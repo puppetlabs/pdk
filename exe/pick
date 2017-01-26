@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require 'pick/cli'
+
+Pick::CLI.start(ARGV)

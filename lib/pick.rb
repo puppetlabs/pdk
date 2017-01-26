@@ -1,5 +1,4 @@
 require 'pick/version'
+require 'pick/generate'
 
-module Pick
-  # Your code goes here...
-end
+module Pick; end
