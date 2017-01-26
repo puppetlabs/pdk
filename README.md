@@ -4,6 +4,8 @@ The shortest path to better modules: Puppet Infrastructure Construction Kit
 
 A CLI tool to facilitate easy, unified development workflows for puppet modules.
 
+![pick logo using puppet dag shapes](docs/logo.png)
+
 ## Installation
 
 Install it into your ruby installation as:
@@ -22,5 +24,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/pick.
+Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pick. Especially a better logo ;-)
 
