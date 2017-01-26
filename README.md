@@ -2,20 +2,11 @@
 
 The shortest path to better modules: Puppet Infrastructure Construction Kit
 
+A CLI tool to facilitate easy, unified development workflows for puppet modules.
 
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'pick'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
+Install it into your ruby installation as:
 
     $ gem install pick
 
