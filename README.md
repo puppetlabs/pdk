@@ -10,8 +10,9 @@ A CLI tool to facilitate easy, unified development workflows for puppet modules.
 
 Install it into your ruby installation as:
 
-    $ gem install pick
-
+```
+$ gem install pick
+```
 ## Usage
 
 ### Generate a new module
@@ -68,9 +69,9 @@ Generates a new resource provider.
 * `provider_name`: Specify the name of the new resource provider here.
 * `data_type:attribute_name`: Specify a list of attributes with their expected data types.
 
-### Running static tests
+### Running static analysis
 
-The default template provides a number of different tests that can improve confidence in the working of a module. Static tests are very quick to run, but only provide basic guarantees on the well-formedness of the module and syntax of its files. Run them like this:
+The default template provides a number of different tools that can improve confidence in the working of a module. Static tests are very quick to run, but only provide basic guarantees on the well-formedness of the module and syntax of its files. Run them like this:
 
 ```
 ~/new_module $ pick test static
@@ -108,11 +109,26 @@ Finished in 0.25554 seconds (files took 1.16 seconds to load)
 #### Reference
 
 ```
-pick test unit [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format] [rspec_options]
+pick test unit [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format] [runner_options]
 ```
 
+* `--list`: Display a list of unit tests and their descriptions. Using this option will skip running the tests.
+* `--tests=test_list`: A comma separated list of tests to run. This can be used during development to pinpoint a single failing test. See the `--list` output for allowed values.
+* `--report-file=file_name`: Specify a filename to write a report of the test results. Without a file name specified, no report will be created.
+* `--report-format=format`: Specify the format of the report. Possible values are `junit`, or `text`. Defaults to `junit`.
+* <!-- this is a cop-out; alternatives are surfacing the real runner to advanced users, or completely wrapping the runner's interface --> `runner_options`: Pass through options to the actual test-runner. In the default template (and commonly across most modules) this is [rspec](https://relishapp.com/rspec/rspec-core/docs/command-line).
 
+### Code management
 
+Version control is a critical practice when the infrastructure is described in code. If you don't have an established version control routine, pick provides a set of easy commands to get you started:
+
+```
+pick update [--source=git_url] # download and apply changes from upstream
+pick commit # git add -A && git commit
+pick upload [--destination=git_url] [--environment=environment] # git push
+```
+
+<!-- // TODO: git hosting services (integration); code manager workflow integration; CI/CD Integration -->
 
 
 
@@ -124,5 +140,5 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pick. Especially a better logo ;-)
+Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pick.
 
