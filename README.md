@@ -1,4 +1,4 @@
-# pick 
+# pick
 
 The shortest path to better modules: Puppet Infrastructure Construction Kit
 
@@ -20,13 +20,13 @@ $ gem install pick
 
 To get started, generate a new module from the default template.
 
-1. Run the `pick generate module` command, specifying the name of the new module:
+1. Run the `pick new module` command, specifying the name of the new module:
 
 ```
-pick generate module new_module
+pick new module my_module
 ```
 
-This generates the basic components of a new module and initializes Git for you. The `pick generate` command sets some default values based on your environment. Check the `metadata.json` to make sure that these values are correct. The new module now contains all the infrastructure to use the other capabilities of `pick`.
+This generates the basic components of a new module and initializes Git for you. The `pick new module` command sets some default values based on your environment. Check the `metadata.json` to make sure that these values are correct. The new module now contains all the infrastructure to use the other capabilities of `pick`.
 
 ### Generate a new resource provider
 
@@ -41,7 +41,6 @@ pick generate provider new_provider String:content 'Enum[absent, present]:ensure
 ```
 
 This creates all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type has an `ensure` property with the expected values, and a `String` property named `content`. If your types use Bash special characters, such as 'Enum[absent, present]:ensure' above, you must quote to avoid issues with the shell.
-
 
 ### Running validations
 
@@ -75,25 +74,17 @@ pick test unit
 
 ## Reference
 
-### `pick generate module` command
+### `pick new module` command
 
 Generates a new module.
 
 Usage:
 
 ```
-pick generate module [--namespace=forge_user] [--github-user=github_user] [--template-url=git_url] [--license=spdx_identifier] [--vcs=vcs_provider] [--target-dir=directory] module_name
+pick new module [--template-url=git_url] [--license=spdx_identifier] [--vcs=vcs_provider] module_name [target_dir]
 ```
 
-The `pick generate module` command accepts the following arguments. Arguments are optional unless specified.
-
-#### `--namespace=forge_user`
-
-Specifies the Forge username that will host this module. This is used globally to identify your contributions. Defaults to the local part of your mail address (before the @ symbol), if available.
-
-#### `--github-user=github_user`
-
-Specifies the [GitHub](https://github.com) user that will host this module. Defaults to the namespace. If you don't use GitHub to publish your module, you can ignore this.
+The `pick new module` command accepts the following arguments and options. Arguments are optional unless otherwise specified.
 
 #### `--template-url=git_url`
 
@@ -107,13 +98,13 @@ Specifies the license this module is written under. See https://spdx.org/license
 
 Specifies the version control driver. Valid values: `git`, `none`. Default: `git`.
 
-#### `--target-dir=directory`
-
-Specifies where the new module should be located. Defaults to the current working directory: `directory/forge_user-module_name`. 
-
 #### `module_name`
 
-**Required**. Specifies the name of the module being created. 
+**Required**. Specifies the name of the module being created, including the namespace. e.g.: `username-my_module`
+
+#### `target_dir`
+
+Specifies the directory that the new module will be created in. Defaults to creating a new directory with the given `module_name` inside the current directory.
 
 ### `pick generate provider` command
 
