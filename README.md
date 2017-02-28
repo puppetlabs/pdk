@@ -43,20 +43,18 @@ pick generate provider new_provider String:content 'Enum[absent, present]:ensure
 This creates all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type has an `ensure` property with the expected values, and a `String` property named `content`. If your types use Bash special characters, such as 'Enum[absent, present]:ensure' above, you must quote to avoid issues with the shell.
 
 
-### Run static analysis
+### Running validations
 
-The default template provides tools for running static analysis of your new module. Static tests run quickly, but they provide only a basic check of the well-formedness of the module and syntax of its files.
-
-1. In the module's directory, run:
+The default template provides tools for running static validations of your new module. Validations run quickly, but they provide only a basic check of the well-formedness of the module and syntax of its files.
 
 ```
-pick test static
+pick validate
 ```
 
 This displays results in the console:
 
 ```
-Running static analysis on `new_module`:
+Running validations on `new_module`:
 * ruby syntax: OK!
 * puppet syntax: OK!
 [...]
@@ -163,28 +161,41 @@ Overrides the template to use for this module. If possible please contribute you
 
 Specifies a list of attributes with their expected data types, such as `'Enum[absent, present]:ensure'`. If not specified, the data type will have no attributes.
 
-### `pick test static` command
+### `pick validate` command
 
-Runs all static tests. Any errors are displayed to the console and reported in the report-file, if requested. The exitcode is non-zero when errors occur.
+Runs all static validations. Any errors are reported to the console in the format requested. The exit code is non-zero when errors occur.
+
+Usage:
 
 ```
-pick test static [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format]
+pick validate [--format=format] [validations] [targets*]
 ```
-#### `--list`
 
-Displays a list of configured static tests and their descriptions. Using this option lists the tests without running them.
+#### `--format=format`
 
-#### `--tests=test_list`
+Specifies the format of the output. Valid values: `junit`, `text`. Default: `text`.
 
-A comma-separated list of tests to run. Use this during development to pinpoint a single failing test. See the `--list` output for allowed values.
+#### `validations`
 
-#### `--report-file=file_name`
+Specifies a comma separated list of validations to run (or `all`). See the `--help` output for a list of available validations. Defaults to `all` if not supplied.
 
-Specifies a filename to which to write the test results. If no filename is specified, no report is created.
+#### `targets`
 
-#### `--report-format=format`
+Specifies a list of directories or individual files to validate. Validations which are not applicable to individual files will be skipped for those files. Defaults to validating everything.
 
-Specifies the format of the report. Valid values: `junit`, `text`. Default: `junit`.
+#### Additional Examples
+
+```
+$ pick validate metadata
+Running 'metadata' validation on `new_module`: OK!
+```
+
+```
+$ pick validate all lib/
+Running validations on `new_module/lib`:
+* ruby syntax: OK!
+* puppet syntax: (no puppet manifests found)
+```
 
 #### `pick test unit` command
 
