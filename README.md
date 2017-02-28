@@ -40,7 +40,8 @@ For example:
 pick generate provider new_provider String:content 'Enum[absent, present]:ensure'
 ```
 
-This creates all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type has an `ensure` property with the expected values, and a `String` property named `content`. You must quote complex types (such as 'Enum[absent, present]:ensure' above) to avoid issues with the shell. TODO: what specifically do we mean by "more complex types"? Anything more complicated that `Type:attribute`?
+This creates all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type has an `ensure` property with the expected values, and a `String` property named `content`. If your types use Bash special characters, such as 'Enum[absent, present]:ensure' above, you must quote to avoid issues with the shell.
+
 
 ### Run static analysis
 
@@ -65,7 +66,7 @@ Running static analysis on `new_module`:
 
 The default template sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing. 
 
-1. From the module's directory, run all unit tests with:
+1. In the module's directory, run all unit tests with:
 
 ```
 pick test unit
@@ -160,7 +161,7 @@ Overrides the template to use for this module. If possible please contribute you
 
 #### `data_type:attribute_name`
 
-Specifies a list of attributes with their expected data types, such as `'Enum[absent, present]:ensure'`. If not specified, the data type will be "empty."
+Specifies a list of attributes with their expected data types, such as `'Enum[absent, present]:ensure'`. If not specified, the data type will have no attributes.
 
 ### `pick test static` command
 
