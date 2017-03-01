@@ -10,5 +10,7 @@ group(:development, :test) do
 end
 
 group :development do
+  gem 'metadata-json-lint'
   gem 'pry'
+  gem 'rubocop'
 end
