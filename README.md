@@ -2,141 +2,221 @@
 
 The shortest path to better modules: Puppet Infrastructure Construction Kit
 
-A CLI tool to facilitate easy, unified development workflows for puppet modules.
+A CLI tool to facilitate easy, unified development workflows for Puppet modules.
 
 ![pick logo using puppet dag shapes](docs/logo.png)
 
 ## Installation
 
-Install it into your ruby installation as:
+1. Install `pick` into your Ruby installation with:
 
 ```
 $ gem install pick
 ```
+
 ## Usage
 
 ### Generate a new module
 
-To start out using this tool set, generate a new module from the default template:
+To get started, generate a new module from the default template.
+
+1. Run the `pick generate module` command, specifying the name of the new module:
 
 ```
-~/ $ pick generate module new_module
-Generating new module 'new_module'...
-+ ./new_module/metadata.json
-[...]
+pick generate module new_module
 ```
 
-This will lay out the basics of a new module, and initialise git for you. Some of the defaults will be guessed from your environment. Have a look at the `metadata.json` to make sure that the tool guessed right. The new module now contains all the infrastructure to use the other capabilities of `pick`.
-
-#### Reference
-
-```
-pick generate module [--namespace=forge_user] [--github-user=github_user] [--template-url=git_url] [--license=spdx_identifier] [--vcs=vcs_provider] [--target-dir=directory] module_name
-```
-
-Generates a new module.
-
-* `--namespace=forge_user`: Specify the forge username that will host this module. This is used globally to identify your contributions. Defaults to the local part of your mail address, if available.
-* `--github-user=github_user`: Specify the [github](https://github.com) user that will host this module. Defaults to the namespace. If you don't use github to publish your module, you can ignore this.
-* `--template-url=git_url`: Override the template to use for this module. If possible please contribute your improvements back to the default template at [puppetlabs/pick](https://github.com/puppetlabs/pick).
-* `--license=spdx_identifier`: Specify the license this module will be written under. See https://spdx.org/licenses/ for a list of open source licenses, or use `propietary`. Defaults to `Apache-2.0`.
-* `--vcs=vcs_provider`: Specify the version control driver. Currently supported are `git` and `none`. Defaults to `git`.
-* `--target-dir=directory`: Specify where the new module should be located. Defaults to the current working directory. The module will be created in `directory/forge_user-modulen_name`. 
-* `module_name`: Specify the name of your new module here. 
+This generates the basic components of a new module and initializes Git for you. The `pick generate` command sets some default values based on your environment. Check the `metadata.json` to make sure that these values are correct. The new module now contains all the infrastructure to use the other capabilities of `pick`.
 
 ### Generate a new resource provider
 
-To add code managing a specific resource that is not yet covered by puppet's basic resource types, or an existing module, create a new resource provider to fill the gap:
+If you need to manage a specific resource that is not covered by either Puppet's basic resource types or an existing module, create a new resource provider.
+
+1. In the module's directory, run `pick generate provider` command, specifying the new provider name, as well as any attributes along with their data types.
+
+For example:
 
 ```
-~/new_module $ pick generate provider new_provider String:content 'Enum[absent, present]:ensure'
-Generating new resource provider `new_provider`...
-+ ./lib/puppet/type/new_provider.rb
-[...]
+pick generate provider new_provider String:content 'Enum[absent, present]:ensure'
 ```
 
-This will create all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type will have a `ensure` property with the expected values, and a `String` property named `content`. Note the special quoting required to avoid confusing your shell when specifying more complex types.
+This creates all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type has an `ensure` property with the expected values, and a `String` property named `content`. If your types use Bash special characters, such as 'Enum[absent, present]:ensure' above, you must quote to avoid issues with the shell.
 
-#### Reference
 
-```
-pick generate provider [--template-url=git_url] provider_name [data_type:attribute_name]*
-```
+### Run static analysis
 
-Generates a new resource provider.
+The default template provides tools for running static analysis of your new module. Static tests run quickly, but they provide only a basic check of the well-formedness of the module and syntax of its files.
 
-* `--template-url=git_url`: Override the template to use for this module. If possible please contribute your improvements back to the default template at [puppetlabs/pick](https://github.com/puppetlabs/pick).
-* `provider_name`: Specify the name of the new resource provider here.
-* `data_type:attribute_name`: Specify a list of attributes with their expected data types.
-
-### Running static analysis
-
-The default template provides a number of different tools that can improve confidence in the working of a module. Static tests are very quick to run, but only provide basic guarantees on the well-formedness of the module and syntax of its files. Run them like this:
+1. In the module's directory, run:
 
 ```
-~/new_module $ pick test static
+pick test static
+```
+
+This displays results in the console:
+
+```
 Running static analysis on `new_module`:
 * ruby syntax: OK!
 * puppet syntax: OK!
 [...]
 ```
 
-#### Reference
+### Run unit tests
+
+The default template sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing. 
+
+1. In the module's directory, run all unit tests with:
 
 ```
-pick test static [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format]
+pick test unit
 ```
 
-Runs all "static" tests. Any errors are displayed to the console, and reported in the report-file, if requested. The exitcode is non-zero when errors occur.
+### Manage code with version control
 
-* `--list`: Display a list of configured static tests and their descriptions. Using this option will skip running the tests.
-* `--tests=test_list`: A comma separated list of tests to run. This can be used during development to pinpoint a single failing test. See the `--list` output for allowed values.
-* `--report-file=file_name`: Specify a filename to write a report of the test results. Without a file name specified, no report will be created.
-* `--report-format=format`: Specify the format of the report. Possible values are `junit`, or `text`. Defaults to `junit`.
+Version control is critical when infrastructure is described in code. If you don't have an established version control routine, `pick` provides a set of commands to get you started.
 
-### Running unit tests
-
-The default template sets up [rspec](http://rspec.info/) for ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing. To run all of them, use this command:
-
-```
-~/new_module $ pick test unit
-Running unit tests on `new_module`:
-[...]
-Finished in 0.25554 seconds (files took 1.16 seconds to load)
-72 examples, 0 failures
-```
-
-#### Reference
-
-```
-pick test unit [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format] [runner_options]
-```
-
-* `--list`: Display a list of unit tests and their descriptions. Using this option will skip running the tests.
-* `--tests=test_list`: A comma separated list of tests to run. This can be used during development to pinpoint a single failing test. See the `--list` output for allowed values.
-* `--report-file=file_name`: Specify a filename to write a report of the test results. Without a file name specified, no report will be created.
-* `--report-format=format`: Specify the format of the report. Possible values are `junit`, or `text`. Defaults to `junit`.
-* <!-- this is a cop-out; alternatives are surfacing the real runner to advanced users, or completely wrapping the runner's interface --> `runner_options`: Pass through options to the actual test-runner. In the default template (and commonly across most modules) this is [rspec](https://relishapp.com/rspec/rspec-core/docs/command-line).
-
-### Code management
-
-Version control is a critical practice when the infrastructure is described in code. If you don't have an established version control routine, pick provides a set of easy commands to get you started:
+1. From your module's directory, download and apply changes from your upstream repository:
 
 ```
 pick update [--source=git_url] # download and apply changes from upstream
-pick commit # git add -A && git commit
-pick upload [--destination=git_url] [--environment=environment] # git push
+````
+
+2. After you make changes, add all of your changes and commit to Git with:
+
+```
+pick commit
+```
+
+3. Push your commit to Git with:
+
+```
+pick upload [--destination=git_url] [--environment=environment]
 ```
 
 <!-- // TODO: git hosting services (integration); code manager workflow integration; CI/CD Integration -->
 
 
+## Reference
 
-## Development
+### `pick generate module` command
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+Generates a new module.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Usage:
+
+```
+pick generate module [--namespace=forge_user] [--github-user=github_user] [--template-url=git_url] [--license=spdx_identifier] [--vcs=vcs_provider] [--target-dir=directory] module_name
+```
+
+The `pick generate module` command accepts the following arguments. Arguments are optional unless specified.
+
+#### `--namespace=forge_user`
+
+Specifies the Forge username that will host this module. This is used globally to identify your contributions. Defaults to the local part of your mail address (before the @ symbol), if available.
+
+#### `--github-user=github_user`
+
+Specifies the [GitHub](https://github.com) user that will host this module. Defaults to the namespace. If you don't use GitHub to publish your module, you can ignore this.
+
+#### `--template-url=git_url`
+
+Overrides the template to use for this module. If possible, please contribute your improvements back to the default template at [puppetlabs/pick](https://github.com/puppetlabs/pick).
+
+#### `--license=spdx_identifier`
+
+Specifies the license this module is written under. See https://spdx.org/licenses/ for a list of open source licenses, or use `proprietary`. Defaults to `Apache-2.0`.
+
+#### `--vcs=vcs_provider`
+
+Specifies the version control driver. Valid values: `git`, `none`. Default: `git`.
+
+#### `--target-dir=directory`
+
+Specifies where the new module should be located. Defaults to the current working directory: `directory/forge_user-module_name`. 
+
+#### `module_name`
+
+**Required**. Specifies the name of the module being created. 
+
+### `pick generate provider` command
+
+Generates a new resource provider.
+
+Usage:
+
+```
+pick generate provider [--template-url=git_url] provider_name [data_type:attribute_name]*
+```
+
+The `pick generate provider` command accepts the following arguments. Arguments are optional unless specified.
+
+#### `--template-url=git_url`
+
+Overrides the template to use for this module. If possible please contribute your improvements back to the default template at [puppetlabs/pick](https://github.com/puppetlabs/pick).
+
+#### `provider_name`
+
+**Required**. Specifies the name of the resource provider being created.
+
+#### `data_type:attribute_name`
+
+Specifies a list of attributes with their expected data types, such as `'Enum[absent, present]:ensure'`. If not specified, the data type will have no attributes.
+
+### `pick test static` command
+
+Runs all static tests. Any errors are displayed to the console and reported in the report-file, if requested. The exitcode is non-zero when errors occur.
+
+```
+pick test static [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format]
+```
+#### `--list`
+
+Displays a list of configured static tests and their descriptions. Using this option lists the tests without running them.
+
+#### `--tests=test_list`
+
+A comma-separated list of tests to run. Use this during development to pinpoint a single failing test. See the `--list` output for allowed values.
+
+#### `--report-file=file_name`
+
+Specifies a filename to which to write the test results. If no filename is specified, no report is created.
+
+#### `--report-format=format`
+
+Specifies the format of the report. Valid values: `junit`, `text`. Default: `junit`.
+
+#### `pick test unit` command
+
+Runs unit tests. Any errors are displayed to the console and reported in the report-file, if requested. The exitcode is non-zero when errors occur.
+
+Usage:
+
+```
+pick test unit [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format] [runner_options]
+```
+
+#### `--list`
+
+Displays a list of unit tests and their descriptions. Using this option lists the tests without running them.
+
+#### `--tests=test_list`
+
+A comma-separated list of tests to run. Use this during development to pinpoint a single failing test. See the `--list` output for allowed values.
+
+#### `--report-file=file_name`
+
+Specifies a filename to which to write the test results. If no filename is specified, no report is created.
+
+#### `--report-format=format`
+
+Specifies the format of the report. Valid values: `junit`, `text`. Default: `junit`.
+
+#### `runner_options`
+
+<!-- this is a cop-out; alternatives are surfacing the real runner to advanced users, or completely wrapping the runner's interface -->
+
+Specifies options to pass through to the actual test-runner. In the default template (and most commonly across modules), this is [rspec](https://relishapp.com/rspec/rspec-core/docs/command-line).
 
 ## Contributing
 
