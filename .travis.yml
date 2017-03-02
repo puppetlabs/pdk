@@ -4,3 +4,5 @@ rvm:
   - 2.3.3
 before_install: gem install bundler -v 1.13.6
 bundler_args: --without development
+script:
+ - "bundle exec rake spec"
