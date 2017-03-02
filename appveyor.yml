@@ -1,0 +1,14 @@
+build: off
+
+# ruby versions under test
+platform:
+  - Ruby23-x64
+  - Ruby21-x64
+
+test_script:
+  - SET PATH=C:\%PLATFORM%\bin;%PATH%
+  - SET LOG_SPEC_ORDER=true
+  - bundle install --jobs 4 --retry 2 --without development
+  - type Gemfile.lock
+  - ruby -v
+  - bundle exec rake spec
