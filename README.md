@@ -72,28 +72,6 @@ The default template sets up [rspec](http://rspec.info/) for Ruby-level unit tes
 pick test unit
 ```
 
-### Manage code with version control
-
-Version control is critical when infrastructure is described in code. If you don't have an established version control routine, `pick` provides a set of commands to get you started.
-
-1. From your module's directory, download and apply changes from your upstream repository:
-
-```
-pick update [--source=git_url] # download and apply changes from upstream
-````
-
-2. After you make changes, add all of your changes and commit to Git with:
-
-```
-pick commit
-```
-
-3. Push your commit to Git with:
-
-```
-pick upload [--destination=git_url] [--environment=environment]
-```
-
 <!-- // TODO: git hosting services (integration); code manager workflow integration; CI/CD Integration -->
 
 
