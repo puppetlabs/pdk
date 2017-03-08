@@ -1,17 +1,25 @@
-require 'open3'
+require 'childprocess'
 
 module Pick
   module CLI
     module Exec
-      # TODO: standardize how we want to execute commands
+      # TODO: decide how to handle multiple output targets when underlying tool doesn't support that
+      # TODO: decide what this method should return
+      # TODO: decide how/when to connect stdin to child process for things like pry
       def self.execute(cmd, options = {})
-        out = ''
-        err = ''
-        Open3.popen3(cmd) do |stdin, stdout, stderr|
-          out = stdout.read.to_s
-          err = stderr.read.to_s
-        end
-        "#{out}, #{err}"
+        process = ChildProcess.build(cmd)
+
+        # inherit stdout/stderr from parent...
+        process.io.inherit!
+
+        # start the process
+        process.start
+
+        # wait indefinitely for process to exit...
+        process.wait
+
+        # get the exit code
+        process.exit_code #=> 0
       end
     end
   end
