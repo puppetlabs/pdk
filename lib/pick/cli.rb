@@ -17,9 +17,9 @@ module Pick
         puts "Generation done. Enjoy your new #{template}!"
       end
 
-      desc 'validate [--list] [--validations=test_list] [--report-file=file_name] [--report-format=format]', 'Runs all static validations.'
+      desc 'validate', 'Runs all static validations.'
       method_option :list, type: :boolean
-      method_option :validators
+      method_option :validators, desc: "Available validators: #{Pick::Validate.validators.map(&:cmd).join(', ')}"
 
       def validate
         validators = Pick::Validate.validators
