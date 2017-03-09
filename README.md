@@ -168,12 +168,24 @@ Runs all static validations. Any errors are reported to the console in the forma
 Usage:
 
 ```
-pick validate [--format=format] [validations] [targets*]
+pick validate --list
 ```
 
-#### `--format=format`
+#### `--list`
+
+Displays a list of available validations and their descriptions. Using this option lists the tests without running them.
+
+```
+pick validate [--format=format[:target]] [validations] [targets*]
+```
+
+#### `--format=format[:target]`
 
 Specifies the format of the output. Valid values: `junit`, `text`. Default: `text`.
+
+Optionally, you can specify a target file for the given output format with the syntax: `--format=junit:report.xml`
+
+Multiple `--format` options can be specified as long as they all have distinct output targets.
 
 #### `validations`
 
