@@ -1,7 +1,7 @@
-require 'pick/validations/metadata'
-require 'pick/validations/puppet_lint'
-require 'pick/validations/puppet_parser'
-require 'pick/validations/ruby_lint'
+require 'pick/validators/metadata'
+require 'pick/validators/puppet_lint'
+require 'pick/validators/puppet_parser'
+require 'pick/validators/ruby_lint'
 
 module Pick
   module Validate
