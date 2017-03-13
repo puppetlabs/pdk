@@ -171,13 +171,13 @@ Usage:
 pick validate --list
 ```
 
-#### `--list`
-
-Displays a list of available validations and their descriptions. Using this option lists the tests without running them.
-
 ```
 pick validate [--format=format[:target]] [validations] [targets*]
 ```
+
+#### `--list`
+
+Displays a list of available validations and their descriptions. Using this option lists the tests without running them.
 
 #### `--format=format[:target]`
 
@@ -189,7 +189,7 @@ Multiple `--format` options can be specified as long as they all have distinct o
 
 #### `validations`
 
-Specifies a comma separated list of validations to run (or `all`). See the `--help` output for a list of available validations. Defaults to `all` if not supplied.
+Specifies a comma separated list of validations to run (or `all`). See the `--list` output for a list of available validations. Defaults to `all` if not supplied.
 
 #### `targets`
 
