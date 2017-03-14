@@ -1,15 +1,35 @@
 require 'pick'
-require 'thor'
+require 'pick/cli/generate'
+require 'pick/cli/validate'
+require 'cri'
 
 module Pick
-  class CLI < Thor
-    desc 'generate [template] [name]', 'generates a `template` thing named `name`.'
-    method_option :source, default: 'git@github.com:puppetlabs/modulesync_configs.git', desc: 'The source repository to load templates from.'
+  module CLI
+    def self.base_command
+      @base ||= Cri::Command.define do
+        name 'pick'
+        usage 'pick [options]'
+        summary 'Puppet SDK'
+        description 'The shortest path to better modules.'
 
-    def generate(template='module', name = 'example')
-      puts "Generating a #{template} named '#{name}' ..."
-      Pick::Generate.generate(template, name, options)
-      puts "Generation done. Enjoy your new #{template}!"
+        flag   :h,  :help,  'show help for this command' do |value, cmd|
+          puts cmd.help
+          exit 0
+        end
+
+        option nil, :'report-file', 'report-file', argument: :required
+        option nil, :'report-format', 'report-format', argument: :required do |value|
+          Pick::CLI::Util::OptionValidator.enum(value, Pick::Report.formats)
+        end
+      end
+
+      @base.add_command(Pick::CLI::Validate.command)
+      @base.add_command(Pick::CLI::Generate.command)
+      @base
+    end
+
+    def self.run(*args)
+      base_command.run(*args)
     end
   end
 end
