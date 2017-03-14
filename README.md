@@ -37,11 +37,10 @@ If you need to manage a specific resource that is not covered by either Puppet's
 For example:
 
 ```
-pick generate provider new_provider String:content 'Enum[absent, present]:ensure'
+pick generate provider new_provider content:String ensure:'Enum[absent, present]'
 ```
 
-This creates all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type has an `ensure` property with the expected values, and a `String` property named `content`. If your types use Bash special characters, such as 'Enum[absent, present]:ensure' above, you must quote to avoid issues with the shell.
-
+This creates all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type has an `ensure` property with the expected values, and a `content` property of type `String`. If your types use Bash special characters, such as 'Enum[absent, present]' above, you must quote it to avoid issues with the shell.
 
 ### Running validations
 
@@ -122,22 +121,22 @@ Generates a new resource provider.
 Usage:
 
 ```
-pick generate provider [--template-url=git_url] provider_name [data_type:attribute_name]*
+pick generate provider [--template-url=git_url] provider_name [attribute_name:data_type]*
 ```
 
-The `pick generate provider` command accepts the following arguments. Arguments are optional unless specified.
+The `pick generate provider` command accepts the following arguments and options. Arguments are optional unless specified.
 
 #### `--template-url=git_url`
 
-Overrides the template to use for this module. If possible please contribute your improvements back to the default template at [puppetlabs/pick](https://github.com/puppetlabs/pick).
+Overrides the template to use for this provider. If possible please contribute your improvements back to the default template at [puppetlabs/pick](https://github.com/puppetlabs/pick).
 
 #### `provider_name`
 
 **Required**. Specifies the name of the resource provider being created.
 
-#### `data_type:attribute_name`
+#### `attribute_name:data_type`
 
-Specifies a list of attributes with their expected data types, such as `'Enum[absent, present]:ensure'`. If not specified, the data type will have no attributes.
+Specifies a list of attributes with their expected data types, such as `ensure:'Enum[absent, present]'`. If not specified, the provider will have no attributes.
 
 ### `pick validate` command
 
