@@ -194,12 +194,16 @@ Runs unit tests. Any errors are displayed to the console and reported in the rep
 Usage:
 
 ```
-pick test unit [--format=format] [runner_options] [targets*]
+pick test unit [--format=format[:target]] [runner_options] [targets*]
 ```
 
-#### `--format=format`
+#### `--format=format[:target]`
 
-Specifies the format of the report. Valid values: `junit`, `text`. Default: `text`.
+Specifies the format of the output. Valid values: `junit`, `text`. Default: `text`.
+
+Optionally, you can specify a target file for the given output format with the syntax: `--format=junit:report.xml`
+
+Multiple `--format` options can be specified as long as they all have distinct output targets.
 
 #### `runner_options`
 
