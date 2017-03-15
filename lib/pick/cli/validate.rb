@@ -1,11 +1,14 @@
 require 'cri'
 require 'pick/cli/util/option_validator'
+require 'pick/report'
 
-include Pick::CLI::Util
+require 'pick/validate'
 
 module Pick
   module CLI
     class Validate
+      include Pick::CLI::Util
+
       def self.command
         @validate ||= Cri::Command.define do
           name 'validate'
@@ -13,12 +16,8 @@ module Pick
           summary 'Run static analysis tests.'
           description 'Run metadata-json-lint, puppet parser validate, puppet-lint, or rubocop.'
 
-          flag :h, :help, 'validate help' do |value, cmd|
-            puts cmd.help
-            exit 0
-          end
-
           flag nil, :list, 'list all available validators'
+
           option nil, :validators, "Available validators: #{Pick::Validate.validators.map(&:cmd).join(', ')}", argument: :required do |values|
             # Ensure the argument is a comma separated list and that each validator exists
             OptionValidator.enum(OptionValidator.list(values), Pick::Validate.validators.map(&:cmd))

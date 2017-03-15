@@ -1,35 +1,41 @@
-require 'pick'
+require 'cri'
+
+require 'pick/cli/util/option_validator'
+require 'pick/report'
+
 require 'pick/cli/generate'
 require 'pick/cli/validate'
-require 'cri'
 
 module Pick
   module CLI
     def self.base_command
-      @base ||= Cri::Command.define do
-        name 'pick'
-        usage 'pick [options]'
-        summary 'Puppet SDK'
-        description 'The shortest path to better modules.'
+      @base ||= Cri::Command.new.tap do |cmd|
+        cmd.modify do
+          name 'pick'
+          usage 'pick [options]'
+          summary 'Puppet SDK'
+          description 'The shortest path to better modules.'
 
-        flag   :h,  :help,  'show help for this command' do |value, cmd|
-          puts cmd.help
-          exit 0
+          flag :h, :help, 'show help for this command' do |_, c|
+            puts c.help
+            exit 0
+          end
+
+          option nil, :'report-file', 'report-file', argument: :required
+          option nil, :'report-format', 'report-format', argument: :required do |value|
+            Pick::CLI::Util::OptionValidator.enum(value, Pick::Report.formats)
+          end
         end
 
-        option nil, :'report-file', 'report-file', argument: :required
-        option nil, :'report-format', 'report-format', argument: :required do |value|
-          Pick::CLI::Util::OptionValidator.enum(value, Pick::Report.formats)
-        end
+        cmd.add_command(Cri::Command.new_basic_help)
+
+        cmd.add_command(Pick::CLI::Validate.command)
+        cmd.add_command(Pick::CLI::Generate.command)
       end
-
-      @base.add_command(Pick::CLI::Validate.command)
-      @base.add_command(Pick::CLI::Generate.command)
-      @base
     end
 
-    def self.run(*args)
-      base_command.run(*args)
+    def self.run(args)
+      base_command.run(args)
     end
   end
 end
