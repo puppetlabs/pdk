@@ -10,5 +10,6 @@ group(:development, :test) do
   gem 'bundler', '~> 1.13'
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
+  gem 'pry-byebug', '~> 3.4'
 end
 

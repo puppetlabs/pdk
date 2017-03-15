@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
 
 require 'pick/cli'
-Pick::CLI.run(ARGV)
+
+Pick::CLI.run(ARGV.dup)
