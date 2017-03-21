@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'pick/version'
+require 'pdk/version'
 
 Gem::Specification.new do |spec|
-  spec.name    = 'pick'
-  spec.version = Pick::VERSION
+  spec.name    = 'pdk'
+  spec.version = PDK::VERSION
   spec.authors = ['David Schmitt']
   spec.email   = ['david.schmitt@puppet.com']
 
-  spec.summary     = %q{The shortest path to better modules: Puppet Infrastructure Construction Kit}
+  spec.summary     = %q{The shortest path to better modules: Puppet Development Kit}
   spec.description = %q{A CLI tool to facilitate easy, unified development workflows for puppet modules.}
-  spec.homepage    = 'https://github.com/puppetlabs/pick'
+  spec.homepage    = 'https://github.com/puppetlabs/pdk'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
