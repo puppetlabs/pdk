@@ -1,17 +1,17 @@
-# pick
+# pdk
 
-The shortest path to better modules: Puppet Infrastructure Construction Kit
+The shortest path to better modules: Puppet Development Kit
 
 A CLI tool to facilitate easy, unified development workflows for Puppet modules.
 
-![pick logo using puppet dag shapes](docs/logo.png)
+![pdk logo using puppet dag shapes](docs/logo.png)
 
 ## Installation
 
-1. Install `pick` into your Ruby installation with:
+1. Install `pdk` into your Ruby installation with:
 
 ```
-$ gem install pick
+$ gem install pdk
 ```
 
 ## Usage
@@ -20,24 +20,24 @@ $ gem install pick
 
 To get started, generate a new module from the default template.
 
-1. Run the `pick new module` command, specifying the name of the new module:
+1. Run the `pdk new module` command, specifying the name of the new module:
 
 ```
-pick new module my_module
+pdk new module my_module
 ```
 
-This generates the basic components of a new module and initializes Git for you. The `pick new module` command sets some default values based on your environment. Check the `metadata.json` to make sure that these values are correct. The new module now contains all the infrastructure to use the other capabilities of `pick`.
+This generates the basic components of a new module and initializes Git for you. The `pdk new module` command sets some default values based on your environment. Check the `metadata.json` to make sure that these values are correct. The new module now contains all the infrastructure to use the other capabilities of `pdk`.
 
 ### Generate a new resource provider
 
 If you need to manage a specific resource that is not covered by either Puppet's basic resource types or an existing module, create a new resource provider.
 
-1. In the module's directory, run `pick generate provider` command, specifying the new provider name, as well as any attributes along with their data types.
+1. In the module's directory, run `pdk generate provider` command, specifying the new provider name, as well as any attributes along with their data types.
 
 For example:
 
 ```
-pick generate provider new_provider String:content 'Enum[absent, present]:ensure'
+pdk generate provider new_provider String:content 'Enum[absent, present]:ensure'
 ```
 
 This creates all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type has an `ensure` property with the expected values, and a `String` property named `content`. If your types use Bash special characters, such as 'Enum[absent, present]:ensure' above, you must quote to avoid issues with the shell.
@@ -47,7 +47,7 @@ This creates all the files required to define a resource type, its provider, and
 The default template provides tools for running static validations of your new module. Validations run quickly, but they provide only a basic check of the well-formedness of the module and syntax of its files.
 
 ```
-pick validate
+pdk validate
 ```
 
 This displays results in the console:
@@ -66,7 +66,7 @@ The default template sets up [rspec](http://rspec.info/) for Ruby-level unit tes
 1. In the module's directory, run all unit tests with:
 
 ```
-pick test unit
+pdk test unit
 ```
 
 <!-- // TODO: git hosting services (integration); code manager workflow integration; CI/CD Integration -->
@@ -74,21 +74,21 @@ pick test unit
 
 ## Reference
 
-### `pick new module` command
+### `pdk new module` command
 
 Generates a new module.
 
 Usage:
 
 ```
-pick new module [--template-url=git_url] [--license=spdx_identifier] [--vcs=vcs_provider] module_name [target_dir]
+pdk new module [--template-url=git_url] [--license=spdx_identifier] [--vcs=vcs_provider] module_name [target_dir]
 ```
 
-The `pick new module` command accepts the following arguments and options. Arguments are optional unless otherwise specified.
+The `pdk new module` command accepts the following arguments and options. Arguments are optional unless otherwise specified.
 
 #### `--template-url=git_url`
 
-Overrides the template to use for this module. If possible, please contribute your improvements back to the default template at [puppetlabs/pick](https://github.com/puppetlabs/pick).
+Overrides the template to use for this module. If possible, please contribute your improvements back to the default template at [puppetlabs/pdk](https://github.com/puppetlabs/pdk).
 
 #### `--license=spdx_identifier`
 
@@ -106,21 +106,21 @@ Specifies the version control driver. Valid values: `git`, `none`. Default: `git
 
 Specifies the directory that the new module will be created in. Defaults to creating a new directory with the given `module_name` inside the current directory.
 
-### `pick generate provider` command
+### `pdk generate provider` command
 
 Generates a new resource provider.
 
 Usage:
 
 ```
-pick generate provider [--template-url=git_url] provider_name [data_type:attribute_name]*
+pdk generate provider [--template-url=git_url] provider_name [data_type:attribute_name]*
 ```
 
-The `pick generate provider` command accepts the following arguments. Arguments are optional unless specified.
+The `pdk generate provider` command accepts the following arguments. Arguments are optional unless specified.
 
 #### `--template-url=git_url`
 
-Overrides the template to use for this module. If possible please contribute your improvements back to the default template at [puppetlabs/pick](https://github.com/puppetlabs/pick).
+Overrides the template to use for this module. If possible please contribute your improvements back to the default template at [puppetlabs/pdk](https://github.com/puppetlabs/pdk).
 
 #### `provider_name`
 
@@ -130,18 +130,18 @@ Overrides the template to use for this module. If possible please contribute you
 
 Specifies a list of attributes with their expected data types, such as `'Enum[absent, present]:ensure'`. If not specified, the data type will have no attributes.
 
-### `pick validate` command
+### `pdk validate` command
 
 Runs all static validations. Any errors are reported to the console in the format requested. The exit code is non-zero when errors occur.
 
 Usage:
 
 ```
-pick validate --list
+pdk validate --list
 ```
 
 ```
-pick validate [--format=format[:target]] [validations] [targets*]
+pdk validate [--format=format[:target]] [validations] [targets*]
 ```
 
 #### `--list`
@@ -167,25 +167,25 @@ Specifies a list of directories or individual files to validate. Validations whi
 #### Additional Examples
 
 ```
-$ pick validate metadata
+$ pdk validate metadata
 Running 'metadata' validation on `new_module`: OK!
 ```
 
 ```
-$ pick validate all lib/
+$ pdk validate all lib/
 Running validations on `new_module/lib`:
 * ruby syntax: OK!
 * puppet syntax: (no puppet manifests found)
 ```
 
-#### `pick test unit` command
+#### `pdk test unit` command
 
 Runs unit tests. Any errors are displayed to the console and reported in the report-file, if requested. The exitcode is non-zero when errors occur.
 
 Usage:
 
 ```
-pick test unit [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format] [runner_options]
+pdk test unit [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format] [runner_options]
 ```
 
 #### `--list`
@@ -212,5 +212,5 @@ Specifies options to pass through to the actual test-runner. In the default temp
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pick.
+Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pdk.
 
