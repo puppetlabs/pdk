@@ -5,6 +5,7 @@ require 'pdk/report'
 
 require 'pdk/cli/generate'
 require 'pdk/cli/validate'
+require 'pdk/cli/test'
 
 module PDK
   module CLI
@@ -29,6 +30,7 @@ module PDK
 
         cmd.add_command(Cri::Command.new_basic_help)
 
+        cmd.add_command(PDK::CLI::Test.command)
         cmd.add_command(PDK::CLI::Validate.command)
         cmd.add_command(PDK::CLI::Generate.command)
       end
