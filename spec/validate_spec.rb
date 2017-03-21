@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Pick::Validate do
+describe PDK::Validate do
   it 'should include each of the validation tools' do
-    expect(subject.validators).to eq([Pick::Validate::Metadata,
-                                      Pick::Validate::PuppetLint,
-                                      Pick::Validate::PuppetParser,
-                                      Pick::Validate:: RubyLint])
+    expect(subject.validators).to eq([PDK::Validate::Metadata,
+                                      PDK::Validate::PuppetLint,
+                                      PDK::Validate::PuppetParser,
+                                      PDK::Validate::RubyLint])
   end
 end

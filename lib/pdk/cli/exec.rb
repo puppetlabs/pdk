@@ -1,6 +1,6 @@
 require 'childprocess'
 
-module Pick
+module PDK
   module CLI
     module Exec
       # TODO: decide how to handle multiple output targets when underlying tool doesn't support that

@@ -1,6 +1,6 @@
 require 'cri'
 
-module Pick
+module PDK
   module CLI
     class Generate
       def self.command
@@ -19,7 +19,7 @@ module Pick
             source = opts.fetch(:source, 'git@github.com:puppetlabs/modulesync_configs.git')
             name = opts.fetch(:name)
             puts "Generating a #{template} named '#{name}' from source #{source}..."
-            Pick::Generate.generate(template, name, opts)
+            PDK::Generate.generate(template, name, opts)
             puts "Generation done. Enjoy your new #{template}!"
           end
         end

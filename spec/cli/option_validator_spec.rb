@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'pick/cli/util/option_validator'
+require 'pdk/cli/util/option_validator'
 
-describe Pick::CLI::Util::OptionValidator do
+describe PDK::CLI::Util::OptionValidator do
   context 'when verifying comma-separated lists' do
     it 'should normalize and return an array of strings' do
       expect(described_class.list('a,b,c')).to eq(%w(a b c))

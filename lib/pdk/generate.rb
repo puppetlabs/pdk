@@ -1,4 +1,4 @@
-module Pick
+module PDK
   module Generate
     def self.generate(template, name, options = {})
       puts '>  Real work happens.'

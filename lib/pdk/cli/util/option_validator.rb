@@ -1,4 +1,4 @@
-module Pick
+module PDK
   module CLI
     module Util
       class OptionValidator
