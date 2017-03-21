@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in pick.gemspec
+# Specify your gem's dependencies in pdk.gemspec
 gemspec
 
 gem 'metadata-json-lint'

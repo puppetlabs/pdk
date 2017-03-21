@@ -1,4 +1,4 @@
-module Pick
+module PDK
   class Report
     def initialize(path, format = nil)
       @path = path

@@ -1,7 +1,7 @@
-require 'pick'
-require 'pick/cli/exec'
+require 'pdk'
+require 'pdk/cli/exec'
 
-module Pick
+module PDK
   module Validate
     class PuppetParser
       def self.cmd
@@ -9,7 +9,7 @@ module Pick
       end
 
       def self.invoke(report = nil)
-        output = Pick::CLI::Exec.execute(cmd)
+        output = PDK::CLI::Exec.execute(cmd)
         report.write(output) if report
       end
     end

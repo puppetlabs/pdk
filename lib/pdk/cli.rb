@@ -1,18 +1,18 @@
 require 'cri'
 
-require 'pick/cli/util/option_validator'
-require 'pick/report'
+require 'pdk/cli/util/option_validator'
+require 'pdk/report'
 
-require 'pick/cli/generate'
-require 'pick/cli/validate'
+require 'pdk/cli/generate'
+require 'pdk/cli/validate'
 
-module Pick
+module PDK
   module CLI
     def self.base_command
       @base ||= Cri::Command.new.tap do |cmd|
         cmd.modify do
-          name 'pick'
-          usage 'pick [options]'
+          name 'pdk'
+          usage 'pdk [options]'
           summary 'Puppet SDK'
           description 'The shortest path to better modules.'
 
@@ -23,14 +23,14 @@ module Pick
 
           option nil, :'report-file', 'report-file', argument: :required
           option nil, :'report-format', 'report-format', argument: :required do |value|
-            Pick::CLI::Util::OptionValidator.enum(value, Pick::Report.formats)
+            PDK::CLI::Util::OptionValidator.enum(value, PDK::Report.formats)
           end
         end
 
         cmd.add_command(Cri::Command.new_basic_help)
 
-        cmd.add_command(Pick::CLI::Validate.command)
-        cmd.add_command(Pick::CLI::Generate.command)
+        cmd.add_command(PDK::CLI::Validate.command)
+        cmd.add_command(PDK::CLI::Generate.command)
       end
     end
 
