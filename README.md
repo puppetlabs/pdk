@@ -4,8 +4,6 @@ The shortest path to better modules: Puppet Development Kit
 
 A CLI tool to facilitate easy, unified development workflows for Puppet modules.
 
-![pdk logo using puppet dag shapes](docs/logo.png)
-
 ## Installation
 
 1. Install `pdk` into your Ruby installation with:
