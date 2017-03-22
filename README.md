@@ -183,7 +183,7 @@ Runs unit tests. Any errors are displayed to the console and reported in the rep
 Usage:
 
 ```
-pdk test unit [--list] [--tests=test_list] [--report-file=file_name] [--report-format=format] [runner_options]
+pdk test unit [--list] [--tests=test_list] [--format=format[:target]] [runner_options]
 ```
 
 #### `--list`
@@ -194,13 +194,13 @@ Displays a list of unit tests and their descriptions. Using this option lists th
 
 A comma-separated list of tests to run. Use this during development to pinpoint a single failing test. See the `--list` output for allowed values.
 
-#### `--report-file=file_name`
+#### `--format=format[:target]`
 
-Specifies a filename to which to write the test results. If no filename is specified, no report is created.
+Specifies the format of the output. Valid values: `junit`, `text`. Default: `text`.
 
-#### `--report-format=format`
+Optionally, you can specify a target file for the given output format with the syntax: `--format=junit:report.xml`
 
-Specifies the format of the report. Valid values: `junit`, `text`. Default: `junit`.
+Multiple `--format` options can be specified as long as they all have distinct output targets.
 
 #### `runner_options`
 

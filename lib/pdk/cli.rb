@@ -22,9 +22,22 @@ module PDK
             exit 0
           end
 
-          option nil, :'report-file', 'report-file', argument: :required
-          option nil, :'report-format', 'report-format', argument: :required do |value|
-            PDK::CLI::Util::OptionValidator.enum(value, PDK::Report.formats)
+          format_desc = <<~EOS
+            Specify desired output format. Valid formats are '#{PDK::Report.formats.join("', '")}'.
+            You may also specify a file to which the formatted output will be directed, for example: '--format=junit:report.xml'.
+            This option may be specified multiple times as long as each option specifies a distinct target file.
+          EOS
+
+          option :f, :format, format_desc, { argument: :required, multiple: true } do |values|
+            values.compact.each do |v|
+              if v.include?(':')
+                format = v.split(':', 2).first
+
+                PDK::CLI::Util::OptionValidator.enum(format, PDK::Report.formats)
+              else
+                PDK::CLI::Util::OptionValidator.enum(v, PDK::Report.formats)
+              end
+            end
           end
         end
 
