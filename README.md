@@ -26,16 +26,16 @@ pdk new module my_module
 
 This generates the basic components of a new module and initializes Git for you. The `pdk new module` command sets some default values based on your environment. Check the `metadata.json` to make sure that these values are correct. The new module now contains all the infrastructure to use the other capabilities of `pdk`.
 
-### Generate a new resource provider
+### Add a new resource provider
 
 If you need to manage a specific resource that is not covered by either Puppet's basic resource types or an existing module, create a new resource provider.
 
-1. In the module's directory, run `pdk generate provider` command, specifying the new provider name, as well as any attributes along with their data types.
+1. From within an existing module, run `pdk add provider`, specifying the new provider name as well as any attributes along with their data types.
 
 For example:
 
 ```
-pdk generate provider new_provider String:content 'Enum[absent, present]:ensure'
+pdk add provider new_provider String:content 'Enum[absent, present]:ensure'
 ```
 
 This creates all the files required to define a resource type, its provider, and the associated basic tests. In this example, the resource type has an `ensure` property with the expected values, and a `String` property named `content`. If your types use Bash special characters, such as 'Enum[absent, present]:ensure' above, you must quote to avoid issues with the shell.
@@ -104,17 +104,17 @@ Specifies the version control driver. Valid values: `git`, `none`. Default: `git
 
 Specifies the directory that the new module will be created in. Defaults to creating a new directory with the given `module_name` inside the current directory.
 
-### `pdk generate provider` command
+### `pdk add provider` command
 
-Generates a new resource provider.
+Adds a new resource provider to an existing module.
 
 Usage:
 
 ```
-pdk generate provider [--template-url=git_url] provider_name [data_type:attribute_name]*
+pdk add provider [--template-url=git_url] provider_name [data_type:attribute_name]*
 ```
 
-The `pdk generate provider` command accepts the following arguments. Arguments are optional unless specified.
+The `pdk add provider` command accepts the following arguments. Arguments are optional unless specified.
 
 #### `--template-url=git_url`
 
