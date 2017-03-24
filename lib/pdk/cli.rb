@@ -13,7 +13,7 @@ module PDK
       @base ||= Cri::Command.new.tap do |cmd|
         cmd.modify do
           name 'pdk'
-          usage 'pdk [options]'
+          usage 'pdk command [options]'
           summary 'Puppet SDK'
           description 'The shortest path to better modules.'
 
