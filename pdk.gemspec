@@ -5,7 +5,7 @@ require 'pdk/version'
 
 Gem::Specification.new do |spec|
   spec.name    = 'pdk'
-  spec.version = PDK::VERSION
+  spec.version = PDK::VERSION.dup
   spec.authors = ['David Schmitt']
   spec.email   = ['david.schmitt@puppet.com']
 
