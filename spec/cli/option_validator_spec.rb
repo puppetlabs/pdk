@@ -3,12 +3,20 @@ require 'pdk/cli/util/option_validator'
 
 describe PDK::CLI::Util::OptionValidator do
   context 'when verifying comma-separated lists' do
-    it 'should normalize and return an array of strings' do
-      expect(described_class.list('a,b,c')).to eq(%w(a b c))
+    it 'should return true if the list is comma separated' do
+      expect(described_class.is_comma_separated_list?('a,b,c')).to eq(true)
+    end
+
+    it 'should return false if the list is not comma separated' do
+      expect(described_class.is_comma_separated_list?('a,b c,d')).to eq(false)
+    end
+
+    it 'should normalize and return an array of strings when the list is comma separated' do
+      expect(described_class.comma_separated_list_to_array('a,b,c')).to eq(%w(a b c))
     end
 
     it 'should raise an error when the list is invalid' do
-      expect { described_class.list('a,b c,d') }.to raise_error('Error: expected comma separated list')
+      expect { described_class.comma_separated_list_to_array('a,b c,d') }.to raise_error('Error: expected comma separated list')
     end
   end
 
