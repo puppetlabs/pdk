@@ -3,12 +3,7 @@ module PDK
     module Util
       class OptionValidator
         def self.is_comma_separated_list?(list, options = {})
-          list =~ /^[\w+\-,]+,([\w+\-,])+$/ ? true : false
-        end
-
-        def self.comma_separated_list_to_array(list, options = {})
-          raise 'Error: expected comma separated list' unless is_comma_separated_list?(list)
-          list.split(',').compact
+          list =~ /^[\w\-]+(?:,[\w\-]+)+$/ ? true : false
         end
 
         def self.enum(val, valid_entries, options = {})

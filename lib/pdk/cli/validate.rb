@@ -18,32 +18,55 @@ module PDK
 
           flag nil, :list, 'list all available validators'
 
-          option nil, :validators, "Available validators: #{PDK::Validate.validators.map(&:cmd).join(', ')}", argument: :required do |values|
-            # Ensure the argument is a comma separated list and that each validator exists
-            OptionValidator.enum(OptionValidator.list(values), PDK::Validate.validators.map(&:cmd))
-          end
-
           run do |opts, args, cmd|
+            validator_names = PDK::Validate.validators.map { |v| v.name }
             validators = PDK::Validate.validators
+            targets = []
             reports = nil
 
             if opts[:list]
-              PDK::Validate.validators.each { |v| puts v.cmd }
+              puts "Available validators: #{validator_names.join(', ')}"
               exit 0
             end
 
-            if opts[:validators]
-              vals = OptionValidator.list(opts.fetch(:validators))
-              validators = PDK::Validate.validators.find_all { |v| vals.include?(v.cmd) }
+            if args[0]
+              # This may be a single validator, a list of validators, or a target.
+              if OptionValidator.is_comma_separated_list?(args[0])
+                # This is a comma separated list. Treat each item as a validator.
+
+                vals = OptionNormalizer.comma_separated_list_to_array(args[0])
+                validators = PDK::Validate.validators.find_all { |v| vals.include?(v.name) }
+
+                invalid = vals.find_all { |v| !validator_names.include?(v) }
+                invalid.each do |v|
+                  PDK.logger.warn("Unknown validator '#{v}'. Available validators: #{validator_names.join(', ')}")
+                end
+              else
+                # This is a single item. Check if it's a known validator, or otherwise treat it as a target.
+                val = PDK::Validate.validators.find { |v| args[0] == v.name }
+                if val
+                  validators = [val]
+                else
+                  targets = [args[0]]
+                  # We now know that no validators were passed, so let the user know we're using all of them by default.
+                  PDK.logger.info("Running all available validators...")
+                end
+              end
+            else
+              PDK.logger.info("Running all available validators...")
             end
+
+            # Subsequent arguments are targets.
+            targets.concat(args[1..-1]) if args.length > 1
 
             # Note: Reporting may be delegated to the validation tool itself.
             if opts[:format]
               reports = OptionNormalizer.report_formats(opts.fetch(:format))
             end
 
+            options = targets.empty? ? {} : { :targets => targets }
             validators.each do |validator|
-              result = validator.invoke
+              result = validator.invoke(options)
               if reports
                 reports.each do |r|
                   r.write(result)

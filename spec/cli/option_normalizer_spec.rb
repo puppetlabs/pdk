@@ -2,6 +2,16 @@ require 'spec_helper'
 require 'pdk/cli/util/option_normalizer'
 
 describe PDK::CLI::Util::OptionNormalizer do
+  context 'when normalizing lists' do
+    it 'should normalize and return an array of strings when the list is comma separated' do
+      expect(described_class.comma_separated_list_to_array('a,b,c')).to eq(%w(a b c))
+    end
+
+    it 'should raise an error when the list is invalid' do
+      expect { described_class.comma_separated_list_to_array('a,b c,d') }.to raise_error('Error: expected comma separated list')
+    end
+  end
+
   context 'when parsing report formats and targets' do
 
     context 'when a single format is specified' do

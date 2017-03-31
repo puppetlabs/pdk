@@ -4,10 +4,10 @@ require 'pdk/cli/exec'
 module PDK
   module Validate
     class BaseValidator
-      def self.invoke(report = nil, options = {})
+      def self.invoke(options = {})
         PDK.logger.info("Running #{cmd} with options: #{options}")
-        output = PDK::CLI::Exec.execute(cmd, options)
-        report.write(output) if report
+        result = PDK::CLI::Exec.execute(cmd, options)
+        result
       end
     end
   end

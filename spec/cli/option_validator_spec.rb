@@ -10,14 +10,6 @@ describe PDK::CLI::Util::OptionValidator do
     it 'should return false if the list is not comma separated' do
       expect(described_class.is_comma_separated_list?('a,b c,d')).to eq(false)
     end
-
-    it 'should normalize and return an array of strings when the list is comma separated' do
-      expect(described_class.comma_separated_list_to_array('a,b,c')).to eq(%w(a b c))
-    end
-
-    it 'should raise an error when the list is invalid' do
-      expect { described_class.comma_separated_list_to_array('a,b c,d') }.to raise_error('Error: expected comma separated list')
-    end
   end
 
   context 'when verifying a value exists in an enum' do
