@@ -9,8 +9,10 @@ module PDK
       end
 
       def self.invoke(report = nil)
-        output = PDK::CLI::Exec.execute(cmd)
-        report.write(output) if report
+        PDK.logger.info("Running #{cmd}")
+        result = PDK::CLI::Exec.execute(cmd)
+
+        result
       end
     end
   end

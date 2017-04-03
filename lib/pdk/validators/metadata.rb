@@ -8,10 +8,11 @@ module PDK
         'metadata-json-lint'
       end
 
-      def self.invoke(report = nil)
+      def self.invoke
         PDK.logger.info("Running #{cmd}")
-        output = PDK::CLI::Exec.execute(cmd)
-        report.write(output) if report
+        result = PDK::CLI::Exec.execute(cmd)
+
+        result
       end
     end
   end

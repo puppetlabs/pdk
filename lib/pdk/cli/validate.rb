@@ -25,7 +25,7 @@ module PDK
 
           run do |opts, args, cmd|
             validators = PDK::Validate.validators
-            report = nil
+            reports = nil
 
             if opts[:list]
               PDK::Validate.validators.each { |v| puts v.cmd }
@@ -38,13 +38,17 @@ module PDK
             end
 
             # Note: Reporting may be delegated to the validation tool itself.
-            if opts[:'report-file']
-              format = opts.fetch(:'report-format', PDK::Report.default_format)
-              report = Report.new(opts.fetch(:'report-file'), format)
+            if opts[:format]
+              reports = OptionNormalizer.report_formats(opts.fetch(:format))
             end
 
             validators.each do |validator|
-              validator.invoke(report)
+              result = validator.invoke
+              if reports
+                reports.each do |r|
+                  r.write(result)
+                end
+              end
             end
           end
         end

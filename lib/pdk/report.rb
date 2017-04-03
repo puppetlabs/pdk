@@ -13,6 +13,10 @@ module PDK
       'junit'
     end
 
+    def self.default_target
+      'stdout' # TODO: actually write to stdout
+    end
+
     def write(text)
       if @format == 'junit'
         report = prepare_junit(text)

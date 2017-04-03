@@ -1,6 +1,7 @@
 require 'cri'
 
 require 'pdk/cli/util/option_validator'
+require 'pdk/cli/util/option_normalizer'
 require 'pdk/report'
 
 require 'pdk/cli/new'
