@@ -26,12 +26,11 @@ module PDK
           process.io.stderr.close
         end
 
-        Struct.new("CommandResult", :exit_code, :stdout, :stderr)
-        Struct::CommandResult.new(
-          process.exit_code,
-          stdout,
-          stderr
-        )
+        {
+          :exit_code => process.exit_code,
+          :stdout => stdout,
+          :stderr => stderr
+        }
       end
     end
   end

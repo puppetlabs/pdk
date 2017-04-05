@@ -1,18 +1,16 @@
 require 'pdk'
 require 'pdk/cli/exec'
+require 'pdk/validators/base_validator'
 
 module PDK
   module Validate
-    class RubyLint
-      def self.cmd
-        'rubocop'
+    class RubyLint < BaseValidator
+      def self.name
+        'ruby-lint'
       end
 
-      def self.invoke(report = nil)
-        PDK.logger.info("Running #{cmd}")
-        result = PDK::CLI::Exec.execute(cmd)
-
-        result
+      def self.cmd
+        'rubocop'
       end
     end
   end

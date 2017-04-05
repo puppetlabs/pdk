@@ -1,18 +1,16 @@
 require 'pdk'
 require 'pdk/cli/exec'
+require 'pdk/validators/base_validator'
 
 module PDK
   module Validate
-    class Metadata
-      def self.cmd
-        'metadata-json-lint'
+    class Metadata < BaseValidator
+      def self.name
+        'metadata'
       end
 
-      def self.invoke
-        PDK.logger.info("Running #{cmd}")
-        result = PDK::CLI::Exec.execute(cmd)
-
-        result
+      def self.cmd
+        'metadata-json-lint'
       end
     end
   end
