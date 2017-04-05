@@ -9,17 +9,29 @@ module PDK
       def self.execute(cmd, options = {})
         process = ChildProcess.build(cmd)
 
-        # inherit stdout/stderr from parent...
-        process.io.inherit!
+        process.io.stdout = Tempfile.new('stdout')
+        process.io.stderr = Tempfile.new('stderr')
 
-        # start the process
-        process.start
+        begin
+          # start the process
+          process.start
 
-        # wait indefinitely for process to exit...
-        process.wait
+          # wait indefinitely for process to exit...
+          process.wait
 
-        # get the exit code
-        process.exit_code #=> 0
+          stdout = process.io.stdout.open.read
+          stderr = process.io.stderr.open.read
+        ensure
+          process.io.stdout.close
+          process.io.stderr.close
+        end
+
+        Struct.new("CommandResult", :exit_code, :stdout, :stderr)
+        Struct::CommandResult.new(
+          process.exit_code,
+          stdout,
+          stderr
+        )
       end
     end
   end
