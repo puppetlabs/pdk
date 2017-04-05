@@ -23,7 +23,7 @@ module PDK
             exit 0
           end
 
-          format_desc = <<~EOS
+          format_desc = <<-EOS
             Specify desired output format. Valid formats are '#{PDK::Report.formats.join("', '")}'.
             You may also specify a file to which the formatted output will be directed, for example: '--format=junit:report.xml'.
             This option may be specified multiple times as long as each option specifies a distinct target file.
