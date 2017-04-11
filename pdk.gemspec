@@ -13,9 +13,7 @@ Gem::Specification.new do |spec|
   spec.description = %q{A CLI to facilitate easy, unified development workflows for Puppet modules.}
   spec.homepage    = 'https://github.com/puppetlabs/pdk'
 
-  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
-    f.match(%r{^(test|spec|features)/})
-  end
+  spec.files         = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*', 'exe/**/*']
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
