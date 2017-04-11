@@ -23,7 +23,7 @@ module PDK
 
             run do |opts, args, cmd|
               puts "Creating new module: #{args[0]}"
-              PDK::Generate::Module.invoke
+              PDK::Generate::Module.invoke(args[0])
             end
           end
         end
