@@ -8,8 +8,12 @@ gem 'rubocop'
 
 group(:development, :test) do
   gem 'bundler', '~> 1.13'
-  gem 'rake', '~> 10.0'
+  gem 'rake', '~> 11.0'
   gem 'rspec', '~> 3.0'
   gem 'pry-byebug', '~> 3.4'
+end
+
+group :acceptance do
+  gem 'beaker-rspec'
 end
 
