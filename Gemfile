@@ -13,3 +13,7 @@ group(:development, :test) do
   gem 'pry-byebug', '~> 3.4'
 end
 
+group :acceptance do
+  gem 'beaker-rspec'
+end
+
