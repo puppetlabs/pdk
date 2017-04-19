@@ -26,7 +26,7 @@ module PDK
 
         metadata = PDK::Module::Metadata.new(defaults)
 
-        module_interview(metadata, opts) unless opts[:skip_interview] # TODO: Build way to get info by answers file
+        module_interview(metadata, opts) unless opts[:'skip-interview'] # TODO: Build way to get info by answers file
 
         # TODO: write metadata.json, build module directory structure, and write out templates.
         PDK::CLI::Exec.execute(cmd(opts))

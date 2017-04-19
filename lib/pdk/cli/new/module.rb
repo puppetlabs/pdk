@@ -21,6 +21,8 @@ module PDK
 
             option nil, 'vcs', 'Specifies the version control driver. Valid values: git, none. Default: git.', argument: :required
 
+            flag nil, 'skip-interview', 'When specified, skips interactive querying of metadata.'
+
             run do |opts, args, cmd|
               puts "Creating new module: #{args[0]}"
               PDK::Generate::Module.invoke(args[0], opts)
