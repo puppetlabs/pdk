@@ -41,8 +41,8 @@ module PDK
           puts "\nPuppet uses Semantic Versioning (semver.org) to version modules."
           puts "What version is this module?  [#{metadata.data['version']}]"
           metadata.update('version' => PDK::CLI::Input.get(metadata.data['version']))
-        rescue
-          PDK.logger.error("We're sorry, we could not parse that as a Semantic Version.")
+        rescue StandardError => e
+          PDK.logger.error("We're sorry, we could not parse that as a Semantic Version: #{e.message}")
           retry
         end
 
