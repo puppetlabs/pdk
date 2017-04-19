@@ -38,6 +38,16 @@ module PDK
         puts "to leave it blank."
 
         begin
+          if metadata.data['name'].nil?
+            puts "\nWhat is the name of your module?"
+            metadata.update('name' => PDK::CLI::Input.get())
+          end
+        rescue StandardError => e
+          PDK.logger.error("We're sorry, we could not parse that as a module name: #{e.message}")
+          retry
+        end
+
+        begin
           puts "\nPuppet uses Semantic Versioning (semver.org) to version modules."
           puts "What version is this module?  [#{metadata.data['version']}]"
           metadata.update('version' => PDK::CLI::Input.get(metadata.data['version']))
