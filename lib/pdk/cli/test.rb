@@ -11,8 +11,8 @@ module PDK
         @test ||= Cri::Command.new.tap do |cmd|
           cmd.modify do
             name 'test'
-            usage 'test [type] [options]'
-            summary 'Run tests.'
+            usage _("test [type] [options]")
+            summary _("Run tests.")
           end
 
           cmd.add_command(PDK::CLI::Test::Unit.command)
