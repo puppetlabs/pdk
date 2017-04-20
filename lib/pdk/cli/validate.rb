@@ -25,7 +25,7 @@ module PDK
             reports = nil
 
             if opts[:list]
-              puts "Available validators: #{validator_names.join(', ')}"
+              puts _("Available validators: %{validator_names}") % {validator_names: validator_names.join(', ')}
               exit 0
             end
 
@@ -39,7 +39,7 @@ module PDK
 
                 invalid = vals.find_all { |v| !validator_names.include?(v) }
                 invalid.each do |v|
-                  PDK.logger.warn("Unknown validator '#{v}'. Available validators: #{validator_names.join(', ')}")
+                  PDK.logger.warn(_("Unknown validator '%{v}'. Available validators: %{validators}") % {v: v, validators: validator_names.join(', ')})
                 end
               else
                 # This is a single item. Check if it's a known validator, or otherwise treat it as a target.
@@ -49,11 +49,11 @@ module PDK
                 else
                   targets = [args[0]]
                   # We now know that no validators were passed, so let the user know we're using all of them by default.
-                  PDK.logger.info("Running all available validators...")
+                  PDK.logger.info(_("Running all available validators..."))
                 end
               end
             else
-              PDK.logger.info("Running all available validators...")
+              PDK.logger.info(_("Running all available validators..."))
             end
 
             # Subsequent arguments are targets.

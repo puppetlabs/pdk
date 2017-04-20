@@ -22,7 +22,7 @@ module PDK
             option nil, 'vcs', 'Specifies the version control driver. Valid values: git, none. Default: git.', argument: :required
 
             run do |opts, args, cmd|
-              puts "Creating new module: #{args[0]}"
+              puts _("Creating new module: %{modname}") % {modname: args[0]}
               PDK::Generate::Module.invoke(args[0])
             end
           end
