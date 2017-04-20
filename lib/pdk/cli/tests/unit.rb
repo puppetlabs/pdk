@@ -28,7 +28,7 @@ module PDK
               report = nil
 
               if opts[:list]
-                puts 'List of all available unit tests: (TODO)'
+                puts _("List of all available unit tests: (TODO)")
               end
 
               if opts[:tests]
@@ -41,7 +41,7 @@ module PDK
                 report = Report.new(opts.fetch(:'report-file'), format)
               end
 
-              puts "Running unit tests: #{tests}"
+              puts _("Running unit tests: %{tests}") % {tests: tests}
               PDK::Test::Unit.invoke(tests, report)
             end
           end
