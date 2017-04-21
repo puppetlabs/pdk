@@ -14,41 +14,55 @@ module PDK
       end
 
       def self.invoke(name, opts={})
-        metadata = PDK::Module::Metadata.new(
-          {
-            'name' => name,
-            'version' => '0.1.0',
-            'dependencies' => [
-              { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' }
-            ]
-          }
-        )
+        defaults = {
+          'name' => name,
+          'version' => '0.1.0',
+          'dependencies' => [
+            { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' }
+          ]
+        }
 
-        module_interview(metadata) unless opts[:skip_interview] # TODO: Build way to get info by answers file
+        defaults['license'] = opts[:license] if opts.has_key? :license
+
+        metadata = PDK::Module::Metadata.new(defaults)
+
+        module_interview(metadata, opts) unless opts[:'skip-interview'] # TODO: Build way to get info by answers file
 
         # TODO: write metadata.json, build module directory structure, and write out templates.
         PDK::CLI::Exec.execute(cmd(opts))
       end
 
-      def self.module_interview(metadata)
+      def self.module_interview(metadata, opts={})
         puts "We need to create a metadata.json file for this module.  Please answer the"
         puts "following questions; if the question is not applicable to this module, feel free"
         puts "to leave it blank."
 
         begin
+          if metadata.data['name'].nil?
+            puts "\nWhat is the name of your module?"
+            metadata.update('name' => PDK::CLI::Input.get())
+          end
+        rescue StandardError => e
+          PDK.logger.error("We're sorry, we could not parse that as a module name: #{e.message}")
+          retry
+        end
+
+        begin
           puts "\nPuppet uses Semantic Versioning (semver.org) to version modules."
           puts "What version is this module?  [#{metadata.data['version']}]"
           metadata.update('version' => PDK::CLI::Input.get(metadata.data['version']))
-        rescue
-          PDK.logger.error("We're sorry, we could not parse that as a Semantic Version.")
+        rescue StandardError => e
+          PDK.logger.error("We're sorry, we could not parse that as a Semantic Version: #{e.message}")
           retry
         end
 
         puts "\nWho wrote this module?  [#{metadata.data['author']}]"
         metadata.data.update('author' => PDK::CLI::Input.get(metadata.data['author']))
 
-        puts "\nWhat license does this module code fall under?  [#{metadata.data['license']}]"
-        metadata.data.update('license' => PDK::CLI::Input.get(metadata.data['license']))
+        if not opts.has_key? :license
+          puts "\nWhat license does this module code fall under?  [#{metadata.data['license']}]"
+          metadata.data.update('license' => PDK::CLI::Input.get(metadata.data['license']))
+        end
 
         puts "\nHow would you describe this module in a single sentence?"
         metadata.data.update('summary' => PDK::CLI::Input.get(metadata.data['summary']))

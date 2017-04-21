@@ -57,7 +57,7 @@ Running validations on `new_module`:
 
 ### Run unit tests
 
-The default template sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing. 
+The default template sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing.
 
 1. In the module's directory, run all unit tests with:
 
@@ -93,6 +93,10 @@ Specifies the license this module is written under. See https://spdx.org/license
 #### `--vcs=vcs_provider`
 
 Specifies the version control driver. Valid values: `git`, `none`. Default: `git`.
+
+#### `--skip-interview`
+
+Suppress interactive queries for initial values. All questions will use the default values.
 
 #### `module_name`
 
@@ -209,4 +213,3 @@ Specifies options to pass through to the actual test-runner. In the default temp
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pdk.
-
