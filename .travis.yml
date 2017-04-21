@@ -4,6 +4,13 @@ rvm:
   - 2.1.9
   - 2.3.3
 before_install: gem install bundler -v 1.14.6
-bundler_args: --without development
+bundler_args: "--without development"
 script:
- - "bundle exec rake spec"
+  - bundle exec rake spec
+notifications:
+  hipchat:
+    rooms:
+      secure: AqLd2pbdyfyuFsRgaoBEOC+OQUCK6cm5oWAAV9EQUx3G/iS0PSz7R95NApGomAQ/0wwVp5W63Iyn2qi+YT+RfacdZpQu1ypIlQT9GNUt39kkNc6Czb2fHd3ceERHXOaLeZQfPagdDLzxhKMwzWl3PqlC4/TzPvd6/H14doX+p3LKkadwXxenxDoRdZQuBX4P7rctKPfdupEl8fSA0AQlLNrtPF4PI+i/1rHlYeQvHBsEo7DGK+6s5g/PpETHmlMvXEK9fkZCZiDAmUqt/R5lD6Ndly26fMnwUb6PsWiyrnHSYE33nitgsvgZZkELRQEFRAcR+tbY4/tqo5XB9mT8TkeXGFREmqM2Hnoe8JUAniM1DTEiawu2US7LhVfo1z/k2jAgSymdZougYZwP/JDygfus1dGnkgAs7h/riOh6B8koyNJXORZMtqWYkov5Cu2fH13zZOhI5F000cSgzSvOgUBSD5Zvax8ixzQ3G8YbyfNjYq7Q+pv3Tv3losEHeSBwm8F6740GDJWJaBn/il9kgSFI1P5RMQw6wd1VcXjWUBhQZHqHgEqznSjPuIaPTDpT42JpopGhXZh1sK89/6XcB6sZGX6k8PStJFDE1+LSC5L9Xaf0lPS2/FHAvyct2TRFcsD8v83nyN/KZ1CTIRbY376cmYYlkxqPX5GFVNfewdo=
+    template:
+      - '%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message} (<a href="%{build_url}">Details</a> | <a href="%{compare_url}">PR/Diff</a>)'
+    format: html
