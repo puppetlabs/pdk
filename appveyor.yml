@@ -12,3 +12,11 @@ test_script:
   - type Gemfile.lock
   - ruby -v
   - bundle exec rake spec
+
+notifications:
+  - provider: HipChat
+    auth_token:
+      secure: W9FwcoLtq+0XUqE3lM6m8zGdPdIOfHNafvdVD0qtoG0ra3C3hkseSaHR6uO8h/h2
+    room: 3519749
+    template: >
+      {{repositoryName}}#{{buildNumber}} ({{#isPullRequest}}PR {{pullRequestId}}{{/isPullRequest}}{{^isPullRequest}}{{branch}}{{/isPullRequest}} - {{commitId}} : {{commitAuthor}}): {{status}} (<a href="{{buildUrl}}">Details</a>{{#isPullRequest}} | <a href="https://github.com/{{repositoryName}}/pull/{{pullRequestId}}">PR</a>{{/isPullRequest}})
