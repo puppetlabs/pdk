@@ -1,0 +1,258 @@
+# German translations for puppet development kit package.
+# Copyright (C) 2017 Puppet, Inc.
+# This file is distributed under the same license as the puppet development kit package.
+# David Schmitt <david.schmitt@puppet.com>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: puppet development kit \n"
+"Report-Msgid-Bugs-To: docs@puppet.com\n"
+"POT-Creation-Date: 2017-04-21 12:09-0700\n"
+"PO-Revision-Date: 2017-04-24 15:47+0100\n"
+"Last-Translator: David Schmitt <david.schmitt@puppet.com>\n"
+"Language-Team: German <>\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.7\n"
+
+#: ../lib/pdk/cli.rb:17
+msgid "pdk command [options]"
+msgstr "pdk befehl [optionen]"
+
+#: ../lib/pdk/cli.rb:18
+msgid "Puppet Development Kit"
+msgstr "Puppet Development Kit"
+
+#: ../lib/pdk/cli.rb:19
+msgid "The shortest path to better modules."
+msgstr "Der kürzeste Pfad zu besseren Modulen.\n"
+
+#: ../lib/pdk/cli.rb:21
+msgid "show help for this command"
+msgstr "Hilfetext für diesen Befehl anzeigen"
+
+#: ../lib/pdk/cli.rb:26
+msgid ""
+"Specify desired output format. Valid formats are '%{available_formats}'. You "
+"may also specify a file to which the formatted output will be directed, for "
+"example: '--format=junit:report.xml'. This option may be specified multiple "
+"times as long as each option specifies a distinct target file."
+msgstr ""
+"Das gewünschte Ausgabeformat. Gültige Werte sind '%{available_formats}'. "
+"Zusätzlich kann hier ein Dateiname angegeben werden um die formatierte "
+"Ausgabe zu speichern. Zum Beispiel: '--format=junit:report.xml'. Solange "
+"jeder Wert ein eigene Ausgabedatei angibt kann diese Option mehrmals "
+"angeführt werden.\n"
+
+#: ../lib/pdk/cli/new.rb:11
+msgid "new <type> [options]"
+msgstr "new <objekt> [optionen]"
+
+#: ../lib/pdk/cli/new.rb:12
+msgid "create a new module, etc."
+msgstr "erzeuge ein neues Modul, etc."
+
+#: ../lib/pdk/cli/new.rb:13
+msgid ""
+"Creates a new instance of <type> using the options relevant to that type of "
+"thing"
+msgstr ""
+"Legt ein neues <object> an. Dabei werden Optionen speziell für diese Ding "
+"ausgewertet"
+
+#: ../lib/pdk/cli/new/module.rb:15
+msgid "module [options] <module_name> [target_dir]"
+msgstr "module [optionen] <modulname> [zielverzeichnis]"
+
+#: ../lib/pdk/cli/new/module.rb:16
+msgid "Create a new module named <module_name> using given options"
+msgstr ""
+"Erzeugt ein neues Modul mit dem Name <modulename>, und den angegebenen "
+"Optionen"
+
+#: ../lib/pdk/cli/new/module.rb:18
+msgid "Overrides the template to use for this module."
+msgstr "Verwende ein eigenes Vorlagerepository für dieses Modul."
+
+#: ../lib/pdk/cli/new/module.rb:20
+msgid ""
+"Specifies the license this module is written under. This should be a "
+"identifier from https://spdx.org/licenses/. Common values are 'Apache-2.0', "
+"'MIT', or 'proprietary'."
+msgstr ""
+"Verwende die angegebene Lizenz für dieses Modul. Erlaubte Werte sind "
+"'identifier' von https://spdx.org/licenses/. Übliche Lizenzen sind "
+"'Apache-2.0', 'MIT', oder 'proprietary'."
+
+#: ../lib/pdk/cli/new/module.rb:22
+msgid ""
+"Specifies the version control driver. Valid values: 'git', 'none'. Default: "
+"'git'."
+msgstr ""
+"Verwende diesen Adapter zur Versionskontrolle. Gültige Werte: 'git', 'none'. "
+"Standardwert: 'git'."
+
+#: ../lib/pdk/cli/new/module.rb:24
+msgid "When specified, skips interactive querying of metadata."
+msgstr "Überspringe interaktive Abfrage von Metadaten."
+
+#: ../lib/pdk/cli/new/module.rb:27
+msgid "Creating new module: %{modname}"
+msgstr "Neues Modul: %{modname}"
+
+#: ../lib/pdk/cli/test.rb:14
+msgid "test [type] [options]"
+msgstr "test [art] [optionen]"
+
+#: ../lib/pdk/cli/test.rb:15
+msgid "Run tests."
+msgstr "Führe Tests aus."
+
+#: ../lib/pdk/cli/tests/unit.rb:16
+msgid "unit [options]"
+msgstr "unit [optionen]"
+
+#: ../lib/pdk/cli/tests/unit.rb:17
+msgid "Run unit tests."
+msgstr "Führe Unit-Tests aus."
+
+#: ../lib/pdk/cli/tests/unit.rb:19
+msgid "list all available unit tests and their descriptions"
+msgstr "Gibt die Namen aller verfügbaren Unit-Tests aus."
+
+#: ../lib/pdk/cli/tests/unit.rb:21
+msgid "a comma-separated list of tests to run"
+msgstr "eine Komma-getrennte Liste alle Tests, die ausgeführt werden sollen"
+
+#: ../lib/pdk/cli/tests/unit.rb:25
+msgid "options to pass through to the actual test-runner"
+msgstr ""
+"diese Optionen werden an das zugrundeliegende Testwerkzeug weitergereicht"
+
+#: ../lib/pdk/cli/tests/unit.rb:31
+msgid "List of all available unit tests: (TODO)"
+msgstr "Verfügbare Unit-Tests: (TODO)"
+
+#: ../lib/pdk/cli/tests/unit.rb:44
+msgid "Running unit tests: %{tests}"
+msgstr "Führe aus: Unit test '%{tests}'"
+
+#: ../lib/pdk/cli/util/option_normalizer.rb:6
+msgid "Error: expected comma separated list"
+msgstr "Fehler: Komma-getrennte Liste erwartet"
+
+#: ../lib/pdk/cli/util/option_validator.rb:14
+msgid "Error: the following values are invalid: %{invalid_entries}"
+msgstr "Fehler: die folgenden Einträge sind ungültig: %{invalid_entries}"
+
+#: ../lib/pdk/cli/validate.rb:15
+msgid "validate [options]"
+msgstr "validate [optionen]"
+
+#: ../lib/pdk/cli/validate.rb:16
+msgid "Run static analysis tests."
+msgstr "Statische Analysen ausführen."
+
+#: ../lib/pdk/cli/validate.rb:17
+msgid ""
+"Run metadata-json-lint, puppet parser validate, puppet-lint, or rubocop."
+msgstr ""
+"metadata-json-lint, puppet parser validate, puppet-lint, oder rubocop "
+"ausführen."
+
+#: ../lib/pdk/cli/validate.rb:19
+msgid "list all available validators"
+msgstr "Gibt die Namen aller verfügbaren Prüfer aus."
+
+#: ../lib/pdk/cli/validate.rb:28
+msgid "Available validators: %{validator_names}"
+msgstr "Verfügbare Prüfer: %{validator_names}"
+
+#: ../lib/pdk/cli/validate.rb:42
+msgid "Unknown validator '%{v}'. Available validators: %{validators}"
+msgstr "Prüfer '%{v}' nicht erkannt. Verfügbare Prüfer: %{validators}"
+
+#: ../lib/pdk/cli/validate.rb:52 ../lib/pdk/cli/validate.rb:56
+msgid "Running all available validators..."
+msgstr "Führe alle verfügbaren Prüfer aus..."
+
+#: ../lib/pdk/generators/module.rb:36
+msgid ""
+"We need to create a metadata.json file for this module. Please answer the "
+"following questions; if the question is not applicable to this module, feel "
+"free to leave it blank."
+msgstr ""
+"Um die metadata.json Datei für dieses Modul zu ereugen, werden einige Werte "
+"benötigt. Bitte beantworten Sie die folgenden Fragen. Sollte eine der Fragen "
+"nicht relevant sein, kann der Standardwert verwendet werden."
+
+#: ../lib/pdk/generators/module.rb:44
+msgid "What is the name of your module?"
+msgstr "Wie lautet der Name dieses Moduls?"
+
+#: ../lib/pdk/generators/module.rb:48
+msgid "We're sorry, we could not parse that as a module name: %{message}"
+msgstr "Der Wert konnte nicht als Modulname interpretiert werden: %{message}"
+
+#: ../lib/pdk/generators/module.rb:53
+msgid "Puppet uses Semantic Versioning (semver.org) to version modules."
+msgstr "Puppet verwendet Semantic Versioning (http://semver.org) für Module."
+
+#: ../lib/pdk/generators/module.rb:54
+msgid "What version is this module? [%{default_version}]"
+msgstr "Was ist die aktuelle Version dieses Moduls? [%{default_version}]"
+
+#: ../lib/pdk/generators/module.rb:57
+msgid "We're sorry, we could not parse that as a Semantic Version: %{message}"
+msgstr "Der Wert konnte nicht als Modulname interpretiert werden: %{message}"
+
+#: ../lib/pdk/generators/module.rb:61
+msgid "Who wrote this module? [%{default_author}]"
+msgstr "Wer ist der Autor dieses Moduls? [%{default_author}]"
+
+#: ../lib/pdk/generators/module.rb:65
+msgid "What license does this module code fall under? [%{default_license}]"
+msgstr "Unter welcher Lizenz ist das Modul erhältlich? [%{default_license}]"
+
+#: ../lib/pdk/generators/module.rb:69
+msgid "How would you describe this module in a single sentence?"
+msgstr "Beschreibe das Modul in einem Satz:"
+
+#: ../lib/pdk/generators/module.rb:72
+msgid "Where is this module's source code repository?"
+msgstr "Wo ist das Repository für dieses Modul?"
+
+#: ../lib/pdk/generators/module.rb:75
+msgid ""
+"Where can others go to learn more about this module? "
+"[%{default_project_page}]"
+msgstr "Wo kann man mehr über dieses Modul erfahren? [%{default_project_page}]"
+
+#: ../lib/pdk/generators/module.rb:78
+msgid ""
+"Where can others go to file issues about this module? [%{default_issues_url}]"
+msgstr ""
+"Wo kann man Fehler über dieses Modul berichten? [%{default_issues_url}]"
+
+#: ../lib/pdk/generators/module.rb:86
+msgid "About to generate this metadata; continue? [n/Y]"
+msgstr "Bereit metadata.json zu generieren; weitermachen? [n/Y]"
+
+#: ../lib/pdk/generators/module.rb:89
+msgid "Aborting..."
+msgstr "Abbruch..."
+
+#: ../lib/pdk/validators/base_validator.rb:8
+msgid "Running %{cmd} with options: %{options}"
+msgstr "'%{cmd}' wird mit Optionen '%{options}' ausgeführt."
+
+#~ msgid ""
+#~ "We need to create a metadata.json file for this module. Please answer the"
+#~ msgstr ""
+#~ "Um die `metadata.json` Datei zu erzeugen benötigen wir ein paar Eckdaten."
+
+#~ msgid "to leave it blank."
+#~ msgstr "indem eine leere Antwort gegeben wird."
