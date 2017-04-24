@@ -16,6 +16,12 @@ module PDK
 
           val
         end
+
+        # Validate the module name against the regular expression in the
+        # documentation: https://docs.puppet.com/puppet/4.10/modules_fundamentals.html#allowed-module-names
+        def self.is_valid_module_name?(string)
+          !(string =~ /\A[a-z][a-z0-9_]*\Z/).nil?
+        end
       end
     end
   end
