@@ -248,11 +248,3 @@ msgstr "Abbruch..."
 #: ../lib/pdk/validators/base_validator.rb:8
 msgid "Running %{cmd} with options: %{options}"
 msgstr "'%{cmd}' wird mit Optionen '%{options}' ausgeführt."
-
-#~ msgid ""
-#~ "We need to create a metadata.json file for this module. Please answer the"
-#~ msgstr ""
-#~ "Um die `metadata.json` Datei zu erzeugen benötigen wir ein paar Eckdaten."
-
-#~ msgid "to leave it blank."
-#~ msgstr "indem eine leere Antwort gegeben wird."
