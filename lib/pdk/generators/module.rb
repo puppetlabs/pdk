@@ -1,22 +1,22 @@
+require 'etc'
+require 'pathname'
+require 'fileutils'
+
 require 'pdk'
 require 'pdk/logger'
 require 'pdk/module/metadata'
+require 'pdk/module/templatedir'
 require 'pdk/cli/exec'
 require 'pdk/cli/input'
 
 module PDK
   module Generate
     class Module
-      def self.cmd(opts={})
-        # TODO
-        cmd = 'pwd'
-        cmd
-      end
+      DEFAULT_TEMPLATE = 'https://github.com/puppetlabs/pdk-module-template'
 
-      def self.invoke(name, opts={})
+      def self.invoke(opts={})
         defaults = {
-          'name' => name,
-          'version' => '0.1.0',
+          'version'      => '0.1.0',
           'dependencies' => [
             { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' }
           ]
@@ -28,8 +28,43 @@ module PDK
 
         module_interview(metadata, opts) unless opts[:'skip-interview'] # TODO: Build way to get info by answers file
 
-        # TODO: write metadata.json, build module directory structure, and write out templates.
-        PDK::CLI::Exec.execute(cmd(opts))
+        module_dir = File.expand_path(opts[:target_dir])
+        prepare_module_directory(module_dir)
+
+        template_url = opts.fetch(:'template-url', DEFAULT_TEMPLATE)
+
+        PDK::Module::TemplateDir.new(template_url).with_templates do |templates|
+          templates.render do |file_path, file_content|
+            file = Pathname.new(module_dir) + file_path
+            file.dirname.mkpath
+            file.write(file_content)
+          end
+
+          # Add information about the template used to generate the module to the
+          # metadata (for a future update command).
+          metadata.update!(templates.metadata)
+
+          File.open(File.join(module_dir, 'metadata.json'), 'w') do |metadata_file|
+            metadata_file.puts metadata.to_json
+          end
+        end
+      end
+
+      def self.prepare_module_directory(target_dir)
+        if File.exists?(target_dir)
+          raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % {:dir => target_dir}
+        end
+
+        [
+          File.join(target_dir, 'manifests'),
+          File.join(target_dir, 'templates'),
+        ].each do |dir|
+          begin
+            FileUtils.mkdir_p(dir)
+          rescue SystemCallError
+            raise PDK::CLI::FatalError, _("Unable to create directory '%{dir}'") % {:dir => dir}
+          end
+        end
       end
 
       def self.module_interview(metadata, opts={})
@@ -40,12 +75,11 @@ module PDK
         )
 
         begin
-          if metadata.data['name'].nil?
-            puts "\n" + _("What is the name of your module?")
-            metadata.update!('name' => PDK::CLI::Input.get())
-          end
+          system_user = Etc.getlogin
+          puts "\n" + _("What is your Puppet Forge username?  [%{username}]") % {:username => system_user}
+          metadata.update!('name' => "#{PDK::CLI::Input.get(system_user)}-#{opts[:name]}")
         rescue StandardError => e
-          PDK.logger.error(_("We're sorry, we could not parse that as a module name: %{message}") % {message: e.message})
+          PDK.logger.error(_("We're sorry, we could not parse your module name: %{message}") % {:message => e.message})
           retry
         end
 

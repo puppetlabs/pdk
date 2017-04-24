@@ -20,6 +20,5 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'cri', '~> 2.7.1'
   spec.add_runtime_dependency 'childprocess', '~> 0.6.2'
-
   spec.add_runtime_dependency 'gettext-setup', '~> 0.24'
 end
