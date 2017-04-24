@@ -13,22 +13,22 @@ module PDK
         def self.command
           @unit ||= Cri::Command.define do
             name 'unit'
-            usage 'unit [options]'
-            summary 'Run unit tests.'
+            usage _("unit [options]")
+            summary _("Run unit tests.")
 
-            flag nil, :list, 'list all available unit tests and their descriptions'
+            flag nil, :list, _("list all available unit tests and their descriptions")
 
-            option nil, :tests, 'a comma-separated list of tests to run', argument: :required do |values|
+            option nil, :tests, _("a comma-separated list of tests to run"), argument: :required do |values|
               OptionValidator.list(values)
             end
 
-            option nil, :runner_options, 'options to pass through to the actual test-runner', argument: :required
+            option nil, :runner_options, _("options to pass through to the actual test-runner"), argument: :required
 
             run do |opts, args, cmd|
               report = nil
 
               if opts[:list]
-                puts 'List of all available unit tests: (TODO)'
+                puts _("List of all available unit tests: (TODO)")
               end
 
               if opts[:tests]
@@ -41,7 +41,7 @@ module PDK
                 report = Report.new(opts.fetch(:'report-file'), format)
               end
 
-              puts "Running unit tests: #{tests}"
+              puts _("Running unit tests: %{tests}") % {tests: tests}
               PDK::Test::Unit.invoke(tests, report)
             end
           end

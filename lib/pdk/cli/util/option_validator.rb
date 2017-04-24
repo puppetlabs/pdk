@@ -11,7 +11,7 @@ module PDK
           invalid_entries = vals.find_all { |e| !valid_entries.include?(e) }
 
           unless invalid_entries.empty?
-            raise "Error: the following values are invalid: #{invalid_entries}"
+            raise _("Error: the following values are invalid: %{invalid_entries}") % {invalid_entries: invalid_entries}
           end
 
           val

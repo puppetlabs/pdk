@@ -8,9 +8,9 @@ module PDK
         @new ||= Cri::Command.new.tap do |cmd|
           cmd.modify do
             name 'new'
-            usage 'new <type> [options]'
-            summary 'create a new module, etc.'
-            description 'Creates a new instance of <type> using the options relevant to that type of thing'
+            usage _("new <type> [options]")
+            summary _("create a new module, etc.")
+            description _("Creates a new instance of <type> using the options relevant to that type of thing")
           end
 
           cmd.add_command(PDK::CLI::New::Module.command)

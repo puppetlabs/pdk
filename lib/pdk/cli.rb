@@ -14,20 +14,21 @@ module PDK
       @base ||= Cri::Command.new.tap do |cmd|
         cmd.modify do
           name 'pdk'
-          usage 'pdk command [options]'
-          summary 'Puppet SDK'
-          description 'The shortest path to better modules.'
+          usage _("pdk command [options]")
+          summary _("Puppet Development Kit")
+          description _("The shortest path to better modules.")
 
-          flag :h, :help, 'show help for this command' do |_, c|
+          flag :h, :help, _("show help for this command") do |_, c|
             puts c.help
             exit 0
           end
 
-          format_desc = <<-EOS
-            Specify desired output format. Valid formats are '#{PDK::Report.formats.join("', '")}'.
-            You may also specify a file to which the formatted output will be directed, for example: '--format=junit:report.xml'.
-            This option may be specified multiple times as long as each option specifies a distinct target file.
-          EOS
+          format_desc = _(
+            "Specify desired output format. Valid formats are '%{available_formats}'. " +
+            "You may also specify a file to which the formatted output will be directed, " +
+            "for example: '--format=junit:report.xml'. This option may be specified " +
+            "multiple times as long as each option specifies a distinct target file."
+          ) % {available_formats: PDK::Report.formats.join("', '")}
 
           option :f, :format, format_desc, { argument: :required, multiple: true } do |values|
             values.compact.each do |v|

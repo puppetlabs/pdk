@@ -33,47 +33,49 @@ module PDK
       end
 
       def self.module_interview(metadata, opts={})
-        puts "We need to create a metadata.json file for this module.  Please answer the"
-        puts "following questions; if the question is not applicable to this module, feel free"
-        puts "to leave it blank."
+        puts _(
+          "We need to create a metadata.json file for this module. Please answer the " +
+          "following questions; if the question is not applicable to this module, feel free " +
+          "to leave it blank."
+        )
 
         begin
           if metadata.data['name'].nil?
-            puts "\nWhat is the name of your module?"
+            puts "\n" + _("What is the name of your module?")
             metadata.update('name' => PDK::CLI::Input.get())
           end
         rescue StandardError => e
-          PDK.logger.error("We're sorry, we could not parse that as a module name: #{e.message}")
+          PDK.logger.error(_("We're sorry, we could not parse that as a module name: %{message}") % {message: e.message})
           retry
         end
 
         begin
-          puts "\nPuppet uses Semantic Versioning (semver.org) to version modules."
-          puts "What version is this module?  [#{metadata.data['version']}]"
+          puts "\n" + _("Puppet uses Semantic Versioning (semver.org) to version modules.")
+          puts _("What version is this module? [%{default_version}]") % {default_version: metadata.data['version']}
           metadata.update('version' => PDK::CLI::Input.get(metadata.data['version']))
         rescue StandardError => e
-          PDK.logger.error("We're sorry, we could not parse that as a Semantic Version: #{e.message}")
+          PDK.logger.error(_("We're sorry, we could not parse that as a Semantic Version: %{message}") % {message: e.message})
           retry
         end
 
-        puts "\nWho wrote this module?  [#{metadata.data['author']}]"
+        puts "\n" + _("Who wrote this module? [%{default_author}]") % {default_author: metadata.data['author']}
         metadata.data.update('author' => PDK::CLI::Input.get(metadata.data['author']))
 
         if not opts.has_key? :license
-          puts "\nWhat license does this module code fall under?  [#{metadata.data['license']}]"
+          puts "\n" + _("What license does this module code fall under? [%{default_license}]") % {default_license: metadata.data['license']}
           metadata.data.update('license' => PDK::CLI::Input.get(metadata.data['license']))
         end
 
-        puts "\nHow would you describe this module in a single sentence?"
+        puts "\n" + _("How would you describe this module in a single sentence?")
         metadata.data.update('summary' => PDK::CLI::Input.get(metadata.data['summary']))
 
-        puts "\nWhere is this module's source code repository?"
+        puts "\n" + _("Where is this module's source code repository?")
         metadata.data.update('source' => PDK::CLI::Input.get(metadata.data['source']))
 
-        puts "\nWhere can others go to learn more about this module?  [#{metadata.data['project_page'] || '(none)'}]"
+        puts "\n" + _("Where can others go to learn more about this module? [%{default_project_page}]") % {default_project_page: (metadata.data['project_page'] || '(none)')}
         metadata.data.update('project_page' => PDK::CLI::Input.get(metadata.data['project_page']))
 
-        puts "\nWhere can others go to file issues about this module? [#{metadata.data['issues_url'] || '(none)'}]"
+        puts "\n" + _("Where can others go to file issues about this module? [%{default_issues_url}]") % {default_issues_url: (metadata.data['issues_url'] || '(none)')}
         metadata.data.update('issues_url' => PDK::CLI::Input.get(metadata.data['issues_url']))
 
         puts
@@ -81,10 +83,10 @@ module PDK
         puts metadata.to_json
         puts '-' * 40
         puts
-        puts "About to generate this metadata; continue? [n/Y]"
+        puts _("About to generate this metadata; continue? [n/Y]")
 
         if PDK::CLI::Input.get('Y') !~ /^y(es)?$/i
-          puts "Aborting..."
+          puts _("Aborting...")
           exit 0
         end
       end

@@ -1,0 +1,211 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2017 Puppet, Inc.
+# This file is distributed under the same license as the puppet development kit package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2017.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: puppet development kit \n"
+"Report-Msgid-Bugs-To: docs@puppet.com\n"
+"POT-Creation-Date: 2017-04-21 12:09-0700\n"
+"PO-Revision-Date: 2017-04-21 12:09-0700\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: ../lib/pdk/cli.rb:17
+msgid "pdk command [options]"
+msgstr ""
+
+#: ../lib/pdk/cli.rb:18
+msgid "Puppet Development Kit"
+msgstr ""
+
+#: ../lib/pdk/cli.rb:19
+msgid "The shortest path to better modules."
+msgstr ""
+
+#: ../lib/pdk/cli.rb:21
+msgid "show help for this command"
+msgstr ""
+
+#: ../lib/pdk/cli.rb:26
+msgid "Specify desired output format. Valid formats are '%{available_formats}'. You may also specify a file to which the formatted output will be directed, for example: '--format=junit:report.xml'. This option may be specified multiple times as long as each option specifies a distinct target file."
+msgstr ""
+
+#: ../lib/pdk/cli/new.rb:11
+msgid "new <type> [options]"
+msgstr ""
+
+#: ../lib/pdk/cli/new.rb:12
+msgid "create a new module, etc."
+msgstr ""
+
+#: ../lib/pdk/cli/new.rb:13
+msgid "Creates a new instance of <type> using the options relevant to that type of thing"
+msgstr ""
+
+#: ../lib/pdk/cli/new/module.rb:15
+msgid "module [options] <module_name> [target_dir]"
+msgstr ""
+
+#: ../lib/pdk/cli/new/module.rb:16
+msgid "Create a new module named <module_name> using given options"
+msgstr ""
+
+#: ../lib/pdk/cli/new/module.rb:18
+msgid "Overrides the template to use for this module."
+msgstr ""
+
+#: ../lib/pdk/cli/new/module.rb:20
+msgid "Specifies the license this module is written under. This should be a identifier from https://spdx.org/licenses/. Common values are 'Apache-2.0', 'MIT', or 'proprietary'."
+msgstr ""
+
+#: ../lib/pdk/cli/new/module.rb:22
+msgid "Specifies the version control driver. Valid values: 'git', 'none'. Default: 'git'."
+msgstr ""
+
+#: ../lib/pdk/cli/new/module.rb:24
+msgid "When specified, skips interactive querying of metadata."
+msgstr ""
+
+#: ../lib/pdk/cli/new/module.rb:27
+msgid "Creating new module: %{modname}"
+msgstr ""
+
+#: ../lib/pdk/cli/test.rb:14
+msgid "test [type] [options]"
+msgstr ""
+
+#: ../lib/pdk/cli/test.rb:15
+msgid "Run tests."
+msgstr ""
+
+#: ../lib/pdk/cli/tests/unit.rb:16
+msgid "unit [options]"
+msgstr ""
+
+#: ../lib/pdk/cli/tests/unit.rb:17
+msgid "Run unit tests."
+msgstr ""
+
+#: ../lib/pdk/cli/tests/unit.rb:19
+msgid "list all available unit tests and their descriptions"
+msgstr ""
+
+#: ../lib/pdk/cli/tests/unit.rb:21
+msgid "a comma-separated list of tests to run"
+msgstr ""
+
+#: ../lib/pdk/cli/tests/unit.rb:25
+msgid "options to pass through to the actual test-runner"
+msgstr ""
+
+#: ../lib/pdk/cli/tests/unit.rb:31
+msgid "List of all available unit tests: (TODO)"
+msgstr ""
+
+#: ../lib/pdk/cli/tests/unit.rb:44
+msgid "Running unit tests: %{tests}"
+msgstr ""
+
+#: ../lib/pdk/cli/util/option_normalizer.rb:6
+msgid "Error: expected comma separated list"
+msgstr ""
+
+#: ../lib/pdk/cli/util/option_validator.rb:14
+msgid "Error: the following values are invalid: %{invalid_entries}"
+msgstr ""
+
+#: ../lib/pdk/cli/validate.rb:15
+msgid "validate [options]"
+msgstr ""
+
+#: ../lib/pdk/cli/validate.rb:16
+msgid "Run static analysis tests."
+msgstr ""
+
+#: ../lib/pdk/cli/validate.rb:17
+msgid "Run metadata-json-lint, puppet parser validate, puppet-lint, or rubocop."
+msgstr ""
+
+#: ../lib/pdk/cli/validate.rb:19
+msgid "list all available validators"
+msgstr ""
+
+#: ../lib/pdk/cli/validate.rb:28
+msgid "Available validators: %{validator_names}"
+msgstr ""
+
+#: ../lib/pdk/cli/validate.rb:42
+msgid "Unknown validator '%{v}'. Available validators: %{validators}"
+msgstr ""
+
+#: ../lib/pdk/cli/validate.rb:52 ../lib/pdk/cli/validate.rb:56
+msgid "Running all available validators..."
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:36
+msgid "We need to create a metadata.json file for this module. Please answer the following questions; if the question is not applicable to this module, feel free to leave it blank."
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:44
+msgid "What is the name of your module?"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:48
+msgid "We're sorry, we could not parse that as a module name: %{message}"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:53
+msgid "Puppet uses Semantic Versioning (semver.org) to version modules."
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:54
+msgid "What version is this module? [%{default_version}]"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:57
+msgid "We're sorry, we could not parse that as a Semantic Version: %{message}"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:61
+msgid "Who wrote this module? [%{default_author}]"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:65
+msgid "What license does this module code fall under? [%{default_license}]"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:69
+msgid "How would you describe this module in a single sentence?"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:72
+msgid "Where is this module's source code repository?"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:75
+msgid "Where can others go to learn more about this module? [%{default_project_page}]"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:78
+msgid "Where can others go to file issues about this module? [%{default_issues_url}]"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:86
+msgid "About to generate this metadata; continue? [n/Y]"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:89
+msgid "Aborting..."
+msgstr ""
+
+#: ../lib/pdk/validators/base_validator.rb:8
+msgid "Running %{cmd} with options: %{options}"
+msgstr ""
