@@ -13,8 +13,16 @@ desc 'Run acceptance tests'
 RSpec::Core::RakeTask.new(:acceptance) do |t|
   require 'beaker-hostgenerator'
 
+  unless ENV['PACKAGE_BUILD_VERSION'] then
+    abort 'Environment variable PACKAGE_BUILD_VERSION must be set to the SHA of a puppet-sdk build'
+  end
+
   test_target = ENV['TEST_TARGET']
   if test_target then
+    unless ENV['BUILD_SERVER'] or test_target !~ /win/ then
+      abort 'Testing against Windows requires environment variable BUILD_SERVER '\
+            'to be set to the hostname of your build server (JIRA BKR-1109)'
+    end
     puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
     cli = BeakerHostGenerator::CLI.new(["#{test_target}{type=foss}", '--disable-default-role'])
     ENV['BEAKER_setfile'] = generated_hosts_filename = 'acceptance_hosts.yml'

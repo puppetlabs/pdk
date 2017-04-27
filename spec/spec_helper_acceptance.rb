@@ -8,10 +8,15 @@ RSpec.configure do |c|
   c.before(:suite) do
     
     # Install pdk on workstation host
-    install_puppetlabs_dev_repo(workstation, 'puppet-sdk', ENV['PACKAGE_BUILD_VERSION'], 'repo-config')
+    if workstation['platform'] =~ /windows/
+      # BKR-1109 requests a neater way to install an MSI
+      msi_url = "http://#{ENV['BUILD_SERVER']}/puppet-sdk/#{ENV['PACKAGE_BUILD_VERSION']}/repos/windows/puppet-sdk-x64.msi"
+      generic_install_msi_on(workstation, msi_url)
+    else
+      install_puppetlabs_dev_repo(workstation, 'puppet-sdk', ENV['PACKAGE_BUILD_VERSION'], 'repo-config')
 
-    # Install pdk package
-    workstation.install_package('puppet-sdk')
-
+      # Install pdk package
+      workstation.install_package('puppet-sdk')
+    end
   end
 end
