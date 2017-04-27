@@ -59,6 +59,7 @@ build-iPhoneSimulator/
 /pkg/
 /spec/reports/
 /tmp/
+/vendor/gems/
 
 # beaker output directories
 /log/
