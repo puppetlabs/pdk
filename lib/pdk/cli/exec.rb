@@ -1,4 +1,5 @@
 require 'childprocess'
+require 'tempfile'
 
 module PDK
   module CLI
