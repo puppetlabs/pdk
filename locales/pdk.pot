@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: puppet development kit \n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2017-04-21 12:09-0700\n"
-"PO-Revision-Date: 2017-04-21 12:09-0700\n"
+"POT-Creation-Date: 2017-05-02 14:07+1000\n"
+"PO-Revision-Date: 2017-05-02 14:07+1000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -36,6 +36,10 @@ msgstr ""
 
 #: ../lib/pdk/cli.rb:26
 msgid "Specify desired output format. Valid formats are '%{available_formats}'. You may also specify a file to which the formatted output will be directed, for example: '--format=junit:report.xml'. This option may be specified multiple times as long as each option specifies a distinct target file."
+msgstr ""
+
+#: ../lib/pdk/cli.rb:45
+msgid "Enable debug output."
 msgstr ""
 
 #: ../lib/pdk/cli/new.rb:11
