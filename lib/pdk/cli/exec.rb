@@ -7,8 +7,8 @@ module PDK
       # TODO: decide how to handle multiple output targets when underlying tool doesn't support that
       # TODO: decide what this method should return
       # TODO: decide how/when to connect stdin to child process for things like pry
-      def self.execute(cmd, options = {})
-        process = ChildProcess.build(cmd)
+      def self.execute(*cmd)
+        process = ChildProcess.build(*cmd)
 
         process.io.stdout = Tempfile.new('stdout')
         process.io.stderr = Tempfile.new('stderr')
