@@ -14,6 +14,12 @@ module PDK
       self.formatter = proc do |severity,datetime,progname,msg|
         "pdk (#{severity}): #{msg}\n"
       end
+
+      self.level = ::Logger::INFO
+    end
+
+    def enable_debug_output
+      self.level = ::Logger::DEBUG
     end
   end
 end

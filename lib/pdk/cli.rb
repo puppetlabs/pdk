@@ -41,6 +41,10 @@ module PDK
               end
             end
           end
+
+          flag :d, :debug, _("Enable debug output.") do |_, _|
+            PDK.logger.enable_debug_output
+          end
         end
 
         cmd.add_command(Cri::Command.new_basic_help)
