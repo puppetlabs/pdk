@@ -1,0 +1,3 @@
+# Allow longer lines
+Metrics/LineLength:
+  Max: 200
