@@ -63,3 +63,4 @@ build-iPhoneSimulator/
 # beaker output directories
 /log/
 /repo-config/
+/acceptance_hosts.yml
