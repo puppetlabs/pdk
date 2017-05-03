@@ -9,7 +9,7 @@ describe PDK::CLI::Validate do
        PDK::Validate::RubyLint].each do |validator|
         expect(validator).to receive(:invoke).with({})
       end
-      expect_any_instance_of(Logger).to receive(:info).with('Running all available validators...')
+      expect(logger).to receive(:info).with('Running all available validators...')
       PDK::CLI.run(['validate'])
     end
   end
@@ -53,7 +53,7 @@ describe PDK::CLI::Validate do
     end
 
     it 'should warn about unknown validators' do
-      expect_any_instance_of(Logger).to receive(:warn).with('Unknown validator \'bad-val\'. Available validators: metadata, puppet-lint, puppet-parser, ruby-lint')
+      expect(logger).to receive(:warn).with('Unknown validator \'bad-val\'. Available validators: metadata, puppet-lint, puppet-parser, ruby-lint')
       expect(PDK::Validate::PuppetLint).to receive(:invoke).with({})
 
       PDK::CLI.run(['validate', 'puppet-lint,bad-val'])
@@ -76,7 +76,7 @@ describe PDK::CLI::Validate do
        PDK::Validate::RubyLint].each do |validator|
         expect(validator).to receive(:invoke).with({:targets => ['lib/', 'manifests/']})
       end
-      expect_any_instance_of(Logger).to receive(:info).with('Running all available validators...')
+      expect(logger).to receive(:info).with('Running all available validators...')
       PDK::CLI.run(['validate', 'lib/', 'manifests/'])
     end
   end
