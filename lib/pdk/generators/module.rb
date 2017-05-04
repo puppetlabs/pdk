@@ -80,9 +80,9 @@ module PDK
         )
 
         begin
-          system_user = Etc.getlogin
-          puts "\n" + _("What is your Puppet Forge username?  [%{username}]") % {:username => system_user}
-          metadata.update!('name' => "#{PDK::CLI::Input.get(system_user)}-#{opts[:name]}")
+          puts ""
+          forge_user = PDK::CLI::Input.get(_("What is your Puppet Forge username?"), Etc.getlogin)
+          metadata.update!('name' => "#{forge_user}-#{opts[:name]}")
         rescue StandardError => e
           PDK.logger.error(_("We're sorry, we could not parse your module name: %{message}") % {:message => e.message})
           retry
@@ -90,41 +90,46 @@ module PDK
 
         begin
           puts "\n" + _("Puppet uses Semantic Versioning (semver.org) to version modules.")
-          puts _("What version is this module? [%{default_version}]") % {default_version: metadata.data['version']}
-          metadata.update!('version' => PDK::CLI::Input.get(metadata.data['version']))
+          module_version = PDK::CLI::Input.get(_("What version is this module?"), metadata.data['version'])
+          metadata.update!('version' => module_version)
         rescue StandardError => e
           PDK.logger.error(_("We're sorry, we could not parse that as a Semantic Version: %{message}") % {message: e.message})
           retry
         end
 
-        puts "\n" + _("Who wrote this module? [%{default_author}]") % {default_author: metadata.data['author']}
-        metadata.update!('author' => PDK::CLI::Input.get(metadata.data['author']))
+        puts ""
+        module_author = PDK::CLI::Input.get(_("Who wrote this module?"), metadata.data['author'])
+        metadata.update!('author' => module_author)
 
-        if not opts.has_key? :license
-          puts "\n" + _("What license does this module code fall under? [%{default_license}]") % {default_license: metadata.data['license']}
-          metadata.update!('license' => PDK::CLI::Input.get(metadata.data['license']))
+        unless opts.has_key?(:license)
+          puts ""
+          module_license = PDK::CLI::Input.get(_("What license does this module code fall under?"), metadata.data['license'])
+          metadata.update!('license' => module_license)
         end
 
-        puts "\n" + _("How would you describe this module in a single sentence?")
-        metadata.update!('summary' => PDK::CLI::Input.get(metadata.data['summary']))
+        puts ""
+        module_summary = PDK::CLI::Input.get(_("How would you describe this module in a single sentence?"))
+        metadata.update!('summary' => module_summary)
 
-        puts "\n" + _("Where is this module's source code repository?")
-        metadata.update!('source' => PDK::CLI::Input.get(metadata.data['source']))
+        puts ""
+        module_source = PDK::CLI::Input.get(_("Where is this module's source code repository?"))
+        metadata.update!('source' => module_source)
 
-        puts "\n" + _("Where can others go to learn more about this module? [%{default_project_page}]") % {default_project_page: (metadata.data['project_page'] || '(none)')}
-        metadata.update!('project_page' => PDK::CLI::Input.get(metadata.data['project_page']))
+        puts ""
+        module_page = PDK::CLI::Input.get(_("Where can others go to learn more about this module?"), metadata.data['project_page'])
+        metadata.update!('project_page' => module_page)
 
-        puts "\n" + _("Where can others go to file issues about this module? [%{default_issues_url}]") % {default_issues_url: (metadata.data['issues_url'] || '(none)')}
-        metadata.update!('issues_url' => PDK::CLI::Input.get(metadata.data['issues_url']))
+        puts ""
+        module_issues = PDK::CLI::Input.get(_("Where can others go to file issues about this module?"), metadata.data['issues_url'])
+        metadata.update!('issues_url' => module_issues)
 
         puts
         puts '-' * 40
         puts metadata.to_json
         puts '-' * 40
         puts
-        puts _("About to generate this metadata; continue? [n/Y]")
 
-        if PDK::CLI::Input.get('Y') !~ /^y(es)?$/i
+        if PDK::CLI::Input.get(_("About to generate this module; continue?"), 'Y') !~ /^y(es)?$/i
           puts _("Aborting...")
           exit 0
         end
