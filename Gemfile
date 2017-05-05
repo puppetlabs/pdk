@@ -11,6 +11,7 @@ group(:development, :test) do
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
   gem 'pry-byebug', '~> 3.4'
+  gem 'rubocop-rspec'
 end
 
 group :acceptance do
