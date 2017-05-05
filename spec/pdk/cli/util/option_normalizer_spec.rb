@@ -4,7 +4,7 @@ require 'pdk/cli/util/option_normalizer'
 describe PDK::CLI::Util::OptionNormalizer do
   context 'when normalizing lists' do
     it 'should normalize and return an array of strings when the list is comma separated' do
-      expect(described_class.comma_separated_list_to_array('a,b,c')).to eq(%w(a b c))
+      expect(described_class.comma_separated_list_to_array('a,b,c')).to eq(%w[a b c])
     end
 
     it 'should raise an error when the list is invalid' do
@@ -13,7 +13,6 @@ describe PDK::CLI::Util::OptionNormalizer do
   end
 
   context 'when parsing report formats and targets' do
-
     context 'when a single format is specified' do
       it 'should return a single Report with the default target when target is not specified' do
         reports = described_class.report_formats(['text'])
