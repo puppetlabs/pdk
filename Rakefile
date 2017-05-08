@@ -37,4 +37,12 @@ RSpec::Core::RakeTask.new(:acceptance) do |t|
   t.pattern = 'spec/spec_helper_acceptance.rb,spec/acceptance/**.rb'
 end
 
+desc 'run static analysis with rubocop'
+task(:rubocop) do
+  require 'rubocop'
+  cli = RuboCop::CLI.new
+  exit_code = cli.run(%w(--display-cop-names --format simple))
+  raise "RuboCop detected offenses" if exit_code != 0
+end
+
 task :default => :spec

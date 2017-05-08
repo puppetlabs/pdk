@@ -1,5 +1,8 @@
 require: rubocop-rspec
 
+AllCops:
+  TargetRubyVersion: 2.1.9
+
 # Allow longer lines
 Metrics/LineLength:
   Max: 200
