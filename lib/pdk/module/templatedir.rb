@@ -1,20 +1,15 @@
-require 'erb'
-require 'ostruct'
 require 'yaml'
 require 'pdk/util'
 require 'pdk/cli/exec'
 require 'pdk/cli/errors'
+require 'pdk/template_file'
 
 module PDK
   module Module
     class TemplateDir
-      def initialize(path_or_url)
-        @path_or_url = path_or_url
-      end
-
-      def with_templates(&block)
-        if File.directory?(@path_or_url)
-          @path = @path_or_url
+      def initialize(path_or_url, &block)
+        if File.directory?(path_or_url)
+          @path = path_or_url
         else
           # If path_or_url isn't a directory on disk, we assume that it is
           # a remote git repository.
@@ -29,14 +24,14 @@ module PDK
             raise PDK::CLI::FatalError, _("Unable to find git binary")
           end
 
-          clone_result = PDK::CLI::Exec.execute(@git_path, 'clone', @path_or_url, temp_dir)
+          clone_result = PDK::CLI::Exec.execute(@git_path, 'clone', path_or_url, temp_dir)
           unless clone_result[:exit_code] == 0
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
-            raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'") % {:repo => @path_or_url, :dest => temp_dir}
+            raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'") % {:repo => path_or_url, :dest => temp_dir}
           end
           @path = temp_dir
-          @repo = @path_or_url
+          @repo = path_or_url
         end
 
         @moduleroot_dir = File.join(@path, 'moduleroot')
@@ -44,7 +39,11 @@ module PDK
 
         yield self
       ensure
-        cleanup
+        # If we cloned a git repo to get the template, remove the clone once
+        # we're done with it.
+        if @repo
+          FileUtils.remove_dir(@path)
+        end
       end
 
       def metadata
@@ -55,13 +54,6 @@ module PDK
           else
             {}
           end
-        end
-      end
-
-      def cleanup
-        # If we cloned a git repo to get the templates, clean it up
-        if @repo
-          FileUtils.remove_dir(@path)
         end
       end
 
@@ -105,60 +97,20 @@ module PDK
 
       def render(&block)
         rendered_files = files_in_template.each do |template_file|
-          case File.extname(template_file)
-          when ".erb"
-            engine = ERBEngine
-            dest_path = template_file.sub(/\.erb\Z/, '')
-          else
-            engine = PlainEngine
-            dest_path = template_file
-          end
-
           PDK.logger.debug(_("Rendering '%{template}'...") % {:template => template_file})
+          dest_path = template_file.sub(/\.erb\Z/, '')
 
           begin
-            dest_content = engine.render(File.join(@moduleroot_dir, template_file), {:configs => config_for(dest_path)})
+            dest_content = PDK::TemplateFile.new(File.join(@moduleroot_dir, template_file), {:configs => config_for(dest_path)}).render
           rescue => e
             error_msg = _(
               "Failed to render template '%{template}'\n" +
               "%{exception}: %{message}"
               ) % {:template => template_file, :exception => e.class, :message => e.message}
-            raise PDK::CLI::FatalError.new(error_msg, 1)
+            raise PDK::CLI::FatalError, error_msg
           end
 
           yield dest_path, dest_content
-        end
-      end
-
-      class PlainEngine
-        def self.render(path, _)
-          if File.file?(path) && File.readable?(path)
-            File.read(path)
-          else
-            nil
-          end
-        end
-      end
-
-      class ERBEngine < OpenStruct
-        def initialize(hash)
-          # Support modulesync style instance variable
-          if hash.has_key?(:configs)
-            @configs = hash[:configs]
-          end
-          super
-        end
-
-        def self.render(path, data)
-          ERBEngine.new(data).render(path)
-        end
-
-        def render(path)
-          if File.file?(path) && File.readable?(path)
-            ::ERB.new(File.read(path), nil, '-').result(binding)
-          else
-            nil
-          end
         end
       end
     end
