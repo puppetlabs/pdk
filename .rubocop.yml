@@ -1,0 +1,14 @@
+require: rubocop-rspec
+
+# Allow longer lines
+Metrics/LineLength:
+  Max: 200
+
+# rspec uses long describe blocks, so allow long blocks under spec/
+Style/BlockLength:
+  Exclude:
+    - 'spec/**/*.rb'
+
+# Allow longer specs
+RSpec/ExampleLength:
+  Max: 50
