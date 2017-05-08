@@ -8,6 +8,7 @@ require 'pdk/module/metadata'
 require 'pdk/module/templatedir'
 require 'pdk/cli/exec'
 require 'pdk/cli/input'
+require 'pdk/util'
 
 module PDK
   module Generate
@@ -23,19 +24,25 @@ module PDK
         }
 
         defaults['license'] = opts[:license] if opts.has_key? :license
+        target_dir = File.expand_path(opts[:target_dir])
+
+        if File.exists?(target_dir)
+          raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % {:dir => target_dir}
+        end
 
         metadata = PDK::Module::Metadata.new(defaults)
 
-        module_interview(metadata, opts) unless opts[:'skip-interview'] # TODO: Build way to get info by answers file
+        module_interview(metadata, opts) unless opts[:'skip-interview'] # @todo Build way to get info by answers file
 
-        module_dir = File.expand_path(opts[:target_dir])
-        prepare_module_directory(module_dir)
+        temp_target_dir = PDK::Util.make_tmpdir_name('pdk-module-target')
+
+        prepare_module_directory(temp_target_dir)
 
         template_url = opts.fetch(:'template-url', DEFAULT_TEMPLATE)
 
         PDK::Module::TemplateDir.new(template_url).with_templates do |templates|
           templates.render do |file_path, file_content|
-            file = Pathname.new(module_dir) + file_path
+            file = Pathname.new(temp_target_dir) + file_path
             file.dirname.mkpath
             file.write(file_content)
           end
@@ -44,17 +51,15 @@ module PDK
           # metadata (for a future update command).
           metadata.update!(templates.metadata)
 
-          File.open(File.join(module_dir, 'metadata.json'), 'w') do |metadata_file|
+          File.open(File.join(temp_target_dir, 'metadata.json'), 'w') do |metadata_file|
             metadata_file.puts metadata.to_json
           end
         end
+
+        FileUtils.mv(temp_target_dir, target_dir)
       end
 
       def self.prepare_module_directory(target_dir)
-        if File.exists?(target_dir)
-          raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % {:dir => target_dir}
-        end
-
         [
           File.join(target_dir, 'manifests'),
           File.join(target_dir, 'templates'),
