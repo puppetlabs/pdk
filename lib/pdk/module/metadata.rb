@@ -21,10 +21,10 @@ module PDK
 
       def initialize(params = {})
         @data = DEFAULTS.dup
-        update(params) if params
+        update!(params) if params
       end
 
-      def update(data)
+      def update!(data)
         # TODO: validate all data
         process_name(data) if data['name']
         @data.merge!(data)
