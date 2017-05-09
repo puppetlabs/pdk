@@ -16,23 +16,23 @@ module PDK
       @base ||= Cri::Command.new.tap do |cmd|
         cmd.modify do
           name 'pdk'
-          usage _("pdk command [options]")
-          summary _("Puppet Development Kit")
-          description _("The shortest path to better modules.")
+          usage _('pdk command [options]')
+          summary _('Puppet Development Kit')
+          description _('The shortest path to better modules.')
 
-          flag :h, :help, _("show help for this command") do |_, c|
+          flag :h, :help, _('show help for this command') do |_, c|
             puts c.help
             exit 0
           end
 
           format_desc = _(
-            "Specify desired output format. Valid formats are '%{available_formats}'. " +
-            "You may also specify a file to which the formatted output will be directed, " +
-            "for example: '--format=junit:report.xml'. This option may be specified " +
-            "multiple times as long as each option specifies a distinct target file."
-          ) % {available_formats: PDK::Report.formats.join("', '")}
+            "Specify desired output format. Valid formats are '%{available_formats}'. " \
+            'You may also specify a file to which the formatted output will be directed, ' \
+            "for example: '--format=junit:report.xml'. This option may be specified " \
+            'multiple times as long as each option specifies a distinct target file.'
+          ) % { available_formats: PDK::Report.formats.join("', '") }
 
-          option :f, :format, format_desc, { argument: :required, multiple: true } do |values|
+          option :f, :format, format_desc, argument: :required, multiple: true do |values|
             values.compact.each do |v|
               if v.include?(':')
                 format = v.split(':', 2).first
@@ -44,7 +44,7 @@ module PDK
             end
           end
 
-          flag :d, :debug, _("Enable debug output.") do |_, _|
+          flag :d, :debug, _('Enable debug output.') do |_, _|
             PDK.logger.enable_debug_output
           end
         end

@@ -13,27 +13,23 @@ module PDK
         def self.command
           @unit ||= Cri::Command.define do
             name 'unit'
-            usage _("unit [options]")
-            summary _("Run unit tests.")
+            usage _('unit [options]')
+            summary _('Run unit tests.')
 
-            flag nil, :list, _("list all available unit tests and their descriptions")
+            flag nil, :list, _('list all available unit tests and their descriptions')
 
-            option nil, :tests, _("a comma-separated list of tests to run"), argument: :required do |values|
+            option nil, :tests, _('a comma-separated list of tests to run'), argument: :required do |values|
               OptionValidator.list(values)
             end
 
-            option nil, :runner_options, _("options to pass through to the actual test-runner"), argument: :required
+            option nil, :runner_options, _('options to pass through to the actual test-runner'), argument: :required
 
-            run do |opts, args, cmd|
+            run do |opts, _args, _cmd|
               report = nil
 
-              if opts[:list]
-                puts _("List of all available unit tests: (TODO)")
-              end
+              puts _('List of all available unit tests: (TODO)') if opts[:list]
 
-              if opts[:tests]
-                tests = opts.fetch(:tests)
-              end
+              tests = opts.fetch(:tests) if opts[:tests]
 
               # Note: Reporting may be delegated to the validation tool itself.
               if opts[:'report-file']
@@ -41,7 +37,7 @@ module PDK
                 report = Report.new(opts.fetch(:'report-file'), format)
               end
 
-              puts _("Running unit tests: %{tests}") % {tests: tests}
+              puts _('Running unit tests: %{tests}') % { tests: tests }
               PDK::Test::Unit.invoke(tests, report)
             end
           end
