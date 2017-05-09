@@ -28,29 +28,33 @@ describe PDK::CLI::Validate do
   end
 
   context 'when validators are provided as arguments' do
-    it 'onlies invoke a single validator when only one is provided' do
-      expect(PDK::Validate::Metadata).to receive(:invoke).with({})
+    context 'with a single validator' do
+      it 'only invokes that single validator' do
+        expect(PDK::Validate::Metadata).to receive(:invoke).with({})
 
-      [PDK::Validate::PuppetLint,
-       PDK::Validate::PuppetParser,
-       PDK::Validate::RubyLint].each do |validator|
-        expect(validator).not_to receive(:invoke)
+        [PDK::Validate::PuppetLint,
+         PDK::Validate::PuppetParser,
+         PDK::Validate::RubyLint].each do |validator|
+          expect(validator).not_to receive(:invoke)
+        end
+
+        PDK::CLI.run(%w[validate metadata])
       end
-
-      PDK::CLI.run(%w[validate metadata])
     end
 
-    it 'invokes each provided validator when multiple are provided' do
-      [PDK::Validate::PuppetLint, PDK::Validate::PuppetParser].each do |validator|
-        expect(validator).to receive(:invoke).with({})
-      end
+    context 'with multiple providers' do
+      it 'invokes each provided validator' do
+        [PDK::Validate::PuppetLint, PDK::Validate::PuppetParser].each do |validator|
+          expect(validator).to receive(:invoke).with({})
+        end
 
-      [PDK::Validate::Metadata, PDK::Validate::RubyLint].each do |validator|
-        expect(validator).not_to receive(:invoke)
-      end
+        [PDK::Validate::Metadata, PDK::Validate::RubyLint].each do |validator|
+          expect(validator).not_to receive(:invoke)
+        end
 
-      PDK::CLI.run(['validate', 'puppet-lint,puppet-parser'])
-    end
+        PDK::CLI.run(['validate', 'puppet-lint,puppet-parser'])
+      end
+    end 
 
     it 'warns about unknown validators' do
       expect(logger).to receive(:warn).with('Unknown validator \'bad-val\'. Available validators: metadata, puppet-lint, puppet-parser, ruby-lint')
