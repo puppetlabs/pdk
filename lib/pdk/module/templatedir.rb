@@ -46,12 +46,7 @@ module PDK
           # use.
           temp_dir = PDK::Util.make_tmpdir_name('pdk-module-template')
 
-          @git_path = PDK::Util.which('git')
-          if @git_path.nil?
-            raise PDK::CLI::FatalError, _("Unable to find git binary")
-          end
-
-          clone_result = PDK::CLI::Exec.execute(@git_path, 'clone', path_or_url, temp_dir)
+          clone_result = PDK::CLI::Exec.git('clone', path_or_url, temp_dir)
           unless clone_result[:exit_code] == 0
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
@@ -83,7 +78,7 @@ module PDK
       # @api public
       def metadata
         if @repo
-          ref_result = PDK::CLI::Exec.execute(@git_path, '--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long')
+          ref_result = PDK::CLI::Exec.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long')
           if ref_result[:exit_code] == 0
             {'template-url' => @repo, 'template-ref' => ref_result[:stdout].strip}
           else

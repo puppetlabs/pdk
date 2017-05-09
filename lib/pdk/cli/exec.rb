@@ -33,6 +33,19 @@ module PDK
           :stderr => stderr
         }
       end
+
+      def self.pdk_basedir
+        @pdk_basedir ||= Gem.win_platform? ? 'C:\Program Files\PuppetLabs\DevelopmentKit' : '/opt/puppetlabs/sdk'
+      end
+
+      def self.git_bindir
+        @git_dir ||= File.join(pdk_basedir, 'private', 'git', 'bin')
+      end
+
+      def self.git(*args)
+        git_path = ENV['PDK_USE_SYSTEM_BINARIES'].nil? ? File.join(git_bindir, 'git') : 'git'
+        execute(git_path, *args)
+      end
     end
   end
 end
