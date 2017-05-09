@@ -1,12 +1,24 @@
 sudo: false
 language: ruby
+
 rvm:
   - 2.1.9
   - 2.3.3
+env:
+ - "CHECK=spec"
+ - "CHECK=rubocop"
+
+matrix:
+  exclude:
+    - rvm: 2.1.9
+      env: "CHECK=rubocop"
+  allow_failures:
+    - env: "CHECK=rubocop"
+
 before_install: gem install bundler -v 1.14.6
 bundler_args: "--without development"
 script:
-  - bundle exec rake spec
+  - "bundle exec rake $CHECK"
 notifications:
   hipchat:
     rooms:

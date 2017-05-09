@@ -6,7 +6,6 @@ end
 
 RSpec.configure do |c|
   c.before(:suite) do
-    
     # Install pdk on workstation host
     if workstation['platform'] =~ /windows/
       # BKR-1109 requests a neater way to install an MSI
