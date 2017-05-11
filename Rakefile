@@ -13,8 +13,8 @@ desc 'Run acceptance tests'
 RSpec::Core::RakeTask.new(:acceptance) do |t|
   require 'beaker-hostgenerator'
 
-  unless ENV['PACKAGE_BUILD_VERSION'] then
-    abort 'Environment variable PACKAGE_BUILD_VERSION must be set to the SHA of a puppet-sdk build'
+  unless ENV['SHA'] then
+    abort 'Environment variable SHA must be set to the SHA of a puppet-sdk build'
   end
 
   test_target = ENV['TEST_TARGET']
