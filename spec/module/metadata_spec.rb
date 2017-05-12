@@ -29,6 +29,14 @@ describe PDK::Module::Metadata do
 
       expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, /Unable to open '#{metadata_json_path}'/)
     end
+
+    it 'raises an ArgumentError if the file contains invalid JSON' do
+      allow(File).to receive(:file?).with(metadata_json_path).and_return(true)
+      allow(File).to receive(:readable?).with(metadata_json_path).and_return(true)
+      allow(File).to receive(:read).with(metadata_json_path).and_return('{"foo": }')
+
+      expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, /Invalid JSON.*unexpected token/)
+    end
   end
 
   context 'when processing and validating metadata' do

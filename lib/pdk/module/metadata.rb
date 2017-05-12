@@ -33,7 +33,12 @@ module PDK
           raise ArgumentError, _("Unable to open '%{file}' for reading") % {file: metadata_json_path}
         end
 
-        data = JSON.parse(File.read(metadata_json_path))
+        begin
+          data = JSON.parse(File.read(metadata_json_path))
+        rescue JSON::JSONError => e
+          raise ArgumentError, _("Invalid JSON in metadata.json: %{msg}") % {msg: e.message}
+        end
+
         new(data)
       end
 

@@ -57,6 +57,7 @@ module PDK
         end
 
         @moduleroot_dir = File.join(@path, 'moduleroot')
+        @object_dir = File.join(@path, 'object_templates')
         validate_module_template!
 
         yield self
@@ -116,6 +117,32 @@ module PDK
           end
 
           yield dest_path, dest_content
+        end
+      end
+
+      # Searches the template directory for template files that can be used to
+      # render files for the specified object type.
+      #
+      # @param object_type [Symbol] The object type, e.g. (`:class`,
+      # `:defined_type`, `:fact`, etc).
+      #
+      # @return [Hash{Symbol => String}] if the templates are available in the
+      # template dir, otherwise `nil`. The returned hash can contain two keys,
+      # :object contains the path on disk to the template for the object, :spec
+      # contains the path on disk to the template for the object's spec file
+      # (if available).
+      #
+      # @api public
+      def object_template_for(object_type)
+        object_path = File.join(@object_dir, "#{object_type.to_s}.erb")
+        spec_path = File.join(@object_dir, "#{object_type.to_s}_spec.erb")
+
+        if File.file?(object_path) && File.readable?(object_path)
+          result = {object: object_path}
+          result[:spec] = spec_path if File.file?(spec_path) && File.readable?(spec_path)
+          result
+        else
+          nil
         end
       end
     private
