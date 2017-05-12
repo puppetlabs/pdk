@@ -24,6 +24,19 @@ module PDK
         update!(params) if params
       end
 
+      def self.from_file(metadata_json_path)
+        unless File.file?(metadata_json_path)
+          raise ArgumentError, _("'%{file}' does not exist or is not a file") % {file: metadata_json_path}
+        end
+
+        unless File.readable?(metadata_json_path)
+          raise ArgumentError, _("Unable to open '%{file}' for reading") % {file: metadata_json_path}
+        end
+
+        data = JSON.parse(File.read(metadata_json_path))
+        new(data)
+      end
+
       def update!(data)
         # TODO: validate all data
         process_name(data) if data['name']
