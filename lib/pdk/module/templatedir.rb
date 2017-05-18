@@ -145,6 +145,20 @@ module PDK
           nil
         end
       end
+
+      # Generate a hash of data to be used when rendering object templates.
+      #
+      # Read `config_defaults.yml` from the root of the template directory (if
+      # it exists) build a hash of values from the value of the `:global`
+      # key.
+      #
+      # @return [Hash] The data that will be available to the template via the
+      # `@configs` instance variable.
+      #
+      # @api private
+      def object_config
+        config_for(nil)
+      end
     private
       # Validate the content of the template directory.
       #
@@ -210,7 +224,7 @@ module PDK
         end
 
         file_config = @config.fetch(:global, {})
-        file_config.merge(@config.fetch(dest_path, {}))
+        file_config.merge(@config.fetch(dest_path, {})) unless dest_path.nil?
       end
     end
   end

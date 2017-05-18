@@ -26,12 +26,16 @@ describe PDK::Generate::PuppetObject do
       end
     end
 
-    context '#with_template_paths' do
+    context '#with_templates' do
       let(:default_templatedir) { instance_double("PDK::Module::TemplateDir", 'default') }
       let(:default_object_paths) { {object: 'default_object_path', spec: 'default_spec_path'} }
+      let(:configs_hash) { {} }
 
       before do
         allow(default_templatedir).to receive(:object_template_for).with(object_type).and_return(default_object_paths)
+        allow(default_templatedir).to receive(:object_config).and_return(configs_hash)
+        allow(cli_templatedir).to receive(:object_config).and_return(configs_hash)
+        allow(metadata_templatedir).to receive(:object_config).and_return(configs_hash)
         allow(PDK::Module::TemplateDir).to receive(:new).with(PDK::Generate::Module::DEFAULT_TEMPLATE).and_yield(default_templatedir)
       end
 
@@ -50,7 +54,7 @@ describe PDK::Generate::PuppetObject do
           end
 
           it 'yields the path to the object templates from the template dir specified in the CLI' do
-            expect { |b| subject.with_template_paths(&b) }.to yield_with_args(cli_object_paths)
+            expect { |b| subject.with_templates(&b) }.to yield_with_args(cli_object_paths, {})
           end
         end
 
@@ -60,7 +64,7 @@ describe PDK::Generate::PuppetObject do
           end
           
           it 'raises a fatal error' do
-            expect { |b| subject.with_template_paths(&b) }.to raise_error(PDK::CLI::FatalError, /Unable to find/)
+            expect { |b| subject.with_templates(&b) }.to raise_error(PDK::CLI::FatalError, /Unable to find/)
           end
         end
       end
@@ -81,7 +85,7 @@ describe PDK::Generate::PuppetObject do
             end
 
             it 'yields the path to the object templates from the template dir specified in the metadata' do
-              expect { |b| subject.with_template_paths(&b) }.to yield_with_args(metadata_object_paths)
+              expect { |b| subject.with_templates(&b) }.to yield_with_args(metadata_object_paths, {})
             end
           end
 
@@ -92,14 +96,14 @@ describe PDK::Generate::PuppetObject do
 
             it 'falls back to the paths from the default template dir' do
               expect(default_templatedir).to receive(:object_template_for).with(object_type)
-              subject.with_template_paths { }
+              subject.with_templates { }
             end
           end
         end
 
         context 'and a template-url is not found in the module metadata' do
           it 'yields the path to the object templates from the default template dir' do
-            expect { |b| subject.with_template_paths(&b) }.to yield_with_args(default_object_paths)
+            expect { |b| subject.with_templates(&b) }.to yield_with_args(default_object_paths, {})
           end
         end
       end
@@ -112,6 +116,7 @@ describe PDK::Generate::PuppetObject do
       before do
         allow(subject).to receive(:target_object_path).and_return(target_object_path)
         allow(subject).to receive(:target_spec_path).and_return(target_spec_path)
+        allow(subject).to receive(:template_data).and_return({})
       end
 
       context 'when the target files do not exist' do
@@ -124,15 +129,15 @@ describe PDK::Generate::PuppetObject do
         end
 
         it 'renders the object file' do
-          expect(subject).to receive(:with_template_paths).and_yield({object: object_template})
-          expect(subject).to receive(:render_file).with(target_object_path, object_template)
+          expect(subject).to receive(:with_templates).and_yield({object: object_template}, {})
+          expect(subject).to receive(:render_file).with(target_object_path, object_template, {:configs => {}})
           subject.run
         end
 
         it 'renders the spec file if a template for it was found' do
-          expect(subject).to receive(:with_template_paths).and_yield({object: object_template, spec: spec_template})
-          expect(subject).to receive(:render_file).with(target_object_path, object_template)
-          expect(subject).to receive(:render_file).with(target_spec_path, spec_template)
+          expect(subject).to receive(:with_templates).and_yield({object: object_template, spec: spec_template}, {})
+          expect(subject).to receive(:render_file).with(target_object_path, object_template, {:configs => {}})
+          expect(subject).to receive(:render_file).with(target_spec_path, spec_template, {:configs => {}})
           subject.run
         end
       end

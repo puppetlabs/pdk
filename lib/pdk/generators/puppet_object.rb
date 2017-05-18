@@ -88,9 +88,11 @@ module PDK
           end
         end
 
-        with_template_paths do |template_path|
-          render_file(target_object_path, template_path[:object])
-          render_file(target_spec_path, template_path[:spec]) if template_path[:spec]
+        with_templates do |template_path, config_hash|
+          data = template_data.merge(:configs => config_hash)
+
+          render_file(target_object_path, template_path[:object], data)
+          render_file(target_spec_path, template_path[:spec], data) if template_path[:spec]
         end
       end
 
@@ -100,13 +102,15 @@ module PDK
       #   written to. Any necessary directories will be automatically created.
       # @param template_path [String] The path on disk to the file containing
       #   the template.
+      # @param data [Hash{Object => Object}] The data to be provided to the
+      #   template when rendering.
       #
       # @return [void]
       #
       # @api private
-      def render_file(dest_path, template_path)
+      def render_file(dest_path, template_path, data)
         PDK.logger.info(_("Creating %{file} from template.") % {file: dest_path})
-        file_content = PDK::TemplateFile.new(template_path, template_data).render
+        file_content = PDK::TemplateFile.new(template_path, data).render
         FileUtils.mkdir_p(File.dirname(dest_path))
         File.open(dest_path, 'w') { |f| f.write file_content }
       end
@@ -119,11 +123,13 @@ module PDK
       #   the path on disk to the template file for the object, :spec contains
       #   the path on disk to the template file for the tests for the object
       #   (if it exists).
+      # @yieldparam config_hash [Hash{Object => Object}] the contents of the
+      #   :global key in the config_defaults.yml file.
       #
       # @raise [PDK::CLI::FatalError] if no suitable template could be found.
       #
       # @api private
-      def with_template_paths
+      def with_templates
         templates.each do |template|
           if template[:url].nil?
             PDK.logger.debug(_("No %{dir_type} template specified; trying next template directory.") % {dir_type: template[:type]})
@@ -134,7 +140,8 @@ module PDK
             template_paths = template_dir.object_template_for(object_type)
 
             if template_paths
-              yield template_paths
+              config_hash = template_dir.object_config
+              yield template_paths, config_hash
               return
             else
               if template[:allow_fallback]
