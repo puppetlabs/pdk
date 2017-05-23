@@ -10,6 +10,7 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 namespace :acceptance do
+
   desc 'Run acceptance tests against a puppet-sdk package'
   RSpec::Core::RakeTask.new(:package) do |t|
     require 'beaker-hostgenerator'
@@ -22,7 +23,7 @@ namespace :acceptance do
 
     test_target = ENV['TEST_TARGET']
     if test_target then
-      unless ENV['BUILD_SERVER'] or test_target !~ /win/ then
+      unless ENV['BUILD_SERVER'] || test_target !~ /win/
         abort 'Testing against Windows requires environment variable BUILD_SERVER '\
               'to be set to the hostname of your build server (JIRA BKR-1109)'
       end
@@ -37,16 +38,19 @@ namespace :acceptance do
       puts 'No TEST_TARGET set, falling back to regular beaker config'
     end
 
-    t.pattern = 'spec/spec_helper_acceptance.rb,spec/acceptance/**.rb'
+    t.pattern = 'spec/acceptance/**.rb'
   end
 
   desc 'Run acceptance tests against current code'
   RSpec::Core::RakeTask.new(:local) do |t|
     ENV['BEAKER_TESTMODE'] = 'local'
 
+    # Set beaker to not attempt to allocate or provision any host
+    # See bug QA-2991 - beaker-testmode_switcher should do this automatically
     ENV['BEAKER_setfile'] = 'spec/acceptance/nodesets/none.yml'
+    ENV['BEAKER_provision'] = 'no'
 
-    t.pattern = 'spec/spec_helper_acceptance.rb,spec/acceptance/**.rb'
+    t.pattern = 'spec/acceptance/**.rb'
   end
 end
 
