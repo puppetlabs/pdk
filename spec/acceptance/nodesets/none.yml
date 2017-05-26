@@ -1,0 +1,6 @@
+HOSTS:
+  dummy-host:
+    roles:
+      - workstation
+    platform: el-7-x86_64 # Mandatory key and must be a supported value
+    hypervisor: none

@@ -8,7 +8,7 @@ Metrics/LineLength:
   Max: 200
 
 # rspec uses long describe blocks, so allow long blocks under spec/
-Style/BlockLength:
+Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
 
