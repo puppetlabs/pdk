@@ -3,7 +3,6 @@ require 'json'
 module PDK
   module Module
     class Metadata
-
       attr_accessor :data
 
       DEFAULTS = {
@@ -16,8 +15,8 @@ module PDK
         'project_page'  => nil,
         'issues_url'    => nil,
         'dependencies'  => Set.new.freeze,
-        'data_provider' => nil,
-      }
+        'data_provider' => nil
+      }.freeze
 
       def initialize(params = {})
         @data = DEFAULTS.dup
@@ -53,14 +52,14 @@ module PDK
         modname = :namespace_missing if namespace == ''
 
         err = case modname
-        when nil, '', :namespace_missing
-          "the field must be a dash-separated username and module name"
-        when /[^a-z0-9_]/i
-          "the module name contains non-alphanumeric (or underscore) characters"
-        when /^[^a-z]/i
-          "the module name must begin with a letter"
-        else
-          "the namespace contains non-alphanumeric characters"
+              when nil, '', :namespace_missing
+                'the field must be a dash-separated username and module name'
+              when /[^a-z0-9_]/i
+                'the module name contains non-alphanumeric (or underscore) characters'
+              when /^[^a-z]/i
+                'the module name must begin with a letter'
+              else
+                'the namespace contains non-alphanumeric characters'
         end
 
         raise ArgumentError, "Invalid 'name' field in metadata.json: #{err}"

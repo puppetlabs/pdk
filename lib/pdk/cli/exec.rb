@@ -28,9 +28,9 @@ module PDK
         end
 
         {
-          :exit_code => process.exit_code,
-          :stdout => stdout,
-          :stderr => stderr
+          exit_code: process.exit_code,
+          stdout: stdout,
+          stderr: stderr
         }
       end
 

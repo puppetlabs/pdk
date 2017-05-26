@@ -11,7 +11,7 @@ module PDK
       super(STDOUT)
 
       # TODO: Decide on output format.
-      self.formatter = proc do |severity,datetime,progname,msg|
+      self.formatter = proc do |severity, _datetime, _progname, msg|
         "pdk (#{severity}): #{msg}\n"
       end
 

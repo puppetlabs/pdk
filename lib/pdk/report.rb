@@ -6,7 +6,7 @@ module PDK
     end
 
     def self.formats
-      @report_formats ||= ['junit', 'text'].freeze
+      @report_formats ||= %w[junit text].freeze
     end
 
     def self.default_format

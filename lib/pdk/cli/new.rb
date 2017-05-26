@@ -8,13 +8,13 @@ module PDK
         @new ||= Cri::Command.new.tap do |cmd|
           cmd.modify do
             name 'new'
-            usage _("new <type> [options]")
-            summary _("create a new module, etc.")
-            description _("Creates a new instance of <type> using the options relevant to that type of thing")
+            usage _('new <type> [options]')
+            summary _('create a new module, etc.')
+            description _('Creates a new instance of <type> using the options relevant to that type of thing')
 
             # print the help text for the 'new' sub command if no type has been
             # provided.
-            run do |opts, args, cmd|
+            run do |_opts, _args, _cmd|
               puts command.help
               exit 1
             end

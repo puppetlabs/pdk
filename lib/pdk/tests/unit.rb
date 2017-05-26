@@ -4,10 +4,10 @@ require 'pdk/cli/exec'
 module PDK
   module Test
     class Unit
-      def self.cmd(tests)
+      def self.cmd(_tests)
         # TODO: actually run the tests
-        #cmd = 'rake spec'
-        #cmd += " #{tests}" if tests
+        # cmd = 'rake spec'
+        # cmd += " #{tests}" if tests
         cmd = 'pwd'
         cmd
       end
