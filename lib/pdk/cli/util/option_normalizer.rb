@@ -23,6 +23,21 @@ module PDK
 
           reports
         end
+
+        def self.parameter_specification(value)
+          param_name, param_type = value.split(':', 2)
+          param_type = 'String' if param_type.nil?
+
+          unless PDK::CLI::Util::OptionValidator.is_valid_param_name?(param_name)
+            raise PDK::CLI::FatalError, _("'%{name}' is not a valid parameter name") % {name: param_name}
+          end
+
+          unless PDK::CLI::Util::OptionValidator.is_valid_data_type?(param_type)
+            raise PDK::CLI::FatalError, _("'%{type}' is not a valid data type") % {type: param_type}
+          end
+
+          {name: param_name, type: param_type}
+        end
       end
     end
   end

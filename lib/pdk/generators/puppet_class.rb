@@ -10,7 +10,12 @@ module PDK
       # @return [Hash{Symbol => Object}] a hash of information that will be
       # provided to the class and class spec templates during rendering.
       def template_data
-        {name: object_name}
+        data = {name: object_name}
+        if @options.key?(:params)
+          data[:params] = @options[:params]
+          data[:max_type_length] = @options[:params].map { |r| r[:type].length }.max
+        end
+        data
       end
 
       # Calculates the path to the .pp file that the new class will be written

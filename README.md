@@ -84,7 +84,7 @@ The `pdk new module` command accepts the following arguments and options. Argume
 
 #### `--template-url=git_url`
 
-Overrides the template to use for this module. If possible, please contribute your improvements back to the default template at [puppetlabs/pdk](https://github.com/puppetlabs/pdk).
+Overrides the template to use for this module. If possible, please contribute your improvements back to the default template at [puppetlabs/pdk-module-template](https://github.com/puppetlabs/pdk-module-template).
 
 #### `--license=spdx_identifier`
 
@@ -105,6 +105,45 @@ Suppress interactive queries for initial values. All questions will use the defa
 #### `target_dir`
 
 Specifies the directory that the new module will be created in. Defaults to creating a new directory with the given `module_name` inside the current directory.
+
+### `pdk new class` command
+
+Generates a new class and skeleton test for it in the current module.
+
+Usage:
+
+```
+pdk new class [--template-url=git_url] <class_name> [parameter_name[:parameter_type]] [parameter_name[:parameter_type]] ...
+```
+
+e.g.
+
+```
+cd my_module
+pdk new class my_class "ensure:Enum['absent', 'present']" version:String
+```
+
+#### `--template-url`
+
+Overrides the template to use when generating this class. If this is not
+specified, the template used to generate the module will be used instead. If
+that template is not available, the default template at
+[puppetlabs/pdk-module-template](https://github.com/puppetlabs/pdk-module-template)
+will be used.
+
+#### `class_name`
+
+The name of the class to generate. If the class name is not inside the module
+namespace (e.g. module name is `apt` and the class name is `source`, then the
+module name will automatically be prepended to the class name (e.g.
+`apt::source`).
+
+#### `parameter_name[:parameter_type]`
+
+If the class should take parameters, they can be specified on the command line
+to be added to the generated class. Optionally, the data type of the parameter
+can be specified along with the parameter name, separated by a colon. Any
+number of parameters can be provided on the command line.
 
 ### `pdk add provider` command
 
