@@ -61,6 +61,11 @@ build-iPhoneSimulator/
 /tmp/
 /vendor/gems/
 
+# ignore bundler generated binstubs, but keep setup/console scripts
+/bin/*
+!/bin/setup
+!/bin/console
+
 # beaker output directories
 /log/
 /repo-config/
