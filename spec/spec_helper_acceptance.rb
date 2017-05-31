@@ -11,7 +11,7 @@ def path_to_pdk
   local_path = 'bundle exec pdk'
   posix_path = '/opt/puppetlabs/sdk/bin/pdk'
   windows_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit/bin/pdk.bat'
-  return local_path if ENV['BEAKER_TESTMODE'] == 'local'
+  return local_path if Beaker::TestmodeSwitcher.testmode == :local
   if workstation['platform'] =~ /windows/
     windows_path
   else
@@ -21,7 +21,7 @@ end
 
 RSpec.configure do |c|
   c.before(:suite) do
-    if ENV['BEAKER_TESTMODE'] == 'agent'
+    if Beaker::TestmodeSwitcher.testmode == :agent
       # Install pdk on workstation host
       if workstation['platform'] =~ /windows/
         # BKR-1109 requests a neater way to install an MSI
