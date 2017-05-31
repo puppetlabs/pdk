@@ -5,6 +5,20 @@ def workstation
   find_at_most_one('workstation')
 end
 
+# Return the path to pdk executable.
+# Returns 'bundle exec pdk' if running locally. 
+def path_to_pdk
+  local_path = 'bundle exec pdk'
+  posix_path = '/opt/puppetlabs/sdk/bin/pdk'
+  windows_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit/bin/pdk.bat'
+  return local_path if ENV['BEAKER_TESTMODE'] == 'local'
+  if workstation['platform'] =~ /windows/
+    windows_path
+  else
+    posix_path
+  end
+end
+
 RSpec.configure do |c|
   c.before(:suite) do
     if ENV['BEAKER_TESTMODE'] == 'agent'

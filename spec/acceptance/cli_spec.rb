@@ -2,17 +2,6 @@ require 'spec_helper_acceptance'
 
 describe 'Basic usage of the CLI' do
   context 'when the --help options is used' do
-    let(:path_to_pdk) do
-      local_path = 'bundle exec pdk'
-      posix_path = '/opt/puppetlabs/sdk/bin/pdk'
-      windows_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit/bin/pdk.bat'
-      return local_path if ENV['BEAKER_TESTMODE'] == 'local'
-      if workstation['platform'] =~ /windows/
-        windows_path
-      else
-        posix_path
-      end
-    end
     let(:help_output) { shell_ex("#{path_to_pdk} --help") }
 
     it 'displays help text on stdout' do
