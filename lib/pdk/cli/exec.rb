@@ -1,5 +1,6 @@
 require 'childprocess'
 require 'tempfile'
+require 'tty-spinner'
 
 module PDK
   module CLI
@@ -7,37 +8,9 @@ module PDK
       # TODO: decide how to handle multiple output targets when underlying tool doesn't support that
       # TODO: decide what this method should return
       # TODO: decide how/when to connect stdin to child process for things like pry
+      # TODO: need a way to set progress callbacks on new stdout data
       def self.execute(*cmd)
-        process = ChildProcess.build(*cmd)
-
-        process.io.stdout = Tempfile.new('stdout')
-        process.io.stderr = Tempfile.new('stderr')
-
-        begin
-          # Make this process leader of a new group
-          process.leader = true
-
-          # start the process
-          process.start
-
-          # wait indefinitely for process to exit...
-          process.wait
-
-          stdout = process.io.stdout.open.read
-          stderr = process.io.stderr.open.read
-        ensure
-          process.stop unless process.exited?
-          process.io.stdout.close
-          process.io.stderr.close
-        end
-
-        {
-          exit_code: process.exit_code,
-          stdout: stdout,
-          stderr: stderr,
-        }
-      rescue ChildProcess::LaunchError => e
-        raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: cmd.join(' '), message: e.message }
+        Command.new(*cmd).execute!
       end
 
       def self.pdk_basedir
@@ -69,6 +42,78 @@ module PDK
         else
           PDK.logger.debug(_("Trying '%{fallback}' from the system PATH, instead of '%{vendored_bin_path}'") % { fallback: fallback, vendored_bin_path: vendored_bin_path })
           fallback
+        end
+      end
+
+      # Experimental instance-based approach
+      class Command
+        attr_reader :argv
+        attr_accessor :timeout
+
+        def initialize(*argv)
+          @argv = argv
+
+          @process = ChildProcess.build(*@argv)
+          @process.leader = true
+          @stdout = @process.io.stdout = Tempfile.new('stdout')
+          @stderr = @process.io.stderr = Tempfile.new('stderr')
+
+          @stdout.sync = true
+          @stderr.sync = true
+        end
+
+        def add_spinner(message, opts={})
+          @success_message = opts.delete(:success)
+          @failure_message = opts.delete(:failure)
+
+          @spinner = TTY::Spinner.new(message, opts)
+        end
+
+        def execute!
+          # Start spinning if configured.
+          @spinner.auto_spin if @spinner
+
+          begin
+            @process.start
+          rescue ChildProcess::LaunchError => e
+            raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: @process.argv.join(" "), message: e.message}
+          end
+
+          if timeout
+            begin
+              @process.poll_for_exit(timeout)
+            rescue ChildProcess::TimeoutError
+              @process.stop # tries increasingly harsher methods to kill the process.
+            end
+          else
+            # Wait indfinitely if no timeout set.
+            @process.wait
+          end
+
+          # Stop spinning when done (if configured).
+          if @spinner
+            if @process.exit_code == 0 && @success_message
+              @spinner.success(@success_message)
+            elsif @failure_message
+              @spinner.error(@failure_message)
+            else
+              @spinner.stop
+            end
+          end
+
+          @stdout.rewind
+          @stderr.rewind
+
+          process_data = {
+            stdout: @stdout.read,
+            stderr: @stderr.read,
+            exit_code: @process.exit_code,
+          }
+
+          return process_data
+        ensure
+          @stdout.close
+          @stderr.close
         end
       end
     end
