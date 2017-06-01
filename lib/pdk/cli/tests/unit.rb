@@ -41,7 +41,6 @@ module PDK
                 report = Report.new(opts.fetch(:'report-file'), format)
               end
 
-              puts _("Running unit tests: %{tests}") % {tests: tests}
               PDK::Test::Unit.invoke(tests, report)
             end
           end

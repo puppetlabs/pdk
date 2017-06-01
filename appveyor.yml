@@ -9,6 +9,7 @@ test_script:
   - SET PATH=C:\%PLATFORM%\bin;%PATH%
   - SET LOG_SPEC_ORDER=true
   - bundle install --jobs 4 --retry 2 --without development
+  - bundle binstubs pdk
   - type Gemfile.lock
   - ruby -v
   - bundle exec rake spec acceptance:local
