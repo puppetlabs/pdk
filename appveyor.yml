@@ -11,7 +11,7 @@ test_script:
   - bundle install --jobs 4 --retry 2 --without development
   - type Gemfile.lock
   - ruby -v
-  - bundle exec rake spec
+  - bundle exec rake spec acceptance:local
 
 notifications:
   - provider: HipChat
