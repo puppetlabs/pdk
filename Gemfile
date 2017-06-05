@@ -21,4 +21,5 @@ group :acceptance do
   gem 'beaker-hostgenerator'
   gem 'beaker-rspec'
   gem 'beaker-testmode_switcher'
+  gem 'serverspec'
 end
