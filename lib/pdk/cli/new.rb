@@ -1,5 +1,6 @@
 require 'cri'
 require 'pdk/cli/new/module'
+require 'pdk/cli/new/class'
 
 module PDK
   module CLI
@@ -21,6 +22,7 @@ module PDK
           end
 
           cmd.add_command(PDK::CLI::New::Module.command)
+          cmd.add_command(PDK::CLI::New::PuppetClass.command)
         end
       end
     end
