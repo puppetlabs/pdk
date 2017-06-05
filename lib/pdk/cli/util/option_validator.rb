@@ -60,10 +60,14 @@ module PDK
             Tuple Struct Optional Catalogentry Type Any Callable NotUndef
           }.freeze
 
-          string.scan(/\b(([a-zA-Z]+)(,|\[|\]|\Z))/) do |result|
+          string.scan(/\b(([a-zA-Z0-9_]+)(,|\[|\]|\Z))/) do |result|
             type = result[1]
 
-            return false unless valid_types.include?(type)
+            return false unless string =~ /\A[A-Z]/
+
+            unless valid_types.include?(type)
+              PDK.logger.warn(_("Non-standard data type '%{type}', check the generated files for mistakes") % {type: type})
+            end
           end
 
           true

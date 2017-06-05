@@ -157,8 +157,14 @@ describe PDK::CLI::Util::OptionValidator do
       expect(subject.is_valid_data_type?('string')).to be false
     end
 
+    it 'warns the user about non-standard data types' do
+      expect(logger).to receive(:warn).with(a_string_matching(/Non-standard data type 'Test123'/))
+      expect(subject.is_valid_data_type?('Test123')).to be true
+    end
+
     it 'checks all the data types in an abstract data type' do
-      expect(subject.is_valid_data_type?('Variant[Integer, boolean, String]')).to be false
+      expect(logger).to receive(:warn).with(a_string_matching(/Non-standard data type 'Test123'/))
+      expect(subject.is_valid_data_type?('Variant[Integer, Test123, String]')).to be true
     end
   end
 end
