@@ -32,6 +32,8 @@ module PDK
           :stdout => stdout,
           :stderr => stderr
         }
+      rescue ChildProcess::LaunchError => e
+        raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: cmd.join(" "), message: e.message}
       end
 
       def self.pdk_basedir
