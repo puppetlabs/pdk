@@ -36,6 +36,12 @@ describe PDK::Generate::Module do
           'issues_url'    => 'tickets.foo.com/whopper/bar',
           'dependencies'  => [{'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0'}],
           'data_provider' => nil,
+          "operatingsystem_support" => [
+            {"operatingsystem"=>"Debian", "operatingsystemrelease"=>["8"]},
+            {"operatingsystem"=>"RedHat", "operatingsystemrelease"=>["7.0"]},
+            {"operatingsystem"=>"Ubuntu", "operatingsystemrelease"=>["16.04"]},
+            {"operatingsystem"=>"Windows", "operatingsystemrelease"=>["2016"]}
+          ],
         }
       )
     end
