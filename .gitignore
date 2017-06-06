@@ -70,3 +70,6 @@ build-iPhoneSimulator/
 /log/
 /repo-config/
 /acceptance_hosts.yml
+
++# Puppet packaging files
+ +/ext/packaging/
