@@ -17,10 +17,11 @@ module PDK
 
       def self.invoke(opts={})
         defaults = {
+          'name'         => "#{Etc.getlogin}-#{opts[:name]}",
           'version'      => '0.1.0',
           'dependencies' => [
             { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' }
-          ]
+          ],
         }
 
         defaults['license'] = opts[:license] if opts.has_key? :license
@@ -81,7 +82,7 @@ module PDK
 
         begin
           puts ""
-          forge_user = PDK::CLI::Input.get(_("What is your Puppet Forge username?"), Etc.getlogin)
+          forge_user = PDK::CLI::Input.get(_("What is your Puppet Forge username?"), metadata.data['author'])
           metadata.update!('name' => "#{forge_user}-#{opts[:name]}")
         rescue StandardError => e
           PDK.logger.error(_("We're sorry, we could not parse your module name: %{message}") % {:message => e.message})

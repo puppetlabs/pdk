@@ -10,7 +10,7 @@ module PDK
         'name'          => nil,
         'version'       => nil,
         'author'        => nil,
-        'summary'       => nil,
+        'summary'       => '',
         'license'       => 'Apache-2.0',
         'source'        => '',
         'project_page'  => nil,
