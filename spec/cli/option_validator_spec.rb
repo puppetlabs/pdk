@@ -142,8 +142,7 @@ describe PDK::CLI::Util::OptionValidator do
     it 'accepts known data types' do
       %w[String Integer Float Numeric Boolean Array Hash Regexp Undef Default
          Class Resource Scalar Collection Variant Data Pattern Enum Tuple Struct
-         Optional Catalogentry Type Any Callable NotUndef
-      ].each do |data_type|
+         Optional Catalogentry Type Any Callable NotUndef].each do |data_type|
         expect(subject.is_valid_data_type?(data_type)).to be true
       end
     end

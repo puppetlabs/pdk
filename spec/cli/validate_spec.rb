@@ -37,7 +37,7 @@ describe PDK::CLI::Validate do
         expect(validator).not_to receive(:invoke)
       end
 
-      PDK::CLI.run(['validate', 'metadata'])
+      PDK::CLI.run(%w[validate metadata])
     end
 
     it 'invokes each provided validator when multiple are provided' do
@@ -61,7 +61,7 @@ describe PDK::CLI::Validate do
 
     context 'when targets are provided as arguments' do
       it 'invokes the specified validator with the target as an option' do
-        expect(PDK::Validate::Metadata).to receive(:invoke).with({ targets: ['lib/', 'manifests/'] })
+        expect(PDK::Validate::Metadata).to receive(:invoke).with(targets: ['lib/', 'manifests/'])
 
         PDK::CLI.run(['validate', 'metadata', 'lib/', 'manifests/'])
       end
@@ -74,7 +74,7 @@ describe PDK::CLI::Validate do
        PDK::Validate::PuppetLint,
        PDK::Validate::PuppetParser,
        PDK::Validate::RubyLint].each do |validator|
-        expect(validator).to receive(:invoke).with({ targets: ['lib/', 'manifests/'] })
+        expect(validator).to receive(:invoke).with(targets: ['lib/', 'manifests/'])
       end
       expect(logger).to receive(:info).with('Running all available validators...')
       PDK::CLI.run(['validate', 'lib/', 'manifests/'])

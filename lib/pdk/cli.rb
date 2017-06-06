@@ -32,7 +32,7 @@ module PDK
             'multiple times as long as each option specifies a distinct target file.'
           ) % { available_formats: PDK::Report.formats.join("', '") }
 
-          option :f, :format, format_desc, { argument: :required, multiple: true } do |values|
+          option :f, :format, format_desc, argument: :required, multiple: true do |values|
             values.compact.each do |v|
               if v.include?(':')
                 format = v.split(':', 2).first

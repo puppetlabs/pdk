@@ -31,14 +31,14 @@ module PDK
         @module_dir = module_dir
         @options = options
 
-        if [:class, :defined_type].include?(object_type)
+        if %i[class defined_type].include?(object_type)
           object_name_parts = object_name.split('::')
 
-          if object_name_parts.first == module_name
-            @object_name = object_name
-          else
-            @object_name = [module_name, object_name].join('::')
-          end
+          @object_name = if object_name_parts.first == module_name
+                           object_name
+                         else
+                           [module_name, object_name].join('::')
+                         end
         end
       end
 

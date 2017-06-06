@@ -46,7 +46,7 @@ module PDK
 
       def self.git(*args)
         vendored_bin_path = File.join(git_bindir, 'git')
-        git_path = File.exists?(vendored_bin_path) ? vendored_bin_path : 'git'
+        git_path = File.exist?(vendored_bin_path) ? vendored_bin_path : 'git'
         PDK.logger.debug(_("Using git from the system PATH, instead of '%{vendored_bin_path}'") % { vendored_bin_path: vendored_bin_path })
         execute(git_path, *args)
       end

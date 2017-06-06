@@ -13,7 +13,7 @@ require 'pdk/util'
 module PDK
   module Generate
     class Module
-      DEFAULT_TEMPLATE = 'https://github.com/puppetlabs/pdk-module-template'
+      DEFAULT_TEMPLATE = 'https://github.com/puppetlabs/pdk-module-template'.freeze
 
       def self.invoke(opts = {})
         defaults = {
@@ -24,10 +24,10 @@ module PDK
           ],
         }
 
-        defaults['license'] = opts[:license] if opts.has_key? :license
+        defaults['license'] = opts[:license] if opts.key? :license
         target_dir = File.expand_path(opts[:target_dir])
 
-        if File.exists?(target_dir)
+        if File.exist?(target_dir)
           raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % { dir: target_dir }
         end
 
@@ -102,7 +102,7 @@ module PDK
         module_author = PDK::CLI::Input.get(_('Who wrote this module?'), metadata.data['author'])
         metadata.update!('author' => module_author)
 
-        unless opts.has_key?(:license)
+        unless opts.key?(:license)
           puts ''
           module_license = PDK::CLI::Input.get(_('What license does this module code fall under?'), metadata.data['license'])
           metadata.update!('license' => module_license)

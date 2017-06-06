@@ -56,7 +56,7 @@ describe PDK::CLI::Util::OptionNormalizer do
         expect(PDK::CLI::Util::OptionValidator).to receive(:is_valid_data_type?).with(param_type).and_call_original
       end
 
-      it { is_expected.to eq({ name: param_name, type: param_type }) }
+      it { is_expected.to eq(name: param_name, type: param_type) }
     end
 
     context 'when passed a parameter without a data type' do
@@ -65,7 +65,7 @@ describe PDK::CLI::Util::OptionNormalizer do
       end
 
       it 'defaults to a String data type' do
-        is_expected.to eq({ name: param_name, type: 'String' })
+        is_expected.to eq(name: param_name, type: 'String')
       end
     end
 
@@ -77,7 +77,7 @@ describe PDK::CLI::Util::OptionNormalizer do
         expect(PDK::CLI::Util::OptionValidator).to receive(:is_valid_data_type?).with(param_type).and_call_original
       end
 
-      it { is_expected.to eq({ name: param_name, type: param_type }) }
+      it { is_expected.to eq(name: param_name, type: param_type) }
     end
 
     context 'when passed an invalid parameter name' do

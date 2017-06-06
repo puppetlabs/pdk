@@ -5,7 +5,6 @@ require 'pdk/report'
 module PDK
   module CLI
     module Test
-
       def self.command
         @test ||= Cri::Command.new.tap do |cmd|
           cmd.modify do

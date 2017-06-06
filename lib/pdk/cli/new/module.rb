@@ -37,7 +37,7 @@ module PDK
                   "'%{module_name}' is not a valid module name.\n" \
                   'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.'
                 ) % { module_name: module_name }
-                raise PDK::CLI::FatalError.new(error_msg)
+                raise PDK::CLI::FatalError, error_msg
               end
 
               opts[:name] = module_name

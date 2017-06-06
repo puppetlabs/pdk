@@ -6,8 +6,8 @@ module PDK
     class Unit
       def self.cmd(_tests)
         # TODO: actually run the tests
-        #cmd = 'rake spec'
-        #cmd += " #{tests}" if tests
+        # cmd = 'rake spec'
+        # cmd += " #{tests}" if tests
         cmd = 'pwd'
         cmd
       end

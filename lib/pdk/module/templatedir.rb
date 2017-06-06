@@ -107,7 +107,7 @@ module PDK
           dest_path = template_file.sub(/\.erb\Z/, '')
 
           begin
-            dest_content = PDK::TemplateFile.new(File.join(@moduleroot_dir, template_file), { configs: config_for(dest_path) }).render
+            dest_content = PDK::TemplateFile.new(File.join(@moduleroot_dir, template_file), configs: config_for(dest_path)).render
           rescue => e
             error_msg = _(
               "Failed to render template '%{template}'\n" \
@@ -134,15 +134,13 @@ module PDK
       #
       # @api public
       def object_template_for(object_type)
-        object_path = File.join(@object_dir, "#{object_type.to_s}.erb")
-        spec_path = File.join(@object_dir, "#{object_type.to_s}_spec.erb")
+        object_path = File.join(@object_dir, "#{object_type}.erb")
+        spec_path = File.join(@object_dir, "#{object_type}_spec.erb")
 
         if File.file?(object_path) && File.readable?(object_path)
           result = { object: object_path }
           result[:spec] = spec_path if File.file?(spec_path) && File.readable?(spec_path)
           result
-        else
-          nil
         end
       end
 
@@ -159,7 +157,9 @@ module PDK
       def object_config
         config_for(nil)
       end
-    private
+
+      private
+
       # Validate the content of the template directory.
       #
       # @raise [ArgumentError] If the specified path is not a directory.
@@ -188,9 +188,9 @@ module PDK
       def files_in_template
         @files ||= Dir.glob(File.join(@moduleroot_dir, '**', '*'), File::FNM_DOTMATCH).select { |template_path|
           File.file?(template_path) && !File.symlink?(template_path)
-        }.map { |template_path|
+        }.map do |template_path|
           template_path.sub(/\A#{Regexp.escape(@moduleroot_dir)}#{Regexp.escape(File::SEPARATOR)}/, '')
-        }
+        end
       end
 
       # Generate a hash of data to be used when rendering the specified
@@ -213,7 +213,7 @@ module PDK
 
           if File.file?(config_path) && File.readable?(config_path)
             begin
-              @config = YAML.load(File.read(config_path))
+              @config = YAML.safe_load(File.read(config_path))
             rescue
               PDK.logger.warn(_("'%{file}' is not a valid YAML file") % { file: config_path })
               @config = {}

@@ -4,7 +4,7 @@ describe PDK::CLI::New::Module do
   context 'when not passed a module name' do
     it do
       expect {
-        PDK::CLI.run(['new', 'module'])
+        PDK::CLI.run(%w[new module])
       }.to raise_error(SystemExit) { |error|
         expect(error.status).to eq(1)
       }.and output(a_string_matching(/^USAGE\s+pdk new module/m)).to_stdout
@@ -16,7 +16,7 @@ describe PDK::CLI::New::Module do
       expect(logger).to receive(:fatal).with(a_string_matching(/'123test'.*not.*valid module name/m))
 
       expect {
-        PDK::CLI.run(['new', 'module', '123test'])
+        PDK::CLI.run(%w[new module 123test])
       }.to raise_error(SystemExit) { |error|
         expect(error.status).to eq(1)
       }

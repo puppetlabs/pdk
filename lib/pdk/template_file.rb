@@ -16,7 +16,7 @@ module PDK
     def initialize(template_file, data = {})
       @template_file = template_file
 
-      if data.has_key?(:configs)
+      if data.key?(:configs)
         @configs = data[:configs]
       end
 
@@ -43,7 +43,9 @@ module PDK
         render_plain
       end
     end
-  private
+
+    private
+
     # Reads the content of the template file into memory.
     #
     # @return [String] The content of the template file.

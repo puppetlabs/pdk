@@ -100,7 +100,7 @@ describe PDK::Generate::PuppetObject do
 
             it 'falls back to the paths from the default template dir' do
               expect(default_templatedir).to receive(:object_template_for).with(object_type)
-              subject.with_templates { }
+              subject.with_templates {}
             end
           end
         end
@@ -134,14 +134,14 @@ describe PDK::Generate::PuppetObject do
 
         it 'renders the object file' do
           expect(subject).to receive(:with_templates).and_yield({ object: object_template }, {})
-          expect(subject).to receive(:render_file).with(target_object_path, object_template, { configs: {} })
+          expect(subject).to receive(:render_file).with(target_object_path, object_template, configs: {})
           subject.run
         end
 
         it 'renders the spec file if a template for it was found' do
           expect(subject).to receive(:with_templates).and_yield({ object: object_template, spec: spec_template }, {})
-          expect(subject).to receive(:render_file).with(target_object_path, object_template, { configs: {} })
-          expect(subject).to receive(:render_file).with(target_spec_path, spec_template, { configs: {} })
+          expect(subject).to receive(:render_file).with(target_object_path, object_template, configs: {})
+          expect(subject).to receive(:render_file).with(target_spec_path, spec_template, configs: {})
           subject.run
         end
       end

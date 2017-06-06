@@ -19,7 +19,7 @@ module PDK
           flag nil, :list, _('list all available validators')
 
           run do |opts, args, _cmd|
-            validator_names = PDK::Validate.validators.map { |v| v.name }
+            validator_names = PDK::Validate.validators.map(&:name)
             validators = PDK::Validate.validators
             targets = []
             reports = nil
@@ -67,10 +67,9 @@ module PDK
             options = targets.empty? ? {} : { targets: targets }
             validators.each do |validator|
               result = validator.invoke(options)
-              if reports
-                reports.each do |r|
-                  r.write(result)
-                end
+              next unless reports
+              reports.each do |r|
+                r.write(result)
               end
             end
           end

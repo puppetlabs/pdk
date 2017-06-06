@@ -15,7 +15,8 @@ module PDK
             if f.include?(':')
               format, target = f.split(':')
             else
-              format, target = f, PDK::Report.default_target
+              format = f
+              target = PDK::Report.default_target
             end
 
             reports << Report.new(target, format)

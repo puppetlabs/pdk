@@ -3,7 +3,6 @@ require 'json'
 module PDK
   module Module
     class Metadata
-
       attr_accessor :data
 
       DEFAULTS = {
@@ -20,22 +19,22 @@ module PDK
         'operatingsystem_support' => [
           {
             'operatingsystem' => 'Debian',
-            'operatingsystemrelease' => [ '8' ],
+            'operatingsystemrelease' => ['8'],
           },
           {
             'operatingsystem' => 'RedHat',
-            'operatingsystemrelease' => [ '7.0' ],
+            'operatingsystemrelease' => ['7.0'],
           },
           {
             'operatingsystem' => 'Ubuntu',
-            'operatingsystemrelease' => [ '16.04' ],
+            'operatingsystemrelease' => ['16.04'],
           },
           {
             'operatingsystem' => 'Windows',
-            'operatingsystemrelease' => [ '2016' ],
+            'operatingsystemrelease' => ['2016'],
           },
         ],
-      }
+      }.freeze
 
       def initialize(params = {})
         @data = DEFAULTS.dup
@@ -95,7 +94,7 @@ module PDK
                 'the module name contains non-alphanumeric (or underscore) characters'
               when /^[^a-z]/i
                 'the module name must begin with a letter'
-        else
+              else
                 'the namespace contains non-alphanumeric characters'
         end
 
