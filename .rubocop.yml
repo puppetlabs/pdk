@@ -3,7 +3,7 @@ require: rubocop-rspec
 AllCops:
   TargetRubyVersion: 2.1.9
 
-# Allow longer lines
+# People have wide screens, use them.
 Metrics/LineLength:
   Max: 200
 
@@ -13,5 +13,29 @@ Metrics/BlockLength:
     - 'spec/**/*.rb'
 
 # Allow longer specs
-RSpec/ExampleLength:
-  Max: 50
+# RSpec/ExampleLength:
+#   Max: 50
+
+RSpec/HookArgument:
+  Description: Prefer explicit :each argument, matching existing module's style
+  EnforcedStyle: each
+
+Style/TrailingCommaInLiteral:
+  Description: Prefer always trailing comma on multiline literals. This makes diffs, and re-ordering nicer.
+  EnforcedStyleForMultiline: comma
+
+Style/BlockDelimiters:
+  Description: Prefer braces for chaining. Mostly an aesthetical choice. Better to be consistent then.
+  EnforcedStyle: braces_for_chaining
+
+Style/IfUnlessModifier:
+  Description: Post-fix `if` modifiers are hard to parse for newcomers. We don't want to encourage them. Post-fix `unless` modifiers could be nice in some cases, but the Cop doesn't differentiate.
+  Enabled: false
+
+Style/FormatString:
+  Description: Following the main puppet project's style, prefer the % format format.
+  EnforcedStyle: percent
+
+Style/FormatStringToken:
+  Description: Following the main puppet project's style, prefer the simpler template tokens over annotated ones.
+  EnforcedStyle: template
