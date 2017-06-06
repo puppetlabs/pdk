@@ -1,12 +1,31 @@
-require 'beaker-rspec'
 require 'beaker/testmode_switcher/dsl'
+
+if Beaker::TestmodeSwitcher.testmode == :local
+  require 'serverspec'
+
+  if Gem.win_platform?
+    set :backend, :cmd
+  else
+    set :backend, :exec
+  end
+
+  # workaround pending release of https://github.com/puppetlabs/beaker-testmode_switcher/pull/13
+  def hosts
+    nil
+  end
+  def logger
+    nil
+  end
+else
+  require 'beaker-rspec'
+end
 
 def workstation
   find_at_most_one('workstation')
 end
 
 # Return the path to pdk executable.
-# Returns 'bundle exec pdk' if running locally. 
+# Returns 'bundle exec pdk' if running locally.
 def path_to_pdk
   local_path = 'bundle exec pdk'
   posix_path = '/opt/puppetlabs/sdk/bin/pdk'

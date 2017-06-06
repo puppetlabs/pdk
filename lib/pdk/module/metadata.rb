@@ -17,6 +17,24 @@ module PDK
         'issues_url'    => nil,
         'dependencies'  => Set.new.freeze,
         'data_provider' => nil,
+        'operatingsystem_support' => [
+          {
+            "operatingsystem" => "Debian",
+            "operatingsystemrelease" => [ "8" ]
+          },
+          {
+            "operatingsystem" => "RedHat",
+            "operatingsystemrelease" => [ "7.0" ]
+          },
+          {
+            "operatingsystem" => "Ubuntu",
+            "operatingsystemrelease" => [ "16.04" ]
+          },
+          {
+            "operatingsystem" => "Windows",
+            "operatingsystemrelease" => [ "2016" ]
+          },
+        ]
       }
 
       def initialize(params = {})

@@ -252,14 +252,6 @@ Specifies options to pass through to the actual test-runner. In the default temp
 
 ## Contributing
 
-To run the `pdk` tool directly from the repository, set the environment variable `PDK_USE_SYSTEM_BINARIES` to `true`. This causes it to use the system installed binaries, instead of relying on the puppet-sdk-vanagon packaging. Currently required is a ruby (2.1, or later), and git.
-
-```
-PowerShell: $env:PDK_USE_SYSTEM_BINARIES = "true"
-cmd.exe:    set PDK_USE_SYSTEM_BINARIES=true
-bash:       export PDK_USE_SYSTEM_BINARIES=true
-```
-
 In cases where `pdk` needs to run in a working directory outside the cloned repository, either set `BUNDLE_GEMFILE` to the pdk's Gemfile location, or install and use the [binstubs of bundler](http://bundler.io/v1.15/bundle_binstubs.html), which are small proxy binaries, that set up the environment for running the tool.
 
 ```

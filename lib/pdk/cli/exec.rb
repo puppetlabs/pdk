@@ -32,6 +32,8 @@ module PDK
           :stdout => stdout,
           :stderr => stderr
         }
+      rescue ChildProcess::LaunchError => e
+        raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: cmd.join(" "), message: e.message}
       end
 
       def self.pdk_basedir
@@ -43,7 +45,9 @@ module PDK
       end
 
       def self.git(*args)
-        git_path = ENV['PDK_USE_SYSTEM_BINARIES'].nil? ? File.join(git_bindir, 'git') : 'git'
+        vendored_bin_path = File.join(git_bindir, 'git')
+        git_path = File.exists?(vendored_bin_path) ? vendored_bin_path : 'git'
+        PDK.logger.debug(_("Using git from the system PATH, instead of '%{vendored_bin_path}'") % { vendored_bin_path: vendored_bin_path})
         execute(git_path, *args)
       end
     end
