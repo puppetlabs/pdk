@@ -2,16 +2,16 @@ module PDK
   module CLI
     module Util
       class OptionValidator
-        def self.is_comma_separated_list?(list, options = {})
+        def self.is_comma_separated_list?(list, _options = {})
           list =~ /^[\w\-]+(?:,[\w\-]+)+$/ ? true : false
         end
 
-        def self.enum(val, valid_entries, options = {})
+        def self.enum(val, valid_entries, _options = {})
           vals = val.is_a?(Array) ? val : [val]
           invalid_entries = vals.find_all { |e| !valid_entries.include?(e) }
 
           unless invalid_entries.empty?
-            raise _("Error: the following values are invalid: %{invalid_entries}") % {invalid_entries: invalid_entries}
+            raise _('Error: the following values are invalid: %{invalid_entries}') % { invalid_entries: invalid_entries }
           end
 
           val
@@ -39,8 +39,8 @@ module PDK
         # The parameter should also not be a reserved word or overload
         # a metaparameter.
         def self.is_valid_param_name?(string)
-          reserved_words = %w{trusted facts server_facts title name}.freeze
-          metaparams = %w{alias audit before loglevel noop notify require schedule stage subscribe tag}.freeze
+          reserved_words = %w[trusted facts server_facts title name].freeze
+          metaparams = %w[alias audit before loglevel noop notify require schedule stage subscribe tag].freeze
           return false if reserved_words.include?(string) || metaparams.include?(string)
 
           !(string =~ /\A[a-z][a-zA-Z0-9_]*\Z/).nil?
@@ -54,11 +54,11 @@ module PDK
         #   should be replaced eventually by something better (or just call
         #   Puppet::Pops::Types::TypesParser)
         def self.is_valid_data_type?(string)
-          valid_types = %w{
+          valid_types = %w[
             String Integer Float Numeric Boolean Array Hash Regexp Undef
             Default Class Resource Scalar Collection Variant Data Pattern Enum
             Tuple Struct Optional Catalogentry Type Any Callable NotUndef
-          }.freeze
+          ].freeze
 
           string.scan(/\b(([a-zA-Z0-9_]+)(,|\[|\]|\Z))/) do |result|
             type = result[1]
@@ -66,7 +66,7 @@ module PDK
             return false unless string =~ /\A[A-Z]/
 
             unless valid_types.include?(type)
-              PDK.logger.warn(_("Non-standard data type '%{type}', check the generated files for mistakes") % {type: type})
+              PDK.logger.warn(_("Non-standard data type '%{type}', check the generated files for mistakes") % { type: type })
             end
           end
 

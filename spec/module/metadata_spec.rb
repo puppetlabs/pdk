@@ -15,7 +15,7 @@ describe PDK::Module::Metadata do
       allow(File).to receive(:readable?).with(metadata_json_path).and_return(true)
       allow(File).to receive(:read).with(metadata_json_path).and_return(metadata_json_content)
 
-      expect(described_class.from_file(metadata_json_path).data).to include({'name' => 'foo-bar', 'version' => '0.1.0'})
+      expect(described_class.from_file(metadata_json_path).data).to include({ 'name' => 'foo-bar', 'version' => '0.1.0' })
     end
 
     it 'raises an ArgumentError if the file does not exist' do
@@ -40,25 +40,25 @@ describe PDK::Module::Metadata do
   end
 
   context 'when processing and validating metadata' do
-    let (:metadata) { PDK::Module::Metadata.new.update!(
-                        'name' => 'foo-bar',
-                        'version' => '0.1.0',
-                        'dependencies' => [
-                          { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' }
-                        ]
-                      )
-                    }
+    let (:metadata) { described_class.new.update!(
+      'name' => 'foo-bar',
+      'version' => '0.1.0',
+      'dependencies' => [
+        { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' },
+      ]
+    )
+    }
 
-    it 'should error when the provided name is not namespaced' do
-      expect { metadata.update!({'name' => 'foo'}) }.to raise_error(ArgumentError, "Invalid 'name' field in metadata.json: the field must be a dash-separated username and module name")
+    it 'errors when the provided name is not namespaced' do
+      expect { metadata.update!({ 'name' => 'foo' }) }.to raise_error(ArgumentError, "Invalid 'name' field in metadata.json: the field must be a dash-separated username and module name")
     end
 
-    it 'should error when the provided name contains non-alphanumeric characters' do
-      expect { metadata.update!({'name' => 'foo-@bar'}) }.to raise_error(ArgumentError, "Invalid 'name' field in metadata.json: the module name contains non-alphanumeric (or underscore) characters")
+    it 'errors when the provided name contains non-alphanumeric characters' do
+      expect { metadata.update!({ 'name' => 'foo-@bar' }) }.to raise_error(ArgumentError, "Invalid 'name' field in metadata.json: the module name contains non-alphanumeric (or underscore) characters")
     end
 
-    it 'should error when the provided name starts with a non-letter character' do
-      expect { metadata.update!({'name' => 'foo-1bar'}) }.to raise_error(ArgumentError, "Invalid 'name' field in metadata.json: the module name must begin with a letter")
+    it 'errors when the provided name starts with a non-letter character' do
+      expect { metadata.update!({ 'name' => 'foo-1bar' }) }.to raise_error(ArgumentError, "Invalid 'name' field in metadata.json: the module name must begin with a letter")
     end
   end
 end

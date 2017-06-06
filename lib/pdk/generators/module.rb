@@ -15,12 +15,12 @@ module PDK
     class Module
       DEFAULT_TEMPLATE = 'https://github.com/puppetlabs/pdk-module-template'
 
-      def self.invoke(opts={})
+      def self.invoke(opts = {})
         defaults = {
           'name'         => "#{Etc.getlogin}-#{opts[:name]}",
           'version'      => '0.1.0',
           'dependencies' => [
-            { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' }
+            { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' },
           ],
         }
 
@@ -28,7 +28,7 @@ module PDK
         target_dir = File.expand_path(opts[:target_dir])
 
         if File.exists?(target_dir)
-          raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % {:dir => target_dir}
+          raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % { dir: target_dir }
         end
 
         metadata = PDK::Module::Metadata.new(defaults)
@@ -68,60 +68,60 @@ module PDK
           begin
             FileUtils.mkdir_p(dir)
           rescue SystemCallError
-            raise PDK::CLI::FatalError, _("Unable to create directory '%{dir}'") % {:dir => dir}
+            raise PDK::CLI::FatalError, _("Unable to create directory '%{dir}'") % { dir: dir }
           end
         end
       end
 
-      def self.module_interview(metadata, opts={})
+      def self.module_interview(metadata, opts = {})
         puts _(
-          "We need to create a metadata.json file for this module. Please answer the " +
-          "following questions; if the question is not applicable to this module, feel free " +
-          "to leave it blank."
+          'We need to create a metadata.json file for this module. Please answer the ' \
+          'following questions; if the question is not applicable to this module, feel free ' \
+          'to leave it blank.'
         )
 
         begin
-          puts ""
-          forge_user = PDK::CLI::Input.get(_("What is your Puppet Forge username?"), metadata.data['author'])
+          puts ''
+          forge_user = PDK::CLI::Input.get(_('What is your Puppet Forge username?'), metadata.data['author'])
           metadata.update!('name' => "#{forge_user}-#{opts[:name]}")
         rescue StandardError => e
-          PDK.logger.error(_("We're sorry, we could not parse your module name: %{message}") % {:message => e.message})
+          PDK.logger.error(_("We're sorry, we could not parse your module name: %{message}") % { message: e.message })
           retry
         end
 
         begin
-          puts "\n" + _("Puppet uses Semantic Versioning (semver.org) to version modules.")
-          module_version = PDK::CLI::Input.get(_("What version is this module?"), metadata.data['version'])
+          puts "\n" + _('Puppet uses Semantic Versioning (semver.org) to version modules.')
+          module_version = PDK::CLI::Input.get(_('What version is this module?'), metadata.data['version'])
           metadata.update!('version' => module_version)
         rescue StandardError => e
-          PDK.logger.error(_("We're sorry, we could not parse that as a Semantic Version: %{message}") % {message: e.message})
+          PDK.logger.error(_("We're sorry, we could not parse that as a Semantic Version: %{message}") % { message: e.message })
           retry
         end
 
-        puts ""
-        module_author = PDK::CLI::Input.get(_("Who wrote this module?"), metadata.data['author'])
+        puts ''
+        module_author = PDK::CLI::Input.get(_('Who wrote this module?'), metadata.data['author'])
         metadata.update!('author' => module_author)
 
         unless opts.has_key?(:license)
-          puts ""
-          module_license = PDK::CLI::Input.get(_("What license does this module code fall under?"), metadata.data['license'])
+          puts ''
+          module_license = PDK::CLI::Input.get(_('What license does this module code fall under?'), metadata.data['license'])
           metadata.update!('license' => module_license)
         end
 
-        puts ""
-        module_summary = PDK::CLI::Input.get(_("How would you describe this module in a single sentence?"))
+        puts ''
+        module_summary = PDK::CLI::Input.get(_('How would you describe this module in a single sentence?'))
         metadata.update!('summary' => module_summary)
 
-        puts ""
+        puts ''
         module_source = PDK::CLI::Input.get(_("Where is this module's source code repository?"))
         metadata.update!('source' => module_source)
 
-        puts ""
-        module_page = PDK::CLI::Input.get(_("Where can others go to learn more about this module?"), metadata.data['project_page'])
+        puts ''
+        module_page = PDK::CLI::Input.get(_('Where can others go to learn more about this module?'), metadata.data['project_page'])
         metadata.update!('project_page' => module_page)
 
-        puts ""
-        module_issues = PDK::CLI::Input.get(_("Where can others go to file issues about this module?"), metadata.data['issues_url'])
+        puts ''
+        module_issues = PDK::CLI::Input.get(_('Where can others go to file issues about this module?'), metadata.data['issues_url'])
         metadata.update!('issues_url' => module_issues)
 
         puts
@@ -130,8 +130,8 @@ module PDK
         puts '-' * 40
         puts
 
-        if PDK::CLI::Input.get(_("About to generate this module; continue?"), 'Y') !~ /^y(es)?$/i
-          puts _("Aborting...")
+        if PDK::CLI::Input.get(_('About to generate this module; continue?'), 'Y') !~ /^y(es)?$/i
+          puts _('Aborting...')
           exit 0
         end
       end

@@ -13,6 +13,7 @@ if Beaker::TestmodeSwitcher.testmode == :local
   def hosts
     nil
   end
+
   def logger
     nil
   end

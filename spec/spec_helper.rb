@@ -3,7 +3,8 @@ require 'pdk'
 require 'pdk/cli'
 
 RSpec.shared_context :stubbed_logger do
-  let(:logger) { instance_double("PDK::Logger").as_null_object }
+  let(:logger) { instance_double('PDK::Logger').as_null_object }
+
   before(:each) { allow(PDK).to receive(:logger).and_return(logger) }
 end
 

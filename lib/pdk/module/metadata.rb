@@ -19,22 +19,22 @@ module PDK
         'data_provider' => nil,
         'operatingsystem_support' => [
           {
-            "operatingsystem" => "Debian",
-            "operatingsystemrelease" => [ "8" ]
+            'operatingsystem' => 'Debian',
+            'operatingsystemrelease' => [ '8' ],
           },
           {
-            "operatingsystem" => "RedHat",
-            "operatingsystemrelease" => [ "7.0" ]
+            'operatingsystem' => 'RedHat',
+            'operatingsystemrelease' => [ '7.0' ],
           },
           {
-            "operatingsystem" => "Ubuntu",
-            "operatingsystemrelease" => [ "16.04" ]
+            'operatingsystem' => 'Ubuntu',
+            'operatingsystemrelease' => [ '16.04' ],
           },
           {
-            "operatingsystem" => "Windows",
-            "operatingsystemrelease" => [ "2016" ]
+            'operatingsystem' => 'Windows',
+            'operatingsystemrelease' => [ '2016' ],
           },
-        ]
+        ],
       }
 
       def initialize(params = {})
@@ -44,17 +44,17 @@ module PDK
 
       def self.from_file(metadata_json_path)
         unless File.file?(metadata_json_path)
-          raise ArgumentError, _("'%{file}' does not exist or is not a file") % {file: metadata_json_path}
+          raise ArgumentError, _("'%{file}' does not exist or is not a file") % { file: metadata_json_path }
         end
 
         unless File.readable?(metadata_json_path)
-          raise ArgumentError, _("Unable to open '%{file}' for reading") % {file: metadata_json_path}
+          raise ArgumentError, _("Unable to open '%{file}' for reading") % { file: metadata_json_path }
         end
 
         begin
           data = JSON.parse(File.read(metadata_json_path))
         rescue JSON::JSONError => e
-          raise ArgumentError, _("Invalid JSON in metadata.json: %{msg}") % {msg: e.message}
+          raise ArgumentError, _('Invalid JSON in metadata.json: %{msg}') % { msg: e.message }
         end
 
         new(data)
@@ -89,14 +89,14 @@ module PDK
         modname = :namespace_missing if namespace == ''
 
         err = case modname
-        when nil, '', :namespace_missing
-          "the field must be a dash-separated username and module name"
-        when /[^a-z0-9_]/i
-          "the module name contains non-alphanumeric (or underscore) characters"
-        when /^[^a-z]/i
-          "the module name must begin with a letter"
+              when nil, '', :namespace_missing
+                'the field must be a dash-separated username and module name'
+              when /[^a-z0-9_]/i
+                'the module name contains non-alphanumeric (or underscore) characters'
+              when /^[^a-z]/i
+                'the module name must begin with a letter'
         else
-          "the namespace contains non-alphanumeric characters"
+                'the namespace contains non-alphanumeric characters'
         end
 
         raise ArgumentError, "Invalid 'name' field in metadata.json: #{err}"
