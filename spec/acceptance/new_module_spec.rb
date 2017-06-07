@@ -3,10 +3,10 @@ require 'spec_helper_acceptance'
 describe 'Creating a new module' do
   context 'when the --skip-interview option is used' do
     after(:all) do
-      shell_ex('rm -rf foo')
+      FileUtils.rm_rf('foo')
     end
 
-    describe command("#{path_to_pdk} new module foo --skip-interview") do
+    describe command('pdk new module foo --skip-interview') do
       its(:exit_status) { is_expected.to eq 0 }
       its(:stdout) { is_expected.to match(/Creating new module: foo/) }
       its(:stdout) { is_expected.not_to match(/WARN|ERR/) }
