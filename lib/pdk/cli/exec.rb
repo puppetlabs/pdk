@@ -14,6 +14,9 @@ module PDK
         process.io.stderr = Tempfile.new('stderr')
 
         begin
+          # Make this process leader of a new group
+          process.leader = true
+
           # start the process
           process.start
 
@@ -23,6 +26,7 @@ module PDK
           stdout = process.io.stdout.open.read
           stderr = process.io.stderr.open.read
         ensure
+          process.stop unless process.exited?
           process.io.stdout.close
           process.io.stderr.close
         end
@@ -46,9 +50,24 @@ module PDK
 
       def self.git(*args)
         vendored_bin_path = File.join(git_bindir, 'git')
-        git_path = File.exists?(vendored_bin_path) ? vendored_bin_path : 'git'
-        PDK.logger.debug(_("Using git from the system PATH, instead of '%{vendored_bin_path}'") % { vendored_bin_path: vendored_bin_path})
-        execute(git_path, *args)
+
+        execute(try_vendored_bin(vendored_bin_path, 'git'), *args)
+      end
+
+      def self.bundle(*args)
+        bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
+        vendored_bin_path = File.join(pdk_basedir, 'private', 'ruby', '2.1.9', 'bin', bundle_bin)
+
+        execute(try_vendored_bin(vendored_bin_path, bundle_bin), *args)
+      end
+
+      def self.try_vendored_bin(vendored_bin_path, fallback)
+        if File.exists?(vendored_bin_path)
+          return vendored_bin_path
+        else
+          PDK.logger.debug(_("Trying '%{fallback}' from the system PATH, instead of '%{vendored_bin_path}'") % {fallback: fallback, vendored_bin_path: vendored_bin_path})
+          return fallback
+        end
       end
     end
   end
