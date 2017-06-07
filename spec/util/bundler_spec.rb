@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/util/bundler'
 
 RSpec.describe PDK::Util::Bundler do
   describe '.ensure_bundle!' do

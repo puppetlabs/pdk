@@ -2,4 +2,4 @@
 
 require 'pdk/cli'
 
-PDK::CLI.run(ARGV.dup)
+PDK::CLI.run(ARGV)

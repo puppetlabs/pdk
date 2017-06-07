@@ -6,8 +6,8 @@ module PDK
     class BaseValidator
       def self.invoke(options = {})
         PDK.logger.info(_("Running %{cmd} with options: %{options}") % {cmd: cmd, options: options})
-        result = PDK::CLI::Exec.execute(cmd, options)
-        result
+        # result = PDK::CLI::Exec.execute(cmd, options)
+        # result
       end
     end
   end
