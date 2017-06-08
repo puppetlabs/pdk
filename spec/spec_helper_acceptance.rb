@@ -25,12 +25,16 @@ def workstation
 end
 
 # Return the path to pdk executable.
-# Returns 'bundle exec pdk' if running locally.
+# Returns the path to the binstub if executing locally
 def path_to_pdk
-  local_path = 'bundle exec pdk'
+  local_path = File.expand_path(File.join(__FILE__, '..', '..', 'bin', 'pdk'))
   posix_path = '/opt/puppetlabs/sdk/bin/pdk'
   windows_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit/bin/pdk.bat'
-  return local_path if Beaker::TestmodeSwitcher.testmode == :local
+
+  if Beaker::TestmodeSwitcher.testmode == :local
+    return Gem.win_platform? ? "ruby #{local_path}" : local_path
+  end
+
   if workstation['platform'] =~ /windows/
     windows_path
   else

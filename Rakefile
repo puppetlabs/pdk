@@ -52,6 +52,7 @@ namespace :acceptance do
 
     t.pattern = 'spec/acceptance/**.rb'
   end
+  task local: [:binstubs]
 end
 
 desc 'run static analysis with rubocop'
@@ -60,6 +61,10 @@ task(:rubocop) do
   cli = RuboCop::CLI.new
   exit_code = cli.run(%w(--display-cop-names --format simple))
   raise "RuboCop detected offenses" if exit_code != 0
+end
+
+task(:binstubs) do
+  system('bundle binstubs pdk --force')
 end
 
 task :default => :spec

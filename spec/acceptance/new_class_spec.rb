@@ -10,7 +10,16 @@ describe 'Creating a new class' do
   end
 
   context 'when creating the main class' do
-    describe command("cd foo && BUNDLE_GEMFILE=../Gemfile #{path_to_pdk} new class foo") do
+    describe command("#{path_to_pdk} new class foo") do
+      before do
+        @old_pwd = Dir.pwd
+        Dir.chdir('foo')
+      end
+
+      after do
+        Dir.chdir(@old_pwd)
+      end
+
       its(:exit_status) { is_expected.to eq 0 }
       its(:stdout) { is_expected.to match(/Creating .* from template/) }
       its(:stdout) { is_expected.not_to match(/WARN|ERR/) }
