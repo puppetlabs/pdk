@@ -1,8 +1,5 @@
 # version: 1.0.{build}-{branch}
 
-cache:
-  - C:\gems
-
 environment:
   matrix:
     - RUBY_VERSION: 23
@@ -11,7 +8,7 @@ environment:
 install:
   - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
   - SET LOG_SPEC_ORDER=true
-  - bundle install --jobs 4 --retry 2 --without development --path=C:\gems
+  - bundle install --jobs 4 --retry 2 --without development
 
 build: off
 
