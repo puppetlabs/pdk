@@ -20,7 +20,8 @@ module PDK
         # If no targets are passed, then we will run puppet-lint on the base
         # module directory by default and lint everything.
         if options[:targets].nil? or options[:targets].empty?
-          targets << PDK::Util.module_root
+          module_root = PDK::Util.module_root
+          targets << module_root unless module_root.nil?
         else
           targets.concat(options[:targets])
         end
