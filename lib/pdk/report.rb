@@ -10,11 +10,19 @@ module PDK
     end
 
     def self.default_format
-      'junit'
+      'text'
     end
 
     def self.default_target
       'stdout' # TODO: actually write to stdout
+    end
+
+    def get_format
+      @format
+    end
+
+    def get_path
+      @path
     end
 
     def write(text)
