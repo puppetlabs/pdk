@@ -10,7 +10,12 @@ module PDK
       end
 
       def self.cmd
-        'puppet-parser-validate'
+        'pwd'
+      end
+
+      def self.invoke(options = {})
+        PDK.logger.info(_("Running %{cmd} with options: %{options}") % {cmd: cmd, options: options})
+        result = PDK::CLI::Exec.execute(cmd)
       end
     end
   end

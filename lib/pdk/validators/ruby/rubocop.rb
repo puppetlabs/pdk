@@ -1,22 +1,23 @@
 require 'pdk'
 require 'pdk/cli/exec'
 require 'pdk/validators/base_validator'
+require 'pdk/validators/ruby_validator'
 
 module PDK
   module Validate
-    class Metadata < BaseValidator
+    class Rubocop < BaseValidator
       def self.name
-        'metadata'
+        'rubocop'
       end
 
       def self.cmd
-        'metadata-json-lint'
+        'pwd'
       end
 
       def self.invoke(options = {})
         PDK.logger.info(_("Running %{cmd} with options: %{options}") % {cmd: cmd, options: options})
-        result = { "#{name}" => PDK::CLI::Exec.execute(cmd) }
-      end
+        result = PDK::CLI::Exec.execute(cmd)
+      end 
     end
   end
 end

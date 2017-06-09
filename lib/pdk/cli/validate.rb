@@ -14,7 +14,7 @@ module PDK
           name 'validate'
           usage _("validate [options]")
           summary _("Run static analysis tests.")
-          description _("Run metadata-json-lint, puppet parser validate, puppet-lint, or rubocop.")
+          description _("Run metadata, puppet, or ruby validation.")
 
           flag nil, :list, _("list all available validators")
 

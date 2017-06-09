@@ -1,12 +1,11 @@
 require 'pdk/validators/metadata'
-require 'pdk/validators/puppet_lint'
-require 'pdk/validators/puppet_parser'
-require 'pdk/validators/ruby_lint'
+require 'pdk/validators/puppet_validator'
+require 'pdk/validators/ruby_validator'
 
 module PDK
   module Validate
     def self.validators
-      @validators ||= [Metadata, PuppetLint, PuppetParser, RubyLint].freeze
+      @validators ||= [Metadata, PuppetValidator, RubyValidator].freeze
     end
   end
 end
