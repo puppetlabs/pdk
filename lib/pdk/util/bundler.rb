@@ -87,23 +87,12 @@ module PDK
           end
         end
 
-        def find_upwards(target)
-          previous = nil
-          current  = File.expand_path(Dir.pwd)
-
-          until !File.directory?(current) || current == previous
-            filename = File.join(current, target)
-            return filename if File.file?(filename)
-            current, previous = File.expand_path("..", current), current
-          end
-        end
-
         def gemfile
-          @gemfile ||= find_upwards('Gemfile')
+          @gemfile ||= PDK::Util.find_upwards('Gemfile')
         end
 
         def gemfile_lock
-          @gemfile_lock ||= find_upwards('Gemfile.lock')
+          @gemfile_lock ||= PDK::Util.find_upwards('Gemfile.lock')
         end
 
         def bundle_cachedir

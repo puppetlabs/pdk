@@ -3,6 +3,24 @@ require 'tempfile'
 
 module PDK
   module Util
+    # Searches upwards from current working directory for the given target file.
+    #
+    # @param target [String] Name of file to search for.
+    #
+    # @return [String, nil] Fully qualified path to the given target file if found,
+    #   nil if the target file could not be found.
+    def find_upwards(target)
+      previous = nil
+      current  = File.expand_path(Dir.pwd)
+
+      until !File.directory?(current) || current == previous
+        filename = File.join(current, target)
+        return filename if File.file?(filename)
+        current, previous = File.expand_path("..", current), current
+      end
+    end
+    module_function :find_upwards
+
     # Generate a name for a temporary directory.
     #
     # @param base [String] A string to base the name generation off.
@@ -26,5 +44,19 @@ module PDK
       return File.join(basedir, '.pdk', 'cache')
     end
     module_function :cachedir
+
+    # Returns path to the root of the module being worked on.
+    #
+    # @return [String, nil] Fully qualified base path to module, or nil if
+    #   the current working dir does not appear to be within a module.
+    def module_root
+      if metadata_path = find_upwards("metdata.json")
+        return File.dirname(metadata_path)
+      else
+        return nil
+      end
+    end
+    module_function :module_root
+
   end
 end

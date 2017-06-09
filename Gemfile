@@ -4,6 +4,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'metadata-json-lint'
+gem 'puppet-lint'
 gem 'rubocop'
 
 # avoid newer versions that do not support ruby 2.1 anymore

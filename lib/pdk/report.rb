@@ -1,5 +1,8 @@
 module PDK
   class Report
+    attr_reader :format
+    attr_reader :path
+
     def initialize(path, format = nil)
       @path = path
       @format = format || self.class.default_format
@@ -10,7 +13,7 @@ module PDK
     end
 
     def self.default_format
-      'junit'
+      'text'
     end
 
     def self.default_target
