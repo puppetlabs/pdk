@@ -3,31 +3,21 @@ require 'tempfile'
 
 module PDK
   module Util
-    # Finds the parent directory path of the target file
+    # Searches upwards from current working directory for the given target file.
     #
-    # @param target [String] A string with the name of the target file
+    # @param target [String] Name of file to search for.
     #
-    # @return [String] Fully qualified path to the parent directory of target
-    def find_parent_dir(target)
+    # @return [String, nil] Fully qualified path to the given target file if found,
+    #   nil if the target file could not be found.
+    def find_upwards(target)
       previous = nil
       current  = File.expand_path(Dir.pwd)
 
       until !File.directory?(current) || current == previous
         filename = File.join(current, target)
-        return current if File.file?(filename)
+        return filename if File.file?(filename)
         current, previous = File.expand_path("..", current), current
       end
-    end
-    module_function :find_parent_dir
-
-    # Finds the file path of the target file
-    #
-    # @param target [String] A string with the name of the target file
-    #
-    # @return [String] Fully qualified path of the target file
-    def find_upwards(target)
-      parent = find_parent_dir(target)
-      return File.join(parent, target) unless parent.nil?
     end
     module_function :find_upwards
 
@@ -55,13 +45,18 @@ module PDK
     end
     module_function :cachedir
 
-    # Returns the fully qualified base path to a module being worked on.
+    # Returns path to the root of the module being worked on.
     #
-    # @return [String] Fully qualified base path to module.
-    def moduledir
-      return find_parent_dir("metadata.json")
+    # @return [String, nil] Fully qualified base path to module, or nil if
+    #   the current working dir does not appear to be within a module.
+    def module_root
+      if metadata_path = find_upwards("metdata.json")
+        return File.dirname(metadata_path)
+      else
+        return nil
+      end
     end
-    module_function :moduledir
+    module_function :module_root
 
   end
 end

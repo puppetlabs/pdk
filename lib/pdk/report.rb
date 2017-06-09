@@ -1,5 +1,8 @@
 module PDK
   class Report
+    attr_reader :format
+    attr_reader :path
+
     def initialize(path, format = nil)
       @path = path
       @format = format || self.class.default_format
@@ -15,14 +18,6 @@ module PDK
 
     def self.default_target
       'stdout' # TODO: actually write to stdout
-    end
-
-    def get_format
-      @format
-    end
-
-    def get_path
-      @path
     end
 
     def write(text)
