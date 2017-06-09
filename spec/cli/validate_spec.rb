@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe PDK::CLI::Validate do
+  include_context :validators
+  let(:validator_names) { validators.map(&:name).join(', ') }
+
   context 'when no arguments or options are provided' do
     it 'should invoke each validator with no report and no options' do
-      [PDK::Validate::Metadata,
-       PDK::Validate::PuppetLint,
-       PDK::Validate::PuppetParser,
-       PDK::Validate::RubyLint].each do |validator|
+      validators.each do |validator|
         expect(validator).to receive(:invoke).with({})
       end
       expect(logger).to receive(:info).with('Running all available validators...')
@@ -17,7 +17,7 @@ describe PDK::CLI::Validate do
   context 'when the --list option is provided' do
     it 'should list all of the available validators and exit' do
       # TODO: replace this with a real output mechanism
-      expect(STDOUT).to receive(:puts).with('Available validators: metadata, puppet-lint, puppet-parser, ruby-lint')
+      expect(STDOUT).to receive(:puts).with("Available validators: #{validator_names}")
 
       begin
         PDK::CLI.run(['validate', '--list'])
@@ -31,9 +31,7 @@ describe PDK::CLI::Validate do
     it 'should only invoke a single validator when only one is provided' do
       expect(PDK::Validate::Metadata).to receive(:invoke).with({})
 
-      [PDK::Validate::PuppetLint,
-       PDK::Validate::PuppetParser,
-       PDK::Validate::RubyLint].each do |validator|
+      validators.reject { |r| r == PDK::Validate::Metadata }.each do |validator|
         expect(validator).not_to receive(:invoke)
       end
 
@@ -41,22 +39,27 @@ describe PDK::CLI::Validate do
     end
 
     it 'should invoke each provided validator when multiple are provided' do
-      [PDK::Validate::PuppetLint, PDK::Validate::PuppetParser].each do |validator|
+      invoked_validators = [
+        PDK::Validate::PuppetValidator,
+        PDK::Validate::Metadata,
+      ]
+
+      invoked_validators.each do |validator|
         expect(validator).to receive(:invoke).with({})
       end
 
-      [PDK::Validate::Metadata, PDK::Validate::RubyLint].each do |validator|
+      (validators | invoked_validators).each do |validator|
         expect(validator).not_to receive(:invoke)
       end
 
-      PDK::CLI.run(['validate', 'puppet-lint,puppet-parser'])
+      PDK::CLI.run(['validate', 'puppet,metadata'])
     end
 
     it 'should warn about unknown validators' do
-      expect(logger).to receive(:warn).with('Unknown validator \'bad-val\'. Available validators: metadata, puppet-lint, puppet-parser, ruby-lint')
-      expect(PDK::Validate::PuppetLint).to receive(:invoke).with({})
+      expect(logger).to receive(:warn).with("Unknown validator 'bad-val'. Available validators: #{validator_names}")
+      expect(PDK::Validate::PuppetValidator).to receive(:invoke).with({})
 
-      PDK::CLI.run(['validate', 'puppet-lint,bad-val'])
+      PDK::CLI.run(['validate', 'puppet,bad-val'])
     end
 
     context 'when targets are provided as arguments' do
@@ -70,10 +73,7 @@ describe PDK::CLI::Validate do
 
   context 'when targets are provided as arguments and no validators are specified' do
     it 'should invoke all validators with the target as an option' do
-      [PDK::Validate::Metadata,
-       PDK::Validate::PuppetLint,
-       PDK::Validate::PuppetParser,
-       PDK::Validate::RubyLint].each do |validator|
+      validators.each do |validator|
         expect(validator).to receive(:invoke).with({:targets => ['lib/', 'manifests/']})
       end
       expect(logger).to receive(:info).with('Running all available validators...')

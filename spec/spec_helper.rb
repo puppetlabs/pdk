@@ -10,3 +10,11 @@ end
 RSpec.configure do |c|
   c.include_context :stubbed_logger
 end
+
+RSpec.shared_context :validators do
+  let(:validators) { [
+    PDK::Validate::Metadata,
+    PDK::Validate::PuppetValidator,
+    PDK::Validate::RubyValidator,
+  ] }
+end
