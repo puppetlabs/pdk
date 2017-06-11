@@ -11,17 +11,36 @@ module PDK
       end
 
       def self.cmd
-        'puppet-lint'
+        File.join(PDK::Util.module_root, 'bin', 'puppet-lint')
       end
 
-      def self.parse_options(options, targets)
-        cmd_options = []
+      def self.pattern
+        '**/*.pp'
+      end
 
-        if options[:format] && options[:format] == 'junit'
-          cmd_options << '--json'
-        end
+      def self.spinner_text
+        _('Checking Puppet manifest style')
+      end
+
+      def self.parse_options(_options, targets)
+        cmd_options = ['--json']
 
         cmd_options.concat(targets)
+      end
+
+      def self.parse_output(report, json_data)
+        json_data.each do |offense|
+          report.add_event(
+            file:     offense['path'],
+            source:   'puppet-lint',
+            line:     offense['line'],
+            column:   offense['column'],
+            message:  offense['message'],
+            test:     offense['check'],
+            severity: offense['kind'],
+            state:    :failure,
+          )
+        end
       end
     end
   end

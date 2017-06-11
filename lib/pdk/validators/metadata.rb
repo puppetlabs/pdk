@@ -14,17 +14,18 @@ module PDK
         File.join(PDK::Util.module_root, 'bin', 'metadata-json-lint')
       end
 
-      def self.invoke(options = {})
+      def self.invoke(_report, options = {})
         PDK::Util::Bundler.ensure_bundle!
         PDK::Util::Bundler.ensure_binstubs!('metadata-json-lint')
 
         options[:targets] = [File.join(PDK::Util.module_root, 'metadata.json')]
 
-        result = super
+        # result = super
 
         # FIXME: this is weird so that it complies with the format
         # of the other validators which are nested
-        { 'metadata' => result }
+        # { 'metadata' => result }
+        0
       end
     end
   end

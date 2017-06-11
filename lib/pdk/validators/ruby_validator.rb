@@ -14,13 +14,15 @@ module PDK
         [Rubocop]
       end
 
-      def self.invoke(options = {})
-        results = {}
+      def self.invoke(report, options = {})
+        exit_code = 0
+
         ruby_validators.each do |validator|
-          output = validator.invoke(options)
-          results.merge!(validator.name.to_s => output)
+          exit_code = validator.invoke(report, options)
+          break if exit_code != 0
         end
-        results
+
+        exit_code
       end
     end
   end

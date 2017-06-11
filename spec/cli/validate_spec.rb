@@ -11,7 +11,7 @@ describe 'Running `pdk validate` in a module' do
   context 'when no arguments or options are provided' do
     it 'invokes each validator with no report and no options and exits zero' do
       validators.each do |validator|
-        expect(validator).to receive(:invoke).with({}).and_return(validator.name => validator_success)
+        expect(validator).to receive(:invoke).with(instance_of(PDK::Report), {}).and_return(0)
       end
 
       expect(logger).to receive(:info).with('Running all available validators...')
@@ -40,9 +40,9 @@ describe 'Running `pdk validate` in a module' do
     let(:validator) { PDK::Validate::Metadata }
 
     it 'only invokes the given validator and exits zero' do
-      expect(validator).to receive(:invoke).with({}).and_return(validator.name => validator_success)
+      expect(validator).to receive(:invoke).with(instance_of(PDK::Report), {}).and_return(0)
 
-      validators.reject { |r| r == PDK::Validate::Metadata }.each do |v|
+      validators.reject { |r| r == validator }.each do |v|
         expect(v).not_to receive(:invoke)
       end
 
@@ -64,7 +64,7 @@ describe 'Running `pdk validate` in a module' do
 
     it 'invokes each given validator and exits zero' do
       invoked_validators.each do |validator|
-        expect(validator).to receive(:invoke).with({}).and_return(validator.name => validator_success)
+        expect(validator).to receive(:invoke).with(instance_of(PDK::Report), {}).and_return(0)
       end
 
       (validators | invoked_validators).each do |validator|
@@ -84,8 +84,7 @@ describe 'Running `pdk validate` in a module' do
 
     it 'warns about unknown validators, invokes known validators, and exits zero' do
       expect(logger).to receive(:warn).with("Unknown validator 'bad-val'. Available validators: #{validator_names}")
-
-      expect(validator).to receive(:invoke).with({}).and_return(validator.name => validator_success)
+      expect(validator).to receive(:invoke).with(instance_of(PDK::Report), {}).and_return(0)
 
       expect {
         PDK::CLI.run(['validate', 'puppet,bad-val'])
@@ -99,7 +98,7 @@ describe 'Running `pdk validate` in a module' do
     let(:validator) { PDK::Validate::Metadata }
 
     it 'invokes the specified validator with the target as an option' do
-      expect(validator).to receive(:invoke).with(targets: ['lib/', 'manifests/']).and_return(validator.name => validator_success)
+      expect(validator).to receive(:invoke).with(instance_of(PDK::Report), targets: ['lib/', 'manifests/']).and_return(0)
 
       expect {
         PDK::CLI.run(['validate', 'metadata', 'lib/', 'manifests/'])
@@ -112,7 +111,7 @@ describe 'Running `pdk validate` in a module' do
   context 'when targets are provided as arguments and no validators are specified' do
     it 'invokes all validators with the target as an option' do
       validators.each do |validator|
-        expect(validator).to receive(:invoke).with(targets: ['lib/', 'manifests/']).and_return(validator.name => validator_success)
+        expect(validator).to receive(:invoke).with(instance_of(PDK::Report), targets: ['lib/', 'manifests/']).and_return(0)
       end
 
       expect(logger).to receive(:info).with('Running all available validators...')
