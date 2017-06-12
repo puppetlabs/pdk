@@ -11,6 +11,8 @@ A CLI to facilitate easy, unified development workflows for Puppet modules. pdk 
 $ gem install pdk
 ```
 
+For default usage, you'll also need to have `git`, and `bundle` (from [bundler](http://bundler.io/)) on your system PATH.
+
 ## Usage
 
 ### Generate a new module
