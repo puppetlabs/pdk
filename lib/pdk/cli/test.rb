@@ -1,23 +1,12 @@
-require 'cri'
-require 'pdk/cli/tests/unit'
-require 'pdk/report'
 
-
-module PDK
-  module CLI
-    module Test
-
-      def self.command
-        @test ||= Cri::Command.new.tap do |cmd|
-          cmd.modify do
-            name 'test'
-            usage _("test [type] [options]")
-            summary _("Run tests.")
-          end
-
-          cmd.add_command(PDK::CLI::Test::Unit.command)
-        end
-      end
-    end
+module PDK::CLI
+  @test_cmd = @base_cmd.define_command do
+    name 'test'
+    usage _("test [type] [options]")
+    summary _("Run tests.")
+    default_subcommand 'help'
   end
+  @test_cmd.add_command Cri::Command.new_basic_help
 end
+
+require 'pdk/cli/test/unit'

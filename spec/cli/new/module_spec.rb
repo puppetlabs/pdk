@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-describe PDK::CLI::New::Module do
+describe "Running `pdk new module`" do
+  subject { PDK::CLI.instance_variable_get(:@new_module_cmd) }
+
   context 'when not passed a module name' do
     it do
       expect {
