@@ -12,11 +12,6 @@ module PDK
       def self.cmd
         'metadata-json-lint'
       end
-
-      def self.invoke(options = {})
-        PDK.logger.info(_("Running %{cmd} with options: %{options}") % {cmd: cmd, options: options})
-        result = { "#{name}" => PDK::CLI::Exec.execute(cmd) }
-      end
     end
   end
 end
