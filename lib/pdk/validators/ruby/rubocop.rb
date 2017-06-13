@@ -11,13 +11,18 @@ module PDK
       end
 
       def self.cmd
-        'pwd'
+        'rubocop'
       end
 
-      def self.invoke(options = {})
-        PDK.logger.info(_("Running %{cmd} with options: %{options}") % {cmd: cmd, options: options})
-        result = PDK::CLI::Exec.execute(cmd)
-      end 
+      def self.parse_options(options, targets)
+        cmd_options = if options[:format] && options[:format] == 'junit'
+          ['--format', 'json']
+        else
+          ['--format', 'clang']
+        end
+
+        cmd_options.concat(targets)
+      end
     end
   end
 end
