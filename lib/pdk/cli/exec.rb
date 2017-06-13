@@ -45,13 +45,14 @@ module PDK
       end
 
       def self.git_bindir
-        @git_dir ||= File.join(pdk_basedir, 'private', 'git', 'bin')
+        @git_dir ||= File.join(pdk_basedir, 'private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
       end
 
       def self.git(*args)
-        vendored_bin_path = File.join(git_bindir, 'git')
+        git_bin = Gem.win_platform? ? 'git.exe' : 'git'
+        vendored_bin_path = File.join(git_bindir, git_bin)
 
-        execute(try_vendored_bin(vendored_bin_path, 'git'), *args)
+        execute(try_vendored_bin(vendored_bin_path, git_bin), *args)
       end
 
       def self.bundle(*args)
@@ -63,6 +64,7 @@ module PDK
 
       def self.try_vendored_bin(vendored_bin_path, fallback)
         if File.exists?(vendored_bin_path)
+          PDK.logger.debug(_("Using '%{vendored_bin_path}'") % {fallback: fallback, vendored_bin_path: vendored_bin_path})
           return vendored_bin_path
         else
           PDK.logger.debug(_("Trying '%{fallback}' from the system PATH, instead of '%{vendored_bin_path}'") % {fallback: fallback, vendored_bin_path: vendored_bin_path})
