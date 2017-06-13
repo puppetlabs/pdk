@@ -20,7 +20,5 @@ end
 
 group :acceptance do
   gem 'beaker-hostgenerator'
-  gem 'beaker-rspec'
-  gem 'beaker-testmode_switcher', '>= 0.3.0'
   gem 'serverspec'
 end
