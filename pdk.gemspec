@@ -23,4 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'childprocess', '~> 0.6.2'
   spec.add_runtime_dependency 'gettext-setup', '~> 0.24'
   spec.add_runtime_dependency 'tty-spinner', '~> 0.4'
+
+  # Used in the pdk-module-template
+  spec.add_runtime_dependency 'deep_merge', '~> 1.1'
 end
