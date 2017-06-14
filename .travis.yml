@@ -21,8 +21,6 @@ matrix:
   include:
     - rvm: 2.1.9
       env: "CHECK=acceptance:local"
-  allow_failures:
-    - env: "CHECK=rubocop"
 
 notifications:
   hipchat:
