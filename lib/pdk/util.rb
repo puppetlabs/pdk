@@ -36,7 +36,7 @@ module PDK
     # @return [String] Fully qualified path to per-user PDK cachedir.
     def cachedir
       if Gem.win_platform?
-        basedir = ENV['APPDATA']
+        basedir = ENV['LOCALAPPDATA']
       else
         basedir = Dir.home
       end
