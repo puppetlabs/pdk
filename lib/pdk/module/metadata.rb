@@ -75,16 +75,16 @@ module PDK
       # Do basic validation and parsing of the name parameter.
       def process_name(data)
         validate_name(data['name'])
-        author, module_name = data['name'].split(/[-\/]/, 2)
+        author, module_name = data['name'].split(%r{[-/]}, 2)
 
         data['author'] ||= author if @data['author'] == DEFAULTS['author']
       end
 
       # Validates that the given module name is both namespaced and well-formed.
       def validate_name(name)
-        return if name =~ /\A[a-z0-9]+[-\/][a-z][a-z0-9_]*\Z/i
+        return if name =~ %r{\A[a-z0-9]+[-\/][a-z][a-z0-9_]*\Z}i
 
-        namespace, modname = name.split(/[-\/]/, 2)
+        namespace, modname = name.split(%r{[-/]}, 2)
         modname = :namespace_missing if namespace == ''
 
         err = case modname
