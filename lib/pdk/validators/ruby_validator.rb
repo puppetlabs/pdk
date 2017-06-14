@@ -11,14 +11,14 @@ module PDK
       end
 
       def self.ruby_validators
-        [ Rubocop ]
+        [Rubocop]
       end
 
       def self.invoke(options = {})
         results = {}
         ruby_validators.each do |validator|
           output = validator.invoke(options)
-          results.merge!("#{validator.name}" => output)
+          results.merge!(validator.name.to_s => output)
         end
         results
       end

@@ -1,4 +1,5 @@
 # coding: utf-8
+
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'pdk/version'
@@ -9,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.authors = ['David Schmitt']
   spec.email   = ['david.schmitt@puppet.com']
 
-  spec.summary     = %q{A key part of the Puppet Development Kit, the shortest path to better modules}
-  spec.description = %q{A CLI to facilitate easy, unified development workflows for Puppet modules.}
+  spec.summary     = 'A key part of the Puppet Development Kit, the shortest path to better modules'
+  spec.description = 'A CLI to facilitate easy, unified development workflows for Puppet modules.'
   spec.homepage    = 'https://github.com/puppetlabs/pdk'
 
   spec.files         = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*', 'exe/**/*', 'locales/**/*']

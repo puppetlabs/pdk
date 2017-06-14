@@ -16,7 +16,7 @@ module PDK
     def initialize(template_file, data = {})
       @template_file = template_file
 
-      if data.has_key?(:configs)
+      if data.key?(:configs)
         @configs = data[:configs]
       end
 
@@ -37,13 +37,15 @@ module PDK
     # @api public
     def render
       case File.extname(@template_file)
-      when ".erb"
+      when '.erb'
         render_erb
       else
         render_plain
       end
     end
-  private
+
+    private
+
     # Reads the content of the template file into memory.
     #
     # @return [String] The content of the template file.
@@ -56,7 +58,7 @@ module PDK
       if File.file?(@template_file) && File.readable?(@template_file)
         File.read(@template_file)
       else
-        raise ArgumentError, _("'%{template}' is not a readable file") % {:template => @template_file}
+        raise ArgumentError, _("'%{template}' is not a readable file") % { template: @template_file }
       end
     end
 

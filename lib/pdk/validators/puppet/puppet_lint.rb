@@ -11,7 +11,7 @@ module PDK
       end
 
       def self.cmd
-        "puppet-lint"
+        'puppet-lint'
       end
 
       def self.parse_options(options, targets)

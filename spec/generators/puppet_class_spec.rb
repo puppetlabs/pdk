@@ -2,10 +2,11 @@ require 'spec_helper'
 
 describe PDK::Generate::PuppetClass do
   subject { described_class.new(module_dir, class_name) }
+
   let(:module_name) { 'test_module' }
   let(:module_dir) { '/tmp/test_module' }
 
-  before do
+  before(:each) do
     allow_any_instance_of(described_class).to receive(:module_name).and_return(module_name)
   end
 
@@ -46,7 +47,7 @@ describe PDK::Generate::PuppetClass do
   end
 
   context 'when the class name is outside the module namespace' do
-    let(:class_name) { "test_class" }
+    let(:class_name) { 'test_class' }
 
     it 'will prepend the module name to the class name' do
       expect(subject.object_name).to eq("#{module_name}::#{class_name}")

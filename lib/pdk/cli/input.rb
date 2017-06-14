@@ -10,10 +10,10 @@ module PDK
       #
       # @return [String] The value provided by the user (or the supplied
       # default value).
-      def self.get(message, default=nil)
+      def self.get(message, default = nil)
         print message
         if default.nil?
-          print " [(none)]"
+          print ' [(none)]'
         else
           print " [#{default}]"
         end

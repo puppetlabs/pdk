@@ -12,15 +12,15 @@ module PDK
         bundle = BundleHelper.new
 
         if bundle.has_gemfile?
-          if !bundle.locked?
+          unless bundle.locked?
             unless bundle.lock!
-              raise PDK::CLI::FatalError, _("Unable to resolve Gemfile dependencies.")
+              raise PDK::CLI::FatalError, _('Unable to resolve Gemfile dependencies.')
             end
           end
 
-          if !bundle.installed?
+          unless bundle.installed?
             unless bundle.install!
-              raise PDK::CLI::FatalError, _("Unable to install missing Gemfile dependencies.")
+              raise PDK::CLI::FatalError, _('Unable to install missing Gemfile dependencies.')
             end
           end
         end
@@ -38,17 +38,17 @@ module PDK
         end
 
         def installed?
-          output_start(_("Checking for missing Gemfile dependencies"))
+          output_start(_('Checking for missing Gemfile dependencies'))
 
           result = invoke('check', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}")
 
           output_end(:success)
 
-          return result[:exit_code] == 0
+          result[:exit_code] == 0
         end
 
         def lock!
-          output_start(_("Resolving Gemfile dependencies"))
+          output_start(_('Resolving Gemfile dependencies'))
 
           result = invoke('lock')
 
@@ -60,11 +60,11 @@ module PDK
             $stderr.puts result[:stderr]
           end
 
-          return result[:exit_code] == 0
+          result[:exit_code] == 0
         end
 
         def install!
-          output_start(_("Installing missing Gemfile dependencies"))
+          output_start(_('Installing missing Gemfile dependencies'))
 
           result = invoke('install', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}")
 
@@ -76,7 +76,7 @@ module PDK
             $stderr.puts result[:stderr]
           end
 
-          return result[:exit_code] == 0
+          result[:exit_code] == 0
         end
 
         private

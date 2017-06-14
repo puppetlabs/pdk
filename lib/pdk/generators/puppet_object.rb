@@ -34,11 +34,11 @@ module PDK
         if [:class, :defined_type].include?(object_type)
           object_name_parts = object_name.split('::')
 
-          if object_name_parts.first == module_name
-            @object_name = object_name
-          else
-            @object_name = [module_name, object_name].join('::')
-          end
+          @object_name = if object_name_parts.first == module_name
+                           object_name
+                         else
+                           [module_name, object_name].join('::')
+                         end
         end
       end
 
@@ -84,12 +84,12 @@ module PDK
       def run
         [target_object_path, target_spec_path].each do |target_file|
           if File.exist?(target_file)
-            raise PDK::CLI::FatalError, _("Unable to generate class, '%{file}' already exists.") % {file: target_file}
+            raise PDK::CLI::FatalError, _("Unable to generate class, '%{file}' already exists.") % { file: target_file }
           end
         end
 
         with_templates do |template_path, config_hash|
-          data = template_data.merge(:configs => config_hash)
+          data = template_data.merge(configs: config_hash)
 
           render_file(target_object_path, template_path[:object], data)
           render_file(target_spec_path, template_path[:spec], data) if template_path[:spec]
@@ -109,7 +109,7 @@ module PDK
       #
       # @api private
       def render_file(dest_path, template_path, data)
-        PDK.logger.info(_("Creating %{file} from template.") % {file: dest_path})
+        PDK.logger.info(_('Creating %{file} from template.') % { file: dest_path })
         file_content = PDK::TemplateFile.new(template_path, data).render
         FileUtils.mkdir_p(File.dirname(dest_path))
         File.open(dest_path, 'w') { |f| f.write file_content }
@@ -132,7 +132,7 @@ module PDK
       def with_templates
         templates.each do |template|
           if template[:url].nil?
-            PDK.logger.debug(_("No %{dir_type} template specified; trying next template directory.") % {dir_type: template[:type]})
+            PDK.logger.debug(_('No %{dir_type} template specified; trying next template directory.') % { dir_type: template[:type] })
             next
           end
 
@@ -145,9 +145,9 @@ module PDK
               return
             else
               if template[:allow_fallback]
-                PDK.logger.debug(_("Unable to find a %{type} template in %{url}, trying next template directory") % {type: object_type, url: template[:url]})
+                PDK.logger.debug(_('Unable to find a %{type} template in %{url}, trying next template directory') % { type: object_type, url: template[:url] })
               else
-                raise PDK::CLI::FatalError, _("Unable to find the %{type} template in %{url}.") % {type: object_type, url: template[:url]}
+                raise PDK::CLI::FatalError, _('Unable to find the %{type} template in %{url}.') % { type: object_type, url: template[:url] }
               end
             end
           end
@@ -176,9 +176,9 @@ module PDK
       # @api private
       def templates
         @templates ||= [
-          {type: 'CLI', url: @options[:'template-url'], allow_fallback: false},
-          {type: 'metadata', url: module_metadata.data['template-url'], allow_fallback: true},
-          {type: 'default', url: PDK::Generate::Module::DEFAULT_TEMPLATE, allow_fallback: false},
+          { type: 'CLI', url: @options[:'template-url'], allow_fallback: false },
+          { type: 'metadata', url: module_metadata.data['template-url'], allow_fallback: true },
+          { type: 'default', url: PDK::Generate::Module::DEFAULT_TEMPLATE, allow_fallback: false },
         ]
       end
 
@@ -205,7 +205,7 @@ module PDK
         @module_metadata ||= begin
           PDK::Module::Metadata.from_file(File.join(module_dir, 'metadata.json'))
         rescue ArgumentError => e
-          raise PDK::CLI::FatalError, _("'%{dir}' does not contain valid Puppet module metadata; %{msg}") % {dir: module_dir, msg: e.message}
+          raise PDK::CLI::FatalError, _("'%{dir}' does not contain valid Puppet module metadata; %{msg}") % { dir: module_dir, msg: e.message }
         end
       end
     end

@@ -3,7 +3,8 @@ require 'pdk'
 require 'pdk/cli'
 
 RSpec.shared_context :stubbed_logger do
-  let(:logger) { instance_double("PDK::Logger").as_null_object }
+  let(:logger) { instance_double('PDK::Logger').as_null_object }
+
   before(:each) { allow(PDK).to receive(:logger).and_return(logger) }
 end
 
@@ -12,9 +13,11 @@ RSpec.configure do |c|
 end
 
 RSpec.shared_context :validators do
-  let(:validators) { [
-    PDK::Validate::Metadata,
-    PDK::Validate::PuppetValidator,
-    PDK::Validate::RubyValidator,
-  ] }
+  let(:validators) do
+    [
+      PDK::Validate::Metadata,
+      PDK::Validate::PuppetValidator,
+      PDK::Validate::RubyValidator,
+    ]
+  end
 end

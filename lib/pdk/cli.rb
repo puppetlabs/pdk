@@ -30,29 +30,29 @@ module PDK::CLI
   end
 
   def self.template_url_option(dsl)
-    dsl.option nil, 'template-url', _("Specifies the URL to the template to use when creating the module. Defaults to the template used to create the module."), argument: :required, default: PDK::Generate::Module::DEFAULT_TEMPLATE
+    dsl.option nil, 'template-url', _('Specifies the URL to the template to use when creating the module. Defaults to the template used to create the module.'), argument: :required, default: PDK::Generate::Module::DEFAULT_TEMPLATE
   end
 
   @base_cmd = Cri::Command.define do
     name 'pdk'
-    usage _("pdk command [options]")
-    summary _("Puppet Development Kit")
-    description _("The shortest path to better modules.")
+    usage _('pdk command [options]')
+    summary _('Puppet Development Kit')
+    description _('The shortest path to better modules.')
     default_subcommand 'help'
 
-    flag :h, :help, _("show help for this command") do |_, c|
+    flag :h, :help, _('show help for this command') do |_, c|
       puts c.help
       exit 0
     end
 
     format_desc = _(
-      "Specify desired output format. Valid formats are '%{available_formats}'. " +
-      "You may also specify a file to which the formatted output will be directed, " +
-      "for example: '--format=junit:report.xml'. This option may be specified " +
-      "multiple times as long as each option specifies a distinct target file."
-    ) % {available_formats: PDK::Report.formats.join("', '")}
+      "Specify desired output format. Valid formats are '%{available_formats}'. " \
+      'You may also specify a file to which the formatted output will be directed, ' \
+      "for example: '--format=junit:report.xml'. This option may be specified " \
+      'multiple times as long as each option specifies a distinct target file.',
+    ) % { available_formats: PDK::Report.formats.join("', '") }
 
-    option :f, :format, format_desc, { argument: :required, multiple: true } do |values|
+    option :f, :format, format_desc, argument: :required, multiple: true do |values|
       values.compact.each do |v|
         if v.include?(':')
           format = v.split(':', 2).first
@@ -64,7 +64,7 @@ module PDK::CLI
       end
     end
 
-    flag :d, :debug, _("Enable debug output.") do |_, _|
+    flag :d, :debug, _('Enable debug output.') do |_, _|
       PDK.logger.enable_debug_output
     end
   end
