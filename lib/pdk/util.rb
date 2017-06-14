@@ -51,7 +51,8 @@ module PDK
     # @return [String, nil] Fully qualified base path to module, or nil if
     #   the current working dir does not appear to be within a module.
     def module_root
-      if metadata_path = find_upwards('metadata.json')
+      metadata_path = find_upwards('metadata.json')
+      if metadata_path
         File.dirname(metadata_path)
       else
         nil

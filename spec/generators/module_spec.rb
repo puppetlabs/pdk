@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PDK::Generate::Module do
   context 'when gathering module information via the user interview' do
-    let (:metadata) do
+    let(:metadata) do
       PDK::Module::Metadata.new.update!(
         'version' => '0.1.0',
         'dependencies' => [

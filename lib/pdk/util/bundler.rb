@@ -111,7 +111,7 @@ module PDK
 
         def output_end(state)
           if Gem.win_platform?
-            $stderr.print (state == :success) ? _("done.\n") : _("FAILURE!\n")
+            $stderr.print((state == :success) ? _("done.\n") : _("FAILURE!\n"))
           else
             if state == :success
               @spinner.success

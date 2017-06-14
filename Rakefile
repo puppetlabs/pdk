@@ -10,7 +10,7 @@ if File.exist?(build_defs_file)
   begin
     require 'yaml'
     @build_defaults ||= YAML.load_file(build_defs_file)
-  rescue Exception => e
+  rescue StandardError => e
     STDERR.puts "Unable to load yaml from #{build_defs_file}:"
     STDERR.puts e
   end

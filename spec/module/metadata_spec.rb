@@ -40,7 +40,7 @@ describe PDK::Module::Metadata do
   end
 
   context 'when processing and validating metadata' do
-    let (:metadata) do
+    let(:metadata) do
       described_class.new.update!(
         'name' => 'foo-bar',
         'version' => '0.1.0',

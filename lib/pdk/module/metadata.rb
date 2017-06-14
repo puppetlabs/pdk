@@ -75,7 +75,7 @@ module PDK
       # Do basic validation and parsing of the name parameter.
       def process_name(data)
         validate_name(data['name'])
-        author, module_name = data['name'].split(%r{[-/]}, 2)
+        author, _modname = data['name'].split(%r{[-/]}, 2)
 
         data['author'] ||= author if @data['author'] == DEFAULTS['author']
       end
@@ -96,7 +96,7 @@ module PDK
                 'the module name must begin with a letter'
               else
                 'the namespace contains non-alphanumeric characters'
-        end
+              end
 
         raise ArgumentError, "Invalid 'name' field in metadata.json: #{err}"
       end

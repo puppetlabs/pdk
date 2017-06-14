@@ -142,7 +142,8 @@ module PDK
             if template_paths
               config_hash = template_dir.object_config
               yield template_paths, config_hash
-              return
+              # TODO: refactor to a search-and-execute form instead
+              return # work is done # rubocop:disable Lint/NonLocalExitFromIterator
             else
               if template[:allow_fallback]
                 PDK.logger.debug(_('Unable to find a %{type} template in %{url}, trying next template directory') % { type: object_type, url: template[:url] })

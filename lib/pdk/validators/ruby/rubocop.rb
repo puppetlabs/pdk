@@ -19,7 +19,7 @@ module PDK
                         ['--format', 'json']
                       else
                         ['--format', 'clang']
-        end
+                      end
 
         cmd_options.concat(targets)
       end
