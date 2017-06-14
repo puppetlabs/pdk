@@ -30,7 +30,8 @@ module PDK::CLI
   end
 
   def self.template_url_option(dsl)
-    dsl.option nil, 'template-url', _('Specifies the URL to the template to use when creating the module. Defaults to the template used to create the module.'), argument: :required, default: PDK::Generate::Module::DEFAULT_TEMPLATE
+    dsl.option nil, 'template-url', _('Specifies the URL to the template to use when creating the module. ' \
+      'Defaults to the template used to create the module.'), argument: :required, default: PDK::Generate::Module::DEFAULT_TEMPLATE
   end
 
   @base_cmd = Cri::Command.define do

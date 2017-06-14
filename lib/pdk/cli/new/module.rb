@@ -7,7 +7,8 @@ module PDK::CLI
 
     PDK::CLI.template_url_option(self)
 
-    option nil, 'license', _("Specifies the license this module is written under. This should be a identifier from https://spdx.org/licenses/. Common values are 'Apache-2.0', 'MIT', or 'proprietary'."), argument: :required
+    option nil, 'license', _('Specifies the license this module is written under. ' \
+      "This should be a identifier from https://spdx.org/licenses/. Common values are 'Apache-2.0', 'MIT', or 'proprietary'."), argument: :required
 
     option nil, 'vcs', _("Specifies the version control driver. Valid values: 'git', 'none'. Default: 'git'."), argument: :required
 
