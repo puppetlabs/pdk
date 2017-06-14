@@ -3,8 +3,6 @@ language: ruby
 before_install: gem install bundler -v 1.14.6
 bundler_args: "--without development"
 script:
-  - "bundle binstubs pdk"
-  - "cat Gemfile"
   - "cat Gemfile.lock"
   - "bundle exec rake $CHECK"
 cache: bundler

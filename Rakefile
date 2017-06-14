@@ -65,7 +65,7 @@ namespace :acceptance do
       File.open(generated_hosts_filename, 'w') do |hosts_file|
         hosts_file.print(cli.execute)
       end
-    
+
     else
       puts 'No TEST_TARGET set, falling back to regular beaker config'
     end
@@ -75,13 +75,6 @@ namespace :acceptance do
 
   desc 'Run acceptance tests against current code'
   RSpec::Core::RakeTask.new(:local) do |t|
-    ENV['BEAKER_TESTMODE'] = 'local'
-
-    # Set beaker to not attempt to allocate or provision any host
-    # See bug QA-2991 - beaker-testmode_switcher should do this automatically
-    ENV['BEAKER_setfile'] = 'spec/acceptance/nodesets/none.yml'
-    ENV['BEAKER_provision'] = 'no'
-
     t.pattern = 'spec/acceptance/**.rb'
   end
   task local: [:binstubs]

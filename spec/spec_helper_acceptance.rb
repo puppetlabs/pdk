@@ -1,61 +1,42 @@
-require 'beaker/testmode_switcher/dsl'
+require 'fileutils'
+require 'serverspec'
+require 'tmpdir'
 
-if Beaker::TestmodeSwitcher.testmode == :local
-  require 'serverspec'
-
-  if Gem.win_platform?
-    set :backend, :cmd
-  else
-    set :backend, :exec
-  end
-
-  # workaround pending release of https://github.com/puppetlabs/beaker-testmode_switcher/pull/13
-  def hosts
-    nil
-  end
-  def logger
-    nil
-  end
+if Gem.win_platform?
+  set :backend, :cmd
 else
-  require 'beaker-rspec'
+  set :backend, :exec
 end
 
-def workstation
-  find_at_most_one('workstation')
+tempdir = nil
+
+# Save bundle environment from being purged by specinfra. This needs to be repeated for every example, as specinfra does not correctly reset the environment after a `describe command()` block
+# presumably https://github.com/mizzy/specinfra/blob/79b62b37909545b67b7492574a97c300fb1dc91e/lib/specinfra/backend/exec.rb#L143-L165
+bundler_env = {}
+keys = %w[BUNDLER_EDITOR BUNDLE_BIN_PATH BUNDLE_GEMFILE
+            RUBYOPT GEM_HOME GEM_PATH GEM_CACHE]
+keys.each do |k|
+  bundler_env[k] = ENV[k] if ENV.key? k
 end
-
-# Return the path to pdk executable.
-# Returns the path to the binstub if executing locally
-def path_to_pdk
-  local_path = File.expand_path(File.join(__FILE__, '..', '..', 'bin', 'pdk'))
-  posix_path = '/opt/puppetlabs/sdk/bin/pdk'
-  windows_path = '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit/bin/pdk.bat'
-
-  if Beaker::TestmodeSwitcher.testmode == :local
-    return Gem.win_platform? ? "ruby #{local_path}" : local_path
-  end
-
-  if workstation['platform'] =~ /windows/
-    windows_path
-  else
-    posix_path
-  end
-end
+# dup to avoid pollution from specinfra
+Specinfra.configuration.env = bundler_env.dup
 
 RSpec.configure do |c|
   c.before(:suite) do
-    if Beaker::TestmodeSwitcher.testmode == :agent
-      # Install pdk on workstation host
-      if workstation['platform'] =~ /windows/
-        # BKR-1109 requests a neater way to install an MSI
-        msi_url = "http://#{ENV['BUILD_SERVER']}/puppet-sdk/#{ENV['SHA']}/repos/windows/puppet-sdk-x64.msi"
-        generic_install_msi_on(workstation, msi_url)
-      else
-        install_puppetlabs_dev_repo(workstation, 'puppet-sdk', ENV['SHA'], 'repo-config')
+    tempdir = Dir.mktmpdir
+    Dir.chdir(tempdir)
+    puts "Working in #{tempdir}"
+  end
+  c.after(:suite) do
+    Dir.chdir('/')
+    FileUtils.rm_rf(tempdir)
+    puts "Cleaned #{tempdir}"
+  end
 
-        # Install pdk package
-        workstation.install_package('puppet-sdk')
-      end
+  c.after(:each) do
+    # recover bundle environment from serverspec munging
+    bundler_env.keys.each do |k|
+      ENV[k] = bundler_env[k]
     end
   end
 end

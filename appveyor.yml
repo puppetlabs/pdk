@@ -1,17 +1,24 @@
-build: off
+# version: 1.0.{build}-{branch}
 
-# ruby versions under test
-platform:
-  - Ruby23-x64
-  - Ruby21-x64
+environment:
+  matrix:
+    - RUBY_VERSION: 23-x64
+    - RUBY_VERSION: 21-x64
 
-test_script:
-  - SET PATH=C:\%PLATFORM%\bin;%PATH%
+install:
+  - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
   - SET LOG_SPEC_ORDER=true
   - bundle install --jobs 4 --retry 2 --without development
-  - bundle binstubs pdk
-  - type Gemfile.lock
+
+build: off
+
+before_test:
   - ruby -v
+  - gem -v
+  - bundle -v
+  - type Gemfile.lock
+
+test_script:
   - bundle exec rake spec acceptance:local
 
 notifications:
