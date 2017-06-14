@@ -52,8 +52,8 @@ describe PDK::CLI::Util::OptionNormalizer do
       let(:param_type) { 'Integer' }
 
       before(:each) do
-        expect(PDK::CLI::Util::OptionValidator).to receive(:is_valid_param_name?).with(param_name).and_call_original
-        expect(PDK::CLI::Util::OptionValidator).to receive(:is_valid_data_type?).with(param_type).and_call_original
+        expect(PDK::CLI::Util::OptionValidator).to receive(:valid_param_name?).with(param_name).and_call_original
+        expect(PDK::CLI::Util::OptionValidator).to receive(:valid_data_type?).with(param_type).and_call_original
       end
 
       it { is_expected.to eq(name: param_name, type: param_type) }
@@ -61,7 +61,7 @@ describe PDK::CLI::Util::OptionNormalizer do
 
     context 'when passed a parameter without a data type' do
       before(:each) do
-        expect(PDK::CLI::Util::OptionValidator).to receive(:is_valid_param_name?).with(param_name).and_call_original
+        expect(PDK::CLI::Util::OptionValidator).to receive(:valid_param_name?).with(param_name).and_call_original
       end
 
       it 'defaults to a String data type' do
@@ -73,8 +73,8 @@ describe PDK::CLI::Util::OptionNormalizer do
       let(:param_type) { 'Variant[Enum["absent", "present"], Integer]' }
 
       before(:each) do
-        expect(PDK::CLI::Util::OptionValidator).to receive(:is_valid_param_name?).with(param_name).and_call_original
-        expect(PDK::CLI::Util::OptionValidator).to receive(:is_valid_data_type?).with(param_type).and_call_original
+        expect(PDK::CLI::Util::OptionValidator).to receive(:valid_param_name?).with(param_name).and_call_original
+        expect(PDK::CLI::Util::OptionValidator).to receive(:valid_data_type?).with(param_type).and_call_original
       end
 
       it { is_expected.to eq(name: param_name, type: param_type) }
@@ -82,7 +82,7 @@ describe PDK::CLI::Util::OptionNormalizer do
 
     context 'when passed an invalid parameter name' do
       before(:each) do
-        allow(PDK::CLI::Util::OptionValidator).to receive(:is_valid_param_name?).with(param_name).and_return(false)
+        allow(PDK::CLI::Util::OptionValidator).to receive(:valid_param_name?).with(param_name).and_return(false)
       end
 
       it { expect { subject }.to raise_error(PDK::CLI::FatalError, %r{'#{param_name}' is not a valid parameter name}) }
@@ -92,7 +92,7 @@ describe PDK::CLI::Util::OptionNormalizer do
       let(:param_type) { 'integer' }
 
       before(:each) do
-        allow(PDK::CLI::Util::OptionValidator).to receive(:is_valid_data_type?).with(param_type).and_return(false)
+        allow(PDK::CLI::Util::OptionValidator).to receive(:valid_data_type?).with(param_type).and_return(false)
       end
 
       it { expect { subject }.to raise_error(PDK::CLI::FatalError, %r{'#{param_type}' is not a valid data type}) }

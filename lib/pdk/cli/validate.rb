@@ -22,7 +22,7 @@ module PDK::CLI
 
       if args[0]
         # This may be a single validator, a list of validators, or a target.
-        if Util::OptionValidator.is_comma_separated_list?(args[0])
+        if Util::OptionValidator.comma_separated_list?(args[0])
           # This is a comma separated list. Treat each item as a validator.
 
           vals = Util::OptionNormalizer.comma_separated_list_to_array(args[0])

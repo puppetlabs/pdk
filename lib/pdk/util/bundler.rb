@@ -11,30 +11,31 @@ module PDK
       def self.ensure_bundle!
         bundle = BundleHelper.new
 
-        if bundle.has_gemfile?
-          unless bundle.locked?
-            unless bundle.lock!
-              raise PDK::CLI::FatalError, _('Unable to resolve Gemfile dependencies.')
-            end
-          end
+        unless bundle.gemfile?
+          PDK.logger.debug(_("No Gemfile found in '%{cwd}', skipping bundler management") % { cwd: Dir.pwd })
+          return
+        end
 
-          unless bundle.installed?
-            unless bundle.install!
-              raise PDK::CLI::FatalError, _('Unable to install missing Gemfile dependencies.')
-            end
+        unless bundle.locked?
+          unless bundle.lock!
+            raise PDK::CLI::FatalError, _('Unable to resolve Gemfile dependencies.')
+          end
+        end
+
+        unless bundle.installed? # rubocop:disable Style/GuardClause
+          unless bundle.install!
+            raise PDK::CLI::FatalError, _('Unable to install missing Gemfile dependencies.')
           end
         end
       end
 
       class BundleHelper
-        def has_gemfile?
-          # return a pure boolean
-          !!gemfile
+        def gemfile?
+          !gemfile.nil?
         end
 
         def locked?
-          # return a pure boolean
-          !!gemfile_lock
+          !gemfile_lock.nil?
         end
 
         def installed?
@@ -44,7 +45,7 @@ module PDK
 
           output_end(:success)
 
-          result[:exit_code] == 0
+          result[:exit_code].zero?
         end
 
         def lock!
@@ -52,7 +53,7 @@ module PDK
 
           result = invoke('lock')
 
-          if result[:exit_code] == 0
+          if result[:exit_code].zero?
             output_end(:success)
           else
             output_end(:failure)
@@ -60,7 +61,7 @@ module PDK
             $stderr.puts result[:stderr]
           end
 
-          result[:exit_code] == 0
+          result[:exit_code].zero?
         end
 
         def install!
@@ -68,7 +69,7 @@ module PDK
 
           result = invoke('install', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}")
 
-          if result[:exit_code] == 0
+          if result[:exit_code].zero?
             output_end(:success)
           else
             output_end(:failure)
@@ -76,7 +77,7 @@ module PDK
             $stderr.puts result[:stderr]
           end
 
-          result[:exit_code] == 0
+          result[:exit_code].zero?
         end
 
         private

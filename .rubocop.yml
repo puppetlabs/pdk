@@ -37,6 +37,11 @@ Metrics/PerceivedComplexity:
   Enabled: False
 
 # RSpec cops
+RSpec/BeforeAfterAll:
+  Description: Beware of using after(:all) as it may cause state to leak between tests. A necessary evil in acceptance testing.
+  Exclude:
+    - 'spec/acceptance/**/*.rb'
+
 RSpec/DescribeClass:
   Description: This cop does not account for rspec-puppet, and beaker-rspec usage.
   Enabled: False

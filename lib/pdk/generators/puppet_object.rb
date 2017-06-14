@@ -31,7 +31,7 @@ module PDK
         @module_dir = module_dir
         @options = options
 
-        if [:class, :defined_type].include?(object_type)
+        if [:class, :defined_type].include?(object_type) # rubocop:disable Style/GuardClause
           object_name_parts = object_name.split('::')
 
           @object_name = if object_name_parts.first == module_name
@@ -144,12 +144,10 @@ module PDK
               yield template_paths, config_hash
               # TODO: refactor to a search-and-execute form instead
               return # work is done # rubocop:disable Lint/NonLocalExitFromIterator
+            elsif template[:allow_fallback]
+              PDK.logger.debug(_('Unable to find a %{type} template in %{url}, trying next template directory') % { type: object_type, url: template[:url] })
             else
-              if template[:allow_fallback]
-                PDK.logger.debug(_('Unable to find a %{type} template in %{url}, trying next template directory') % { type: object_type, url: template[:url] })
-              else
-                raise PDK::CLI::FatalError, _('Unable to find the %{type} template in %{url}.') % { type: object_type, url: template[:url] }
-              end
+              raise PDK::CLI::FatalError, _('Unable to find the %{type} template in %{url}.') % { type: object_type, url: template[:url] }
             end
           end
         end

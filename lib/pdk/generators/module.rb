@@ -130,7 +130,7 @@ module PDK
         puts '-' * 40
         puts
 
-        if PDK::CLI::Input.get(_('About to generate this module; continue?'), 'Y') !~ %r{^y(es)?$}i
+        unless PDK::CLI::Input.get(_('About to generate this module; continue?'), 'Y') =~ %r{^y(es)?$}i # rubocop:disable Style/GuardClause
           puts _('Aborting...')
           exit 0
         end

@@ -25,7 +25,7 @@ module PDK::CLI
         exit 1
       end
 
-      unless Util::OptionValidator.is_valid_module_name?(module_name)
+      unless Util::OptionValidator.valid_module_name?(module_name)
         error_msg = _(
           "'%{module_name}' is not a valid module name.\n" \
           'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.',

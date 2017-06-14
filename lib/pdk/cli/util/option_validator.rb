@@ -2,7 +2,7 @@ module PDK
   module CLI
     module Util
       class OptionValidator
-        def self.is_comma_separated_list?(list, _options = {})
+        def self.comma_separated_list?(list, _options = {})
           (list =~ %r{^[\w\-]+(?:,[\w\-]+)+$}) ? true : false
         end
 
@@ -19,26 +19,26 @@ module PDK
 
         # Validate the module name against the regular expression in the
         # documentation: https://docs.puppet.com/puppet/4.10/modules_fundamentals.html#allowed-module-names
-        def self.is_valid_module_name?(string)
+        def self.valid_module_name?(string)
           !(string =~ %r{\A[a-z][a-z0-9_]*\Z}).nil?
         end
 
         # Validate a Puppet namespace against the regular expression in the
         # documentation: https://docs.puppet.com/puppet/4.10/lang_reserved.html#classes-and-defined-resource-types
-        def self.is_valid_namespace?(string)
+        def self.valid_namespace?(string)
           return false if (string || '').split('::').last == 'init'
 
           !(string =~ %r{\A([a-z][a-z0-9_]*)(::[a-z][a-z0-9_]*)*\Z}).nil?
         end
 
-        singleton_class.send(:alias_method, :is_valid_class_name?, :is_valid_namespace?)
-        singleton_class.send(:alias_method, :is_valid_defined_type_name?, :is_valid_namespace?)
+        singleton_class.send(:alias_method, :valid_class_name?, :valid_namespace?)
+        singleton_class.send(:alias_method, :valid_defined_type_name?, :valid_namespace?)
 
         # Validate that a class/defined type parameter matches the regular
         # expression in the documentation: https://docs.puppet.com/puppet/4.10/lang_reserved.html#parameters
         # The parameter should also not be a reserved word or overload
         # a metaparameter.
-        def self.is_valid_param_name?(string)
+        def self.valid_param_name?(string)
           reserved_words = %w[trusted facts server_facts title name].freeze
           metaparams = %w[alias audit before loglevel noop notify require schedule stage subscribe tag].freeze
           return false if reserved_words.include?(string) || metaparams.include?(string)
@@ -53,7 +53,7 @@ module PDK
         #   but that shouldn't be a problem for the current feature set. This
         #   should be replaced eventually by something better (or just call
         #   Puppet::Pops::Types::TypesParser)
-        def self.is_valid_data_type?(string)
+        def self.valid_data_type?(string)
           valid_types = %w[
             String Integer Float Numeric Boolean Array Hash Regexp Undef
             Default Class Resource Scalar Collection Variant Data Pattern Enum

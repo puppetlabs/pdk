@@ -29,7 +29,7 @@ describe 'Running `pdk new module`' do
     let(:module_name) { 'test123' }
 
     it 'validates the module name' do
-      expect(PDK::CLI::Util::OptionValidator).to receive(:is_valid_module_name?).with(module_name).and_call_original
+      expect(PDK::CLI::Util::OptionValidator).to receive(:valid_module_name?).with(module_name).and_call_original
       expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(name: module_name))
       expect(logger).to receive(:info).with("Creating new module: #{module_name}")
       PDK::CLI.run(['new', 'module', module_name])

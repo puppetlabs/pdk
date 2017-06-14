@@ -18,7 +18,7 @@ module PDK::CLI
         exit 1
       end
 
-      unless Util::OptionValidator.is_valid_class_name?(class_name)
+      unless Util::OptionValidator.valid_class_name?(class_name)
         raise PDK::CLI::FatalError, _("'%{name}' is not a valid class name") % { name: class_name }
       end
 

@@ -47,7 +47,7 @@ module PDK
           temp_dir = PDK::Util.make_tmpdir_name('pdk-module-template')
 
           clone_result = PDK::CLI::Exec.git('clone', path_or_url, temp_dir)
-          unless clone_result[:exit_code] == 0
+          unless clone_result[:exit_code].zero?
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
             raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'") % { repo: path_or_url, dest: temp_dir }
@@ -78,13 +78,13 @@ module PDK
       #
       # @api public
       def metadata
-        if @repo
-          ref_result = PDK::CLI::Exec.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long')
-          if ref_result[:exit_code] == 0
-            { 'template-url' => @repo, 'template-ref' => ref_result[:stdout].strip }
-          else
-            {}
-          end
+        return {} unless @repo
+
+        ref_result = PDK::CLI::Exec.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long')
+        if ref_result[:exit_code].zero?
+          { 'template-url' => @repo, 'template-ref' => ref_result[:stdout].strip }
+        else
+          {}
         end
       end
 
@@ -176,7 +176,7 @@ module PDK
           raise ArgumentError, _("The specified template '%{path}' is not a directory") % { path: @path }
         end
 
-        unless File.directory?(@moduleroot_dir)
+        unless File.directory?(@moduleroot_dir) # rubocop:disable Style/GuardClause
           raise ArgumentError, _("The template at '%{path}' does not contain a moduleroot directory") % { path: @path }
         end
       end
@@ -188,10 +188,14 @@ module PDK
       #
       # @api private
       def files_in_template
-        @files ||= Dir.glob(File.join(@moduleroot_dir, '**', '*'), File::FNM_DOTMATCH).select { |template_path|
-          File.file?(template_path) && !File.symlink?(template_path)
-        }.map do |template_path|
-          template_path.sub(%r{\A#{Regexp.escape(@moduleroot_dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
+        @files ||= begin
+          template_paths = Dir.glob(File.join(@moduleroot_dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
+            File.file?(template_path) && !File.symlink?(template_path)
+          end
+
+          template_paths.map do |template_path|
+            template_path.sub(%r{\A#{Regexp.escape(@moduleroot_dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
+          end
         end
       end
 

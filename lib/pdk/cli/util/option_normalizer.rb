@@ -3,7 +3,7 @@ module PDK
     module Util
       class OptionNormalizer
         def self.comma_separated_list_to_array(list, _options = {})
-          raise _('Error: expected comma separated list') unless OptionValidator.is_comma_separated_list?(list)
+          raise _('Error: expected comma separated list') unless OptionValidator.comma_separated_list?(list)
           list.split(',').compact
         end
 
@@ -29,11 +29,11 @@ module PDK
           param_name, param_type = value.split(':', 2)
           param_type = 'String' if param_type.nil?
 
-          unless PDK::CLI::Util::OptionValidator.is_valid_param_name?(param_name)
+          unless PDK::CLI::Util::OptionValidator.valid_param_name?(param_name)
             raise PDK::CLI::FatalError, _("'%{name}' is not a valid parameter name") % { name: param_name }
           end
 
-          unless PDK::CLI::Util::OptionValidator.is_valid_data_type?(param_type)
+          unless PDK::CLI::Util::OptionValidator.valid_data_type?(param_type)
             raise PDK::CLI::FatalError, _("'%{type}' is not a valid data type") % { type: param_type }
           end
 

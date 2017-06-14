@@ -4,14 +4,13 @@ describe PDK::Generate::PuppetObject do
   subject { described_class.new(module_dir, 'test_module::test_object', options) }
 
   let(:object_type) { :something }
+  let(:options) { {} }
+  let(:module_dir) { '/tmp/test_module' }
+  let(:metadata_path) { File.join(module_dir, 'metadata.json') }
+
   before(:each) do
     allow_any_instance_of(described_class).to receive(:object_type).and_return(object_type)
   end
-
-  let(:options) { {} }
-  let(:module_dir) { '/tmp/test_module' }
-
-  let(:metadata_path) { File.join(module_dir, 'metadata.json') }
 
   context 'when the module metadata.json is available' do
     let(:module_metadata) { '{"name": "testuser-test_module"}' }
@@ -32,6 +31,10 @@ describe PDK::Generate::PuppetObject do
       let(:default_templatedir) { instance_double('PDK::Module::TemplateDir', 'default') }
       let(:default_object_paths) { { object: 'default_object_path', spec: 'default_spec_path' } }
       let(:configs_hash) { {} }
+      let(:cli_templatedir) { instance_double('PDK::Module::TemplateDir', 'CLI') }
+      let(:cli_object_paths) { { object: 'cli_object_path', spec: 'cli_spec_path' } }
+      let(:metadata_templatedir) { instance_double('PDK::Module::TemplateDir', 'metadata') }
+      let(:metadata_object_paths) { { object: 'metadata_object_path', spec: 'metadata_spec_path' } }
 
       before(:each) do
         allow(default_templatedir).to receive(:object_template_for).with(object_type).and_return(default_object_paths)
@@ -40,9 +43,6 @@ describe PDK::Generate::PuppetObject do
         allow(metadata_templatedir).to receive(:object_config).and_return(configs_hash)
         allow(PDK::Module::TemplateDir).to receive(:new).with(PDK::Generate::Module::DEFAULT_TEMPLATE).and_yield(default_templatedir)
       end
-
-      let(:cli_templatedir) { instance_double('PDK::Module::TemplateDir', 'CLI') }
-      let(:cli_object_paths) { { object: 'cli_object_path', spec: 'cli_spec_path' } }
 
       context 'when a template-url is provided on the CLI' do
         let(:options) { { :'template-url' => '/some/path' } }
@@ -71,9 +71,6 @@ describe PDK::Generate::PuppetObject do
           end
         end
       end
-
-      let(:metadata_templatedir) { instance_double('PDK::Module::TemplateDir', 'metadata') }
-      let(:metadata_object_paths) { { object: 'metadata_object_path', spec: 'metadata_spec_path' } }
 
       context 'when a template-url is not provided on the CLI' do
         context 'and a template-url is found in the module metadata' do
