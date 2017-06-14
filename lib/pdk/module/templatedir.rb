@@ -219,9 +219,9 @@ module PDK
 
           if File.file?(config_path) && File.readable?(config_path)
             begin
-              @config = YAML.safe_load(File.read(config_path))
-            rescue
-              PDK.logger.warn(_("'%{file}' is not a valid YAML file") % { file: config_path })
+              @config = YAML.safe_load(File.read(config_path), [], [], true)
+            rescue StandardError => e
+              PDK.logger.warn(_("'%{file}' is not a valid YAML file: %{message}") % { file: config_path, message: e.message })
               @config = {}
             end
           else
