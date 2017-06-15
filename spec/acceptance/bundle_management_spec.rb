@@ -13,16 +13,16 @@ describe 'Managing Gemfile dependencies' do
 
   context 'when there is no Gemfile.lock' do
     before(:all) do
-      File.delete("Gemfile.lock") if File.exist?("Gemfile.lock")
+      File.delete('Gemfile.lock') if File.exist?('Gemfile.lock')
       # TODO: come up with a way to invoke only the bundler stuff without trying to run unit tests
       # @result = shell_ex("#{path_to_pdk} ", chdir: target_dir)
     end
 
-    describe command("pdk test unit") do
-      its(:exit_status) { pending "json install requires ruby devkit" if Gem.win_platform?; is_expected.to eq 0 }
-      its(:stderr) { is_expected.to match(/Checking for missing Gemfile dependencies/i) }
+    describe command('pdk test unit') do
+      its(:exit_status) { pending 'json install requires ruby devkit' if Gem.win_platform?; is_expected.to eq 0 }
+      its(:stderr) { is_expected.to match(%r{Checking for missing Gemfile dependencies}i) }
 
-      describe file("Gemfile.lock") do
+      describe file('Gemfile.lock') do
         it { is_expected.to be_file }
       end
     end
@@ -40,9 +40,9 @@ describe 'Managing Gemfile dependencies' do
       FileUtils.mv('Gemfile.old', 'Gemfile')
     end
 
-    describe command("pdk test unit") do
+    describe command('pdk test unit') do
       its(:exit_status) { is_expected.not_to eq 0 }
-      its(:stderr) { is_expected.to match(/error parsing `gemfile`/i) }
+      its(:stderr) { is_expected.to match(%r{error parsing `gemfile`}i) }
     end
   end
 end

@@ -34,7 +34,7 @@ module PDK
       # @raise [ArgumentError] (see #validate_module_template!)
       #
       # @api public
-      def initialize(path_or_url, &block)
+      def initialize(path_or_url)
         if File.directory?(path_or_url)
           @path = path_or_url
         else
@@ -47,10 +47,10 @@ module PDK
           temp_dir = PDK::Util.make_tmpdir_name('pdk-module-template')
 
           clone_result = PDK::CLI::Exec.git('clone', path_or_url, temp_dir)
-          unless clone_result[:exit_code] == 0
+          unless clone_result[:exit_code].zero?
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
-            raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'") % {:repo => path_or_url, :dest => temp_dir}
+            raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'") % { repo: path_or_url, dest: temp_dir }
           end
           @path = temp_dir
           @repo = path_or_url
@@ -78,13 +78,13 @@ module PDK
       #
       # @api public
       def metadata
-        if @repo
-          ref_result = PDK::CLI::Exec.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long')
-          if ref_result[:exit_code] == 0
-            {'template-url' => @repo, 'template-ref' => ref_result[:stdout].strip}
-          else
-            {}
-          end
+        return {} unless @repo
+
+        ref_result = PDK::CLI::Exec.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long')
+        if ref_result[:exit_code].zero?
+          { 'template-url' => @repo, 'template-ref' => ref_result[:stdout].strip }
+        else
+          {}
         end
       end
 
@@ -101,18 +101,18 @@ module PDK
       # @return [void]
       #
       # @api public
-      def render(&block)
+      def render
         files_in_template.each do |template_file|
-          PDK.logger.debug(_("Rendering '%{template}'...") % {:template => template_file})
-          dest_path = template_file.sub(/\.erb\Z/, '')
+          PDK.logger.debug(_("Rendering '%{template}'...") % { template: template_file })
+          dest_path = template_file.sub(%r{\.erb\Z}, '')
 
           begin
-            dest_content = PDK::TemplateFile.new(File.join(@moduleroot_dir, template_file), {:configs => config_for(dest_path)}).render
+            dest_content = PDK::TemplateFile.new(File.join(@moduleroot_dir, template_file), configs: config_for(dest_path)).render
           rescue => e
             error_msg = _(
-              "Failed to render template '%{template}'\n" +
-              "%{exception}: %{message}"
-              ) % {:template => template_file, :exception => e.class, :message => e.message}
+              "Failed to render template '%{template}'\n" \
+              '%{exception}: %{message}',
+            ) % { template: template_file, exception: e.class, message: e.message }
             raise PDK::CLI::FatalError, error_msg
           end
 
@@ -134,11 +134,11 @@ module PDK
       #
       # @api public
       def object_template_for(object_type)
-        object_path = File.join(@object_dir, "#{object_type.to_s}.erb")
-        spec_path = File.join(@object_dir, "#{object_type.to_s}_spec.erb")
+        object_path = File.join(@object_dir, "#{object_type}.erb")
+        spec_path = File.join(@object_dir, "#{object_type}_spec.erb")
 
         if File.file?(object_path) && File.readable?(object_path)
-          result = {object: object_path}
+          result = { object: object_path }
           result[:spec] = spec_path if File.file?(spec_path) && File.readable?(spec_path)
           result
         else
@@ -159,7 +159,9 @@ module PDK
       def object_config
         config_for(nil)
       end
-    private
+
+      private
+
       # Validate the content of the template directory.
       #
       # @raise [ArgumentError] If the specified path is not a directory.
@@ -171,11 +173,11 @@ module PDK
       # @api private
       def validate_module_template!
         unless File.directory?(@path)
-          raise ArgumentError, _("The specified template '%{path}' is not a directory") % {:path => @path}
+          raise ArgumentError, _("The specified template '%{path}' is not a directory") % { path: @path }
         end
 
-        unless File.directory?(@moduleroot_dir)
-          raise ArgumentError, _("The template at '%{path}' does not contain a moduleroot directory") % {:path => @path}
+        unless File.directory?(@moduleroot_dir) # rubocop:disable Style/GuardClause
+          raise ArgumentError, _("The template at '%{path}' does not contain a moduleroot directory") % { path: @path }
         end
       end
 
@@ -186,11 +188,15 @@ module PDK
       #
       # @api private
       def files_in_template
-        @files ||= Dir.glob(File.join(@moduleroot_dir, "**", "*"), File::FNM_DOTMATCH).select { |template_path|
-          File.file?(template_path) && !File.symlink?(template_path)
-        }.map { |template_path|
-          template_path.sub(/\A#{Regexp.escape(@moduleroot_dir)}#{Regexp.escape(File::SEPARATOR)}/, '')
-        }
+        @files ||= begin
+          template_paths = Dir.glob(File.join(@moduleroot_dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
+            File.file?(template_path) && !File.symlink?(template_path)
+          end
+
+          template_paths.map do |template_path|
+            template_path.sub(%r{\A#{Regexp.escape(@moduleroot_dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
+          end
+        end
       end
 
       # Generate a hash of data to be used when rendering the specified
@@ -213,9 +219,9 @@ module PDK
 
           if File.file?(config_path) && File.readable?(config_path)
             begin
-              @config = YAML.load(File.read(config_path))
-            rescue
-              PDK.logger.warn(_("'%{file}' is not a valid YAML file") % {:file => config_path})
+              @config = YAML.safe_load(File.read(config_path), [], [], true)
+            rescue StandardError => e
+              PDK.logger.warn(_("'%{file}' is not a valid YAML file: %{message}") % { file: config_path, message: e.message })
               @config = {}
             end
           else

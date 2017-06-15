@@ -16,10 +16,10 @@ module PDK
 
       def self.parse_options(options, targets)
         cmd_options = if options[:format] && options[:format] == 'junit'
-          ['--format', 'json']
-        else
-          ['--format', 'clang']
-        end
+                        ['--format', 'json']
+                      else
+                        ['--format', 'clang']
+                      end
 
         cmd_options.concat(targets)
       end

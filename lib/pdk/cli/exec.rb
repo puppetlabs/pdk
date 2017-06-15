@@ -32,12 +32,12 @@ module PDK
         end
 
         {
-          :exit_code => process.exit_code,
-          :stdout => stdout,
-          :stderr => stderr
+          exit_code: process.exit_code,
+          stdout: stdout,
+          stderr: stderr,
         }
       rescue ChildProcess::LaunchError => e
-        raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: cmd.join(" "), message: e.message}
+        raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: cmd.join(' '), message: e.message }
       end
 
       def self.pdk_basedir
@@ -63,12 +63,12 @@ module PDK
       end
 
       def self.try_vendored_bin(vendored_bin_path, fallback)
-        if File.exists?(vendored_bin_path)
-          PDK.logger.debug(_("Using '%{vendored_bin_path}'") % {fallback: fallback, vendored_bin_path: vendored_bin_path})
-          return vendored_bin_path
+        if File.exist?(vendored_bin_path)
+          PDK.logger.debug(_("Using '%{vendored_bin_path}'") % { fallback: fallback, vendored_bin_path: vendored_bin_path })
+          vendored_bin_path
         else
-          PDK.logger.debug(_("Trying '%{fallback}' from the system PATH, instead of '%{vendored_bin_path}'") % {fallback: fallback, vendored_bin_path: vendored_bin_path})
-          return fallback
+          PDK.logger.debug(_("Trying '%{fallback}' from the system PATH, instead of '%{vendored_bin_path}'") % { fallback: fallback, vendored_bin_path: vendored_bin_path })
+          fallback
         end
       end
     end

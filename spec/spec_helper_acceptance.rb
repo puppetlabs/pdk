@@ -14,7 +14,7 @@ tempdir = nil
 # presumably https://github.com/mizzy/specinfra/blob/79b62b37909545b67b7492574a97c300fb1dc91e/lib/specinfra/backend/exec.rb#L143-L165
 bundler_env = {}
 keys = %w[BUNDLER_EDITOR BUNDLE_BIN_PATH BUNDLE_GEMFILE
-            RUBYOPT GEM_HOME GEM_PATH GEM_CACHE]
+          RUBYOPT GEM_HOME GEM_PATH GEM_CACHE]
 keys.each do |k|
   bundler_env[k] = ENV[k] if ENV.key? k
 end

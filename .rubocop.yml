@@ -1,17 +1,112 @@
 require: rubocop-rspec
+inherit_from: .rubocop_todo.yml
 
 AllCops:
   TargetRubyVersion: 2.1.9
 
-# Allow longer lines
-Metrics/LineLength:
-  Max: 200
+# Metrics, excludes complexity and sizing metrics for now, as ruby's defaults are very strict
+Metrics/AbcSize:
+  Enabled: False
 
-# rspec uses long describe blocks, so allow long blocks under spec/
 Metrics/BlockLength:
+  Description: rspec uses long describe blocks, so allow long blocks under spec/
+  Enabled: False
   Exclude:
     - 'spec/**/*.rb'
 
-# Allow longer specs
-RSpec/ExampleLength:
-  Max: 50
+Metrics/ClassLength:
+  Enabled: False
+
+Metrics/CyclomaticComplexity:
+  Enabled: False
+
+Metrics/LineLength:
+  Description: People have wide screens, use them.
+  Max: 200
+
+Metrics/MethodLength:
+  Enabled: False
+
+Metrics/ModuleLength:
+  Enabled: False
+
+Metrics/ParameterLists:
+  Enabled: False
+
+Metrics/PerceivedComplexity:
+  Enabled: False
+
+# RSpec cops
+RSpec/BeforeAfterAll:
+  Description: Beware of using after(:all) as it may cause state to leak between tests. A necessary evil in acceptance testing.
+  Exclude:
+    - 'spec/acceptance/**/*.rb'
+
+RSpec/DescribeClass:
+  Description: This cop does not account for rspec-puppet, and beaker-rspec usage.
+  Enabled: False
+
+RSpec/HookArgument:
+  Description: Prefer explicit :each argument, matching existing module's style
+  EnforcedStyle: each
+
+# Style Cops
+Style/AsciiComments:
+  Description: Names, non-english speaking communities.
+  Enabled: False
+
+Style/BlockDelimiters:
+  Description: Prefer braces for chaining. Mostly an aesthetical choice. Better to be consistent then.
+  EnforcedStyle: braces_for_chaining
+
+Style/ClassAndModuleChildren:
+  Description: Compact style reduces the required amount of indentation.
+  EnforcedStyle: compact
+
+Style/EmptyElse:
+  Description: Enforce against empty else clauses, but allow `nil` for clarity.
+  EnforcedStyle: empty
+
+Style/FormatString:
+  Description: Following the main puppet project's style, prefer the % format format.
+  EnforcedStyle: percent
+
+Style/FormatStringToken:
+  Description: Following the main puppet project's style, prefer the simpler template tokens over annotated ones.
+  EnforcedStyle: template
+
+Style/IfUnlessModifier:
+  Description: Post-fix `if` modifiers are hard to parse for newcomers. We don't want to encourage them. Post-fix `unless` modifiers could be nice in some cases, but the Cop doesn't differentiate.
+  Enabled: false
+
+Style/Lambda:
+  Description: Prefer the keyword for easier discoverability.
+  EnforcedStyle: literal
+
+Style/MethodCalledOnDoEndBlock:
+  Enabled: true
+
+Style/RegexpLiteral:
+  Description: Community preference. See https://github.com/voxpupuli/modulesync_config/issues/168
+  EnforcedStyle: percent_r
+
+Style/SymbolProc:
+  Description: SymbolProc notation is not discoverable
+  Enabled: false
+
+Style/TernaryParentheses:
+  Description: Checks for use of parentheses around ternary conditions. Enforce parentheses on complex expressions for better readability, but seriously consider breaking it up.
+  EnforcedStyle: require_parentheses_when_complex
+
+Style/TrailingCommaInArguments:
+  Description: Prefer always trailing comma on multiline argument lists. This makes diffs, and re-ordering nicer.
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInLiteral:
+  Description: Prefer always trailing comma on multiline literals. This makes diffs, and re-ordering nicer.
+  EnforcedStyleForMultiline: comma
+
+Style/SymbolArray:
+  Description: Using percent style obscures symbolic intent of array's contents.
+  Enabled: true
+  EnforcedStyle: brackets

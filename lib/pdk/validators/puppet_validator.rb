@@ -12,14 +12,14 @@ module PDK
       end
 
       def self.puppet_validators
-        [ PuppetLint, PuppetParser ]
+        [PuppetLint, PuppetParser]
       end
 
       def self.invoke(options = {})
         results = {}
         puppet_validators.each do |validator|
           output = validator.invoke(options)
-          results.merge!("#{validator.name}" => output)
+          results.merge!(validator.name.to_s => output)
         end
         results
       end

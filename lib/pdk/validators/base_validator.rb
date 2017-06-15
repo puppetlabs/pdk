@@ -14,7 +14,7 @@ module PDK
         end
       end
 
-      def self.parse_options(options, targets)
+      def self.parse_options(_options, targets)
         targets
       end
 
@@ -22,7 +22,7 @@ module PDK
         targets = parse_targets(options)
         cmd_options = parse_options(options, targets)
 
-        PDK.logger.debug(_("Running %{cmd} with options: %{options}") % {cmd: cmd, options: cmd_options})
+        PDK.logger.debug(_('Running %{cmd} with options: %{options}') % { cmd: cmd, options: cmd_options })
         result = PDK::CLI::Exec.execute(cmd, *cmd_options)
         result
       end

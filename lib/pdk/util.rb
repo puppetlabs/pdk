@@ -16,7 +16,8 @@ module PDK
       until !File.directory?(current) || current == previous
         filename = File.join(current, target)
         return filename if File.file?(filename)
-        current, previous = File.expand_path("..", current), current
+        previous = current
+        current = File.expand_path('..', current)
       end
     end
     module_function :find_upwards
@@ -35,13 +36,13 @@ module PDK
     #
     # @return [String] Fully qualified path to per-user PDK cachedir.
     def cachedir
-      if Gem.win_platform?
-        basedir = ENV['LOCALAPPDATA']
-      else
-        basedir = Dir.home
-      end
+      basedir = if Gem.win_platform?
+                  ENV['LOCALAPPDATA']
+                else
+                  Dir.home
+                end
 
-      return File.join(basedir, '.pdk', 'cache')
+      File.join(basedir, '.pdk', 'cache')
     end
     module_function :cachedir
 
@@ -50,13 +51,13 @@ module PDK
     # @return [String, nil] Fully qualified base path to module, or nil if
     #   the current working dir does not appear to be within a module.
     def module_root
-      if metadata_path = find_upwards("metadata.json")
-        return File.dirname(metadata_path)
+      metadata_path = find_upwards('metadata.json')
+      if metadata_path
+        File.dirname(metadata_path)
       else
-        return nil
+        nil
       end
     end
     module_function :module_root
-
   end
 end

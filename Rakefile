@@ -1,5 +1,5 @@
-require "bundler/gem_tasks"
-require "rspec/core/rake_task"
+require 'bundler/gem_tasks'
+require 'rspec/core/rake_task'
 
 gettext_spec = Gem::Specification.find_by_name 'gettext-setup'
 load "#{gettext_spec.gem_dir}/lib/tasks/gettext.rake"
@@ -10,7 +10,7 @@ if File.exist?(build_defs_file)
   begin
     require 'yaml'
     @build_defaults ||= YAML.load_file(build_defs_file)
-  rescue Exception => e
+  rescue StandardError => e
     STDERR.puts "Unable to load yaml from #{build_defs_file}:"
     STDERR.puts e
   end
@@ -20,17 +20,17 @@ if File.exist?(build_defs_file)
   raise "Could not find packaging repo in #{build_defs_file}" if @packaging_repo.nil?
 
   namespace :package do
-    desc "Bootstrap packaging automation (clone packaging repo)"
+    desc 'Bootstrap packaging automation (clone packaging repo)'
     task :bootstrap do
       if File.exist?("ext/#{@packaging_repo}")
         puts "It looks like you already have ext/#{@packaging_repo}. If you don't like it, blow it away with package:implode."
       else
         cd 'ext' do
-          %x{git clone #{@packaging_url}}
+          `git clone #{@packaging_url}`
         end
       end
     end
-    desc "Remove all cloned packaging automation"
+    desc 'Remove all cloned packaging automation'
     task :implode do
       rm_rf "ext/#{@packaging_repo}"
     end
@@ -42,20 +42,19 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 namespace :acceptance do
-
   desc 'Run acceptance tests against a puppet-sdk package'
   RSpec::Core::RakeTask.new(:package) do |t|
     require 'beaker-hostgenerator'
 
     ENV['BEAKER_TESTMODE'] = 'agent'
 
-    unless ENV['SHA'] then
+    unless ENV['SHA']
       abort 'Environment variable SHA must be set to the SHA or tag of a puppet-sdk build'
     end
 
     test_target = ENV['TEST_TARGET']
-    if test_target then
-      unless ENV['BUILD_SERVER'] || test_target !~ /win/
+    if test_target
+      unless ENV['BUILD_SERVER'] || test_target !~ %r{win}
         abort 'Testing against Windows requires environment variable BUILD_SERVER '\
               'to be set to the hostname of your build server (JIRA BKR-1109)'
       end
@@ -84,12 +83,12 @@ desc 'run static analysis with rubocop'
 task(:rubocop) do
   require 'rubocop'
   cli = RuboCop::CLI.new
-  exit_code = cli.run(%w(--display-cop-names --format simple))
-  raise "RuboCop detected offenses" if exit_code != 0
+  exit_code = cli.run(%w[--display-cop-names --format simple])
+  raise 'RuboCop detected offenses' if exit_code != 0
 end
 
 task(:binstubs) do
   system('bundle binstubs pdk --force')
 end
 
-task :default => :spec
+task default: :spec
