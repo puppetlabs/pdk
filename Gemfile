@@ -11,7 +11,6 @@ gem 'rubocop'
 gem 'nokogiri', '1.7.2'
 
 group(:development, :test) do
-  gem 'bundler', '~> 1.13'
   gem 'pry-byebug', '~> 3.4'
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
