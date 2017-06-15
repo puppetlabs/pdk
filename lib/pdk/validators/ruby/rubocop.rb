@@ -1,5 +1,6 @@
 require 'pdk'
 require 'pdk/cli/exec'
+require 'pdk/util/bundler'
 require 'pdk/validators/base_validator'
 require 'pdk/validators/ruby_validator'
 
@@ -22,6 +23,10 @@ module PDK
                       end
 
         cmd_options.concat(targets)
+      end
+
+      def self.invoke(options = {})
+        # PDK::Util::Bundler.ensure_binstubs!(
       end
     end
   end

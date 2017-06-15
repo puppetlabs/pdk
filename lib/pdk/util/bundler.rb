@@ -29,6 +29,14 @@ module PDK
         end
       end
 
+      def self.ensure_binstubs!(*gems)
+        bundle = BundleHelper.new
+
+        unless bundle.binstubs!(gems)
+          raise PDK::CLI::FatalError, _('Unable to install requested binstubs.')
+        end
+      end
+
       class BundleHelper
         def gemfile?
           !gemfile.nil?
@@ -76,6 +84,13 @@ module PDK
             $stderr.puts result[:stdout]
             $stderr.puts result[:stderr]
           end
+
+          result[:exit_code].zero?
+        end
+
+        def binstubs!(gems)
+          # FIXME: wrap in progress indicator
+          result = invoke('binstubs', gems.join(' '), '--force')
 
           result[:exit_code].zero?
         end
