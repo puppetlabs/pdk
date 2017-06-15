@@ -5,16 +5,19 @@ gemspec
 
 gem 'metadata-json-lint'
 gem 'puppet-lint'
-gem 'rubocop'
 
 # avoid newer versions that do not support ruby 2.1 anymore
 gem 'nokogiri', '1.7.2'
 
-group(:development, :test) do
+group :development do
   gem 'pry-byebug', '~> 3.4'
+end
+
+group :test do
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
-  gem 'rubocop-rspec'
+  gem 'rubocop', '= 0.49.1'
+  gem 'rubocop-rspec', '= 1.15.1'
 end
 
 group :acceptance do
