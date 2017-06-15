@@ -62,7 +62,7 @@ module PDK
           @stderr.sync = true
         end
 
-        def add_spinner(message, opts={})
+        def add_spinner(message, opts = {})
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
@@ -92,7 +92,7 @@ module PDK
 
           # Stop spinning when done (if configured).
           if @spinner
-            if @process.exit_code == 0 && @success_message
+            if @process.exit_code.zero? && @success_message
               @spinner.success(@success_message)
             elsif @failure_message
               @spinner.error(@failure_message)
