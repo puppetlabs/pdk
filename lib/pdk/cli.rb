@@ -7,6 +7,7 @@ require 'pdk/generators/module'
 require 'pdk/i18n'
 require 'pdk/logger'
 require 'pdk/report'
+require 'pdk/version'
 
 module PDK::CLI
   def self.run(args)
@@ -40,6 +41,11 @@ module PDK::CLI
     summary _('Puppet Development Kit')
     description _('The shortest path to better modules.')
     default_subcommand 'help'
+
+    flag nil, :version, _('show version of pdk') do |_, _|
+      puts PDK.version_string
+      exit 0
+    end
 
     flag :h, :help, _('show help for this command') do |_, c|
       puts c.help
