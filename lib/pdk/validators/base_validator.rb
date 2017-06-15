@@ -23,7 +23,13 @@ module PDK
         cmd_options = parse_options(options, targets)
 
         PDK.logger.debug(_('Running %{cmd} with options: %{options}') % { cmd: cmd, options: cmd_options })
-        result = PDK::CLI::Exec.execute(cmd, *cmd_options)
+
+        command = PDK::CLI::Exec::Command.new(cmd, *cmd_options).tap do |c|
+          c.context = :module
+          #c.add_spinner(_("Invoking %{c} %{args}") % { c: cmd, args: cmd_options.join(' ') })
+        end
+
+        result = command.execute!
         result
       end
     end
