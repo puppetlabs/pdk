@@ -1,15 +1,7 @@
 require 'spec_helper_acceptance'
 
 describe 'Creating a new class' do
-  before(:all) do
-    system('pdk new module foo --skip-interview') || raise
-    Dir.chdir('foo')
-  end
-
-  after(:all) do
-    Dir.chdir('..')
-    FileUtils.rm_rf('foo')
-  end
+  include_context 'in a new module', 'foo'
 
   context 'when creating the main class' do
     describe command('pdk new class foo') do

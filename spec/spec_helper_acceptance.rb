@@ -2,6 +2,9 @@ require 'fileutils'
 require 'serverspec'
 require 'tmpdir'
 
+# automatically load any shared examples or contexts
+Dir['./spec/acceptance/support/**/*.rb'].sort.each { |f| require f }
+
 if Gem.win_platform?
   set :backend, :cmd
 else
