@@ -1,3 +1,4 @@
+require 'bundler'
 require 'childprocess'
 require 'tempfile'
 require 'tty-spinner'
@@ -5,10 +6,6 @@ require 'tty-spinner'
 module PDK
   module CLI
     module Exec
-      # TODO: decide how to handle multiple output targets when underlying tool doesn't support that
-      # TODO: decide what this method should return
-      # TODO: decide how/when to connect stdin to child process for things like pry
-      # TODO: need a way to set progress callbacks on new stdout data
       def self.execute(*cmd)
         Command.new(*cmd).execute!
       end
@@ -45,9 +42,11 @@ module PDK
         end
       end
 
-      # Experimental instance-based approach
+      # TODO: decide how/when to connect stdin to child process for things like pry
+      # TODO: need a way to set callbacks on new stdout/stderr data
       class Command
         attr_reader :argv
+        attr_reader :context
         attr_accessor :timeout
 
         def initialize(*argv)
@@ -55,11 +54,23 @@ module PDK
 
           @process = ChildProcess.build(*@argv)
           @process.leader = true
-          @stdout = @process.io.stdout = Tempfile.new('stdout')
-          @stderr = @process.io.stderr = Tempfile.new('stderr')
 
-          @stdout.sync = true
-          @stderr.sync = true
+          @stdout = Tempfile.new('stdout').tap { |io| io.sync = true }
+          @stderr = Tempfile.new('stderr').tap { |io| io.sync = true }
+
+          @process.io.stdout = @stdout
+          @process.io.stderr = @stderr
+
+          # Default to running things in the system context.
+          @context = :system
+        end
+
+        def context=(new_context)
+          if %i{system module}.include?(new_context)
+            @context = new_context
+          else
+            raise ArgumentError, _("Expected execution context to be :system or :module but got '%{context}'") % { context: new_contenxt }
+          end
         end
 
         def add_spinner(message, opts = {})
@@ -73,21 +84,16 @@ module PDK
           # Start spinning if configured.
           @spinner.auto_spin if @spinner
 
-          begin
-            @process.start
-          rescue ChildProcess::LaunchError => e
-            raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: @process.argv.join(" "), message: e.message}
-          end
+          if context == :module
+            # FIXME: manage ENV more precisely as well.
 
-          if timeout
-            begin
-              @process.poll_for_exit(timeout)
-            rescue ChildProcess::TimeoutError
-              @process.stop # tries increasingly harsher methods to kill the process.
+            Dir.chdir(PDK::Util.module_root) do
+              ::Bundler.with_clean_env do
+                run_process!
+              end
             end
           else
-            # Wait indfinitely if no timeout set.
-            @process.wait
+            run_process!
           end
 
           # Stop spinning when done (if configured).
@@ -114,6 +120,27 @@ module PDK
         ensure
           @stdout.close
           @stderr.close
+        end
+
+        protected
+
+        def run_process!
+          begin
+            @process.start
+          rescue ChildProcess::LaunchError => e
+            raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: @process.argv.join(' '), message: e.message }
+          end
+
+          if timeout
+            begin
+              @process.poll_for_exit(timeout)
+            rescue ChildProcess::TimeoutError
+              @process.stop # tries increasingly harsher methods to kill the process.
+            end
+          else
+            # Wait indfinitely if no timeout set.
+            @process.wait
+          end
         end
       end
     end
