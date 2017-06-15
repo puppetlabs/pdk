@@ -66,11 +66,11 @@ module PDK
         end
 
         def context=(new_context)
-          if %i{system module}.include?(new_context)
-            @context = new_context
-          else
+          unless [:system, :module].include?(new_context)
             raise ArgumentError, _("Expected execution context to be :system or :module but got '%{context}'") % { context: new_contenxt }
           end
+
+          @context = new_context
         end
 
         def add_spinner(message, opts = {})
