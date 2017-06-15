@@ -77,7 +77,7 @@ module PDK
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
-          @spinner = TTY::Spinner.new(message, opts)
+          @spinner = TTY::Spinner.new("[:spinner] #{message}", opts)
         end
 
         def execute!
@@ -98,12 +98,10 @@ module PDK
 
           # Stop spinning when done (if configured).
           if @spinner
-            if @process.exit_code.zero? && @success_message
+            if @process.exit_code.zero?
               @spinner.success(@success_message)
-            elsif @failure_message
-              @spinner.error(@failure_message)
             else
-              @spinner.stop
+              @spinner.error(@failure_message)
             end
           end
 
