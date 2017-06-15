@@ -1,5 +1,6 @@
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
+require 'rubocop/rake_task'
 
 gettext_spec = Gem::Specification.find_by_name 'gettext-setup'
 load "#{gettext_spec.gem_dir}/lib/tasks/gettext.rake"
@@ -79,12 +80,8 @@ namespace :acceptance do
   task local: [:binstubs]
 end
 
-desc 'run static analysis with rubocop'
-task(:rubocop) do
-  require 'rubocop'
-  cli = RuboCop::CLI.new
-  exit_code = cli.run(%w[--display-cop-names --format simple])
-  raise 'RuboCop detected offenses' if exit_code != 0
+RuboCop::RakeTask.new(:rubocop) do |task|
+  task.options = %w[-D -S -E]
 end
 
 task(:binstubs) do

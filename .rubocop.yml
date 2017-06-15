@@ -3,6 +3,14 @@ inherit_from: .rubocop_todo.yml
 
 AllCops:
   TargetRubyVersion: 2.1.9
+  Exclude:
+    # binstubs, and other utilities
+    - bin/**/*
+    - vendor/bundle/**/*
+
+Layout/IndentHeredoc:
+  Description: The `squiggly` style would be preferable, but is only available from ruby 2.3. We'll enable this when we can.
+  Enabled: False
 
 # Metrics, excludes complexity and sizing metrics for now, as ruby's defaults are very strict
 Metrics/AbcSize:
