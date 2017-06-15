@@ -1,5 +1,6 @@
 require 'tmpdir'
 require 'tempfile'
+require 'puppet/util/windows'
 
 module PDK
   module Util
@@ -31,6 +32,23 @@ module PDK
       Dir::Tmpname.make_tmpname(File.join(Dir.tmpdir, base), nil)
     end
     module_function :make_tmpdir_name
+
+    # Return an expanded, absolute path
+    #
+    # @param path [String] Existing path that may not be canonical
+    #
+    # @return [String] Canonical path
+    def canonical_path(path)
+      if Gem.win_platform?
+        unless File.exist?(path)
+          raise PDK::CLI::FatalError, _("Cannot resolve a full path to '%{path}' as it does not currently exist") % { path: path }
+        end
+        Puppet::Util::Windows::File.get_long_pathname(path)
+      else
+        File.expand_path(path)
+      end
+    end
+    module_function :canonical_path
 
     # Returns the fully qualified path to a per-user PDK cachedir.
     #
