@@ -26,7 +26,7 @@ module PDK
 
         command = PDK::CLI::Exec::Command.new(cmd, *cmd_options).tap do |c|
           c.context = :module
-          #c.add_spinner(_("Invoking %{c} %{args}") % { c: cmd, args: cmd_options.join(' ') })
+          # c.add_spinner(_("Invoking %{c} %{args}") % { c: cmd, args: cmd_options.join(' ') })
         end
 
         result = command.execute!

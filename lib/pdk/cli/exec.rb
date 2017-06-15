@@ -126,7 +126,7 @@ module PDK
           begin
             @process.start
           rescue ChildProcess::LaunchError => e
-            raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: @process.argv.join(' '), message: e.message }
+            raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: argv.join(' '), message: e.message }
           end
 
           if timeout
