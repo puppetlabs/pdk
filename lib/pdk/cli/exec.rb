@@ -99,9 +99,9 @@ module PDK
           # Stop spinning when done (if configured).
           if @spinner
             if @process.exit_code.zero?
-              @spinner.success(@success_message)
+              @spinner.success(@success_message || '')
             else
-              @spinner.error(@failure_message)
+              @spinner.error(@failure_message || '')
             end
           end
 
