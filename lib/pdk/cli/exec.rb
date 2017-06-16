@@ -32,6 +32,13 @@ module PDK
         execute(try_vendored_bin(vendored_bin_path, bundle_bin), *args)
       end
 
+      def self.bundle_bin
+        bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
+        vendored_bin_path = File.join(pdk_basedir, 'private', 'ruby', '2.1.9', 'bin', bundle_bin)
+
+        try_vendored_bin(vendored_bin_path, bundle_bin)
+      end
+
       def self.try_vendored_bin(vendored_bin_path, fallback)
         if File.exist?(vendored_bin_path)
           PDK.logger.debug(_("Using '%{vendored_bin_path}'") % { fallback: fallback, vendored_bin_path: vendored_bin_path })
@@ -85,7 +92,8 @@ module PDK
           @spinner.auto_spin if @spinner
 
           if context == :module
-            # FIXME: manage ENV more precisely as well.
+            # FIXME: this is kludgy
+            @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'bundler', 'ruby', RbConfig::CONFIG['ruby_version'])
 
             Dir.chdir(PDK::Util.module_root) do
               ::Bundler.with_clean_env do
