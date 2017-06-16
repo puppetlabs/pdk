@@ -2,6 +2,32 @@ require 'spec_helper'
 require 'pdk/util/bundler'
 
 RSpec.describe PDK::Util::Bundler do
+  before(:each) do
+    # Doesn't matter where this is since all the execs get mocked.
+    allow(PDK::Util).to receive(:module_root).and_return('/')
+  end
+
+  def allow_command(argv, result = nil)
+    result ||= { exit_code: 0, stdout: '', stderr: '' }
+
+    command_double = double(PDK::CLI::Exec::Command, { 'context=' => true, 'execute!' => result })
+
+    allow(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(command_double)
+  end
+
+  def expect_command(argv, result = nil)
+    result ||= { exit_code: 0, stdout: '', stderr: '' }
+
+    command_double = double(PDK::CLI::Exec::Command, { 'context=' => true, 'execute!' => result })
+
+    expect(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(command_double)
+  end
+
+  def bundle_regex
+    %r{bundle(\.bat)?$}
+  end
+
+
   describe '.ensure_bundle!' do
     context 'when there is no Gemfile' do
       before(:each) do
@@ -9,7 +35,7 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'does nothing' do
-        expect(PDK::CLI::Exec).not_to receive(:bundle)
+        expect(PDK::CLI::Exec::Command).not_to receive(:new)
 
         described_class.ensure_bundle!
       end
@@ -19,12 +45,13 @@ RSpec.describe PDK::Util::Bundler do
       before(:each) do
         allow(File).to receive(:file?).with(%r{Gemfile$}).and_return(true)
         allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(false)
-        allow(PDK::CLI::Exec).to receive(:bundle).with('check', any_args).and_return(exit_code: 1)
-        allow(PDK::CLI::Exec).to receive(:bundle).with('install', any_args).and_return(exit_code: 0)
+
+        allow_command([bundle_regex, 'check', any_args], { exit_code: 1 })
+        allow_command([bundle_regex, 'install', any_args])
       end
 
       it 'generates Gemfile.lock' do
-        expect(PDK::CLI::Exec).to receive(:bundle).with('lock', any_args).and_return(exit_code: 0)
+        expect_command([bundle_regex, 'lock', any_args])
 
         expect { described_class.ensure_bundle! }.to output(%r{resolving gemfile}i).to_stderr
       end
@@ -34,11 +61,12 @@ RSpec.describe PDK::Util::Bundler do
       before(:each) do
         allow(File).to receive(:file?).with(%r{Gemfile$}).and_return(true)
         allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(true)
-        allow(PDK::CLI::Exec).to receive(:bundle).with('check', any_args).and_return(exit_code: 1)
+
+        allow_command([bundle_regex, 'check', any_args], { exit_code: 1 })
       end
 
       it 'installs missing gems' do
-        expect(PDK::CLI::Exec).to receive(:bundle).with('install', any_args).and_return(exit_code: 0)
+        expect_command([bundle_regex, 'install', any_args])
 
         expect { described_class.ensure_bundle! }.to output(%r{installing missing gemfile}i).to_stderr
       end
@@ -51,8 +79,9 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'checks for missing but does not install anything' do
-        expect(PDK::CLI::Exec).to receive(:bundle).with('check', any_args).and_return(exit_code: 0)
-        expect(PDK::CLI::Exec).not_to receive(:bundle).with('install', any_args)
+        expect_command([bundle_regex, 'check', any_args])
+
+        expect(PDK::CLI::Exec::Command).not_to receive(:new).with(bundle_regex, 'install', any_args)
 
         expect { described_class.ensure_bundle! }.to output(%r{checking for missing}i).to_stderr
       end
