@@ -7,10 +7,11 @@ RSpec.describe PDK::Util::Bundler do
     allow(PDK::Util).to receive(:module_root).and_return('/')
   end
 
+  # TODO: deduplicate code in these two methods and extract them to a shared location
   def allow_command(argv, result = nil)
     result ||= { exit_code: 0, stdout: '', stderr: '' }
 
-    command_double = double(PDK::CLI::Exec::Command, { 'context=' => true, 'execute!' => result })
+    command_double = instance_double(PDK::CLI::Exec::Command, 'context=' => true, 'execute!' => result)
 
     allow(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(command_double)
   end
@@ -18,7 +19,7 @@ RSpec.describe PDK::Util::Bundler do
   def expect_command(argv, result = nil)
     result ||= { exit_code: 0, stdout: '', stderr: '' }
 
-    command_double = double(PDK::CLI::Exec::Command, { 'context=' => true, 'execute!' => result })
+    command_double = instance_double(PDK::CLI::Exec::Command, 'context=' => true, 'execute!' => result)
 
     expect(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(command_double)
   end
@@ -26,7 +27,6 @@ RSpec.describe PDK::Util::Bundler do
   def bundle_regex
     %r{bundle(\.bat)?$}
   end
-
 
   describe '.ensure_bundle!' do
     context 'when there is no Gemfile' do
@@ -46,7 +46,7 @@ RSpec.describe PDK::Util::Bundler do
         allow(File).to receive(:file?).with(%r{Gemfile$}).and_return(true)
         allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(false)
 
-        allow_command([bundle_regex, 'check', any_args], { exit_code: 1 })
+        allow_command([bundle_regex, 'check', any_args], exit_code: 1)
         allow_command([bundle_regex, 'install', any_args])
       end
 
@@ -62,7 +62,7 @@ RSpec.describe PDK::Util::Bundler do
         allow(File).to receive(:file?).with(%r{Gemfile$}).and_return(true)
         allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(true)
 
-        allow_command([bundle_regex, 'check', any_args], { exit_code: 1 })
+        allow_command([bundle_regex, 'check', any_args], exit_code: 1)
       end
 
       it 'installs missing gems' do

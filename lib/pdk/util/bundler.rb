@@ -32,7 +32,7 @@ module PDK
       def self.ensure_binstubs!(*gems)
         bundle = BundleHelper.new
 
-        unless bundle.binstubs!(gems)
+        unless bundle.binstubs!(gems) # rubocop:disable Style/GuardClause
           raise PDK::CLI::FatalError, _('Unable to install requested binstubs.')
         end
       end
