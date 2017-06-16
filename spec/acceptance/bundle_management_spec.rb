@@ -15,21 +15,21 @@ describe 'Managing Gemfile dependencies' do
       its(:stderr) { is_expected.to match(%r{Checking for missing Gemfile dependencies}i) }
 
       describe file('Gemfile.lock') do
-        it { is_expected.to be_file }
+        it { pending 'json install requires ruby devkit' if Gem.win_platform?; is_expected.to be_file }
       end
     end
   end
 
   context 'when there is an invalid Gemfile' do
     before(:all) do
-      FileUtils.mv('Gemfile', 'Gemfile.old')
+      FileUtils.mv('Gemfile', 'Gemfile.old', force: true)
       File.open('Gemfile', 'w') do |f|
         f.puts 'not a gemfile'
       end
     end
 
     after(:all) do
-      FileUtils.mv('Gemfile.old', 'Gemfile')
+      FileUtils.mv('Gemfile.old', 'Gemfile', force: true)
     end
 
     describe command('pdk test unit') do
