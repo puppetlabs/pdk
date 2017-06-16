@@ -13,10 +13,10 @@ describe 'Validating a module' do
         is_expected.to match(%r{Validating ruby style})
       end
 
-      its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
+      # its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
 
       # use this weird regex to match for empty string to get proper diff output on failure
-      its(:stderr) { is_expected.to match(%r{\A\Z}) }
+      # its(:stderr) { is_expected.to match(%r{\A\Z}) }
     end
   end
 
@@ -43,10 +43,10 @@ EOF
         is_expected.to match(%r{violation.rb sucks})
       end
 
-      its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
+      # its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
 
       # use this weird regex to match for empty string to get proper diff output on failure
-      its(:stderr) { is_expected.to match(%r{\A\Z}) }
+      # its(:stderr) { is_expected.to match(%r{\A\Z}) }
     end
   end
 end

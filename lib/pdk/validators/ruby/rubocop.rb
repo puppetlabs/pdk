@@ -27,6 +27,7 @@ module PDK
       end
 
       def self.invoke(options = {})
+        PDK::Util::Bundler.ensure_bundle!
         PDK::Util::Bundler.ensure_binstubs!('rubocop')
 
         super
