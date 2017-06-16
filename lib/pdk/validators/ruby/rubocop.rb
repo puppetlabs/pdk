@@ -13,11 +13,7 @@ module PDK
       end
 
       def self.cmd
-        command = ''
-        # FIXME: this might need a full path to ruby or we need to make sure
-        # PATH is carefully managed.
-        command << 'ruby ' if Gem.win_platform?
-        command << File.join(PDK::Util.module_root, 'bin', 'rubocop')
+        File.join(PDK::Util.module_root, 'bin', 'rubocop')
       end
 
       def self.parse_options(options, targets)

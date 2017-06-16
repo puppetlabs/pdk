@@ -6,12 +6,15 @@ describe 'Validating a module' do
 
     describe command('pdk validate ruby') do
       its(:exit_status) { is_expected.to eq 0 }
+
       its(:stdout) do
         pending('correct output needs implementing')
         # TODO: fixup to correct message
         is_expected.to match(%r{Validating ruby style})
       end
+
       its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
+
       # use this weird regex to match for empty string to get proper diff output on failure
       its(:stderr) { is_expected.to match(%r{\A\Z}) }
     end
@@ -19,6 +22,7 @@ describe 'Validating a module' do
 
   context 'with a style violation' do
     include_context 'in a new module', 'foo'
+
     before(:all) do
       File.open('spec/violation.rb', 'w') do |f|
         f.puts <<EOF
@@ -32,12 +36,15 @@ EOF
         pending('correct reporting needs implementing')
         is_expected.not_to eq 0
       end
+
       its(:stdout) do
         pending('correct output needs implementing')
         # TODO: fixup to correct message
         is_expected.to match(%r{violation.rb sucks})
       end
+
       its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
+
       # use this weird regex to match for empty string to get proper diff output on failure
       its(:stderr) { is_expected.to match(%r{\A\Z}) }
     end
