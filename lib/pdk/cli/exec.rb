@@ -92,8 +92,9 @@ module PDK
           @spinner.auto_spin if @spinner
 
           if context == :module
-            # FIXME: this is kludgy
+            # TODO: we should probably more carefully manage PATH and maybe other things too
             @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'bundler', 'ruby', RbConfig::CONFIG['ruby_version'])
+            @process.environment['GEM_PATH'] = pdk_gem_path
 
             Dir.chdir(PDK::Util.module_root) do
               ::Bundler.with_clean_env do
@@ -146,6 +147,22 @@ module PDK
           else
             # Wait indfinitely if no timeout set.
             @process.wait
+          end
+        end
+
+        def pdk_gem_path
+          @pdk_gem_path ||= find_pdk_gem_path
+        end
+
+        def find_pdk_gem_path
+          # /opt/puppetlabs/sdk/private/ruby/2.1.9/lib/ruby/gems/2.1.0
+          package_gem_path = File.join(PDK::CLI::Exec.pdk_basedir, 'private', 'ruby', RUBY_VERSION, 'lib', 'ruby', 'gems', RbConfig::CONFIG['ruby_version'])
+
+          if File.directory?(package_gem_path)
+            package_gem_path
+          else
+            # FIXME: calculate this more reliably
+            File.absolute_path(File.join(`bundle show bundler`, '..', '..'))
           end
         end
       end
