@@ -15,7 +15,7 @@ describe 'Managing Gemfile dependencies' do
       its(:stderr) { is_expected.to match(%r{Checking for missing Gemfile dependencies}i) }
 
       describe file('Gemfile.lock') do
-        it { pending 'json install requires ruby devkit' if Gem.win_platform?; is_expected.to be_file }
+        it { is_expected.to be_file }
       end
     end
   end
