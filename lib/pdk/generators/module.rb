@@ -35,6 +35,8 @@ module PDK
 
         module_interview(metadata, opts) unless opts[:'skip-interview'] # @todo Build way to get info by answers file
 
+        metadata.update!('pdk-version' => PDK.version_string)
+
         temp_target_dir = PDK::Util.make_tmpdir_name('pdk-module-target')
 
         prepare_module_directory(temp_target_dir)
