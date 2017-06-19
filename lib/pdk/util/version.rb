@@ -9,8 +9,8 @@ module PDK
       end
 
       def self.pdk_ref
-        ref = pkg_sha || git_ref
-        ref.nil? ? nil : "(#{ref})"
+        ref = "#{pkg_sha} #{git_ref}".strip
+        ref.empty? ? nil : "(#{ref})"
       end
 
       def self.pkg_sha
