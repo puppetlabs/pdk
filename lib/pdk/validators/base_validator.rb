@@ -20,10 +20,17 @@ module PDK
 
       def self.invoke(options = {})
         targets = parse_targets(options)
-        cmd_options = parse_options(options, targets)
+        cmd_argv = parse_options(options, targets).unshift(cmd)
+        cmd_argv.unshift('ruby') if Gem.win_platform?
 
-        PDK.logger.debug(_('Running %{cmd} with options: %{options}') % { cmd: cmd, options: cmd_options })
-        result = PDK::CLI::Exec.execute(cmd, *cmd_options)
+        PDK.logger.debug(_('Running %{cmd}') % { cmd: cmd_argv.join(' ') })
+
+        command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
+          c.context = :module
+          # c.add_spinner(_("Invoking %{c} %{args}") % { c: cmd, args: cmd_options.join(' ') })
+        end
+
+        result = command.execute!
         result
       end
     end

@@ -32,6 +32,13 @@ module PDK
         execute(try_vendored_bin(vendored_bin_path, bundle_bin), *args)
       end
 
+      def self.bundle_bin
+        bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
+        vendored_bin_path = File.join(pdk_basedir, 'private', 'ruby', '2.1.9', 'bin', bundle_bin)
+
+        try_vendored_bin(vendored_bin_path, bundle_bin)
+      end
+
       def self.try_vendored_bin(vendored_bin_path, fallback)
         if File.exist?(vendored_bin_path)
           PDK.logger.debug(_("Using '%{vendored_bin_path}'") % { fallback: fallback, vendored_bin_path: vendored_bin_path })
@@ -85,7 +92,9 @@ module PDK
           @spinner.auto_spin if @spinner
 
           if context == :module
-            # FIXME: manage ENV more precisely as well.
+            # TODO: we should probably more carefully manage PATH and maybe other things too
+            @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'bundler', 'ruby', RbConfig::CONFIG['ruby_version'])
+            @process.environment['GEM_PATH'] = pdk_gem_path
 
             Dir.chdir(PDK::Util.module_root) do
               ::Bundler.with_clean_env do
@@ -99,9 +108,9 @@ module PDK
           # Stop spinning when done (if configured).
           if @spinner
             if @process.exit_code.zero?
-              @spinner.success(@success_message)
+              @spinner.success(@success_message || '')
             else
-              @spinner.error(@failure_message)
+              @spinner.error(@failure_message || '')
             end
           end
 
@@ -126,7 +135,7 @@ module PDK
           begin
             @process.start
           rescue ChildProcess::LaunchError => e
-            raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: @process.argv.join(' '), message: e.message }
+            raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: argv.join(' '), message: e.message }
           end
 
           if timeout
@@ -138,6 +147,22 @@ module PDK
           else
             # Wait indfinitely if no timeout set.
             @process.wait
+          end
+        end
+
+        def pdk_gem_path
+          @pdk_gem_path ||= find_pdk_gem_path
+        end
+
+        def find_pdk_gem_path
+          # /opt/puppetlabs/sdk/private/ruby/2.1.9/lib/ruby/gems/2.1.0
+          package_gem_path = File.join(PDK::CLI::Exec.pdk_basedir, 'private', 'ruby', RUBY_VERSION, 'lib', 'ruby', 'gems', RbConfig::CONFIG['ruby_version'])
+
+          if File.directory?(package_gem_path)
+            package_gem_path
+          else
+            # FIXME: calculate this more reliably
+            File.absolute_path(File.join(`bundle show bundler`, '..', '..'))
           end
         end
       end

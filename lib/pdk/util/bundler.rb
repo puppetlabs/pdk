@@ -29,6 +29,14 @@ module PDK
         end
       end
 
+      def self.ensure_binstubs!(*gems)
+        bundle = BundleHelper.new
+
+        unless bundle.binstubs!(gems) # rubocop:disable Style/GuardClause
+          raise PDK::CLI::FatalError, _('Unable to install requested binstubs.')
+        end
+      end
+
       class BundleHelper
         def gemfile?
           !gemfile.nil?
@@ -80,12 +88,27 @@ module PDK
           result[:exit_code].zero?
         end
 
+        def binstubs!(gems)
+          # FIXME: wrap in progress indicator
+          result = invoke('binstubs', gems.join(' '), '--force')
+
+          unless result[:exit_code].zero?
+            $stderr.puts result[:stdout]
+            $stderr.puts result[:stderr]
+          end
+
+          result[:exit_code].zero?
+        end
+
         private
 
         def invoke(*args)
-          ::Bundler.with_clean_env do
-            PDK::CLI::Exec.bundle(*args)
+          bundle_bin = PDK::CLI::Exec.bundle_bin
+          command = PDK::CLI::Exec::Command.new(bundle_bin, *args).tap do |c|
+            c.context = :module
           end
+
+          command.execute!
         end
 
         def gemfile

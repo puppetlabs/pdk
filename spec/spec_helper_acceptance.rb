@@ -22,10 +22,6 @@ keys.each do |k|
   bundler_env[k] = ENV[k] if ENV.key? k
 end
 
-# bundler won't install bundler into the --path, so in order to access ::Bundler.with_clean_env
-# from within pdk during spec tests, we have to manually re-add the global gem path :(
-bundler_env['GEM_PATH'] += ":#{File.absolute_path(File.join(`bundle show bundler`, '..', '..'))}"
-
 # dup to avoid pollution from specinfra
 Specinfra.configuration.env = bundler_env.dup
 
@@ -35,6 +31,7 @@ RSpec.configure do |c|
     Dir.chdir(tempdir)
     puts "Working in #{tempdir}"
   end
+
   c.after(:suite) do
     Dir.chdir('/')
     FileUtils.rm_rf(tempdir)
