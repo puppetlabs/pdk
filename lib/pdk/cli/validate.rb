@@ -56,13 +56,25 @@ module PDK::CLI
       end
 
       options = targets.empty? ? {} : { targets: targets }
+
+      exit_code = 0
+
       validators.each do |validator|
         result = validator.invoke(options)
-        next unless reports
-        reports.each do |r|
-          r.write(result)
+
+        exit_code = 1 unless result[:exit_code].zero?
+
+        if reports
+          reports.each do |r|
+            r.write(result)
+          end
+        else
+          $stdout.puts(result[:stdout])
+          $stderr.puts(result[:stderr])
         end
       end
+
+      exit exit_code
     end
   end
 end
