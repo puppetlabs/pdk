@@ -9,6 +9,7 @@ require 'pdk/module/templatedir'
 require 'pdk/cli/exec'
 require 'pdk/cli/input'
 require 'pdk/util'
+require 'pdk/util/version'
 
 module PDK
   module Generate
@@ -35,7 +36,7 @@ module PDK
 
         module_interview(metadata, opts) unless opts[:'skip-interview'] # @todo Build way to get info by answers file
 
-        metadata.update!('pdk-version' => PDK.version_string)
+        metadata.update!('pdk-version' => PDK::Util::Version.version_string)
 
         temp_target_dir = PDK::Util.make_tmpdir_name('pdk-module-target')
 

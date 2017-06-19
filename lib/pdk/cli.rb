@@ -7,7 +7,7 @@ require 'pdk/generators/module'
 require 'pdk/i18n'
 require 'pdk/logger'
 require 'pdk/report'
-require 'pdk/version'
+require 'pdk/util/version'
 
 module PDK::CLI
   def self.run(args)
@@ -43,7 +43,7 @@ module PDK::CLI
     default_subcommand 'help'
 
     flag nil, :version, _('show version of pdk') do |_, _|
-      puts PDK.version_string
+      puts PDK::Util::Version.version_string
       exit 0
     end
 
