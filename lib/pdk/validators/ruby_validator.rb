@@ -15,22 +15,12 @@ module PDK
       end
 
       def self.invoke(options = {})
-        # FIXME: deal with nested validators, this is a mess right now
-        result = {
-          exit_code: 0,
-          stdout: '',
-          stderr: '',
-        }
-
-        # Merge the results of each sub-validator into a single result for now.
+        results = {}
         ruby_validators.each do |validator|
           output = validator.invoke(options)
-          result[:exit_code] = 1 unless output[:exit_code].zero?
-          result[:stdout] << output[:stdout]
-          result[:stderr] << output[:stderr]
+          results.merge!(validator.name.to_s => output)
         end
-
-        result
+        results
       end
     end
   end

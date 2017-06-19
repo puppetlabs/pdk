@@ -60,17 +60,20 @@ module PDK::CLI
       exit_code = 0
 
       validators.each do |validator|
-        result = validator.invoke(options)
+        results = validator.invoke(options)
 
-        exit_code = 1 unless result[:exit_code].zero?
+        results.each do |_validator_name, result|
+          exit_code = 1 unless result[:exit_code].zero?
 
-        if reports
-          reports.each do |r|
-            r.write(result)
+          if reports
+            reports.each do |r|
+              r.write(result)
+            end
+          else
+            # TODO: not sure if we want this long term
+            $stdout.puts(result[:stdout])
+            $stderr.puts(result[:stderr])
           end
-        else
-          $stdout.puts(result[:stdout])
-          $stderr.puts(result[:stderr])
         end
       end
 
