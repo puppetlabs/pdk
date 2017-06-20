@@ -13,7 +13,6 @@ module PDK::CLI
       validator_names = PDK::Validate.validators.map { |v| v.name }
       validators = PDK::Validate.validators
       targets = []
-      reports = nil
 
       if opts[:list]
         PDK.logger.info(_('Available validators: %{validator_names}') % { validator_names: validator_names.join(', ') })
@@ -50,31 +49,27 @@ module PDK::CLI
       # Subsequent arguments are targets.
       targets.concat(args[1..-1]) if args.length > 1
 
-      # Note: Reporting may be delegated to the validation tool itself.
-      if opts[:format]
-        reports = Util::OptionNormalizer.report_formats(opts.fetch(:format))
-      end
+      report = PDK::Report.new
+      report_formats = if opts[:format]
+                         PDK::CLI::Util::OptionNormalizer.report_formats(opts[:format])
+                       else
+                         [{
+                           method: PDK::Report.default_format,
+                           target: PDK::Report.default_target,
+                         }]
+                       end
 
       options = targets.empty? ? {} : { targets: targets }
 
       exit_code = 0
 
       validators.each do |validator|
-        results = validator.invoke(options)
+        exit_code = validator.invoke(report, options)
+        break if exit_code != 0
+      end
 
-        results.each do |_validator_name, result|
-          exit_code = 1 unless result[:exit_code].zero?
-
-          if reports
-            reports.each do |r|
-              r.write(result)
-            end
-          else
-            # TODO: not sure if we want this long term
-            $stdout.puts(result[:stdout])
-            $stderr.puts(result[:stderr])
-          end
-        end
+      report_formats.each do |format|
+        report.send(format[:method], format[:target])
       end
 
       exit exit_code

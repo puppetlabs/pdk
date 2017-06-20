@@ -1,8 +1,8 @@
 require 'pdk'
 require 'pdk/cli/exec'
 require 'pdk/validators/base_validator'
-require 'pdk/validators/puppet/puppet_lint.rb'
-require 'pdk/validators/puppet/puppet_parser.rb'
+require 'pdk/validators/puppet/puppet_lint'
+require 'pdk/validators/puppet/puppet_parser'
 
 module PDK
   module Validate
@@ -12,16 +12,18 @@ module PDK
       end
 
       def self.puppet_validators
-        [PuppetLint, PuppetParser]
+        [PuppetLint]
       end
 
-      def self.invoke(options = {})
-        results = {}
+      def self.invoke(report, options = {})
+        exit_code = 0
+
         puppet_validators.each do |validator|
-          output = validator.invoke(options)
-          results.merge!(validator.name.to_s => output)
+          exit_code = validator.invoke(report, options)
+          break if exit_code != 0
         end
-        results
+
+        exit_code
       end
     end
   end

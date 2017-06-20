@@ -6,7 +6,7 @@ AllCops:
   Exclude:
     # binstubs, and other utilities
     - bin/**/*
-    - vendor/bundle/**/*
+    - vendor/**/*
 
 Layout/IndentHeredoc:
   Description: The `squiggly` style would be preferable, but is only available from ruby 2.3. We'll enable this when we can.
@@ -57,6 +57,14 @@ RSpec/DescribeClass:
 RSpec/HookArgument:
   Description: Prefer explicit :each argument, matching existing module's style
   EnforcedStyle: each
+
+RSpec/NestedGroups:
+  Description: Nested groups can lead to cleaner tests with less duplication
+  Max: 10
+
+RSpec/ExampleLength:
+  Description: Forcing short examples leads to the creation of one-time use let() helpers
+  Enabled: False
 
 # Style Cops
 Style/AsciiComments:

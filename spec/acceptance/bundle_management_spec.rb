@@ -11,7 +11,7 @@ describe 'Managing Gemfile dependencies' do
     end
 
     describe command('pdk test unit') do
-      its(:exit_status) { pending 'json install requires ruby devkit' if Gem.win_platform?; is_expected.to eq 0 }
+      its(:exit_status) { is_expected.to eq 0 }
       its(:stderr) { is_expected.to match(%r{Checking for missing Gemfile dependencies}i) }
 
       describe file('Gemfile.lock') do

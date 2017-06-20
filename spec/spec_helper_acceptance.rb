@@ -11,6 +11,22 @@ else
   set :backend, :exec
 end
 
+module Specinfra
+  module Backend
+    class Cmd
+      def execute_script(script)
+        if Open3.respond_to?(:capture3)
+          stdout, stderr, status = Open3.capture3(script)
+          { stdout: stdout, stderr: stderr, status: status }
+        else
+          stdout = `#{script} 2>&1`
+          { stdout: stdout, stderr: nil, status: $? } # rubocop:disable Style/SpecialGlobalVars
+        end
+      end
+    end
+  end
+end
+
 tempdir = nil
 
 # Save bundle environment from being purged by specinfra. This needs to be repeated for every example, as specinfra does not correctly reset the environment after a `describe command()` block

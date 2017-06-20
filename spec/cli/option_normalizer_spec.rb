@@ -13,30 +13,50 @@ describe PDK::CLI::Util::OptionNormalizer do
   end
 
   context 'when parsing report formats and targets' do
-    context 'when a single format is specified' do
-      it 'returns a single Report with the default target when target is not specified' do
+    context 'and given a single format with no target' do
+      it 'returns a single format specification with no target' do
         reports = described_class.report_formats(['text'])
         expect(reports.length).to eq(1)
-        expect(reports[0].instance_variable_get(:@path)).to eq('stdout')
-        expect(reports[0].instance_variable_get(:@format)).to eq('text')
-      end
-
-      it 'returns a single Report with the specified target when provided' do
-        reports = described_class.report_formats(['text:foo.txt'])
-        expect(reports.length).to eq(1)
-        expect(reports[0].instance_variable_get(:@path)).to eq('foo.txt')
-        expect(reports[0].instance_variable_get(:@format)).to eq('text')
+        expect(reports[0][:method]).to eq(:to_text)
+        expect(reports[0][:target]).to eq(nil)
       end
     end
 
-    context 'when multiple report formats are specified' do
-      it 'returns two Reports with default and specified targets where appropriate' do
+    context 'and given a single format with a target' do
+      it 'returns a single format specification with target' do
+        reports = described_class.report_formats(['text:foo.txt'])
+        expect(reports.length).to eq(1)
+        expect(reports[0][:method]).to eq(:to_text)
+        expect(reports[0][:target]).to eq('foo.txt')
+      end
+
+      context 'and the target is stdout' do
+        it 'returns the $stdout IO object as the target' do
+          reports = described_class.report_formats(['text:stdout'])
+          expect(reports.length).to eq(1)
+          expect(reports[0][:method]).to eq(:to_text)
+          expect(reports[0][:target]).to eq($stdout)
+        end
+      end
+
+      context 'and the target is stderr' do
+        it 'returns the $stderr IO object as the target' do
+          reports = described_class.report_formats(['text:stderr'])
+          expect(reports.length).to eq(1)
+          expect(reports[0][:method]).to eq(:to_text)
+          expect(reports[0][:target]).to eq($stderr)
+        end
+      end
+    end
+
+    context 'and multiple report formats are specified' do
+      it 'returns multiple format specifications with targets when appropriate' do
         reports = described_class.report_formats(['text', 'junit:foo.junit'])
         expect(reports.length).to eq(2)
-        expect(reports[0].instance_variable_get(:@path)).to eq('stdout')
-        expect(reports[0].instance_variable_get(:@format)).to eq('text')
-        expect(reports[1].instance_variable_get(:@path)).to eq('foo.junit')
-        expect(reports[1].instance_variable_get(:@format)).to eq('junit')
+        expect(reports[0][:method]).to eq(:to_text)
+        expect(reports[0][:target]).to eq(nil)
+        expect(reports[1][:method]).to eq(:to_junit)
+        expect(reports[1][:target]).to eq('foo.junit')
       end
     end
   end

@@ -32,7 +32,6 @@ RSpec/FilePath:
     - 'spec/generators/puppet_object_spec.rb'
     - 'spec/logger_spec.rb'
     - 'spec/module/metadata_spec.rb'
-    - 'spec/report_spec.rb'
     - 'spec/template_file_spec.rb'
     - 'spec/util/bundler_spec.rb'
     - 'spec/validate_spec.rb'
