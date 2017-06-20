@@ -7,6 +7,8 @@ AllCops:
     # binstubs, and other utilities
     - bin/**/*
     - vendor/**/*
+    # Puppet util code follows Puppet's style, not pdk's
+    - lib/puppet/**/*
 
 Layout/IndentHeredoc:
   Description: The `squiggly` style would be preferable, but is only available from ruby 2.3. We'll enable this when we can.

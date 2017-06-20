@@ -52,7 +52,8 @@ module PDK
             PDK.logger.error clone_result[:stderr]
             raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'") % { repo: path_or_url, dest: temp_dir }
           end
-          @path = temp_dir
+
+          @path = PDK::Util.canonical_path(temp_dir)
           @repo = path_or_url
         end
 

@@ -22,14 +22,14 @@ describe 'Managing Gemfile dependencies' do
 
   context 'when there is an invalid Gemfile' do
     before(:all) do
-      FileUtils.mv('Gemfile', 'Gemfile.old')
+      FileUtils.mv('Gemfile', 'Gemfile.old', force: true)
       File.open('Gemfile', 'w') do |f|
         f.puts 'not a gemfile'
       end
     end
 
     after(:all) do
-      FileUtils.mv('Gemfile.old', 'Gemfile')
+      FileUtils.mv('Gemfile.old', 'Gemfile', force: true)
     end
 
     describe command('pdk test unit') do
