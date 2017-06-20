@@ -3,9 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in pdk.gemspec
 gemspec
 
-gem 'metadata-json-lint'
-gem 'puppet-lint'
-
 # avoid newer versions that do not support ruby 2.1 anymore
 gem 'nokogiri', '1.7.2'
 
