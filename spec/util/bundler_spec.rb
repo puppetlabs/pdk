@@ -66,9 +66,16 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'installs missing gems' do
+        allow(described_class).to receive(:already_bundled?).and_return(false)
         expect_command([bundle_regex, 'install', any_args])
 
         expect { described_class.ensure_bundle! }.to output(%r{installing missing gemfile}i).to_stderr
+      end
+
+      it 'only attempts to install the gems once' do
+        expect(PDK::CLI::Exec::Command).not_to receive(:new)
+        expect(logger).to receive(:debug).with(%r{already been installed})
+        expect { described_class.ensure_bundle! }.to output(%r{\A\Z}).to_stderr
       end
     end
 
@@ -79,6 +86,7 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'checks for missing but does not install anything' do
+        allow(described_class).to receive(:already_bundled?).and_return(false)
         expect_command([bundle_regex, 'check', any_args])
 
         expect(PDK::CLI::Exec::Command).not_to receive(:new).with(bundle_regex, 'install', any_args)
