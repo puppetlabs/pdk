@@ -66,7 +66,7 @@ module PDK
             return false unless string =~ %r{\A[A-Z]}
 
             unless valid_types.include?(type)
-              PDK.logger.warn(_("Non-standard data type '%{type}', check the generated files for mistakes") % { type: type })
+              PDK.logger.warn(_("Non-standard data type '%{type}', make sure the type is available in your code, or dependencies") % { type: type })
             end
           end
 

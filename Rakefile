@@ -89,3 +89,19 @@ task(:binstubs) do
 end
 
 task default: :spec
+
+begin
+  require 'github_changelog_generator/task'
+  GitHubChangelogGenerator::RakeTask.new :changelog do |config|
+    require 'pdk/version'
+    config.future_release = "v#{PDK::VERSION}"
+    config.header = "# Changelog\n\nAll notable changes to this project will be documented in this file.\n"
+    config.include_labels = %w[enhancement bug]
+    config.user = 'puppetlabs'
+  end
+rescue LoadError
+  desc 'Install github_changelog_generator to get access to automatic changelog generation'
+  task :changelog do
+    raise 'Install github_changelog_generator to get access to automatic changelog generation'
+  end
+end

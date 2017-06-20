@@ -109,7 +109,7 @@ module PDK
       #
       # @api private
       def render_file(dest_path, template_path, data)
-        PDK.logger.info(_('Creating %{file} from template.') % { file: dest_path })
+        PDK.logger.info(_("Creating '%{file}' from template.") % { file: dest_path })
         file_content = PDK::TemplateFile.new(template_path, data).render
         FileUtils.mkdir_p(File.dirname(dest_path))
         File.open(dest_path, 'w') { |f| f.write file_content }
@@ -204,7 +204,7 @@ module PDK
         @module_metadata ||= begin
           PDK::Module::Metadata.from_file(File.join(module_dir, 'metadata.json'))
         rescue ArgumentError => e
-          raise PDK::CLI::FatalError, _("'%{dir}' does not contain valid Puppet module metadata; %{msg}") % { dir: module_dir, msg: e.message }
+          raise PDK::CLI::FatalError, _("'%{dir}' does not contain valid Puppet module metadata: %{msg}") % { dir: module_dir, msg: e.message }
         end
       end
     end
