@@ -5,21 +5,8 @@ describe 'Validating a module' do
     include_context 'in a new module', 'foo'
 
     describe command('pdk validate ruby') do
-      its(:exit_status) do
-        pending('current module template by default has like 109 offenses')
-        is_expected.to eq 0
-      end
-
-      its(:stdout) do
-        pending('correct output needs implementing')
-        # TODO: fixup to correct message
-        is_expected.to match(%r{Validating ruby style})
-      end
-
-      # its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
-
-      # use this weird regex to match for empty string to get proper diff output on failure
-      # its(:stderr) { is_expected.to match(%r{\A\Z}) }
+      its(:exit_status) { is_expected.to eq 0 }
+      its(:stdout) { is_expected.to match(%r{2 files inspected, no offenses detected}) }
     end
   end
 
@@ -35,20 +22,8 @@ EOF
     end
 
     describe command('pdk validate ruby') do
-      its(:exit_status) do
-        is_expected.not_to eq 0
-      end
-
-      its(:stdout) do
-        pending('correct output needs implementing')
-        # TODO: fixup to correct message
-        is_expected.to match(%r{violation.rb sucks})
-      end
-
-      # its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
-
-      # use this weird regex to match for empty string to get proper diff output on failure
-      # its(:stderr) { is_expected.to match(%r{\A\Z}) }
+      its(:exit_status) { is_expected.not_to eq 0 }
+      its(:stdout) { is_expected.to match(%r{3 files inspected, 1 offense detected}) }
     end
   end
 end
