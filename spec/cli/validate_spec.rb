@@ -8,6 +8,10 @@ describe 'Running `pdk validate` in a module' do
   let(:validator_names) { validators.map(&:name).join(', ') }
   let(:validator_success) { { exit_code: 0, stdout: 'success', stderr: '' } }
 
+  before(:each) do
+    allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
+  end
+
   context 'when no arguments or options are provided' do
     it 'invokes each validator with no report and no options and exits zero' do
       validators.each do |validator|

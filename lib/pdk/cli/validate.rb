@@ -1,3 +1,5 @@
+require 'pdk/util/bundler'
+
 module PDK::CLI
   @validate_cmd = @base_cmd.define_command do
     name 'validate'
@@ -8,7 +10,6 @@ module PDK::CLI
     flag nil, :list, _('list all available validators')
 
     run do |opts, args, _cmd|
-      require 'pdk/validate'
 
       validator_names = PDK::Validate.validators.map { |v| v.name }
       validators = PDK::Validate.validators
@@ -62,6 +63,9 @@ module PDK::CLI
       options = targets.empty? ? {} : { targets: targets }
 
       exit_code = 0
+
+      # Ensure that the bundle is installed and tools are available before running any validations.
+      PDK::Util::Bundler.ensure_bundle!
 
       validators.each do |validator|
         exit_code = validator.invoke(report, options)
