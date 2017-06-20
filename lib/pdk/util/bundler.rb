@@ -11,6 +11,11 @@ module PDK
       def self.ensure_bundle!
         bundle = BundleHelper.new
 
+        if already_bundled?(bundle.gemfile)
+          PDK.logger.debug(_('Bundle has already been installed, skipping run'))
+          return
+        end
+
         unless bundle.gemfile?
           PDK.logger.debug(_("No Gemfile found in '%{cwd}', skipping bundler management") % { cwd: Dir.pwd })
           return
@@ -22,11 +27,21 @@ module PDK
           end
         end
 
-        unless bundle.installed? # rubocop:disable Style/GuardClause
+        unless bundle.installed?
           unless bundle.install!
             raise PDK::CLI::FatalError, _('Unable to install missing Gemfile dependencies.')
           end
         end
+
+        mark_as_bundled!(bundle.gemfile)
+      end
+
+      def self.already_bundled?(gemfile)
+        !(@bundled ||= {})[gemfile].nil?
+      end
+
+      def self.mark_as_bundled!(gemfile)
+        (@bundled ||= {})[gemfile] = true
       end
 
       def self.ensure_binstubs!(*gems)
@@ -100,6 +115,10 @@ module PDK
           result[:exit_code].zero?
         end
 
+        def gemfile
+          @gemfile ||= PDK::Util.find_upwards('Gemfile')
+        end
+
         private
 
         def invoke(*args)
@@ -109,10 +128,6 @@ module PDK
           end
 
           command.execute!
-        end
-
-        def gemfile
-          @gemfile ||= PDK::Util.find_upwards('Gemfile')
         end
 
         def gemfile_lock
