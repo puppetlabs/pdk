@@ -10,7 +10,11 @@ module PDK
       end
 
       def self.cmd
-        'pwd'
+        'puppet'
+      end
+
+      def self.parse_options(_options, targets)
+        ['parser', 'validate'].concat(targets)
       end
     end
   end
