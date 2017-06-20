@@ -10,7 +10,12 @@ gem 'puppet-lint'
 gem 'nokogiri', '1.7.2'
 
 group :development do
+  gem 'github_changelog_generator', git: 'https://github.com/DavidS/github-changelog-generator.git', ref: 'adjust-tag-section-mapping'
   gem 'pry-byebug', '~> 3.4'
+  if RUBY_VERSION < '2.2.2'
+    # required for github_changelog_generator
+    gem 'rack', '~> 1.0'
+  end
 end
 
 group :test do
