@@ -11,7 +11,7 @@ module PDK
       end
 
       def self.cmd
-        File.join(PDK::Util.module_root, 'bin', 'puppet-lint')
+        'puppet-lint'
       end
 
       def self.pattern

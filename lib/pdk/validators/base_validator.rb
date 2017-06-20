@@ -38,7 +38,7 @@ module PDK
         _('Invoking %{cmd}') % { cmd: cmd }
       end
 
-      def self.invoke(options = {})
+      def self.invoke(report, options = {})
         PDK::Util::Bundler.ensure_binstubs!(cmd)
 
         targets = parse_targets(options)
