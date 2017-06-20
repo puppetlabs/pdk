@@ -20,7 +20,8 @@ module PDK
         targets.map { |target|
           if respond_to?(:pattern)
             if File.directory?(target)
-              Array[pattern].flatten.map { |p| Dir.glob(File.join(target, p)) }
+              files_glob = Array[pattern].flatten.map { |p| Dir.glob(File.join(target, p)) }
+              files_glob.flatten.empty? ? target : files_glob
             else
               target
             end
