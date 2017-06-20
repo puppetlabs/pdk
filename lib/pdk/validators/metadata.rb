@@ -36,7 +36,7 @@ module PDK
               message:  offense['msg'],
               test:     offense['check'],
               severity: type,
-              state:    type == 'errors' ? :failure : :passed
+              state:    :failure
             )
           end
         end
