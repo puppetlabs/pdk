@@ -14,7 +14,7 @@ module PDK
         'metadata-json-lint'
       end
 
-      def self.parse_targets(options)
+      def self.parse_targets(_options)
         [File.join(PDK::Util.module_root, 'metadata.json')]
       end
 
@@ -36,7 +36,7 @@ module PDK
               message:  offense['msg'],
               test:     offense['check'],
               severity: type,
-              state:    :failure
+              state:    :failure,
             )
           end
         end

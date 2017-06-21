@@ -22,11 +22,12 @@ module PDK
       end
 
       def self.parse_options(_options, targets)
-        ['parser', 'validate'].concat(targets)
+        %w[parser validate].concat(targets)
       end
 
-      def self.parse_output(report, json_data)
-        return
+      def self.parse_output(report, _json_data)
+        # TODO: handle outputs
+        report.add_event(result.merge(state: :passed, severity: :ok))
       end
     end
   end

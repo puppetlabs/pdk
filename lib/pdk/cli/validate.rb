@@ -10,7 +10,6 @@ module PDK::CLI
     flag nil, :list, _('list all available validators')
 
     run do |opts, args, _cmd|
-
       validator_names = PDK::Validate.validators.map { |v| v.name }
       validators = PDK::Validate.validators
       targets = []
