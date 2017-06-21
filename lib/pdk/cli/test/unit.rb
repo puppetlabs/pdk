@@ -24,27 +24,34 @@ module PDK::CLI
       report = nil
 
       if opts[:list]
-        puts _('List of all available unit tests: (TODO)')
-        exit 0
+        examples = PDK::Test::Unit.list
+        if examples.empty?
+          puts _('No examples found.')
+        else
+          puts _('Examples:')
+          examples.each do |example|
+            puts _("%{id}\t%{description}" % { id: example[:id], description: example[:full_description] })
+          end
+        end
+      else
+        report = PDK::Report.new
+        report_formats = if opts[:format]
+                           PDK::CLI::Util::OptionNormalizer.report_formats(opts[:format])
+                         else
+                           [{
+                             method: PDK::Report.default_format,
+                             target: PDK::Report.default_target,
+                           }]
+                         end
+
+        exit_code = PDK::Test::Unit.invoke(report, opts)
+
+        report_formats.each do |format|
+          report.send(format[:method], format[:target])
+        end
+
+        exit exit_code
       end
-
-      report = PDK::Report.new
-      report_formats = if opts[:format]
-                         PDK::CLI::Util::OptionNormalizer.report_formats(opts[:format])
-                       else
-                         [{
-                           method: PDK::Report.default_format,
-                           target: PDK::Report.default_target,
-                         }]
-                       end
-
-      exit_code = PDK::Test::Unit.invoke(report, opts)
-
-      report_formats.each do |format|
-        report.send(format[:method], format[:target])
-      end
-
-      exit exit_code
     end
   end
 end
