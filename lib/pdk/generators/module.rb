@@ -21,7 +21,7 @@ module PDK
           'name'         => "#{Etc.getlogin}-#{opts[:name]}",
           'version'      => '0.1.0',
           'dependencies' => [
-            { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' },
+            { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.13.1 < 5.0.0' },
           ],
         }
 
@@ -112,11 +112,11 @@ module PDK
         end
 
         puts ''
-        module_summary = PDK::CLI::Input.get(_('How would you describe this module in a single sentence?'))
+        module_summary = PDK::CLI::Input.get(_('How would you describe this module in a single sentence?'), metadata.data['summary'])
         metadata.update!('summary' => module_summary)
 
         puts ''
-        module_source = PDK::CLI::Input.get(_("Where is this module's source code repository?"))
+        module_source = PDK::CLI::Input.get(_("Where is this module's source code repository?"), metadata.data['source'])
         metadata.update!('source' => module_source)
 
         puts ''

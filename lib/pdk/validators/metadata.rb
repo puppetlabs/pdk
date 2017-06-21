@@ -11,21 +11,35 @@ module PDK
       end
 
       def self.cmd
-        File.join(PDK::Util.module_root, 'bin', 'metadata-json-lint')
+        'metadata-json-lint'
       end
 
-      def self.invoke(_report, options = {})
-        PDK::Util::Bundler.ensure_bundle!
-        PDK::Util::Bundler.ensure_binstubs!('metadata-json-lint')
+      def self.parse_targets(_options)
+        [File.join(PDK::Util.module_root, 'metadata.json')]
+      end
 
-        options[:targets] = [File.join(PDK::Util.module_root, 'metadata.json')]
+      def self.parse_options(_options, targets)
+        cmd_options = ['--format', 'json']
 
-        # result = super
+        cmd_options.concat(targets)
+      end
 
-        # FIXME: this is weird so that it complies with the format
-        # of the other validators which are nested
-        # { 'metadata' => result }
-        0
+      def self.parse_output(report, json_data)
+        return if json_data.empty?
+
+        json_data.delete('result')
+        json_data.keys.each do |type|
+          json_data[type].each do |offense|
+            report.add_event(
+              file:     'metadata.json',
+              source:   cmd,
+              message:  offense['msg'],
+              test:     offense['check'],
+              severity: type,
+              state:    :failure,
+            )
+          end
+        end
       end
     end
   end

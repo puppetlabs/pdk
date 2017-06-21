@@ -13,7 +13,7 @@ module PDK
       end
 
       def self.cmd
-        File.join(PDK::Util.module_root, 'bin', 'rubocop')
+        'rubocop'
       end
 
       def self.spinner_text
@@ -24,13 +24,6 @@ module PDK
         cmd_options = ['--format', 'json']
 
         cmd_options.concat(targets)
-      end
-
-      def self.invoke(report, options = {})
-        PDK::Util::Bundler.ensure_bundle!
-        PDK::Util::Bundler.ensure_binstubs!('rubocop')
-
-        super
       end
 
       def self.parse_output(report, json_data)

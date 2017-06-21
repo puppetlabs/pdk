@@ -4,6 +4,10 @@ require 'pdk/cli/exec'
 module PDK
   module Validate
     class BaseValidator
+      def self.cmd_path
+        File.join(PDK::Util.module_root, 'bin', cmd)
+      end
+
       def self.parse_targets(options)
         # If no targets are specified, then we will run validations from the
         # base module directory.
@@ -16,7 +20,8 @@ module PDK
         targets.map { |target|
           if respond_to?(:pattern)
             if File.directory?(target)
-              Array[pattern].flatten.map { |p| Dir.glob(File.join(target, p)) }
+              files_glob = Array[pattern].flatten.map { |p| Dir.glob(File.join(target, p)) }
+              files_glob.flatten.empty? ? target : files_glob
             else
               target
             end
@@ -35,11 +40,10 @@ module PDK
       end
 
       def self.invoke(report, options = {})
-        PDK::Util::Bundler.ensure_bundle!
-        PDK::Util::Bundler.ensure_binstubs!(name)
+        PDK::Util::Bundler.ensure_binstubs!(cmd)
 
         targets = parse_targets(options)
-        cmd_argv = parse_options(options, targets).unshift(cmd)
+        cmd_argv = parse_options(options, targets).unshift(cmd_path)
         cmd_argv.unshift('ruby') if Gem.win_platform?
 
         PDK.logger.debug(_('Running %{cmd}') % { cmd: cmd_argv.join(' ') })
