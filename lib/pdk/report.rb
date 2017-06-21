@@ -1,6 +1,7 @@
 require 'rexml/document'
 require 'time'
 require 'pdk/report/event'
+require 'socket'
 
 module PDK
   class Report
@@ -51,6 +52,7 @@ module PDK
       document << REXML::XMLDecl.new
       testsuites = REXML::Element.new('testsuites')
 
+      id = 0
       events.each do |testsuite_name, testcases|
         testsuite = REXML::Element.new('testsuite')
         testsuite.attributes['name'] = testsuite_name
@@ -58,10 +60,17 @@ module PDK
         testsuite.attributes['errors'] = testcases.select(&:error?).length
         testsuite.attributes['failures'] = testcases.select(&:failure?).length
         testsuite.attributes['time'] = 0
-        testsuite.attributes['timestamp'] = Time.now.xmlschema
+        testsuite.attributes['timestamp'] = Time.now.strftime('%Y-%m-%dT%H:%M:%S')
+        testsuite.attributes['hostname'] = Socket.gethostname
+        testsuite.attributes['id'] = id
+        testsuite.attributes['package'] = testsuite_name
+        testsuite.add_element('properties')
         testcases.each { |r| testsuite.elements << r.to_junit }
+        testsuite.add_element('system-out')
+        testsuite.add_element('system-err')
 
         testsuites.elements << testsuite
+        id += 1
       end
 
       document.elements << testsuites

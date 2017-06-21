@@ -463,8 +463,12 @@ describe PDK::Report::Event do
         expect(junit_event.children.first.name).to eq('failure')
       end
 
-      it 'sets the message attribute to the severity' do
-        expect(junit_event.children.first.attributes['message']).to eq('critical')
+      it 'sets the message attribute to the message' do
+        expect(junit_event.children.first.attributes['message']).to eq('some message')
+      end
+
+      it 'sets the type attribute to the severity' do
+        expect(junit_event.children.first.attributes['type']).to eq('critical')
       end
 
       it 'puts a textual representation of the event into the failure element' do

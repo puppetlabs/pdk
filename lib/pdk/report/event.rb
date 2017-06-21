@@ -103,7 +103,8 @@ module PDK
 
         if failure?
           failure = REXML::Element.new('failure')
-          failure.attributes['message'] = severity
+          failure.attributes['type'] = severity
+          failure.attributes['message'] = message
           failure.text = to_text
           testcase.elements << failure
         elsif skipped?
