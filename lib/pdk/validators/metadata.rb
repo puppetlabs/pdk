@@ -23,7 +23,7 @@ module PDK
       end
 
       def self.parse_options(_options, targets)
-        cmd_options = ['--format', 'json']
+        cmd_options = ['--format', 'json', '--no-fail-on-warnings']
 
         cmd_options.concat(targets)
       end
