@@ -1,6 +1,8 @@
 require 'spec_helper_acceptance'
 
 describe 'Running ruby validation' do
+  let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
+
   context 'with a fresh module' do
     include_context 'in a new module', 'foo'
 
@@ -8,6 +10,33 @@ describe 'Running ruby validation' do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stdout) { is_expected.to match(%r{\A\Z}) }
       its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
+    end
+
+    describe command('pdk validate ruby --format junit') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
+      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+
+      its(:stdout) do
+        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]').with_attributes(
+          'failures' => '0',
+          'tests'    => satisfy { |v| v.to_i > 0 },
+        )
+      end
+
+      its(:stdout) do
+        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
+          'classname' => 'rubocop',
+          'name'      => 'Gemfile',
+        )
+      end
+
+      its(:stdout) do
+        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
+          'classname' => 'rubocop',
+          'name'      => File.join('spec', 'spec_helper.rb'),
+        )
+      end
     end
   end
 
@@ -53,6 +82,40 @@ describe 'Running ruby validation' do
         its(:stdout) { is_expected.to match(%r{#{Regexp.escape(another_violation_rb)}}) }
         its(:stdout) { is_expected.not_to match(%r{#{Regexp.escape(spec_violation_rb)}}) }
         its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
+      end
+    end
+
+    describe command('pdk validate ruby --format junit') do
+      its(:exit_status) { is_expected.not_to eq(0) }
+      its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
+      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+
+      its(:stdout) do
+        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]').with_attributes(
+          'failures' => satisfy { |v| v.to_i > 0 },
+          'tests'    => satisfy { |v| v.to_i >= 3 },
+        )
+      end
+
+      its(:stdout) do
+        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
+          'classname' => 'rubocop',
+          'name'      => 'Gemfile',
+        )
+      end
+
+      its(:stdout) do
+        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
+          'classname' => 'rubocop',
+          'name'      => File.join('spec', 'spec_helper.rb'),
+        )
+      end
+
+      its(:stdout) do
+        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
+          'classname' => a_string_matching(%r{UselessAssignment}),
+          'name'      => a_string_starting_with(File.join('spec', 'violation.rb')),
+        )
       end
     end
   end
