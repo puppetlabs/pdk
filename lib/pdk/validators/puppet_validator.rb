@@ -12,7 +12,7 @@ module PDK
       end
 
       def self.puppet_validators
-        [PuppetLint, PuppetParser]
+        [PuppetParser, PuppetLint]
       end
 
       def self.invoke(report, options = {})
