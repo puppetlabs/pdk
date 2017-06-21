@@ -6,6 +6,14 @@ describe 'Running ruby validation' do
   context 'with a fresh module' do
     include_context 'in a new module', 'foo'
 
+    example_rb = File.join('spec', 'example.rb')
+
+    before(:all) do
+      File.open(example_rb, 'w') do |f|
+        f.puts "require 'filepath'"
+      end
+    end
+
     describe command('pdk validate ruby') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stdout) { is_expected.to match(%r{\A\Z}) }
@@ -27,7 +35,7 @@ describe 'Running ruby validation' do
       its(:stdout) do
         is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
           'classname' => 'rubocop',
-          'name'      => 'Gemfile',
+          'name'      => example_rb,
         )
       end
 
@@ -94,13 +102,6 @@ describe 'Running ruby validation' do
         is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]').with_attributes(
           'failures' => satisfy { |v| v.to_i > 0 },
           'tests'    => satisfy { |v| v.to_i >= 3 },
-        )
-      end
-
-      its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
-          'classname' => 'rubocop',
-          'name'      => 'Gemfile',
         )
       end
 
