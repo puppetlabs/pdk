@@ -85,6 +85,9 @@ module PDK
     # @param target [#write] an IO object that the report will be written to.
     #   Defaults to PDK::Report.default_target.
     def to_text(target = self.class.default_target)
+      # Extra defaulting here, b/c the Class.send method will pass in nil
+      target = target || self.class.default_target
+
       events.each do |_tool, tool_events|
         tool_events.each do |event|
           target.puts(event.to_text) unless event.pass?
