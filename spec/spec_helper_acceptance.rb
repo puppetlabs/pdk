@@ -1,6 +1,7 @@
 require 'fileutils'
 require 'serverspec'
 require 'tmpdir'
+require 'rspec/xsd'
 
 # automatically load any shared examples or contexts
 Dir['./spec/acceptance/support/**/*.rb'].sort.each { |f| require f }
@@ -64,4 +65,10 @@ RSpec.configure do |c|
       ENV[k] = bundler_env[k]
     end
   end
+
+  c.expect_with(:rspec) do |e|
+    e.include_chain_clauses_in_custom_matcher_descriptions = true
+  end
+  c.include RSpec::XSD
+  c.add_setting :fixtures_path, default: File.join(File.dirname(__FILE__), 'fixtures')
 end
