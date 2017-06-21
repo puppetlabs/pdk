@@ -3,11 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
-## [v0.1.20170616](https://github.com/puppetlabs/pdk/tree/v0.1.20170616) (2017-06-16)
-[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.1.0...v0.1.20170616)
+## [v0.2.0](https://github.com/puppetlabs/pdk/tree/v0.2.0) (2017-06-21)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.1.0...v0.2.0)
 
 **Implemented enhancements:**
 
+- \(SDK-137\) Adds Puppet Parser syntax validation [\#94](https://github.com/puppetlabs/pdk/pull/94) ([bmjen](https://github.com/bmjen))
+- \(SDK-274\) Adds --version option [\#90](https://github.com/puppetlabs/pdk/pull/90) ([bmjen](https://github.com/bmjen))
 - \(SDK-244\) Add rubocop validation subcommand [\#75](https://github.com/puppetlabs/pdk/pull/75) ([rodjek](https://github.com/rodjek))
 - \(maint\) Add hints for gem installation [\#74](https://github.com/puppetlabs/pdk/pull/74) ([DavidS](https://github.com/DavidS))
 - \(SDK-240\) Adds puppet-lint validation subcommand [\#71](https://github.com/puppetlabs/pdk/pull/71) ([bmjen](https://github.com/bmjen))
