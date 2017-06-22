@@ -1,7 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'Running metadata validation' do
-  let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
   let(:spinner_text) { %r{checking metadata\.json}i }
 
   context 'with a fresh module' do
@@ -16,7 +15,7 @@ describe 'Running metadata validation' do
     describe command('pdk validate metadata --format junit') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(spinner_text) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+      it_behaves_like :it_generates_valid_junit_xml
 
       its(:stdout) do
         is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]').with_attributes(
@@ -54,7 +53,7 @@ describe 'Running metadata validation' do
     describe command('pdk validate metadata --format junit') do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stderr) { is_expected.to match(spinner_text) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+      it_behaves_like :it_generates_valid_junit_xml
 
       its(:stdout) do
         is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]').with_attributes(

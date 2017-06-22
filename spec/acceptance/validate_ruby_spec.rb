@@ -23,7 +23,7 @@ describe 'pdk validate ruby', module_command: true do
     describe command('pdk validate ruby --format junit') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+      it_behaves_like :it_generates_valid_junit_xml
 
       its(:stdout) do
         is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]').with_attributes(
@@ -96,7 +96,7 @@ describe 'pdk validate ruby', module_command: true do
     describe command('pdk validate ruby --format junit') do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+      it_behaves_like :it_generates_valid_junit_xml
 
       its(:stdout) do
         is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]').with_attributes(
