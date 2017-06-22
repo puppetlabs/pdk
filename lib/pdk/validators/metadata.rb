@@ -14,6 +14,10 @@ module PDK
         'metadata-json-lint'
       end
 
+      def self.spinner_text
+        _('Checking metadata.json')
+      end
+
       def self.parse_targets(_options)
         [File.join(PDK::Util.module_root, 'metadata.json')]
       end
