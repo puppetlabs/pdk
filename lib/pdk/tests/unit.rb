@@ -9,7 +9,7 @@ module PDK
         # TODO: actually run the tests
         # cmd = 'rake spec'
         # cmd += " #{tests}" if tests
-        cmd = 'pwd'
+        cmd = 'BattleToads'
         cmd
       end
 
