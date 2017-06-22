@@ -30,12 +30,17 @@ module PDK
         json_data.delete('result')
         json_data.keys.each do |type|
           json_data[type].each do |offense|
+            # metadata-json-lint groups the offenses by type, so the type ends
+            # up being `warnings` or `errors`. We want to convert that to the
+            # singular noun for the event.
+            event_type = type[%r{\A(.+?)s?\Z}, 1]
+
             report.add_event(
               file:     'metadata.json',
               source:   cmd,
               message:  offense['msg'],
               test:     offense['check'],
-              severity: type,
+              severity: event_type,
               state:    :failure,
             )
           end
