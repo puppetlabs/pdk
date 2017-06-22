@@ -10,6 +10,7 @@ describe 'Running `pdk validate` in a module' do
 
   before(:each) do
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
+    allow(PDK::Util).to receive(:module_root).and_return('/path/to/testmodule')
   end
 
   context 'when no arguments or options are provided' do
