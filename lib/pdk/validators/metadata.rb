@@ -29,24 +29,31 @@ module PDK
       end
 
       def self.parse_output(report, json_data, _targets)
-        return if json_data.empty?
+        if json_data.empty?
+          report.add_event(
+            file:     'metadata.json',
+            source:   cmd,
+            state:    :passed,
+            severity: :ok,
+          )
+        else
+          json_data.delete('result')
+          json_data.keys.each do |type|
+            json_data[type].each do |offense|
+              # metadata-json-lint groups the offenses by type, so the type ends
+              # up being `warnings` or `errors`. We want to convert that to the
+              # singular noun for the event.
+              event_type = type[%r{\A(.+?)s?\Z}, 1]
 
-        json_data.delete('result')
-        json_data.keys.each do |type|
-          json_data[type].each do |offense|
-            # metadata-json-lint groups the offenses by type, so the type ends
-            # up being `warnings` or `errors`. We want to convert that to the
-            # singular noun for the event.
-            event_type = type[%r{\A(.+?)s?\Z}, 1]
-
-            report.add_event(
-              file:     'metadata.json',
-              source:   cmd,
-              message:  offense['msg'],
-              test:     offense['check'],
-              severity: event_type,
-              state:    :failure,
-            )
+              report.add_event(
+                file:     'metadata.json',
+                source:   cmd,
+                message:  offense['msg'],
+                test:     offense['check'],
+                severity: event_type,
+                state:    :failure,
+              )
+            end
           end
         end
       end
