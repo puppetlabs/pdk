@@ -86,7 +86,7 @@ module PDK
     #   Defaults to PDK::Report.default_target.
     def to_text(target = self.class.default_target)
       # Extra defaulting here, b/c the Class.send method will pass in nil
-      target = target || self.class.default_target
+      target ||= self.class.default_target
 
       events.each do |_tool, tool_events|
         tool_events.each do |event|

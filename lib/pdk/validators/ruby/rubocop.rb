@@ -26,7 +26,13 @@ module PDK
         cmd_options.concat(targets)
       end
 
-      def self.parse_output(report, json_data, _targets)
+      def self.parse_output(report, result, _targets)
+        begin
+          json_data = JSON.parse(result[:stdout])
+        rescue JSON::ParserError
+          json_data = []
+        end
+
         return unless json_data.key?('files')
 
         json_data['files'].each do |file_info|

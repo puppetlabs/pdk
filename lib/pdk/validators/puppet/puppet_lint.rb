@@ -28,7 +28,13 @@ module PDK
         cmd_options.concat(targets)
       end
 
-      def self.parse_output(report, json_data, targets)
+      def self.parse_output(report, result, targets)
+        begin
+          json_data = JSON.parse(result[:stdout])
+        rescue JSON::ParserError
+          json_data = []
+        end
+
         # puppet-lint does not include files without problems in its JSON
         # output, so we need to go through the list of targets and add passing
         # events to the report for any target not listed in the JSON output.

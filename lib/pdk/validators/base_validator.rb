@@ -56,13 +56,7 @@ module PDK
 
         result = command.execute!
 
-        begin
-          json_data = JSON.parse(result[:stdout])
-        rescue JSON::ParserError
-          json_data = []
-        end
-
-        parse_output(report, json_data, targets)
+        parse_output(report, result, targets)
 
         result[:exit_code]
       end
