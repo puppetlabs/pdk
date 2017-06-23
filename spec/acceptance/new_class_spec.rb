@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'Creating a new class' do
+describe 'pdk new class', module_command: true do
   context 'in a new module' do
     include_context 'in a new module', 'foo'
 
@@ -86,13 +86,6 @@ describe 'Creating a new class' do
           is_expected.to match(%r{foo::bar::baz})
         end
       end
-    end
-  end
-
-  context 'outside a module folder' do
-    describe command('pdk new class bar') do
-      its(:exit_status) { is_expected.not_to eq 0 }
-      its(:stdout) { is_expected.to match(%r{metadata.json.*does not exist}) }
     end
   end
 end

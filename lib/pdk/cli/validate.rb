@@ -19,10 +19,7 @@ module PDK::CLI
         exit 0
       end
 
-      if PDK::Util.module_root.nil?
-        PDK.logger.error(_('pdk validate must be run inside a module'))
-        exit 1
-      end
+      PDK::CLI::Util.ensure_in_module!
 
       if args[0]
         # This may be a single validator, a list of validators, or a target.

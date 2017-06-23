@@ -1,4 +1,3 @@
-
 module PDK::CLI
   @new_class_cmd = @new_cmd.define_command do
     name 'class'
@@ -9,6 +8,8 @@ module PDK::CLI
 
     run do |opts, args, _cmd|
       require 'pdk/generators/puppet_class'
+
+      PDK::CLI::Util.ensure_in_module!
 
       class_name = args[0]
       module_dir = Dir.pwd
