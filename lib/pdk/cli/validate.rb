@@ -8,6 +8,7 @@ module PDK::CLI
     description _('Run metadata, puppet, or ruby validation.')
 
     flag nil, :list, _('list all available validators')
+    flag :a, 'auto-correct', _('automatically correct problems (where possible)')
 
     run do |opts, args, _cmd|
       validator_names = PDK::Validate.validators.map { |v| v.name }
@@ -62,6 +63,7 @@ module PDK::CLI
                        end
 
       options = targets.empty? ? {} : { targets: targets }
+      options[:auto_correct] = true if opts.key?(:'auto-correct')
 
       exit_code = 0
 

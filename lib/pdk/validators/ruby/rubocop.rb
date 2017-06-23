@@ -20,8 +20,12 @@ module PDK
         _('Checking Ruby code style')
       end
 
-      def self.parse_options(_options, targets)
+      def self.parse_options(options, targets)
         cmd_options = ['--format', 'json']
+
+        if options[:auto_correct]
+          cmd_options << '--auto-correct'
+        end
 
         cmd_options.concat(targets)
       end
@@ -45,7 +49,7 @@ module PDK
                   line:     offense['location']['line'],
                   column:   offense['location']['column'],
                   message:  offense['message'],
-                  severity: offense['severity'],
+                  severity: (offense['corrected']) ? 'corrected' : offense['severity'],
                   test:     offense['cop_name'],
                   state:    :failure,
                 ),
