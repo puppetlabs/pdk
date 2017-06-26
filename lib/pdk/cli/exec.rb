@@ -88,7 +88,7 @@ module PDK
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
-          @spinner = TTY::Spinner.new("[:spinner] #{message}", opts)
+          @spinner = Gem.win_platform? ? WindowsSpinner.new(message, opts) : TTY::Spinner.new("[:spinner] #{message}", opts)
         end
 
         def execute!
@@ -178,6 +178,30 @@ module PDK
             # FIXME: calculate this more reliably
             File.absolute_path(File.join(`bundle show bundler`, '..', '..'))
           end
+        end
+      end
+
+      # This is a placeholder until we integrate ansicon into Windows packaging
+      # or come up with some other progress indicator for Windows.
+      class WindowsSpinner
+        def initialize(message, _opts = {})
+          @message = message
+        end
+
+        def auto_spin
+          $stderr.print @message << '...'
+        end
+
+        def success(message = '')
+          message ||= 'done.'
+
+          $stderr.print message << "\n"
+        end
+
+        def error(message = '')
+          message ||= 'FAILED'
+
+          $stderr.print message << "\n"
         end
       end
     end
