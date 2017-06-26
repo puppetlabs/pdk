@@ -19,6 +19,8 @@ module PDK::CLI
         exit 0
       end
 
+      PDK::CLI::Util.ensure_in_module!
+
       if args[0]
         # This may be a single validator, a list of validators, or a target.
         if Util::OptionValidator.comma_separated_list?(args[0])

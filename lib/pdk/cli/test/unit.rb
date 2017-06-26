@@ -1,4 +1,3 @@
-
 module PDK::CLI
   @test_unit_cmd = @test_cmd.define_command do
     name 'unit'
@@ -15,6 +14,8 @@ module PDK::CLI
 
     run do |opts, _args, _cmd|
       require 'pdk/tests/unit'
+
+      PDK::CLI::Util.ensure_in_module!
 
       report = nil
 
