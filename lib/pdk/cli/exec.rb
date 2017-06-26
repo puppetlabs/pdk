@@ -105,7 +105,15 @@ module PDK
             @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'bundler', 'ruby', RbConfig::CONFIG['ruby_version'])
             @process.environment['GEM_PATH'] = pdk_gem_path
 
-            Dir.chdir(PDK::Util.module_root) do
+            mod_root = PDK::Util.module_root
+
+            unless mod_root
+              @spinner.error
+
+              raise PDK::CLI::FatalError, _('Current working directory is not part of a module. (No metadata.json was found.)')
+            end
+
+            Dir.chdir(mod_root) do
               ::Bundler.with_clean_env do
                 run_process!
               end
