@@ -100,7 +100,7 @@ module PDK
           {
             name:     'author',
             question: _('Who wrote this module?'),
-            help:     _('This is used to identify your module with you.'),
+            help:     _('The person who gets credit for creating the module. '),
             required: true,
             default:  metadata.data['author'],
           },
@@ -163,7 +163,7 @@ module PDK
         metadata.update!(answers)
 
         puts '-' * 40
-        puts 'SUMMARY'
+        puts _('SUMMARY')
         puts '-' * 40
         puts metadata.to_json
         puts '-' * 40

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: puppet development kit \n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2017-06-16 16:10+0100\n"
-"PO-Revision-Date: 2017-06-16 16:11+0100\n"
+"POT-Creation-Date: 2017-06-26 14:48+0100\n"
+"PO-Revision-Date: 2017-06-26 14:50+0100\n"
 "Last-Translator: David Schmitt <david.schmitt@puppet.com>\n"
 "Language-Team: German <>\n"
 "Language: de\n"
@@ -18,29 +18,33 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.7\n"
 
-#: ../lib/pdk/cli.rb:33
+#: ../lib/pdk/cli.rb:34
 msgid ""
 "Specifies the URL to the template to use when creating new modules, and "
 "other parts."
 msgstr "Die URL zum Template das für die Modulerzeugung genutzt werden soll."
 
-#: ../lib/pdk/cli.rb:38
+#: ../lib/pdk/cli.rb:39
 msgid "pdk command [options]"
 msgstr "pdk befehl [optionen]"
 
-#: ../lib/pdk/cli.rb:39
+#: ../lib/pdk/cli.rb:40
 msgid "Puppet Development Kit"
 msgstr "Puppet Development Kit"
 
-#: ../lib/pdk/cli.rb:40
+#: ../lib/pdk/cli.rb:41
 msgid "The shortest path to better modules."
 msgstr "Der kürzeste Weg zu besseren Modulen.\n"
 
-#: ../lib/pdk/cli.rb:43
+#: ../lib/pdk/cli.rb:44
+msgid "show version of pdk"
+msgstr "Version des pdk anzeigen"
+
+#: ../lib/pdk/cli.rb:49
 msgid "show help for this command"
 msgstr "Hilfetext für diesen Befehl anzeigen"
 
-#: ../lib/pdk/cli.rb:48
+#: ../lib/pdk/cli.rb:54
 msgid ""
 "Specify desired output format. Valid formats are '%{available_formats}'. You "
 "may also specify a file to which the formatted output will be directed, for "
@@ -53,7 +57,7 @@ msgstr ""
 "jeder Wert ein eigene Ausgabedatei angibt kann diese Option mehrmals "
 "angeführt werden.\n"
 
-#: ../lib/pdk/cli.rb:67
+#: ../lib/pdk/cli.rb:73
 msgid "Enable debug output."
 msgstr "Debug Ausgabe aktivieren."
 
@@ -64,25 +68,29 @@ msgstr ""
 "Ein unerwarteter Fehler ist aufgetreten. Das gleiche Kommand mit --debug "
 "kann mehr Information zur Ursache geben."
 
-#: ../lib/pdk/cli/exec.rb:37
+#: ../lib/pdk/cli/exec.rb:44
 msgid "Using '%{vendored_bin_path}'"
 msgstr "Verwende '%{vendored_bin_path}'"
 
-#: ../lib/pdk/cli/exec.rb:40
+#: ../lib/pdk/cli/exec.rb:47
 msgid ""
 "Trying '%{fallback}' from the system PATH, instead of '%{vendored_bin_path}'"
 msgstr "Verwende '%{fallback}' in PATH, statt '%{vendored_bin_path}'"
 
-#: ../lib/pdk/cli/exec.rb:70
+#: ../lib/pdk/cli/exec.rb:77
 msgid ""
 "Expected execution context to be :system or :module but got '%{context}'"
 msgstr ""
 "Ausführumgebung '%{context}' nicht erkannt. Sie muss :system oder :module "
 "sein."
 
-#: ../lib/pdk/cli/exec.rb:129
+#: ../lib/pdk/cli/exec.rb:139
 msgid "Failed to execute '%{command}': %{message}"
 msgstr "Konnte Befehl '%{command}' night ausführen: %{message}"
+
+#: ../lib/pdk/cli/exec.rb:141
+msgid "Failed to execute process: %{message}"
+msgstr "Konnte einen Prozess nicht starten: %{message}"
 
 #: ../lib/pdk/cli/new.rb:5
 msgid "new <type> [options]"
@@ -193,15 +201,27 @@ msgstr ""
 msgid "List of all available unit tests: (TODO)"
 msgstr "Verfügbare Unit-Tests: (TODO)"
 
+#: ../lib/pdk/cli/util/interview.rb:30
+msgid "[Q %{current_number}/%{questions_total}]"
+msgstr "[Frage %{current_number}/%{questions_total}]"
+
+#: ../lib/pdk/cli/util/interview.rb:33
+msgid "-->"
+msgstr "-->"
+
 #: ../lib/pdk/cli/util/option_normalizer.rb:6
 msgid "Error: expected comma separated list"
 msgstr "Fehler: Komma-getrennte Liste erwartet"
 
-#: ../lib/pdk/cli/util/option_normalizer.rb:33
+#: ../lib/pdk/cli/util/option_normalizer.rb:32
+msgid "'%{name}' is not a valid report format (%{valid})"
+msgstr "'%{name}' ist kein gültiges Format (%{valid})"
+
+#: ../lib/pdk/cli/util/option_normalizer.rb:54
 msgid "'%{name}' is not a valid parameter name"
 msgstr "'%{name}' ist kein gültiger Parametername"
 
-#: ../lib/pdk/cli/util/option_normalizer.rb:37
+#: ../lib/pdk/cli/util/option_normalizer.rb:60
 msgid "'%{type}' is not a valid data type"
 msgstr "'%{name}' ist kein gültiger Datentyp"
 
@@ -217,101 +237,150 @@ msgstr ""
 "Nonstandard Datentyp '%{type}'. Stelle sicher das der Typ im Code oder in "
 "den Abhängigkeiten verfügbar ist."
 
-#: ../lib/pdk/cli/validate.rb:4
+#: ../lib/pdk/cli/validate.rb:6
 msgid "validate [options]"
 msgstr "validate [optionen]"
 
-#: ../lib/pdk/cli/validate.rb:5
+#: ../lib/pdk/cli/validate.rb:7
 msgid "Run static analysis tests."
 msgstr "Statische Analysen ausführen."
 
-#: ../lib/pdk/cli/validate.rb:6
+#: ../lib/pdk/cli/validate.rb:8
 msgid "Run metadata, puppet, or ruby validation."
 msgstr "Metadaten, Puppet und Ruby prüfen."
 
-#: ../lib/pdk/cli/validate.rb:8
+#: ../lib/pdk/cli/validate.rb:10
 msgid "list all available validators"
 msgstr "Gibt die Namen aller verfügbaren Prüfer aus."
 
-#: ../lib/pdk/cli/validate.rb:19
+#: ../lib/pdk/cli/validate.rb:18
 msgid "Available validators: %{validator_names}"
 msgstr "Verfügbare Prüfer: %{validator_names}"
 
-#: ../lib/pdk/cli/validate.rb:33
+#: ../lib/pdk/cli/validate.rb:32
 msgid "Unknown validator '%{v}'. Available validators: %{validators}"
 msgstr "Prüfer '%{v}' nicht erkannt. Verfügbare Prüfer: %{validators}"
 
-#: ../lib/pdk/cli/validate.rb:43 ../lib/pdk/cli/validate.rb:47
+#: ../lib/pdk/cli/validate.rb:42 ../lib/pdk/cli/validate.rb:46
 msgid "Running all available validators..."
 msgstr "Führe alle verfügbaren Prüfer aus..."
 
-#: ../lib/pdk/generators/module.rb:31
+#: ../lib/pdk/generators/module.rb:33
 msgid "The destination directory '%{dir}' already exists"
 msgstr "Das Zielverzeichnis '%{dir}' existiert bereits"
 
-#: ../lib/pdk/generators/module.rb:71
+#: ../lib/pdk/generators/module.rb:75
 msgid "Unable to create directory '%{dir}'"
 msgstr "Das Verzeichnis '%{dir}' kann nicht erstellt werden."
 
-#: ../lib/pdk/generators/module.rb:77
-msgid ""
-"We need to create a metadata.json file for this module. Please answer the "
-"following questions; if the question is not applicable to this module, feel "
-"free to leave it blank."
-msgstr ""
-"Um die metadata.json Datei für dieses Modul zu ereugen, werden einige Werte "
-"benötigt. Bitte beantworten Sie die folgenden Fragen. Sollte eine der Fragen "
-"nicht relevant sein, kann der Standardwert verwendet werden."
-
-#: ../lib/pdk/generators/module.rb:85
+#: ../lib/pdk/generators/module.rb:84
 msgid "What is your Puppet Forge username?"
 msgstr "Was ist dein Puppet Forge Benutzername?"
 
+#: ../lib/pdk/generators/module.rb:85
+msgid ""
+"This will be used when uploading your module to the Forge. You can opt out "
+"of this at any time."
+msgstr ""
+
 #: ../lib/pdk/generators/module.rb:88
-msgid "We're sorry, we could not parse your module name: %{message}"
-msgstr "Der Wert konnte nicht als Modulname interpretiert werden: %{message}"
+msgid "Forge usernames can only contain letters and numbers"
+msgstr ""
 
 #: ../lib/pdk/generators/module.rb:93
-msgid "Puppet uses Semantic Versioning (semver.org) to version modules."
-msgstr "Puppet verwendet Semantic Versioning (http://semver.org) für Module."
-
-#: ../lib/pdk/generators/module.rb:94
 msgid "What version is this module?"
 msgstr "Was ist die aktuelle Version dieses Moduls?"
 
+#: ../lib/pdk/generators/module.rb:94
+msgid "Puppet uses Semantic Versioning (semver.org) to version modules."
+msgstr "Puppet verwendet Semantic Versioning (http://semver.org) für Module."
+
 #: ../lib/pdk/generators/module.rb:97
-msgid "We're sorry, we could not parse that as a Semantic Version: %{message}"
-msgstr "Der Wert konnte nicht als Modulname interpretiert werden: %{message}"
+msgid "Semantic Version numbers must be in the form MAJOR.MINOR.PATCH"
+msgstr ""
 
 #: ../lib/pdk/generators/module.rb:102
 msgid "Who wrote this module?"
 msgstr "Wer ist der Autor dieses Moduls?"
 
-#: ../lib/pdk/generators/module.rb:107
+#: ../lib/pdk/generators/module.rb:103
+msgid "The person who gets credit for creating the module. "
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:109
 msgid "What license does this module code fall under?"
 msgstr "Unter welcher Lizenz ist das Modul erhältich?"
 
-#: ../lib/pdk/generators/module.rb:112
+#: ../lib/pdk/generators/module.rb:110
+#, fuzzy
+msgid ""
+"This should be an identifier from https://spdk.org/licenses/. Common values "
+"are \"Apache-2.0\", \"MIT\", or \"proprietary\"."
+msgstr ""
+"Verwende die angegebene Lizenz für dieses Modul. Erlaubte Werte sind "
+"'identifier' von https://spdx.org/licenses/. Übliche Lizenzen sind "
+"'Apache-2.0', 'MIT', oder 'proprietary'."
+
+#: ../lib/pdk/generators/module.rb:116
 msgid "How would you describe this module in a single sentence?"
 msgstr "Beschreibe das Modul in einem Satz:"
 
-#: ../lib/pdk/generators/module.rb:116
-msgid "Where is this module's source code repository?"
+#: ../lib/pdk/generators/module.rb:117
+msgid "To help other Puppet users understand what the module does."
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:123
+#, fuzzy
+msgid "Where is this modules's source code repository?"
 msgstr "Wo ist das Repository für dieses Modul?"
 
-#: ../lib/pdk/generators/module.rb:120
+#: ../lib/pdk/generators/module.rb:124
+msgid "Usually a GitHub URL"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:130
 msgid "Where can others go to learn more about this module?"
 msgstr "Wo kann man mehr über dieses Modul erfahren?"
 
-#: ../lib/pdk/generators/module.rb:124
+#: ../lib/pdk/generators/module.rb:131
+msgid "A web site that offers full information about your module."
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:136
 msgid "Where can others go to file issues about this module?"
 msgstr "Wo kann man Fehler in diesem Modul berichten?"
 
-#: ../lib/pdk/generators/module.rb:133
+#: ../lib/pdk/generators/module.rb:137
+msgid "A web site with a public bug tracker for your module."
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:150
+#, fuzzy
+msgid ""
+"\n"
+"We need to create a metadata.json file for this module, so we're going to "
+"ask you %{count} quick questions.\n"
+"If the question is not applicable to this module, just leave the answer "
+"blank.\n"
+"\n"
+msgstr ""
+"Um die metadata.json Datei für dieses Modul zu ereugen, werden einige Werte "
+"benötigt. Bitte beantworten Sie die folgenden Fragen. Sollte eine der Fragen "
+"nicht relevant sein, kann der Standardwert verwendet werden."
+
+#: ../lib/pdk/generators/module.rb:158
+msgid "Interview cancelled, aborting..."
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:166
+msgid "SUMMARY"
+msgstr ""
+
+#: ../lib/pdk/generators/module.rb:172
 msgid "About to generate this module; continue?"
 msgstr "Bereit metadata.json zu generieren; weitermachen?"
 
-#: ../lib/pdk/generators/module.rb:134
+#: ../lib/pdk/generators/module.rb:173
 msgid "Aborting..."
 msgstr "Abbruch..."
 
@@ -360,11 +429,11 @@ msgid "Unable to clone git repository '%{repo}' to '%{dest}'"
 msgstr ""
 "Das git Repository '%{repo}' konnte nicht nach '%{dest}' geklont werden."
 
-#: ../lib/pdk/module/templatedir.rb:106
+#: ../lib/pdk/module/templatedir.rb:107
 msgid "Rendering '%{template}'..."
 msgstr "Verarbeite '%{template}'..."
 
-#: ../lib/pdk/module/templatedir.rb:112
+#: ../lib/pdk/module/templatedir.rb:113
 msgid ""
 "Failed to render template '%{template}'\n"
 "%{exception}: %{message}"
@@ -372,17 +441,57 @@ msgstr ""
 "Template '%{template}' konnte nicht verarbeitet werden\n"
 "%{exception}: %{message}"
 
-#: ../lib/pdk/module/templatedir.rb:176
+#: ../lib/pdk/module/templatedir.rb:177
 msgid "The specified template '%{path}' is not a directory"
 msgstr "Das angegebene Template'%{path}' ist kein Verzeichnis"
 
-#: ../lib/pdk/module/templatedir.rb:180
+#: ../lib/pdk/module/templatedir.rb:181
 msgid "The template at '%{path}' does not contain a moduleroot directory"
 msgstr "Das Template '%{path}' enthält kein moduleroot Verzeichnis"
 
-#: ../lib/pdk/module/templatedir.rb:224
+#: ../lib/pdk/module/templatedir.rb:225
 msgid "'%{file}' is not a valid YAML file: %{message}"
 msgstr "'%{file}' ist keine gültige YAML Datei: %{message}"
+
+#: ../lib/pdk/report/event.rb:155
+msgid "file not specified"
+msgstr ""
+
+#: ../lib/pdk/report/event.rb:159
+msgid "file must be a String"
+msgstr ""
+
+#: ../lib/pdk/report/event.rb:190
+msgid "state not specified"
+msgstr ""
+
+#: ../lib/pdk/report/event.rb:195
+msgid "state must be a Symbol, not %{type}"
+msgstr ""
+
+#: ../lib/pdk/report/event.rb:200
+msgid "Invalid state %{state}, valid states are: %{valid}"
+msgstr ""
+
+#: ../lib/pdk/report/event.rb:219
+msgid "source not specified"
+msgstr ""
+
+#: ../lib/pdk/report/event.rb:240
+msgid "line must be an Integer or a String representation of an Integer"
+msgstr ""
+
+#: ../lib/pdk/report/event.rb:244
+msgid "the line number can only contain the digits 0-9"
+msgstr ""
+
+#: ../lib/pdk/report/event.rb:265
+msgid "column must be an Integer or a String representation of an Integer"
+msgstr ""
+
+#: ../lib/pdk/report/event.rb:269
+msgid "the column number can only contain the digits 0-9"
+msgstr ""
 
 #: ../lib/pdk/template_file.rb:62
 msgid "'%{template}' is not a readable file"
@@ -392,41 +501,101 @@ msgstr "'%{template}' ist nicht lesbar"
 msgid "Running unit tests: %{tests}"
 msgstr "Führe aus: Unit test '%{tests}'"
 
+#: ../lib/pdk/util.rb:44
+msgid "Cannot resolve a full path to '%{path}' as it does not currently exist"
+msgstr ""
+
 #: ../lib/pdk/util/bundler.rb:15
+msgid "Bundle has already been installed, skipping run"
+msgstr ""
+
+#: ../lib/pdk/util/bundler.rb:20
 msgid "No Gemfile found in '%{cwd}', skipping bundler management"
 msgstr "Kein Gemfile in '%{cwd}', überspringe bundler Verwaltung"
 
-#: ../lib/pdk/util/bundler.rb:21
+#: ../lib/pdk/util/bundler.rb:26
 msgid "Unable to resolve Gemfile dependencies."
 msgstr "Gemfile Abhängigkeiten konnten nicht aufgelöst werden."
 
-#: ../lib/pdk/util/bundler.rb:27
+#: ../lib/pdk/util/bundler.rb:32
 msgid "Unable to install missing Gemfile dependencies."
 msgstr "Fehlende Gemfile Abhängigkeiten konnten nicht installiert werden."
 
-#: ../lib/pdk/util/bundler.rb:42
+#: ../lib/pdk/util/bundler.rb:51
+msgid "Unable to install requested binstubs."
+msgstr ""
+
+#: ../lib/pdk/util/bundler.rb:65
 msgid "Checking for missing Gemfile dependencies"
 msgstr "Gemfile Abhängigkeiten werden überprüft."
 
-#: ../lib/pdk/util/bundler.rb:52
+#: ../lib/pdk/util/bundler.rb:75
 msgid "Resolving Gemfile dependencies"
 msgstr "Gemfile Abhängigkeiten werden aufgelöst"
 
-#: ../lib/pdk/util/bundler.rb:68
+#: ../lib/pdk/util/bundler.rb:91
 msgid "Installing missing Gemfile dependencies"
 msgstr "Fehlende Gemfile Abhängigkeiten weren installiert"
 
-#: ../lib/pdk/util/bundler.rb:115
+#: ../lib/pdk/util/bundler.rb:153
 msgid "done.\n"
 msgstr "Fertig.\n"
 
-#: ../lib/pdk/util/bundler.rb:115
+#: ../lib/pdk/util/bundler.rb:153
 msgid "FAILURE!\n"
 msgstr "FEHLER!\n"
 
-#: ../lib/pdk/validators/base_validator.rb:25
-msgid "Running %{cmd} with options: %{options}"
-msgstr "'%{cmd}' wird mit Optionen '%{options}' ausgeführt."
+#: ../lib/pdk/validators/base_validator.rb:39
+msgid "Invoking %{cmd}"
+msgstr ""
+
+#: ../lib/pdk/validators/base_validator.rb:49
+msgid "Running %{cmd}"
+msgstr ""
+
+#: ../lib/pdk/validators/puppet/puppet_lint.rb:22
+msgid "Checking Puppet manifest style"
+msgstr ""
+
+#: ../lib/pdk/validators/puppet/puppet_parser.rb:21
+msgid "Checking Puppet manifest syntax"
+msgstr ""
+
+#: ../lib/pdk/validators/ruby/rubocop.rb:20
+msgid "Checking Ruby code style"
+msgstr ""
+
+#: ../lib/puppet/util/windows/api_types.rb:68
+msgid "Unable to read wide strings with %{null_terminator} terminal nulls"
+msgstr ""
+
+#: ../lib/puppet/util/windows/api_types.rb:199
+msgid "Bad GUID format."
+msgstr ""
+
+#: ../lib/puppet/util/windows/file.rb:158
+msgid "Failed to set file attributes"
+msgstr ""
+
+#: ../lib/puppet/util/windows/file.rb:193
+msgid "out_buffer is required"
+msgstr ""
+
+#: ../lib/puppet/util/windows/file.rb:274
+msgid "Failed to call GetLongPathName"
+msgstr ""
+
+#~ msgid "We're sorry, we could not parse your module name: %{message}"
+#~ msgstr ""
+#~ "Der Wert konnte nicht als Modulname interpretiert werden: %{message}"
+
+#~ msgid ""
+#~ "We're sorry, we could not parse that as a Semantic Version: %{message}"
+#~ msgstr ""
+#~ "Der Wert konnte nicht als Modulname interpretiert werden: %{message}"
+
+#~ msgid "Running %{cmd} with options: %{options}"
+#~ msgstr "'%{cmd}' wird mit Optionen '%{options}' ausgeführt."
 
 #~ msgid "Overrides the template to use for this module."
 #~ msgstr "Verwende ein eigenes Vorlagerepository für dieses Modul."
