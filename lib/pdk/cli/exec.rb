@@ -177,7 +177,6 @@ module PDK
         end
 
         def find_pdk_gem_path
-          # /opt/puppetlabs/sdk/private/ruby/2.1.9/lib/ruby/gems/2.1.0
           package_gem_path = File.join(PDK::CLI::Exec.pdk_basedir, 'private', 'ruby', RUBY_VERSION, 'lib', 'ruby', 'gems', RbConfig::CONFIG['ruby_version'])
 
           if File.directory?(package_gem_path)
