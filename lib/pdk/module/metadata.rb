@@ -38,7 +38,7 @@ module PDK
 
       def initialize(params = {})
         @data = DEFAULTS.dup
-        update!(params) if params
+        @data.merge!(params) if params
       end
 
       def self.from_file(metadata_json_path)

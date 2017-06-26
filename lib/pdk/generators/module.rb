@@ -17,8 +17,15 @@ module PDK
       DEFAULT_TEMPLATE = 'https://github.com/puppetlabs/pdk-module-template'.freeze
 
       def self.invoke(opts = {})
+        username = Etc.getlogin
+        if username != username.gsub(%r{[^0-9a-z]}i, '')
+          raise PDK::CLI::FatalError, _('Unable to select a valid Forge username, run without --skip-interview to enter one') if opts[:'skip-interview']
+
+          username = ''
+        end
+
         defaults = {
-          'name'         => "#{Etc.getlogin}-#{opts[:name]}",
+          'name'         => "#{username}-#{opts[:name]}",
           'version'      => '0.1.0',
           'dependencies' => [
             { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.13.1 < 5.0.0' },
