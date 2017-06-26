@@ -6,12 +6,12 @@ describe PDK::Report do
   %w[junit text].each do |report_format|
     it "can format the report as #{report_format}" do
       expect(described_class.formats).to include(report_format)
-      is_expected.to respond_to("to_#{report_format}")
+      is_expected.to respond_to("write_#{report_format}")
     end
   end
 
   it 'defaults to the text format' do
-    expect(described_class.default_format).to eq(:to_text)
+    expect(described_class.default_format).to eq(:write_text)
   end
 
   it 'defaults to writing to stdout' do
@@ -42,7 +42,7 @@ describe PDK::Report do
     context 'and rendering the report as text' do
       subject(:text_report) do
         io = StringIO.new
-        report.to_text(io)
+        report.write_text(io)
         io.rewind
         io.read
       end
@@ -64,7 +64,7 @@ describe PDK::Report do
     context 'and rendering the report as JUnit XML' do
       subject(:junit_report) do
         io = StringIO.new
-        report.to_junit(io)
+        report.write_junit(io)
         io.rewind
         REXML::Document.new(io)
       end

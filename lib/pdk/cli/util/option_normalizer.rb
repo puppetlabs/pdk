@@ -42,7 +42,7 @@ module PDK
               target = $stderr
             end
 
-            { method: "to_#{format}".to_sym, target: target }
+            { method: "write_#{format}".to_sym, target: target }
           end
         end
 
