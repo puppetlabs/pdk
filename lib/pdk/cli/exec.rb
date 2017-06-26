@@ -55,6 +55,7 @@ module PDK
         attr_reader :argv
         attr_reader :context
         attr_accessor :timeout
+        attr_accessor :environment
 
         def initialize(*argv)
           @argv = argv
@@ -70,6 +71,9 @@ module PDK
 
           # Default to running things in the system context.
           @context = :system
+
+          # Extra environment vars to add to base set.
+          @environment = {}
         end
 
         def context=(new_context)
@@ -90,6 +94,11 @@ module PDK
         def execute!
           # Start spinning if configured.
           @spinner.auto_spin if @spinner
+
+          # Add custom env vars.
+          @environment.each do |k, v|
+            @process.environment[k] = v
+          end
 
           if context == :module
             # TODO: we should probably more carefully manage PATH and maybe other things too
