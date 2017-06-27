@@ -6,15 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 8
-# Configuration parameters: Max.
-RSpec/ExampleLength:
-  Exclude:
-    - 'spec/cli/new/module_spec.rb'
-    - 'spec/cli/option_normalizer_spec.rb'
-    - 'spec/cli/validate_spec.rb'
-    - 'spec/generators/module_spec.rb'
-
 # Offense count: 12
 # Configuration parameters: CustomTransform, IgnoreMethods.
 RSpec/FilePath:
@@ -30,12 +21,6 @@ RSpec/FilePath:
     - 'spec/util/bundler_spec.rb'
     - 'spec/validate_spec.rb'
     - 'spec/validations/metadata_spec.rb'
-
-# Offense count: 2
-# Configuration parameters: AssignmentOnly.
-RSpec/InstanceVariable:
-  Exclude:
-    - 'spec/report_spec.rb'
 
 # Offense count: 3
 RSpec/IteratedExpectation:
@@ -85,10 +70,3 @@ Style/ClassAndModuleChildren:
 # Offense count: 35
 Style/Documentation:
   Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAsExpressionSeparator.
-Style/Semicolon:
-  Exclude:
-    - 'spec/acceptance/bundle_management_spec.rb'
