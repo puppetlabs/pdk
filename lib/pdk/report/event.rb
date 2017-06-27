@@ -35,6 +35,9 @@ module PDK
       #   :skipped.
       attr_reader :state
 
+      # @return [Array] Array of full stack trace lines associated with event
+      attr_reader :trace
+
       # Initailises a new PDK::Report::Event object.
       #
       # @param data [Hash{Symbol=>Object}
@@ -46,6 +49,7 @@ module PDK
       # @option data [String] :severity (see #severity)
       # @option data [String] :test (see #test)
       # @option data [Symbol] :state (see #state)
+      # @option data [Array] :trace (see #trace)
       #
       # @raise [ArgumentError] (see #sanitise_data)
       def initialize(data)
@@ -89,6 +93,7 @@ module PDK
       def to_text
         location = [file, line, column].compact.join(':')
 
+        # TODO: maybe add trace
         [location, severity, message].compact.join(': ')
       end
 
@@ -270,6 +275,28 @@ module PDK
         end
 
         value.to_i
+      end
+
+      # Cleans up provided stack trace by removing entries that are inside gems
+      # or the rspec binstub.
+      #
+      # @param value [Array] Array of stack trace lines
+      #
+      # @return [Array] Array of stack trace lines with less relevant lines excluded
+      def sanitise_trace(value)
+        return nil if value.nil?
+
+        valid_types = [Array]
+
+        unless valid_types.include?(value.class)
+          raise ArgumentError, _('trace must be an Array of stack trace lines')
+        end
+
+        # Drop any stacktrace lines that include '/gems/' in the path or
+        # are the original rspec binstub lines
+        value.reject do |line|
+          (line =~ %r{/gems/}) || (line =~ %r{bin/rspec:})
+        end
       end
     end
   end
