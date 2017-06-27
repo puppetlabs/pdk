@@ -32,17 +32,6 @@ RSpec/MessageSpies:
 RSpec/MultipleExpectations:
   Max: 10
 
-# Offense count: 64
-RSpec/NamedSubject:
-  Exclude:
-    - 'spec/cli/option_normalizer_spec.rb'
-    - 'spec/cli/option_validator_spec.rb'
-    - 'spec/generators/puppet_class_spec.rb'
-    - 'spec/generators/puppet_object_spec.rb'
-    - 'spec/logger_spec.rb'
-    - 'spec/template_file_spec.rb'
-    - 'spec/validate_spec.rb'
-
 # Offense count: 14
 # Configuration parameters: Max.
 RSpec/NestedGroups:
