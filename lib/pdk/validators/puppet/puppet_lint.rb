@@ -28,7 +28,19 @@ module PDK
         cmd_options.concat(targets)
       end
 
-      def self.parse_output(report, json_data)
+      def self.parse_output(report, json_data, targets)
+        # puppet-lint does not include files without problems in its JSON
+        # output, so we need to go through the list of targets and add passing
+        # events to the report for any target not listed in the JSON output.
+        targets.reject { |target| json_data.any? { |j| j['path'] == target } }.each do |target|
+          report.add_event(
+            file:     target,
+            source:   'puppet-lint',
+            severity: 'ok',
+            state:    :passed,
+          )
+        end
+
         json_data.each do |offense|
           report.add_event(
             file:     offense['path'],

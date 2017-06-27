@@ -61,7 +61,7 @@ module PDK
           json_data = []
         end
 
-        parse_output(report, json_data)
+        parse_output(report, json_data, targets)
 
         result[:exit_code]
       end

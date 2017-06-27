@@ -26,7 +26,7 @@ module PDK
         cmd_options.concat(targets)
       end
 
-      def self.parse_output(report, json_data)
+      def self.parse_output(report, json_data, _targets)
         return unless json_data.key?('files')
 
         json_data['files'].each do |file_info|
