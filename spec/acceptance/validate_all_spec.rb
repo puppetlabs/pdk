@@ -6,6 +6,17 @@ describe 'Running all validations' do
   context 'with a fresh module' do
     include_context 'in a new module', 'foo'
 
+    init_pp = File.join('manifests', 'init.pp')
+
+    before(:all) do
+      File.open(init_pp, 'w') do |f|
+        f.puts <<-EOS
+# foo
+class foo { }
+        EOS
+      end
+    end
+
     describe command('pdk validate --list') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stdout) { is_expected.to match(%r{Available validators: metadata, puppet, ruby}i) }
@@ -14,7 +25,7 @@ describe 'Running all validations' do
     describe command('pdk validate') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stdout) { is_expected.to match(%r{Running all available validators}i) }
-      its(:stderr) { is_expected.to match(%r{Checking Metadata file}i) }
+      its(:stderr) { is_expected.to match(%r{Checking metadata.json}i) }
       its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
       its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
       its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }

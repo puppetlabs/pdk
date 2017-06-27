@@ -25,31 +25,52 @@ module PDK
         %w[parser validate].concat(targets)
       end
 
-      def self.parse_output(report, result, _targets)
+      def self.parse_output(report, result, targets)
         # Due to PUP-7504, we will have to programmatically construct the json
         # object from the text output for now.
         output = result[:stderr].split("\n")
 
+        results_data = []
         output.each do |offense|
           sanitize_console_output(offense)
-          message, _at, location = offense.partition(' at ')
+          message, _at, location_raw = offense.partition(' at ')
 
           # Parse the offense type and msg
           severity, _colon, message = message.rpartition(': ')
 
           # Parse the offense location info
-          file, line, column = location.split(':') unless location.nil?
+          location = location_raw.strip.match(%r{\A(?<file>.+):(?<line>\d+):(?<column>\d+)\Z}) unless location_raw.nil?
 
-          inputs = {
+          attributes = {
             source:  name,
             message: message.strip,
             state:  'failure',
           }
-          inputs[:severity] = severity.strip unless severity.nil?
-          inputs[:file] = file.strip unless file.nil?
-          inputs[:line] = line.strip unless line.nil?
-          inputs[:column] = column.strip unless column.nil?
-          report.add_event(inputs)
+          attributes[:severity] = severity.strip unless severity.nil?
+
+          unless location.nil?
+            attributes[:file] = location[:file]
+            attributes[:line] = location[:line]
+            attributes[:column] = location[:column]
+          end
+
+          results_data << attributes
+        end
+
+        # puppet-lint does not include files without problems in its JSON
+        # output, so we need to go through the list of targets and add passing
+        # events to the report for any target not listed in the JSON output.
+        targets.reject { |target| results_data.any? { |j| j[:file] == target } }.each do |target|
+          report.add_event(
+            file:     target,
+            source:   'puppet-syntax',
+            severity: 'ok',
+            state:    :passed,
+          )
+        end
+
+        results_data.each do |offense|
+          report.add_event(offense)
         end
       end
 
