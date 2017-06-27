@@ -6,21 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 2
-RSpec/AnyInstance:
-  Exclude:
-    - 'spec/generators/puppet_class_spec.rb'
-    - 'spec/generators/puppet_object_spec.rb'
-
-# Offense count: 8
-# Configuration parameters: Max.
-RSpec/ExampleLength:
-  Exclude:
-    - 'spec/cli/new/module_spec.rb'
-    - 'spec/cli/option_normalizer_spec.rb'
-    - 'spec/cli/validate_spec.rb'
-    - 'spec/generators/module_spec.rb'
-
 # Offense count: 12
 # Configuration parameters: CustomTransform, IgnoreMethods.
 RSpec/FilePath:
@@ -37,37 +22,9 @@ RSpec/FilePath:
     - 'spec/validate_spec.rb'
     - 'spec/validations/metadata_spec.rb'
 
-# Offense count: 2
-# Configuration parameters: AssignmentOnly.
-RSpec/InstanceVariable:
-  Exclude:
-    - 'spec/report_spec.rb'
-
-# Offense count: 3
-RSpec/IteratedExpectation:
-  Exclude:
-    - 'spec/cli/validate_spec.rb'
-
-# Offense count: 71
-# Configuration parameters: SupportedStyles.
-# SupportedStyles: have_received, receive
-RSpec/MessageSpies:
-  EnforcedStyle: receive
-
 # Offense count: 34
 RSpec/MultipleExpectations:
   Max: 10
-
-# Offense count: 64
-RSpec/NamedSubject:
-  Exclude:
-    - 'spec/cli/option_normalizer_spec.rb'
-    - 'spec/cli/option_validator_spec.rb'
-    - 'spec/generators/puppet_class_spec.rb'
-    - 'spec/generators/puppet_object_spec.rb'
-    - 'spec/logger_spec.rb'
-    - 'spec/template_file_spec.rb'
-    - 'spec/validate_spec.rb'
 
 # Offense count: 14
 # Configuration parameters: Max.
@@ -91,10 +48,3 @@ Style/ClassAndModuleChildren:
 # Offense count: 35
 Style/Documentation:
   Enabled: false
-
-# Offense count: 1
-# Cop supports --auto-correct.
-# Configuration parameters: AllowAsExpressionSeparator.
-Style/Semicolon:
-  Exclude:
-    - 'spec/acceptance/bundle_management_spec.rb'

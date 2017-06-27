@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe PDK::Generate::PuppetObject do
-  subject { described_class.new(module_dir, 'test_module::test_object', options) }
+  subject(:templated_object) { described_class.new(module_dir, 'test_module::test_object', options) }
 
   let(:object_type) { :something }
   let(:options) { {} }
@@ -9,7 +9,7 @@ describe PDK::Generate::PuppetObject do
   let(:metadata_path) { File.join(module_dir, 'metadata.json') }
 
   before(:each) do
-    allow_any_instance_of(described_class).to receive(:object_type).and_return(object_type)
+    stub_const('PDK::Generate::PuppetObject::OBJECT_TYPE', object_type)
   end
 
   context 'when the module metadata.json is available' do
@@ -23,7 +23,7 @@ describe PDK::Generate::PuppetObject do
 
     context '#module_name' do
       it 'can read the module name from the module metadata' do
-        expect(subject.module_name).to eq('test_module')
+        expect(templated_object.module_name).to eq('test_module')
       end
     end
 
@@ -57,7 +57,7 @@ describe PDK::Generate::PuppetObject do
           end
 
           it 'yields the path to the object templates from the template dir specified in the CLI' do
-            expect { |b| subject.with_templates(&b) }.to yield_with_args(cli_object_paths, {})
+            expect { |b| templated_object.with_templates(&b) }.to yield_with_args(cli_object_paths, {})
           end
         end
 
@@ -67,7 +67,7 @@ describe PDK::Generate::PuppetObject do
           end
 
           it 'raises a fatal error' do
-            expect { |b| subject.with_templates(&b) }.to raise_error(PDK::CLI::FatalError, %r{Unable to find})
+            expect { |b| templated_object.with_templates(&b) }.to raise_error(PDK::CLI::FatalError, %r{Unable to find})
           end
         end
       end
@@ -86,7 +86,7 @@ describe PDK::Generate::PuppetObject do
             end
 
             it 'yields the path to the object templates from the template dir specified in the metadata' do
-              expect { |b| subject.with_templates(&b) }.to yield_with_args(metadata_object_paths, {})
+              expect { |b| templated_object.with_templates(&b) }.to yield_with_args(metadata_object_paths, {})
             end
           end
 
@@ -97,14 +97,14 @@ describe PDK::Generate::PuppetObject do
 
             it 'falls back to the paths from the default template dir' do
               expect(default_templatedir).to receive(:object_template_for).with(object_type)
-              subject.with_templates {}
+              templated_object.with_templates {}
             end
           end
         end
 
         context 'and a template-url is not found in the module metadata' do
           it 'yields the path to the object templates from the default template dir' do
-            expect { |b| subject.with_templates(&b) }.to yield_with_args(default_object_paths, {})
+            expect { |b| templated_object.with_templates(&b) }.to yield_with_args(default_object_paths, {})
           end
         end
       end
@@ -115,9 +115,9 @@ describe PDK::Generate::PuppetObject do
       let(:target_spec_path) { '/tmp/test_module/spec_file' }
 
       before(:each) do
-        allow(subject).to receive(:target_object_path).and_return(target_object_path)
-        allow(subject).to receive(:target_spec_path).and_return(target_spec_path)
-        allow(subject).to receive(:template_data).and_return({})
+        allow(templated_object).to receive(:target_object_path).and_return(target_object_path)
+        allow(templated_object).to receive(:target_spec_path).and_return(target_spec_path)
+        allow(templated_object).to receive(:template_data).and_return({})
       end
 
       context 'when the target files do not exist' do
@@ -130,16 +130,16 @@ describe PDK::Generate::PuppetObject do
         end
 
         it 'renders the object file' do
-          expect(subject).to receive(:with_templates).and_yield({ object: object_template }, {})
-          expect(subject).to receive(:render_file).with(target_object_path, object_template, configs: {})
-          subject.run
+          expect(templated_object).to receive(:with_templates).and_yield({ object: object_template }, {})
+          expect(templated_object).to receive(:render_file).with(target_object_path, object_template, configs: {})
+          templated_object.run
         end
 
         it 'renders the spec file if a template for it was found' do
-          expect(subject).to receive(:with_templates).and_yield({ object: object_template, spec: spec_template }, {})
-          expect(subject).to receive(:render_file).with(target_object_path, object_template, configs: {})
-          expect(subject).to receive(:render_file).with(target_spec_path, spec_template, configs: {})
-          subject.run
+          expect(templated_object).to receive(:with_templates).and_yield({ object: object_template, spec: spec_template }, {})
+          expect(templated_object).to receive(:render_file).with(target_object_path, object_template, configs: {})
+          expect(templated_object).to receive(:render_file).with(target_spec_path, spec_template, configs: {})
+          templated_object.run
         end
       end
 
@@ -149,7 +149,7 @@ describe PDK::Generate::PuppetObject do
         end
 
         it 'raises a fatal error' do
-          expect { subject.run }.to raise_error(PDK::CLI::FatalError, %r{'#{target_object_path}' already exists})
+          expect { templated_object.run }.to raise_error(PDK::CLI::FatalError, %r{'#{target_object_path}' already exists})
         end
       end
 
@@ -160,7 +160,7 @@ describe PDK::Generate::PuppetObject do
         end
 
         it 'raises a fatal error' do
-          expect { subject.run }.to raise_error(PDK::CLI::FatalError, %r{'#{target_spec_path}' already exists})
+          expect { templated_object.run }.to raise_error(PDK::CLI::FatalError, %r{'#{target_spec_path}' already exists})
         end
       end
     end
@@ -169,7 +169,7 @@ describe PDK::Generate::PuppetObject do
   context 'when the module metadata.json is not available' do
     it 'raises a fatal error' do
       expect(File).to receive(:file?).with(metadata_path).and_return(false)
-      expect { subject.module_metadata }.to raise_error(PDK::CLI::FatalError, %r{'#{module_dir}'.*not contain.*metadata})
+      expect { templated_object.module_metadata }.to raise_error(PDK::CLI::FatalError, %r{'#{module_dir}'.*not contain.*metadata})
     end
   end
 end

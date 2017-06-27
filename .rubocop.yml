@@ -68,6 +68,9 @@ RSpec/ExampleLength:
   Description: Forcing short examples leads to the creation of one-time use let() helpers
   Enabled: False
 
+RSpec/MessageSpies:
+  EnforcedStyle: receive
+
 # Style Cops
 Style/AsciiComments:
   Description: Names, non-english speaking communities.
