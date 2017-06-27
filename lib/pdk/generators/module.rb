@@ -51,11 +51,10 @@ module PDK
       end
 
       def self.prepare_metadata(opts)
-        username = Etc.getlogin
-        if username != username.gsub(%r{[^0-9a-z]}i, '')
-          raise PDK::CLI::FatalError, _('Unable to select a valid Forge username, run without --skip-interview to enter one') if opts[:'skip-interview']
-
-          username = ''
+        username = Etc.getlogin.gsub(%r{[^0-9a-z]}i, '')
+        username = 'username' if username == ''
+        if Etc.getlogin != username
+          PDK.logger.warn(_('Your username is not a valid Forge username, proceeding with the username %{username}' % { username: username } ))
         end
 
         defaults = {
