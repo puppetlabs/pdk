@@ -20,8 +20,7 @@ module PDK
         targets.map { |target|
           if respond_to?(:pattern)
             if File.directory?(target)
-              files_glob = Array[pattern].flatten.map { |p| Dir.glob(File.join(target, p)) }
-              files_glob.flatten.empty? ? target : files_glob
+              Array[pattern].flatten.map { |p| Dir.glob(File.join(target, p)) }
             else
               target
             end
@@ -40,9 +39,11 @@ module PDK
       end
 
       def self.invoke(report, options = {})
-        PDK::Util::Bundler.ensure_binstubs!(cmd)
-
         targets = parse_targets(options)
+
+        return 0 if targets.empty?
+
+        PDK::Util::Bundler.ensure_binstubs!(cmd)
         cmd_argv = parse_options(options, targets).unshift(cmd_path)
         cmd_argv.unshift('ruby') if Gem.win_platform?
 
