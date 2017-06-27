@@ -24,7 +24,7 @@ module PDK
         cmd_options.concat(targets)
       end
 
-      def self.parse_output(report, json_data)
+      def self.parse_output(report, json_data, _targets)
         return if json_data.empty?
 
         json_data.delete('result')
