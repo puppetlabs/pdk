@@ -7,7 +7,8 @@ describe PDK::Generate::PuppetClass do
   let(:module_dir) { '/tmp/test_module' }
 
   before(:each) do
-    allow_any_instance_of(described_class).to receive(:module_name).and_return(module_name)
+    test_metadata = instance_double(PDK::Module::Metadata, data: { 'name' => module_name })
+    allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(module_dir, 'metadata.json')).and_return(test_metadata)
   end
 
   context 'when the class name is the same as the module name' do

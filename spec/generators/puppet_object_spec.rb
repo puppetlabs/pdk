@@ -9,7 +9,7 @@ describe PDK::Generate::PuppetObject do
   let(:metadata_path) { File.join(module_dir, 'metadata.json') }
 
   before(:each) do
-    allow_any_instance_of(described_class).to receive(:object_type).and_return(object_type)
+    stub_const('PDK::Generate::PuppetObject::OBJECT_TYPE', object_type)
   end
 
   context 'when the module metadata.json is available' do

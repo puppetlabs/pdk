@@ -6,12 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 2
-RSpec/AnyInstance:
-  Exclude:
-    - 'spec/generators/puppet_class_spec.rb'
-    - 'spec/generators/puppet_object_spec.rb'
-
 # Offense count: 8
 # Configuration parameters: Max.
 RSpec/ExampleLength:
