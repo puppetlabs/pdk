@@ -46,6 +46,58 @@ describe PDK::Generate::Module do
     end
   end
 
+  context 'when running under a user whose name is not a valid forge name' do
+    before(:each) do
+      allow(Etc).to receive(:getlogin).and_return('user.name')
+    end
+
+    let(:defaults) do
+      {
+        :name => 'foo',
+        :'skip-interview' => true,
+        :target_dir => 'foo',
+      }
+    end
+
+    it 'still works' do
+      expect { described_class.prepare_metadata(defaults) }.not_to raise_error
+    end
+
+    describe 'the generated metadata' do
+      subject(:the_metadata) { described_class.prepare_metadata(defaults).data }
+
+      it do
+        expect(the_metadata['name']).to eq 'username-foo'
+      end
+    end
+
+    context 'when running under an entirely non-alphanumeric username' do
+      before(:each) do
+        allow(Etc).to receive(:getlogin).and_return('Αρίσταρχος ό Σάμιος')
+      end
+
+      let(:defaults) do
+        {
+          :name => 'foo',
+          :'skip-interview' => true,
+          :target_dir => 'foo',
+        }
+      end
+
+      it 'still works' do
+        expect { described_class.prepare_metadata(defaults) }.not_to raise_error
+      end
+
+      describe 'the generated metadata' do
+        subject(:the_metadata) { described_class.prepare_metadata(defaults).data }
+
+        it do
+          expect(the_metadata['name']).to eq 'username-foo'
+        end
+      end
+    end
+  end
+
   context '.prepare_module_directory' do
     let(:path) { 'test123' }
 

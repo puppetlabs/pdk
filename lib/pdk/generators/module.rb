@@ -17,26 +17,13 @@ module PDK
       DEFAULT_TEMPLATE = 'https://github.com/puppetlabs/pdk-module-template'.freeze
 
       def self.invoke(opts = {})
-        defaults = {
-          'name'         => "#{Etc.getlogin}-#{opts[:name]}",
-          'version'      => '0.1.0',
-          'dependencies' => [
-            { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.13.1 < 5.0.0' },
-          ],
-        }
-
-        defaults['license'] = opts[:license] if opts.key? :license
         target_dir = File.expand_path(opts[:target_dir])
 
         if File.exist?(target_dir)
           raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % { dir: target_dir }
         end
 
-        metadata = PDK::Module::Metadata.new(defaults)
-
-        module_interview(metadata, opts) unless opts[:'skip-interview'] # @todo Build way to get info by answers file
-
-        metadata.update!('pdk-version' => PDK::Util::Version.version_string)
+        metadata = prepare_metadata(opts)
 
         temp_target_dir = PDK::Util.make_tmpdir_name('pdk-module-target')
 
@@ -61,6 +48,31 @@ module PDK
         end
 
         FileUtils.mv(temp_target_dir, target_dir)
+      end
+
+      def self.prepare_metadata(opts)
+        username = Etc.getlogin.gsub(%r{[^0-9a-z]}i, '')
+        username = 'username' if username == ''
+        if Etc.getlogin != username
+          PDK.logger.warn(_('Your username is not a valid Forge username, proceeding with the username %{username}' % { username: username }))
+        end
+
+        defaults = {
+          'name'         => "#{username}-#{opts[:name]}",
+          'version'      => '0.1.0',
+          'dependencies' => [
+            { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.13.1 < 5.0.0' },
+          ],
+        }
+        defaults['license'] = opts[:license] if opts.key? :license
+
+        metadata = PDK::Module::Metadata.new(defaults)
+
+        module_interview(metadata, opts) unless opts[:'skip-interview'] # @todo Build way to get info by answers file
+
+        metadata.update!('pdk-version' => PDK::Util::Version.version_string)
+
+        metadata
       end
 
       def self.prepare_module_directory(target_dir)
