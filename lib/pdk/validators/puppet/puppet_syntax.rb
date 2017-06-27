@@ -32,10 +32,10 @@ module PDK
 
         output.each do |offense|
           sanitize_console_output(offense)
-          message, _at, location = offense.rpartition('at')
+          message, _at, location = offense.partition(' at ')
 
           # Parse the offense type and msg
-          severity = message.split(':').first
+          severity, _colon, message = message.rpartition(': ')
 
           # Parse the offense location info
           file, line, column = location.split(':') unless location.nil?
@@ -43,10 +43,10 @@ module PDK
           inputs = {
             source:  name,
             message: message.strip,
-            file:    file.strip,
             state:  'failure',
           }
           inputs[:severity] = severity.strip unless severity.nil?
+          inputs[:file] = file.strip unless file.nil?
           inputs[:line] = line.strip unless line.nil?
           inputs[:column] = column.strip unless column.nil?
           report.add_event(inputs)

@@ -92,6 +92,7 @@ module PDK
       # @return [String] The rendered event.
       def to_text
         location = [file, line, column].compact.join(':')
+        location = nil if location.empty?
 
         # TODO: maybe add trace
         [location, severity, message].compact.join(': ')
