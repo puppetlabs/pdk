@@ -22,11 +22,6 @@ RSpec/FilePath:
     - 'spec/validate_spec.rb'
     - 'spec/validations/metadata_spec.rb'
 
-# Offense count: 3
-RSpec/IteratedExpectation:
-  Exclude:
-    - 'spec/cli/validate_spec.rb'
-
 # Offense count: 71
 # Configuration parameters: SupportedStyles.
 # SupportedStyles: have_received, receive

@@ -15,9 +15,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'when no arguments or options are provided' do
     it 'invokes each validator with no report and no options and exits zero' do
-      validators.each do |validator|
-        expect(validator).to receive(:invoke).with(instance_of(PDK::Report), {}).and_return(0)
-      end
+      expect(validators).to all(receive(:invoke).with(instance_of(PDK::Report), {}).and_return(0))
 
       expect(logger).to receive(:info).with('Running all available validators...')
 
@@ -68,9 +66,7 @@ describe 'Running `pdk validate` in a module' do
     end
 
     it 'invokes each given validator and exits zero' do
-      invoked_validators.each do |validator|
-        expect(validator).to receive(:invoke).with(instance_of(PDK::Report), {}).and_return(0)
-      end
+      expect(invoked_validators).to all(receive(:invoke).with(instance_of(PDK::Report), {}).and_return(0))
 
       (validators | invoked_validators).each do |validator|
         expect(validator).not_to receive(:invoke)
@@ -115,9 +111,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'when targets are provided as arguments and no validators are specified' do
     it 'invokes all validators with the target as an option' do
-      validators.each do |validator|
-        expect(validator).to receive(:invoke).with(instance_of(PDK::Report), targets: ['lib/', 'manifests/']).and_return(0)
-      end
+      expect(validators).to all(receive(:invoke).with(instance_of(PDK::Report), targets: ['lib/', 'manifests/']).and_return(0))
 
       expect(logger).to receive(:info).with('Running all available validators...')
 
