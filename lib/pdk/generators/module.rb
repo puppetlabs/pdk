@@ -54,7 +54,7 @@ module PDK
         username = Etc.getlogin.gsub(%r{[^0-9a-z]}i, '')
         username = 'username' if username == ''
         if Etc.getlogin != username
-          PDK.logger.warn(_('Your username is not a valid Forge username, proceeding with the username %{username}' % { username: username } ))
+          PDK.logger.warn(_('Your username is not a valid Forge username, proceeding with the username %{username}' % { username: username }))
         end
 
         defaults = {

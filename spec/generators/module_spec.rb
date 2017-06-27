@@ -98,7 +98,6 @@ describe PDK::Generate::Module do
     end
   end
 
-
   context '.prepare_module_directory' do
     let(:path) { 'test123' }
 
