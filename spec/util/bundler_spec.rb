@@ -11,15 +11,19 @@ RSpec.describe PDK::Util::Bundler do
   def allow_command(argv, result = nil)
     result ||= { exit_code: 0, stdout: '', stderr: '' }
 
-    command_double = instance_double(PDK::CLI::Exec::Command, 'context=' => true, 'execute!' => result)
+    command_double = instance_double(PDK::CLI::Exec::Command, 'context=' => true, 'execute!' => result, 'add_spinner' => true)
 
     allow(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(command_double)
   end
 
-  def expect_command(argv, result = nil)
+  def expect_command(argv, result = nil, spinner_message = nil)
     result ||= { exit_code: 0, stdout: '', stderr: '' }
 
     command_double = instance_double(PDK::CLI::Exec::Command, 'context=' => true, 'execute!' => result)
+
+    if spinner_message
+      expect(command_double).to receive(:add_spinner).with(spinner_message, any_args)
+    end
 
     expect(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(command_double)
   end
@@ -51,9 +55,9 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'generates Gemfile.lock' do
-        expect_command([bundle_regex, 'lock', any_args])
+        expect_command([bundle_regex, 'lock', any_args], nil, %r{resolving gemfile}i)
 
-        expect { described_class.ensure_bundle! }.to output(%r{resolving gemfile}i).to_stderr
+        described_class.ensure_bundle!
       end
     end
 
@@ -67,15 +71,16 @@ RSpec.describe PDK::Util::Bundler do
 
       it 'installs missing gems' do
         allow(described_class).to receive(:already_bundled?).and_return(false)
-        expect_command([bundle_regex, 'install', any_args])
+        expect_command([bundle_regex, 'install', any_args], nil, %r{installing missing gemfile}i)
 
-        expect { described_class.ensure_bundle! }.to output(%r{installing missing gemfile}i).to_stderr
+        described_class.ensure_bundle!
       end
 
       it 'only attempts to install the gems once' do
         expect(PDK::CLI::Exec::Command).not_to receive(:new)
         expect(logger).to receive(:debug).with(%r{already been installed})
-        expect { described_class.ensure_bundle! }.to output(%r{\A\Z}).to_stderr
+
+        described_class.ensure_bundle!
       end
     end
 
@@ -83,15 +88,14 @@ RSpec.describe PDK::Util::Bundler do
       before(:each) do
         allow(File).to receive(:file?).with(%r{Gemfile$}).and_return(true)
         allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(true)
+        allow(described_class).to receive(:already_bundled?).and_return(false)
       end
 
       it 'checks for missing but does not install anything' do
-        allow(described_class).to receive(:already_bundled?).and_return(false)
-        expect_command([bundle_regex, 'check', any_args])
-
+        expect_command([bundle_regex, 'check', any_args], nil, %r{checking for missing}i)
         expect(PDK::CLI::Exec::Command).not_to receive(:new).with(bundle_regex, 'install', any_args)
 
-        expect { described_class.ensure_bundle! }.to output(%r{checking for missing}i).to_stderr
+        described_class.ensure_bundle!
       end
     end
   end

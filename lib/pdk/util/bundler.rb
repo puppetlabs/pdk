@@ -62,24 +62,28 @@ module PDK
         end
 
         def installed?
-          output_start(_('Checking for missing Gemfile dependencies'))
+          command = bundle_command('check', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}").tap do |c|
+            c.add_spinner(_('Checking for missing Gemfile dependencies'))
+          end
 
-          result = invoke('check', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}")
+          result = command.execute!
 
-          output_end(:success)
+          unless result[:exit_code].zero?
+            $stderr.puts result[:stdout]
+            $stderr.puts result[:stderr]
+          end
 
           result[:exit_code].zero?
         end
 
         def lock!
-          output_start(_('Resolving Gemfile dependencies'))
+          command = bundle_command('lock').tap do |c|
+            c.add_spinner(_('Resolving Gemfile dependencies'))
+          end
 
-          result = invoke('lock')
+          result = command.execute!
 
-          if result[:exit_code].zero?
-            output_end(:success)
-          else
-            output_end(:failure)
+          unless result[:exit_code].zero?
             $stderr.puts result[:stdout]
             $stderr.puts result[:stderr]
           end
@@ -88,14 +92,13 @@ module PDK
         end
 
         def install!
-          output_start(_('Installing missing Gemfile dependencies'))
+          command = bundle_command('install', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}").tap do |c|
+            c.add_spinner(_('Installing missing Gemfile dependencies'))
+          end
 
-          result = invoke('install', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}")
+          result = command.execute!
 
-          if result[:exit_code].zero?
-            output_end(:success)
-          else
-            output_end(:failure)
+          unless result[:exit_code].zero?
             $stderr.puts result[:stdout]
             $stderr.puts result[:stderr]
           end
@@ -104,8 +107,11 @@ module PDK
         end
 
         def binstubs!(gems)
-          # FIXME: wrap in progress indicator
-          result = invoke('binstubs', gems.join(' '), '--force')
+          command = bundle_command('binstubs', gems.join(' '), '--force').tap do |c|
+            c.add_spinner(_('Checking for required Bundler binstubs'))
+          end
+
+          result = command.execute!
 
           unless result[:exit_code].zero?
             $stderr.puts result[:stdout]
@@ -121,13 +127,10 @@ module PDK
 
         private
 
-        def invoke(*args)
-          bundle_bin = PDK::CLI::Exec.bundle_bin
-          command = PDK::CLI::Exec::Command.new(bundle_bin, *args).tap do |c|
+        def bundle_command(*args)
+          PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
             c.context = :module
           end
-
-          command.execute!
         end
 
         def gemfile_lock
@@ -136,30 +139,6 @@ module PDK
 
         def bundle_cachedir
           @bundle_cachedir ||= File.join(PDK::Util.cachedir, 'bundler')
-        end
-
-        # These two output_* methods are just a way to not try to do the spinner stuff on Windows for now.
-        def output_start(message)
-          if Gem.win_platform?
-            $stderr.print "#{message}... "
-          else
-            @spinner = TTY::Spinner.new("[:spinner] #{message}")
-            @spinner.auto_spin
-          end
-        end
-
-        def output_end(state)
-          if Gem.win_platform?
-            $stderr.print((state == :success) ? _("done.\n") : _("FAILURE!\n"))
-          else
-            if state == :success
-              @spinner.success
-            else
-              @spinner.error
-            end
-
-            remove_instance_variable(:@spinner)
-          end
         end
       end
     end

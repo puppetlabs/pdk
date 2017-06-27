@@ -55,6 +55,7 @@ module PDK
         attr_reader :argv
         attr_reader :context
         attr_accessor :timeout
+        attr_accessor :environment
 
         def initialize(*argv)
           @argv = argv
@@ -70,6 +71,9 @@ module PDK
 
           # Default to running things in the system context.
           @context = :system
+
+          # Extra environment vars to add to base set.
+          @environment = {}
         end
 
         def context=(new_context)
@@ -84,19 +88,32 @@ module PDK
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
-          @spinner = TTY::Spinner.new("[:spinner] #{message}", opts)
+          @spinner = Gem.win_platform? ? WindowsSpinner.new(message, opts) : TTY::Spinner.new("[:spinner] #{message}", opts)
         end
 
         def execute!
           # Start spinning if configured.
           @spinner.auto_spin if @spinner
 
+          # Add custom env vars.
+          @environment.each do |k, v|
+            @process.environment[k] = v
+          end
+
           if context == :module
             # TODO: we should probably more carefully manage PATH and maybe other things too
             @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'bundler', 'ruby', RbConfig::CONFIG['ruby_version'])
             @process.environment['GEM_PATH'] = pdk_gem_path
 
-            Dir.chdir(PDK::Util.module_root) do
+            mod_root = PDK::Util.module_root
+
+            unless mod_root
+              @spinner.error
+
+              raise PDK::CLI::FatalError, _('Current working directory is not part of a module. (No metadata.json was found.)')
+            end
+
+            Dir.chdir(mod_root) do
               ::Bundler.with_clean_env do
                 run_process!
               end
@@ -160,7 +177,6 @@ module PDK
         end
 
         def find_pdk_gem_path
-          # /opt/puppetlabs/sdk/private/ruby/2.1.9/lib/ruby/gems/2.1.0
           package_gem_path = File.join(PDK::CLI::Exec.pdk_basedir, 'private', 'ruby', RUBY_VERSION, 'lib', 'ruby', 'gems', RbConfig::CONFIG['ruby_version'])
 
           if File.directory?(package_gem_path)
@@ -169,6 +185,30 @@ module PDK
             # FIXME: calculate this more reliably
             File.absolute_path(File.join(`bundle show bundler`, '..', '..'))
           end
+        end
+      end
+
+      # This is a placeholder until we integrate ansicon into Windows packaging
+      # or come up with some other progress indicator for Windows.
+      class WindowsSpinner
+        def initialize(message, _opts = {})
+          @message = message
+        end
+
+        def auto_spin
+          $stderr.print @message << '...'
+        end
+
+        def success(message = '')
+          message ||= 'done.'
+
+          $stderr.print message << "\n"
+        end
+
+        def error(message = '')
+          message ||= 'FAILED'
+
+          $stderr.print message << "\n"
         end
       end
     end
