@@ -45,7 +45,7 @@ module PDK
 
         PDK::Util::Bundler.ensure_binstubs!(cmd)
         cmd_argv = parse_options(options, targets).unshift(cmd_path)
-        cmd_argv.unshift('ruby') if Gem.win_platform?
+        cmd_argv.unshift('ruby', '-W0') if Gem.win_platform?
 
         PDK.logger.debug(_('Running %{cmd}') % { cmd: cmd_argv.join(' ') })
 
