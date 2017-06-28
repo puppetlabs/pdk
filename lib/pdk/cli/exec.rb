@@ -149,15 +149,12 @@ module PDK
         protected
 
         def run_process!
+          command_string = argv.join(' ')
+          PDK.logger.debug(_("Executing '%{command}'") % { command: command_string })
           begin
             @process.start
           rescue ChildProcess::LaunchError => e
-            msg = if @process.respond_to?(:argv)
-                    _("Failed to execute '%{command}': %{message}") % { command: @process.argv.join(' '), message: e.message }
-                  else
-                    _('Failed to execute process: %{message}') % { message: e.message }
-                  end
-            raise PDK::CLI::FatalError, msg
+            raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: command_string, message: e.message }
           end
 
           if timeout

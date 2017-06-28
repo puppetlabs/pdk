@@ -47,8 +47,6 @@ module PDK
         cmd_argv = parse_options(options, targets).unshift(cmd_path)
         cmd_argv.unshift('ruby', '-W0') if Gem.win_platform?
 
-        PDK.logger.debug(_('Running %{cmd}') % { cmd: cmd_argv.join(' ') })
-
         command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
           c.context = :module
           c.add_spinner(spinner_text)
