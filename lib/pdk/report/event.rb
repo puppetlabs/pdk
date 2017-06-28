@@ -81,6 +81,7 @@ module PDK
       end
 
       # Checks if the event is the result of test that was not run.
+      # This includes pending tests (that are run but have an expected failure result).
       #
       # @return [Boolean] true if the test was skipped, otherwise false.
       def skipped?
