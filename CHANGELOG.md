@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v0.3.0](https://github.com/puppetlabs/pdk/tree/v0.3.0) (2017-06-28)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.2.0...v0.3.0)
+
+**Implemented enhancements:**
+
+- \(SDK-148\) Add "test unit --list" [\#107](https://github.com/puppetlabs/pdk/pull/107) ([james-stocks](https://github.com/james-stocks))
+- \(SDK-137\) Add puppet syntax validation [\#105](https://github.com/puppetlabs/pdk/pull/105) ([bmjen](https://github.com/bmjen))
+- \(SDK-285\) Add --auto-correct flag to validators that support it [\#104](https://github.com/puppetlabs/pdk/pull/104) ([rodjek](https://github.com/rodjek))
+- \(SDK-147\) Add 'test unit' runner and basic output formatting [\#98](https://github.com/puppetlabs/pdk/pull/98) ([scotje](https://github.com/scotje))
+
+**Fixed bugs:**
+
+- \(SDK-290\) Make sure that all usernames are processed when creating a new module [\#108](https://github.com/puppetlabs/pdk/pull/108) ([austb](https://github.com/austb))
+- \(SDK-277\) Exit cleanly if pdk commands are run outside of a module [\#100](https://github.com/puppetlabs/pdk/pull/100) ([rodjek](https://github.com/rodjek))
+
 ## [v0.2.0](https://github.com/puppetlabs/pdk/tree/v0.2.0) (2017-06-21)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.1.0...v0.2.0)
 
