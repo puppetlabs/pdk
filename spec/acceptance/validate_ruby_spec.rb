@@ -26,9 +26,9 @@ describe 'pdk validate ruby', module_command: true do
       it_behaves_like :it_generates_valid_junit_xml
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]').with_attributes(
-          'failures' => '0',
-          'tests'    => satisfy { |v| v.to_i > 0 },
+        is_expected.to have_junit_testsuite('rubocop').with_attributes(
+          'failures' => eq(0),
+          'tests'    => a_value > 0,
         )
       end
 
@@ -99,9 +99,9 @@ describe 'pdk validate ruby', module_command: true do
       it_behaves_like :it_generates_valid_junit_xml
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]').with_attributes(
-          'failures' => satisfy { |v| v.to_i > 0 },
-          'tests'    => satisfy { |v| v.to_i >= 3 },
+        is_expected.to have_junit_testsuite('rubocop').with_attributes(
+          'failures' => a_value > 1,
+          'tests'    => a_value >= 3,
         )
       end
 

@@ -25,8 +25,8 @@ describe 'pdk validate puppet', module_command: true do
       its(:stderr) { is_expected.not_to match(lint_spinner_text) }
 
       its(:stdout) { is_expected.to pass_validation(junit_xsd) }
-      its(:stdout) { is_expected.not_to have_xpath('/testsuites/testsuite[@name="puppet-syntax"]') }
-      its(:stdout) { is_expected.not_to have_xpath('/testsuites/testsuite[@name="puppet-lint"]') }
+      its(:stdout) { is_expected.not_to have_junit_testsuite('puppet-syntax') }
+      its(:stdout) { is_expected.not_to have_junit_testsuite('puppet-lint') }
     end
   end
 
@@ -56,13 +56,8 @@ class foo {
       its(:stderr) { is_expected.to match(lint_spinner_text) }
       its(:stdout) { is_expected.to pass_validation(junit_xsd) }
 
-      its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-syntax"]')
-      end
-
-      its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-lint"]')
-      end
+      its(:stdout) { is_expected.to have_junit_testsuite('puppet-syntax') }
+      its(:stdout) { is_expected.to have_junit_testsuite('puppet-lint') }
     end
   end
 
@@ -98,9 +93,9 @@ class foo {
       its(:stdout) { is_expected.to pass_validation(junit_xsd) }
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-syntax"]').with_attributes(
-          'failures' => satisfy { |v| v.to_i == 2 },
-          'tests'    => satisfy { |v| v.to_i == 2 },
+        is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+          'failures' => eq(2),
+          'tests'    => eq(2),
         )
       end
 
@@ -126,9 +121,9 @@ class foo {
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-lint"]').with_attributes(
-          'failures' => satisfy { |v| v.to_i > 0 },
-          'tests'    => satisfy { |v| v.to_i > 0 },
+        is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+          'failures' => a_value > 0,
+          'tests'    => a_value > 0,
         )
       end
 
@@ -171,9 +166,9 @@ class foo {
       its(:stdout) { is_expected.to pass_validation(junit_xsd) }
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-syntax"]').with_attributes(
-          'failures' => '0',
-          'tests'    => '1',
+        is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+          'failures' => eq(0),
+          'tests'    => eq(1),
         )
       end
 
@@ -185,9 +180,9 @@ class foo {
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-lint"]').with_attributes(
-          'failures' => '1',
-          'tests'    => '1',
+        is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+          'failures' => eq(1),
+          'tests'    => eq(1),
         )
       end
 
@@ -233,9 +228,9 @@ class foo {
       its(:stdout) { is_expected.to pass_validation(junit_xsd) }
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-syntax"]').with_attributes(
-          'failures' => satisfy { |v| v.to_i == 3 },
-          'tests'    => satisfy { |v| v.to_i == 3 },
+        is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+          'failures' => eq(3),
+          'tests'    => eq(3),
         )
 
         is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-syntax"]/testcase').with_attributes(
@@ -290,9 +285,9 @@ class foo {
       its(:stdout) { is_expected.to pass_validation(junit_xsd) }
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-lint"]').with_attributes(
-          'failures' => '1',
-          'tests'    => '1',
+        is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+          'failures' => eq(1),
+          'tests'    => eq(1),
         )
       end
 
@@ -328,9 +323,9 @@ class foo {
         its(:stdout) { is_expected.to pass_validation(junit_xsd) }
 
         its(:stdout) do
-          is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-syntax"]').with_attributes(
-            'failures' => '0',
-            'tests'    => '1',
+          is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+            'failures' => eq(0),
+            'tests'    => eq(1),
           )
         end
 
@@ -342,9 +337,9 @@ class foo {
         end
 
         its(:stdout) do
-          is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-lint"]').with_attributes(
-            'failures' => '0',
-            'tests'    => '1',
+          is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+            'failures' => eq(0),
+            'tests'    => eq(1),
           )
         end
 
@@ -383,9 +378,9 @@ class foo {
         its(:stdout) { is_expected.to pass_validation(junit_xsd) }
 
         its(:stdout) do
-          is_expected.to have_xpath('/testsuites/testsuite[@name="puppet-lint"]').with_attributes(
-            'failures' => '2',
-            'tests'    => '2',
+          is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+            'failures' => eq(2),
+            'tests'    => eq(2),
           )
         end
 

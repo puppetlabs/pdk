@@ -18,9 +18,9 @@ describe 'Running metadata validation' do
       it_behaves_like :it_generates_valid_junit_xml
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]').with_attributes(
-          'failures' => '0',
-          'tests'    => '1',
+        is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
+          'failures' => eq(0),
+          'tests'    => eq(1),
         )
       end
 
@@ -56,9 +56,9 @@ describe 'Running metadata validation' do
       it_behaves_like :it_generates_valid_junit_xml
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]').with_attributes(
-          'failures' => '1',
-          'tests'    => '1',
+        is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
+          'failures' => eq(1),
+          'tests'    => eq(1),
         )
       end
 
