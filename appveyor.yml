@@ -21,6 +21,11 @@ before_test:
 test_script:
   - bundle exec rake spec acceptance:local
 
+# Uncomment this block to enable RDP access to the AppVeyor test instance for
+# debugging purposes.
+# on_finish:
+#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+
 notifications:
   - provider: HipChat
     auth_token:
