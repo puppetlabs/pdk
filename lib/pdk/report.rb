@@ -48,6 +48,12 @@ module PDK
     # @param target [#write] an IO object that the report will be written to.
     #   Defaults to PDK::Report.default_target.
     def write_junit(target = self.class.default_target)
+      # Extra defaulting here, b/c the Class.send method will pass in nil
+      target ||= self.class.default_target
+
+      # Open a File Object for IO if target is a string containing a filename or path
+      target = File.open(target, 'w') if target.is_a? String
+
       document = REXML::Document.new
       document << REXML::XMLDecl.new
       testsuites = REXML::Element.new('testsuites')
@@ -76,6 +82,8 @@ module PDK
 
       document.elements << testsuites
       document.write(target, 2)
+    ensure
+      target.close if target.is_a? File
     end
 
     # Renders the report as plain text.
@@ -89,11 +97,16 @@ module PDK
       # Extra defaulting here, b/c the Class.send method will pass in nil
       target ||= self.class.default_target
 
+      # Open a File Object for IO if target is a string containing a filename or path
+      target = File.open(target, 'w') if target.is_a? String
+
       events.each do |_tool, tool_events|
         tool_events.each do |event|
           target.puts(event.to_text) unless event.pass?
         end
       end
+    ensure
+      target.close if target.is_a? File
     end
   end
 end
