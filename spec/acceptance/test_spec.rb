@@ -1,21 +1,21 @@
 require 'spec_helper_acceptance'
+require 'fileutils'
 
-describe 'pdk test unit', module_command: true do
-  context 'within a module directory' do
+describe 'Using the test command' do
+  context 'not within a module directory' do
     before(:all) do
-      system('pdk new module foo --skip-interview') || raise
-      Dir.chdir('foo')
+      Dir.mkdir('not_a_module') || raise
+      Dir.chdir('not_a_module')
     end
 
     after(:all) do
       Dir.chdir('..')
-      FileUtils.rm_rf('foo')
+      FileUtils.rm_rf('not_a_module')
     end
 
     describe command('pdk test unit') do
-      its(:exit_status) { is_expected.to eq 0 }
-      its(:stdout) { is_expected.to match(%r{Running unit tests}) }
-      its(:stderr) { is_expected.not_to match(%r{WARN|ERROR|FAIL}i) }
+      its(:exit_status) { is_expected.not_to eq(0) }
+      its(:stdout) { is_expected.to match(%r{no metadata\.json found}i) }
     end
   end
 end
