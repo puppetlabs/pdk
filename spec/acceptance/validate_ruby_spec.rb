@@ -33,17 +33,17 @@ describe 'pdk validate ruby', module_command: true do
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
+        is_expected.to have_junit_testcase.in_testsuite('rubocop').with_attributes(
           'classname' => 'rubocop',
           'name'      => example_rb,
-        )
+        ).that_passed
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
+        is_expected.to have_junit_testcase.in_testsuite('rubocop').with_attributes(
           'classname' => 'rubocop',
           'name'      => File.join('spec', 'spec_helper.rb'),
-        )
+        ).that_passed
       end
     end
   end
@@ -106,17 +106,17 @@ describe 'pdk validate ruby', module_command: true do
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
+        is_expected.to have_junit_testcase.in_testsuite('rubocop').with_attributes(
           'classname' => 'rubocop',
           'name'      => File.join('spec', 'spec_helper.rb'),
-        )
+        ).that_passed
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="rubocop"]/testcase').with_attributes(
+        is_expected.to have_junit_testcase.in_testsuite('rubocop').with_attributes(
           'classname' => a_string_matching(%r{UselessAssignment}),
           'name'      => a_string_starting_with(File.join('spec', 'violation.rb')),
-        )
+        ).that_failed
       end
     end
   end

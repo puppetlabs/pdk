@@ -25,10 +25,10 @@ describe 'Running metadata validation' do
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
+        is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
           'classname' => 'metadata-json-lint',
           'name'      => 'metadata.json',
-        )
+        ).that_passed
       end
     end
   end
@@ -63,10 +63,10 @@ describe 'Running metadata validation' do
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
+        is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
           'classname' => 'metadata-json-lint.dependencies',
           'name'      => 'metadata.json',
-        )
+        ).that_failed
       end
     end
   end
