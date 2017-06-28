@@ -66,6 +66,7 @@ module PDK
         end
 
         example_results.each do |result, examples|
+          # Translate rspec example results to JUnit XML testcase results
           state = case result
                   when 'passed' then :passed
                   when 'failed' then :failure
