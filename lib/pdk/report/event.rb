@@ -95,8 +95,10 @@ module PDK
         location = [file, line, column].compact.join(':')
         location = nil if location.empty?
 
-        # TODO: maybe add trace
-        [location, severity, message].compact.join(': ')
+        result = [location, severity, test].compact.join(': ')
+        result += "\n--> " + message if message
+        result += "\n" + trace.join("\n") if trace
+        result
       end
 
       # Renders the event as a JUnit XML testcase.

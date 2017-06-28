@@ -159,7 +159,7 @@ class foo {
 
     describe command('pdk validate puppet') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{^#{Regexp.escape(init_pp)}.+class not documented}i) }
+      its(:stdout) { is_expected.to match(%r{^#{Regexp.escape(init_pp)}.+class not documented}mi) }
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.to match(lint_spinner_text) }
     end
@@ -279,7 +279,7 @@ class foo {
 
     describe command('pdk validate puppet') do
       its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stdout) { is_expected.to match(%r{#{Regexp.escape(example_pp)}.+autoload module layout}i) }
+      its(:stdout) { is_expected.to match(%r{#{Regexp.escape(example_pp)}.+autoload module layout}mi) }
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.to match(lint_spinner_text) }
     end

@@ -46,7 +46,7 @@ describe 'Running metadata validation' do
 
     describe command('pdk validate metadata') do
       its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stdout) { is_expected.to match(%r{^metadata\.json:.+warning.+open ended dependency}) }
+      its(:stdout) { is_expected.to match(%r{^metadata\.json:.+warning.+open ended dependency}m) }
       its(:stderr) { is_expected.to match(spinner_text) }
     end
 
