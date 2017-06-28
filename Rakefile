@@ -43,11 +43,9 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 namespace :acceptance do
-  desc 'Run acceptance tests against a pdk package'
-  RSpec::Core::RakeTask.new(:package) do |t|
+  desc 'Run acceptance tests against a puppet-sdk package'
+  task(:package) do
     require 'beaker-hostgenerator'
-
-    ENV['BEAKER_TESTMODE'] = 'agent'
 
     unless ENV['SHA']
       abort 'Environment variable SHA must be set to the SHA or tag of a pdk build'
@@ -70,7 +68,7 @@ namespace :acceptance do
       puts 'No TEST_TARGET set, falling back to regular beaker config'
     end
 
-    t.pattern = 'spec/acceptance/**.rb'
+    sh('bundle exec beaker -h acceptance_hosts.yml --options-file package-testing/config/options.rb --tests package-testing/tests/')
   end
 
   desc 'Run acceptance tests against current code'

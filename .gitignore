@@ -71,6 +71,9 @@ build-iPhoneSimulator/
 /log/
 /repo-config/
 /acceptance_hosts.yml
+/junit/
+/archive/
+/sut-files.tgz
 
 +# Puppet packaging files
  +/ext/packaging/
