@@ -52,10 +52,30 @@ pdk validate
 This displays results in the console:
 
 ```
-Running validations on `new_module`:
-* ruby syntax: OK!
-* puppet syntax: OK!
+pdk (INFO): Running all available validators...
+[✔] Checking for missing Gemfile dependencies
+[✔] Checking metadata.json
+[✔] Checking Ruby code style
 [...]
+```
+
+Specific validators can be run by providing the validator name (or a comma
+separated list of names) as an argument to `pdk validate`.
+
+```
+$ pdk validate metadata
+[✔] Checking for missing Gemfile dependencies
+[✔] Checking metadata.json
+```
+
+By default each validator will automatically determine which files in the
+module that it should validate, however validations can be run on specific
+files or directories by providing them as arguments to `pdk validate`
+
+```
+$ pdk validate lib/
+[✔] Checking for missing Gemfile dependencies
+[✔] Checking Ruby code style
 ```
 
 ### Run unit tests
