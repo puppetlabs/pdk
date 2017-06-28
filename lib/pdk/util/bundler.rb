@@ -107,13 +107,12 @@ module PDK
         end
 
         def binstubs!(gems)
-          command = bundle_command('binstubs', gems.join(' '), '--force').tap do |c|
-            c.add_spinner(_('Checking for required Bundler binstubs'))
-          end
+          command = bundle_command('binstubs', gems.join(' '), '--force')
 
           result = command.execute!
 
           unless result[:exit_code].zero?
+            PDK.logger.error(_('Failed to generate binstubs for %{gems}') % { gems: gems.join(' ') })
             $stderr.puts result[:stdout]
             $stderr.puts result[:stderr]
           end
