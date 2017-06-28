@@ -4,7 +4,7 @@
 	 elementFormDefault="qualified"
 	 attributeFormDefault="unqualified">
 	<xs:annotation>
-		<xs:documentation xml:lang="en">JUnit test result schema for the Apache Ant JUnit and JUnitReport tasks
+		<xs:documentation xml:lang="en">Derived from JUnit test result schema for the Apache Ant JUnit and JUnitReport tasks
 Copyright © 2011, Windy Road Technology Pty. Limited
 The Apache Ant JUnit XML Schema is distributed under the terms of the Apache License Version 2.0 http://www.apache.org/licenses/
 Permission to waive conditions of this license may be requested from Windy Road Support (http://windyroad.org/support).</xs:documentation>
@@ -113,6 +113,11 @@ Permission to waive conditions of this license may be requested from Windy Road 
 								</xs:simpleContent>
 							</xs:complexType>
 						</xs:element>
+                                                <xs:element name="skipped">
+                        <xs:annotation>
+                                <xs:documentation xml:lang="en">Indicates that the test was skipped. A skipped test is a test that the test runner evaluates it can skip execution without reaching a pass or failure result.</xs:documentation>
+                        </xs:annotation>
+                                                </xs:element>
 					</xs:choice>
 					<xs:attribute name="name" type="xs:token" use="required">
 						<xs:annotation>
@@ -192,6 +197,11 @@ Permission to waive conditions of this license may be requested from Windy Road 
 				<xs:documentation xml:lang="en">The total number of tests in the suite that errored. An errored test is one that had an unanticipated problem. e.g., an unchecked throwable; or a problem with the implementation of the test.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+                <xs:attribute name="skipped" type="xs:int" use="required">
+                        <xs:annotation>
+                                <xs:documentation xml:lang="en">The total number of tests in the suite that were skipped. A skipped test is one that is not expected to currently pass or fail e.g. the feature tested is not complete, or the test is not applicable for the current test environment.</xs:documentation>
+                        </xs:annotation>
+                </xs:attribute>
 		<xs:attribute name="time" type="xs:decimal" use="required">
 			<xs:annotation>
 				<xs:documentation xml:lang="en">Time taken (in seconds) to execute the tests in the suite</xs:documentation>
