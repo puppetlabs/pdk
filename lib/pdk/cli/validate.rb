@@ -3,9 +3,15 @@ require 'pdk/util/bundler'
 module PDK::CLI
   @validate_cmd = @base_cmd.define_command do
     name 'validate'
-    usage _('validate [options]')
+    usage _('validate [validators] [options] [targets]')
     summary _('Run static analysis tests.')
-    description _('Run metadata, puppet, or ruby validation.')
+    description _(
+      "Run metadata, puppet, or ruby validation.\n\n" \
+      '[validators] is an optional comma separated list of validators to use. ' \
+      "If not specified, all validators will be used.\n\n" \
+      '[targets] is an optional space separated list of files or directories to be validated. ' \
+      'If not specified, the validators will be run against all applicable files in the module.',
+    )
 
     flag nil, :list, _('list all available validators')
     flag :a, 'auto-correct', _('automatically correct problems (where possible)')

@@ -59,6 +59,7 @@ module PDK
         testsuite.attributes['tests'] = testcases.length
         testsuite.attributes['errors'] = testcases.select(&:error?).length
         testsuite.attributes['failures'] = testcases.select(&:failure?).length
+        testsuite.attributes['skipped'] = testcases.select(&:skipped?).length
         testsuite.attributes['time'] = 0
         testsuite.attributes['timestamp'] = Time.now.strftime('%Y-%m-%dT%H:%M:%S')
         testsuite.attributes['hostname'] = Socket.gethostname
