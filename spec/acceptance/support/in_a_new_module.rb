@@ -1,7 +1,11 @@
+require 'open3'
 
 shared_context 'in a new module' do |name|
   before(:all) do
-    system("pdk new module #{name} --skip-interview") || raise
+    output, status = Open3.capture2e('pdk', 'new', 'module', name, '--skip-interview')
+
+    raise "Failed to create test module:\n#{output}" unless status.success?
+
     Dir.chdir(name)
   end
 

@@ -120,4 +120,29 @@ describe 'pdk validate ruby', module_command: true do
       end
     end
   end
+
+  context 'when auto-correcting violations' do
+    include_context 'in a new module', 'foo'
+
+    before(:all) do
+      File.open('test.rb', 'w') do |f|
+        f.puts "puts({'a' => 'b'}.inspect)"
+      end
+    end
+
+    describe command('pdk validate ruby') do
+      its(:exit_status) { is_expected.not_to eq(0) }
+      its(:stdout) { is_expected.to match(%r{^test\.rb.*space inside (\{|\}) missing}i) }
+    end
+
+    describe command('pdk validate ruby --auto-correct') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stdout) { is_expected.to match(%r{^test\.rb.*corrected.*space inside (\{|\}) missing}i) }
+    end
+
+    describe command('pdk validate ruby') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stdout) { is_expected.to match(%r{\A\Z}) }
+    end
+  end
 end

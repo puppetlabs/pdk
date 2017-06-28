@@ -22,8 +22,10 @@ module PDK
         _('Checking Puppet manifest style')
       end
 
-      def self.parse_options(_options, targets)
+      def self.parse_options(options, targets)
         cmd_options = ['--json']
+
+        cmd_options << '--fix' if options[:auto_correct]
 
         cmd_options.concat(targets)
       end
@@ -55,7 +57,7 @@ module PDK
             column:   offense['column'],
             message:  offense['message'],
             test:     offense['check'],
-            severity: offense['kind'],
+            severity: (offense['kind'] == 'fixed') ? 'corrected' : offense['kind'],
             state:    :failure,
           )
         end

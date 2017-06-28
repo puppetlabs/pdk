@@ -405,4 +405,29 @@ class foo {
       end
     end
   end
+
+  context 'when auto-correcting manifest style problems' do
+    include_context 'in a new module', 'foo'
+
+    before(:all) do
+      File.open(example_pp, 'w') do |f|
+        f.puts 'notify { "test": }'
+      end
+    end
+
+    describe command('pdk validate puppet') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stdout) { is_expected.to match(%r{^#{Regexp.escape(example_pp)}.*warning.*double quoted string}) }
+    end
+
+    describe command('pdk validate puppet --auto-correct') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stdout) { is_expected.to match(%r{^#{Regexp.escape(example_pp)}.*corrected.*double quoted string}) }
+    end
+
+    describe command('pdk validate puppet') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stdout) { is_expected.to match(empty_string) }
+    end
+  end
 end

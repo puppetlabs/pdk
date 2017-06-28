@@ -78,6 +78,22 @@ $ pdk validate lib/
 [✔] Checking Ruby code style
 ```
 
+Some validators support automatic correction of detected problems (for example,
+both rubocop and puppet-lint can automatically correct many common code style
+problems). To enable this functionality, run `pdk validate` with the
+`--auto-correct` option.
+
+```
+$ pdk validate --auto-correct
+pdk (INFO): Running all available validators...
+[✔] Checking for missing Gemfile dependencies
+[✔] Checking metadata.json
+[✔] Checking Puppet manifest style
+[✔] Checking Puppet manifest syntax
+[✔] Checking Ruby code style
+manifests/init.pp:1:10: corrected: double quoted string containing no variables
+```
+
 ### Run unit tests
 
 The default template sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing.
