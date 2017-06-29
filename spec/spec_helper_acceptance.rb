@@ -2,6 +2,8 @@ require 'fileutils'
 require 'serverspec'
 require 'tmpdir'
 require 'rspec/xsd'
+require 'open3'
+require 'pdk/generators/module'
 
 # automatically load any shared examples or contexts
 Dir['./spec/acceptance/support/**/*.rb'].sort.each { |f| require f }
@@ -48,6 +50,10 @@ Specinfra.configuration.env = bundler_env.dup
 
 RSpec.configure do |c|
   c.before(:suite) do
+    RSpec.configuration.template_dir = Dir.mktmpdir
+    output, status = Open3.capture2e('git', 'clone', '--bare', PDK::Generate::Module::DEFAULT_TEMPLATE, RSpec.configuration.template_dir)
+    raise "Failed to cache module template: #{output}" unless status.success?
+
     tempdir = Dir.mktmpdir
     Dir.chdir(tempdir)
     puts "Working in #{tempdir}"
@@ -56,6 +62,7 @@ RSpec.configure do |c|
   c.after(:suite) do
     Dir.chdir('/')
     FileUtils.rm_rf(tempdir)
+    FileUtils.rm_rf(RSpec.configuration.template_dir)
     puts "Cleaned #{tempdir}"
   end
 
@@ -71,4 +78,5 @@ RSpec.configure do |c|
   end
   c.include RSpec::XSD
   c.add_setting :fixtures_path, default: File.join(File.dirname(__FILE__), 'fixtures')
+  c.add_setting :template_dir
 end
