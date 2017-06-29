@@ -7,8 +7,8 @@ require 'pdk/version'
 Gem::Specification.new do |spec|
   spec.name    = 'pdk'
   spec.version = PDK::VERSION
-  spec.authors = ['David Schmitt']
-  spec.email   = ['david.schmitt@puppet.com']
+  spec.authors = ['Puppet, Inc.']
+  spec.email   = ['pdk-maintainers@puppet.com']
 
   spec.summary     = 'A key part of the Puppet Development Kit, the shortest path to better modules'
   spec.description = 'A CLI to facilitate easy, unified development workflows for Puppet modules.'
