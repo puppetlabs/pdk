@@ -1,13 +1,14 @@
 require 'etc'
 require 'pathname'
 require 'fileutils'
+require 'tty-prompt'
 
 require 'pdk'
 require 'pdk/logger'
 require 'pdk/module/metadata'
 require 'pdk/module/templatedir'
 require 'pdk/cli/exec'
-require 'pdk/cli/input'
+require 'pdk/cli/util/interview'
 require 'pdk/util'
 require 'pdk/util/version'
 
@@ -89,63 +90,98 @@ module PDK
       end
 
       def self.module_interview(metadata, opts = {})
+        questions = [
+          {
+            name:             'name',
+            question:         _('What is your Puppet Forge username?'),
+            help:             _('This will be used when uploading your module to the Forge. You can opt out of this at any time.'),
+            required:         true,
+            validate_pattern: %r{\A[a-z0-9]+\Z}i,
+            validate_message: _('Forge usernames can only contain lowercase letters and numbers'),
+            default:          metadata.data['author'],
+          },
+          {
+            name:             'version',
+            question:         _('What version is this module?'),
+            help:             _('Puppet uses Semantic Versioning (semver.org) to version modules.'),
+            required:         true,
+            validate_pattern: %r{\A[0-9]+\.[0-9]+\.[0-9]+},
+            validate_message: _('Semantic Version numbers must be in the form MAJOR.MINOR.PATCH'),
+            default:          metadata.data['version'],
+          },
+          {
+            name:     'author',
+            question: _('Who wrote this module?'),
+            help:     _('The person who gets credit for creating the module. '),
+            required: true,
+            default:  metadata.data['author'],
+          },
+          {
+            name:     'license',
+            question: _('What license does this module code fall under?'),
+            help:     _('This should be an identifier from https://spdk.org/licenses/. Common values are "Apache-2.0", "MIT", or "proprietary".'),
+            required: true,
+            default:  metadata.data['license'],
+          },
+          {
+            name:     'summary',
+            question: _('How would you describe this module in a single sentence?'),
+            help:     _('To help other Puppet users understand what the module does.'),
+            required: true,
+            default:  metadata.data['summary'],
+          },
+          {
+            name:     'source',
+            question: _("Where is this modules's source code repository?"),
+            help:     _('Usually a GitHub URL'),
+            required: true,
+            default:  metadata.data['source'],
+          },
+          {
+            name:     'project_page',
+            question: _('Where can others go to learn more about this module?'),
+            help:     _('A web site that offers full information about your module.'),
+            default:  metadata.data['project_page'],
+          },
+          {
+            name:     'issues_url',
+            question: _('Where can others go to file issues about this module?'),
+            help:     _('A web site with a public bug tracker for your module.'),
+            default:  metadata.data['issues_url'],
+          },
+        ]
+
+        prompt = TTY::Prompt.new
+
+        interview = PDK::CLI::Util::Interview.new(prompt)
+
+        questions.reject! { |q| q[:name] == 'license' } if opts.key?(:license)
+
+        interview.add_questions(questions)
+
         puts _(
-          'We need to create a metadata.json file for this module. Please answer the ' \
-          'following questions; if the question is not applicable to this module, feel free ' \
-          'to leave it blank.',
-        )
+          "\nWe need to create a metadata.json file for this module, so we're going to ask you %{count} quick questions.\n" \
+          "If the question is not applicable to this module, just leave the answer blank.\n\n",
+        ) % { count: interview.num_questions }
 
-        begin
-          puts ''
-          forge_user = PDK::CLI::Input.get(_('What is your Puppet Forge username?'), metadata.data['author'])
-          metadata.update!('name' => "#{forge_user}-#{opts[:name]}")
-        rescue StandardError => e
-          PDK.logger.error(_("We're sorry, we could not parse your module name: %{message}") % { message: e.message })
-          retry
+        answers = interview.run
+
+        if answers.nil?
+          puts _('Interview cancelled, aborting...')
+          exit 0
         end
 
-        begin
-          puts "\n" + _('Puppet uses Semantic Versioning (semver.org) to version modules.')
-          module_version = PDK::CLI::Input.get(_('What version is this module?'), metadata.data['version'])
-          metadata.update!('version' => module_version)
-        rescue StandardError => e
-          PDK.logger.error(_("We're sorry, we could not parse that as a Semantic Version: %{message}") % { message: e.message })
-          retry
-        end
+        answers['name'] = "#{answers['name']}-#{opts[:name]}"
+        metadata.update!(answers)
 
-        puts ''
-        module_author = PDK::CLI::Input.get(_('Who wrote this module?'), metadata.data['author'])
-        metadata.update!('author' => module_author)
-
-        unless opts.key?(:license)
-          puts ''
-          module_license = PDK::CLI::Input.get(_('What license does this module code fall under?'), metadata.data['license'])
-          metadata.update!('license' => module_license)
-        end
-
-        puts ''
-        module_summary = PDK::CLI::Input.get(_('How would you describe this module in a single sentence?'), metadata.data['summary'])
-        metadata.update!('summary' => module_summary)
-
-        puts ''
-        module_source = PDK::CLI::Input.get(_("Where is this module's source code repository?"), metadata.data['source'])
-        metadata.update!('source' => module_source)
-
-        puts ''
-        module_page = PDK::CLI::Input.get(_('Where can others go to learn more about this module?'), metadata.data['project_page'])
-        metadata.update!('project_page' => module_page)
-
-        puts ''
-        module_issues = PDK::CLI::Input.get(_('Where can others go to file issues about this module?'), metadata.data['issues_url'])
-        metadata.update!('issues_url' => module_issues)
-
-        puts
+        puts '-' * 40
+        puts _('SUMMARY')
         puts '-' * 40
         puts metadata.to_json
         puts '-' * 40
         puts
 
-        unless PDK::CLI::Input.get(_('About to generate this module; continue?'), 'Y') =~ %r{^y(es)?$}i # rubocop:disable Style/GuardClause
+        unless prompt.yes?(_('About to generate this module; continue?')) # rubocop:disable Style/GuardClause
           puts _('Aborting...')
           exit 0
         end

@@ -10,18 +10,22 @@ describe PDK::Generate::Module do
         ],
       )
     end
+    let(:prompt) { TTY::TestPrompt.new }
 
     it 'populates the Metadata object based on user input' do
-      allow(STDOUT).to receive(:puts)
-      expect(PDK::CLI::Input).to receive(:get) { 'foo' }
-      expect(PDK::CLI::Input).to receive(:get) { '2.2.0' }
-      expect(PDK::CLI::Input).to receive(:get) { 'William Hopper' }
-      expect(PDK::CLI::Input).to receive(:get) { 'Apache-2.0' }
-      expect(PDK::CLI::Input).to receive(:get) { 'A simple module to do some stuff.' }
-      expect(PDK::CLI::Input).to receive(:get) { 'github.com/whopper/bar' }
-      expect(PDK::CLI::Input).to receive(:get) { 'forge.puppet.com/whopper/bar' }
-      expect(PDK::CLI::Input).to receive(:get) { 'tickets.foo.com/whopper/bar' }
-      expect(PDK::CLI::Input).to receive(:get) { 'yes' }
+      expect(TTY::Prompt).to receive(:new).and_return(prompt)
+      prompt.input << [
+        "foo\n",
+        "2.2.0\n",
+        "William Hopper\n",
+        "Apache-2.0\n",
+        "A simple module to do some stuff.\n",
+        "github.com/whopper/bar\n",
+        "forge.puppet.com/whopper/bar\n",
+        "tickets.foo.com/whopper/bar\n",
+        "yes\n",
+      ].join
+      prompt.input.rewind
 
       described_class.module_interview(metadata, name: 'bar')
 
