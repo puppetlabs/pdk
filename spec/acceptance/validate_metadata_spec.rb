@@ -4,7 +4,7 @@ describe 'Running metadata validation' do
   let(:spinner_text) { %r{checking metadata\.json}i }
 
   context 'with a fresh module' do
-    include_context 'in a new module', 'foo'
+    include_context 'in a new module', 'metadata_validation_module'
 
     describe command('pdk validate metadata') do
       its(:exit_status) { is_expected.to eq(0) }
