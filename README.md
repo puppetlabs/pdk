@@ -298,3 +298,12 @@ bundle binstubs pdk --path ~/bin
 ```
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pdk.
+
+### Release Process
+
+1. Bump the version in `lib/pdk/version.rb`.
+1. In a clean checkout of master, run `rake changelog`.
+1. Edit PR titles and tags, until `rake changelog` output makes sense.
+1. Commit and PR the changes.
+1. When the PR is merged, get a clean checkout of the merged commit, and run `rake release [upstream]` (where "upstream" is your local name of the puppetlabs remote)
+1. Profit!
