@@ -4,7 +4,7 @@ describe 'pdk validate ruby', module_command: true do
   let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
 
   context 'with a fresh module' do
-    include_context 'in a new module', 'foo'
+    include_context 'in a new module', 'validate_ruby_module'
 
     example_rb = File.join('spec', 'example.rb')
 

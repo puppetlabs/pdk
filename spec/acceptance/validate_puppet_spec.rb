@@ -10,7 +10,7 @@ describe 'pdk validate puppet', module_command: true do
   example_pp = File.join('manifests', 'example.pp')
 
   context 'with no .pp files' do
-    include_context 'in a new module', 'foo'
+    include_context 'in a new module', 'validate_puppet_module'
 
     describe command('pdk validate puppet') do
       its(:exit_status) { is_expected.to eq(0) }

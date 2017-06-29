@@ -2,10 +2,10 @@ require 'spec_helper_acceptance'
 
 describe 'pdk new class', module_command: true do
   context 'in a new module' do
-    include_context 'in a new module', 'foo'
+    include_context 'in a new module', 'new_class'
 
     context 'when creating the main class' do
-      describe command('pdk new class foo') do
+      describe command('pdk new class new_class') do
         its(:exit_status) { is_expected.to eq 0 }
         its(:stdout) { is_expected.to match(%r{Creating .* from template}) }
         its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
@@ -20,20 +20,20 @@ describe 'pdk new class', module_command: true do
       describe file('manifests/init.pp') do
         it { is_expected.to be_file }
         its(:content) do
-          is_expected.to match(%r{class foo })
+          is_expected.to match(%r{class new_class })
         end
       end
 
-      describe file('spec/classes/foo_spec.rb') do
+      describe file('spec/classes/new_class_spec.rb') do
         it { is_expected.to be_file }
         its(:content) do
-          is_expected.to match(%r{foo})
+          is_expected.to match(%r{new_class})
         end
       end
     end
 
     context 'when creating an ancillary class' do
-      describe command('pdk new class foo::bar') do
+      describe command('pdk new class new_class::bar') do
         its(:exit_status) { is_expected.to eq 0 }
         its(:stdout) { is_expected.to match(%r{Creating .* from template}) }
         its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
@@ -48,20 +48,20 @@ describe 'pdk new class', module_command: true do
       describe file('manifests/bar.pp') do
         it { is_expected.to be_file }
         its(:content) do
-          is_expected.to match(%r{class foo::bar})
+          is_expected.to match(%r{class new_class::bar})
         end
       end
 
       describe file('spec/classes/bar_spec.rb') do
         it { is_expected.to be_file }
         its(:content) do
-          is_expected.to match(%r{foo::bar})
+          is_expected.to match(%r{new_class::bar})
         end
       end
     end
 
     context 'when creating a deeply nested class' do
-      describe command('pdk new class foo::bar::baz') do
+      describe command('pdk new class new_class::bar::baz') do
         its(:exit_status) { is_expected.to eq 0 }
         its(:stdout) { is_expected.to match(%r{Creating .* from template}) }
         its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
@@ -76,14 +76,14 @@ describe 'pdk new class', module_command: true do
       describe file('manifests/bar/baz.pp') do
         it { is_expected.to be_file }
         its(:content) do
-          is_expected.to match(%r{class foo::bar::baz})
+          is_expected.to match(%r{class new_class::bar::baz})
         end
       end
 
       describe file('spec/classes/bar/baz_spec.rb') do
         it { is_expected.to be_file }
         its(:content) do
-          is_expected.to match(%r{foo::bar::baz})
+          is_expected.to match(%r{new_class::bar::baz})
         end
       end
     end

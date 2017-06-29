@@ -1,7 +1,7 @@
 require 'spec_helper_acceptance'
 
 describe 'Managing Gemfile dependencies' do
-  include_context 'in a new module', 'foo'
+  include_context 'in a new module', 'bundle_management'
 
   context 'when there is no Gemfile.lock' do
     before(:all) do

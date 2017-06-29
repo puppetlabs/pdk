@@ -4,15 +4,15 @@ describe 'Running all validations' do
   let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
 
   context 'with a fresh module' do
-    include_context 'in a new module', 'foo'
+    include_context 'in a new module', 'validate_all'
 
     init_pp = File.join('manifests', 'init.pp')
 
     before(:all) do
       File.open(init_pp, 'w') do |f|
         f.puts <<-EOS
-# foo
-class foo { }
+# validate_all
+class validate_all { }
         EOS
       end
     end
