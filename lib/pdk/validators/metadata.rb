@@ -6,6 +6,8 @@ require 'pdk/util/bundler'
 module PDK
   module Validate
     class Metadata < BaseValidator
+      INVOKE_STYLE = :per_target
+
       def self.name
         'metadata'
       end
@@ -28,12 +30,14 @@ module PDK
         cmd_options.concat(targets)
       end
 
-      def self.parse_output(report, result, _targets)
+      def self.parse_output(report, result, targets)
         begin
           json_data = JSON.parse(result[:stdout])
         rescue JSON::ParserError
           json_data = []
         end
+
+        raise ArgumentError, 'More that 1 target provided to PDK::Validate::Metadata' if targets.count > 1
 
         if json_data.empty?
           report.add_event(
@@ -52,7 +56,7 @@ module PDK
               event_type = type[%r{\A(.+?)s?\Z}, 1]
 
               report.add_event(
-                file:     'metadata.json',
+                file:     targets.first,
                 source:   cmd,
                 message:  offense['msg'],
                 test:     offense['check'],
