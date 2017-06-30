@@ -42,7 +42,7 @@ module PDK
         targets
       end
 
-      def self.spinner_text
+      def self.spinner_text(_targets = nil)
         _('Invoking %{cmd}') % { cmd: cmd }
       end
 
@@ -67,7 +67,7 @@ module PDK
 
           command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
             c.context = :module
-            c.add_spinner(spinner_text)
+            c.add_spinner(spinner_text(invokation_targets))
           end
 
           result = command.execute!

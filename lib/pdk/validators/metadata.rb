@@ -2,10 +2,13 @@ require 'pdk'
 require 'pdk/cli/exec'
 require 'pdk/validators/base_validator'
 require 'pdk/util/bundler'
+require 'pathname'
 
 module PDK
   module Validate
     class Metadata < BaseValidator
+      # Validate each metadata file separately, as metadata-json-lint does not
+      # support multiple targets.
       INVOKE_STYLE = :per_target
 
       def self.name
@@ -16,12 +19,14 @@ module PDK
         'metadata-json-lint'
       end
 
-      def self.spinner_text
-        _('Checking metadata.json')
+      def self.spinner_text(targets = nil)
+        _('Checking metadata (%{targets})') % {
+          targets: targets.map { |t| Pathname.new(t).absolute? ? Pathname.new(t).relative_path_from(Pathname.pwd) : t }.join(' '),
+        }
       end
 
-      def self.parse_targets(_options)
-        [File.join(PDK::Util.module_root, 'metadata.json')]
+      def self.pattern
+        'metadata.json'
       end
 
       def self.parse_options(_options, targets)
@@ -41,7 +46,7 @@ module PDK
 
         if json_data.empty?
           report.add_event(
-            file:     'metadata.json',
+            file:     targets.first,
             source:   cmd,
             state:    :passed,
             severity: :ok,
