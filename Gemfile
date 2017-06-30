@@ -13,6 +13,7 @@ group :development do
     # required for github_changelog_generator
     gem 'rack', '~> 1.0'
   end
+  gem 'ruby-prof'
 end
 
 group :test do
