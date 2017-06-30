@@ -11,7 +11,7 @@ module PDK
           invalid_entries = vals.reject { |e| valid_entries.include?(e) }
 
           unless invalid_entries.empty?
-            raise _('Error: the following values are invalid: %{invalid_entries}') % { invalid_entries: invalid_entries }
+            raise ArgumentError, _('Error: the following values are invalid: %{invalid_entries}') % { invalid_entries: invalid_entries }
           end
 
           val

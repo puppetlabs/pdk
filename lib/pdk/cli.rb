@@ -60,15 +60,7 @@ module PDK::CLI
     ) % { available_formats: PDK::Report.formats.join("', '") }
 
     option :f, :format, format_desc, argument: :required, multiple: true do |values|
-      values.compact.each do |v|
-        if v.include?(':')
-          format = v.split(':', 2).first
-
-          Util::OptionValidator.enum(format, PDK::Report.formats)
-        else
-          Util::OptionValidator.enum(v, PDK::Report.formats)
-        end
-      end
+      PDK::CLI::Util::OptionNormalizer.report_formats(values.compact)
     end
 
     flag :d, :debug, _('Enable debug output.') do |_, _|
