@@ -307,4 +307,4 @@ Bug reports and pull requests are welcome on GitHub at https://github.com/puppet
 1. Commit and PR the changes.
 1. When the PR is merged, get a clean checkout of the merged commit, and run `bundle exec rake release[upstream]` (where "upstream" is your local name of the puppetlabs remote)
 1. Profit!
-1. Update `lib/pdk/version.rb` with `x.y.z-pre`, commit, and PR to prepare for next release.
+1. Update `lib/pdk/version.rb` with `x.y.z.pre` version bump, commit, and PR to prepare for next release.
