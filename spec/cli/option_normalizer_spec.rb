@@ -14,11 +14,11 @@ describe PDK::CLI::Util::OptionNormalizer do
 
   context 'when parsing report formats and targets' do
     context 'and given a single format with no target' do
-      it 'returns a single format specification with no target' do
+      it 'returns a single format specification with default target' do
         reports = described_class.report_formats(['text'])
         expect(reports.length).to eq(1)
         expect(reports[0][:method]).to eq(:write_text)
-        expect(reports[0][:target]).to eq(nil)
+        expect(reports[0][:target]).to eq(PDK::Report.default_target)
       end
     end
 
@@ -54,7 +54,7 @@ describe PDK::CLI::Util::OptionNormalizer do
         reports = described_class.report_formats(['text', 'junit:foo.junit'])
         expect(reports.length).to eq(2)
         expect(reports[0][:method]).to eq(:write_text)
-        expect(reports[0][:target]).to eq(nil)
+        expect(reports[0][:target]).to eq(PDK::Report.default_target)
         expect(reports[1][:method]).to eq(:write_junit)
         expect(reports[1][:target]).to eq('foo.junit')
       end
