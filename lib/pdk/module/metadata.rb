@@ -67,7 +67,7 @@ module PDK
       end
 
       def to_json
-        JSON.pretty_generate(@data)
+        JSON.pretty_generate(@data.dup.delete_if { |_key, value| value.nil? })
       end
 
       private
