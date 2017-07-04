@@ -50,7 +50,9 @@ RSpec.describe PDK::Util::Bundler do
         allow(File).to receive(:file?).with(%r{Gemfile$}).and_return(true)
         allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(false)
 
-        allow_command([bundle_regex, 'check', any_args], exit_code: 1)
+        allow_command([bundle_regex, 'check', any_args], exit_code: 1, stdout: 'check stdout', stderr: 'check stderr')
+        allow($stderr).to receive(:puts).with('check stdout')
+        allow($stderr).to receive(:puts).with('check stderr')
         allow_command([bundle_regex, 'install', any_args])
       end
 
@@ -59,6 +61,21 @@ RSpec.describe PDK::Util::Bundler do
 
         described_class.ensure_bundle!
       end
+
+      context 'and it fails to generate Gemfile.lock' do
+        before(:each) do
+          allow(described_class).to receive(:already_bundled?).and_return(false)
+          allow_command([bundle_regex, 'lock'], exit_code: 1, stdout: 'lock stdout', stderr: 'lock stderr')
+          allow($stderr).to receive(:puts).with('lock stdout')
+          allow($stderr).to receive(:puts).with('lock stderr')
+        end
+
+        it 'raises a FatalError' do
+          expect {
+            described_class.ensure_bundle!
+          }.to raise_error(PDK::CLI::FatalError, %r{unable to resolve gemfile dependencies}i)
+        end
+      end
     end
 
     context 'when there are missing gems' do
@@ -66,7 +83,9 @@ RSpec.describe PDK::Util::Bundler do
         allow(File).to receive(:file?).with(%r{Gemfile$}).and_return(true)
         allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(true)
 
-        allow_command([bundle_regex, 'check', any_args], exit_code: 1)
+        allow_command([bundle_regex, 'check', any_args], exit_code: 1, stdout: 'check stdout', stderr: 'check stderr')
+        allow($stderr).to receive(:puts).with('check stdout')
+        allow($stderr).to receive(:puts).with('check stderr')
       end
 
       it 'installs missing gems' do
@@ -74,6 +93,21 @@ RSpec.describe PDK::Util::Bundler do
         expect_command([bundle_regex, 'install', any_args], nil, %r{installing missing gemfile}i)
 
         described_class.ensure_bundle!
+      end
+
+      context 'and it fails to install the gems' do
+        before(:each) do
+          allow(described_class).to receive(:already_bundled?).and_return(false)
+          allow_command([bundle_regex, 'install', any_args], exit_code: 1, stdout: 'install stdout', stderr: 'install stderr')
+          allow($stderr).to receive(:puts).with('install stdout')
+          allow($stderr).to receive(:puts).with('install stderr')
+        end
+
+        it 'raises a FatalError' do
+          expect {
+            described_class.ensure_bundle!
+          }.to raise_error(PDK::CLI::FatalError, %r{unable to install missing gemfile dependencies}i)
+        end
       end
 
       it 'only attempts to install the gems once' do
