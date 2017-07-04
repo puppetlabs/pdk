@@ -7,6 +7,9 @@ RSpec.describe PDK::Util::Bundler do
     allow(PDK::Util).to receive(:module_root).and_return('/')
   end
 
+  # @todo: untangle tests of PDK::Util::Bundler and
+  #   PDK::Util::Bundler::BundleHelper
+
   # TODO: deduplicate code in these two methods and extract them to a shared location
   def allow_command(argv, result = nil)
     result ||= { exit_code: 0, stdout: '', stderr: '' }
@@ -130,6 +133,71 @@ RSpec.describe PDK::Util::Bundler do
         expect(PDK::CLI::Exec::Command).not_to receive(:new).with(bundle_regex, 'install', any_args)
 
         described_class.ensure_bundle!
+      end
+    end
+  end
+
+  describe '.ensure_binstubs!' do
+    let(:gemfile) { '/path/to/Gemfile' }
+    let(:binstub_dir) { File.join(File.dirname(gemfile), 'bin') }
+    let(:gems) { %w[rspec pdk rake] }
+
+    before(:each) do
+      allow(PDK::Util).to receive(:find_upwards).and_return(gemfile)
+    end
+
+    context 'when the binstubs do not already exist' do
+      before(:each) do
+        gems.each { |gem| allow(File).to receive(:file?).with(File.join(binstub_dir, gem)).and_return(false) }
+      end
+
+      it 'generates the requested binstubs' do
+        expect_command([bundle_regex, 'binstubs', *gems, '--force'])
+
+        described_class.ensure_binstubs!(*gems)
+      end
+    end
+
+    context 'when all the requested binstubs exist' do
+      before(:each) do
+        gems.each { |gem| allow(File).to receive(:file?).with(File.join(binstub_dir, gem)).and_return(true) }
+      end
+
+      it 'does not regenerate the requested binstubs' do
+        expect(PDK::CLI::Exec::Command).not_to receive(:new).with(bundle_regex, 'binstubs', any_args)
+
+        described_class.ensure_binstubs!(*gems)
+      end
+    end
+
+    context 'when not all of the requested binstubs exist' do
+      before(:each) do
+        allow(File).to receive(:file?).with(File.join(binstub_dir, 'rake')).and_return(true)
+        allow(File).to receive(:file?).with(File.join(binstub_dir, 'rspec')).and_return(false)
+        allow(File).to receive(:file?).with(File.join(binstub_dir, 'pdk')).and_return(true)
+      end
+
+      it 'generates the requested binstubs' do
+        expect_command([bundle_regex, 'binstubs', *gems, '--force'])
+
+        described_class.ensure_binstubs!(*gems)
+      end
+    end
+
+    context 'when it fails to generate the binstubs' do
+      before(:each) do
+        gems.each { |gem| allow(File).to receive(:file?).with(File.join(binstub_dir, gem)).and_return(false) }
+        allow_command([bundle_regex, 'binstubs', *gems, '--force'], exit_code: 1, stdout: 'binstubs stdout', stderr: 'binstubs stderr')
+        allow($stderr).to receive(:puts).with('binstubs stdout')
+        allow($stderr).to receive(:puts).with('binstubs stderr')
+      end
+
+      it 'raises a fatal error' do
+        expect(logger).to receive(:error).with(a_string_matching(%r{failed to generate binstubs}i))
+
+        expect {
+          described_class.ensure_binstubs!(*gems)
+        }.to raise_error(PDK::CLI::FatalError, %r{unable to install requested binstubs}i)
       end
     end
   end
