@@ -48,6 +48,18 @@ describe PDK::Report::Event do
       end
     end
 
+    context 'and passed a file path that is not a String' do
+      let(:data) do
+        {
+          file: ['/path/to/test/module/lib/some/file.rb'],
+        }
+      end
+
+      it 'raises an ArgumentError' do
+        expect { event }.to raise_error(ArgumentError, %r{file must be a string}i)
+      end
+    end
+
     context 'and passed an empty string as the file path' do
       let(:data) do
         {
