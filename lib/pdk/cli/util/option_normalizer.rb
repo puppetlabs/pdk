@@ -40,6 +40,8 @@ module PDK
               target = $stdout
             when 'stderr'
               target = $stderr
+            when nil
+              target = PDK::Report.default_target
             end
 
             { method: "write_#{format}".to_sym, target: target }

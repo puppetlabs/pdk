@@ -48,9 +48,6 @@ module PDK
     # @param target [#write] an IO object that the report will be written to.
     #   Defaults to PDK::Report.default_target.
     def write_junit(target = self.class.default_target)
-      # Extra defaulting here, b/c the Class.send method will pass in nil
-      target ||= self.class.default_target
-
       # Open a File Object for IO if target is a string containing a filename or path
       target = File.open(target, 'w') if target.is_a? String
 
@@ -94,9 +91,6 @@ module PDK
     # @param target [#write] an IO object that the report will be written to.
     #   Defaults to PDK::Report.default_target.
     def write_text(target = self.class.default_target)
-      # Extra defaulting here, b/c the Class.send method will pass in nil
-      target ||= self.class.default_target
-
       # Open a File Object for IO if target is a string containing a filename or path
       target = File.open(target, 'w') if target.is_a? String
 
