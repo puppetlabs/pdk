@@ -2,10 +2,15 @@ require 'pdk'
 require 'pdk/cli/exec'
 require 'pdk/validators/base_validator'
 require 'pdk/util/bundler'
+require 'pathname'
 
 module PDK
   module Validate
     class Metadata < BaseValidator
+      # Validate each metadata file separately, as metadata-json-lint does not
+      # support multiple targets.
+      INVOKE_STYLE = :per_target
+
       def self.name
         'metadata'
       end
@@ -14,12 +19,14 @@ module PDK
         'metadata-json-lint'
       end
 
-      def self.spinner_text
-        _('Checking metadata.json')
+      def self.spinner_text(targets = nil)
+        _('Checking metadata (%{targets})') % {
+          targets: targets.map { |t| Pathname.new(t).absolute? ? Pathname.new(t).relative_path_from(Pathname.pwd) : t }.join(' '),
+        }
       end
 
-      def self.parse_targets(_options)
-        [File.join(PDK::Util.module_root, 'metadata.json')]
+      def self.pattern
+        'metadata.json'
       end
 
       def self.parse_options(_options, targets)
@@ -28,16 +35,18 @@ module PDK
         cmd_options.concat(targets)
       end
 
-      def self.parse_output(report, result, _targets)
+      def self.parse_output(report, result, targets)
         begin
           json_data = JSON.parse(result[:stdout])
         rescue JSON::ParserError
           json_data = []
         end
 
+        raise ArgumentError, 'More that 1 target provided to PDK::Validate::Metadata' if targets.count > 1
+
         if json_data.empty?
           report.add_event(
-            file:     'metadata.json',
+            file:     targets.first,
             source:   cmd,
             state:    :passed,
             severity: :ok,
@@ -52,7 +61,7 @@ module PDK
               event_type = type[%r{\A(.+?)s?\Z}, 1]
 
               report.add_event(
-                file:     'metadata.json',
+                file:     targets.first,
                 source:   cmd,
                 message:  offense['msg'],
                 test:     offense['check'],

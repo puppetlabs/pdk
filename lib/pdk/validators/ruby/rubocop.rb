@@ -16,7 +16,7 @@ module PDK
         'rubocop'
       end
 
-      def self.spinner_text
+      def self.spinner_text(_targets = nil)
         _('Checking Ruby code style')
       end
 

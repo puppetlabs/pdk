@@ -4,6 +4,14 @@ require 'pdk/cli/exec'
 module PDK
   module Validate
     class BaseValidator
+      # Controls how many times the validator is invoked.
+      #
+      #   :once -       The validator will be invoked once and passed all the
+      #                 targets.
+      #   :per_target - The validator will be invoked for each target
+      #                 separately.
+      INVOKE_STYLE = :once
+
       def self.cmd_path
         File.join(PDK::Util.module_root, 'bin', cmd)
       end
@@ -34,7 +42,7 @@ module PDK
         targets
       end
 
-      def self.spinner_text
+      def self.spinner_text(_targets = nil)
         _('Invoking %{cmd}') % { cmd: cmd }
       end
 
@@ -44,19 +52,31 @@ module PDK
         return 0 if targets.empty?
 
         PDK::Util::Bundler.ensure_binstubs!(cmd)
-        cmd_argv = parse_options(options, targets).unshift(cmd_path)
-        cmd_argv.unshift('ruby', '-W0') if Gem.win_platform?
 
-        command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
-          c.context = :module
-          c.add_spinner(spinner_text)
+        # If invoking :per_target, split the targets array into an array of
+        # single element arrays (one per target). If invoking :once, wrap the
+        # targets array in another array. This is so we can loop through the
+        # invokes with the same logic, regardless of which invoke style is
+        # needed.
+        targets = (self::INVOKE_STYLE == :per_target) ? targets.combination(1).to_a : Array[targets]
+        exit_codes = []
+
+        targets.each do |invokation_targets|
+          cmd_argv = parse_options(options, invokation_targets).unshift(cmd_path)
+          cmd_argv.unshift('ruby', '-W0') if Gem.win_platform?
+
+          command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
+            c.context = :module
+            c.add_spinner(spinner_text(invokation_targets))
+          end
+
+          result = command.execute!
+          exit_codes << result[:exit_code]
+
+          parse_output(report, result, invokation_targets)
         end
 
-        result = command.execute!
-
-        parse_output(report, result, targets)
-
-        result[:exit_code]
+        exit_codes.sort.last
       end
     end
   end

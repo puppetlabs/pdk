@@ -17,7 +17,7 @@ module PDK
         '**/**.pp'
       end
 
-      def self.spinner_text
+      def self.spinner_text(_targets = nil)
         _('Checking Puppet manifest syntax')
       end
 
