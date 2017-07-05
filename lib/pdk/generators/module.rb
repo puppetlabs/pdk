@@ -30,7 +30,7 @@ module PDK
 
         prepare_module_directory(temp_target_dir)
 
-        template_url = opts.fetch(:'template-url', DEFAULT_TEMPLATE)
+        template_url = opts.fetch(:'template-url', PDK.answers['template-url'] || DEFAULT_TEMPLATE)
 
         PDK::Module::TemplateDir.new(template_url) do |templates|
           templates.render do |file_path, file_content|
@@ -48,15 +48,27 @@ module PDK
           end
         end
 
+        PDK.answers.update!('template-url' => template_url)
+
         FileUtils.mv(temp_target_dir, target_dir)
       end
 
-      def self.prepare_metadata(opts)
-        username = Etc.getlogin.gsub(%r{[^0-9a-z]}i, '')
-        username = 'username' if username == ''
-        if Etc.getlogin != username
-          PDK.logger.warn(_('Your username is not a valid Forge username, proceeding with the username %{username}' % { username: username }))
+      def self.username_from_login
+        login = Etc.getlogin
+        login_clean = login.gsub(%r{[^0-9a-z]}i, '')
+        login_clean = 'username' if login_clean.empty?
+
+        if login_clean != login
+          PDK.logger.warn _('You username is not a valid Forge username, proceeding with the username %{username}') % {
+            username: login_clean,
+          }
         end
+
+        login_clean
+      end
+
+      def self.prepare_metadata(opts)
+        username = PDK.answers['forge-username'] || username_from_login
 
         defaults = {
           'name'         => "#{username}-#{opts[:name]}",
@@ -65,11 +77,13 @@ module PDK
             { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.13.1 < 5.0.0' },
           ],
         }
+        defaults['author'] = PDK.answers['author'] unless PDK.answers['author'].nil?
+        defaults['license'] = PDK.answers['license'] unless PDK.answers['license'].nil?
         defaults['license'] = opts[:license] if opts.key? :license
 
         metadata = PDK::Module::Metadata.new(defaults)
 
-        module_interview(metadata, opts) unless opts[:'skip-interview'] # @todo Build way to get info by answers file
+        module_interview(metadata, opts) unless opts[:'skip-interview']
 
         metadata.update!('pdk-version' => PDK::Util::Version.version_string)
 
@@ -98,7 +112,7 @@ module PDK
             required:         true,
             validate_pattern: %r{\A[a-z0-9]+\Z}i,
             validate_message: _('Forge usernames can only contain lowercase letters and numbers'),
-            default:          metadata.data['author'],
+            default:          PDK.answers['forge-username'] || metadata.data['author'],
           },
           {
             name:             'version',
@@ -171,7 +185,9 @@ module PDK
           exit 0
         end
 
+        forge_username = answers['name']
         answers['name'] = "#{answers['name']}-#{opts[:name]}"
+        answers['license'] = opts[:license] if opts.key?(:license)
         metadata.update!(answers)
 
         puts '-' * 40
@@ -181,10 +197,16 @@ module PDK
         puts '-' * 40
         puts
 
-        unless prompt.yes?(_('About to generate this module; continue?')) # rubocop:disable Style/GuardClause
+        unless prompt.yes?(_('About to generate this module; continue?'))
           puts _('Aborting...')
           exit 0
         end
+
+        PDK.answers.update!(
+          'forge-username' => forge_username,
+          'author'         => answers['author'],
+          'license'        => answers['license'],
+        )
       end
     end
   end

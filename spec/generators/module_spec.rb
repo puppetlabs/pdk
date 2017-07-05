@@ -1,108 +1,471 @@
 require 'spec_helper'
+require 'tempfile'
+require 'stringio'
 
-describe PDK::Generate::Module do
-  context 'when gathering module information via the user interview' do
-    let(:metadata) do
-      PDK::Module::Metadata.new.update!(
-        'version' => '0.1.0',
-        'dependencies' => [
-          { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' },
-        ],
-      )
-    end
-    let(:prompt) { TTY::TestPrompt.new }
+shared_context 'blank answer file' do
+  let(:temp_answer_file) { Tempfile.new('pdk-test-answers') }
 
-    it 'populates the Metadata object based on user input' do
-      expect(TTY::Prompt).to receive(:new).and_return(prompt)
-      prompt.input << [
-        "foo\n",
-        "2.2.0\n",
-        "William Hopper\n",
-        "Apache-2.0\n",
-        "A simple module to do some stuff.\n",
-        "github.com/whopper/bar\n",
-        "forge.puppet.com/whopper/bar\n",
-        "tickets.foo.com/whopper/bar\n",
-        "yes\n",
-      ].join
-      prompt.input.rewind
-
-      described_class.module_interview(metadata, name: 'bar')
-
-      expect(metadata.data).to eq(
-        'name' => 'foo-bar',
-        'version'       => '2.2.0',
-        'author'        => 'William Hopper',
-        'license'       => 'Apache-2.0',
-        'summary'       => 'A simple module to do some stuff.',
-        'source'        => 'github.com/whopper/bar',
-        'project_page'  => 'forge.puppet.com/whopper/bar',
-        'issues_url'    => 'tickets.foo.com/whopper/bar',
-        'dependencies'  => [{ 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' }],
-        'data_provider' => nil,
-        'operatingsystem_support' => [
-          { 'operatingsystem' => 'Debian', 'operatingsystemrelease' => ['8'] },
-          { 'operatingsystem' => 'RedHat', 'operatingsystemrelease' => ['7.0'] },
-          { 'operatingsystem' => 'Ubuntu', 'operatingsystemrelease' => ['16.04'] },
-          { 'operatingsystem' => 'Windows', 'operatingsystemrelease' => ['2016'] },
-        ],
-      )
-    end
+  before(:each) do
+    PDK.answer_file = temp_answer_file.path
   end
 
-  context 'when running under a user whose name is not a valid forge name' do
-    before(:each) do
-      allow(Etc).to receive(:getlogin).and_return('user.name')
-    end
+  after(:each) do
+    temp_answer_file.close
+    temp_answer_file.unlink
+  end
+end
 
-    let(:defaults) do
+shared_context 'allow summary to be printed to stdout' do
+  before(:each) do
+    allow($stdout).to receive(:puts).with(a_string_matching(%r{\A-+\Z}))
+    allow($stdout).to receive(:puts).with('SUMMARY')
+    allow($stdout).to receive(:puts).with(a_string_matching(%r{\A\{.+\}\Z}m))
+    allow($stdout).to receive(:puts).with(no_args)
+  end
+end
+
+shared_context 'mock template dir' do
+  let(:test_template_dir) { instance_double(PDK::Module::TemplateDir, render: true, metadata: {}) }
+  let(:test_template_file) { StringIO.new }
+
+  before(:each) do
+    allow(PDK::Module::TemplateDir).to receive(:new).with(anything).and_yield(test_template_dir)
+
+    dir_double = instance_double(Pathname, mkpath: true)
+    allow(dir_double).to receive(:+).with(anything).and_return(test_template_file)
+    allow(test_template_file).to receive(:dirname).and_return(dir_double)
+    allow(Pathname).to receive(:new).with(temp_target_dir).and_return(dir_double)
+  end
+end
+
+shared_context 'mock metadata.json' do
+  let(:metadata_json) { StringIO.new }
+
+  before(:each) do
+    allow(File).to receive(:open).with(any_args).and_call_original
+    allow(File).to receive(:open).with(a_string_matching(%r{metadata\.json\Z}), 'w').and_yield(metadata_json)
+  end
+end
+
+describe PDK::Generate::Module do
+  describe '.invoke' do
+    let(:target_dir) { File.expand_path('/path/to/target/module') }
+    let(:invoke_opts) do
       {
-        :name => 'foo',
+        :target_dir       => target_dir,
+        :name             => 'foo',
         :'skip-interview' => true,
-        :target_dir => 'foo',
       }
     end
 
-    it 'still works' do
-      expect { described_class.prepare_metadata(defaults) }.not_to raise_error
-    end
-
-    describe 'the generated metadata' do
-      subject(:the_metadata) { described_class.prepare_metadata(defaults).data }
-
-      it do
-        expect(the_metadata['name']).to eq 'username-foo'
-      end
-    end
-
-    context 'when running under an entirely non-alphanumeric username' do
+    context 'when the target module directory already exists' do
       before(:each) do
-        allow(Etc).to receive(:getlogin).and_return('Αρίσταρχος ό Σάμιος')
+        allow(File).to receive(:exist?).with(target_dir).and_return(true)
       end
 
-      let(:defaults) do
-        {
-          :name => 'foo',
-          :'skip-interview' => true,
-          :target_dir => 'foo',
-        }
+      it 'raises a FatalError' do
+        expect {
+          described_class.invoke(target_dir: target_dir)
+        }.to raise_error(PDK::CLI::FatalError, %r{destination directory '.+' already exists}i)
+      end
+    end
+
+    context 'when the target module directory does not exist' do
+      include_context 'blank answer file'
+      include_context 'mock template dir'
+      include_context 'mock metadata.json'
+
+      let(:temp_target_dir) { '/path/to/temp/dir' }
+
+      before(:each) do
+        allow(File).to receive(:exist?).with(target_dir).and_return(false)
+        allow(PDK::Util).to receive(:make_tmpdir_name).with(anything).and_return(temp_target_dir)
+        allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
+        allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
+        allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
       end
 
-      it 'still works' do
-        expect { described_class.prepare_metadata(defaults) }.not_to raise_error
+      it 'generates the new module in a temporary directory' do
+        expect(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
+        described_class.invoke(invoke_opts)
       end
 
-      describe 'the generated metadata' do
-        subject(:the_metadata) { described_class.prepare_metadata(defaults).data }
+      context 'when the module template contains template files' do
+        before(:each) do
+          allow(test_template_dir).to receive(:render).and_yield('test_file_path', 'test_file_content')
+        end
 
-        it do
-          expect(the_metadata['name']).to eq 'username-foo'
+        it 'writes the rendered files from the template to the temporary directory' do
+          described_class.invoke(invoke_opts)
+
+          test_template_file.rewind
+          expect(test_template_file.read).to eq('test_file_content')
+        end
+      end
+
+      context 'when the template dir generates metadata about itself' do
+        let(:template_metadata) do
+          {
+            'template-url' => 'test_template_url',
+            'template-ref' => 'test_template_ref',
+          }
+        end
+
+        before(:each) do
+          allow(test_template_dir).to receive(:metadata).and_return(template_metadata)
+        end
+
+        it 'includes details about the template in the generated metadata.json' do
+          described_class.invoke(invoke_opts)
+
+          metadata_json.rewind
+          expect(JSON.parse(metadata_json.read)).to include(template_metadata)
+        end
+      end
+
+      it 'moves the temporary directory to the target directory when done' do
+        expect(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
+        described_class.invoke(invoke_opts)
+      end
+
+      context 'when a template-url is supplied on the command line' do
+        it 'uses that template to generate the module' do
+          expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template').and_yield(test_template_dir)
+          described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+        end
+
+        it 'takes precedence over the template-url answer' do
+          PDK.answers.update!('template-url' => 'answer-template')
+          expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template').and_yield(test_template_dir)
+          described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+        end
+
+        it 'saves the template-url to the answer file' do
+          expect(PDK.answers).to receive(:update!).with('template-url' => 'cli-template')
+
+          described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+        end
+      end
+
+      context 'when a template-url is not supplied on the command line' do
+        context 'and a template-url answer exists' do
+          it 'uses the template-url from the answer file to generate the module' do
+            PDK.answers.update!('template-url' => 'answer-template')
+            expect(PDK::Module::TemplateDir).to receive(:new).with('answer-template').and_yield(test_template_dir)
+
+            described_class.invoke(invoke_opts)
+          end
+        end
+
+        context 'and no template-url answer exists' do
+          it 'uses the default template to generate the module' do
+            expect(PDK::Module::TemplateDir).to receive(:new).with(PDK::Generate::Module::DEFAULT_TEMPLATE).and_yield(test_template_dir)
+
+            described_class.invoke(invoke_opts)
+          end
         end
       end
     end
   end
 
-  context '.prepare_module_directory' do
+  describe '.module_interview' do
+    include_context 'blank answer file'
+
+    subject(:interview_metadata) do
+      metadata = PDK::Module::Metadata.new
+      metadata.update!(default_metadata)
+      described_class.module_interview(metadata, options)
+      metadata.data
+    end
+
+    subject(:answers) do
+      allow($stdout).to receive(:puts).with(a_string_matching(%r{quick questions}))
+      interview_metadata
+      PDK.answers
+    end
+
+    let(:module_name) { 'bar' }
+    let(:default_metadata) { {} }
+    let(:options) { { name: module_name } }
+
+    before(:each) do
+      prompt = TTY::TestPrompt.new
+      allow(TTY::Prompt).to receive(:new).and_return(prompt)
+      prompt.input << responses.join("\n") + "\n"
+      prompt.input.rewind
+    end
+
+    context 'when provided answers to all the questions' do
+      include_context 'allow summary to be printed to stdout'
+
+      let(:responses) do
+        [
+          'foo',
+          '2.2.0',
+          'William Hopper',
+          'Apache-2.0',
+          'A simple module to do some stuff.',
+          'github.com/whopper/bar',
+          'forge.puppet.com/whopper/bar',
+          'tickets.foo.com/whopper/bar',
+          'yes',
+        ]
+      end
+
+      it 'populates the Metadata object based on user input' do
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 quick questions}m))
+
+        expect(interview_metadata).to include(
+          'name'         => 'foo-bar',
+          'version'      => '2.2.0',
+          'author'       => 'William Hopper',
+          'license'      => 'Apache-2.0',
+          'summary'      => 'A simple module to do some stuff.',
+          'source'       => 'github.com/whopper/bar',
+          'project_page' => 'forge.puppet.com/whopper/bar',
+          'issues_url'   => 'tickets.foo.com/whopper/bar',
+        )
+      end
+
+      it 'saves the forge username to the answer file' do
+        expect(answers['forge-username']).to eq('foo')
+      end
+
+      it 'saves the module author to the answer file' do
+        expect(answers['author']).to eq('William Hopper')
+      end
+
+      it 'saves the license to the answer file' do
+        expect(answers['license']).to eq('Apache-2.0')
+      end
+    end
+
+    context 'when the user chooses the default values for everything' do
+      include_context 'allow summary to be printed to stdout'
+
+      let(:default_metadata) do
+        {
+          'author'  => 'defaultauthor',
+          'version' => '0.0.1',
+          'summary' => 'default summary',
+          'source'  => 'default source',
+          'license' => 'default license',
+        }
+      end
+
+      let(:responses) do
+        [
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+          '',
+        ]
+      end
+
+      it 'populates the interview question defaults with existing metadata values' do
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 quick questions}))
+
+        expect(interview_metadata).to include(
+          'name'    => 'defaultauthor-bar',
+          'version' => '0.0.1',
+          'author'  => 'defaultauthor',
+          'license' => 'default license',
+          'summary' => 'default summary',
+          'source'  => 'default source',
+        )
+      end
+
+      it 'saves the forge username to the answer file' do
+        expect(answers['forge-username']).to eq('defaultauthor')
+      end
+
+      it 'saves the module author to the answer file' do
+        expect(answers['author']).to eq('defaultauthor')
+      end
+
+      it 'saves the license to the answer file' do
+        expect(answers['license']).to eq('default license')
+      end
+    end
+
+    context 'when the user provides the license as a command line option' do
+      include_context 'allow summary to be printed to stdout'
+
+      let(:options) { { name: module_name, license: 'MIT' } }
+      let(:responses) do
+        [
+          'foo',
+          '2.2.0',
+          'William Hopper',
+          'A simple module to do some stuff.',
+          'github.com/whopper/bar',
+          'forge.puppet.com/whopper/bar',
+          'tickets.foo.com/whopper/bar',
+          'yes',
+        ]
+      end
+
+      it 'populates the Metadata object based on user input' do
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{7 quick questions}m))
+
+        expect(interview_metadata).to include(
+          'name'         => 'foo-bar',
+          'version'      => '2.2.0',
+          'author'       => 'William Hopper',
+          'license'      => 'MIT',
+          'summary'      => 'A simple module to do some stuff.',
+          'source'       => 'github.com/whopper/bar',
+          'project_page' => 'forge.puppet.com/whopper/bar',
+          'issues_url'   => 'tickets.foo.com/whopper/bar',
+        )
+      end
+
+      it 'saves the forge username to the answer file' do
+        expect(answers['forge-username']).to eq('foo')
+      end
+
+      it 'saves the module author to the answer file' do
+        expect(answers['author']).to eq('William Hopper')
+      end
+
+      it 'saves the license to the answer file' do
+        expect(answers['license']).to eq('MIT')
+      end
+    end
+
+    context 'when the user cancels the interview' do
+      let(:responses) do
+        [
+          "foo\003", # \003 being the equivalent to the user hitting Ctrl-C
+        ]
+      end
+
+      it 'exits cleanly' do
+        allow(logger).to receive(:info).with(a_string_matching(%r{interview cancelled}i))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 quick questions}m))
+
+        expect { interview_metadata }.to raise_error(SystemExit) { |error|
+          expect(error.status).to eq(0)
+        }
+      end
+    end
+
+    context 'when the user does not confirm the metadata' do
+      include_context 'allow summary to be printed to stdout'
+
+      let(:responses) do
+        [
+          'foo',
+          '2.2.0',
+          'William Hopper',
+          'Apache-2.0',
+          'A simple module to do some stuff.',
+          'github.com/whopper/bar',
+          'forge.puppet.com/whopper/bar',
+          'tickets.foo.com/whopper/bar',
+          'no',
+        ]
+      end
+
+      it 'exits cleanly' do
+        allow(logger).to receive(:info).with(a_string_matching(%r{module not generated}i))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 quick questions}m))
+
+        expect { interview_metadata }.to raise_error(SystemExit) { |error|
+          expect(error.status).to eq(0)
+        }
+      end
+    end
+  end
+
+  describe '.prepare_metadata' do
+    include_context 'blank answer file'
+
+    subject(:metadata) { described_class.prepare_metadata(options) }
+
+    before(:each) do
+      allow(described_class).to receive(:username_from_login).and_return('testlogin')
+    end
+
+    let(:options) { { name: 'baz' } }
+
+    context 'when provided :skip-interview => true' do
+      let(:options) { { :name => 'baz', :'skip-interview' => true } }
+
+      it 'does not perform the module interview' do
+        expect(described_class).not_to receive(:module_interview)
+
+        metadata
+      end
+    end
+
+    context 'when there are no saved answers' do
+      before(:each) do
+        allow(described_class).to receive(:module_interview).with(any_args)
+      end
+
+      it 'guesses the forge username from the system login' do
+        expect(metadata.data).to include('name' => 'testlogin-baz')
+      end
+
+      it 'sets the version number to a 0.x release' do
+        expect(metadata.data).to include('version' => a_string_starting_with('0.'))
+      end
+
+      it 'includes puppetlabs-stdlib as a dependency' do
+        expect(metadata.data).to include(
+          'dependencies' => [
+            {
+              'name'                => 'puppetlabs-stdlib',
+              'version_requirement' => a_string_matching(%r{>=?\s+\d+\.\d+\.\d+\s<=?\s\d+\.\d+\.\d+}),
+            },
+          ],
+        )
+      end
+
+      it 'includes the PDK version number' do
+        expect(metadata.data).to include('pdk-version' => PDK::Util::Version.version_string)
+      end
+    end
+
+    context 'when an answer file exists with answers' do
+      before(:each) do
+        allow(described_class).to receive(:module_interview).with(any_args)
+
+        PDK.answers.update!(
+          'forge-username' => 'testuser123',
+          'license'        => 'MIT',
+          'author'         => 'Test User',
+        )
+      end
+
+      it 'uses the saved forge-username answer' do
+        expect(metadata.data).to include('name' => 'testuser123-baz')
+      end
+
+      it 'uses the saved author answer' do
+        expect(metadata.data).to include('author' => 'Test User')
+      end
+
+      it 'uses the saved license answer' do
+        expect(metadata.data).to include('license' => 'MIT')
+      end
+
+      context 'and the user specifies a license as a command line option' do
+        let(:options) { { name: 'baz', license: 'Apache-2.0' } }
+
+        it 'prefers the license specified on the command line over the saved license answer' do
+          expect(metadata.data).to include('license' => 'Apache-2.0')
+        end
+      end
+    end
+  end
+
+  describe '.prepare_module_directory' do
     let(:path) { 'test123' }
 
     it 'creates a skeleton directory structure' do
@@ -110,6 +473,40 @@ describe PDK::Generate::Module do
       expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'templates'))
 
       described_class.prepare_module_directory(path)
+    end
+  end
+
+  describe '.username_from_login' do
+    subject { described_class.username_from_login }
+
+    before(:each) do
+      allow(Etc).to receive(:getlogin).and_return(login)
+    end
+
+    context 'when the login is entirely alphanumeric' do
+      let(:login) { 'testUser123' }
+
+      it 'returns the unaltered login' do
+        is_expected.to eq(login)
+      end
+    end
+
+    context 'when the login contains some non-alphanumeric characters' do
+      let(:login) { 'test_user' }
+
+      it 'warns the user and returns the login with the characters removed' do
+        expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
+        is_expected.to eq('testuser')
+      end
+    end
+
+    context 'when the login contains only non-alphanumeric characters' do
+      let(:login) { 'Αρίσταρχος ό Σάμιος' }
+
+      it 'warns the user and returns the string "username"' do
+        expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
+        is_expected.to eq('username')
+      end
     end
   end
 end
