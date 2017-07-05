@@ -66,6 +66,10 @@ module PDK::CLI
     flag :d, :debug, _('Enable debug output.') do |_, _|
       PDK.logger.enable_debug_output
     end
+
+    option nil, 'answer-file', _('Path to an answer file'), argument: :required, hidden: true do |value|
+      PDK.answer_file = value
+    end
   end
 
   require 'pdk/cli/new'
