@@ -19,9 +19,9 @@ module PDK
         'metadata-json-lint'
       end
 
-      def self.spinner_text(targets = nil)
-        _('Checking metadata (%{targets})') % {
-          targets: targets.map { |t| Pathname.new(t).absolute? ? Pathname.new(t).relative_path_from(Pathname.pwd) : t }.join(' '),
+      def self.spinner_text(targets = [])
+        _('Checking metadata style (%{targets})') % {
+          targets: PDK::Util.targets_relative_to_pwd(targets).join(' '),
         }
       end
 

@@ -10,6 +10,17 @@ module PDK
         raise PDK::CLI::FatalError, message if PDK::Util.module_root.nil?
       end
       module_function :ensure_in_module!
+
+      def spinner_opts_for_platform
+        windows_opts = {
+          success_mark: '*',
+          error_mark: 'X',
+        }
+
+        return windows_opts if Gem.win_platform?
+        {}
+      end
+      module_function :spinner_opts_for_platform
     end
   end
 end

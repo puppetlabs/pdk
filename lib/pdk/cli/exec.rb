@@ -73,6 +73,7 @@ module PDK
         attr_reader :context
         attr_accessor :timeout
         attr_accessor :environment
+        attr_writer :exec_group
 
         def initialize(*argv)
           @argv = argv
@@ -91,6 +92,9 @@ module PDK
 
           # Extra environment vars to add to base set.
           @environment = {}
+
+          # Register the ExecGroup when running in parallel
+          @exec_group = nil
         end
 
         def context=(new_context)
@@ -101,11 +105,18 @@ module PDK
           @context = new_context
         end
 
+        def register_spinner(spinner, opts = {})
+          @success_message = opts.delete(:success)
+          @failure_message = opts.delete(:failure)
+
+          @spinner = spinner
+        end
+
         def add_spinner(message, opts = {})
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
-          @spinner = Gem.win_platform? ? WindowsSpinner.new(message, opts) : TTY::Spinner.new("[:spinner] #{message}", opts)
+          @spinner = TTY::Spinner.new("[:spinner] #{message}", opts.merge(PDK::CLI::Util.spinner_opts_for_platform))
         end
 
         def execute!
@@ -145,9 +156,11 @@ module PDK
               raise PDK::CLI::FatalError, _('Current working directory is not part of a module. (No metadata.json was found.)')
             end
 
-            Dir.chdir(mod_root) do
-              ::Bundler.with_clean_env do
-                run_process!
+            if Dir.pwd == mod_root
+              run_process_in_clean_env!
+            else
+              Dir.chdir(mod_root) do
+                run_process_in_clean_env!
               end
             end
           else
@@ -155,13 +168,7 @@ module PDK
           end
 
           # Stop spinning when done (if configured).
-          if @spinner
-            if @process.exit_code.zero?
-              @spinner.success(@success_message || '')
-            else
-              @spinner.error(@failure_message || '')
-            end
-          end
+          stop_spinner
 
           @stdout.rewind
           @stderr.rewind
@@ -180,6 +187,23 @@ module PDK
         end
 
         protected
+
+        def stop_spinner
+          return unless @spinner
+
+          # If it is a single spinner, we need to send it a success/error message
+          if @process.exit_code.zero?
+            @spinner.success(@success_message || '')
+          else
+            @spinner.error(@failure_message || '')
+          end
+        end
+
+        def run_process_in_clean_env!
+          ::Bundler.with_clean_env do
+            run_process!
+          end
+        end
 
         def run_process!
           command_string = argv.join(' ')
@@ -202,30 +226,6 @@ module PDK
             @process.wait
           end
           @duration = Time.now - start_time
-        end
-      end
-
-      # This is a placeholder until we integrate ansicon into Windows packaging
-      # or come up with some other progress indicator for Windows.
-      class WindowsSpinner
-        def initialize(message, _opts = {})
-          @message = message
-        end
-
-        def auto_spin
-          $stderr.print @message << '...'
-        end
-
-        def success(message = '')
-          message = 'done.' if message.nil? || message.empty?
-
-          $stderr.print message << "\n"
-        end
-
-        def error(message = '')
-          message = 'FAILED' if message.nil? || message.empty?
-
-          $stderr.print message << "\n"
         end
       end
     end

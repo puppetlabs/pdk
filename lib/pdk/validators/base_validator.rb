@@ -67,7 +67,13 @@ module PDK
 
           command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
             c.context = :module
-            c.add_spinner(spinner_text(invokation_targets))
+            exec_group = options[:exec_group]
+            if exec_group
+              sub_spinner = exec_group.add_spinner(spinner_text(invokation_targets))
+              c.register_spinner(sub_spinner)
+            else
+              c.add_spinner(spinner_text(invokation_targets))
+            end
           end
 
           result = command.execute!
