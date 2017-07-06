@@ -27,9 +27,9 @@ module PDK
           num_questions = @questions.count
           @questions.each do |question_name, question|
             @name = question_name
-            puts pastel.bold(_('[Q %{current_number}/%{questions_total}]') % { current_number: i, questions_total: num_questions })
-            puts pastel.bold(question[:question])
-            puts question[:help]
+            @prompt.print pastel.bold(_('[Q %{current_number}/%{questions_total}]') % { current_number: i, questions_total: num_questions })
+            @prompt.print pastel.bold(question[:question])
+            @prompt.print question[:help]
             ask(_('-->')) do |q|
               q.required(question.fetch(:required, false))
 
@@ -40,7 +40,7 @@ module PDK
               q.default(question[:default]) if question.key?(:default)
             end
             i += 1
-            puts ''
+            @prompt.print ''
           end
           @answers
         rescue TTY::Prompt::Reader::InputInterrupt
