@@ -20,7 +20,6 @@ RSpec/FilePath:
     - 'spec/template_file_spec.rb'
     - 'spec/util/bundler_spec.rb'
     - 'spec/validate_spec.rb'
-    - 'spec/validations/metadata_spec.rb'
 
 # Offense count: 34
 RSpec/MultipleExpectations:

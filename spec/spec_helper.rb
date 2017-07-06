@@ -15,7 +15,7 @@ end
 RSpec.shared_context :validators do
   let(:validators) do
     [
-      PDK::Validate::Metadata,
+      PDK::Validate::MetadataValidator,
       PDK::Validate::PuppetValidator,
       PDK::Validate::RubyValidator,
     ]
