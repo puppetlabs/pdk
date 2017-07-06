@@ -11,7 +11,7 @@ module PDK
       end
 
       def self.pdk_basedir
-        @pdk_basedir ||= Gem.win_platform? ? 'C:/Program Files/Puppet Labs/DevelopmentKit' : '/opt/puppetlabs/sdk'
+        @pdk_basedir ||= Gem.win_platform? ? 'C:/Program Files/Puppet Labs/DevelopmentKit' : '/opt/puppetlabs/pdk'
       end
 
       def self.git_bindir
