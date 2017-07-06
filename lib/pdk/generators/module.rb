@@ -181,7 +181,7 @@ module PDK
         answers = interview.run
 
         if answers.nil?
-          puts _('Interview cancelled, aborting...')
+          PDK.logger.info _('Interview cancelled, not generating the module.')
           exit 0
         end
 
@@ -198,7 +198,7 @@ module PDK
         puts
 
         unless prompt.yes?(_('About to generate this module; continue?'))
-          puts _('Aborting...')
+          PDK.logger.info _('Module not generated.')
           exit 0
         end
 
