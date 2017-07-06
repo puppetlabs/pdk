@@ -43,14 +43,14 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 namespace :acceptance do
-  desc 'Run acceptance tests against a puppet-sdk package'
+  desc 'Run acceptance tests against a pdk package'
   RSpec::Core::RakeTask.new(:package) do |t|
     require 'beaker-hostgenerator'
 
     ENV['BEAKER_TESTMODE'] = 'agent'
 
     unless ENV['SHA']
-      abort 'Environment variable SHA must be set to the SHA or tag of a puppet-sdk build'
+      abort 'Environment variable SHA must be set to the SHA or tag of a pdk build'
     end
 
     test_target = ENV['TEST_TARGET']
