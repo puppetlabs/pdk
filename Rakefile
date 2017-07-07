@@ -43,7 +43,7 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 namespace :acceptance do
-  desc 'Run acceptance tests against a puppet-sdk package'
+  desc 'Run acceptance tests against a pdk package'
   task(:package) do
     require 'beaker-hostgenerator'
 
