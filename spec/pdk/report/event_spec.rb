@@ -48,6 +48,18 @@ describe PDK::Report::Event do
       end
     end
 
+    context 'and passed a file path that is not a String' do
+      let(:data) do
+        {
+          file: ['/path/to/test/module/lib/some/file.rb'],
+        }
+      end
+
+      it 'raises an ArgumentError' do
+        expect { event }.to raise_error(ArgumentError, %r{file must be a string}i)
+      end
+    end
+
     context 'and passed an empty string as the file path' do
       let(:data) do
         {
@@ -271,7 +283,7 @@ describe PDK::Report::Event do
       end
     end
 
-    context 'and passed a column numbre that is not a String or Integer' do
+    context 'and passed a column number that is not a String or Integer' do
       let(:data) do
         {
           column: [456],
@@ -296,6 +308,52 @@ describe PDK::Report::Event do
 
       it 'sets the column number to nil' do
         expect(event).to have_attributes(column: nil)
+      end
+    end
+
+    context 'and passed a trace that is not an Array' do
+      let(:data) do
+        {
+          trace: 'test',
+        }
+      end
+
+      it 'raises an ArgumentError' do
+        expect { event }.to raise_error(ArgumentError, %r{trace must be an Array})
+      end
+    end
+
+    context 'and passed a trace that is an Array of Strings' do
+      let(:data) do
+        {
+          trace: [
+            'lib/myfile.rb: test',
+            'bin/rspec: this should not exist',
+            'vendor/bundle/gems/test.rb: nor should this',
+            'bin/rspec-foo: this should though',
+          ],
+        }
+      end
+
+      it 'does not raise an error' do
+        expect { event }.not_to raise_error
+      end
+
+      it 'removes lines relating to the rspec binstub' do
+        expect(event).not_to have_attributes(trace: include(a_string_matching(%r{bin/rspec:})))
+      end
+
+      it 'removes lines relating to vendored gems' do
+        expect(event).not_to have_attributes(trace: include(a_string_matching(%r{/gems/})))
+      end
+
+      it 'includes the other lines' do
+        expected_lines = [
+          a_string_matching(%r{lib/myfile}),
+          a_string_matching(%r{bin/rspec-foo}),
+        ]
+
+        expect(event).to have_attributes(trace: include(*expected_lines))
       end
     end
   end
