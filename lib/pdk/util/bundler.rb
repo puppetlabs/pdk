@@ -110,7 +110,7 @@ module PDK
           binstub_dir = File.join(File.dirname(gemfile), 'bin')
           return true if gems.all? { |gem| File.file?(File.join(binstub_dir, gem)) }
 
-          command = bundle_command('binstubs', gems.join(' '), '--force')
+          command = bundle_command('binstubs', *gems, '--force')
 
           result = command.execute!
 
