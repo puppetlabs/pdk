@@ -25,6 +25,10 @@ group :test do
 end
 
 group :acceptance do
-  gem 'beaker-hostgenerator'
   gem 'serverspec'
+end
+
+# beaker should not be installed on the SUT during package testing
+group :package_testing do
+  gem 'beaker'
 end
