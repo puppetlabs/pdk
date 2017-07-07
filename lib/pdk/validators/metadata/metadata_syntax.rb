@@ -80,8 +80,9 @@ module PDK
           end
         end
 
-        JSON.parser = JSON::Ext::Parser if defined?(JSON::Ext::Parser)
         return_val
+      ensure
+        JSON.parser = JSON::Ext::Parser if defined?(JSON::Ext::Parser)
       end
     end
   end
