@@ -42,7 +42,7 @@ describe 'Running `pdk validate` in a module' do
   end
 
   context 'when a single validator is provided as an argument' do
-    let(:validator) { PDK::Validate::Metadata }
+    let(:validator) { PDK::Validate::MetadataValidator }
 
     it 'only invokes the given validator and exits zero' do
       expect(validator).to receive(:invoke).with(report, {}).and_return(0)
@@ -63,7 +63,7 @@ describe 'Running `pdk validate` in a module' do
     let(:invoked_validators) do
       [
         PDK::Validate::PuppetValidator,
-        PDK::Validate::Metadata,
+        PDK::Validate::MetadataValidator,
       ]
     end
 
@@ -98,7 +98,7 @@ describe 'Running `pdk validate` in a module' do
   end
 
   context 'when targets are provided as arguments' do
-    let(:validator) { PDK::Validate::Metadata }
+    let(:validator) { PDK::Validate::MetadataValidator }
 
     it 'invokes the specified validator with the target as an option' do
       expect(validator).to receive(:invoke).with(report, targets: ['lib/', 'manifests/']).and_return(0)

@@ -6,13 +6,13 @@ require 'pathname'
 
 module PDK
   module Validate
-    class Metadata < BaseValidator
+    class MetadataJSONLint < BaseValidator
       # Validate each metadata file separately, as metadata-json-lint does not
       # support multiple targets.
       INVOKE_STYLE = :per_target
 
       def self.name
-        'metadata'
+        'metadata-json-lint'
       end
 
       def self.cmd
@@ -42,7 +42,7 @@ module PDK
           json_data = []
         end
 
-        raise ArgumentError, 'More that 1 target provided to PDK::Validate::Metadata' if targets.count > 1
+        raise ArgumentError, 'More that 1 target provided to PDK::Validate::MetadataJSONLint' if targets.count > 1
 
         if json_data.empty?
           report.add_event(
