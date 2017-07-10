@@ -14,6 +14,16 @@ else
   set :backend, :exec
 end
 
+# The default directory pdk bin would be installed to on this machine
+def default_installed_bin_dir
+  if Gem.win_platform?
+    # TODO: Also support Windows without cygwin
+    '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit/bin'
+  else
+    '/opt/puppetlabs/bin'
+  end
+end
+
 module Specinfra
   module Backend
     class Cmd
