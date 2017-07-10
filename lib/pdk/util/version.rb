@@ -14,11 +14,9 @@ module PDK
       end
 
       def self.pkg_sha
-        version_file = File.join(File.expand_path('../../..', File.dirname(__FILE__)), 'VERSION')
-
-        if File.exist? version_file
+        if version_file && File.exist?(version_file)
           ver = File.read(version_file)
-          sha = ver.strip.split('.')[-1] unless ver.nil?
+          sha = ver.strip.split('.')[5] unless ver.nil?
         end
 
         sha
@@ -28,6 +26,10 @@ module PDK
         ref_result = PDK::CLI::Exec.git('--git-dir', File.join(File.expand_path('../../..', File.dirname(__FILE__)), '.git'), 'describe', '--all', '--long')
 
         ref_result[:stdout].strip if ref_result[:exit_code].zero?
+      end
+
+      def self.version_file
+        PDK::Util.find_upwards('PDK_VERSION', File.dirname(__FILE__))
       end
     end
   end

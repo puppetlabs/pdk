@@ -3,6 +3,8 @@ require 'childprocess'
 require 'tempfile'
 require 'tty-spinner'
 
+require 'pdk/util'
+
 module PDK
   module CLI
     module Exec
@@ -10,12 +12,8 @@ module PDK
         Command.new(*cmd).execute!
       end
 
-      def self.pdk_basedir
-        @pdk_basedir ||= Gem.win_platform? ? 'C:/Program Files/Puppet Labs/DevelopmentKit' : '/opt/puppetlabs/pdk'
-      end
-
       def self.git_bindir
-        @git_dir ||= File.join(pdk_basedir, 'private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
+        @git_dir ||= File.join('private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
       end
 
       def self.git(*args)
@@ -27,24 +25,29 @@ module PDK
 
       def self.bundle(*args)
         bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
-        vendored_bin_path = File.join(pdk_basedir, 'private', 'ruby', '2.1.9', 'bin', bundle_bin)
+        vendored_bin_path = File.join('private', 'ruby', '2.1.9', 'bin', bundle_bin)
 
         execute(try_vendored_bin(vendored_bin_path, bundle_bin), *args)
       end
 
       def self.bundle_bin
         bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
-        vendored_bin_path = File.join(pdk_basedir, 'private', 'ruby', '2.1.9', 'bin', bundle_bin)
+        vendored_bin_path = File.join('private', 'ruby', '2.1.9', 'bin', bundle_bin)
 
         try_vendored_bin(vendored_bin_path, bundle_bin)
       end
 
       def self.try_vendored_bin(vendored_bin_path, fallback)
-        if File.exist?(vendored_bin_path)
-          PDK.logger.debug(_("Using '%{vendored_bin_path}'") % { fallback: fallback, vendored_bin_path: vendored_bin_path })
-          vendored_bin_path
+        unless PDK::Util.package_install?
+          PDK.logger.debug(_("PDK package installation not found, trying '%{fallback}' from the system PATH instead") % { fallback: fallback })
+          return fallback
+        end
+
+        if File.exist?(File.join(PDK::Util.pdk_package_basedir, vendored_bin_path))
+          PDK.logger.debug(_("Using '%{vendored_bin_path}' from PDK package") % { vendored_bin_path: vendored_bin_path })
+          File.join(PDK::Util.pdk_package_basedir, vendored_bin_path)
         else
-          PDK.logger.debug(_("Trying '%{fallback}' from the system PATH, instead of '%{vendored_bin_path}'") % { fallback: fallback, vendored_bin_path: vendored_bin_path })
+          PDK.logger.debug(_("Could not find '%{vendored_bin_path}' in PDK package, trying '%{fallback}' from the system PATH instead") % { fallback: fallback, vendored_bin_path: vendored_bin_path })
           fallback
         end
       end
@@ -101,9 +104,17 @@ module PDK
           end
 
           if context == :module
+            # Subprocesses use their own set of gems which are managed by pdk or installed with the package.
+            @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'ruby', RbConfig::CONFIG['ruby_version'])
+
+            if PDK::Util.gem_install?
+              # This allows the subprocess to find the 'bundler' gem, which isn't in the cachedir above for gem installs.
+              # bundler_gem_path = File.absolute_path(File.join(Gem.loaded_specs['bundler'].gem_dir, '..', '..', '..', '..', '..'))
+              bundler_gem_path = File.absolute_path(File.join(`bundle show bundler`, '..', '..'))
+              @process.environment['GEM_PATH'] = bundler_gem_path
+            end
+
             # TODO: we should probably more carefully manage PATH and maybe other things too
-            @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'bundler', 'ruby', RbConfig::CONFIG['ruby_version'])
-            @process.environment['GEM_PATH'] = pdk_gem_path
 
             mod_root = PDK::Util.module_root
 
@@ -166,21 +177,6 @@ module PDK
           else
             # Wait indfinitely if no timeout set.
             @process.wait
-          end
-        end
-
-        def pdk_gem_path
-          @pdk_gem_path ||= find_pdk_gem_path
-        end
-
-        def find_pdk_gem_path
-          package_gem_path = File.join(PDK::CLI::Exec.pdk_basedir, 'private', 'ruby', RUBY_VERSION, 'lib', 'ruby', 'gems', RbConfig::CONFIG['ruby_version'])
-
-          if File.directory?(package_gem_path)
-            package_gem_path
-          else
-            # FIXME: calculate this more reliably
-            File.absolute_path(File.join(`bundle show bundler`, '..', '..'))
           end
         end
       end
