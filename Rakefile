@@ -52,20 +52,15 @@ namespace :acceptance do
     end
 
     test_target = ENV['TEST_TARGET']
-    if test_target
-      unless ENV['BUILD_SERVER'] || test_target !~ %r{win}
-        abort 'Testing against Windows requires environment variable BUILD_SERVER '\
-              'to be set to the hostname of your build server (JIRA BKR-1109)'
-      end
-      puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
-      cli = BeakerHostGenerator::CLI.new(["#{test_target}{type=foss}", '--disable-default-role'])
-      ENV['BEAKER_setfile'] = generated_hosts_filename = 'acceptance_hosts.yml'
-      File.open(generated_hosts_filename, 'w') do |hosts_file|
-        hosts_file.print(cli.execute)
-      end
-
-    else
-      puts 'No TEST_TARGET set, falling back to regular beaker config'
+    abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. redhat7-64workstation.' unless test_target
+    unless ENV['BUILD_SERVER'] || test_target !~ %r{win}
+      abort 'Testing against Windows requires environment variable BUILD_SERVER '\
+            'to be set to the hostname of your build server (JIRA BKR-1109)'
+    end
+    puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
+    cli = BeakerHostGenerator::CLI.new(["#{test_target}{type=foss}", '--disable-default-role'])
+    File.open('acceptance_hosts.yml', 'w') do |hosts_file|
+      hosts_file.print(cli.execute)
     end
 
     sh('bundle exec beaker -h acceptance_hosts.yml --options-file package-testing/config/options.rb --tests package-testing/tests/')
