@@ -44,7 +44,7 @@ module PDK
           attributes = {
             source:  name,
             message: message.strip,
-            state:  'failure',
+            state:  :failure,
           }
           attributes[:severity] = severity.strip unless severity.nil?
 
@@ -57,14 +57,14 @@ module PDK
           results_data << attributes
         end
 
-        # puppet-lint does not include files without problems in its JSON
+        # puppet parser validate does not include files without problems in its
         # output, so we need to go through the list of targets and add passing
-        # events to the report for any target not listed in the JSON output.
+        # events to the report for any target not listed in the output.
         targets.reject { |target| results_data.any? { |j| j[:file] == target } }.each do |target|
           report.add_event(
             file:     target,
-            source:   'puppet-syntax',
-            severity: 'ok',
+            source:   name,
+            severity: :ok,
             state:    :passed,
           )
         end
