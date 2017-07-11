@@ -20,6 +20,7 @@ end
 group :test do
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
+  gem 'parallel_tests'
   gem 'rspec-xsd'
   gem 'rubocop', '= 0.49.1'
   gem 'rubocop-rspec', '= 1.15.1'

@@ -1,6 +1,7 @@
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
+require 'parallel_tests/tasks.rb'
 
 gettext_spec = Gem::Specification.find_by_name 'gettext-setup'
 load "#{gettext_spec.gem_dir}/lib/tasks/gettext.rake"

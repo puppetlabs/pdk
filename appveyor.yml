@@ -19,7 +19,7 @@ before_test:
   - type Gemfile.lock
 
 test_script:
-  - bundle exec rake spec acceptance:local
+  - bundle exec rake spec parallel:spec[^spec/acceptance]
 
 # Uncomment this block to enable RDP access to the AppVeyor test instance for
 # debugging purposes.
