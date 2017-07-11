@@ -14,6 +14,16 @@ else
   set :backend, :exec
 end
 
+# The default directory pdk bin would be installed to on this machine
+def default_installed_bin_dir
+  if Gem.win_platform?
+    # TODO: Also support Windows without cygwin
+    '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit/bin'
+  else
+    '/opt/puppetlabs/bin'
+  end
+end
+
 module Specinfra
   module Backend
     class Cmd
@@ -49,6 +59,9 @@ end
 Specinfra.configuration.env = bundler_env.dup
 
 RSpec.configure do |c|
+  # If testing a package, set serverspec path to install dir
+  set :path, "#{default_installed_bin_dir}:$PATH" unless c.inclusion_filter.opposite.rules[:package]
+
   c.before(:suite) do
     RSpec.configuration.template_dir = Dir.mktmpdir
     output, status = Open3.capture2e('git', 'clone', '--bare', PDK::Generate::Module::DEFAULT_TEMPLATE, RSpec.configuration.template_dir)
