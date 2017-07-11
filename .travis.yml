@@ -20,7 +20,7 @@ matrix:
       env: "CHECK=rubocop"
   include:
     - rvm: 2.1.9
-      env: "CHECK=binstubs parallel:spec[^spec/acceptance]"
+      env: "CHECK='binstubs parallel:spec[^spec/acceptance]'"
 
 notifications:
   hipchat:
