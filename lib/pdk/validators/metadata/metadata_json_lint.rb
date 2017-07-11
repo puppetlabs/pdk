@@ -36,6 +36,8 @@ module PDK
       end
 
       def self.parse_output(report, result, targets)
+        raise ArgumentError, 'More than 1 target provided to PDK::Validate::MetadataJSONLint' if targets.count > 1
+
         if result[:stdout].strip.empty?
           # metadata-json-lint will print nothing if there are no problems with
           # the file being linted. This should be handled separately to
@@ -56,8 +58,6 @@ module PDK
             return
           end
         end
-
-        raise ArgumentError, 'More that 1 target provided to PDK::Validate::MetadataJSONLint' if targets.count > 1
 
         if json_data.empty?
           report.add_event(
