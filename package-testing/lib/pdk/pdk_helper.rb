@@ -33,7 +33,7 @@ def install_dir(host)
   if host.platform =~ %r{windows}
     '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit'
   else
-    '/opt/puppetlabs/sdk'
+    '/opt/puppetlabs/pdk'
   end
 end
 
