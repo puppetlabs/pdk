@@ -31,10 +31,12 @@ module PDK
       end
 
       def self.parse_output(report, result, _targets)
+        return if result[:stdout].empty?
+
         begin
           json_data = JSON.parse(result[:stdout])
         rescue JSON::ParserError
-          json_data = []
+          json_data = {}
         end
 
         return unless json_data.key?('files')
