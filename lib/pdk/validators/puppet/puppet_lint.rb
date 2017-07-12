@@ -32,7 +32,7 @@ module PDK
 
       def self.parse_output(report, result, targets)
         begin
-          json_data = JSON.parse(result[:stdout])
+          json_data = JSON.parse(result[:stdout]).flatten
         rescue JSON::ParserError
           json_data = []
         end
