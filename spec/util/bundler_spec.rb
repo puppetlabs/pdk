@@ -5,6 +5,9 @@ RSpec.describe PDK::Util::Bundler do
   before(:each) do
     # Doesn't matter where this is since all the execs get mocked.
     allow(PDK::Util).to receive(:module_root).and_return('/')
+
+    # Don't trigger the package-based install stuff.
+    allow(PDK::Util).to receive(:package_install?).and_return(false)
   end
 
   # @todo: untangle tests of PDK::Util::Bundler and

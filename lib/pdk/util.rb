@@ -2,17 +2,20 @@ require 'tmpdir'
 require 'tempfile'
 require 'puppet/util/windows'
 
+require 'pdk/util/version'
+
 module PDK
   module Util
     # Searches upwards from current working directory for the given target file.
     #
     # @param target [String] Name of file to search for.
+    # @param start_dir [String] Directory to start searching from, defaults to Dir.pwd
     #
     # @return [String, nil] Fully qualified path to the given target file if found,
     #   nil if the target file could not be found.
-    def find_upwards(target)
+    def find_upwards(target, start_dir = nil)
       previous = nil
-      current  = File.expand_path(Dir.pwd)
+      current  = File.expand_path(start_dir || Dir.pwd)
 
       until !File.directory?(current) || current == previous
         filename = File.join(current, target)
@@ -50,17 +53,34 @@ module PDK
     end
     module_function :canonical_path
 
+    def package_install?
+      !PDK::Util::Version.version_file.nil?
+    end
+    module_function :package_install?
+
+    def gem_install?
+      !package_install?
+    end
+    module_function :gem_install?
+
+    def pdk_package_basedir
+      raise PDK::CLI::FatalError, _('Package basedir requested for non-package install') unless package_install?
+
+      File.dirname(PDK::Util::Version.version_file)
+    end
+    module_function :pdk_package_basedir
+
     # Returns the fully qualified path to a per-user PDK cachedir.
     #
     # @return [String] Fully qualified path to per-user PDK cachedir.
     def cachedir
-      basedir = if Gem.win_platform?
-                  ENV['LOCALAPPDATA']
-                else
-                  Dir.home
-                end
-
-      File.join(basedir, '.pdk', 'cache')
+      if package_install?
+        File.join(pdk_package_basedir, 'share', 'cache')
+      elsif Gem.win_platform?
+        File.join(ENV['LOCALAPPDATA'], 'PDK', 'cache')
+      else
+        File.join(Dir.home, '.pdk', 'cache')
+      end
     end
     module_function :cachedir
 

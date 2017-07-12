@@ -62,7 +62,10 @@ module PDK
         end
 
         def installed?
-          command = bundle_command('check', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}").tap do |c|
+          argv = ['check', "--gemfile=#{gemfile}"]
+          argv << "--path=#{bundle_cachedir}" if PDK::Util.gem_install?
+
+          command = bundle_command(*argv).tap do |c|
             c.add_spinner(_('Checking for missing Gemfile dependencies'))
           end
 
@@ -92,7 +95,10 @@ module PDK
         end
 
         def install!
-          command = bundle_command('install', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}").tap do |c|
+          argv = ['install', "--gemfile=#{gemfile}"]
+          argv << "--path=#{bundle_cachedir}" if PDK::Util.gem_install?
+
+          command = bundle_command(*argv).tap do |c|
             c.add_spinner(_('Installing missing Gemfile dependencies'))
           end
 
@@ -140,7 +146,7 @@ module PDK
         end
 
         def bundle_cachedir
-          @bundle_cachedir ||= File.join(PDK::Util.cachedir, 'bundler')
+          @bundle_cachedir ||= File.join(PDK::Util.cachedir)
         end
       end
     end
