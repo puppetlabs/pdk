@@ -33,7 +33,15 @@ def install_dir(host)
   if host.platform =~ %r{windows}
     '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit'
   else
-    '/opt/puppetlabs/sdk'
+    '/opt/puppetlabs/pdk'
+  end
+end
+
+def pdk_git_bin_dir(host)
+  if host.platform =~ %r{windows}
+    "#{install_dir(host)}/private/git/mingw64/bin"
+  else
+    "#{install_dir(host)}/private/git/bin"
   end
 end
 
@@ -42,7 +50,7 @@ def pdk_rubygems_cert_dir(host)
 end
 
 def command_prefix(host)
-  command = "PATH=#{install_dir(host)}/bin:#{install_dir(host)}/private/ruby/2.1.9/bin:#{install_dir(host)}/private/git/bin:$PATH && cd #{target_dir} &&"
+  command = "PATH=#{install_dir(host)}/bin:#{install_dir(host)}/private/ruby/2.1.9/bin:#{pdk_git_bin_dir(host)}:$PATH && cd #{target_dir} &&"
   command = "#{command} cmd.exe /C" unless host.platform !~ %r{windows}
   command
 end

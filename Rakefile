@@ -68,6 +68,7 @@ namespace :acceptance do
 
   desc 'Run acceptance tests against current code'
   RSpec::Core::RakeTask.new(:local) do |t|
+    t.rspec_opts = '--tag ~package' # Exclude package specific examples
     t.pattern = 'spec/acceptance/**.rb'
   end
   task local: [:binstubs]
