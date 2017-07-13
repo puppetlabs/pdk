@@ -1,3 +1,4 @@
+require 'pdk/answer_file'
 require 'pdk/generate'
 require 'pdk/i18n'
 require 'pdk/logger'
