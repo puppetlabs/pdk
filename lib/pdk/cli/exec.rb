@@ -170,6 +170,7 @@ module PDK
             stdout: @stdout.read,
             stderr: @stderr.read,
             exit_code: @process.exit_code,
+            duration: @duration,
           }
 
           return process_data
@@ -183,6 +184,7 @@ module PDK
         def run_process!
           command_string = argv.join(' ')
           PDK.logger.debug(_("Executing '%{command}'") % { command: command_string })
+          start_time = Time.now
           begin
             @process.start
           rescue ChildProcess::LaunchError => e
@@ -199,6 +201,7 @@ module PDK
             # Wait indfinitely if no timeout set.
             @process.wait
           end
+          @duration = Time.now - start_time
         end
       end
 
