@@ -2,6 +2,7 @@ require 'bundler'
 require 'childprocess'
 require 'tempfile'
 require 'tty-spinner'
+require 'tty-which'
 
 require 'pdk/util'
 
@@ -12,22 +13,35 @@ module PDK
         Command.new(*cmd).execute!
       end
 
+      def self.ensure_bin_present!(bin_path, bin_name)
+        message = _('Unable to find `%{name}`. Check that it is installed and try again.') % {
+          name: bin_name,
+        }
+
+        raise PDK::CLI::FatalError, message unless TTY::Which.exist?(bin_path)
+      end
+
       def self.git_bindir
         @git_dir ||= File.join('private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
       end
 
-      def self.git(*args)
+      def self.git_bin
         git_bin = Gem.win_platform? ? 'git.exe' : 'git'
         vendored_bin_path = File.join(git_bindir, git_bin)
 
-        execute(try_vendored_bin(vendored_bin_path, git_bin), *args)
+        try_vendored_bin(vendored_bin_path, git_bin)
+      end
+
+      def self.git(*args)
+        ensure_bin_present!(git_bin, 'git')
+
+        execute(git_bin, *args)
       end
 
       def self.bundle(*args)
-        bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
-        vendored_bin_path = File.join('private', 'ruby', '2.1.9', 'bin', bundle_bin)
+        ensure_bin_present!(bundle_bin, 'bundler')
 
-        execute(try_vendored_bin(vendored_bin_path, bundle_bin), *args)
+        execute(bundle_bin, *args)
       end
 
       def self.bundle_bin

@@ -26,6 +26,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'tty-spinner', '~> 0.4'
   spec.add_runtime_dependency 'tty-prompt', '~> 0.12'
   spec.add_runtime_dependency 'json_pure', '~> 2.1.0'
+  spec.add_runtime_dependency 'tty-which', '~> 0.3.0'
 
   # Used in the pdk-module-template
   spec.add_runtime_dependency 'deep_merge', '~> 1.1'
