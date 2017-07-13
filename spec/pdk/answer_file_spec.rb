@@ -3,6 +3,7 @@ require 'stringio'
 
 shared_context 'a valid answer file' do
   before(:each) do
+    allow(PDK::Util).to receive(:package_install?).and_return(false)
     allow(File).to receive(:file?).with(default_path).and_return(true)
     allow(File).to receive(:zero?).with(default_path).and_return(false)
     allow(File).to receive(:readable?).with(default_path).and_return(true)
@@ -34,6 +35,7 @@ describe PDK::AnswerFile do
   describe '#read_from_disk' do
     context 'when the answer file does not exist' do
       before(:each) do
+        allow(PDK::Util).to receive(:package_install?).and_return(false)
         allow(File).to receive(:file?).with(default_path).and_return(false)
       end
 
@@ -44,6 +46,7 @@ describe PDK::AnswerFile do
 
     context 'when the answer file exists' do
       before(:each) do
+        allow(PDK::Util).to receive(:package_install?).and_return(false)
         allow(File).to receive(:file?).with(default_path).and_return(true)
       end
 
