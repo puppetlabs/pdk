@@ -104,10 +104,13 @@ module PDK
           end
 
           if context == :module
-            # Subprocesses use their own set of gems which are managed by pdk or installed with the package.
-            @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'ruby', RbConfig::CONFIG['ruby_version'])
+            if PDK::Util.package_install?
+              # Subprocesses use their own set of gems which are managed by pdk or installed with the package.
+              @process.environment['GEM_HOME'] = File.join(PDK::Util.package_cachedir, 'ruby', RbConfig::CONFIG['ruby_version'])
+            else
+              # Subprocesses use their own set of gems which are managed by pdk or installed with the package.
+              @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'ruby', RbConfig::CONFIG['ruby_version'])
 
-            if PDK::Util.gem_install?
               # This allows the subprocess to find the 'bundler' gem, which isn't in the cachedir above for gem installs.
               # bundler_gem_path = File.absolute_path(File.join(Gem.loaded_specs['bundler'].gem_dir, '..', '..', '..', '..', '..'))
               bundler_gem_path = File.absolute_path(File.join(`bundle show bundler`, '..', '..'))

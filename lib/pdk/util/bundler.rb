@@ -146,7 +146,7 @@ module PDK
         end
 
         def bundle_cachedir
-          @bundle_cachedir ||= File.join(PDK::Util.cachedir)
+          @bundle_cachedir ||= PDK::Util.package_install? ? PDK::Util.package_cachedir : File.join(PDK::Util.cachedir)
         end
       end
     end
