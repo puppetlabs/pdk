@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v0.4.1](https://github.com/puppetlabs/pdk/tree/v0.4.1) (2017-07-14)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.0...v0.4.1)
+
+**Fixed bugs:**
+
+- \(FIXUP\) Resolve conflation of cachedir concepts [\#153](https://github.com/puppetlabs/pdk/pull/153) ([scotje](https://github.com/scotje))
+
 ## [v0.4.0](https://github.com/puppetlabs/pdk/tree/v0.4.0) (2017-07-14)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.3.0...v0.4.0)
 
