@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v0.4.0](https://github.com/puppetlabs/pdk/tree/v0.4.0) (2017-07-14)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.3.0...v0.4.0)
+
+**Implemented enhancements:**
+
+- \(SDK-299\) Check metadata.json syntax before linting [\#133](https://github.com/puppetlabs/pdk/pull/133) ([rodjek](https://github.com/rodjek))
+- \(SDK-305\) Answer file to cache module interview answers, template-url etc [\#132](https://github.com/puppetlabs/pdk/pull/132) ([rodjek](https://github.com/rodjek))
+- \(SDK-296\) Allow target selection for the metadata validator [\#124](https://github.com/puppetlabs/pdk/pull/124) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- \(SDK-298\) Handle exception raised when an invalid report format is specified on the CLI [\#125](https://github.com/puppetlabs/pdk/pull/125) ([rodjek](https://github.com/rodjek))
+
 ## [v0.3.0](https://github.com/puppetlabs/pdk/tree/v0.3.0) (2017-06-29)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.2.0...v0.3.0)
 
