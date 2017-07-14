@@ -82,8 +82,8 @@ namespace :acceptance do
       raise 'Add the parallel_tests gem to Gemfile to enable this task'
     end
   end
-  task local: [:binstubs]
 end
+task :'acceptance:local' => [:binstubs]
 
 RuboCop::RakeTask.new(:rubocop) do |task|
   task.options = %w[-D -S -E]
