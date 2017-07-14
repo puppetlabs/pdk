@@ -4,6 +4,7 @@ before_install: gem install bundler -v 1.15.1
 bundler_args: "--without development"
 script:
   - "cat Gemfile.lock"
+  - "bundle exec rake binstubs"
   - "bundle exec rake $CHECK"
 cache: bundler
 
