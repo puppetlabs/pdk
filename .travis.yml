@@ -5,7 +5,7 @@ bundler_args: "--without development"
 script:
   - "cat Gemfile.lock"
   - "bundle exec rake binstubs"
-  - "bundle exec rake $CHECK"
+  - "bundle exec parallel_test -n 2 --group-by filesize --type rspec -- --tag ~package -- spec/acceptance/"
 cache: bundler
 
 rvm:
