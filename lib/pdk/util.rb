@@ -70,13 +70,16 @@ module PDK
     end
     module_function :pdk_package_basedir
 
+    def package_cachedir
+      File.join(pdk_package_basedir, 'share', 'cache')
+    end
+    module_function :package_cachedir
+
     # Returns the fully qualified path to a per-user PDK cachedir.
     #
     # @return [String] Fully qualified path to per-user PDK cachedir.
     def cachedir
-      if package_install?
-        File.join(pdk_package_basedir, 'share', 'cache')
-      elsif Gem.win_platform?
+      if Gem.win_platform?
         File.join(ENV['LOCALAPPDATA'], 'PDK', 'cache')
       else
         File.join(Dir.home, '.pdk', 'cache')
