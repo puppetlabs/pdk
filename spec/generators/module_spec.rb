@@ -491,6 +491,14 @@ describe PDK::Generate::Module do
       end
     end
 
+    context 'when Etc.getlogin returns nil' do
+      let(:login) { nil }
+
+      it 'warns the user and returns the string "username"' do
+        is_expected.to eq('username')
+      end
+    end
+
     context 'when the login contains some non-alphanumeric characters' do
       let(:login) { 'test_user' }
 

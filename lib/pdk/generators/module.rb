@@ -54,7 +54,7 @@ module PDK
       end
 
       def self.username_from_login
-        login = Etc.getlogin
+        login = Etc.getlogin || ''
         login_clean = login.gsub(%r{[^0-9a-z]}i, '')
         login_clean = 'username' if login_clean.empty?
 
