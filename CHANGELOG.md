@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v0.4.3](https://github.com/puppetlabs/pdk/tree/v0.4.3) (2017-07-17)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.2...v0.4.3)
+
+**Fixed bugs:**
+
+- \(FIXUP\) Fix default subprocess success/failure messages on Windows [\#164](https://github.com/puppetlabs/pdk/pull/164) ([scotje](https://github.com/scotje))
+
 ## [v0.4.2](https://github.com/puppetlabs/pdk/tree/v0.4.2) (2017-07-17)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.1...v0.4.2)
 
