@@ -196,13 +196,13 @@ module PDK
         end
 
         def success(message = '')
-          message ||= 'done.'
+          message = 'done.' if message.nil? || message.empty?
 
           $stderr.print message << "\n"
         end
 
         def error(message = '')
-          message ||= 'FAILED'
+          message = 'FAILED' if message.nil? || message.empty?
 
           $stderr.print message << "\n"
         end
