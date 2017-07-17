@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v0.4.2](https://github.com/puppetlabs/pdk/tree/v0.4.2) (2017-07-17)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.1...v0.4.2)
+
+**Fixed bugs:**
+
+- \(FIXUP\) Add missing newlines in new module interview prompts [\#161](https://github.com/puppetlabs/pdk/pull/161) ([scotje](https://github.com/scotje))
+- Use default username when Etc.getlogin fails [\#160](https://github.com/puppetlabs/pdk/pull/160) ([austb](https://github.com/austb))
+
 ## [v0.4.1](https://github.com/puppetlabs/pdk/tree/v0.4.1) (2017-07-14)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.0...v0.4.1)
 
