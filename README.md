@@ -7,6 +7,8 @@ A CLI to facilitate easy, unified development workflows for Puppet modules. pdk 
 
 Download and install the newest package matching your platform from [here](https://drive.google.com/drive/folders/0Bz0tCHSb1u41alR4MmZfRHBTV1k?usp=sharing).
 
+On Windows you need to set your script execution policy to [RemoteSigned](https://technet.microsoft.com/en-us/library/ee176961.aspx), to allow the (required) PowerShell integration to work.
+
 ## Usage
 
 ### Generate a new module
