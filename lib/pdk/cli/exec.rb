@@ -117,8 +117,6 @@ module PDK
               @process.environment['GEM_PATH'] = bundler_gem_path
             end
 
-            # TODO: we should probably more carefully manage PATH and maybe other things too
-
             mod_root = PDK::Util.module_root
 
             unless mod_root
@@ -129,7 +127,13 @@ module PDK
 
             Dir.chdir(mod_root) do
               ::Bundler.with_clean_env do
-                run_process!
+                tmp = ENV['PATH']
+                begin
+                  ENV['PATH'] = [RbConfig::CONFIG['bindir'], ENV['PATH']].compact.join(File::PATH_SEPARATOR)
+                  run_process!
+                ensure
+                  ENV['PATH'] = tmp
+                end
               end
             end
           else
