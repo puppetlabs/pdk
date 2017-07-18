@@ -112,10 +112,12 @@ module PDK
               @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'ruby', RbConfig::CONFIG['ruby_version'])
 
               # This allows the subprocess to find the 'bundler' gem, which isn't in the cachedir above for gem installs.
-              # bundler_gem_path = File.absolute_path(File.join(Gem.loaded_specs['bundler'].gem_dir, '..', '..', '..', '..', '..'))
-              bundler_gem_path = File.absolute_path(File.join(`bundle show bundler`, '..', '..'))
+              bundler_gem_path = File.absolute_path(File.join(`gem which bundler`, '..', '..', '..', '..'))
               @process.environment['GEM_PATH'] = bundler_gem_path
             end
+
+            # Make sure invocation of Ruby prefers our private installation.
+            @process.environment['PATH'] = [RbConfig::CONFIG['bindir'], ENV['PATH']].compact.join(File::PATH_SEPARATOR)
 
             mod_root = PDK::Util.module_root
 
@@ -127,13 +129,7 @@ module PDK
 
             Dir.chdir(mod_root) do
               ::Bundler.with_clean_env do
-                tmp = ENV['PATH']
-                begin
-                  ENV['PATH'] = [RbConfig::CONFIG['bindir'], ENV['PATH']].compact.join(File::PATH_SEPARATOR)
-                  run_process!
-                ensure
-                  ENV['PATH'] = tmp
-                end
+                run_process!
               end
             end
           else
