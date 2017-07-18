@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v0.4.4](https://github.com/puppetlabs/pdk/tree/v0.4.4) (2017-07-18)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.3...v0.4.4)
+
+**Fixed bugs:**
+
+- Cannot find bundler [\#166](https://github.com/puppetlabs/pdk/issues/166)
+- Validate fails on existing module [\#158](https://github.com/puppetlabs/pdk/issues/158)
+- \(\#158\) \(\#166\) Resolve issue loading bundler from gem installs [\#170](https://github.com/puppetlabs/pdk/pull/170) ([scotje](https://github.com/scotje))
+- \(SDK-319\) force usage of our ruby [\#168](https://github.com/puppetlabs/pdk/pull/168) ([DavidS](https://github.com/DavidS))
+
 ## [v0.4.3](https://github.com/puppetlabs/pdk/tree/v0.4.3) (2017-07-17)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.2...v0.4.3)
 
@@ -15,6 +25,7 @@ All notable changes to this project will be documented in this file.
 
 **Fixed bugs:**
 
+- Can't create module if new module fails to get login [\#157](https://github.com/puppetlabs/pdk/issues/157)
 - \(FIXUP\) Add missing newlines in new module interview prompts [\#161](https://github.com/puppetlabs/pdk/pull/161) ([scotje](https://github.com/scotje))
 - Use default username when Etc.getlogin fails [\#160](https://github.com/puppetlabs/pdk/pull/160) ([austb](https://github.com/austb))
 
@@ -30,12 +41,14 @@ All notable changes to this project will be documented in this file.
 
 **Implemented enhancements:**
 
+- \(SDK-306\) Use vendored development gems in package install [\#145](https://github.com/puppetlabs/pdk/pull/145) ([scotje](https://github.com/scotje))
 - \(SDK-299\) Check metadata.json syntax before linting [\#133](https://github.com/puppetlabs/pdk/pull/133) ([rodjek](https://github.com/rodjek))
 - \(SDK-305\) Answer file to cache module interview answers, template-url etc [\#132](https://github.com/puppetlabs/pdk/pull/132) ([rodjek](https://github.com/rodjek))
 - \(SDK-296\) Allow target selection for the metadata validator [\#124](https://github.com/puppetlabs/pdk/pull/124) ([rodjek](https://github.com/rodjek))
 
 **Fixed bugs:**
 
+- \(maint\) Remove nil values from metadata before generating JSON [\#127](https://github.com/puppetlabs/pdk/pull/127) ([rodjek](https://github.com/rodjek))
 - \(SDK-298\) Handle exception raised when an invalid report format is specified on the CLI [\#125](https://github.com/puppetlabs/pdk/pull/125) ([rodjek](https://github.com/rodjek))
 
 ## [v0.3.0](https://github.com/puppetlabs/pdk/tree/v0.3.0) (2017-06-29)
