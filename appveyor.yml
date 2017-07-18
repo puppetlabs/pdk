@@ -6,7 +6,7 @@ environment:
     - RUBY_VERSION: 21-x64
 
 install:
-  - set PATH=C:\Ruby%RUBY_VERSION%\bin;%PATH%
+  - set PATH=C:\Ruby%RUBY_VERSION%\bin;C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
   - SET LOG_SPEC_ORDER=true
   - bundle install --jobs 4 --retry 2 --without development
 
@@ -23,8 +23,8 @@ test_script:
 
 # Uncomment this block to enable RDP access to the AppVeyor test instance for
 # debugging purposes.
-# on_finish:
-#   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+#on_finish:
+#  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 notifications:
   - provider: HipChat

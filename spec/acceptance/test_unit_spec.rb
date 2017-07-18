@@ -23,12 +23,13 @@ describe 'Running unit tests' do
 
     before(:all) do
       FileUtils.mkdir_p('spec/unit')
+      # FIXME: facterversion pin and facterdb issues
       File.open('spec/unit/passing_spec.rb', 'w') do |f|
         f.puts <<-EOF
           require 'spec_helper'
 
           RSpec.describe 'passing test' do
-            on_supported_os.each do |os, facts|
+            on_supported_os(:facterversion => '2.4.6').each do |os, facts|
               context "On OS \#{os}" do
                 it 'should pass' do
                   expect(true).to eq(true)
