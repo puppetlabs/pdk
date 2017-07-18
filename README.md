@@ -5,13 +5,7 @@ A CLI to facilitate easy, unified development workflows for Puppet modules. pdk 
 
 ## Installation
 
-1. Until Puppet Development Kit packaging is available, install `pdk` into your Ruby installation with:
-
-```
-$ gem install pdk
-```
-
-For default usage, you'll also need to have `git`, and `bundle` (from [bundler](http://bundler.io/)) on your system PATH.
+Download and install the newest package matching your platform from [here](https://drive.google.com/drive/folders/0Bz0tCHSb1u41alR4MmZfRHBTV1k?usp=sharing).
 
 ## Usage
 
@@ -283,7 +277,7 @@ In cases where `pdk` needs to run in a working directory outside the cloned repo
 bundle binstubs pdk --path ~/bin
 ```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pdk.
+Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pdk/issues.
 
 ### Running tests
 
