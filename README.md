@@ -125,7 +125,7 @@ Suppress interactive queries for initial values. All questions will use the defa
 
 #### `module_name`
 
-**Required**. Specifies the name of the module being created, including the namespace. e.g.: `username-my_module`
+**Required**. Specifies the name of the module being created. e.g.: `my_module`
 
 #### `target_dir`
 
