@@ -26,8 +26,14 @@ test_name 'Copy pdk acceptance to the System Under Test and bundle install' do
     end
   end
 
+  if workstation.platform =~ %r{windows}
+    step 'Add pdk to path on Windows' do
+      on(workstation,'cmd.exe /C setx PATH "%PATH%;C:\\Program\ Files\\Puppet\ Labs\\DevelopmentKit\\bin" /M')
+    end
+  end
+
   step 'Check rspec is ready' do
-    on(workstation, "#{command_prefix(workstation)} rspec --version") do |outcome|
+    on(workstation, "#{run_rspec(workstation)} --version") do |outcome|
       assert_match(%r{[0-9\.]*}, outcome.stdout, 'rspec --version outputs some version number')
     end
   end
