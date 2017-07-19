@@ -76,6 +76,7 @@ describe PDK::Generate::Module do
       include_context 'mock metadata.json'
 
       let(:temp_target_dir) { '/path/to/temp/dir' }
+      let(:target_parent_writeable) { true }
 
       before(:each) do
         allow(File).to receive(:exist?).with(target_dir).and_return(false)
@@ -83,6 +84,17 @@ describe PDK::Generate::Module do
         allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
         allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
         allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
+        allow(File).to receive(:writable?).with(File.dirname(target_dir)).and_return(target_parent_writeable)
+      end
+
+      context 'when the parent directory of the target is not writable' do
+        let(:target_parent_writeable) { false }
+
+        it 'raises a FatalError' do
+          expect {
+            described_class.invoke(invoke_opts)
+          }.to raise_error(PDK::CLI::FatalError, %r{you do not have permission to write to}i)
+        end
       end
 
       it 'generates the new module in a temporary directory' do
@@ -126,6 +138,18 @@ describe PDK::Generate::Module do
       it 'moves the temporary directory to the target directory when done' do
         expect(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
         described_class.invoke(invoke_opts)
+      end
+
+      context 'when the move to the target directory fails due to invalid permissions' do
+        before(:each) do
+          allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_raise(Errno::EACCES, 'permission denied')
+        end
+
+        it 'raises a FatalError' do
+          expect {
+            described_class.invoke(invoke_opts)
+          }.to raise_error(PDK::CLI::FatalError, %r{failed to move .+: permission denied}i)
+        end
       end
 
       context 'when a template-url is supplied on the command line' do
