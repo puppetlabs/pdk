@@ -43,7 +43,7 @@ module PDK
         targets.reject { |target| json_data.any? { |j| j['path'] == target } }.each do |target|
           report.add_event(
             file:     target,
-            source:   'puppet-lint',
+            source:   name,
             severity: 'ok',
             state:    :passed,
           )
@@ -52,7 +52,7 @@ module PDK
         json_data.each do |offense|
           report.add_event(
             file:     offense['path'],
-            source:   'puppet-lint',
+            source:   name,
             line:     offense['line'],
             column:   offense['column'],
             message:  offense['message'],

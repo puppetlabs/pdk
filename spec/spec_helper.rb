@@ -2,6 +2,9 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'pdk'
 require 'pdk/cli'
 
+# automatically load any shared examples or contexts
+Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
+
 RSpec.shared_context :stubbed_logger do
   let(:logger) { instance_double('PDK::Logger').as_null_object }
 
