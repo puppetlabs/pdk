@@ -54,3 +54,13 @@ def command_prefix(host)
   command = "#{command} cmd.exe /C" unless host.platform !~ %r{windows}
   command
 end
+
+def run_rspec(host)
+  command = "PATH=#{install_dir(host)}/bin:#{pdk_git_bin_dir(host)}:$PATH && cd #{target_dir} &&"
+  if host.platform =~ %r{windows}
+    command = "#{command} cmd.exe /C \"C://Program Files/Puppet Labs/DevelopmentKit/private/ruby/2.1.9/bin/rspec\""
+  else
+    command = "#{command} /opt/puppetlabs/pdk/private/ruby/2.1.9/bin/rspec"
+  end
+  command
+end
