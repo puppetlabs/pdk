@@ -86,6 +86,14 @@ describe 'pdk new class', module_command: true do
           is_expected.to match(%r{new_class::bar::baz})
         end
       end
+
+      context 'when running the generated spec tests' do
+        describe command('pdk test unit') do
+          its(:exit_status) { is_expected.to eq 0 }
+          its(:stderr) { is_expected.to match(%r{0 failures}) }
+          its(:stderr) { is_expected.not_to match(%r{No examples found}) }
+        end
+      end
     end
   end
 end
