@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v0.5.0](https://github.com/puppetlabs/pdk/tree/v0.5.0) (2017-07-20)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.4...v0.5.0)
+
+**Implemented enhancements:**
+
+- \(SDK-329\) implement running arbitrary commands in PDK's environment [\#179](https://github.com/puppetlabs/pdk/pull/179) ([DavidS](https://github.com/DavidS))
+- \(maint\) Add 2.1.9 as the minimum required ruby version in the gemspec [\#176](https://github.com/puppetlabs/pdk/pull/176) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- \(SDK-331\) allow additional gems to be installed [\#178](https://github.com/puppetlabs/pdk/pull/178) ([DavidS](https://github.com/DavidS))
+
 ## [v0.4.4](https://github.com/puppetlabs/pdk/tree/v0.4.4) (2017-07-18)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.3...v0.4.4)
 
