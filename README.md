@@ -238,7 +238,7 @@ Running validations on `new_module/lib`:
 * puppet syntax: (no puppet manifests found)
 ```
 
-#### `pdk test unit` command
+### `pdk test unit` command
 
 Runs unit tests. Any errors are displayed to the console and reported in the report-file, if requested. The exitcode is non-zero when errors occur.
 
@@ -270,13 +270,36 @@ Multiple `--format` options can be specified as long as they all have distinct o
 
 Specifies options to pass through to the actual test-runner. In the default template (and most commonly across modules), this is [rspec](https://relishapp.com/rspec/rspec-core/docs/command-line).
 
+### `pdk bundle` command
+
+This experimental command allows advanced users to execute arbitrary commands in a bundler context within the module you're currently working on. Arguments to this command are passed straight through to bundler. Careless use of this command can lead to errors later which can't be recovered by the pdk itself.
+
+Note that for most advanced uses it is required to use the `--` to separate bundler options from pdk options. Compare the following two commands:
+
+```
+$ pdk bundle exec rake -T
+bundle: illegal option -- T
+
+```
+
+and
+
+```
+$ pdk bundle -- exec rake -T
+rake beaker                # Run beaker acceptance tests
+rake beaker:sets           # List available beaker nodesets
+rake beaker:ssh[set,node]  # Try to use vagrant to login to the Beaker node
+rake build                 # Build puppet module package
+[...]
+```
+
 ## Contributing
 
 In cases where `pdk` needs to run in a working directory outside the cloned repository, either set `BUNDLE_GEMFILE` to the pdk's Gemfile location, or install and use the [binstubs of bundler](http://bundler.io/v1.15/bundle_binstubs.html), which are small proxy binaries, that set up the environment for running the tool.
 
 ```
 # assuming ~/bin is already on your path:
-bundle binstubs pdk --path ~/bin
+$ bundle binstubs pdk --path ~/bin
 ```
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pdk/issues.
