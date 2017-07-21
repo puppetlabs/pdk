@@ -40,8 +40,6 @@ Environment Variable | Usage
 **TEST_TARGET** | A beaker-hostgenerator string for the OS of the VM you want to test on e.g. _redhat7-64workstation._ or _windows2012r2-64workstation._ (The period character after workstation is required by beaker-hostgenerator).
 **BUILD_SERVER** | (Only required if the tests will run on a Windows VM). The hostname of the build server that hosts packages. A Puppet JIRA ticket ([BKR-1109](https://tickets.puppetlabs.com/browse/BKR-1109)) has been filed to update beaker so this would never be required.
 
-On completion of this testing task, the results from the VM will be available in a folder named _archive_.
-
 # Release Process
 
 1. Bump the version in `lib/pdk/version.rb`.
