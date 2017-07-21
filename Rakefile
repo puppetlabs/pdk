@@ -1,6 +1,7 @@
 require 'bundler/gem_tasks'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
+require 'parallel_tests/tasks.rb'
 
 gettext_spec = Gem::Specification.find_by_name 'gettext-setup'
 load "#{gettext_spec.gem_dir}/lib/tasks/gettext.rake"
@@ -67,12 +68,22 @@ namespace :acceptance do
   end
 
   desc 'Run acceptance tests against current code'
-  RSpec::Core::RakeTask.new(:local) do |t|
-    t.rspec_opts = '--tag ~package' # Exclude package specific examples
-    t.pattern = 'spec/acceptance/**.rb'
+  task(:local) do
+    pattern = 'spec/acceptance/**.rb'
+    begin
+      require 'parallel_tests'
+
+      args = ['-t', 'rspec']
+             .concat(['--', '--tag', '~package', '--'])
+             .concat(Rake::FileList[pattern].to_a)
+
+      ParallelTests::CLI.new.run(args)
+    rescue LoadError
+      raise 'Add the parallel_tests gem to Gemfile to enable this task'
+    end
   end
-  task local: [:binstubs]
 end
+task :'acceptance:local' => [:binstubs]
 
 RuboCop::RakeTask.new(:rubocop) do |task|
   task.options = %w[-D -S -E]

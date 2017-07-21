@@ -18,6 +18,7 @@ group :development do
 end
 
 group :test do
+  gem 'parallel_tests'
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
   gem 'rspec-xsd'
