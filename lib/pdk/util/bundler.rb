@@ -62,14 +62,12 @@ module PDK
         end
 
         def installed?
+          PDK.logger.debug(_('Checking for missing Gemfile dependencies.'))
+
           argv = ['check', "--gemfile=#{gemfile}"]
           argv << "--path=#{bundle_cachedir}" if PDK::Util.gem_install?
 
-          command = bundle_command(*argv).tap do |c|
-            c.add_spinner(_('Checking for missing Gemfile dependencies'))
-          end
-
-          result = command.execute!
+          result = bundle_command(*argv).execute!
 
           unless result[:exit_code].zero?
             $stderr.puts result[:stdout]

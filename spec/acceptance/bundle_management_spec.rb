@@ -10,9 +10,9 @@ describe 'Managing Gemfile dependencies' do
       # @result = shell_ex("#{path_to_pdk} ", chdir: target_dir)
     end
 
-    describe command('pdk test unit') do
+    describe command('pdk test unit --debug') do
       its(:exit_status) { is_expected.to eq 0 }
-      its(:stderr) { is_expected.to match(%r{Checking for missing Gemfile dependencies}i) }
+      its(:stdout) { is_expected.to match(%r{Checking for missing Gemfile dependencies}i) }
 
       describe file('Gemfile.lock') do
         it { is_expected.to be_file }
