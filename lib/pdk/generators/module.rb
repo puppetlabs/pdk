@@ -111,7 +111,7 @@ module PDK
             help:             _('This will be used when uploading your module to the Forge. You can opt out of this at any time.'),
             required:         true,
             validate_pattern: %r{\A[a-z0-9]+\Z}i,
-            validate_message: _('Forge usernames can only contain lowercase letters and numbers'),
+            validate_message: _('Forge usernames can only contain letters and numbers'),
             default:          PDK.answers['forge-username'] || metadata.data['author'],
           },
           {
