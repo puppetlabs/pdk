@@ -1,13 +1,13 @@
 # pdk [![Build Status](https://travis-ci.org/puppetlabs/pdk.svg?branch=master)](https://travis-ci.org/puppetlabs/pdk) [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/x70e2fqllbaootpd?svg=true)](https://ci.appveyor.com/project/puppetlabs/pdk)
 
 
-A CLI to facilitate easy, unified development workflows for Puppet modules. pdk is a key part of the Puppet Development Kit, the shortest path to better modules.
+A CLI to facilitate easy, unified development workflows for Puppet modules. `pdk` is a key part of the Puppet Development Kit, the shortest path to better modules.
 
 ## Installation
 
 Download and install the newest package matching your platform from [here](https://drive.google.com/drive/folders/0Bz0tCHSb1u41alR4MmZfRHBTV1k?usp=sharing).
 
-On Windows you need to set your script execution policy to [RemoteSigned](https://technet.microsoft.com/en-us/library/ee176961.aspx), to allow the (required) PowerShell integration to work.
+On Windows you should run PDK from PowerShell and `pdk` will be in your path after installation. Also set your script execution policy to [RemoteSigned](https://technet.microsoft.com/en-us/library/ee176961.aspx), to allow the PowerShell integration to work.
 
 ## Usage
 
