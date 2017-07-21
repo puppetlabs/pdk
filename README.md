@@ -293,6 +293,21 @@ rake build                 # Build puppet module package
 [...]
 ```
 
+## Module Compatibility
+
+**PDK Version Compatibility:** modules created with a specific PDK version should validate against and run on all Puppet andRuby version combinations currently under maintenance (see https://docs.puppet.com/puppet/latest/about_agent.html and https://puppet.com/misc/puppet-enterprise-lifecycle)
+
+**Module Template Compatibility:** Modules created with a specific version of the PDK will remain compatible to newer versions of the PDK with the following exceptions:
+* access to new PDK functionality might require an update of the module to the current Template version
+* access to a new major PDK version might require an update of the module to the current Template version, after a one year deprecation cycle
+* validation against new Puppet versions might require new PDK functionality, a new major PDK version, and changes to the module itself.
+
+## Upgrading
+* In the common case, Puppet and the PDK will be forward-compatible so that minor Puppet updates will not require a new version of the PDK.
+* Some new Puppet versions will require changes to the PDK. In that case, upgrading the PDK for validation prior to roll-out of Puppet is strongly recommended.
+
+
+
 ## Contributing
 
 See the [CONTRIBUTING.md](CONTRIBUTING.md) file for development notes.
