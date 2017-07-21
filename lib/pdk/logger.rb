@@ -7,8 +7,7 @@ module PDK
 
   class Logger < ::Logger
     def initialize
-      # TODO: Decide where log output goes, probably stderr?
-      super(STDOUT)
+      super(STDERR)
 
       # TODO: Decide on output format.
       self.formatter = proc do |severity, _datetime, _progname, msg|

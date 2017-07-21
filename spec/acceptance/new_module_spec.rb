@@ -8,10 +8,10 @@ describe 'Creating a new module' do
 
     describe command('pdk new module foo --skip-interview') do
       its(:exit_status) { is_expected.to eq 0 }
-      its(:stdout) { is_expected.to match(%r{Creating new module: foo}) }
-      its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
+      its(:stderr) { is_expected.to match(%r{Creating new module: foo}) }
+      its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
       # use this weird regex to match for empty string to get proper diff output on failure
-      its(:stderr) { is_expected.to match(%r{\A\Z}) }
+      its(:stdout) { is_expected.to match(%r{\A\Z}) }
     end
 
     describe file('foo') do

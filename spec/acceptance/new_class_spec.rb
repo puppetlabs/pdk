@@ -7,10 +7,10 @@ describe 'pdk new class', module_command: true do
     context 'when creating the main class' do
       describe command('pdk new class new_class') do
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{Creating .* from template}) }
-        its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
+        its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
+        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
         # use this weird regex to match for empty string to get proper diff output on failure
-        its(:stderr) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to match(%r{\A\Z}) }
       end
 
       describe file('manifests') do
@@ -35,10 +35,10 @@ describe 'pdk new class', module_command: true do
     context 'when creating an ancillary class' do
       describe command('pdk new class new_class::bar') do
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{Creating .* from template}) }
-        its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
+        its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
+        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
         # use this weird regex to match for empty string to get proper diff output on failure
-        its(:stderr) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to match(%r{\A\Z}) }
       end
 
       describe file('manifests') do
@@ -63,10 +63,10 @@ describe 'pdk new class', module_command: true do
     context 'when creating a deeply nested class' do
       describe command('pdk new class new_class::bar::baz') do
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{Creating .* from template}) }
-        its(:stdout) { is_expected.not_to match(%r{WARN|ERR}) }
+        its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
+        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
         # use this weird regex to match for empty string to get proper diff output on failure
-        its(:stderr) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to match(%r{\A\Z}) }
       end
 
       describe file('manifests') do

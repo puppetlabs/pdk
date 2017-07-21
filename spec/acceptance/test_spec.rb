@@ -15,7 +15,7 @@ describe 'Using the test command' do
 
     describe command('pdk test unit') do
       its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stdout) { is_expected.to match(%r{no metadata\.json found}i) }
+      its(:stderr) { is_expected.to match(%r{no metadata\.json found}i) }
     end
   end
 end

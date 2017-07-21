@@ -129,7 +129,7 @@ describe 'Running unit tests' do
 
     describe command('pdk test unit --list') do
       its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stdout) { is_expected.to match(%r{Unable to enumerate examples.*SyntaxError}m) }
+      its(:stderr) { is_expected.to match(%r{Unable to enumerate examples.*SyntaxError}m) }
     end
 
     describe command('pdk test unit') do
