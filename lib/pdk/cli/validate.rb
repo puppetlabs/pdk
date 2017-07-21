@@ -17,6 +17,11 @@ module PDK::CLI
     flag :a, 'auto-correct', _('automatically correct problems (where possible)')
 
     run do |opts, args, _cmd|
+      if args == ['help']
+        PDK::CLI.run(['validate', '--help'])
+        exit 0
+      end
+
       validator_names = PDK::Validate.validators.map { |v| v.name }
       validators = PDK::Validate.validators
       targets = []
