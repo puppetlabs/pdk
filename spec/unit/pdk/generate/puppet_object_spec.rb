@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe PDK::Generate::PuppetObject do
-  subject(:templated_object) { described_class.new(module_dir, 'test_module::test_object', options) }
+  let(:templated_object) { described_class.new(module_dir, 'test_module::test_object', options) }
 
   let(:object_type) { :something }
   let(:options) { {} }
