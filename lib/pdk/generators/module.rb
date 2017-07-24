@@ -50,6 +50,15 @@ module PDK
 
         PDK.answers.update!('template-url' => template_url)
 
+        # In packaged installs, try to use vendored Gemfile.lock as a starting point.
+        if PDK::Util.package_install?
+          vendored_gemfile_lock = File.join(PDK::Util.package_cachedir, 'Gemfile.lock')
+
+          if File.exist?(vendored_gemfile_lock)
+            FileUtils.cp(vendored_gemfile_lock, File.join(temp_target_dir, 'Gemfile.lock'))
+          end
+        end
+
         FileUtils.mv(temp_target_dir, target_dir)
       end
 
