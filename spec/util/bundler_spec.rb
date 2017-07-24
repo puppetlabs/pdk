@@ -132,7 +132,8 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'checks for missing but does not install anything' do
-        expect_command([bundle_regex, 'check', any_args], nil, %r{checking for missing}i)
+        expect_command([bundle_regex, 'check', any_args])
+        expect(logger).to receive(:debug).with(%r{checking for missing}i)
         expect(PDK::CLI::Exec::Command).not_to receive(:new).with(bundle_regex, 'install', any_args)
 
         described_class.ensure_bundle!
