@@ -1,6 +1,17 @@
 require 'spec_helper'
 
 describe PDK::CLI do
+  context 'when invoking help' do
+    it 'outputs basic help' do
+      expect($stdout).to receive(:puts).with(a_string_matching(%r{NAME.*USAGE.*DESCRIPTION.*COMMANDS.*OPTIONS}m))
+      expect {
+        described_class.run(['--help'])
+      }.to raise_error(SystemExit) { |error|
+        expect(error.status).to eq(0)
+      }
+    end
+  end
+
   context 'when provided an invalid report format' do
     it 'informs the user and exits' do
       expect(logger).to receive(:fatal).with(a_string_matching(%r{'non_existant_format'.*valid report format}))
