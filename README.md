@@ -98,7 +98,7 @@ Generates a new module.
 Usage:
 
 ```
-pdk new module [--template-url=git_url] [--license=spdx_identifier] [--vcs=vcs_provider] module_name [target_dir]
+pdk new module [--template-url=git_url] [--license=spdx_identifier] module_name [target_dir]
 ```
 
 The `pdk new module` command accepts the following arguments and options. Arguments are optional unless otherwise specified.
@@ -110,10 +110,6 @@ Overrides the template to use for this module. If possible, please contribute yo
 #### `--license=spdx_identifier`
 
 Specifies the license this module is written under. See https://spdx.org/licenses/ for a list of open source licenses, or use `proprietary`. Defaults to `Apache-2.0`.
-
-#### `--vcs=vcs_provider`
-
-Specifies the version control driver. Valid values: `git`, `none`. Default: `git`.
 
 #### `--skip-interview`
 
