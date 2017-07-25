@@ -10,8 +10,6 @@ module PDK::CLI
     option nil, 'license', _('Specifies the license this module is written under. ' \
       "This should be a identifier from https://spdx.org/licenses/. Common values are 'Apache-2.0', 'MIT', or 'proprietary'."), argument: :required
 
-    option nil, 'vcs', _("Specifies the version control driver. Valid values: 'git', 'none'. Default: 'git'."), argument: :required
-
     flag nil, 'skip-interview', _('When specified, skips interactive querying of metadata.')
 
     run do |opts, args, _cmd|
@@ -35,7 +33,6 @@ module PDK::CLI
 
       opts[:name] = module_name
       opts[:target_dir] = target_dir.nil? ? module_name : target_dir
-      opts[:vcs] ||= 'git'
 
       PDK.logger.info(_('Creating new module: %{modname}') % { modname: module_name })
       PDK::Generate::Module.invoke(opts)

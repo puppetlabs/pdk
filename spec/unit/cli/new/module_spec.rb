@@ -55,24 +55,6 @@ describe 'Running `pdk new module`' do
       end
     end
 
-    context 'and the vcs option' do
-      let(:vcs) { 'svn' }
-
-      it 'passes the value of the vcs option to PDK::Generate::Module.invoke' do
-        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(vcs: vcs))
-        expect(logger).to receive(:info).with("Creating new module: #{module_name}")
-        PDK::CLI.run(['new', 'module', '--vcs', vcs, module_name])
-      end
-    end
-
-    context 'without the vcs option' do
-      it 'defaults the value of the vcs option to git' do
-        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(vcs: 'git'))
-        expect(logger).to receive(:info).with("Creating new module: #{module_name}")
-        PDK::CLI.run(['new', 'module', module_name])
-      end
-    end
-
     context 'and the license option' do
       let(:license) { 'MIT' }
 
