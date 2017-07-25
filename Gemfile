@@ -15,6 +15,7 @@ group :development do
     gem 'rack', '~> 1.0'
   end
   gem 'ruby-prof'
+  gem 'yard'
 end
 
 group :test do

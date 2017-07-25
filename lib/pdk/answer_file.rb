@@ -13,8 +13,8 @@ module PDK
   #
   # @param path [String] A path on disk to the file where the PDK should store
   #   answers to interactive questions.
-  def self.answer_file=(value)
-    @answer_file = PDK::AnswerFile.new(value)
+  def self.answer_file=(path)
+    @answer_file = PDK::AnswerFile.new(path)
   end
 
   class AnswerFile

@@ -44,7 +44,7 @@ module PDK
 
       # @abstract Subclass and implement {#template_data} to provide data to
       #   the templates during rendering. Implementations of this method should
-      #   return a Hash[{Symbol => Object}].
+      #   return a Hash!{Symbol => Object}.
       def template_data
         raise NotImplementedError
       end
