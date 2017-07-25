@@ -12,6 +12,19 @@ describe PDK::CLI do
     end
   end
 
+  ['validate', 'test unit', 'bundle'].each do |command|
+    context "when #{command} command used but not in a module folder" do
+      it 'informs the user that this is not a module folder' do
+        expect {
+          described_class.run(command.split(' '))
+        }.to raise_error(SystemExit) { |error|
+          expect(error.status).not_to eq(0)
+          expect(error.cause.to_s).to match(%r{no metadata\.json found}i)
+        }
+      end
+    end
+  end
+
   context 'when provided an invalid report format' do
     it 'informs the user and exits' do
       expect(logger).to receive(:fatal).with(a_string_matching(%r{'non_existant_format'.*valid report format}))
