@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe PDK::Report::Event do
-  subject(:junit_event) { event.to_junit }
-
-  subject(:text_event) { event.to_text }
-
   subject { event }
 
   let(:event) { described_class.new(default_data.merge(data)) }
@@ -359,7 +355,11 @@ describe PDK::Report::Event do
   end
 
   context 'when generating text output' do
+    subject(:text_event) { event.to_text }
+
     it 'contains the file name at the start of the string' do
+      # puts text_event
+      # require'pry';binding.pry
       expect(text_event).to match(%r{\Atestfile\.rb})
     end
 
@@ -408,7 +408,7 @@ describe PDK::Report::Event do
       end
 
       it 'includes the message at the end of the string' do
-        expect(text_event).to match(%r{\Atestfile\.rb: test message\Z})
+        expect(text_event).to match(%r{\Atestfile\.rb.*test message\Z}m)
       end
 
       context 'and a severity is provided' do
@@ -420,13 +420,15 @@ describe PDK::Report::Event do
         end
 
         it 'includes the severity before the message' do
-          expect(text_event).to match(%r{\Atestfile\.rb: critical: test message\Z})
+          expect(text_event).to match(%r{\Atestfile\.rb: critical.*test message\Z}m)
         end
       end
     end
   end
 
   context 'when generating junit output' do
+    subject(:junit_event) { event.to_junit }
+
     it 'sets the classname attribute to the event source' do
       expect(junit_event.attributes['classname']).to eq('test-validator')
     end
@@ -530,7 +532,7 @@ describe PDK::Report::Event do
       end
 
       it 'puts a textual representation of the event into the failure element' do
-        expect(junit_event.children.first.text).to eq(text_event)
+        expect(junit_event.children.first.text).to eq(event.to_text)
       end
     end
   end

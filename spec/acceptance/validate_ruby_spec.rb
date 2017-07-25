@@ -61,7 +61,7 @@ describe 'pdk validate ruby', module_command: true do
 
     describe command('pdk validate ruby') do
       its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stdout) { is_expected.to match(%r{#{Regexp.escape(spec_violation_rb)}.*useless assignment}i) }
+      its(:stdout) { is_expected.to match(%r{#{Regexp.escape(spec_violation_rb)}.*useless assignment}mi) }
       its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
     end
 
