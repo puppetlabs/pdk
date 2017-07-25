@@ -82,6 +82,10 @@ task(:binstubs) do
   system('bundle binstubs pdk --force')
 end
 
+desc 'Locally run all the tests that CI will run'
+task test: [:rubocop, :spec, :'acceptance:local'] do
+end
+
 task default: :spec
 
 begin
