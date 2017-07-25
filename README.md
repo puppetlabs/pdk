@@ -5,9 +5,47 @@ A CLI to facilitate easy, unified development workflows for Puppet modules. `pdk
 
 ## Installation
 
-Download and install the newest package matching your platform from [here](https://drive.google.com/drive/folders/0Bz0tCHSb1u41alR4MmZfRHBTV1k?usp=sharing).
+Download and install the newest package matching your platform from [here](https://drive.google.com/drive/folders/0Bz0tCHSb1u41alR4MmZfRHBTV1k?usp=sharing). If you are using Windows, please remember to close any open PowerShell windows.
 
-On Windows you should run PDK from PowerShell and `pdk` will be in your path after installation. Also set your script execution policy to [RemoteSigned](https://technet.microsoft.com/en-us/library/ee176961.aspx), to allow the PowerShell integration to work.
+### Windows
+
+On Windows you should run PDK from PowerShell and `pdk` will be available in your PowerShell prompt after installation.
+
+If the `pdk` command does not appear, check that the `PuppetDevelopmentKit` PowerShell module is loaded in your PowerShell prompt:
+
+```
+Get-Module -Name PuppetDevelopmentKit
+```
+
+If no output is returned, load the `PuppetDevelopmentKit` module by running the following command:
+
+```
+Import-Module -Name PuppetDevelopmentKit
+```
+
+> Note: On PowerShell version 3 and above, PowerShell modules are loaded automatically so this step shouldn't be necessary.
+
+You should set your script execution policy to at least [RemoteSigned](https://msdn.microsoft.com/en-us/powershell/reference/5.1/microsoft.powershell.security/set-executionpolicy), if it's not already, to allow the PowerShell integration to work.
+
+You can check your ExecutionPolicy by running the following command from a PowerShell prompt:
+
+```
+Get-ExecutionPolicy
+```
+
+To set the `ExecutionPolicy`, run the following command:
+
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
+```
+
+If you can't change the system `ExecutionPolicy`, you can change the `ExecutionPolicy` for just the current session by using the `Scope` paramter:
+
+```
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+
+For more information about PowerShell `ExecutionPolicies` or how to change them, see [about_Execution_Policies](http://go.microsoft.com/fwlink/?LinkID=135170).
 
 ## Usage
 
