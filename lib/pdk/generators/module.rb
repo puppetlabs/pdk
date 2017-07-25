@@ -24,6 +24,13 @@ module PDK
           raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % { dir: target_dir }
         end
 
+        parent_dir = File.dirname(target_dir)
+        unless File.writable?(parent_dir)
+          raise PDK::CLI::FatalError, _("You do not have permission to write to '%{parent_dir}'") % {
+            parent_dir: parent_dir,
+          }
+        end
+
         metadata = prepare_metadata(opts)
 
         temp_target_dir = PDK::Util.make_tmpdir_name('pdk-module-target')
@@ -50,7 +57,15 @@ module PDK
 
         PDK.answers.update!('template-url' => template_url)
 
-        FileUtils.mv(temp_target_dir, target_dir)
+        begin
+          FileUtils.mv(temp_target_dir, target_dir)
+        rescue Errno::EACCES => e
+          raise PDK::CLI::FatalError, _("Failed to move '%{source}' to '%{target}': %{message}") % {
+            source:  temp_target_dir,
+            target:  target_dir,
+            message: e.message,
+          }
+        end
       end
 
       def self.username_from_login
