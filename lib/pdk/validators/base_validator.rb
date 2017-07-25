@@ -76,7 +76,7 @@ module PDK
           parse_output(report, result, invokation_targets)
         end
 
-        exit_codes.sort.last
+        exit_codes.max
       end
     end
   end
