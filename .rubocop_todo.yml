@@ -6,21 +6,6 @@
 # Note that changes in the inspected code, or installation of new
 # versions of RuboCop, may require this file to be generated again.
 
-# Offense count: 12
-# Configuration parameters: CustomTransform, IgnoreMethods.
-RSpec/FilePath:
-  Exclude:
-    - 'spec/cli/option_normalizer_spec.rb'
-    - 'spec/cli/option_validator_spec.rb'
-    - 'spec/generators/module_spec.rb'
-    - 'spec/generators/puppet_class_spec.rb'
-    - 'spec/generators/puppet_object_spec.rb'
-    - 'spec/logger_spec.rb'
-    - 'spec/module/metadata_spec.rb'
-    - 'spec/template_file_spec.rb'
-    - 'spec/util/bundler_spec.rb'
-    - 'spec/validate_spec.rb'
-
 # Offense count: 34
 RSpec/MultipleExpectations:
   Max: 10
@@ -30,13 +15,8 @@ RSpec/MultipleExpectations:
 RSpec/NestedGroups:
   Exclude:
     - 'spec/acceptance/bundle_management_spec.rb'
-    - 'spec/generators/puppet_object_spec.rb'
-    - 'spec/template_file_spec.rb'
-
-# Offense count: 8
-RSpec/SubjectStub:
-  Exclude:
-    - 'spec/generators/puppet_object_spec.rb'
+    - 'spec/unit/generate/puppet_object_spec.rb'
+    - 'spec/unit/template_file_spec.rb'
 
 # Offense count: 45
 # Configuration parameters: EnforcedStyle, SupportedStyles.
