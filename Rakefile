@@ -99,3 +99,14 @@ rescue LoadError
     raise 'Install github_changelog_generator to get access to automatic changelog generation'
   end
 end
+
+begin
+  require 'yard'
+
+  YARD::Rake::YardocTask.new do |t|
+  end
+rescue LoadError
+  desc :yard do
+    raise 'Install yard to generate YARD documentation'
+  end
+end
