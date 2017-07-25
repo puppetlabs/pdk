@@ -3,51 +3,6 @@ require 'spec_helper_acceptance'
 describe 'pdk validate ruby', module_command: true do
   let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
 
-  context 'with a fresh module' do
-    include_context 'in a new module', 'validate_ruby_module'
-
-    example_rb = File.join('spec', 'example.rb')
-
-    before(:all) do
-      File.open(example_rb, 'w') do |f|
-        f.puts "require 'filepath'"
-      end
-    end
-
-    describe command('pdk validate ruby') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{\A\Z}) }
-      its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
-    end
-
-    describe command('pdk validate ruby --format junit') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
-      it_behaves_like :it_generates_valid_junit_xml
-
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('rubocop').with_attributes(
-          'failures' => eq(0),
-          'tests'    => a_value > 0,
-        )
-      end
-
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('rubocop').with_attributes(
-          'classname' => 'rubocop',
-          'name'      => example_rb,
-        ).that_passed
-      end
-
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('rubocop').with_attributes(
-          'classname' => 'rubocop',
-          'name'      => File.join('spec', 'spec_helper.rb'),
-        ).that_passed
-      end
-    end
-  end
-
   context 'with a style violation' do
     include_context 'in a new module', 'foo'
 
