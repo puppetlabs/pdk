@@ -2,4 +2,9 @@
 
 require 'pdk/cli'
 
-PDK::CLI.run(ARGV)
+begin
+  PDK::CLI.run(ARGV)
+rescue Interrupt
+  warn "\nAborted!"
+  exit 1
+end
