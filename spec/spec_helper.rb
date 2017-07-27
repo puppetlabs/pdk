@@ -1,3 +1,13 @@
+if ENV['COVERAGE'] == 'yes'
+  require 'simplecov'
+  require 'coveralls'
+
+  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+  SimpleCov.start do
+    add_filter '/spec/'
+  end
+end
+
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'pdk'
 require 'pdk/cli'

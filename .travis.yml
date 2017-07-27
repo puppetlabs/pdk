@@ -3,29 +3,24 @@ language: ruby
 before_install: gem install bundler -v 1.15.1
 bundler_args: "--without development"
 script:
-  - "cat Gemfile.lock"
-  - "bundle exec rake $CHECK"
+- cat Gemfile.lock
+- bundle exec rake $CHECK
 cache: bundler
-
-rvm:
-  - 2.1.9
-  - 2.3.3
-env:
- - "CHECK=spec"
- - "CHECK=rubocop"
-
 matrix:
-  exclude:
-    - rvm: 2.1.9
-      env: "CHECK=rubocop"
   include:
-    - rvm: 2.1.9
-      env: "CHECK=acceptance:local"
-
+  - rvm: 2.4.1
+    env: CHECK=spec COVERAGE=yes
+  - rvm: 2.4.1
+    env: CHECK=rubocop
+  - rvm: 2.1.9
+    env: CHECK=acceptance:local
+  - rvm: 2.1.9
+    env: CHECK=spec
 notifications:
   hipchat:
     rooms:
       secure: pXZo1noFzXPz4PN+f2jNUjBGxRnv3TBFh6n673/Rp6GO0RVh1zOAv7udzR9Pj84kOfFnRVg8zH98GR8rNLXZkNWhrwxXKiF8YzZhDfdm9EXUW05LY9AfJUw0Sc8iqPqtawBNzAMQolXFOnCMdVCl481b3vsKVyyh9HvfNe3eOPvQs7TsTpcvUPZQvMptIUDEYJQYBOklDVFYoT/mzTYFOTmVTtfzif6orYfzxEeDgN1gy/OcS6Ben66tKS4rzpxTLxKjg8mTUsBlOpx0hOy9KXcGErSpYMiRTwpTsftO02+c5xANobF4tVt6c8uSicZZ0yTLZEAUnnT1F0L4L/DKVH5fygDNgqt8bBNE5jt4QXAWQqBeNP9gKHGSSn15eMrhGRWNpp8wxzDwgFQ1byHWR83TW0/uH2nVdqVKdwSV8QAyD/pd3F5wh7uCaHdJulsFkdgMh7fC9GvLaNbyxosTUNtDTFUO/UN1ZUsWPbBBz28mIx50iIp03oLbN4LrDbTJqRPZ+etPqYJ292FC8ifiRQI7V9zpNMcIBO26EgboeNTqE7GQ403tYMG/L5XdVhGl7tEBqfFCEIQBWwywDa5xTpBjBex0IGb0mqsdHJ1iK8Qy2yJwXIfcsFkIto0Hq65Zm+HvMm+1ep/v6DAsyYVmNbwDGj7hXBVC8WHyxejnxeM=
     template:
-      - '%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message} (<a href="%{build_url}">Details</a> | <a href="%{compare_url}">PR/Diff</a>)'
+    - '%{repository}#%{build_number} (%{branch} - %{commit} : %{author}): %{message}
+      (<a href="%{build_url}">Details</a> | <a href="%{compare_url}">PR/Diff</a>)'
     format: html
