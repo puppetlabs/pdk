@@ -200,30 +200,6 @@ to be added to the generated class. Optionally, the data type of the parameter
 can be specified along with the parameter name, separated by a colon. Any
 number of parameters can be provided on the command line.
 
-### `pdk add provider` command
-
-Adds a new resource provider to an existing module.
-
-Usage:
-
-```
-pdk add provider [--template-url=git_url] provider_name [data_type:attribute_name]*
-```
-
-The `pdk add provider` command accepts the following arguments. Arguments are optional unless specified.
-
-#### `--template-url=git_url`
-
-Overrides the template to use for this module. If possible please contribute your improvements back to the default template at [puppetlabs/pdk](https://github.com/puppetlabs/pdk).
-
-#### `provider_name`
-
-**Required**. Specifies the name of the resource provider being created.
-
-#### `data_type:attribute_name`
-
-Specifies a list of attributes with their expected data types, such as `'Enum[absent, present]:ensure'`. If not specified, the data type will have no attributes.
-
 ### `pdk validate` command
 
 Runs all static validations. Any errors are reported to the console in the format requested. The exit code is non-zero when errors occur.
