@@ -180,7 +180,7 @@ module PDK
           },
         ]
 
-        prompt = TTY::Prompt.new
+        prompt = TTY::Prompt.new(help_color: :cyan)
 
         interview = PDK::CLI::Util::Interview.new(prompt)
 
