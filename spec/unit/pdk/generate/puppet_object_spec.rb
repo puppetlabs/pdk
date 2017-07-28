@@ -72,6 +72,7 @@ describe PDK::Generate::PuppetObject do
     include_context :with_puppet_object_module_metadata
 
     let(:dest_path) { '/path/to/file/to/be/written' }
+    let(:dest_dir) { File.dirname(dest_path) }
     let(:template_path) { '/path/to/file/template' }
     let(:template_data) { { some: 'data', that: 'the', template: 'needs' } }
     let(:template_file) { instance_double(PDK::TemplateFile, render: 'rendered file content') }
@@ -85,15 +86,40 @@ describe PDK::Generate::PuppetObject do
     end
 
     it 'creates the parent directories for the destination path if needed' do
-      expect(FileUtils).to receive(:mkdir_p).with('/path/to/file/to/be')
+      expect(FileUtils).to receive(:mkdir_p).with(dest_dir)
       templated_object.render_file(dest_path, template_path, template_data)
     end
 
     it 'writes the rendered file content to the destination file' do
-      allow(FileUtils).to receive(:mkdir_p).with(anything)
+      allow(FileUtils).to receive(:mkdir_p).with(dest_dir)
       templated_object.render_file(dest_path, template_path, template_data)
       rendered_file.rewind
       expect(rendered_file.read).to eq('rendered file content')
+    end
+
+    context 'when it fails to create the parent directories' do
+      before(:each) do
+        allow(FileUtils).to receive(:mkdir_p).with(dest_dir).and_raise(SystemCallError, 'some message')
+      end
+
+      it 'raises a FatalError' do
+        expect {
+          templated_object.render_file(dest_path, template_path, template_data)
+        }.to raise_error(PDK::CLI::FatalError, %r{unable to create directory '.+':.+some message}i)
+      end
+    end
+
+    context 'when it fails to write the destination file' do
+      before(:each) do
+        allow(File).to receive(:open).with(dest_path, 'w').and_raise(SystemCallError, 'some message')
+        allow(FileUtils).to receive(:mkdir_p).with(dest_dir)
+      end
+
+      it 'raises a FatalError' do
+        expect {
+          templated_object.render_file(dest_path, template_path, template_data)
+        }.to raise_error(PDK::CLI::FatalError, %r{unable to write to file '.+':.+some message}i)
+      end
     end
   end
 
