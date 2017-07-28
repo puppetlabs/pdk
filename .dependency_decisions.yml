@@ -1,0 +1,64 @@
+---
+- - :whitelist
+  - MIT
+  - :who: DavidS
+    :why: standard license
+    :versions: []
+    :when: 2017-07-28 11:11:09.971500380 Z
+- - :whitelist
+  - Apache 2.0
+  - :who: DavidS
+    :why: standard license
+    :versions: []
+    :when: 2017-07-28 11:12:21.086779416 Z
+- - :whitelist
+  - ruby
+  - :who: DavidS
+    :why: standard license
+    :versions: []
+    :when: 2017-07-28 11:12:28.578927478 Z
+- - :whitelist
+  - Simplified BSD
+  - :who: DavidS
+    :why: standard license
+    :versions: []
+    :when: 2017-07-28 11:12:36.924605442 Z
+- - :whitelist
+  - New BSD
+  - :who: DavidS
+    :why: standard license
+    :versions: []
+    :when: 2017-07-28 11:14:00.252514982 Z
+- - :whitelist
+  - Apache License, v2
+  - :who: DavidS
+    :why: standard license
+    :versions: []
+    :when: 2017-07-28 11:14:07.999759997 Z
+- - :whitelist
+  - Ruby or LGPLv3+
+  - :who: DavidS
+    :why: standard license
+    :versions: []
+    :when: 2017-07-28 11:18:47.915684798 Z
+- - :license
+  - bundler
+  - MIT
+  - :who: DavidS
+    :why: See https://rubygems.org/gems/bundler
+    :versions: []
+    :when: 2017-07-28 11:22:12.975947786 Z
+- - :license
+  - minitar
+  - ruby
+  - :who: DavidS
+    :why: https://rubygems.org/gems/minitar
+    :versions: []
+    :when: 2017-07-28 11:22:50.609762862 Z
+- - :license
+  - colored
+  - MIT
+  - :who: DavidS
+    :why: https://github.com/defunkt/colored/blob/829bde0f8832406be1cacc5c99c49d976e05ccfc/LICENSE
+    :versions: []
+    :when: 2017-07-28 11:23:25.554994001 Z

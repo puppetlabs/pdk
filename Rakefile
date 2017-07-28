@@ -96,3 +96,7 @@ rescue LoadError
     raise 'Install yard to generate YARD documentation'
   end
 end
+
+task(:license_finder) do
+  system('license_finder --decisions-file=.dependency_decisions.yml') || raise(StandardError, 'Unapproved license(s) found on dependencies')
+end
