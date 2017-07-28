@@ -23,12 +23,20 @@ describe PDK::Util do
     let(:actual_start_dir) { '/path/to/something/deep/in/a/module' }
 
     before(:each) do
-      current = actual_start_dir
-      until current == '/'
-        allow(File).to receive(:directory?).with(current).and_return(true)
-        allow(File).to receive(:expand_path).with('..', current).and_return(File.dirname(current))
-        current = File.dirname(current)
-      end
+      allow(File).to receive(:directory?).with('/path/to/something/deep/in/a/module').and_return(true)
+      allow(File).to receive(:expand_path).with('..', '/path/to/something/deep/in/a/module').and_return('/path/to/something/deep/in/a')
+      allow(File).to receive(:directory?).with('/path/to/something/deep/in/a').and_return(true)
+      allow(File).to receive(:expand_path).with('..', '/path/to/something/deep/in/a').and_return('/path/to/something/deep/in')
+      allow(File).to receive(:directory?).with('/path/to/something/deep/in').and_return(true)
+      allow(File).to receive(:expand_path).with('..', '/path/to/something/deep/in').and_return('/path/to/something/deep')
+      allow(File).to receive(:directory?).with('/path/to/something/deep').and_return(true)
+      allow(File).to receive(:expand_path).with('..', '/path/to/something/deep').and_return('/path/to/something')
+      allow(File).to receive(:directory?).with('/path/to/something').and_return(true)
+      allow(File).to receive(:expand_path).with('..', '/path/to/something').and_return('/path/to')
+      allow(File).to receive(:directory?).with('/path/to').and_return(true)
+      allow(File).to receive(:expand_path).with('..', '/path/to').and_return('/path')
+      allow(File).to receive(:directory?).with('/path').and_return(true)
+      allow(File).to receive(:expand_path).with('..', '/path').and_return('/')
       allow(File).to receive(:directory?).with('/').and_return(true)
       allow(File).to receive(:expand_path).with('..', '/').and_return('/')
       allow(File).to receive(:expand_path).with(actual_start_dir).and_return(actual_start_dir)
