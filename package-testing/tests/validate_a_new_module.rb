@@ -12,9 +12,12 @@ test_name 'C100321 - Generate a module and validate it (i.e. ensure bundle insta
   end
 
   step 'Validate the module' do
-    on(workstation, "cd #{module_name} && #{pdk_command(workstation, 'validate')}", accept_all_exit_codes: true) do |outcome|
+    on(workstation, "cd #{module_name} && #{pdk_command(workstation, 'validate --debug')}", accept_all_exit_codes: true) do |outcome|
       assert_equal(0, outcome.exit_code,
                    "Validate on a new module should return 0. stderr was: #{outcome.stderr}")
+
+      assert_match(%r{using vendored gemfile\.lock}i, outcome.stdout, 'pdk should use vendored Gemfile.lock')
+
       on(workstation, "test -f #{module_name}/Gemfile.lock", accept_all_exit_codes: true) do |lock_check_outcome|
         assert_equal(0, lock_check_outcome.exit_code, 'pdk validate should have caused a Gemfile.lock file to be created')
       end
