@@ -79,6 +79,7 @@ module PDK
       # point for the class.
       #
       # @raise [PDK::CLI::FatalError] if the target files already exist.
+      # @raise [PDK::CLI::FatalError] (see #render_file)
       #
       # @api public
       def run
@@ -105,14 +106,33 @@ module PDK
       # @param data [Hash{Object => Object}] The data to be provided to the
       #   template when rendering.
       #
+      # @raise [PDK::CLI::FatalError] if the parent directories to `dest_path`
+      #   do not exist and could not be created.
+      # @raise [PDK::CLI::FatalError] if the rendered file could not be written
+      #   to `dest_path`.
+      #
       # @return [void]
       #
       # @api private
       def render_file(dest_path, template_path, data)
         PDK.logger.info(_("Creating '%{file}' from template.") % { file: dest_path })
         file_content = PDK::TemplateFile.new(template_path, data).render
-        FileUtils.mkdir_p(File.dirname(dest_path))
+
+        begin
+          FileUtils.mkdir_p(File.dirname(dest_path))
+        rescue SystemCallError => e
+          raise PDK::CLI::FatalError, _("Unable to create directory '%{path}': %{message}") % {
+            path:    File.dirname(dest_path),
+            message: e.message,
+          }
+        end
+
         File.open(dest_path, 'w') { |f| f.write file_content }
+      rescue SystemCallError => e
+        raise PDK::CLI::FatalError, _("Unable to write to file '%{path}': %{message}") % {
+          path:    dest_path,
+          message: e.message,
+        }
       end
 
       # Search the possible template directories in order of preference to find
