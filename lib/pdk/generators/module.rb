@@ -112,8 +112,11 @@ module PDK
         ].each do |dir|
           begin
             FileUtils.mkdir_p(dir)
-          rescue SystemCallError
-            raise PDK::CLI::FatalError, _("Unable to create directory '%{dir}'") % { dir: dir }
+          rescue SystemCallError => e
+            raise PDK::CLI::FatalError, _("Unable to create directory '%{dir}': %{message}") % {
+              dir:     dir,
+              message: e.message,
+            }
           end
         end
       end
