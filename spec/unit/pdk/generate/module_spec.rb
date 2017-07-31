@@ -84,7 +84,8 @@ describe PDK::Generate::Module do
         allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
         allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
         allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
-        allow(File).to receive(:writable?).with(File.dirname(target_dir)).and_return(target_parent_writeable)
+        allow(File).to receive(:open).with(%r{pdk-test-writable}, anything) { raise Errno::EACCES unless target_parent_writeable }
+        allow(FileUtils).to receive(:rm_f).with(%r{pdk-test-writable})
       end
 
       context 'when the parent directory of the target is not writable' do
