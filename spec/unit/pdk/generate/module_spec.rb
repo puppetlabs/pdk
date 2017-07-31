@@ -498,6 +498,18 @@ describe PDK::Generate::Module do
 
       described_class.prepare_module_directory(path)
     end
+
+    context 'when it fails to create a directory' do
+      before(:each) do
+        allow(FileUtils).to receive(:mkdir_p).with(anything).and_raise(SystemCallError, 'some message')
+      end
+
+      it 'raises a FatalError' do
+        expect {
+          described_class.prepare_module_directory(path)
+        }.to raise_error(PDK::CLI::FatalError, %r{unable to create directory.+some message}i)
+      end
+    end
   end
 
   describe '.username_from_login' do
