@@ -55,19 +55,15 @@ describe PDK::Validate::MetadataJSONLint do
     let(:targets) { %w[target1 target2.json] }
 
     it 'sets the output format as JSON' do
-      expect(command_args.first(2)).to eq(['--format', 'json'])
+      expect(command_args.join(' ')).to match(%r{--format json})
+    end
+
+    it 'enables strict dependency check' do
+      expect(command_args).to include('--strict-dependencies')
     end
 
     it 'appends the targets to the command arguments' do
       expect(command_args.last(targets.count)).to eq(targets)
-    end
-
-    context 'when auto-correct is enabled' do
-      let(:options) { { auto_correct: true } }
-
-      it 'has no effect' do
-        expect(command_args).to eq(['--format', 'json'].concat(targets))
-      end
     end
   end
 
