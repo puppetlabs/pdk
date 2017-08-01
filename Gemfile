@@ -8,7 +8,8 @@ gem 'nokogiri', '1.7.2'
 
 group :development do
   gem 'activesupport', '4.2.9'
-  gem 'github_changelog_generator', git: 'https://github.com/DavidS/github-changelog-generator.git', ref: 'adjust-tag-section-mapping'
+  # TODO: Use gem instead of git. Section mapping is merged into master, but not yet released
+  gem 'github_changelog_generator', git: 'https://github.com/skywinder/github-changelog-generator.git', ref: '33f89614d47a4bca1a3ae02bdcc37edd0b012e86'
   gem 'pry-byebug', '~> 3.4'
   if RUBY_VERSION < '2.2.2'
     # required for github_changelog_generator
