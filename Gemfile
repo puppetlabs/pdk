@@ -31,8 +31,3 @@ end
 group :acceptance do
   gem 'serverspec'
 end
-
-# beaker should not be installed on the SUT during package testing
-group :package_testing do
-  gem 'beaker'
-end

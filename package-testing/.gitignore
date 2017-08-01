@@ -1,0 +1,13 @@
+# bundler items
+/.bundle/
+/vendor/
+/Gemfile.lock
+
+# beaker output directories
+/tmp/
+/log/
+/repo-config/
+/acceptance_hosts.yml
+/junit/
+/archive/
+/sut-files.tgz

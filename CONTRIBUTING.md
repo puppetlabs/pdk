@@ -29,9 +29,10 @@ Run ruby style checks. Use `rake rubocop:auto_correct` to fix the easy ones.
 
 Run acceptance tests on the current pdk code. These tests are executed on commits and pull requests to this repo using both travis and appveyor.
 
-## acceptance:package
+# Testing packages
 
-Run acceptance tests against a package install. This task is for Puppet's packaging CI, and contributors outside of Puppet, Inc. don't need to worry about executing it. It uses [beaker](https://github.com/puppetlabs/beaker) to provision a VM, fetch and install a pdk installation package, and then run the acceptance tests on that VM.
+The package-testing/ folder contains files for testing built packages of pdk. This is for Puppet's packaging CI, and contributors outside of Puppet, Inc. don't need to worry about executing it. It uses [beaker](https://github.com/puppetlabs/beaker) to provision a VM, fetch and install a pdk installation package, and then run the acceptance tests on that VM.
+This folder has its own Gemfile and Rakefile providing an _acceptance_ rake task.
 It requires some environment variables to be set in order to specify what beaker will set up:
 
 Environment Variable | Usage
