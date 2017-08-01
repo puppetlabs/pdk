@@ -3,7 +3,27 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v0.6.0.pre](https://github.com/puppetlabs/pdk/tree/v0.6.0.pre) (2017-08-01)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.5.0...v0.6.0.pre)
+
+**Implemented enhancements:**
+
+- \(maint\) Remove unimplemented `add provider` from docs [\#200](https://github.com/puppetlabs/pdk/pull/200) ([DavidS](https://github.com/DavidS))
+- Update PowerShell install instructions [\#194](https://github.com/puppetlabs/pdk/pull/194) ([jpogran](https://github.com/jpogran))
+- \(maint\) Remove unused vcs option from 'pdk new module' [\#192](https://github.com/puppetlabs/pdk/pull/192) ([rodjek](https://github.com/rodjek))
+- Document compatibility policy and upgrade strategy [\#188](https://github.com/puppetlabs/pdk/pull/188) ([turbodog](https://github.com/turbodog))
+- \(MAINT\) Remove spinner for `bundle check` command [\#187](https://github.com/puppetlabs/pdk/pull/187) ([scotje](https://github.com/scotje))
+- \(SDK-321\) add `pdk validate help` [\#183](https://github.com/puppetlabs/pdk/pull/183) ([DavidS](https://github.com/DavidS))
+- \(SDK-317\) Ensure parent of 'pdk new module' is writable before generation [\#175](https://github.com/puppetlabs/pdk/pull/175) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- \(SDK-333\) Rescue Interrupt cleanly [\#199](https://github.com/puppetlabs/pdk/pull/199) ([scotje](https://github.com/scotje))
+- \(\#137\) Nicer response when binary doesn't exist [\#149](https://github.com/puppetlabs/pdk/pull/149) ([rodjek](https://github.com/rodjek))
+
 ## [v0.5.0](https://github.com/puppetlabs/pdk/tree/v0.5.0) (2017-07-20)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.4...v0.5.0)
 
 **Implemented enhancements:**
@@ -16,6 +36,7 @@ All notable changes to this project will be documented in this file.
 - \(SDK-331\) allow additional gems to be installed [\#178](https://github.com/puppetlabs/pdk/pull/178) ([DavidS](https://github.com/DavidS))
 
 ## [v0.4.4](https://github.com/puppetlabs/pdk/tree/v0.4.4) (2017-07-18)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.3...v0.4.4)
 
 **Fixed bugs:**
@@ -26,6 +47,7 @@ All notable changes to this project will be documented in this file.
 - \(SDK-319\) force usage of our ruby [\#168](https://github.com/puppetlabs/pdk/pull/168) ([DavidS](https://github.com/DavidS))
 
 ## [v0.4.3](https://github.com/puppetlabs/pdk/tree/v0.4.3) (2017-07-17)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.2...v0.4.3)
 
 **Fixed bugs:**
@@ -33,6 +55,7 @@ All notable changes to this project will be documented in this file.
 - \(FIXUP\) Fix default subprocess success/failure messages on Windows [\#164](https://github.com/puppetlabs/pdk/pull/164) ([scotje](https://github.com/scotje))
 
 ## [v0.4.2](https://github.com/puppetlabs/pdk/tree/v0.4.2) (2017-07-17)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.1...v0.4.2)
 
 **Fixed bugs:**
@@ -42,6 +65,7 @@ All notable changes to this project will be documented in this file.
 - Use default username when Etc.getlogin fails [\#160](https://github.com/puppetlabs/pdk/pull/160) ([austb](https://github.com/austb))
 
 ## [v0.4.1](https://github.com/puppetlabs/pdk/tree/v0.4.1) (2017-07-14)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.0...v0.4.1)
 
 **Fixed bugs:**
@@ -49,6 +73,7 @@ All notable changes to this project will be documented in this file.
 - \(FIXUP\) Resolve conflation of cachedir concepts [\#153](https://github.com/puppetlabs/pdk/pull/153) ([scotje](https://github.com/scotje))
 
 ## [v0.4.0](https://github.com/puppetlabs/pdk/tree/v0.4.0) (2017-07-14)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.3.0...v0.4.0)
 
 **Implemented enhancements:**
@@ -64,6 +89,7 @@ All notable changes to this project will be documented in this file.
 - \(SDK-298\) Handle exception raised when an invalid report format is specified on the CLI [\#125](https://github.com/puppetlabs/pdk/pull/125) ([rodjek](https://github.com/rodjek))
 
 ## [v0.3.0](https://github.com/puppetlabs/pdk/tree/v0.3.0) (2017-06-29)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.2.0...v0.3.0)
 
 **Implemented enhancements:**
@@ -83,6 +109,7 @@ All notable changes to this project will be documented in this file.
 - \(SDK-277\) Exit cleanly if pdk commands are run outside of a module [\#100](https://github.com/puppetlabs/pdk/pull/100) ([rodjek](https://github.com/rodjek))
 
 ## [v0.2.0](https://github.com/puppetlabs/pdk/tree/v0.2.0) (2017-06-21)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.1.0...v0.2.0)
 
 **Implemented enhancements:**
@@ -103,6 +130,7 @@ All notable changes to this project will be documented in this file.
 - \(maint\) nokogiri: avoid versions without ruby 2.1 support [\#60](https://github.com/puppetlabs/pdk/pull/60) ([DavidS](https://github.com/DavidS))
 
 ## [v0.1.0](https://github.com/puppetlabs/pdk/tree/v0.1.0) (2017-06-05)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/2be9329bed4715c888f273814b99f2cf37ee9341...v0.1.0)
 
 **Implemented enhancements:**
@@ -126,4 +154,4 @@ All notable changes to this project will be documented in this file.
 
 
 
-\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
+* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*

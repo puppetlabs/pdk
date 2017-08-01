@@ -92,6 +92,7 @@ begin
     config.header = "# Changelog\n\nAll notable changes to this project will be documented in this file.\n"
     config.include_labels = %w[enhancement bug]
     config.user = 'puppetlabs'
+    config.project = 'pdk'
   end
 rescue LoadError
   desc 'Install github_changelog_generator to get access to automatic changelog generation'
