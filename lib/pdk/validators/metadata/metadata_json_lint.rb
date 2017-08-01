@@ -31,6 +31,7 @@ module PDK
 
       def self.parse_options(_options, targets)
         cmd_options = ['--format', 'json']
+        cmd_options << '--strict-dependencies'
 
         cmd_options.concat(targets)
       end
