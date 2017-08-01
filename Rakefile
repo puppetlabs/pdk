@@ -43,29 +43,6 @@ RSpec::Core::RakeTask.new(:spec) do |t|
 end
 
 namespace :acceptance do
-  desc 'Run acceptance tests against a pdk package'
-  task(:package) do
-    require 'beaker-hostgenerator'
-
-    unless ENV['SHA']
-      abort 'Environment variable SHA must be set to the SHA or tag of a pdk build'
-    end
-
-    test_target = ENV['TEST_TARGET']
-    abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. redhat7-64workstation.' unless test_target
-    unless ENV['BUILD_SERVER'] || test_target !~ %r{win}
-      abort 'Testing against Windows requires environment variable BUILD_SERVER '\
-            'to be set to the hostname of your build server (JIRA BKR-1109)'
-    end
-    puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
-    cli = BeakerHostGenerator::CLI.new(["#{test_target}{type=foss}", '--disable-default-role'])
-    File.open('acceptance_hosts.yml', 'w') do |hosts_file|
-      hosts_file.print(cli.execute)
-    end
-
-    sh('bundle exec beaker -h acceptance_hosts.yml --options-file package-testing/config/options.rb --tests package-testing/tests/')
-  end
-
   desc 'Run acceptance tests against current code'
   RSpec::Core::RakeTask.new(:local) do |t|
     t.rspec_opts = '--tag ~package' # Exclude package specific examples
