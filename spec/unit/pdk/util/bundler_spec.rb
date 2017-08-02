@@ -53,6 +53,8 @@ RSpec.describe PDK::Util::Bundler do
 
     context 'when there is no Gemfile.lock' do
       before(:each) do
+        allow(described_class).to receive(:already_bundled?).and_return(false)
+
         allow(File).to receive(:file?).with(%r{Gemfile$}).and_return(true)
         allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(false)
 
@@ -60,6 +62,24 @@ RSpec.describe PDK::Util::Bundler do
         allow($stderr).to receive(:puts).with('check stdout')
         allow($stderr).to receive(:puts).with('check stderr')
         allow_command([bundle_regex, 'install', any_args])
+      end
+
+      context 'when part of a packaged installation' do
+        before(:each) do
+          allow(PDK::Util).to receive(:package_install?).and_return(true)
+          allow(File).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+          allow(File).to receive(:exist?).with(bundle_regex).and_return(true)
+        end
+
+        it 'copies a Gemfile.lock from vendored location' do
+          allow(PDK::Util).to receive(:package_cachedir).and_return('/package/cachedir')
+          allow(File).to receive(:exist?).with('/package/cachedir/Gemfile.lock').and_return(true)
+
+          expect(logger).to receive(:debug).with(%r{using vendored gemfile\.lock}i)
+          expect(FileUtils).to receive(:cp).with('/package/cachedir/Gemfile.lock', %r{Gemfile\.lock$})
+
+          described_class.ensure_bundle!
+        end
       end
 
       it 'generates Gemfile.lock' do

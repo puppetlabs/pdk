@@ -1,4 +1,5 @@
 require 'bundler'
+require 'fileutils'
 require 'tty-spinner'
 require 'pdk/util'
 require 'pdk/cli/exec'
@@ -22,8 +23,20 @@ module PDK
         end
 
         unless bundle.locked?
-          unless bundle.lock!
-            raise PDK::CLI::FatalError, _('Unable to resolve Gemfile dependencies.')
+          if PDK::Util.package_install?
+            # In packaged installs, try to use vendored Gemfile.lock as a starting point.
+            # The 'bundle install' below will pick up any new dependencies.
+            vendored_gemfile_lock = File.join(PDK::Util.package_cachedir, 'Gemfile.lock')
+
+            if File.exist?(vendored_gemfile_lock)
+              PDK.logger.debug(_("No Gemfile.lock found in module, using vendored Gemfile.lock from '%{source}'") % { source: vendored_gemfile_lock })
+              FileUtils.cp(vendored_gemfile_lock, File.join(PDK::Util.module_root, 'Gemfile.lock'))
+            end
+          else
+            # In non-packaged installs, just let bundler resolve deps as normal.
+            unless bundle.lock!
+              raise PDK::CLI::FatalError, _('Unable to resolve Gemfile dependencies.')
+            end
           end
         end
 
