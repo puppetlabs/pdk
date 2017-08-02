@@ -12,7 +12,7 @@ describe 'Managing Gemfile dependencies' do
 
     describe command('pdk test unit --debug') do
       its(:exit_status) { is_expected.to eq 0 }
-      its(:stdout) { is_expected.to match(%r{Checking for missing Gemfile dependencies}i) }
+      its(:stderr) { is_expected.to match(%r{Checking for missing Gemfile dependencies}i) }
 
       describe file('Gemfile.lock') do
         it { is_expected.to be_file }
