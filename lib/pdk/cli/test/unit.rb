@@ -8,6 +8,7 @@ module PDK::CLI
     summary _('Run unit tests.')
 
     flag nil, :list, _('list all available unit tests and their descriptions')
+    flag nil, :parallel, _('run unit tests in parallel'), hidden: true
 
     option nil, :tests, _('a comma-separated list of tests to run'), argument: :required, default: '' do |values|
       PDK::CLI::Util::OptionValidator.comma_separated_list?(values)
