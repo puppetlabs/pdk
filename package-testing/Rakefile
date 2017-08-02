@@ -9,11 +9,17 @@ task(:acceptance) do
     EOS
   end
 
+  if ENV['SHA'] && ENV['LOCAL_PKG']
+    abort "Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other."
+  end
+
   unless test_target = ENV['TEST_TARGET']
     abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. "redhat7-64workstation."'
   end
 
-  unless ENV['BUILD_SERVER'] || test_target !~ %r{win}
+  # TODO: Is there a reason not to just default BUILD_SERVER to
+  # builds.delivery.puppetlabs.net instead of requiring it?
+  unless (!ENV['SHA'] || ENV['BUILD_SERVER']) || test_target !~ %r{win}
     abort 'Testing against Windows requires environment variable BUILD_SERVER '\
           'to be set to the hostname of your build server (JIRA BKR-1109)'
   end
