@@ -189,6 +189,49 @@ describe PDK::Test::Unit do
       end
     end
 
+    context 'in parallel without examples' do
+      let(:rspec_json_output) do
+        '{
+          "examples":
+          [
+            {
+              "id": "./spec/fixtures/modules/testmod/spec/classes/testmod_spec.rb[1:3:1]",
+              "status": "passed",
+              "pending_message": null
+            }
+          ],
+          "summary": {
+            "duration": 0.295112,
+            "example_count": 1,
+            "failure_count": 0,
+            "pending_count": 0
+          }
+        }
+        {
+          "examples":
+          [
+            {
+              "id": "./spec/fixtures/modules/testmod/spec/classes/testmod_spec.rb[1:3:1]",
+              "status": "passed",
+              "pending_message": null
+            }
+          ],
+          "summary": {
+            "duration": 0.295112,
+            "example_count": 1,
+            "failure_count": 0,
+            "pending_count": 0
+          }
+        }'
+      end
+
+      it 'returns 0' do
+        expect(PDK::Util).not_to receive(:find_first_json_in)
+
+        expect(described_class.invoke(report, parallel: true, tests: 'a_test_spec.rb')).to eq(-1)
+      end
+    end
+
     context 'with examples' do
       let(:rspec_json_output) do
         '{

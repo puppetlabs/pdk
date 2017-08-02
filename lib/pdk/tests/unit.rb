@@ -38,7 +38,11 @@ module PDK
 
         result = command.execute!
 
-        json_result = PDK::Util.find_valid_json_in(result[:stdout], break_on_first: !options.key?(:parallel))
+        json_result = if options.key?(:parallel)
+                        PDK::Util.find_all_json_in(result[:stdout])
+                      else
+                        PDK::Util.find_first_json_in(result[:stdout])
+                      end
 
         if parallel_with_no_tests?(options.key?(:parallel), json_result, result)
           json_result = [{ 'messages' => ['No examples found.'] }]
@@ -151,7 +155,7 @@ module PDK
         list_command.context = :module
         output = list_command.execute!
 
-        rspec_json = PDK::Util.find_valid_json_in(output[:stdout])
+        rspec_json = PDK::Util.find_first_json_in(output[:stdout])
         raise PDK::CLI::FatalError, _('Failed to find valid JSON in output from rspec: %{output}' % { output: output[:stdout] }) unless rspec_json
         if rspec_json['examples'].empty?
           rspec_message = rspec_json['messages'][0]
