@@ -103,12 +103,15 @@ module PDK
 
     # Iterate through possible JSON documents until we find one that is valid.
     #
-    # @param text the text in which to find a JSON document
-    # @param break_on_first [Boolean] Whether or not to break after valid JSON is found, defaults to true
+    # @param [String] text the text in which to find a JSON document
+    # @param [Hash] opts options
+    # @option opts [Boolean] :break_on_first Whether or not to break after valid JSON is found, defaults to true
     #
     # @return [Hash, Array<Hash>, nil] subset of text as Hash of first valid JSON found, array of all valid JSON found, or nil if no valid
     #   JSON found in the text
-    def find_valid_json_in(text, break_on_first = true)
+    def find_valid_json_in(text, opts = {})
+      break_on_first = opts.key?(:break_on_first) ? opts[:break_on_first] : true
+
       json_result = break_on_first ? nil : []
 
       text.scan(%r{\{(?:[^{}]|(?:\g<0>))*\}}x) do |str|

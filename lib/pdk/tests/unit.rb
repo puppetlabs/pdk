@@ -32,7 +32,7 @@ module PDK
 
         result = command.execute!
 
-        json_result = PDK::Util.find_valid_json_in(result[:stdout], !options.key?(:parallel))
+        json_result = PDK::Util.find_valid_json_in(result[:stdout], break_on_first: !options.key?(:parallel))
 
         raise PDK::CLI::FatalError, _('Unit test output did not contain a valid JSON result: %{output}') % { output: result[:stdout] } if json_result.nil? || json_result.empty?
 
