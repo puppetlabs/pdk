@@ -239,4 +239,35 @@ describe PDK::Util do
       it { is_expected.to be_nil }
     end
   end
+
+  # TODO: These expect a string rather than actual JSON. Primarily they expect the non-JSON string to be removed
+  describe '.find_valid_json_in' do
+    it 'returns JSON from start of a string' do
+      text = '{"version":"3.6.0", "examples":[]}bar'
+      json = '{"version"=>"3.6.0", "examples"=>[]}'
+      expect(described_class.find_valid_json_in(text).to_s).to eq(json)
+    end
+
+    it 'returns JSON from the end of a string' do
+      text = 'foo{"version":"3.6.0", "examples":[]}'
+      json = '{"version"=>"3.6.0", "examples"=>[]}'
+      expect(described_class.find_valid_json_in(text).to_s).to eq(json)
+    end
+
+    it 'returns JSON from the middle of a string' do
+      text = 'foo{"version":"3.6.0", "examples":[]}bar'
+      json = '{"version"=>"3.6.0", "examples"=>[]}'
+      expect(described_class.find_valid_json_in(text).to_s).to eq(json)
+    end
+
+    it 'returns nil for invalid JSON in a string' do
+      text = 'foo{"version"":"3.6.0", "examples":[]}bar'
+      expect(described_class.find_valid_json_in(text)).to be_nil
+    end
+
+    it 'returns nil for no JSON in a string' do
+      text = 'foosomethingbar'
+      expect(described_class.find_valid_json_in(text)).to be_nil
+    end
+  end
 end

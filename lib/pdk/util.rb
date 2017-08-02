@@ -100,5 +100,27 @@ module PDK
       end
     end
     module_function :module_root
+
+    # Iterate through possible JSON documents until we find one that is valid.
+    #
+    # @param text the text in which to find a JSON document
+    #
+    # @return substring of text that is valid JSON, or nil if no valid
+    #   JSON found in the text
+    def find_valid_json_in(text)
+      json_result = nil
+
+      text.scan(%r{\{(?:[^{}]|(?:\g<0>))*\}}x) do |str|
+        begin
+          json_result = JSON.parse(str)
+          break
+        rescue JSON::ParserError
+          next
+        end
+      end
+
+      json_result
+    end
+    module_function :find_valid_json_in
   end
 end
