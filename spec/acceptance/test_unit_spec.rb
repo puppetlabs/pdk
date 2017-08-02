@@ -16,6 +16,13 @@ describe 'Running unit tests' do
       its(:stderr) { is_expected.to match(%r{no examples found}i) }
       its(:stderr) { is_expected.to match(%r{evaluated 0 tests}i) }
     end
+
+    describe command('pdk test unit --parallel') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{running unit tests in parallel}i) }
+      its(:stderr) { is_expected.to match(%r{no examples found}i) }
+      its(:stderr) { is_expected.to match(%r{evaluated 0 tests}i) }
+    end
   end
 
   context 'with passing tests' do
