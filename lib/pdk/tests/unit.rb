@@ -38,23 +38,7 @@ module PDK
 
         result = command.execute!
 
-        # TODO: cleanup rspec and/or beaker output
-        # Iterate through possible JSON documents until we find one that is valid.
-        json_result = nil
-        json_result = [] if options.key?(:parallel)
-
-        result[:stdout].scan(%r{\{(?:[^{}]|(?:\g<0>))*\}}x) do |str|
-          begin
-            if options.key?(:parallel)
-              json_result.push(JSON.parse(str))
-            else
-              json_result = JSON.parse(str)
-              break
-            end
-          rescue JSON::ParserError
-            next
-          end
-        end
+        json_result = PDK::Util.find_valid_json_in(result[:stdout], break_on_first: !options.key?(:parallel))
 
         if parallel_with_no_tests?(options.key?(:parallel), json_result, result)
           json_result = [{ 'messages' => ['No examples found.'] }]
@@ -159,29 +143,28 @@ module PDK
       # @return array of { :id, :full_description }
       def self.list
         PDK::Util::Bundler.ensure_bundle!
-        PDK::Util::Bundler.ensure_binstubs!('rspec-core')
+        PDK::Util::Bundler.ensure_binstubs!('rake')
 
-        command_argv = [File.join(PDK::Util.module_root, 'bin', 'rspec'), '--dry-run', '--format', 'json']
+        command_argv = [File.join(PDK::Util.module_root, 'bin', 'rake'), 'spec_list_json']
         command_argv.unshift('ruby') if Gem.win_platform?
         list_command = PDK::CLI::Exec::Command.new(*command_argv)
         list_command.context = :module
         output = list_command.execute!
 
-        rspec_json_output = JSON.parse(output[:stdout])
-        if rspec_json_output['examples'].empty?
-          rspec_message = rspec_json_output['messages'][0]
+        rspec_json = PDK::Util.find_valid_json_in(output[:stdout])
+        raise PDK::CLI::FatalError, _('Failed to find valid JSON in output from rspec: %{output}' % { output: output[:stdout] }) unless rspec_json
+        if rspec_json['examples'].empty?
+          rspec_message = rspec_json['messages'][0]
           return [] if rspec_message == 'No examples found.'
 
           raise PDK::CLI::FatalError, _('Unable to enumerate examples. rspec reported: %{message}' % { message: rspec_message })
         else
           examples = []
-          rspec_json_output['examples'].each do |example|
+          rspec_json['examples'].each do |example|
             examples << { id: example['id'], full_description: example['full_description'] }
           end
           examples
         end
-      rescue JSON::ParserError => e
-        raise PDK::CLI::FatalError, _('Failed to parse output from rspec: %{message}' % { message: e.message })
       end
     end
   end

@@ -239,4 +239,58 @@ describe PDK::Util do
       it { is_expected.to be_nil }
     end
   end
+
+  # TODO: These expect a string rather than actual JSON. Primarily they expect the non-JSON string to be removed
+  describe '.find_valid_json_in' do
+    it 'returns JSON from start of a string' do
+      text = '{"version":"3.6.0", "examples":[]}bar'
+      expected = { 'version' => '3.6.0', 'examples' => [] }
+
+      expect(described_class.find_valid_json_in(text)).to eq(expected)
+    end
+
+    it 'returns JSON from the end of a string' do
+      text = 'foo{"version":"3.6.0", "examples":[]}'
+      expected = { 'version' => '3.6.0', 'examples' => [] }
+
+      expect(described_class.find_valid_json_in(text)).to eq(expected)
+    end
+
+    it 'returns JSON from the middle of a string' do
+      text = 'foo{"version":"3.6.0", "examples":[]}bar'
+      expected = { 'version' => '3.6.0', 'examples' => [] }
+
+      expect(described_class.find_valid_json_in(text)).to eq(expected)
+    end
+
+    it 'returns nil for invalid JSON in a string' do
+      text = 'foo{"version"":"3.6.0", "examples":[]}bar'
+
+      expect(described_class.find_valid_json_in(text)).to be_nil
+    end
+
+    it 'returns nil for no JSON in a string' do
+      text = 'foosomethingbar'
+
+      expect(described_class.find_valid_json_in(text)).to be_nil
+    end
+
+    it 'returns first JSON document from string with multiple valid docs' do
+      text = '{"version": "3.6.0", "examples": []}{"version": "4.6.0", "examples": []}'
+      expected = { 'version' => '3.6.0', 'examples' => [] }
+
+      expect(described_class.find_valid_json_in(text)).to eq(expected)
+    end
+
+    context 'when break_on_first option is set to false' do
+      let(:opts) { { break_on_first: false } }
+
+      it 'returns array of JSON documents from string with multiple valid docs' do
+        text = '{"version": "3.6.0", "examples": []}{"version": "4.6.0", "examples": []}'
+        expected = [{ 'version' => '3.6.0', 'examples' => [] }, { 'version' => '4.6.0', 'examples' => [] }]
+
+        expect(described_class.find_valid_json_in(text, opts)).to contain_exactly(*expected)
+      end
+    end
+  end
 end
