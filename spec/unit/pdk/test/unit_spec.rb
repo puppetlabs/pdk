@@ -6,6 +6,19 @@ describe PDK::Test::Unit do
     expect(described_class.methods(false)).to include(:invoke)
   end
 
+  describe '.parallel_with_no_tests?' do
+    context 'when not parallel' do
+      it 'is false' do
+        result = {
+          stderr: 'Pass files or folders to run',
+          exit_code: 1,
+        }
+
+        expect(described_class.parallel_with_no_tests?(false, ['json_result'], result)).to be(false)
+      end
+    end
+  end
+
   describe '.merge_json_results' do
     let(:duration) { 55 }
     let(:results) do
@@ -153,24 +166,6 @@ describe PDK::Test::Unit do
 
   describe '.invoke' do
     let(:report) { PDK::Report.new }
-    let(:rspec_json_output) do
-      '{
-        "examples":
-        [
-          {
-            "id": "./spec/fixtures/modules/testmod/spec/classes/testmod_spec.rb[1:3:1]",
-            "status": "passed",
-            "pending_message": null
-          }
-        ],
-        "summary": {
-          "duration": 0.295112,
-          "example_count": 1,
-          "failure_count": 0,
-          "pending_count": 0
-        }
-      }'
-    end
 
     before(:each) do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
@@ -180,10 +175,45 @@ describe PDK::Test::Unit do
       allow(described_class).to receive(:parse_output)
     end
 
-    it 'executes and parses output' do
-      expect(described_class).to receive(:parse_output).once
-      exit_code = described_class.invoke(report, tests: 'a_test_spec.rb')
-      expect(exit_code).to eq(-1)
+    context 'in parallel without examples' do
+      let(:rspec_json_output) do
+        'Pass files or folders to run'
+      end
+
+      it "returns 0 and doesn't error" do
+        expect(described_class).to receive(:parallel_with_no_tests?).and_return(true)
+
+        exit_code = -1
+        expect { exit_code = described_class.invoke(report, tests: 'a_test_spec.rb') }.not_to raise_exception
+        expect(exit_code).to eq(0)
+      end
+    end
+
+    context 'with examples' do
+      let(:rspec_json_output) do
+        '{
+          "examples":
+          [
+            {
+              "id": "./spec/fixtures/modules/testmod/spec/classes/testmod_spec.rb[1:3:1]",
+              "status": "passed",
+              "pending_message": null
+            }
+          ],
+          "summary": {
+            "duration": 0.295112,
+            "example_count": 1,
+            "failure_count": 0,
+            "pending_count": 0
+          }
+        }'
+      end
+
+      it 'executes and parses output' do
+        expect(described_class).to receive(:parse_output).once
+        exit_code = described_class.invoke(report, tests: 'a_test_spec.rb')
+        expect(exit_code).to eq(-1)
+      end
     end
   end
   # rubocop:enable RSpec/AnyInstance

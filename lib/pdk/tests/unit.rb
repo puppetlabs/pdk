@@ -12,6 +12,12 @@ module PDK
         [File.join(PDK::Util.module_root, 'bin', 'rake'), rake_task]
       end
 
+      def self.parallel_with_no_tests?(ran_in_parallel, json_result, result)
+        ran_in_parallel && json_result.empty? &&
+          !result[:exit_code].zero? &&
+          result[:stderr].strip =~ %r{Pass files or folders to run$}
+      end
+
       def self.invoke(report, options = {})
         PDK::Util::Bundler.ensure_bundle!
         PDK::Util::Bundler.ensure_binstubs!('rake')
@@ -48,6 +54,11 @@ module PDK
           rescue JSON::ParserError
             next
           end
+        end
+
+        if parallel_with_no_tests?(options.key?(:parallel), json_result, result)
+          json_result = [{ 'messages' => ['No examples found.'] }]
+          result[:exit_code] = 0
         end
 
         raise PDK::CLI::FatalError, _('Unit test output did not contain a valid JSON result: %{output}') % { output: result[:stdout] } if json_result.nil? || json_result.empty?
