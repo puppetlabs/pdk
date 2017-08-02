@@ -19,7 +19,7 @@ module PDK
         end
 
         def num_questions
-          @questions.count
+          (@questions ||= {}).count
         end
 
         def run
