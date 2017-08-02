@@ -52,6 +52,11 @@ describe 'Running unit tests' do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{running unit tests.*3 tests.*0 failures}im) }
     end
+
+    describe command('pdk test unit --parallel') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*3 tests.*0 failures}im) }
+    end
   end
 
   context 'with failing tests' do
@@ -136,6 +141,55 @@ describe 'Running unit tests' do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stderr) { is_expected.to match(%r{An error occurred while loading.*syntax_spec.rb}) }
       its(:stderr) { is_expected.to match(%r{SyntaxError}) }
+    end
+  end
+
+  context 'multiple files with passing tests' do
+    include_context 'in a new module', 'unit_test_module_multiple_pass'
+
+    before(:all) do
+      FileUtils.mkdir_p('spec/unit')
+      # FIXME: facterversion pin and facterdb issues
+      File.open('spec/unit/passing_one_spec.rb', 'w') do |f|
+        f.puts <<-EOF
+          require 'spec_helper'
+
+          RSpec.describe 'passing test' do
+            on_supported_os(:facterversion => '2.4.6').each do |os, facts|
+              context "On OS \#{os}" do
+                it 'should pass' do
+                  expect(true).to eq(true)
+                end
+              end
+            end
+          end
+        EOF
+      end
+      File.open('spec/unit/passing_two_spec.rb', 'w') do |f|
+        f.puts <<-EOF
+          require 'spec_helper'
+
+          RSpec.describe 'passing test' do
+            on_supported_os(:facterversion => '2.4.6').each do |os, facts|
+              context "On OS \#{os}" do
+                it 'should pass' do
+                  expect(true).to eq(true)
+                end
+              end
+            end
+          end
+        EOF
+      end
+    end
+
+    describe command('pdk test unit') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{running unit tests.*6 tests.*0 failures}im) }
+    end
+
+    describe command('pdk test unit --parallel') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*6 tests.*0 failures}im) }
     end
   end
 end
