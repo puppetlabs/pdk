@@ -32,14 +32,16 @@ Run acceptance tests on the current pdk code. These tests are executed on commit
 # Testing packages
 
 The package-testing/ folder contains files for testing built packages of pdk. This is for Puppet's packaging CI, and contributors outside of Puppet, Inc. don't need to worry about executing it. It uses [beaker](https://github.com/puppetlabs/beaker) to provision a VM, fetch and install a pdk installation package, and then run the acceptance tests on that VM.
-This folder has its own Gemfile and Rakefile providing an _acceptance_ rake task.
-It requires some environment variables to be set in order to specify what beaker will set up:
+
+This folder has its own Gemfile and Rakefile providing an _acceptance_ rake task. It requires some environment variables to be set in order to specify what beaker will set up:
 
 Environment Variable | Usage
 ---------------------|------
 **SHA** | The SHA or tag of a package build i.e. the folder name on the build server that packages will be found in.
+*--or--* |
+**LOCAL_PKG** | Full path to a locally built package that you want to test.
 **TEST_TARGET** | A beaker-hostgenerator string for the OS of the VM you want to test on e.g. _redhat7-64workstation._ or _windows2012r2-64workstation._ (The period character after workstation is required by beaker-hostgenerator).
-**BUILD_SERVER** | (Only required if the tests will run on a Windows VM). The hostname of the build server that hosts packages. A Puppet JIRA ticket ([BKR-1109](https://tickets.puppetlabs.com/browse/BKR-1109)) has been filed to update beaker so this would never be required.
+**BUILD_SERVER** | (Only required if testing a SHA on a Windows VM). The hostname of the build server that hosts packages. A Puppet JIRA ticket ([BKR-1109](https://tickets.puppetlabs.com/browse/BKR-1109)) has been filed to update beaker so this would never be required.
 
 # Release Process
 
