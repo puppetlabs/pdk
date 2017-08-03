@@ -2,18 +2,36 @@ desc 'Run acceptance tests against a pdk package'
 task(:acceptance) do
   require 'beaker-hostgenerator'
 
-  unless ENV['SHA']
-    abort 'Environment variable SHA must be set to the SHA or tag of a pdk build'
+  unless ENV['SHA'] || ENV['LOCAL_PKG']
+    abort "SHA or LOCAL_PKG must be set:\n" +
+      "  SHA: git sha or tag of a pdk package build available on the server\n" +
+      "  LOCAL_PKG: path to a locally built package to use for testing"
+    EOS
   end
 
-  test_target = ENV['TEST_TARGET']
-  abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. redhat7-64workstation.' unless test_target
-  unless ENV['BUILD_SERVER'] || test_target !~ %r{win}
+  if ENV['SHA'] && ENV['LOCAL_PKG']
+    abort "Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other."
+  end
+
+  if ENV['LOCAL_PKG'] && !File.exist?(ENV['LOCAL_PKG'])
+    abort "LOCAL_PKG is set to '#{ENV['LOCAL_PKG']}' but that file does not exist."
+  end
+
+  unless test_target = ENV['TEST_TARGET']
+    abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. "redhat7-64workstation."'
+  end
+
+  # TODO: Is there a reason not to just default BUILD_SERVER to
+  # builds.delivery.puppetlabs.net instead of requiring it?
+  unless (!ENV['SHA'] || ENV['BUILD_SERVER']) || test_target !~ %r{win}
     abort 'Testing against Windows requires environment variable BUILD_SERVER '\
           'to be set to the hostname of your build server (JIRA BKR-1109)'
   end
+
   puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
+
   cli = BeakerHostGenerator::CLI.new(["#{test_target}{type=foss}", '--disable-default-role'])
+
   File.open('acceptance_hosts.yml', 'w') do |hosts_file|
     hosts_file.print(cli.execute)
   end
