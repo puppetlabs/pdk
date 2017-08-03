@@ -13,6 +13,10 @@ task(:acceptance) do
     abort "Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other."
   end
 
+  if ENV['LOCAL_PKG'] && !File.exist?(ENV['LOCAL_PKG'])
+    abort "LOCAL_PKG is set to '#{ENV['LOCAL_PKG']}' but that file does not exist."
+  end
+
   unless test_target = ENV['TEST_TARGET']
     abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. "redhat7-64workstation."'
   end
