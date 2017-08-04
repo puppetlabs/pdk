@@ -57,12 +57,12 @@ describe 'Running unit tests' do
 
     describe command('pdk test unit') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{running unit tests.*3 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{running unit tests.*5 tests.*0 failures}im) }
     end
 
     describe command('pdk test unit --parallel') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*3 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*5 tests.*0 failures}im) }
     end
   end
 
@@ -191,12 +191,12 @@ describe 'Running unit tests' do
 
     describe command('pdk test unit') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{running unit tests.*6 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{running unit tests.*10 tests.*0 failures}im) }
     end
 
     describe command('pdk test unit --parallel') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*6 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*10 tests.*0 failures}im) }
     end
   end
 end
