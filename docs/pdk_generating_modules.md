@@ -1,3 +1,6 @@
+
+**Note: this page is a draft in progress for a tech preview release and may differ from the final version.**
+
 ## Generating modules and classes with PDK
 
 PDK generates the basic components of a module and sets up the basic infrastructure for testing it.

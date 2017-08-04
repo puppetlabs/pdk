@@ -1,3 +1,6 @@
+
+**Note: this page is a draft in progress for a tech preview release and may differ from the final version.**
+
 ## PDK reference
 
 ### `pdk new module` command
@@ -15,7 +18,7 @@ The `pdk new module` command accepts the following arguments and options. Argume
 Argument   | Description   | Values      | Default
 ----------------|:---------------:|:------------------:|-------------------------
 `--template-url=git_url` | Overrides the template to use for this module. | A valid Git URL.    | No default.
-`--license=spdx_identifier` | Specifies the license this module is written under. | See https://spdx.org/licenses/ for a list of open source licenses, or use `proprietary`.    | Apache 2.0
+`--license=spdx_identifier` | Specifies the license this module is written under. | See https://spdx.org/licenses/ for a list of open source licenses, or use `proprietary`.    | Apache-2.0
 `--skip-interview` | Suppress interactive queries for initial values. Metadata will be generated with default values for all questions.| None    | No default.
 `module_name` | **Required**. Specifies the name of the module being created. | A module name beginning with a lowercase letter and including only lowercase letters, digits, and underscores.    | No default.
 `target_dir` | Specifies the directory that the new module will be created in. | <# cell data #>    | Creates a directory with the given `module_name` inside the current directory.

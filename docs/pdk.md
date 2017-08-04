@@ -1,3 +1,6 @@
+
+**Note: this page is a draft in progress for a tech preview release and may differ from the final version.**
+
 ## Puppet Development Kit
 
 The Puppet Development Kit (PDK) is a package of development and testing tools to help you create great Puppet modules.

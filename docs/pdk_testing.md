@@ -1,7 +1,7 @@
 
-**Note: this page is a draft in progress and may differ from the final version.**
+**Note: this page is a draft in progress for a tech preview release and may differ from the final version.**
 
-## Testing your module with PDK
+## Validating and testing your module with PDK
 
 The Puppet Development Kit (PDK) provides tools to help you run unit tests on your module and validate your module's metadata, syntax, and style.
 
