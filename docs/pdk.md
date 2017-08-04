@@ -30,12 +30,3 @@ To get started, install the PDK, and then create and test a module.
 1. Validate and unit test your module to verify that the new code was created correctly.
 
 PDK can unit test code that it generates, but for any other code you add, you'll need to write unit tests. As you add code to your module, be sure to validate and unit test your module both before and after adding code. This ensures that you are always developing on a clean, valid codebase.
-
-
-PDK docs:
-
-* Installing the PDK package
-* Generating modules and classes
-* Testing modules
-* PDK Reference
-* Troubleshooting PDK
