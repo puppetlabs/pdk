@@ -30,7 +30,7 @@ Before you begin, ensure that you've installed the PDK package.
 
 1. From the command line, run the `pdk new module` command, specifying the name of the module: `pdk new module module_name`
    
-   Optionally, to skip the interview questions and generate the module with default values, use the ``skip-interview` flag when you generate the module: `pdk new module module_name --skip-interview`
+   Optionally, to skip the interview questions and generate the module with default values, use the `skip-interview` flag when you generate the module: `pdk new module module_name --skip-interview`
 
 1. Respond to the PDK dialog questions in the terminal. Each question indicates the default value it will use if you just hit **Enter**.
 
@@ -43,7 +43,7 @@ Before you begin, ensure that you've installed the PDK package.
    7. Where others can learn more: If you have a website where users can learn more about your module, enter the URL.
    8. Where others can report issues: If you have a public bug tracker for your module, enter the URL.
 
-1. If the metadata that PDK displays is correct, confirm to generate the module. If it is incorrect, enter `n` to cancel and start over.
+1. If the metadata that PDK displays is correct, confirm with `Y` or **Enter** to generate the module. If it is incorrect, enter `n` to cancel and start over.
 
 ### Module contents
 
