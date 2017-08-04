@@ -19,6 +19,10 @@ test_name 'C100321 - Generate a module and validate it (i.e. ensure bundle insta
       on(workstation, "test -f #{module_name}/Gemfile.lock", accept_all_exit_codes: true) do |lock_check_outcome|
         assert_equal(0, lock_check_outcome.exit_code, 'pdk validate should have caused a Gemfile.lock file to be created')
       end
+
+      on(workstation, "diff #{install_dir(workstation)}/share/cache/Gemfile.lock #{module_name}/Gemfile.lock", accept_all_exit_codes: true) do |gemfile_cmp|
+        assert_equal(0, gemfile_cmp.exit_code, "newly created Gemfile.lock should match vendored Gemfile.lock but it had differences: #{gemfile_cmp.stdout}")
+      end
     end
   end
 end
