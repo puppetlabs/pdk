@@ -23,11 +23,11 @@ To get started, install the PDK, and then create and test a module.
 
 <!--TK: overview workflow graphic-->
 
-1. Generate a module using the `pdk new module` command.
-1. Validate your module, to verify that it is well-formed.
-1. Unit test your module, to verify that all dependencies and directories are present.
-1. Generate a class for your module, using the `pdk new class` command.
-1. Validate and unit test your module.
+1. [Generate a module](./pdk_generating_modules.md) using the `pdk new module` command.
+1. [Validate your module](./pdk_testing.md), to verify that it is well-formed.
+1. [Unit test](./pdk_testing.md) your module, to verify that all dependencies and directories are present.
+1. [Generate a class]](./pdk_generating_modules.md) for your module, using the `pdk new class` command.
+1. Validate and unit test your module to verify that the new code was created correctly.
 
 PDK can unit test code that it generates, but for any other code you add, you'll need to write unit tests. As you add code to your module, be sure to validate and unit test your module both before and after adding code. This ensures that you are always developing on a clean, valid codebase.
 
