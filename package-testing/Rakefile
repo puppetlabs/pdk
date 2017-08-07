@@ -1,12 +1,14 @@
+require 'json'
+require 'open-uri'
+
 desc 'Run acceptance tests against a pdk package'
 task(:acceptance) do
   require 'beaker-hostgenerator'
 
   unless ENV['SHA'] || ENV['LOCAL_PKG']
-    abort 'SHA or LOCAL_PKG must be set:\n' \
-      '  SHA: git sha or tag of a pdk package build available on the server\n' \
+    abort "SHA or LOCAL_PKG must be set:\n" \
+      "  SHA: git sha or tag of a pdk package build available on the server\n" \
       '  LOCAL_PKG: path to a locally built package to use for testing'
-    EOS
   end
 
   if ENV['SHA'] && ENV['LOCAL_PKG']
@@ -20,11 +22,33 @@ task(:acceptance) do
   test_target = ENV['TEST_TARGET']
   abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. "redhat7-64workstation."' unless test_target
 
-  # TODO: Is there a reason not to just default BUILD_SERVER to
-  # builds.delivery.puppetlabs.net instead of requiring it?
-  unless (!ENV['SHA'] || ENV['BUILD_SERVER']) || test_target !~ %r{win}
-    abort 'Testing against Windows requires environment variable BUILD_SERVER '\
-          'to be set to the hostname of your build server (JIRA BKR-1109)'
+  # to use this beaker suite outside of Puppet Inc, set BUILD_SERVER to the hostname of a build server that uses the directory hierarchy beaker assumes
+  ENV['BUILD_SERVER'] ||= 'builds.delivery.puppetlabs.net'
+
+  # If testing on OSX or Windows, SUITE_VERSION should be set to the build's version string (it forms part of the installer file naming)
+  # If it's not set, it's possible to fall back to finding it on BUILD_SERVER if SHA is available
+  # or in the package filename if LOCAL_PKG is being used.
+  unless ENV['SUITE_VERSION'] || test_target !~ %r{osx|win}
+    if ENV['LOCAL_PKG']
+      $stderr.puts "SUITE_VERSION has not been set. Trying to determine it from the filename: '#{ENV['LOCAL_PKG']}'"
+
+      ENV['SUITE_VERSION'] = %r{^pdk[-_](\d+\.\d+\.\d+\.\d+(\.\d+\.g[a-f\d]+)?)}.match(File.basename(ENV['LOCAL_PKG']))[1]
+
+      unless ENV['SUITE_VERSION']
+        abort "Could not find a valid SUITE_VERSION in the filename: '#{ENV['LOCAL_PKG']}'"
+      end
+    else
+      metadata_url = "http://#{ENV['BUILD_SERVER']}/pdk/#{ENV['SHA']}/artifacts/#{ENV['SHA']}.build_metadata.json"
+      $stderr.puts "SUITE_VERSION has not been set. Fetching it from build metadata for '#{ENV['SHA']}' at '#{metadata_url}'"
+
+      begin
+        ENV['SUITE_VERSION'] = JSON.parse(open(metadata_url).read)['version']
+      rescue StandardError => e
+        abort("Could not get build metadata from build server. Tried to request '#{metadata_url}' and got: #{e.message}")
+      end
+    end
+
+    $stderr.puts "Resolved SUITE_VERSION to '#{ENV['SUITE_VERSION']}'"
   end
 
   puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
