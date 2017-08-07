@@ -178,7 +178,7 @@ module PDK
         end
 
         unless File.directory?(@moduleroot_dir) # rubocop:disable Style/GuardClause
-          raise ArgumentError, _("The template at '%{path}' does not contain a moduleroot directory") % { path: @path }
+          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot/' directory") % { path: @path }
         end
       end
 
