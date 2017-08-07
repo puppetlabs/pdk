@@ -21,7 +21,7 @@ Argument   | Description   | Values      | Default
 `--license=spdx_identifier` | Specifies the license this module is written under. | See https://spdx.org/licenses/ for a list of open source licenses, or use `proprietary`.    | Apache-2.0
 `--skip-interview` | Suppress interactive queries for initial values. Metadata will be generated with default values for all questions.| None    | No default.
 `module_name` | **Required**. Specifies the name of the module being created. | A module name beginning with a lowercase letter and including only lowercase letters, digits, and underscores.    | No default.
-`target_dir` | Specifies the directory that the new module will be created in. | <# cell data #>    | Creates a directory with the given `module_name` inside the current directory.
+`target_dir` | Specifies the directory that the new module will be created in. | A valid directory path   | Creates a directory with the given `module_name` inside the current directory.
 
 ### `pdk new class` command
 
@@ -42,10 +42,10 @@ pdk new class my_class "ensure:Enum['absent', 'present']" version:String
 
 Argument   | Description   | Values      | Default
 ----------------|:---------------:|:------------------:|-------------------------
-`--template-url` | Overrides the template to use when generating this class. | A valid URL to a class template. [TODO Is this correct?]    | Uses the template used to generate the module. If that template is not available, the default template at
+`--template-url` | Overrides the template to use when generating this class. | A valid URL to a class template. | Uses the template used to generate the module. If that template is not available, the default template at
 [puppetlabs/pdk-module-template](https://github.com/puppetlabs/pdk-module-template)
 is used.
-`class_name` | [TODO: is this required?] The name of the class to generate. | A class name beginning with a lowercase letter and including only lowercase letters, digits, and underscores.    | No default.
+`class_name` | **Required** The name of the class to generate. | A class name beginning with a lowercase letter and including only lowercase letters, digits, and underscores.    | No default.
 `parameter_name[:parameter_type]` | Parameters for the generated class. Specify any number of parameters on the command line. | A valid parameter name, optionally with the parameter's data type.    | No default.
 
 ### `pdk validate` command
@@ -67,7 +67,7 @@ Argument   | Description   | Values      | Default
 `--list` | Displays a list of available validations and their descriptions. Using this option lists the tests without running them. | None.    | No default.
 `--format=format[:target]` | Specifies the format of the output. Optionally, you can specify a target file for the given output format with the syntax: `--format=junit:report.xml` Multiple `--format` options can be specified as long as they all have distinct output targets. | `junit` (JUnit XML), `text`(plain text)    | `text`
 `validations` | Specifies a comma-separated list of validations to run (or `all`) | See the `--list` output for a list of available validations.    | `all`
-`targets` | Specifies a list of directories or individual files to validate. Validations which are not applicable to individual files will be skipped for those files. | A comma-separated list [TODO: is that correct?]    | Validates all available directories and files.
+`targets` | Specifies a list of directories or individual files to validate. Validations which are not applicable to individual files will be skipped for those files. | A space-separated list.    | Validates all available directories and files.
 
 ### `pdk test unit` command
 
