@@ -9,8 +9,10 @@ if ENV['COVERAGE'] == 'yes'
     Coveralls::SimpleCov::Formatter,
   ]
   SimpleCov.start do
+    track_files 'lib/**/*.rb'
     add_filter '/spec'
     # do not track vendored files
+    add_filter '/lib/puppet'
     add_filter '/vendor'
     add_filter '/.vendor'
   end
