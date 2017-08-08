@@ -30,8 +30,8 @@ module PDK
             'operatingsystemrelease' => ['16.04'],
           },
           {
-            'operatingsystem' => 'Windows',
-            'operatingsystemrelease' => ['2016'],
+            'operatingsystem' => 'windows',
+            'operatingsystemrelease' => ['2012 R2'],
           },
         ],
       }.freeze
