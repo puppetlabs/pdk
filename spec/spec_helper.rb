@@ -1,10 +1,20 @@
 if ENV['COVERAGE'] == 'yes'
-  require 'simplecov'
   require 'coveralls'
+  require 'simplecov'
+  require 'simplecov-console'
 
-  SimpleCov.formatter = Coveralls::SimpleCov::Formatter
+  SimpleCov.formatters = [
+    SimpleCov::Formatter::HTMLFormatter,
+    SimpleCov::Formatter::Console,
+    Coveralls::SimpleCov::Formatter,
+  ]
   SimpleCov.start do
-    add_filter '/spec/'
+    track_files 'lib/**/*.rb'
+    add_filter '/spec'
+    # do not track vendored files
+    add_filter '/lib/puppet'
+    add_filter '/vendor'
+    add_filter '/.vendor'
   end
 end
 

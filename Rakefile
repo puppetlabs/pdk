@@ -38,6 +38,14 @@ if File.exist?(build_defs_file)
   end
 end
 
+namespace :spec do
+  desc 'Run RSpec code examples with coverage collection'
+  task :coverage do
+    ENV['COVERAGE'] = 'yes'
+    Rake::Task['spec'].execute
+  end
+end
+
 RSpec::Core::RakeTask.new(:spec) do |t|
   t.exclude_pattern = 'spec/spec_helper_acceptance.rb,spec/acceptance/**'
 end
