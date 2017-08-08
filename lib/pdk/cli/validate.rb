@@ -82,8 +82,8 @@ module PDK::CLI
       PDK::Util::Bundler.ensure_bundle!
 
       validators.each do |validator|
-        exit_code = validator.invoke(report, options)
-        break if exit_code != 0
+        validator_exit_code = validator.invoke(report, options)
+        exit_code = validator_exit_code if validator_exit_code != 0
       end
 
       report_formats.each do |format|
