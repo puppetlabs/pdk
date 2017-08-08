@@ -3,36 +3,6 @@ require 'spec_helper_acceptance'
 describe 'Running metadata validation' do
   let(:spinner_text) { %r{checking metadata}i }
 
-  context 'with a fresh module' do
-    include_context 'in a new module', 'metadata_validation_module'
-
-    describe command('pdk validate metadata') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{\A\Z}) }
-      its(:stderr) { is_expected.to match(spinner_text) }
-    end
-
-    describe command('pdk validate metadata --format junit') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(spinner_text) }
-      it_behaves_like :it_generates_valid_junit_xml
-
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
-          'failures' => eq(0),
-          'tests'    => eq(1),
-        )
-      end
-
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
-          'classname' => 'metadata-json-lint',
-          'name'      => 'metadata.json',
-        ).that_passed
-      end
-    end
-  end
-
   context 'with a metadata violation' do
     include_context 'in a new module', 'metadata_violation_module'
 
@@ -123,17 +93,17 @@ describe 'Running metadata validation' do
       its(:stderr) { is_expected.to match(spinner_text) }
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
+        is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
           'classname' => 'metadata-json-lint',
           'name'      => 'metadata.json',
-        )
+        ).that_passed
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
+        is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
           'classname' => 'metadata-json-lint.dependencies',
           'name'      => 'broken.json',
-        )
+        ).that_failed
       end
     end
   end

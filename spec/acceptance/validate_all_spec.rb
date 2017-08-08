@@ -17,11 +17,6 @@ class validate_all { }
       end
     end
 
-    describe command('pdk validate --list') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{Available validators: metadata, puppet, ruby}i) }
-    end
-
     describe command('pdk validate') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{Running all available validators}i) }
