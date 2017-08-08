@@ -29,7 +29,7 @@ shared_context 'mock template dir' do
   let(:test_template_file) { StringIO.new }
 
   before(:each) do
-    allow(PDK::Module::TemplateDir).to receive(:new).with(anything).and_yield(test_template_dir)
+    allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything).and_yield(test_template_dir)
 
     dir_double = instance_double(Pathname, mkpath: true)
     allow(dir_double).to receive(:+).with(anything).and_return(test_template_file)
@@ -155,13 +155,13 @@ describe PDK::Generate::Module do
 
       context 'when a template-url is supplied on the command line' do
         it 'uses that template to generate the module' do
-          expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template').and_yield(test_template_dir)
+          expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template', anything).and_yield(test_template_dir)
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
 
         it 'takes precedence over the template-url answer' do
           PDK.answers.update!('template-url' => 'answer-template')
-          expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template').and_yield(test_template_dir)
+          expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template', anything).and_yield(test_template_dir)
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
 
@@ -176,7 +176,7 @@ describe PDK::Generate::Module do
         context 'and a template-url answer exists' do
           it 'uses the template-url from the answer file to generate the module' do
             PDK.answers.update!('template-url' => 'answer-template')
-            expect(PDK::Module::TemplateDir).to receive(:new).with('answer-template').and_yield(test_template_dir)
+            expect(PDK::Module::TemplateDir).to receive(:new).with('answer-template', anything).and_yield(test_template_dir)
 
             described_class.invoke(invoke_opts)
           end
@@ -184,7 +184,7 @@ describe PDK::Generate::Module do
 
         context 'and no template-url answer exists' do
           it 'uses the default template to generate the module' do
-            expect(PDK::Module::TemplateDir).to receive(:new).with(PDK::Generate::Module::DEFAULT_TEMPLATE).and_yield(test_template_dir)
+            expect(PDK::Module::TemplateDir).to receive(:new).with(PDK::Generate::Module::DEFAULT_TEMPLATE, anything).and_yield(test_template_dir)
 
             described_class.invoke(invoke_opts)
           end

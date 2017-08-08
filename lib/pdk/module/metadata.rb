@@ -34,7 +34,7 @@ module PDK
             'operatingsystemrelease' => ['2012 R2'],
           },
         ],
-        'requirements'  => Set.new.freeze,
+        'requirements' => Set.new.freeze,
       }.freeze
 
       def initialize(params = {})

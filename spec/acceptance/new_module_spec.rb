@@ -27,5 +27,15 @@ describe 'Creating a new module' do
                                                                     'operatingsystemrelease' => ['8']))
       end
     end
+
+    describe file('foo/README.md') do
+      it { is_expected.to be_file }
+      it { is_expected.to contain(%r{# foo}i) }
+    end
+
+    describe file('foo/CHANGELOG.md') do
+      it { is_expected.to be_file }
+      it { is_expected.to contain(%r{## Release 0.1.0}i) }
+    end
   end
 end
