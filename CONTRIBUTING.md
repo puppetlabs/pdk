@@ -41,7 +41,8 @@ Environment Variable | Usage
 *--or--* |
 **LOCAL_PKG** | Full path to a locally built package that you want to test.
 **TEST_TARGET** | A beaker-hostgenerator string for the OS of the VM you want to test on e.g. _redhat7-64workstation._ or _windows2012r2-64workstation._ (The period character after workstation is required by beaker-hostgenerator).
-**BUILD_SERVER** | (Only required if testing a SHA on a Windows VM). The hostname of the build server that hosts packages. A Puppet JIRA ticket ([BKR-1109](https://tickets.puppetlabs.com/browse/BKR-1109)) has been filed to update beaker so this would never be required.
+**BUILD_SERVER** | (Defaults to 'builds.delivery.puppetlabs.net' if not set) (Only required if testing a SHA on a Windows VM). The hostname of the build server that hosts packages. A Puppet JIRA ticket ([BKR-1109](https://tickets.puppetlabs.com/browse/BKR-1109)) has been filed to update beaker so this would never be required.
+**SUITE_VERSION** | (If not set, will be automatically determined if possible) The build tag/version string used when installing packages on certain platforms - e.g. if the package you built is `pdk-0.5.0.0.21.gb84d40e-1.osx10.12.dmg` then **SUITE_VERSION** would be `0.5.0.0.21.gb84d40e`
 
 # Release Process
 
