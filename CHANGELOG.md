@@ -3,12 +3,17 @@
 All notable changes to this project will be documented in this file.
 
 
-## [v0.6.0.pre](https://github.com/puppetlabs/pdk/tree/v0.6.0.pre) (2017-08-01)
+## [v0.6.0](https://github.com/puppetlabs/pdk/tree/v0.6.0) (2017-08-08)
 
-[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.5.0...v0.6.0.pre)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.5.0...v0.6.0)
 
 **Implemented enhancements:**
 
+- \(MAINT\) Improve moduleroot error message [\#224](https://github.com/puppetlabs/pdk/pull/224) ([DavidS](https://github.com/DavidS))
+- \(PDK-354\) Change PDK::Logger to write to STDERR [\#217](https://github.com/puppetlabs/pdk/pull/217) ([scotje](https://github.com/scotje))
+- \(SDK-331\) Use vendored Gemfile.lock when available and needed [\#215](https://github.com/puppetlabs/pdk/pull/215) ([scotje](https://github.com/scotje))
+- \(maint\) Expose message when FileUtils.mkdir\_p fails during module generation [\#209](https://github.com/puppetlabs/pdk/pull/209) ([rodjek](https://github.com/rodjek))
+- \(SDK-323\) Change color of default answer to cyan [\#206](https://github.com/puppetlabs/pdk/pull/206) ([austb](https://github.com/austb))
 - \(maint\) Remove unimplemented `add provider` from docs [\#200](https://github.com/puppetlabs/pdk/pull/200) ([DavidS](https://github.com/DavidS))
 - Update PowerShell install instructions [\#194](https://github.com/puppetlabs/pdk/pull/194) ([jpogran](https://github.com/jpogran))
 - \(maint\) Remove unused vcs option from 'pdk new module' [\#192](https://github.com/puppetlabs/pdk/pull/192) ([rodjek](https://github.com/rodjek))
@@ -16,9 +21,14 @@ All notable changes to this project will be documented in this file.
 - \(MAINT\) Remove spinner for `bundle check` command [\#187](https://github.com/puppetlabs/pdk/pull/187) ([scotje](https://github.com/scotje))
 - \(SDK-321\) add `pdk validate help` [\#183](https://github.com/puppetlabs/pdk/pull/183) ([DavidS](https://github.com/DavidS))
 - \(SDK-317\) Ensure parent of 'pdk new module' is writable before generation [\#175](https://github.com/puppetlabs/pdk/pull/175) ([rodjek](https://github.com/rodjek))
+- \(SDK-312\) Add option --parallel to `pdk test unit` [\#154](https://github.com/puppetlabs/pdk/pull/154) ([austb](https://github.com/austb))
 
 **Fixed bugs:**
 
+- \(SDK-325\) Validate all should run all validators [\#230](https://github.com/puppetlabs/pdk/pull/230) ([bmjen](https://github.com/bmjen))
+- \(PDK-373\) Make test unit --list consistent with test unit [\#216](https://github.com/puppetlabs/pdk/pull/216) ([james-stocks](https://github.com/james-stocks))
+- \(MAINT\) Add --strict-dependencies to metadata-json-lint invocation [\#213](https://github.com/puppetlabs/pdk/pull/213) ([scotje](https://github.com/scotje))
+- \(SDK-317\) Replace File.writable? test with actually creating a test file [\#207](https://github.com/puppetlabs/pdk/pull/207) ([scotje](https://github.com/scotje))
 - \(SDK-333\) Rescue Interrupt cleanly [\#199](https://github.com/puppetlabs/pdk/pull/199) ([scotje](https://github.com/scotje))
 - \(\#137\) Nicer response when binary doesn't exist [\#149](https://github.com/puppetlabs/pdk/pull/149) ([rodjek](https://github.com/rodjek))
 
