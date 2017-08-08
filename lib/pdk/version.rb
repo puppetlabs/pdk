@@ -1,3 +1,3 @@
 module PDK
-  VERSION = '0.6.0.pre'.freeze
+  VERSION = '0.6.0'.freeze
 end
