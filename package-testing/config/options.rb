@@ -3,7 +3,7 @@
   pre_suite: [
     'pre/000_install_package.rb',
   ],
-  :ssh => {
-    :keys => ["~/.ssh/id_rsa-acceptance"],
+  ssh: {
+    keys: ['~/.ssh/id_rsa-acceptance'],
   },
 }
