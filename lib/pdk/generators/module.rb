@@ -96,6 +96,9 @@ module PDK
           'dependencies' => [
             { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.13.1 < 5.0.0' },
           ],
+          'requirements' => [
+            { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
+          ],
         }
         defaults['author'] = PDK.answers['author'] unless PDK.answers['author'].nil?
         defaults['license'] = PDK.answers['license'] unless PDK.answers['license'].nil?
