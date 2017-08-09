@@ -15,14 +15,21 @@ describe PDK::Logger do
 
       pdk_logger.debug('test message')
     end
+
+    it { is_expected.to have_attributes(debug?: false) }
   end
 
   context 'with debug output enabled' do
+    before(:each) do
+      pdk_logger.enable_debug_output
+    end
+
     it 'prints debug messages to stdout' do
       expect(STDERR).to receive(:write).with(a_string_matching(%r{test debug message}))
 
-      pdk_logger.enable_debug_output
       pdk_logger.debug('test debug message')
     end
+
+    it { is_expected.to have_attributes(debug?: true) }
   end
 end

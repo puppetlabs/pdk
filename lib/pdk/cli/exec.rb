@@ -113,6 +113,7 @@ module PDK
         end
 
         def add_spinner(message, opts = {})
+          return if PDK.logger.debug?
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
@@ -226,6 +227,7 @@ module PDK
             @process.wait
           end
           @duration = Time.now - start_time
+          PDK.logger.debug(_('Execution complete (exit code: %{exit_code})') % { exit_code: @process.exit_code })
         end
       end
     end
