@@ -30,14 +30,14 @@ Generates a new class and test templates for it in the current module.
 Usage:
 
 ```
-pdk new class [--template-url=git_url] <class_name> [parameter_name[:parameter_type]] [parameter_name[:parameter_type]] ...
+pdk new class [--template-url=git_url] <class_name>
 ```
 
 For example:
 
 ```
 cd my_module
-pdk new class my_class "ensure:Enum['absent', 'present']" version:String
+pdk new class my_class
 ```
 
 Argument   | Description   | Values      | Default
@@ -46,7 +46,6 @@ Argument   | Description   | Values      | Default
 [puppetlabs/pdk-module-template](https://github.com/puppetlabs/pdk-module-template)
 is used.
 `class_name` | **Required** The name of the class to generate. | A class name beginning with a lowercase letter and including only lowercase letters, digits, and underscores.    | No default.
-`parameter_name[:parameter_type]` | Parameters for the generated class. Specify any number of parameters on the command line. | A valid parameter name, optionally with the parameter's data type.    | No default.
 
 ### `pdk validate` command
 

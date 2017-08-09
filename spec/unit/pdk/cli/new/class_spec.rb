@@ -76,26 +76,6 @@ describe 'PDK::CLI new class' do
           PDK::CLI.run(%w[new class test_class --template-url https://custom/template])
         end
       end
-
-      context 'and the parameters that the class should take' do
-        it 'generates the class with the specified parameters' do
-          expect(PDK::CLI::Util::OptionNormalizer).to receive(:parameter_specification).with('ensure:Enum["absent", "present"]').and_call_original
-          expect(PDK::CLI::Util::OptionNormalizer).to receive(:parameter_specification).with('some:Integer').and_call_original
-
-          opts = {
-            :'template-url' => anything,
-            :params         => [
-              { name: 'ensure', type: 'Enum["absent", "present"]' },
-              { name: 'some', type: 'Integer' },
-            ],
-          }
-
-          expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'test_class', opts).and_return(generator)
-          expect(generator).to receive(:run)
-
-          PDK::CLI.run(['new', 'class', 'test_class', 'ensure:Enum["absent", "present"]', 'some:Integer'])
-        end
-      end
     end
   end
 end
