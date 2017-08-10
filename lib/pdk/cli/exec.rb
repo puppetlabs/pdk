@@ -106,6 +106,7 @@ module PDK
         end
 
         def register_spinner(spinner, opts = {})
+          return if PDK.logger.debug?
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
