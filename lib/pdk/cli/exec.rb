@@ -105,7 +105,14 @@ module PDK
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
-          @spinner = Gem.win_platform? ? WindowsSpinner.new(message, opts) : TTY::Spinner.new("[:spinner] #{message}", opts)
+          if Gem.win_platform?
+            # Guard against explicit nil passed for opts.
+            opts ||= {}
+            opts[:success_mark] = '*'
+            opts[:error_mark] = 'X'
+          end
+
+          @spinner = TTY::Spinner.new("[:spinner] #{message}", opts)
         end
 
         def execute!
@@ -202,30 +209,6 @@ module PDK
             @process.wait
           end
           @duration = Time.now - start_time
-        end
-      end
-
-      # This is a placeholder until we integrate ansicon into Windows packaging
-      # or come up with some other progress indicator for Windows.
-      class WindowsSpinner
-        def initialize(message, _opts = {})
-          @message = message
-        end
-
-        def auto_spin
-          $stderr.print @message << '...'
-        end
-
-        def success(message = '')
-          message = 'done.' if message.nil? || message.empty?
-
-          $stderr.print message << "\n"
-        end
-
-        def error(message = '')
-          message = 'FAILED' if message.nil? || message.empty?
-
-          $stderr.print message << "\n"
         end
       end
     end
