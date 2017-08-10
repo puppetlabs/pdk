@@ -236,7 +236,8 @@ module PDK
 
         file_config = @config.fetch(:global, {})
         file_config['module_metadata'] = @module_metadata
-        file_config.merge(@config.fetch(dest_path, {})) unless dest_path.nil?
+        file_config.merge!(@config.fetch(dest_path, {})) unless dest_path.nil?
+        file_config
       end
     end
   end
