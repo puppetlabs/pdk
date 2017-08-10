@@ -114,6 +114,22 @@ pdk (INFO): Running all available validators...
 manifests/init.pp:1:10: corrected: double quoted string containing no variables
 ```
 
+#### Run in parallel
+
+Module validation can also be run in parallel and supports the same selectors for
+validators, files, and directories as non-parallel validation.
+
+```
+$ pdk validate --parallel
+pdk (INFO): Running all available validators...
+┌ [✔] Validating module using 3 threads
+├──[✔] Checking metadata syntax (metadata.json)
+├──[✔] Checking Puppet manifest syntax
+├──[✔] Checking Ruby code style
+├──[✔] Checking metadata style (metadata.json)
+└──[✔] Checking Puppet manifest style
+```
+
 ### Run unit tests
 
 The default template sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing.

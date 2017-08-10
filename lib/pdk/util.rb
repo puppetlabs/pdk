@@ -152,5 +152,19 @@ module PDK
       json_result
     end
     module_function :find_valid_json_in
+
+    # Returns the targets' paths relative to the working directory
+    #
+    # @return [Array<String>] The absolute or path to the target
+    def targets_relative_to_pwd(targets)
+      targets.map do |t|
+        if Pathname.new(t).absolute?
+          Pathname.new(t).relative_path_from(Pathname.pwd)
+        else
+          t
+        end
+      end
+    end
+    module_function :targets_relative_to_pwd
   end
 end

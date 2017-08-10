@@ -10,6 +10,7 @@ describe 'Running `pdk validate` in a module' do
   let(:report) { instance_double('PDK::Report').as_null_object }
 
   before(:each) do
+    allow(Dir).to receive(:chdir) { |_dir, &block| block.call }
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
     allow(PDK::Util).to receive(:module_root).and_return('/path/to/testmodule')
     allow(PDK::Report).to receive(:new).and_return(report)
@@ -26,6 +27,26 @@ describe 'Running `pdk validate` in a module' do
       }.to raise_error(SystemExit) { |error|
         expect(error.status).to eq(0)
       }
+    end
+
+    context 'with --parallel' do
+      let(:spinner) { instance_double('TTY::Spinner::Multi').as_null_object }
+
+      before(:each) do
+        allow(TTY::Spinner::Multi).to receive(:new).and_return(spinner)
+      end
+
+      it 'invokes each validator with no report and no options and exits zero' do
+        expect(validators).to all(receive(:invoke).and_return(0))
+
+        expect(logger).to receive(:info).with('Running all available validators...')
+
+        expect {
+          PDK::CLI.run(['validate', '--parallel'])
+        }.to raise_error(SystemExit) { |error|
+          expect(error.status).to eq(0)
+        }
+      end
     end
   end
 

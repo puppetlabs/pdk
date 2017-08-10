@@ -1,6 +1,5 @@
 require 'bundler'
 require 'fileutils'
-require 'tty-spinner'
 require 'pdk/util'
 require 'pdk/cli/exec'
 

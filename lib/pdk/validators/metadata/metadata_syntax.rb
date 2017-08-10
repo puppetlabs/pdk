@@ -14,12 +14,39 @@ module PDK
         'metadata.json'
       end
 
+      def self.spinner_text(targets = [])
+        _('Checking metadata syntax (%{targets})') % {
+          targets: PDK::Util.targets_relative_to_pwd(targets).join(' '),
+        }
+      end
+
+      def self.create_spinner(targets = [], options = {})
+        options = options.merge(PDK::CLI::Util.spinner_opts_for_platform)
+
+        exec_group = options[:exec_group]
+        @spinner = if exec_group
+                     exec_group.add_spinner(spinner_text(targets), options)
+                   else
+                     TTY::Spinner.new("[:spinner] #{spinner_text(targets)}", options)
+                   end
+        @spinner.auto_spin
+      end
+
+      def self.stop_spinner(exit_code)
+        if exit_code.zero? && @spinner
+          @spinner.success
+        elsif @spinner
+          @spinner.error
+        end
+      end
+
       def self.invoke(report, options = {})
         targets = parse_targets(options)
 
         return 0 if targets.empty?
 
         return_val = 0
+        create_spinner(targets, options)
 
         # The pure ruby JSON parser gives much nicer parse error messages than
         # the C extension at the cost of slightly slower parsing. We require it
@@ -80,6 +107,7 @@ module PDK
           end
         end
 
+        stop_spinner(return_val)
         return_val
       ensure
         JSON.parser = JSON::Ext::Parser if defined?(JSON::Ext::Parser)

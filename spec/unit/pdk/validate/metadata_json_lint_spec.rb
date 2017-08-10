@@ -22,7 +22,7 @@ describe PDK::Validate::MetadataJSONLint do
       let(:targets) { ['foo/metadata.json'] }
 
       it 'includes the path to the target in the spinner text' do
-        expect(spinner_text).to match(%r{checking metadata \(#{Regexp.escape(targets.first)}\)}i)
+        expect(spinner_text).to match(%r{checking metadata style \(#{Regexp.escape(targets.first)}\)}i)
       end
     end
 
@@ -41,7 +41,7 @@ describe PDK::Validate::MetadataJSONLint do
       end
 
       it 'includes the path to the target relative to the PWD in the spinner text' do
-        expect(spinner_text).to match(%r{checking metadata \(metadata\.json\)}i)
+        expect(spinner_text).to match(%r{checking metadata style \(metadata\.json\)}i)
       end
     end
   end
