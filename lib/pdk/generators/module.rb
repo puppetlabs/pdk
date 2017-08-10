@@ -220,7 +220,11 @@ module PDK
         puts '-' * 40
         puts
 
-        unless prompt.yes?(_('About to generate this module; continue?'))
+        continue = prompt.yes?(_('About to generate this module; continue?')) do |q|
+          q.validate(proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }, 'Please answer yes or no')
+        end
+
+        unless continue
           PDK.logger.info _('Module not generated.')
           exit 0
         end

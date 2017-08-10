@@ -405,6 +405,41 @@ describe PDK::Generate::Module do
         }
       end
     end
+
+    context 'when the user does not confirm with yes or no' do
+      include_context 'allow summary to be printed to stdout'
+
+      let(:responses) do
+        [
+          'foo',
+          '2.2.0',
+          'William Hopper',
+          'Apache-2.0',
+          'A simple module to do some stuff.',
+          'github.com/whopper/bar',
+          'forge.puppet.com/whopper/bar',
+          'tickets.foo.com/whopper/bar',
+          'test', # incorrect confirmation
+          'yes',  # reattempted confirmation
+        ]
+      end
+
+      it 'reattempts the confirmation' do
+        allow($stdout).to receive(:puts).and_call_original
+        expect { interview_metadata }.not_to raise_error
+
+        expect(interview_metadata).to include(
+          'name'         => 'foo-bar',
+          'version'      => '2.2.0',
+          'author'       => 'William Hopper',
+          'license'      => 'Apache-2.0',
+          'summary'      => 'A simple module to do some stuff.',
+          'source'       => 'github.com/whopper/bar',
+          'project_page' => 'forge.puppet.com/whopper/bar',
+          'issues_url'   => 'tickets.foo.com/whopper/bar',
+        )
+      end
+    end
   end
 
   describe '.prepare_metadata' do
