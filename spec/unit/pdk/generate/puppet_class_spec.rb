@@ -4,29 +4,6 @@ shared_examples 'it generates class template data' do
   it 'includes the class name in the template data' do
     expect(templated_class.template_data).to eq(name: expected_class_name)
   end
-
-  context 'and the generated class will take parameters' do
-    let(:options) do
-      {
-        params: [
-          { name: 'ensure', type: 'Enum["absent", "present"]' },
-          { name: 'version', type: 'String' },
-        ],
-      }
-    end
-
-    let(:expected_max_type_length) do
-      options[:params].find { |r| r[:name] == 'ensure' }[:type].length
-    end
-
-    it 'includes the parameters in the template data' do
-      expect(templated_class.template_data).to include(params: options[:params])
-    end
-
-    it 'calculates the maximum length of the data type definitions' do
-      expect(templated_class.template_data).to include(max_type_length: expected_max_type_length)
-    end
-  end
 end
 
 describe PDK::Generate::PuppetClass do

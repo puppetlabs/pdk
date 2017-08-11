@@ -184,14 +184,14 @@ Generates a new class and skeleton test for it in the current module.
 Usage:
 
 ```
-pdk new class [--template-url=git_url] <class_name> [parameter_name[:parameter_type]] [parameter_name[:parameter_type]] ...
+pdk new class [--template-url=git_url] <class_name>
 ```
 
 e.g.
 
 ```
 cd my_module
-pdk new class my_class "ensure:Enum['absent', 'present']" version:String
+pdk new class my_class
 ```
 
 #### `--template-url`
@@ -208,13 +208,6 @@ The name of the class to generate. If the class name is not inside the module
 namespace (e.g. module name is `apt` and the class name is `source`, then the
 module name will automatically be prepended to the class name (e.g.
 `apt::source`).
-
-#### `parameter_name[:parameter_type]`
-
-If the class should take parameters, they can be specified on the command line
-to be added to the generated class. Optionally, the data type of the parameter
-can be specified along with the parameter name, separated by a colon. Any
-number of parameters can be provided on the command line.
 
 ### `pdk validate` command
 

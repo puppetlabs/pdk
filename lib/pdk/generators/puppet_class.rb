@@ -11,10 +11,7 @@ module PDK
       # provided to the class and class spec templates during rendering.
       def template_data
         data = { name: object_name }
-        if @options.key?(:params)
-          data[:params] = @options[:params]
-          data[:max_type_length] = @options[:params].map { |r| r[:type].length }.max
-        end
+
         data
       end
 

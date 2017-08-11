@@ -22,9 +22,6 @@ After you generate a module, we suggest validating and testing the module _befor
 
 PDK does not generate any classes at module creation. The `pdk new class` command creates a class manifest and a test template file for the class. When you run this command, PDK creates a class manifest and a test template file for the class. You can then write tests in this template to validate your class's behavior.
 
-If your new class should take parameters, you can specify them, along with the parameter's data type and values, on the command line when you generate your class. You can provide any number of parameters on the command line.
-
-
 ## Generate a module with pdk
 
 To generate a module with PDK's default template, use the `pdk new module` command.
@@ -76,12 +73,12 @@ To generate a new class in your module, use the `pdk new class` command, specify
 
 To generate the main class of the module, which is defined in an `init.pp` file, give the class the same name as the module.
 
-1. From the command line, in your module's directory, run `pdk new class class_name`. Optionally, along with this command, specify any parameters with their data type and values.
+1. From the command line, in your module's directory, run `pdk new class class_name`.
 
-   This example creates a new class and defines an `ensure` parameter, which is an Enum data type that accepts the values 'absent' and 'present'.
+   This example creates a new class named `class_name`.
 
    ``` bash
-   pdk new class class_name "ensure:Enum['absent','present']"
+   pdk new class class_name
    ```
 
 PDK creates the class in `module_name/manifests`. It also creates a test file (like `class_name_spec.rb`) in your module's `/spec/class` directory. This test file includes a basic template for writing your own unit tests.
