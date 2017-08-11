@@ -1,9 +1,9 @@
 sudo: false
 language: ruby
-before_install: gem install bundler -v 1.15.1
 bundler_args: "--without development"
 script:
   - cat Gemfile.lock
+  - bundle list
   - bundle exec rake $CHECK
 cache: bundler
 matrix:
@@ -16,6 +16,10 @@ matrix:
       env: CHECK=acceptance:local
     - rvm: 2.1.9
       env: CHECK=spec
+    # license_finder requires all gems installed
+    - rvm: 2.1.9
+      env: CHECK=license_finder
+      bundler_args: ""
 notifications:
   hipchat:
     rooms:
