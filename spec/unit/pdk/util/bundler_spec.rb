@@ -217,7 +217,7 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'raises a fatal error' do
-        expect(logger).to receive(:error).with(a_string_matching(%r{failed to generate binstubs}i))
+        expect(logger).to receive(:fatal).with(a_string_matching(%r{failed to generate binstubs}i))
 
         expect {
           described_class.ensure_binstubs!(*gems)
