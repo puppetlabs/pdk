@@ -41,7 +41,7 @@ describe 'Running metadata validation' do
     end
   end
 
-  context 'when validating a specific file' do
+  context 'when incorrectly attempting to validate a specific file' do
     include_context 'in a new module', 'metadata_specific_module'
 
     before(:all) do
@@ -71,39 +71,56 @@ describe 'Running metadata validation' do
     end
 
     describe command('pdk validate metadata --format junit broken.json') do
-      its(:exit_status) { is_expected.not_to eq(0) }
+      its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(spinner_text) }
+      its(:stderr) { is_expected.to match(%r{will be ignored.*broken.json}) }
 
       its(:stdout) do
-        is_expected.not_to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
+        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
           'name' => 'metadata.json',
         )
       end
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
-          'classname' => 'metadata-json-lint.dependencies',
-          'name'      => 'broken.json',
+        is_expected.not_to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
+          'name' => 'broken.json',
         )
       end
     end
 
-    describe command('pdk validate metadata --format junit *.json') do
-      its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stderr) { is_expected.to match(spinner_text) }
-
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
-          'classname' => 'metadata-json-lint',
-          'name'      => 'metadata.json',
-        ).that_passed
+    context 'metadata.json has errors' do
+      before(:all) do
+        FileUtils.cp('metadata.json', 'metadata.bak')
+        FileUtils.cp('broken.json', 'metadata.json')
       end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
-          'classname' => 'metadata-json-lint.dependencies',
-          'name'      => 'broken.json',
-        ).that_failed
+      after(:all) do
+        FileUtils.mv('metadata.bak', 'metadata.json')
+      end
+
+      describe command('pdk validate metadata --format junit broken.json') do
+        its(:exit_status) { is_expected.not_to eq(0) }
+        its(:stderr) { is_expected.to match(spinner_text) }
+        its(:stderr) { is_expected.to match(%r{will be ignored.*broken.json}) }
+
+        its(:stdout) do
+          is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
+            'failures' => eq(1),
+            'tests'    => eq(1),
+          )
+        end
+
+        its(:stdout) do
+          is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
+            'name' => 'metadata.json',
+          )
+        end
+
+        its(:stdout) do
+          is_expected.not_to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
+            'name' => 'broken.json',
+          )
+        end
       end
     end
   end

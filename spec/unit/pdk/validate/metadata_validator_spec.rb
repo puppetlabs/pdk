@@ -43,4 +43,18 @@ describe PDK::Validate::MetadataValidator do
       end
     end
   end
+
+  describe '.invoke with targets' do
+    subject(:invoke_with_targets) { described_class.invoke(report, targets: %w[foo bar]) }
+
+    before(:each) do
+      allow(PDK::Validate::MetadataSyntax).to receive(:invoke).with(report, anything).and_return(0)
+      allow(PDK::Validate::MetadataJSONLint).to receive(:invoke).with(report, anything).and_return(0)
+    end
+
+    it 'informs user that targets will be ignored and continues to validate metadata.json' do
+      expect(PDK.logger).to receive(:info).with(a_string_matching(%r{ignored.*foo.*bar}))
+      expect(invoke_with_targets).to eq(0)
+    end
+  end
 end
