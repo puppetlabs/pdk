@@ -21,6 +21,7 @@ module PDK
       end
 
       def self.create_spinner(targets = [], options = {})
+        return if PDK.logger.debug?
         options = options.merge(PDK::CLI::Util.spinner_opts_for_platform)
 
         exec_group = options[:exec_group]

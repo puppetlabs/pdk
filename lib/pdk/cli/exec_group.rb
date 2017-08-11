@@ -10,8 +10,11 @@ module PDK
 
       def initialize(message, opts = {})
         @options = opts.merge(PDK::CLI::Util.spinner_opts_for_platform)
-        @multi_spinner = TTY::Spinner::Multi.new("[:spinner] #{message}", @options)
-        @multi_spinner.auto_spin
+
+        unless PDK.logger.debug?
+          @multi_spinner = TTY::Spinner::Multi.new("[:spinner] #{message}", @options)
+          @multi_spinner.auto_spin
+        end
 
         @threads = []
         @exit_codes = []
@@ -28,6 +31,7 @@ module PDK
       end
 
       def add_spinner(message, opts = {})
+        return if PDK.logger.debug?
         @multi_spinner.register("[:spinner] #{message}", @options.merge(opts).merge(PDK::CLI::Util.spinner_opts_for_platform))
       end
 
@@ -35,9 +39,10 @@ module PDK
         @threads.each(&:join)
 
         exit_code = @exit_codes.max
-        if exit_code.zero?
+
+        if exit_code.zero? && @multi_spinner
           @multi_spinner.success
-        else
+        elsif @multi_spinner
           @multi_spinner.error
         end
 

@@ -20,5 +20,9 @@ module PDK
     def enable_debug_output
       self.level = ::Logger::DEBUG
     end
+
+    def debug?
+      level == ::Logger::DEBUG
+    end
   end
 end
