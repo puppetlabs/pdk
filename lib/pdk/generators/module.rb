@@ -44,7 +44,7 @@ module PDK
 
         template_url = opts.fetch(:'template-url', PDK.answers['template-url'] || DEFAULT_TEMPLATE)
 
-        PDK::Module::TemplateDir.new(template_url) do |templates|
+        PDK::Module::TemplateDir.new(template_url, metadata.data) do |templates|
           templates.render do |file_path, file_content|
             file = Pathname.new(temp_target_dir) + file_path
             file.dirname.mkpath
@@ -95,6 +95,9 @@ module PDK
           'version'      => '0.1.0',
           'dependencies' => [
             { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.13.1 < 5.0.0' },
+          ],
+          'requirements' => [
+            { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
           ],
         }
         defaults['author'] = PDK.answers['author'] unless PDK.answers['author'].nil?

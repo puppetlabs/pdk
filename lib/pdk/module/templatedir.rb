@@ -15,6 +15,8 @@ module PDK
       #
       # @param path_or_url [String] The path to a directory to use as the
       # template or a URL to a git repository.
+      # @param module_metadata [Hash] A Hash containing the module metadata.
+      # Defaults to an empty Hash.
       # @yieldparam self [PDK::Module::TemplateDir] The initialised object with
       # the template available on disk.
       #
@@ -34,7 +36,7 @@ module PDK
       # @raise [ArgumentError] (see #validate_module_template!)
       #
       # @api public
-      def initialize(path_or_url)
+      def initialize(path_or_url, module_metadata = {})
         if File.directory?(path_or_url)
           @path = path_or_url
         else
@@ -60,6 +62,8 @@ module PDK
         @moduleroot_dir = File.join(@path, 'moduleroot')
         @object_dir = File.join(@path, 'object_templates')
         validate_module_template!
+
+        @module_metadata = module_metadata
 
         yield self
       ensure
@@ -231,7 +235,9 @@ module PDK
         end
 
         file_config = @config.fetch(:global, {})
-        file_config.merge(@config.fetch(dest_path, {})) unless dest_path.nil?
+        file_config['module_metadata'] = @module_metadata
+        file_config.merge!(@config.fetch(dest_path, {})) unless dest_path.nil?
+        file_config
       end
     end
   end
