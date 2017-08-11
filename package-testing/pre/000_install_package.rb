@@ -26,11 +26,12 @@ test_name 'Install pdk package on workstation host' do
       # For most platforms, beaker will install the dev repo from the build server then 'install_package('pdk')' can simply be used
       pkg ||= 'pdk'
 
-      if ENV['SHA']
+      if ENV['LOCAL_PKG']
+        workstation.install_local_package(pkg)
+      else
         install_puppetlabs_dev_repo(workstation, 'pdk', ENV['SHA'], 'repo-config')
+        workstation.install_package(pkg)
       end
-
-      workstation.install_package(pkg)
     end
   end
 end

@@ -183,10 +183,25 @@ describe PDK::Generate::Module do
         end
 
         context 'and no template-url answer exists' do
-          it 'uses the default template to generate the module' do
-            expect(PDK::Module::TemplateDir).to receive(:new).with(PDK::Generate::Module::DEFAULT_TEMPLATE, anything).and_yield(test_template_dir)
+          context 'and pdk is installed from packages' do
+            before(:each) do
+              allow(PDK::Util).to receive(:package_install?).and_return(true)
+              allow(PDK::Util).to receive(:package_cachedir).and_return('/tmp/package/cache')
+            end
 
-            described_class.invoke(invoke_opts)
+            it 'uses the vendored template url' do
+              expect(PDK::Module::TemplateDir).to receive(:new).with('file:///tmp/package/cache/pdk-module-template.git', anything).and_yield(test_template_dir)
+
+              described_class.invoke(invoke_opts)
+            end
+          end
+
+          context 'and pdk is not installed from packages' do
+            it 'uses the default template to generate the module' do
+              expect(PDK::Module::TemplateDir).to receive(:new).with(described_class.default_template_url, anything).and_yield(test_template_dir)
+
+              described_class.invoke(invoke_opts)
+            end
           end
         end
       end
