@@ -44,9 +44,15 @@ describe '`pdk test unit`' do
     end
 
     context 'when running tests' do
+      let(:reporter) { instance_double(PDK::Report, write_text: true) }
+
+      before(:each) do
+        allow(PDK::Report).to receive(:new).and_return(reporter)
+      end
+
       context 'when tests pass' do
         before(:each) do
-          expect(PDK::Test::Unit).to receive(:invoke).with(instance_of(PDK::Report), hash_including(:tests)).once.and_return(0)
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_including(:tests)).once.and_return(0)
         end
 
         it do
@@ -61,6 +67,7 @@ describe '`pdk test unit`' do
           before(:each) do
             expect(PDK::CLI::Util::OptionNormalizer).to receive(:report_formats).with(['text:results.txt']).and_return([{ method: :write_text, target: 'results.txt' }]).twice
           end
+
           it do
             expect {
               test_unit_cmd.run_this(['--format=text:results.txt'])
@@ -73,7 +80,7 @@ describe '`pdk test unit`' do
 
       context 'when tests fail' do
         before(:each) do
-          expect(PDK::Test::Unit).to receive(:invoke).with(instance_of(PDK::Report), hash_including(:tests)).once.and_return(1)
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_including(:tests)).once.and_return(1)
         end
 
         it do
