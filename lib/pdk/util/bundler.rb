@@ -82,8 +82,7 @@ module PDK
           result = bundle_command(*argv).execute!
 
           unless result[:exit_code].zero?
-            $stderr.puts result[:stdout]
-            $stderr.puts result[:stderr]
+            PDK.logger.debug(result.values_at(:stdout, :stderr).join("\n"))
           end
 
           result[:exit_code].zero?
@@ -97,8 +96,7 @@ module PDK
           result = command.execute!
 
           unless result[:exit_code].zero?
-            $stderr.puts result[:stdout]
-            $stderr.puts result[:stderr]
+            PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n"))
           end
 
           result[:exit_code].zero?
@@ -115,8 +113,7 @@ module PDK
           result = command.execute!
 
           unless result[:exit_code].zero?
-            $stderr.puts result[:stdout]
-            $stderr.puts result[:stderr]
+            PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n"))
           end
 
           result[:exit_code].zero?
@@ -131,9 +128,7 @@ module PDK
           result = command.execute!
 
           unless result[:exit_code].zero?
-            PDK.logger.error(_('Failed to generate binstubs for %{gems}') % { gems: gems.join(' ') })
-            $stderr.puts result[:stdout]
-            $stderr.puts result[:stderr]
+            PDK.logger.fatal(_("Failed to generate binstubs for '%{gems}':\n%{output}") % { gems: gems.join(' '), output: result.values_at(:stdout, :stderr).join("\n") })
           end
 
           result[:exit_code].zero?
