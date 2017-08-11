@@ -99,7 +99,7 @@ module PDK
 
         def context=(new_context)
           unless [:system, :module].include?(new_context)
-            raise ArgumentError, _("Expected execution context to be :system or :module but got '%{context}'") % { context: new_contenxt }
+            raise ArgumentError, _("Expected execution context to be :system or :module but got '%{context}'") % { context: new_context }
           end
 
           @context = new_context
@@ -153,7 +153,7 @@ module PDK
             mod_root = PDK::Util.module_root
 
             unless mod_root
-              @spinner.error
+              @spinner.error if @spinner
 
               raise PDK::CLI::FatalError, _('Current working directory is not part of a module. (No metadata.json was found.)')
             end
