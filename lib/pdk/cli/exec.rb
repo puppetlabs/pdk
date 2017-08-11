@@ -228,7 +228,8 @@ module PDK
             @process.wait
           end
           @duration = Time.now - start_time
-          PDK.logger.debug(_('Execution complete (exit code: %{exit_code})') % { exit_code: @process.exit_code })
+          PDK.logger.debug(_("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})") %
+            { command: command_string, duration_in_seconds: @duration, exit_code: @process.exit_code })
         end
       end
     end
