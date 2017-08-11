@@ -62,3 +62,9 @@
     :why: https://github.com/defunkt/colored/blob/829bde0f8832406be1cacc5c99c49d976e05ccfc/LICENSE
     :versions: []
     :when: 2017-07-28 11:23:25.554994001 Z
+- - :whitelist
+  - ISC
+  - :who: scotje
+    :why: MIT equivalent
+    :versions: []
+    :when: 2017-08-11 01:30:32.594531000 Z
