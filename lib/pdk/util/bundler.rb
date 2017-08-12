@@ -103,7 +103,7 @@ module PDK
         end
 
         def install!
-          argv = ['install', "--gemfile=#{gemfile}"]
+          argv = ['install', "--gemfile=#{gemfile}", '-j4']
           argv << "--path=#{bundle_cachedir}" if PDK::Util.gem_install?
 
           command = bundle_command(*argv).tap do |c|
