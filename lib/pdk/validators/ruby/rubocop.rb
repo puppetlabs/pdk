@@ -16,8 +16,12 @@ module PDK
         'rubocop'
       end
 
+      def self.pattern
+        '**/**.rb'
+      end
+
       def self.spinner_text(_targets = nil)
-        _('Checking Ruby code style')
+        _('Checking Ruby code style (%{pattern})') % { pattern: pattern }
       end
 
       def self.parse_options(options, targets)
