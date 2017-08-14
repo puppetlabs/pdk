@@ -16,6 +16,17 @@ module PDK
         File.join(PDK::Util.module_root, 'bin', cmd)
       end
 
+      # Parses the target strings provided from the CLI
+      #
+      # @param options [Hash] A Hash containing the input options from the CLI.
+      #
+      # @return targets [Array] An Array of Strings containing target file paths
+      #                         for the validator to validate.
+      # @return skipped [Array] An Array of Strings containing targets
+      #                         that are skipped due to target not containing
+      #                         any files that can be validated by the validator.
+      # @return invalid [Array] An Array of Strings containing targets that do
+      #                         not exist, and will not be run by validator.
       def self.parse_targets(options)
         # If no targets are specified, then we will run validations from the
         # base module directory.
@@ -25,17 +36,32 @@ module PDK
                     options[:targets]
                   end
 
-        targets.map { |target|
+        skipped = []
+        invalid = []
+        matched = targets.map { |target|
           if respond_to?(:pattern)
             if File.directory?(target)
-              Array[pattern].flatten.map { |p| Dir.glob(File.join(target, p)) }
+              target_list = Array[pattern].flatten.map { |p| Dir.glob(File.join(target, p)) }
+              skipped << target if target_list.flatten.empty?
+              target_list
+            elsif File.file?(target)
+              if target.eql? pattern
+                target
+              elsif Array[pattern].flatten.map { |p| File.fnmatch(p, File.expand_path(target)) }.include? true
+                target
+              else
+                skipped << target
+                next
+              end
             else
-              target
+              invalid << target
+              next
             end
           else
             target
           end
-        }.flatten
+        }.compact.flatten
+        [matched, skipped, invalid]
       end
 
       def self.parse_options(_options, targets)
@@ -46,8 +72,37 @@ module PDK
         _('Invoking %{cmd}') % { cmd: cmd }
       end
 
+      def self.process_skipped(report, skipped = [])
+        skipped.each do |skipped_target|
+          PDK.logger.debug(_('%{validator}: Skipped \'%{target}\'. Target does not contain any files to validate (%{pattern}).') % { validator: name, target: skipped_target, pattern: pattern })
+          report.add_event(
+            file:     skipped_target,
+            source:   name,
+            message:  _('Target does not contain any files to validate (%{pattern}).') % { pattern: pattern },
+            severity: :info,
+            state:    :skipped,
+          )
+        end
+      end
+
+      def self.process_invalid(report, invalid = [])
+        invalid.each do |invalid_target|
+          PDK.logger.debug(_('%{validator}: Skipped \'%{target}\'. Target file not found.') % { validator: name, target: invalid_target })
+          report.add_event(
+            file:     invalid_target,
+            source:   name,
+            message:  'File does not exist.',
+            severity: :error,
+            state:    :error,
+          )
+        end
+      end
+
       def self.invoke(report, options = {})
-        targets = parse_targets(options)
+        targets, skipped, invalid = parse_targets(options)
+
+        process_skipped(report, skipped)
+        process_invalid(report, invalid)
 
         return 0 if targets.empty?
 

@@ -21,13 +21,13 @@ RSpec.shared_examples_for 'it accepts .pp targets' do
         end
 
         it 'returns the paths to all the .pp files in the module' do
-          expect(parsed_targets).to eq(globbed_files)
+          expect(parsed_targets.first).to eq(globbed_files)
         end
       end
 
       context 'and the module contains no .pp files' do
         it 'returns no targets' do
-          expect(parsed_targets).to eq([])
+          expect(parsed_targets.first).to eq([])
         end
       end
     end
@@ -38,11 +38,12 @@ RSpec.shared_examples_for 'it accepts .pp targets' do
       before(:each) do
         targets.each do |target|
           allow(File).to receive(:directory?).with(target).and_return(false)
+          allow(File).to receive(:file?).with(target).and_return(true)
         end
       end
 
       it 'returns the targets' do
-        expect(parsed_targets).to eq(targets)
+        expect(parsed_targets.first).to eq(targets)
       end
     end
 
@@ -58,13 +59,13 @@ RSpec.shared_examples_for 'it accepts .pp targets' do
         let(:globbed_files) { [File.join(targets.first, 'test.pp')] }
 
         it 'returns the paths to the .pp files in the directory' do
-          expect(parsed_targets).to eq(globbed_files)
+          expect(parsed_targets.first).to eq(globbed_files)
         end
       end
 
       context 'and the directory contains no .pp files' do
         it 'returns no targets' do
-          expect(parsed_targets).to eq([])
+          expect(parsed_targets.first).to eq([])
         end
       end
     end

@@ -18,11 +18,6 @@ module PDK
       def self.invoke(report, options = {})
         exit_code = 0
 
-        if options[:targets] && options[:targets] != []
-          PDK.logger.info(_('metadata validator only checks metadata.json. The specified files will be ignored: %{targets}') % { targets: options[:targets].join(', ') })
-          options.delete(:targets)
-        end
-
         metadata_validators.each do |validator|
           exit_code = validator.invoke(report, options)
           break if exit_code != 0

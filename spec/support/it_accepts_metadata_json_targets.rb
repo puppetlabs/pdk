@@ -17,28 +17,31 @@ RSpec.shared_examples_for 'it accepts metadata.json targets' do
         let(:globbed_files) { [module_metadata_json] }
 
         it 'returns the path to metadata.json in the module' do
-          expect(parsed_targets).to eq(globbed_files)
+          expect(parsed_targets.first).to eq(globbed_files)
         end
       end
 
       context 'and the module does not contain a metadata.json file' do
         it 'returns no targets' do
-          expect(parsed_targets).to eq([])
+          expect(parsed_targets.first).to eq([])
         end
       end
     end
 
-    context 'when given specific target files' do
+    context 'when given a target that will not match the validator\s pattern' do
       let(:targets) { ['target1', 'target2.json'] }
 
       before(:each) do
         targets.each do |target|
           allow(File).to receive(:directory?).with(target).and_return(false)
+          allow(File).to receive(:file?).with(target).and_return(true)
         end
       end
 
-      it 'returns the targets' do
-        expect(parsed_targets).to eq(targets)
+      it 'skips the targets' do
+        expect(parsed_targets[0]).to eq([])
+        expect(parsed_targets[1]).to eq(['target1', 'target2.json'])
+        expect(parsed_targets[2]).to eq([])
       end
     end
 
@@ -56,13 +59,13 @@ RSpec.shared_examples_for 'it accepts metadata.json targets' do
         let(:globbed_files) { [File.join(targets.first, 'metadata.json')] }
 
         it 'returns the path to the metadata.json file in the target directory' do
-          expect(parsed_targets).to eq(globbed_files)
+          expect(parsed_targets.first).to eq(globbed_files)
         end
       end
 
       context 'and the directory does not contain a metadata.json file' do
         it 'returns no targets' do
-          expect(parsed_targets).to eq([])
+          expect(parsed_targets.first).to eq([])
         end
       end
     end

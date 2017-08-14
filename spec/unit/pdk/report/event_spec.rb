@@ -359,8 +359,8 @@ describe PDK::Report::Event do
   end
 
   context 'when generating text output' do
-    it 'contains the file name at the start of the string' do
-      expect(text_event).to match(%r{\Atestfile\.rb})
+    it 'contains the file name in the string' do
+      expect(text_event).to match(%r{testfile\.rb})
     end
 
     context 'and a line number is provided' do
@@ -371,7 +371,7 @@ describe PDK::Report::Event do
       end
 
       it 'appends the line number to the file name' do
-        expect(text_event).to match(%r{\Atestfile\.rb:123})
+        expect(text_event).to match(%r{testfile\.rb:123})
       end
 
       context 'and a column number is provided' do
@@ -383,7 +383,7 @@ describe PDK::Report::Event do
         end
 
         it 'appends the column number to the line number' do
-          expect(text_event).to match(%r{\Atestfile\.rb:123:456})
+          expect(text_event).to match(%r{testfile\.rb:123:456})
         end
       end
     end
@@ -395,8 +395,20 @@ describe PDK::Report::Event do
         }
       end
 
-      it 'includes the message after the file name' do
-        expect(text_event).to match(%r{\Atestfile\.rb: ok\Z})
+      it 'includes the severity at the front' do
+        expect(text_event).to match(%r{\Aok:})
+      end
+    end
+
+    context 'and a validator is provided' do
+      let(:data) do
+        {
+          source: 'my-validator',
+        }
+      end
+
+      it 'includes the validator' do
+        expect(text_event).to match(%r{my-validator})
       end
     end
 
@@ -408,7 +420,7 @@ describe PDK::Report::Event do
       end
 
       it 'includes the message at the end of the string' do
-        expect(text_event).to match(%r{\Atestfile\.rb: test message\Z})
+        expect(text_event).to match(%r{testfile\.rb: test message\Z})
       end
 
       context 'and a severity is provided' do
@@ -419,8 +431,8 @@ describe PDK::Report::Event do
           }
         end
 
-        it 'includes the severity before the message' do
-          expect(text_event).to match(%r{\Atestfile\.rb: critical: test message\Z})
+        it 'includes the severity before the file' do
+          expect(text_event).to match(%r{\Acritical: test-validator: testfile\.rb: test message\Z})
         end
       end
     end

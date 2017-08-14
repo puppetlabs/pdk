@@ -25,7 +25,7 @@ class foo { }
 
       describe file('report.txt') do
         it { is_expected.to exist }
-        its(:content) { is_expected.to match %r{^#{Regexp.escape(init_pp)}.*warning.*class not documented} }
+        its(:content) { is_expected.to match %r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented} }
       end
     end
 
@@ -34,7 +34,7 @@ class foo { }
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
       its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
-      its(:stdout) { is_expected.to match(%r{^#{Regexp.escape(init_pp)}.*warning.*class not documented}) }
+      its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented}) }
 
       describe file('stdout') do
         it { is_expected.not_to exist }
@@ -47,7 +47,7 @@ class foo { }
       its(:stdout) { is_expected.to match(%r{\A\Z}) }
       its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
       its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
-      its(:stderr) { is_expected.to match(%r{^#{Regexp.escape(init_pp)}.*warning.*class not documented}) }
+      its(:stderr) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented}) }
 
       describe file('stderr') do
         it { is_expected.not_to exist }

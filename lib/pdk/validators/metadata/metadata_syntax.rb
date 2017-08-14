@@ -42,7 +42,10 @@ module PDK
       end
 
       def self.invoke(report, options = {})
-        targets = parse_targets(options)
+        targets, skipped, invalid = parse_targets(options)
+
+        process_skipped(report, skipped)
+        process_invalid(report, invalid)
 
         return 0 if targets.empty?
 
@@ -57,18 +60,6 @@ module PDK
         JSON.parser = JSON::Pure::Parser
 
         targets.each do |target|
-          unless File.file?(target)
-            report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
-              severity: 'error',
-              message:  _('not a file'),
-            )
-            return_val = 1
-            next
-          end
-
           unless File.readable?(target)
             report.add_event(
               file: target,

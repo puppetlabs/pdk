@@ -87,12 +87,12 @@ describe 'pdk validate ruby', module_command: true do
 
     describe command('pdk validate ruby') do
       its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stdout) { is_expected.to match(%r{^test\.rb.*space inside (\{|\}) missing}i) }
+      its(:stdout) { is_expected.to match(%r{test\.rb.*space inside (\{|\}) missing}i) }
     end
 
     describe command('pdk validate ruby --auto-correct') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{^test\.rb.*corrected.*space inside (\{|\}) missing}i) }
+      its(:stdout) { is_expected.to match(%r{^corrected:.*test\.rb.*space inside (\{|\}) missing}i) }
     end
 
     describe command('pdk validate ruby') do

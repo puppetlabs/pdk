@@ -16,7 +16,7 @@ describe 'Running metadata validation' do
 
     describe command('pdk validate metadata') do
       its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stdout) { is_expected.to match(%r{^metadata\.json:.+warning.+open ended dependency}) }
+      its(:stdout) { is_expected.to match(%r{^warning:.*metadata\.json:.+open ended dependency}) }
       its(:stderr) { is_expected.to match(spinner_text) }
     end
 
@@ -72,17 +72,17 @@ describe 'Running metadata validation' do
 
     describe command('pdk validate metadata --format junit broken.json') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(spinner_text) }
-      its(:stderr) { is_expected.to match(%r{will be ignored.*broken.json}) }
+      its(:stderr) { is_expected.not_to match(spinner_text) }
 
       its(:stdout) do
-        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
-          'name' => 'metadata.json',
+        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]').with_attributes(
+          'tests' => '1',
+          'skipped' => '1',
         )
       end
 
       its(:stdout) do
-        is_expected.not_to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
+        is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
           'name' => 'broken.json',
         )
       end
@@ -99,25 +99,18 @@ describe 'Running metadata validation' do
       end
 
       describe command('pdk validate metadata --format junit broken.json') do
-        its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stderr) { is_expected.to match(spinner_text) }
-        its(:stderr) { is_expected.to match(%r{will be ignored.*broken.json}) }
+        its(:exit_status) { is_expected.to eq(0) }
+        its(:stderr) { is_expected.not_to match(spinner_text) }
 
         its(:stdout) do
           is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
-            'failures' => eq(1),
-            'tests'    => eq(1),
+            'skipped' => eq(1),
+            'tests' => eq(1),
           )
         end
 
         its(:stdout) do
           is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
-            'name' => 'metadata.json',
-          )
-        end
-
-        its(:stdout) do
-          is_expected.not_to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
             'name' => 'broken.json',
           )
         end
