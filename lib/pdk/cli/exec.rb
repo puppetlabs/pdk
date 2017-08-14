@@ -148,7 +148,12 @@ module PDK
             end
 
             # Make sure invocation of Ruby prefers our private installation.
-            @process.environment['PATH'] = [RbConfig::CONFIG['bindir'], ENV['PATH']].compact.join(File::PATH_SEPARATOR)
+            @process.environment['PATH'] = [
+              RbConfig::CONFIG['bindir'],
+              File.join(@process.environment['GEM_HOME'], 'bin'),
+              File.join(@process.environment['GEM_PATH'], 'bin'),
+              ENV['PATH'],
+            ].compact.join(File::PATH_SEPARATOR)
 
             mod_root = PDK::Util.module_root
 
