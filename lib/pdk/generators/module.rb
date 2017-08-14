@@ -133,8 +133,8 @@ module PDK
         questions = [
           {
             name:             'name',
-            question:         _('What is your Puppet Forge username?'),
-            help:             _('This will be used when uploading your module to the Forge. You can opt out of this at any time.'),
+            question:         _('If you have a Puppet Forge username, add it here.'),
+            help:             _('We can use this to upload your module to the Forge when it\'s complete.'),
             required:         true,
             validate_pattern: %r{\A[a-z0-9]+\Z}i,
             validate_message: _('Forge usernames can only contain lowercase letters and numbers'),
@@ -152,7 +152,7 @@ module PDK
           {
             name:     'author',
             question: _('Who wrote this module?'),
-            help:     _('The person who gets credit for creating the module. '),
+            help:     _('This will be used to credit the module\'s author.'),
             required: true,
             default:  metadata.data['author'],
           },
@@ -165,28 +165,28 @@ module PDK
           },
           {
             name:     'summary',
-            question: _('How would you describe this module in a single sentence?'),
-            help:     _('To help other Puppet users understand what the module does.'),
+            question: _('Please summarize the purpose of this module in a single sentence.'),
+            help:     _('This will help other Puppet users understand what the module does.'),
             required: true,
             default:  metadata.data['summary'],
           },
           {
             name:     'source',
-            question: _("Where is this modules's source code repository?"),
-            help:     _('Usually a GitHub URL'),
+            question: _('If there is a source code repository for this module, enter the URL here.'),
+            help:     _('Skip this if none exists yet, you can update this later in the metadata.json.'),
             required: true,
             default:  metadata.data['source'],
           },
           {
             name:     'project_page',
-            question: _('Where can others go to learn more about this module?'),
-            help:     _('A web site that offers full information about your module.'),
+            question: _('If there is a URL where others can learn more about this module, enter it here.'),
+            help:     _('Optional. As with all questions above, you can update this later in the metadata.json.'),
             default:  metadata.data['project_page'],
           },
           {
             name:     'issues_url',
-            question: _('Where can others go to file issues about this module?'),
-            help:     _('A web site with a public bug tracker for your module.'),
+            question: _('If there is a public issue tracker for this module, enter its URL here.'),
+            help:     _('Optional. As with all questions above, you can update this later in the metadata.json.'),
             default:  metadata.data['issues_url'],
           },
         ]
@@ -200,8 +200,11 @@ module PDK
         interview.add_questions(questions)
 
         puts _(
-          "\nWe need to create a metadata.json file for this module, so we're going to ask you %{count} quick questions.\n" \
-          "If the question is not applicable to this module, just leave the answer blank.\n\n",
+          "\nWe need to create a metadata.json file for this module, so we\'re going to ask you %{count} quick " \
+          "questions.\n" \
+          'If the question is not applicable to this module, simply leave the answer blank and skip. A default option ' \
+          'is shown after each question. You can modify this or any other answers at any time by manually updating ' \
+          "the metadata.json file.\n\n",
         ) % { count: interview.num_questions }
 
         answers = interview.run
