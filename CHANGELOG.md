@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v1.0.0](https://github.com/puppetlabs/pdk/tree/v1.0.0) (2017-08-15)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.6.0...v1.0.0)
+
+**Implemented enhancements:**
+
+- \(PDK-395\) Use vendored pdk-module-template repo when available [\#255](https://github.com/puppetlabs/pdk/pull/255) ([scotje](https://github.com/scotje))
+- Move content from README to official docs site [\#252](https://github.com/puppetlabs/pdk/pull/252) ([jbondpdx](https://github.com/jbondpdx))
+- \(PDK-367\) Update questionnaire wording [\#251](https://github.com/puppetlabs/pdk/pull/251) ([DavidS](https://github.com/DavidS))
+- \(PDK-406\) Add GEM\_HOME and GEM\_PATH bin dirs to PATH when executing commands [\#249](https://github.com/puppetlabs/pdk/pull/249) ([rodjek](https://github.com/rodjek))
+- \(PDK-401, PDK-402, PDK-403, PDK-404\) Update validators to handle targets better [\#248](https://github.com/puppetlabs/pdk/pull/248) ([bmjen](https://github.com/bmjen))
+- \(maint\) Allow bundler to install gems in parallel [\#245](https://github.com/puppetlabs/pdk/pull/245) ([james-stocks](https://github.com/james-stocks))
+- \(PDK-397\) Log output of bundler commands at appropriate levels [\#243](https://github.com/puppetlabs/pdk/pull/243) ([scotje](https://github.com/scotje))
+- \(PDK-396\) Disable spinners in debug mode [\#233](https://github.com/puppetlabs/pdk/pull/233) ([rodjek](https://github.com/rodjek))
+- \(PDK-388, PDK-392\) Add README, CHANGELOG, and puppet requirement to module generation [\#232](https://github.com/puppetlabs/pdk/pull/232) ([bmjen](https://github.com/bmjen))
+- \(SDK-144\) Add option to run validate in parallel [\#144](https://github.com/puppetlabs/pdk/pull/144) ([austb](https://github.com/austb))
+
+**Fixed bugs:**
+
+- Running PDK native packages on Windows under ConEmu fails [\#220](https://github.com/puppetlabs/pdk/issues/220)
+- \(PDK-407\) Validate module interview confirmation answer [\#237](https://github.com/puppetlabs/pdk/pull/237) ([rodjek](https://github.com/rodjek))
+- \(PDK-386\) Remove parameter options from 'new class' [\#236](https://github.com/puppetlabs/pdk/pull/236) ([austb](https://github.com/austb))
+
 ## [v0.6.0](https://github.com/puppetlabs/pdk/tree/v0.6.0) (2017-08-08)
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.5.0...v0.6.0)
@@ -10,6 +33,7 @@ All notable changes to this project will be documented in this file.
 **Implemented enhancements:**
 
 - \(MAINT\) Improve moduleroot error message [\#224](https://github.com/puppetlabs/pdk/pull/224) ([DavidS](https://github.com/DavidS))
+- \(MAINT\) workaround rspec-puppt-facts being case-sensitive for operatingsystem filters [\#222](https://github.com/puppetlabs/pdk/pull/222) ([DavidS](https://github.com/DavidS))
 - \(PDK-354\) Change PDK::Logger to write to STDERR [\#217](https://github.com/puppetlabs/pdk/pull/217) ([scotje](https://github.com/scotje))
 - \(SDK-331\) Use vendored Gemfile.lock when available and needed [\#215](https://github.com/puppetlabs/pdk/pull/215) ([scotje](https://github.com/scotje))
 - \(maint\) Expose message when FileUtils.mkdir\_p fails during module generation [\#209](https://github.com/puppetlabs/pdk/pull/209) ([rodjek](https://github.com/rodjek))
