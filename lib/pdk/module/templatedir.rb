@@ -85,7 +85,7 @@ module PDK
       def metadata
         return {} unless @repo
 
-        ref_result = PDK::CLI::Exec.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long')
+        ref_result = PDK::CLI::Exec.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long', '--always')
         if ref_result[:exit_code].zero?
           { 'template-url' => @repo, 'template-ref' => ref_result[:stdout].strip }
         else

@@ -4,6 +4,7 @@ shared_context :with_puppet_object_module_metadata do
   let(:module_metadata) { '{"name": "testuser-test_module"}' }
 
   before(:each) do
+    allow(PDK::Util).to receive(:package_install?).and_return(false)
     allow(File).to receive(:file?).with(metadata_path).and_return(true)
     allow(File).to receive(:readable?).with(metadata_path).and_return(true)
     allow(File).to receive(:read).with(metadata_path).and_return(module_metadata)
@@ -139,7 +140,7 @@ describe PDK::Generate::PuppetObject do
       allow(default_templatedir).to receive(:object_config).and_return(configs_hash)
       allow(cli_templatedir).to receive(:object_config).and_return(configs_hash)
       allow(metadata_templatedir).to receive(:object_config).and_return(configs_hash)
-      allow(PDK::Module::TemplateDir).to receive(:new).with(PDK::Generate::Module::DEFAULT_TEMPLATE).and_yield(default_templatedir)
+      allow(PDK::Module::TemplateDir).to receive(:new).with(PDK::Generate::Module.default_template_url).and_yield(default_templatedir)
     end
 
     context 'when a template-url is provided on the CLI' do

@@ -8,7 +8,11 @@ test_name 'C100321 - Generate a module and validate it (i.e. ensure bundle insta
   end
 
   step 'Create a module' do
-    on(workstation, pdk_command(workstation, "new module #{module_name} --skip-interview"))
+    on(workstation, pdk_command(workstation, "new module #{module_name} --skip-interview")) do
+      on(workstation, %(cat #{module_name}/metadata.json | egrep '"template-url":'), accept_all_exit_codes: true) do |template_result|
+        assert_match(%r{"file://.*pdk-module-template\.git",?$}, template_result.stdout.strip, "New module's metadata should refer to vendored pdk-module-template repo")
+      end
+    end
   end
 
   step 'Validate the module' do

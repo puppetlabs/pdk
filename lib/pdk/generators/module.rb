@@ -15,7 +15,15 @@ require 'pdk/util/version'
 module PDK
   module Generate
     class Module
-      DEFAULT_TEMPLATE = 'https://github.com/puppetlabs/pdk-module-template'.freeze
+      def self.default_template_url
+        if !PDK.answers['template-url'].nil?
+          PDK.answers['template-url']
+        elsif PDK::Util.package_install?
+          'file://' + File.join(PDK::Util.package_cachedir, 'pdk-module-template.git')
+        else
+          'https://github.com/puppetlabs/pdk-module-template'
+        end
+      end
 
       def self.invoke(opts = {})
         target_dir = File.expand_path(opts[:target_dir])
@@ -42,7 +50,7 @@ module PDK
 
         prepare_module_directory(temp_target_dir)
 
-        template_url = opts.fetch(:'template-url', PDK.answers['template-url'] || DEFAULT_TEMPLATE)
+        template_url = opts.fetch(:'template-url', default_template_url)
 
         PDK::Module::TemplateDir.new(template_url, metadata.data) do |templates|
           templates.render do |file_path, file_content|
