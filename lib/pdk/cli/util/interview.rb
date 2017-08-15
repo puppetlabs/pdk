@@ -1,5 +1,4 @@
 require 'tty-prompt'
-require 'pdk/monkey_patches'
 
 module PDK
   module CLI
