@@ -49,8 +49,10 @@ This command asks a series of metadata questions and then generates the basic co
 
 To generate a class in your module, use the `pdk new class` command, specifying the name of your new class. To generate the main class of the module, which is defined in an `init.pp` file, give the class the same name as the module.
 
-1. From the command line, in your module's directory, run `pdk new class class_name`. 
-   ```
+1. From the command line, in your module's directory, run: 
+```
+pdk new class class_name 
+```
 
 PDK creates the new class manifest and a test file (as `class_name_spec.rb`) in your module's `/spec/classes` directory. 
 
