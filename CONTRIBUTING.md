@@ -1,37 +1,35 @@
 # Contributing
 
-Post to [puppet-users@groups.google.com](https://groups.google.com/forum/#!forum/puppet-users) for questions. Error reports and patches welcome in this repo!
+We welcome error reports and patches to the PDK repository. Post questions to [puppet-users@groups.google.com](https://groups.google.com/forum/#!forum/puppet-users). Post bug reports and pull requests on GitHub at https://github.com/puppetlabs/pdk/issues.
 
 # Running from source
 
-In cases where `pdk` needs to run in a working directory outside the cloned repository, either set `BUNDLE_GEMFILE` to the pdk's Gemfile location, or install and use the [binstubs of bundler](http://bundler.io/v1.15/bundle_binstubs.html), which are small proxy binaries, that set up the environment for running the tool.
+If you need to run `pdk` in a working directory outside the cloned repository, either set `BUNDLE_GEMFILE` to the pdk's Gemfile location, or install and use the [binstubs of bundler](http://bundler.io/v1.15/bundle_binstubs.html). These binstubs are small proxy binaries that set up the environment for running the tool.
 
 ```
 # assuming ~/bin is already on your path:
 $ bundle binstubs pdk --path ~/bin
 ```
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/puppetlabs/pdk/issues.
-
 # Running tests
 
-pdk has the following testing rake tasks
+pdk has the following testing Rake tasks.
 
 ## spec
 
-Run unit tests.
+Runs unit tests.
 
 ## rubocop
 
-Run ruby style checks. Use `rake rubocop:auto_correct` to fix the easy ones.
+Runs Ruby style checks. Use `rake rubocop:auto_correct` to fix the easy ones.
 
 ## acceptance:local
 
-Run acceptance tests on the current pdk code. These tests are executed on commits and pull requests to this repo using both travis and appveyor.
+Runs acceptance tests on the current pdk code. These tests are executed on commits and pull requests to this repo using both travis and appveyor.
 
 # Testing packages
 
-The package-testing/ folder contains files for testing built packages of pdk. This is for Puppet's packaging CI, and contributors outside of Puppet, Inc. don't need to worry about executing it. It uses [beaker](https://github.com/puppetlabs/beaker) to provision a VM, fetch and install a pdk installation package, and then run the acceptance tests on that VM.
+The package-testing/ folder contains files for testing built packages of pdk. This is for Puppet's packaging CI, so contributors outside of Puppet, Inc. don't need to worry about executing it. It uses [beaker](https://github.com/puppetlabs/beaker) to provision a VM, fetch and install a pdk installation package, and then run the acceptance tests on that VM.
 
 This folder has its own Gemfile and Rakefile providing an _acceptance_ rake task. It requires some environment variables to be set in order to specify what beaker will set up:
 
