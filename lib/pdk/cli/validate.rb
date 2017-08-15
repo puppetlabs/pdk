@@ -93,7 +93,7 @@ module PDK::CLI
         exit_code = exec_group.exit_code
       else
         validators.each do |validator|
-          validator_exit_code = validator.invoke(report, options)
+          validator_exit_code = validator.invoke(report, options.dup)
           exit_code = validator_exit_code if validator_exit_code != 0
         end
       end

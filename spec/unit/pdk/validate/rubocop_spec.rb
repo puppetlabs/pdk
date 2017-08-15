@@ -18,6 +18,7 @@ end
 
 describe PDK::Validate::Rubocop do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }
+  let(:glob_pattern) { File.join(module_root, described_class.pattern) }
 
   before(:each) do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
@@ -38,16 +39,39 @@ describe PDK::Validate::Rubocop do
     context 'when given no targets' do
       let(:targets) { [] }
 
+      let(:globbed_files) do
+        [
+          File.join(module_root, 'spec', 'spec_helper.rb'),
+        ]
+      end
+
+      before(:each) do
+        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
+      end
+
       it 'returns the module root' do
-        expect(target_files).to eq([module_root])
+        expect(target_files.first).to eq(globbed_files)
       end
     end
 
     context 'when given specific targets' do
       let(:targets) { ['target1.rb', 'target2/'] }
 
+      let(:globbed_target2) do
+        [
+          File.join('target2', 'target.rb'),
+        ]
+      end
+
+      before(:each) do
+        allow(Dir).to receive(:glob).with(File.join('target2', described_class.pattern)).and_return(globbed_target2)
+        allow(File).to receive(:directory?).with('target1.rb').and_return(false)
+        allow(File).to receive(:directory?).with('target2/').and_return(true)
+        allow(File).to receive(:file?).with('target1.rb').and_return(true)
+      end
+
       it 'returns the targets' do
-        expect(target_files).to eq(targets)
+        expect(target_files.first).to eq(['target1.rb'].concat(globbed_target2))
       end
     end
   end

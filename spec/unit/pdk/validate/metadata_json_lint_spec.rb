@@ -179,14 +179,15 @@ describe PDK::Validate::MetadataJSONLint do
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!).with(described_class.cmd)
       targets.each do |target|
         allow(File).to receive(:directory?).with(target).and_return(false)
+        allow(File).to receive(:file?).with(target).and_return(true)
       end
     end
 
-    it 'invokes metadata-json-lint once per target' do
-      targets.each do |target|
-        cmd_args = expected_args.dup.flatten << target
-        expect(PDK::CLI::Exec::Command).to receive(:new).with(*cmd_args).and_return(command_double)
-      end
+    it 'invokes metadata-json-lint only once on valid target' do
+      valid_cmd_args = expected_args.dup.flatten << 'metadata.json'
+      invalid_cmd_args = expected_args.dup.flatten << 'test.json'
+      expect(PDK::CLI::Exec::Command).to receive(:new).with(*valid_cmd_args).and_return(command_double)
+      expect(PDK::CLI::Exec::Command).not_to receive(:new).with(*invalid_cmd_args)
 
       described_class.invoke(PDK::Report.new, targets: targets)
     end

@@ -43,4 +43,17 @@ describe PDK::Validate::MetadataValidator do
       end
     end
   end
+
+  describe '.invoke with targets' do
+    subject(:invoke_with_targets) { described_class.invoke(report, targets: %w[foo bar]) }
+
+    before(:each) do
+      allow(PDK::Validate::MetadataSyntax).to receive(:invoke).with(report, anything).and_return(1)
+      allow(PDK::Validate::MetadataJSONLint).to receive(:invoke).with(report, anything).and_return(1)
+    end
+
+    it 'informs user that explicit targets were invalid' do
+      expect(invoke_with_targets).to eq(1)
+    end
+  end
 end

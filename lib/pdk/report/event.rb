@@ -96,7 +96,7 @@ module PDK
         location = nil if location.empty?
 
         # TODO: maybe add trace
-        [location, severity, message].compact.join(': ')
+        [severity, source, location, message].compact.join(': ')
       end
 
       # Renders the event as a JUnit XML testcase.
@@ -170,7 +170,9 @@ module PDK
 
         if path.absolute?
           module_root = Pathname.new(PDK::Util.module_root)
-          path.relative_path_from(module_root).to_path
+          path = path.relative_path_from(module_root).to_path
+          path << '/' if path == '.'
+          path
         else
           path.to_path
         end

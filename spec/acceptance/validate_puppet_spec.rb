@@ -16,7 +16,7 @@ describe 'pdk validate puppet', module_command: true do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.not_to match(syntax_spinner_text) }
       its(:stderr) { is_expected.not_to match(lint_spinner_text) }
-      its(:stdout) { is_expected.to match(empty_string) }
+      its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
     end
 
     describe command('pdk validate puppet --format junit') do
@@ -25,8 +25,8 @@ describe 'pdk validate puppet', module_command: true do
       its(:stderr) { is_expected.not_to match(lint_spinner_text) }
 
       its(:stdout) { is_expected.to pass_validation(junit_xsd) }
-      its(:stdout) { is_expected.not_to have_junit_testsuite('puppet-syntax') }
-      its(:stdout) { is_expected.not_to have_junit_testsuite('puppet-lint') }
+      its(:stdout) { is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').that_was_skipped }
+      its(:stdout) { is_expected.to have_junit_testcase.in_testsuite('puppet-lint').that_was_skipped }
     end
   end
 
@@ -82,8 +82,8 @@ class foo {
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.to match(lint_spinner_text) }
 
-      its(:stdout) { is_expected.to match(%r{Warning: Unrecognized escape sequence \'\\\[\'}i) }
-      its(:stdout) { is_expected.to match(%r{Warning: Unrecognized escape sequence \'\\\]\'}i) }
+      its(:stdout) { is_expected.to match(%r{Warning:.*Unrecognized escape sequence \'\\\[\'}i) }
+      its(:stdout) { is_expected.to match(%r{Warning:.*Unrecognized escape sequence \'\\\]\'}i) }
     end
 
     describe command('pdk validate puppet --format junit') do
@@ -149,7 +149,7 @@ class foo {
 
     describe command('pdk validate puppet') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{^#{Regexp.escape(init_pp)}.+class not documented}i) }
+      its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.+class not documented}i) }
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.to match(lint_spinner_text) }
     end
@@ -211,9 +211,9 @@ class foo {
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.not_to match(lint_spinner_text) }
 
-      its(:stdout) { is_expected.to match(%r{Error: This Name has no effect}i) }
-      its(:stdout) { is_expected.to match(%r{Error: This Type-Name has no effect}i) }
-      its(:stdout) { is_expected.to match(%r{Error: Language validation logged 2 errors. Giving up}i) }
+      its(:stdout) { is_expected.to match(%r{Error:.*This Name has no effect}i) }
+      its(:stdout) { is_expected.to match(%r{Error:.*This Type-Name has no effect}i) }
+      its(:stdout) { is_expected.to match(%r{Error:.*Language validation logged 2 errors. Giving up}i) }
     end
 
     describe command('pdk validate puppet --format junit') do
@@ -356,8 +356,8 @@ class foo {
         its(:exit_status) { is_expected.not_to eq(0) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
-        its(:stdout) { is_expected.to match(%r{^#{Regexp.escape(another_problem_pp)}}) }
-        its(:stdout) { is_expected.not_to match(%r{^#{Regexp.escape(example_pp)}}) }
+        its(:stdout) { is_expected.to match(%r{#{Regexp.escape(another_problem_pp)}}) }
+        its(:stdout) { is_expected.not_to match(%r{#{Regexp.escape(example_pp)}}) }
       end
 
       describe command("pdk validate puppet --format junit #{another_problem_dir}") do
@@ -401,12 +401,12 @@ class foo {
 
     describe command('pdk validate puppet') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{^#{Regexp.escape(example_pp)}.*warning.*double quoted string}) }
+      its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(example_pp)}.*double quoted string}) }
     end
 
     describe command('pdk validate puppet --auto-correct') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{^#{Regexp.escape(example_pp)}.*corrected.*double quoted string}) }
+      its(:stdout) { is_expected.to match(%r{^corrected:.*#{Regexp.escape(example_pp)}.*double quoted string}) }
     end
 
     describe command('pdk validate puppet') do
