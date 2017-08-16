@@ -148,10 +148,12 @@ module PDK
             end
 
             # Make sure invocation of Ruby prefers our private installation.
+            package_binpath = PDK::Util.package_install? ? File.join(PDK::Util.pdk_package_basedir, 'bin') : nil
             @process.environment['PATH'] = [
               RbConfig::CONFIG['bindir'],
               File.join(@process.environment['GEM_HOME'], 'bin'),
               File.join(@process.environment['GEM_PATH'], 'bin'),
+              package_binpath,
               ENV['PATH'],
             ].compact.join(File::PATH_SEPARATOR)
 
