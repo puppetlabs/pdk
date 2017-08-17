@@ -31,7 +31,7 @@ module PDK
             @prompt.puts pastel.bold(question[:question])
             @prompt.puts question[:help] if question.key?(:help)
             if question.key?(:choices)
-              multi_select(_('-->')) do |q|
+              multi_select(_('-->'), per_page: question[:choices].count) do |q|
                 q.enum ')'
                 q.default(*question[:default]) if question.key?(:default)
 
