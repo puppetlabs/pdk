@@ -264,7 +264,7 @@ describe PDK::Generate::Module do
     before(:each) do
       prompt = TTY::TestPrompt.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
-      prompt.input << responses.join("\n") + "\n"
+      prompt.input << responses.join("\r") + "\r"
       prompt.input.rewind
     end
 
