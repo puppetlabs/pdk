@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v1.0.1](https://github.com/puppetlabs/pdk/tree/v1.0.1) (2017-08-17)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.0.0...v1.0.1)
+
+**Fixed bugs:**
+
+- \(MAINT\) Add package bin path to subprocess PATH [\#261](https://github.com/puppetlabs/pdk/pull/261) ([austb](https://github.com/austb))
+- \(MAINT\) Bump tty-prompt ver, remove monkey patch [\#260](https://github.com/puppetlabs/pdk/pull/260) ([austb](https://github.com/austb))
+
 ## [v1.0.0](https://github.com/puppetlabs/pdk/tree/v1.0.0) (2017-08-15)
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.6.0...v1.0.0)
