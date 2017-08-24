@@ -91,7 +91,7 @@ module PDK
           report.add_event(
             file:     invalid_target,
             source:   name,
-            message:  'File does not exist.',
+            message:  _('File does not exist.'),
             severity: :error,
             state:    :error,
           )

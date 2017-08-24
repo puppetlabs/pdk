@@ -90,16 +90,16 @@ module PDK
 
         err = case modname
               when nil, '', :namespace_missing
-                'the field must be a dash-separated username and module name'
+                _('the field must be a dash-separated username and module name')
               when %r{[^a-z0-9_]}i
-                'the module name contains non-alphanumeric (or underscore) characters'
+                _('the module name contains non-alphanumeric (or underscore) characters')
               when %r{^[^a-z]}i
-                'the module name must begin with a letter'
+                _('the module name must begin with a letter')
               else
-                'the namespace contains non-alphanumeric characters'
+                _('the namespace contains non-alphanumeric characters')
               end
 
-        raise ArgumentError, "Invalid 'name' field in metadata.json: #{err}"
+        raise ArgumentError, _("Invalid 'name' field in metadata.json: %{err}") % { err: err }
       end
     end
   end
