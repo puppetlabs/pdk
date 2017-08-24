@@ -71,7 +71,10 @@ module PDK
         PDK.answers.update!('template-url' => template_url)
 
         begin
-          FileUtils.mv(temp_target_dir, target_dir)
+          if FileUtils.mv(temp_target_dir, target_dir)
+            PDK.logger.info(_('Module \'%{name}\' generated at path \'%{path}\'.') % { name: opts[:name], path: target_dir })
+            PDK.logger.info(_('In your new module directory, add classes with the \'pdk new class\' command.'))
+          end
         rescue Errno::EACCES => e
           raise PDK::CLI::FatalError, _("Failed to move '%{source}' to '%{target}': %{message}") % {
             source:  temp_target_dir,
