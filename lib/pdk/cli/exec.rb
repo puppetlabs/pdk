@@ -217,6 +217,10 @@ module PDK
         def run_process!
           command_string = argv.join(' ')
           PDK.logger.debug(_("Executing '%{command}'") % { command: command_string })
+          if context == :module
+            PDK.logger.debug(_("Command environment: GEM_HOME is '%{gem_home}' and GEM_PATH is '%{gem_path}'") % { gem_home: @process.environment['GEM_HOME'],
+                                                                                                                   gem_path: @process.environment['GEM_PATH'] })
+          end
           start_time = Time.now
           begin
             @process.start

@@ -89,7 +89,7 @@ describe PDK::CLI::Exec::Command do
         allow(PDK::Util).to receive(:module_root).with(no_args).and_return('/invalid_path')
         allow(Dir).to receive(:chdir).with('/invalid_path').and_yield
         allow(process).to receive(:exit_code).and_return 0
-        allow(process).to receive(:environment).and_return environment
+        allow(process).to receive(:environment).at_least(:once).and_return environment
       end
 
       it { expect { command.execute! }.not_to raise_error }
