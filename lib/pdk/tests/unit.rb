@@ -6,9 +6,10 @@ require 'json'
 module PDK
   module Test
     class Unit
-      def self.cmd(_tests, opts = {})
+      def self.cmd(tests, opts = {})
         # TODO: test selection
         rake_task = opts.key?(:parallel) ? 'parallel_spec' : 'spec'
+        rake_task += "[#{tests}]" unless tests.nil?
         [File.join(PDK::Util.module_root, 'bin', 'rake'), rake_task]
       end
 
