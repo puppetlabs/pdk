@@ -56,7 +56,9 @@ module PDK
           templates.render do |file_path, file_content|
             file = Pathname.new(temp_target_dir) + file_path
             file.dirname.mkpath
-            file.write(file_content)
+            file.open('wb:UTF-8') do |f|
+              f.write(file_content.encode!(Encoding::UTF_8, universal_newline: true))
+            end
           end
 
           # Add information about the template used to generate the module to the

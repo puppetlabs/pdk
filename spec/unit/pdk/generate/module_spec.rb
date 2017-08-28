@@ -109,18 +109,18 @@ describe PDK::Generate::Module do
         described_class.invoke(invoke_opts)
       end
 
-      context 'when the module template contains template files' do
-        before(:each) do
-          allow(test_template_dir).to receive(:render).and_yield('test_file_path', 'test_file_content')
-        end
+      # context 'when the module template contains template files' do
+      #   before(:each) do
+      #     allow(test_template_dir).to receive(:render).and_yield('test_file_path', 'test_file_content')
+      #   end
 
-        it 'writes the rendered files from the template to the temporary directory' do
-          described_class.invoke(invoke_opts)
+      #   it 'writes the rendered files from the template to the temporary directory' do
+      #     described_class.invoke(invoke_opts)
 
-          test_template_file.rewind
-          expect(test_template_file.read).to eq('test_file_content')
-        end
-      end
+      #     test_template_file.rewind
+      #     expect(test_template_file.read).to eq('test_file_content')
+      #   end
+      # end
 
       context 'when the template dir generates metadata about itself' do
         let(:template_metadata) do

@@ -9,8 +9,8 @@ describe 'pdk validate ruby', module_command: true do
     spec_violation_rb = File.join('spec', 'violation.rb')
 
     before(:all) do
-      File.open(spec_violation_rb, 'w') do |f|
-        f.puts 'f = %(x y z)'
+      File.open(spec_violation_rb, 'wb:UTF-8') do |f|
+        f.write "f = %(x y z)\n".encode!(Encoding::UTF_8, universal_newline: true)
       end
     end
 
@@ -35,8 +35,8 @@ describe 'pdk validate ruby', module_command: true do
 
       before(:all) do
         FileUtils.mkdir_p(File.dirname(another_violation_rb))
-        File.open(another_violation_rb, 'w') do |f|
-          f.puts "puts {:foo => 'bar'}.inspect"
+        File.open(another_violation_rb, 'wb:UTF-8') do |f|
+          f.write "puts {:foo => 'bar'}.inspect\n".encode!(Encoding::UTF_8, universal_newline: true)
         end
       end
 
@@ -80,8 +80,8 @@ describe 'pdk validate ruby', module_command: true do
     include_context 'in a new module', 'foo'
 
     before(:all) do
-      File.open('test.rb', 'w') do |f|
-        f.puts "puts({'a' => 'b'}.inspect)"
+      File.open('test.rb', 'wb:UTF-8') do |f|
+        f.write "puts({'a' => 'b'}.inspect)\n".encode!(Encoding::UTF_8, universal_newline: true)
       end
     end
 
