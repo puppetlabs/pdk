@@ -64,6 +64,9 @@ describe PDK::Generate::Module do
       end
 
       it 'raises a FatalError' do
+        expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
+        expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
+
         expect {
           described_class.invoke(target_dir: target_dir)
         }.to raise_error(PDK::CLI::FatalError, %r{destination directory '.+' already exists}i)
@@ -92,6 +95,9 @@ describe PDK::Generate::Module do
         let(:target_parent_writeable) { false }
 
         it 'raises a FatalError' do
+          expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
+          expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
+
           expect {
             described_class.invoke(invoke_opts)
           }.to raise_error(PDK::CLI::FatalError, %r{you do not have permission to write to}i)
@@ -147,6 +153,9 @@ describe PDK::Generate::Module do
         end
 
         it 'raises a FatalError' do
+          expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
+          expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
+
           expect {
             described_class.invoke(invoke_opts)
           }.to raise_error(PDK::CLI::FatalError, %r{failed to move .+: permission denied}i)
@@ -154,8 +163,15 @@ describe PDK::Generate::Module do
       end
 
       context 'when a template-url is supplied on the command line' do
+        before(:each) do
+          allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
+        end
+
         it 'uses that template to generate the module' do
           expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template', anything).and_yield(test_template_dir)
+          expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
+          expect(logger).to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
+
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
 
@@ -173,10 +189,16 @@ describe PDK::Generate::Module do
       end
 
       context 'when a template-url is not supplied on the command line' do
+        before(:each) do
+          allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
+        end
+
         context 'and a template-url answer exists' do
           it 'uses the template-url from the answer file to generate the module' do
             PDK.answers.update!('template-url' => 'answer-template')
             expect(PDK::Module::TemplateDir).to receive(:new).with('answer-template', anything).and_yield(test_template_dir)
+            expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
+            expect(logger).to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
 
             described_class.invoke(invoke_opts)
           end
