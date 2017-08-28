@@ -10,7 +10,7 @@ describe 'pdk validate ruby', module_command: true do
 
     before(:all) do
       File.open(spec_violation_rb, 'w') do |f|
-        f.puts 'f = %(x y z)'
+        f.write "f = %(x y z)\n"
       end
     end
 
@@ -36,7 +36,7 @@ describe 'pdk validate ruby', module_command: true do
       before(:all) do
         FileUtils.mkdir_p(File.dirname(another_violation_rb))
         File.open(another_violation_rb, 'w') do |f|
-          f.puts "puts {:foo => 'bar'}.inspect"
+          f.write "puts {:foo => 'bar'}.inspect\n"
         end
       end
 
@@ -81,7 +81,7 @@ describe 'pdk validate ruby', module_command: true do
 
     before(:all) do
       File.open('test.rb', 'w') do |f|
-        f.puts "puts({'a' => 'b'}.inspect)"
+        f.write "puts({'a' => 'b'}.inspect)\n"
       end
     end
 
