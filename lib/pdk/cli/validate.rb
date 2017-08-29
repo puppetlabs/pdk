@@ -6,16 +6,16 @@ module PDK::CLI
     usage _('validate [validators] [options] [targets]')
     summary _('Run static analysis tests.')
     description _(
-      "Run metadata, puppet, or ruby validation.\n\n" \
-      '[validators] is an optional comma separated list of validators to use. ' \
-      "If not specified, all validators will be used.\n\n" \
-      '[targets] is an optional space separated list of files or directories to be validated. ' \
-      'If not specified, the validators will be run against all applicable files in the module.',
+      "Run metadata, Puppet, or Ruby validation.\n\n" \
+      '[validators] is an optional comma-separated list of validators to use. ' \
+      "If not specified, all validators are used.\n\n" \
+      '[targets] is an optional space-separated list of files or directories to be validated. ' \
+      'If not specified, validators are run against all applicable files in the module.',
     )
 
-    flag nil, :list, _('list all available validators')
-    flag :a, 'auto-correct', _('automatically correct problems (where possible)')
-    flag nil, :parallel, _('run validations in parallel')
+    flag nil, :list, _('List all available validators.')
+    flag :a, 'auto-correct', _('Automatically correct problems where possible.')
+    flag nil, :parallel, _('Run validations in parallel.')
 
     run do |opts, args, _cmd|
       if args == ['help']
@@ -44,7 +44,7 @@ module PDK::CLI
 
           invalid = vals.reject { |v| validator_names.include?(v) }
           invalid.each do |v|
-            PDK.logger.warn(_("Unknown validator '%{v}'. Available validators: %{validators}") % { v: v, validators: validator_names.join(', ') })
+            PDK.logger.warn(_("Unknown validator '%{v}'. Available validators: %{validators}.") % { v: v, validators: validator_names.join(', ') })
           end
         else
           # This is a single item. Check if it's a known validator, or otherwise treat it as a target.

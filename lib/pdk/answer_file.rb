@@ -53,7 +53,7 @@ module PDK
     # @raise (see #save_to_disk)
     def update!(new_answers = {})
       unless new_answers.is_a?(Hash)
-        raise PDK::CLI::FatalError, _('Answer file can only be updated with a Hash')
+        raise PDK::CLI::FatalError, _('Answer file can be updated only with a Hash')
       end
 
       answers.merge!(new_answers)

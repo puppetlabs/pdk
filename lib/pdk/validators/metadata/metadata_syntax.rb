@@ -15,7 +15,7 @@ module PDK
       end
 
       def self.spinner_text(targets = [])
-        _('Checking metadata syntax (%{targets})') % {
+        _('Checking metadata syntax (%{targets}).') % {
           targets: PDK::Util.targets_relative_to_pwd(targets).join(' '),
         }
       end
@@ -66,7 +66,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: _('could not be read'),
+              message: _('Could not be read.'),
             )
             return_val = 1
             next

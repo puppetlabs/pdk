@@ -21,7 +21,7 @@ module PDK
       end
 
       def self.spinner_text(_targets = nil)
-        _('Checking Ruby code style (%{pattern})') % { pattern: pattern }
+        _('Checking Ruby code style (%{pattern}).') % { pattern: pattern }
       end
 
       def self.parse_options(options, targets)

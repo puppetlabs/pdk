@@ -12,12 +12,12 @@ module PDK
         bundle = BundleHelper.new
 
         if already_bundled?(bundle.gemfile)
-          PDK.logger.debug(_('Bundle has already been installed, skipping run'))
+          PDK.logger.debug(_('Bundle has already been installed. Skipping run.'))
           return
         end
 
         unless bundle.gemfile?
-          PDK.logger.debug(_("No Gemfile found in '%{cwd}', skipping bundler management") % { cwd: Dir.pwd })
+          PDK.logger.debug(_("No Gemfile found in '%{cwd}'. Skipping bundler management.") % { cwd: Dir.pwd })
           return
         end
 
@@ -28,7 +28,7 @@ module PDK
             vendored_gemfile_lock = File.join(PDK::Util.package_cachedir, 'Gemfile.lock')
 
             if File.exist?(vendored_gemfile_lock)
-              PDK.logger.debug(_("No Gemfile.lock found in module, using vendored Gemfile.lock from '%{source}'") % { source: vendored_gemfile_lock })
+              PDK.logger.debug(_("No Gemfile.lock found in module. Using vendored Gemfile.lock from '%{source}'.") % { source: vendored_gemfile_lock })
               FileUtils.cp(vendored_gemfile_lock, File.join(PDK::Util.module_root, 'Gemfile.lock'))
             end
           else
@@ -90,7 +90,7 @@ module PDK
 
         def lock!
           command = bundle_command('lock').tap do |c|
-            c.add_spinner(_('Resolving Gemfile dependencies'))
+            c.add_spinner(_('Resolving Gemfile dependencies.'))
           end
 
           result = command.execute!
@@ -107,7 +107,7 @@ module PDK
           argv << "--path=#{bundle_cachedir}" if PDK::Util.gem_install?
 
           command = bundle_command(*argv).tap do |c|
-            c.add_spinner(_('Installing missing Gemfile dependencies'))
+            c.add_spinner(_('Installing missing Gemfile dependencies.'))
           end
 
           result = command.execute!

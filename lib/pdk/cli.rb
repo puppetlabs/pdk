@@ -33,7 +33,7 @@ module PDK::CLI
   end
 
   def self.template_url_option(dsl)
-    dsl.option nil, 'template-url', _('Specifies the URL to the template to use when creating new modules, and other parts.'), argument: :required, default: PDK::Generate::Module.default_template_url
+    dsl.option nil, 'template-url', _('Specifies the URL to the template to use when creating new modules or classes.'), argument: :required, default: PDK::Generate::Module.default_template_url
   end
 
   @base_cmd = Cri::Command.define do
@@ -43,21 +43,21 @@ module PDK::CLI
     description _('The shortest path to better modules.')
     default_subcommand 'help'
 
-    flag nil, :version, _('show version of pdk') do |_, _|
+    flag nil, :version, _('Show version of pdk.') do |_, _|
       puts PDK::Util::Version.version_string
       exit 0
     end
 
-    flag :h, :help, _('show help for this command') do |_, c|
+    flag :h, :help, _('Show help for this command.') do |_, c|
       puts c.help
       exit 0
     end
 
     format_desc = _(
       "Specify desired output format. Valid formats are '%{available_formats}'. " \
-      'You may also specify a file to which the formatted output will be directed, ' \
+      'You may also specify a file to which the formatted output is sent, ' \
       "for example: '--format=junit:report.xml'. This option may be specified " \
-      'multiple times as long as each option specifies a distinct target file.',
+      'multiple times if each option specifies a distinct target file.',
     ) % { available_formats: PDK::Report.formats.join("', '") }
 
     option :f, :format, format_desc, argument: :required, multiple: true do |values|
@@ -68,7 +68,7 @@ module PDK::CLI
       PDK.logger.enable_debug_output
     end
 
-    option nil, 'answer-file', _('Path to an answer file'), argument: :required, hidden: true do |value|
+    option nil, 'answer-file', _('Path to an answer file.'), argument: :required, hidden: true do |value|
       PDK.answer_file = value
     end
   end

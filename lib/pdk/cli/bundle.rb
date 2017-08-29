@@ -4,8 +4,8 @@ module PDK::CLI
     name 'bundle'
     usage _('bundle -- [bundler_options]')
     summary _('escape hatch to bundler')
-    description _('[experimental] For advanced users, this allows to run arbitrary commands in the bundler environment that the pdk manages. ' \
-      'Careless use of this command can lead to errors later which can\'t be recovered by the pdk itself.')
+    description _('[experimental] For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.' \
+      'Careless use of this command can lead to errors that pdk can\'t help recover from.')
 
     run do |_opts, args, _cmd|
       PDK::CLI::Util.ensure_in_module!

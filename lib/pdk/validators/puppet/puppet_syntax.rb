@@ -18,7 +18,7 @@ module PDK
       end
 
       def self.spinner_text(_targets = nil)
-        _('Checking Puppet manifest syntax (%{pattern})') % { pattern: pattern }
+        _('Checking Puppet manifest syntax (%{pattern}).') % { pattern: pattern }
       end
 
       def self.parse_options(_options, targets)

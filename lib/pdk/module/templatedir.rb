@@ -52,7 +52,7 @@ module PDK
           unless clone_result[:exit_code].zero?
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
-            raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'") % { repo: path_or_url, dest: temp_dir }
+            raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'.") % { repo: path_or_url, dest: temp_dir }
           end
 
           @path = PDK::Util.canonical_path(temp_dir)
@@ -178,11 +178,11 @@ module PDK
       # @api private
       def validate_module_template!
         unless File.directory?(@path)
-          raise ArgumentError, _("The specified template '%{path}' is not a directory") % { path: @path }
+          raise ArgumentError, _("The specified template '%{path}' is not a directory.") % { path: @path }
         end
 
         unless File.directory?(@moduleroot_dir) # rubocop:disable Style/GuardClause
-          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot/' directory") % { path: @path }
+          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot/' directory.") % { path: @path }
         end
       end
 
