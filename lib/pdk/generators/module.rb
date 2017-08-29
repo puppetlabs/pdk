@@ -238,7 +238,7 @@ module PDK
         puts
 
         continue = prompt.yes?(_('About to generate this module; continue?')) do |q|
-          q.validate(proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }, 'Please answer "yes" or "no"')
+          q.validate(proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }, _('Please answer "yes" or "no"'))
         end
 
         unless continue
