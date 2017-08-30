@@ -44,7 +44,7 @@ module PDK
     def canonical_path(path)
       if Gem.win_platform?
         unless File.exist?(path)
-          raise PDK::CLI::FatalError, _("Cannot resolve a full path to '%{path}' as it does not currently exist") % { path: path }
+          raise PDK::CLI::FatalError, _("Cannot resolve a full path to '%{path}', as it does not currently exist.") % { path: path }
         end
         Puppet::Util::Windows::File.get_long_pathname(path)
       else
@@ -64,7 +64,7 @@ module PDK
     module_function :gem_install?
 
     def pdk_package_basedir
-      raise PDK::CLI::FatalError, _('Package basedir requested for non-package install') unless package_install?
+      raise PDK::CLI::FatalError, _('Package basedir requested for non-package install.') unless package_install?
 
       File.dirname(PDK::Util::Version.version_file)
     end

@@ -87,7 +87,7 @@ module PDK
         begin
           if FileUtils.mv(temp_target_dir, target_dir)
             PDK.logger.info(_('Module \'%{name}\' generated at path \'%{path}\'.') % { name: opts[:name], path: target_dir })
-            PDK.logger.info(_('In your new module directory, add classes with the \'pdk new class\' command.'))
+            PDK.logger.info(_('In your module directory, add classes with the \'pdk new class\' command.'))
           end
         rescue Errno::EACCES => e
           raise PDK::CLI::FatalError, _("Failed to move '%{source}' to '%{target}': %{message}") % {
@@ -104,7 +104,7 @@ module PDK
         login_clean = 'username' if login_clean.empty?
 
         if login_clean != login
-          PDK.logger.warn _('Your username is not a valid Forge username, proceeding with the username %{username}. You can fix this afterwards in metadata.json.') % {
+          PDK.logger.warn _('Your username is not a valid Forge username. Proceeding with the username %{username}. You can fix this later in metadata.json.') % {
             username: login_clean,
           }
         end
@@ -177,7 +177,7 @@ module PDK
           {
             name:     'author',
             question: _('Who wrote this module?'),
-            help:     _('This will be used to credit the module\'s author.'),
+            help:     _('This is used to credit the module\'s author.'),
             required: true,
             default:  metadata.data['author'],
           },
@@ -190,28 +190,28 @@ module PDK
           },
           {
             name:     'summary',
-            question: _('Please summarize the purpose of this module in a single sentence.'),
-            help:     _('This will help other Puppet users understand what the module does.'),
+            question: _('Summarize the purpose of this module in a single sentence.'),
+            help:     _('This helps other Puppet users understand what the module does.'),
             required: true,
             default:  metadata.data['summary'],
           },
           {
             name:     'source',
             question: _('If there is a source code repository for this module, enter the URL here.'),
-            help:     _('Skip this if none exists yet, you can update this later in the metadata.json.'),
+            help:     _('Skip this if no repository exists yet. You can update this later in the metadata.json.'),
             required: true,
             default:  metadata.data['source'],
           },
           {
             name:     'project_page',
             question: _('If there is a URL where others can learn more about this module, enter it here.'),
-            help:     _('Optional. As with all questions above, you can update this later in the metadata.json.'),
+            help:     _('Optional. You can update this later in the metadata.json.'),
             default:  metadata.data['project_page'],
           },
           {
             name:     'issues_url',
             question: _('If there is a public issue tracker for this module, enter its URL here.'),
-            help:     _('Optional. As with all questions above, you can update this later in the metadata.json.'),
+            help:     _('Optional. You can update this later in the metadata.json.'),
             default:  metadata.data['issues_url'],
           },
         ]
@@ -225,17 +225,17 @@ module PDK
         interview.add_questions(questions)
 
         puts _(
-          "\nWe need to create a metadata.json file for this module, so we\'re going to ask you %{count} quick " \
+          "\nWe need to create a metadata.json file for this module, so we\'re going to ask you %{count} " \
           "questions.\n" \
-          'If the question is not applicable to this module, simply leave the answer blank and skip. A default option ' \
-          'is shown after each question. You can modify this or any other answers at any time by manually updating ' \
+          'If the question is not applicable to this module, accept the default option ' \
+          'shown after each question. You can modify any answers at any time by manually updating ' \
           "the metadata.json file.\n\n",
         ) % { count: interview.num_questions }
 
         answers = interview.run
 
         if answers.nil?
-          PDK.logger.info _('Interview cancelled, not generating the module.')
+          PDK.logger.info _('Interview cancelled; not generating the module.')
           exit 0
         end
 
@@ -252,7 +252,7 @@ module PDK
         puts
 
         continue = prompt.yes?(_('About to generate this module; continue?')) do |q|
-          q.validate(proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }, _('Please answer "yes" or "no"'))
+          q.validate(proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }, _('Answer "Y" to continue or "n" to cancel.'))
         end
 
         unless continue

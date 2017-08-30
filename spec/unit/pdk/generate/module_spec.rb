@@ -170,7 +170,7 @@ describe PDK::Generate::Module do
         it 'uses that template to generate the module' do
           expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template', anything).and_yield(test_template_dir)
           expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
-          expect(logger).to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
+          expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
 
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
@@ -207,7 +207,7 @@ describe PDK::Generate::Module do
             PDK.answers.update!('template-url' => 'answer-template')
             expect(PDK::Module::TemplateDir).to receive(:new).with('answer-template', anything).and_yield(test_template_dir)
             expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
-            expect(logger).to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
+            expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
 
             described_class.invoke(invoke_opts)
           end
@@ -252,7 +252,7 @@ describe PDK::Generate::Module do
     end
 
     subject(:answers) do
-      allow($stdout).to receive(:puts).with(a_string_matching(%r{quick questions}))
+      allow($stdout).to receive(:puts).with(a_string_matching(%r{questions}))
       interview_metadata
       PDK.answers
     end
@@ -286,7 +286,7 @@ describe PDK::Generate::Module do
       end
 
       it 'populates the Metadata object based on user input' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 quick questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}m))
 
         expect(interview_metadata).to include(
           'name'         => 'foo-bar',
@@ -340,7 +340,7 @@ describe PDK::Generate::Module do
       end
 
       it 'populates the interview question defaults with existing metadata values' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 quick questions}))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}))
 
         expect(interview_metadata).to include(
           'name'    => 'defaultauthor-bar',
@@ -383,7 +383,7 @@ describe PDK::Generate::Module do
       end
 
       it 'populates the Metadata object based on user input' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{7 quick questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{7 questions}m))
 
         expect(interview_metadata).to include(
           'name'         => 'foo-bar',
@@ -419,7 +419,7 @@ describe PDK::Generate::Module do
 
       it 'exits cleanly' do
         allow(logger).to receive(:info).with(a_string_matching(%r{interview cancelled}i))
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 quick questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}m))
 
         expect { interview_metadata }.to raise_error(SystemExit) { |error|
           expect(error.status).to eq(0)
@@ -446,7 +446,7 @@ describe PDK::Generate::Module do
 
       it 'exits cleanly' do
         allow(logger).to receive(:info).with(a_string_matching(%r{module not generated}i))
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 quick questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}m))
 
         expect { interview_metadata }.to raise_error(SystemExit) { |error|
           expect(error.status).to eq(0)

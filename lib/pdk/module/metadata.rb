@@ -44,11 +44,11 @@ module PDK
 
       def self.from_file(metadata_json_path)
         unless File.file?(metadata_json_path)
-          raise ArgumentError, _("'%{file}' does not exist or is not a file") % { file: metadata_json_path }
+          raise ArgumentError, _("'%{file}' does not exist or is not a file.") % { file: metadata_json_path }
         end
 
         unless File.readable?(metadata_json_path)
-          raise ArgumentError, _("Unable to open '%{file}' for reading") % { file: metadata_json_path }
+          raise ArgumentError, _("Unable to open '%{file}' for reading.") % { file: metadata_json_path }
         end
 
         begin
@@ -90,13 +90,13 @@ module PDK
 
         err = case modname
               when nil, '', :namespace_missing
-                _('the field must be a dash-separated username and module name')
+                _('Field must be a dash-separated user name and module name.')
               when %r{[^a-z0-9_]}i
-                _('the module name contains non-alphanumeric (or underscore) characters')
+                _('Module name must contain only alphanumeric or underscore characters.')
               when %r{^[^a-z]}i
-                _('the module name must begin with a letter')
+                _('Module name must begin with a letter.')
               else
-                _('the namespace contains non-alphanumeric characters')
+                _('Namespace must contain only alphanumeric characters.')
               end
 
         raise ArgumentError, _("Invalid 'name' field in metadata.json: %{err}") % { err: err }

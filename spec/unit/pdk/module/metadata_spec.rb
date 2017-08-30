@@ -51,15 +51,15 @@ describe PDK::Module::Metadata do
     end
 
     it 'errors when the provided name is not namespaced' do
-      expect { metadata.update!('name' => 'foo') }.to raise_error(ArgumentError, "Invalid 'name' field in metadata.json: the field must be a dash-separated username and module name")
+      expect { metadata.update!('name' => 'foo') }.to raise_error(ArgumentError, %r{Invalid 'name' field in metadata.json: field must be a dash-separated user name and module name}i)
     end
 
     it 'errors when the provided name contains non-alphanumeric characters' do
-      expect { metadata.update!('name' => 'foo-@bar') }.to raise_error(ArgumentError, "Invalid 'name' field in metadata.json: the module name contains non-alphanumeric (or underscore) characters")
+      expect { metadata.update!('name' => 'foo-@bar') }.to raise_error(ArgumentError, %r{Invalid 'name' field in metadata.json: module name must contain only alphanumeric or underscore characters}i)
     end
 
     it 'errors when the provided name starts with a non-letter character' do
-      expect { metadata.update!('name' => 'foo-1bar') }.to raise_error(ArgumentError, "Invalid 'name' field in metadata.json: the module name must begin with a letter")
+      expect { metadata.update!('name' => 'foo-1bar') }.to raise_error(ArgumentError, %r{Invalid 'name' field in metadata.json: module name must begin with a letter}i)
     end
   end
 end

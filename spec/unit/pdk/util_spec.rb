@@ -163,7 +163,7 @@ describe PDK::Util do
       it 'raises a FatalError' do
         expect {
           described_class.pdk_package_basedir
-        }.to raise_error(PDK::CLI::FatalError, 'Package basedir requested for non-package install')
+        }.to raise_error(PDK::CLI::FatalError, %r{Package basedir requested for non-package install}i)
       end
     end
 
@@ -181,7 +181,7 @@ describe PDK::Util do
       it 'raises a FatalError' do
         expect {
           described_class.package_cachedir
-        }.to raise_error(PDK::CLI::FatalError, 'Package basedir requested for non-package install')
+        }.to raise_error(PDK::CLI::FatalError, %r{Package basedir requested for non-package install}i)
       end
     end
 

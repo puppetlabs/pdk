@@ -28,8 +28,8 @@ module PDK
         end
       end
 
-      # Calculates the path to the file that the tests for the new class will
-      # be written to.
+      # Calculates the path to the file where the tests for the new class will
+      # be written.
       #
       # @return [String] the path where the tests for the new class will be
       # written.

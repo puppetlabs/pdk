@@ -29,7 +29,7 @@ module PDK
 
         command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
           c.context = :module
-          spinner_msg = options.key?(:parallel) ? _('Running unit tests in parallel') : _('Running unit tests')
+          spinner_msg = options.key?(:parallel) ? _('Running unit tests in parallel.') : _('Running unit tests.')
           c.add_spinner(spinner_msg)
           c.environment['CI_SPEC_OPTIONS'] = '--format j'
         end
@@ -99,7 +99,7 @@ module PDK
         return unless json_data['summary']
 
         # TODO: standardize summary output
-        $stderr.puts '  ' << _('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending') % {
+        $stderr.puts '  ' << _('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.') % {
           total: json_data['summary']['example_count'],
           duration: json_data['summary']['duration'],
           failures: json_data['summary']['failure_count'],

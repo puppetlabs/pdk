@@ -20,7 +20,7 @@ module PDK
       end
 
       def self.spinner_text(targets = [])
-        _('Checking metadata style (%{targets})') % {
+        _('Checking metadata style (%{targets}).') % {
           targets: PDK::Util.targets_relative_to_pwd(targets).join(' '),
         }
       end
@@ -37,7 +37,7 @@ module PDK
       end
 
       def self.parse_output(report, result, targets)
-        raise ArgumentError, _('More than 1 target provided to PDK::Validate::MetadataJSONLint') if targets.count > 1
+        raise ArgumentError, _('More than 1 target provided to PDK::Validate::MetadataJSONLint.') if targets.count > 1
 
         if result[:stdout].strip.empty?
           # metadata-json-lint will print nothing if there are no problems with

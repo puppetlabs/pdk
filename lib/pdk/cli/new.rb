@@ -4,7 +4,7 @@ module PDK::CLI
     name 'new'
     usage _('new <type> [options]')
     summary _('create a new module, etc.')
-    description _('Creates a new instance of <type> using the options relevant to that type of thing')
+    description _('Creates a new instance of <type> using relevant options.')
     default_subcommand 'help'
   end
 
