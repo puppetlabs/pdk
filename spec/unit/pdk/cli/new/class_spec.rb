@@ -9,7 +9,7 @@ describe 'PDK::CLI new class' do
     end
 
     it 'exits with a fatal error' do
-      expect(logger).to receive(:fatal).with(a_string_matching(%r{must be run from inside a module}))
+      expect(logger).to receive(:fatal).with(a_string_matching(%r{must be run from inside a valid module}))
 
       expect {
         PDK::CLI.run(%w[new class test_class])

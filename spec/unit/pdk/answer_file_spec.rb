@@ -153,7 +153,7 @@ describe PDK::AnswerFile do
     it 'raises a FatalError if not passed a Hash' do
       expect {
         answer_file.update!('an answer without a question')
-      }.to raise_error(PDK::CLI::FatalError, %r{answer file can only be updated with a hash}i)
+      }.to raise_error(PDK::CLI::FatalError, %r{answer file can be updated only with a hash}i)
     end
   end
 

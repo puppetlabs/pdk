@@ -51,7 +51,7 @@ describe PDK::Validate::MetadataSyntax do
           source:   'metadata-syntax',
           state:    :failure,
           severity: 'error',
-          message:  'could not be read',
+          message:  'Could not be read.',
         )
         expect(return_value).to eq(1)
       end
