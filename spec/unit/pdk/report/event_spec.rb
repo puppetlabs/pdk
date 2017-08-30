@@ -44,7 +44,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{file not specified})
+        expect { event }.to raise_error(ArgumentError, %r{file not specified}i)
       end
     end
 
@@ -68,7 +68,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{file not specified})
+        expect { event }.to raise_error(ArgumentError, %r{file not specified}i)
       end
     end
 
@@ -80,7 +80,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{source not specified})
+        expect { event }.to raise_error(ArgumentError, %r{source not specified}i)
       end
     end
 
@@ -92,7 +92,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{source not specified})
+        expect { event }.to raise_error(ArgumentError, %r{source not specified}i)
       end
     end
 
@@ -104,7 +104,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{state not specified})
+        expect { event }.to raise_error(ArgumentError, %r{state not specified}i)
       end
     end
 
@@ -116,7 +116,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{state not specified})
+        expect { event }.to raise_error(ArgumentError, %r{state not specified}i)
       end
     end
 
@@ -159,7 +159,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{state must be a Symbol})
+        expect { event }.to raise_error(ArgumentError, %r{state must be a Symbol}i)
       end
     end
 
@@ -171,7 +171,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{Invalid state :maybe})
+        expect { event }.to raise_error(ArgumentError, %r{Invalid state :maybe}i)
       end
     end
 
@@ -211,7 +211,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{only contain the digits 0-9})
+        expect { event }.to raise_error(ArgumentError, %r{contain only the digits 0-9}i)
       end
     end
 
@@ -223,7 +223,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{must be an Integer or a String})
+        expect { event }.to raise_error(ArgumentError, %r{must be an Integer or a String}i)
       end
     end
 
@@ -279,7 +279,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{only contain the digits 0-9})
+        expect { event }.to raise_error(ArgumentError, %r{contain only the digits 0-9}i)
       end
     end
 
@@ -291,7 +291,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{must be an Integer or a String})
+        expect { event }.to raise_error(ArgumentError, %r{must be an Integer or a String}i)
       end
     end
 
@@ -319,7 +319,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{trace must be an Array})
+        expect { event }.to raise_error(ArgumentError, %r{trace must be an Array}i)
       end
     end
 

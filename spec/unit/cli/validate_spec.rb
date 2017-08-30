@@ -107,7 +107,7 @@ describe 'Running `pdk validate` in a module' do
     let(:validator) { PDK::Validate::PuppetValidator }
 
     it 'warns about unknown validators, invokes known validators, and exits zero' do
-      expect(logger).to receive(:warn).with("Unknown validator 'bad-val'. Available validators: #{validator_names}")
+      expect(logger).to receive(:warn).with(%r{Unknown validator 'bad-val'. Available validators: #{validator_names}}i)
       expect(validator).to receive(:invoke).with(report, {}).and_return(0)
 
       expect {
