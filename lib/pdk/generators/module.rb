@@ -18,7 +18,13 @@ module PDK
       def self.default_template_url
         if !PDK.answers['template-url'].nil?
           PDK.answers['template-url']
-        elsif PDK::Util.package_install?
+        else
+          puppetlabs_template_url
+        end
+      end
+
+      def self.puppetlabs_template_url
+        if PDK::Util.package_install?
           'file://' + File.join(PDK::Util.package_cachedir, 'pdk-module-template.git')
         else
           'https://github.com/puppetlabs/pdk-module-template'
@@ -68,7 +74,15 @@ module PDK
           end
         end
 
-        PDK.answers.update!('template-url' => template_url)
+        if template_url == puppetlabs_template_url
+          # If the user specifies our template via the command line, remove the
+          # saved template-url answer.
+          PDK.answers.update!('template-url' => nil) if opts.key?(:'template-url')
+        else
+          # Save the template-url answer if the module was generated using
+          # a template other than ours.
+          PDK.answers.update!('template-url' => template_url)
+        end
 
         begin
           if FileUtils.mv(temp_target_dir, target_dir)
