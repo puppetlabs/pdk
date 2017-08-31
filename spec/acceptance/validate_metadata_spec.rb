@@ -8,7 +8,9 @@ describe 'Running metadata validation' do
 
     before(:all) do
       metadata = JSON.parse(File.read('metadata.json'))
-      metadata['dependencies'].first['version_requirement'] = '>= 1.0.0'
+      metadata['dependencies'] = [
+        { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.0.0' },
+      ]
       File.open('metadata.json', 'w') do |f|
         f.puts metadata.to_json
       end
@@ -47,7 +49,9 @@ describe 'Running metadata validation' do
     before(:all) do
       FileUtils.cp('metadata.json', 'broken.json')
       broken_metadata = JSON.parse(File.read('broken.json'))
-      broken_metadata['dependencies'].first['version_requirement'] = '>= 1.0.0'
+      broken_metadata['dependencies'] = [
+        { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.0.0' },
+      ]
       File.open('broken.json', 'w') do |f|
         f.puts broken_metadata.to_json
       end

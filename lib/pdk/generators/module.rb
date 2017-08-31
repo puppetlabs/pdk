@@ -101,9 +101,7 @@ module PDK
         defaults = {
           'name'         => "#{username}-#{opts[:name]}",
           'version'      => '0.1.0',
-          'dependencies' => [
-            { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.13.1 < 5.0.0' },
-          ],
+          'dependencies' => [],
           'requirements' => [
             { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
           ],
