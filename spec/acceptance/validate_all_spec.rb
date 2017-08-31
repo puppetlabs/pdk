@@ -104,4 +104,31 @@ class validate_all {
       end
     end
   end
+
+  context "when 'pdk' is included in the Gemfile" do
+    include_context 'in a new module', 'pdk_in_gemfile'
+
+    before(:all) do
+      File.open('Gemfile', 'a') do |f|
+        f.puts "gem 'pdk', path: '#{File.expand_path(File.join(__FILE__, '..', '..', '..'))}'"
+      end
+
+      File.open(File.join('manifests', 'init.pp'), 'w') do |f|
+        f.puts <<-EOS.gsub(%r{^ {10}}, '')
+          # pdk_in_gemfile
+          class pdk_in_gemfile { }
+        EOS
+      end
+    end
+
+    describe command('pdk validate') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{Running all available validators}i) }
+      its(:stderr) { is_expected.to match(%r{Checking metadata syntax \(metadata\.json\)}i) }
+      its(:stderr) { is_expected.to match(%r{Checking metadata style \(metadata\.json\)}i) }
+      its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
+      its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
+      its(:stdout) { is_expected.to eq('') }
+    end
+  end
 end

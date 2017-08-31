@@ -1,8 +1,8 @@
 require 'tmpdir'
 require 'tempfile'
-require 'puppet/util/windows'
 
 require 'pdk/util/version'
+require 'pdk/util/windows'
 
 module PDK
   module Util
