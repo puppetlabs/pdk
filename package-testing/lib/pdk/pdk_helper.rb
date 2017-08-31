@@ -15,11 +15,10 @@ def pdk_git_bin_dir(host)
 end
 
 # Common way to just invoke 'pdk' on each platform
-# TODO - SDK-330 - pdk should be on path after package install
 def pdk_command(host, command)
   if host.platform =~ %r{windows}
     "powershell pdk #{command}"
   else
-    "/opt/puppetlabs/bin/pdk #{command}"
+    "pdk #{command}"
   end
 end
