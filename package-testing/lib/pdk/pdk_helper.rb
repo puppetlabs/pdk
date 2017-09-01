@@ -20,6 +20,6 @@ def pdk_command(host, command)
     # Pass the command to powershell and exit powershell with pdk's exit code
     "powershell -Command 'pdk #{command.tr("'", "\'")}; exit $LASTEXITCODE'"
   else
-    "pdk #{command}"
+    "/bin/bash -lc \"pdk #{command}\""
   end
 end
