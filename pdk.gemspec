@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'bundler', '~> 1.15'
   spec.add_runtime_dependency 'cri', '~> 2.9.1'
-  spec.add_runtime_dependency 'childprocess', '~> 0.6.2'
+  spec.add_runtime_dependency 'childprocess', '~> 0.7.1'
   spec.add_runtime_dependency 'gettext-setup', '~> 0.24'
   spec.add_runtime_dependency 'tty-spinner', '0.5.0'
   spec.add_runtime_dependency 'tty-prompt', '0.13.1'
