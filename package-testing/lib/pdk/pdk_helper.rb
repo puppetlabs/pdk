@@ -17,7 +17,8 @@ end
 # Common way to just invoke 'pdk' on each platform
 def pdk_command(host, command)
   if host.platform =~ %r{windows}
-    "powershell pdk #{command}"
+    # Pass the command to powershell and exit powershell with pdk's exit code
+    "powershell -Command 'pdk #{command.tr("'", "\'")}; exit $LASTEXITCODE'"
   else
     "pdk #{command}"
   end
