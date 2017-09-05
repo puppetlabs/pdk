@@ -524,14 +524,9 @@ describe PDK::Generate::Module do
         expect(metadata.data).to include('version' => a_string_starting_with('0.'))
       end
 
-      it 'includes puppetlabs-stdlib as a dependency' do
+      it 'has no dependencies' do
         expect(metadata.data).to include(
-          'dependencies' => [
-            {
-              'name'                => 'puppetlabs-stdlib',
-              'version_requirement' => a_string_matching(%r{>=?\s+\d+\.\d+\.\d+\s<=?\s\d+\.\d+\.\d+}),
-            },
-          ],
+          'dependencies' => [],
         )
       end
 
