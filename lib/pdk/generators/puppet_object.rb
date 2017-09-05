@@ -85,7 +85,7 @@ module PDK
       def run
         [target_object_path, target_spec_path].each do |target_file|
           if File.exist?(target_file)
-            raise PDK::CLI::FatalError, _("Unable to generate class; '%{file}' already exists.") % { file: target_file }
+            raise PDK::CLI::FatalError, _("Unable to generate %{object_type}; '%{file}' already exists.") % { file: target_file, object_type: object_type }
           end
         end
 
