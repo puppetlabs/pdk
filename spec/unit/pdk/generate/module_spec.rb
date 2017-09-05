@@ -68,7 +68,7 @@ describe PDK::Generate::Module do
         expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
 
         expect {
-          described_class.invoke(target_dir: target_dir)
+          described_class.invoke(name: 'foo', target_dir: target_dir)
         }.to raise_error(PDK::CLI::FatalError, %r{destination directory '.+' already exists}i)
       end
     end

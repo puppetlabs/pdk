@@ -1,4 +1,3 @@
-
 module PDK::CLI
   @new_module_cmd = @new_cmd.define_command do
     name 'module'
@@ -6,11 +5,10 @@ module PDK::CLI
     summary _('Create a new module named <module_name> using given options')
 
     PDK::CLI.template_url_option(self)
+    PDK::CLI.skip_interview_option(self)
 
     option nil, 'license', _('Specifies the license this module is written under. ' \
       "This should be a identifier from https://spdx.org/licenses/. Common values are 'Apache-2.0', 'MIT', or 'proprietary'."), argument: :required
-
-    flag nil, 'skip-interview', _('When specified, skips interactive querying of metadata.')
 
     run do |opts, args, _cmd|
       require 'pdk/generators/module'
@@ -21,14 +19,6 @@ module PDK::CLI
       if module_name.nil? || module_name.empty?
         puts command.help
         exit 1
-      end
-
-      unless Util::OptionValidator.valid_module_name?(module_name)
-        error_msg = _(
-          "'%{module_name}' is not a valid module name.\n" \
-          'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.',
-        ) % { module_name: module_name }
-        raise PDK::CLI::FatalError, error_msg
       end
 
       opts[:name] = module_name
