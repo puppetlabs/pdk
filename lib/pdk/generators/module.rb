@@ -237,8 +237,8 @@ module PDK
                 'operatingsystemrelease' => ['11'],
               },
               'Windows' => {
-                  'operatingsystem'        => 'windows',
-                  'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+                'operatingsystem'        => 'windows',
+                'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
               },
             },
             default: [1, 2, 7],
