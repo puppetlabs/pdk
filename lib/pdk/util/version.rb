@@ -23,9 +23,12 @@ module PDK
       end
 
       def self.git_ref
-        ref_result = PDK::CLI::Exec.git('--git-dir', File.join(File.expand_path('../../..', File.dirname(__FILE__)), '.git'), 'describe', '--all', '--long')
+        source_git_dir = File.join(File.expand_path('../../..', File.dirname(__FILE__)), '.git')
 
-        ref_result[:stdout].strip if ref_result[:exit_code].zero?
+        return nil unless File.directory?(source_git_dir)
+
+        ref_result = PDK::CLI::Exec.git('--git-dir', source_git_dir, 'describe', '--all', '--long')
+        return ref_result[:stdout].strip if ref_result[:exit_code].zero?
       end
 
       def self.version_file
