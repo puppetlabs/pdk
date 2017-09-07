@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-shared_examples_for 'it sets the common options' do
+shared_examples_for 'it sets the common puppet-lint options' do
   it 'sets the output format as JSON' do
     expect(command_args.first).to eq('--json')
   end
@@ -37,7 +37,7 @@ describe PDK::Validate::PuppetLint do
     context 'when auto-correct is enabled' do
       let(:options) { { auto_correct: true } }
 
-      it_behaves_like 'it sets the common options'
+      it_behaves_like 'it sets the common puppet-lint options'
 
       it 'includes the --fix flag' do
         expect(command_args).to include('--fix')
@@ -45,7 +45,7 @@ describe PDK::Validate::PuppetLint do
     end
 
     context 'when auto-correct is disabled' do
-      it_behaves_like 'it sets the common options'
+      it_behaves_like 'it sets the common puppet-lint options'
 
       it 'does not include the --fix flag' do
         expect(command_args).not_to include('--fix')

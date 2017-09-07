@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'rubocop'
 require 'ostruct'
 
-shared_examples_for 'it sets the common options' do
+shared_examples_for 'it sets the common rubocop options' do
   it 'sets the output format as JSON' do
     expect(command_args.first(2)).to eq(['--format', 'json'])
   end
@@ -85,7 +85,7 @@ describe PDK::Validate::Rubocop do
     context 'when auto-correct is enabled' do
       let(:options) { { auto_correct: true } }
 
-      it_behaves_like 'it sets the common options'
+      it_behaves_like 'it sets the common rubocop options'
 
       it 'includes the --auto-correct flag' do
         expect(command_args).to include('--auto-correct')
@@ -93,7 +93,7 @@ describe PDK::Validate::Rubocop do
     end
 
     context 'when auto-correct is disabled' do
-      it_behaves_like 'it sets the common options'
+      it_behaves_like 'it sets the common rubocop options'
 
       it 'does not include the --auto-correct flag' do
         expect(command_args).not_to include('--auto-correct')
