@@ -3,9 +3,11 @@ module PDK::CLI
   @bundle_cmd = @base_cmd.define_command do
     name 'bundle'
     usage _('bundle -- [bundler_options]')
-    summary _('escape hatch to bundler')
+    summary _('(Experimental) Command pass-through to bundler')
     description _('[experimental] For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.' \
       'Careless use of this command can lead to errors that pdk can\'t help recover from.')
+
+    be_hidden
 
     run do |_opts, args, _cmd|
       PDK::CLI::Util.ensure_in_module!
