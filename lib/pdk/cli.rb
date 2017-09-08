@@ -2,6 +2,7 @@ require 'cri'
 
 require 'pdk/cli/errors'
 require 'pdk/cli/util'
+require 'pdk/cli/util/command_redirector'
 require 'pdk/cli/util/option_normalizer'
 require 'pdk/cli/util/option_validator'
 require 'pdk/cli/exec_group'
@@ -34,6 +35,10 @@ module PDK::CLI
 
   def self.template_url_option(dsl)
     dsl.option nil, 'template-url', _('Specifies the URL to the template to use when creating new modules or classes.'), argument: :required, default: PDK::Generate::Module.default_template_url
+  end
+
+  def self.skip_interview_option(dsl)
+    dsl.option nil, 'skip-interview', _('When specified, skips interactive querying of metadata.')
   end
 
   @base_cmd = Cri::Command.define do
@@ -77,6 +82,7 @@ module PDK::CLI
   require 'pdk/cli/new'
   require 'pdk/cli/test'
   require 'pdk/cli/validate'
+  require 'pdk/cli/module'
 
   @base_cmd.add_command Cri::Command.new_basic_help
 end

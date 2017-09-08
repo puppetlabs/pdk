@@ -9,6 +9,7 @@ require 'pdk/module/metadata'
 require 'pdk/module/templatedir'
 require 'pdk/cli/exec'
 require 'pdk/cli/util/interview'
+require 'pdk/cli/util/option_validator'
 require 'pdk/util'
 require 'pdk/util/version'
 
@@ -31,13 +32,24 @@ module PDK
         end
       end
 
-      def self.invoke(opts = {})
-        target_dir = File.expand_path(opts[:target_dir])
-
-        if File.exist?(target_dir)
-          raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % { dir: target_dir }
+      def self.validate_options(opts)
+        unless PDK::CLI::Util::OptionValidator.valid_module_name?(opts[:name])
+          error_msg = _(
+            "'%{module_name}' is not a valid module name.\n" \
+            'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.',
+          ) % { module_name: opts[:name] }
+          raise PDK::CLI::FatalError, error_msg
         end
 
+        target_dir = File.expand_path(opts[:target_dir])
+
+        raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if File.exist?(target_dir)
+      end
+
+      def self.invoke(opts = {})
+        validate_options(opts)
+
+        target_dir = File.expand_path(opts[:target_dir])
         parent_dir = File.dirname(target_dir)
 
         begin
