@@ -264,7 +264,7 @@ describe PDK::Generate::Module do
     before(:each) do
       prompt = TTY::TestPrompt.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
-      prompt.input << responses.join("\n") + "\n"
+      prompt.input << responses.join("\r") + "\r"
       prompt.input.rewind
     end
 
@@ -277,6 +277,7 @@ describe PDK::Generate::Module do
           '2.2.0',
           'William Hopper',
           'Apache-2.0',
+          '',
           'A simple module to do some stuff.',
           'github.com/whopper/bar',
           'forge.puppet.com/whopper/bar',
@@ -286,17 +287,47 @@ describe PDK::Generate::Module do
       end
 
       it 'populates the Metadata object based on user input' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}m))
 
         expect(interview_metadata).to include(
-          'name'         => 'foo-bar',
-          'version'      => '2.2.0',
-          'author'       => 'William Hopper',
-          'license'      => 'Apache-2.0',
-          'summary'      => 'A simple module to do some stuff.',
-          'source'       => 'github.com/whopper/bar',
-          'project_page' => 'forge.puppet.com/whopper/bar',
-          'issues_url'   => 'tickets.foo.com/whopper/bar',
+          'name'                    => 'foo-bar',
+          'version'                 => '2.2.0',
+          'author'                  => 'William Hopper',
+          'license'                 => 'Apache-2.0',
+          'summary'                 => 'A simple module to do some stuff.',
+          'source'                  => 'github.com/whopper/bar',
+          'project_page'            => 'forge.puppet.com/whopper/bar',
+          'issues_url'              => 'tickets.foo.com/whopper/bar',
+          'operatingsystem_support' => [
+            {
+              'operatingsystem'        => 'CentOS',
+              'operatingsystemrelease' => ['7'],
+            },
+            {
+              'operatingsystem'        => 'OracleLinux',
+              'operatingsystemrelease' => ['7'],
+            },
+            {
+              'operatingsystem'        => 'RedHat',
+              'operatingsystemrelease' => ['7'],
+            },
+            {
+              'operatingsystem'        => 'Scientific',
+              'operatingsystemrelease' => ['7'],
+            },
+            {
+              'operatingsystem'        => 'Debian',
+              'operatingsystemrelease' => ['8'],
+            },
+            {
+              'operatingsystem'        => 'Ubuntu',
+              'operatingsystemrelease' => ['16.04'],
+            },
+            {
+              'operatingsystem'        => 'windows',
+              'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+            },
+          ],
         )
       end
 
@@ -336,11 +367,12 @@ describe PDK::Generate::Module do
           '',
           '',
           '',
+          '',
         ]
       end
 
       it 'populates the interview question defaults with existing metadata values' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}))
 
         expect(interview_metadata).to include(
           'name'    => 'defaultauthor-bar',
@@ -374,6 +406,7 @@ describe PDK::Generate::Module do
           'foo',
           '2.2.0',
           'William Hopper',
+          '',
           'A simple module to do some stuff.',
           'github.com/whopper/bar',
           'forge.puppet.com/whopper/bar',
@@ -383,7 +416,7 @@ describe PDK::Generate::Module do
       end
 
       it 'populates the Metadata object based on user input' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{7 questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}m))
 
         expect(interview_metadata).to include(
           'name'         => 'foo-bar',
@@ -419,7 +452,7 @@ describe PDK::Generate::Module do
 
       it 'exits cleanly' do
         allow(logger).to receive(:info).with(a_string_matching(%r{interview cancelled}i))
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}m))
 
         expect { interview_metadata }.to raise_error(SystemExit) { |error|
           expect(error.status).to eq(0)
@@ -436,6 +469,7 @@ describe PDK::Generate::Module do
           '2.2.0',
           'William Hopper',
           'Apache-2.0',
+          '',
           'A simple module to do some stuff.',
           'github.com/whopper/bar',
           'forge.puppet.com/whopper/bar',
@@ -446,7 +480,7 @@ describe PDK::Generate::Module do
 
       it 'exits cleanly' do
         allow(logger).to receive(:info).with(a_string_matching(%r{module not generated}i))
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}m))
 
         expect { interview_metadata }.to raise_error(SystemExit) { |error|
           expect(error.status).to eq(0)
@@ -463,6 +497,7 @@ describe PDK::Generate::Module do
           '2.2.0',
           'William Hopper',
           'Apache-2.0',
+          '',
           'A simple module to do some stuff.',
           'github.com/whopper/bar',
           'forge.puppet.com/whopper/bar',
@@ -485,6 +520,59 @@ describe PDK::Generate::Module do
           'source'       => 'github.com/whopper/bar',
           'project_page' => 'forge.puppet.com/whopper/bar',
           'issues_url'   => 'tickets.foo.com/whopper/bar',
+        )
+      end
+    end
+
+    context 'when the user selects operating systems' do
+      include_context 'allow summary to be printed to stdout'
+
+      let(:responses) do
+        [
+          'foo',
+          '2.2.0',
+          'William Hopper',
+          'Apache-2.0',
+          "\e[A 1 ", # \e[A == up arrow
+          'A simple module to do some stuff.',
+          'github.com/whopper/bar',
+          'forge.puppet.com/whopper/bar',
+          'tickets.foo.com/whopper/bar',
+          'yes',
+        ]
+      end
+
+      it 'includes the modified operatingsystem_support value in the metadata' do
+        allow($stdout).to receive(:puts).and_call_original
+        expect { interview_metadata }.not_to raise_error
+
+        expect(interview_metadata).to include(
+          'name'         => 'foo-bar',
+          'version'      => '2.2.0',
+          'author'       => 'William Hopper',
+          'license'      => 'Apache-2.0',
+          'summary'      => 'A simple module to do some stuff.',
+          'source'       => 'github.com/whopper/bar',
+          'project_page' => 'forge.puppet.com/whopper/bar',
+          'issues_url'   => 'tickets.foo.com/whopper/bar',
+          'operatingsystem_support' => [
+            {
+              'operatingsystem'        => 'Debian',
+              'operatingsystemrelease' => ['8'],
+            },
+            {
+              'operatingsystem'        => 'Ubuntu',
+              'operatingsystemrelease' => ['16.04'],
+            },
+            {
+              'operatingsystem'        => 'windows',
+              'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+            },
+            {
+              'operatingsystem'        => 'Solaris',
+              'operatingsystemrelease' => ['11'],
+            },
+          ],
         )
       end
     end

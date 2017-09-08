@@ -187,6 +187,63 @@ module PDK
             default:  metadata.data['license'],
           },
           {
+            name:     'operatingsystem_support',
+            question: _('What operating systems does this module support?'),
+            help:     _('Use the up and down keys to move between the choices, space to select and enter to continue.'),
+            required: true,
+            choices:  {
+              'RedHat based Linux' => [
+                {
+                  'operatingsystem'        => 'CentOS',
+                  'operatingsystemrelease' => ['7'],
+                },
+                {
+                  'operatingsystem'        => 'OracleLinux',
+                  'operatingsystemrelease' => ['7'],
+                },
+                {
+                  'operatingsystem'        => 'RedHat',
+                  'operatingsystemrelease' => ['7'],
+                },
+                {
+                  'operatingsystem'        => 'Scientific',
+                  'operatingsystemrelease' => ['7'],
+                },
+              ],
+              'Debian based Linux' => [
+                {
+                  'operatingsystem'        => 'Debian',
+                  'operatingsystemrelease' => ['8'],
+                },
+                {
+                  'operatingsystem'        => 'Ubuntu',
+                  'operatingsystemrelease' => ['16.04'],
+                },
+              ],
+              'Fedora' => {
+                'operatingsystem'        => 'Fedora',
+                'operatingsystemrelease' => ['25'],
+              },
+              'OSX' => {
+                'operatingsystem'        => 'Darwin',
+                'operatingsystemrelease' => ['16'],
+              },
+              'SLES' => {
+                'operatingsystem'        => 'SLES',
+                'operatingsystemrelease' => ['12'],
+              },
+              'Solaris' => {
+                'operatingsystem'        => 'Solaris',
+                'operatingsystemrelease' => ['11'],
+              },
+              'Windows' => {
+                'operatingsystem'        => 'windows',
+                'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+              },
+            },
+            default: [1, 2, 7],
+          },
+          {
             name:     'summary',
             question: _('Summarize the purpose of this module in a single sentence.'),
             help:     _('This helps other Puppet users understand what the module does.'),
@@ -240,6 +297,7 @@ module PDK
         forge_username = answers['name']
         answers['name'] = "#{answers['name']}-#{opts[:name]}"
         answers['license'] = opts[:license] if opts.key?(:license)
+        answers['operatingsystem_support'].flatten!
         metadata.update!(answers)
 
         puts '-' * 40
@@ -249,8 +307,13 @@ module PDK
         puts '-' * 40
         puts
 
-        continue = prompt.yes?(_('About to generate this module; continue?')) do |q|
-          q.validate(proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }, _('Answer "Y" to continue or "n" to cancel.'))
+        begin
+          continue = prompt.yes?(_('About to generate this module; continue?')) do |q|
+            q.validate(proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }, _('Answer "Y" to continue or "n" to cancel.'))
+          end
+        rescue TTY::Prompt::Reader::InputInterrupt
+          PDK.logger.info _('Interview cancelled; not generating the module.')
+          exit 0
         end
 
         unless continue

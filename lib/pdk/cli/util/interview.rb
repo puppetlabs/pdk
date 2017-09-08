@@ -29,15 +29,26 @@ module PDK
             @name = question_name
             @prompt.print pastel.bold(_('[Q %{current_number}/%{questions_total}]') % { current_number: i, questions_total: num_questions }) + ' '
             @prompt.puts pastel.bold(question[:question])
-            @prompt.puts question[:help]
-            ask(_('-->')) do |q|
-              q.required(question.fetch(:required, false))
+            @prompt.puts question[:help] if question.key?(:help)
+            if question.key?(:choices)
+              multi_select(_('-->'), per_page: question[:choices].count) do |q|
+                q.enum ')'
+                q.default(*question[:default]) if question.key?(:default)
 
-              if question.key?(:validate_pattern)
-                q.validate(question[:validate_pattern], question[:validate_message])
+                question[:choices].each do |text, metadata|
+                  q.choice text, metadata
+                end
               end
+            else
+              ask(_('-->')) do |q|
+                q.required(question.fetch(:required, false))
 
-              q.default(question[:default]) if question.key?(:default)
+                if question.key?(:validate_pattern)
+                  q.validate(question[:validate_pattern], question[:validate_message])
+                end
+
+                q.default(question[:default]) if question.key?(:default)
+              end
             end
             i += 1
             @prompt.puts ''
