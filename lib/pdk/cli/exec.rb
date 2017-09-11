@@ -154,6 +154,7 @@ module PDK
               File.join(@process.environment['GEM_HOME'], 'bin'),
               File.join(@process.environment['GEM_PATH'], 'bin'),
               package_binpath,
+              PDK::Util.package_install? ? PDK::CLI::Exec.git_bindir : nil,
               ENV['PATH'],
             ].compact.join(File::PATH_SEPARATOR)
 
