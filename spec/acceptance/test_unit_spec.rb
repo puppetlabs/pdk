@@ -12,16 +12,20 @@ describe 'Running unit tests' do
 
     describe command('pdk test unit') do
       its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
       its(:stderr) { is_expected.to match(%r{running unit tests}i) }
       its(:stderr) { is_expected.to match(%r{no examples found}i) }
       its(:stderr) { is_expected.to match(%r{evaluated 0 tests}i) }
+      its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
     end
 
     describe command('pdk test unit --parallel') do
       its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
       its(:stderr) { is_expected.to match(%r{running unit tests in parallel}i) }
       its(:stderr) { is_expected.to match(%r{no examples found}i) }
       its(:stderr) { is_expected.to match(%r{evaluated 0 tests}i) }
+      its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
     end
   end
 
@@ -57,12 +61,16 @@ describe 'Running unit tests' do
 
     describe command('pdk test unit') do
       its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
       its(:stderr) { is_expected.to match(%r{running unit tests.*5 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
     end
 
     describe command('pdk test unit --parallel') do
       its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
       its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*5 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
     end
   end
 
@@ -197,6 +205,26 @@ describe 'Running unit tests' do
     describe command('pdk test unit --parallel') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*10 tests.*0 failures}im) }
+    end
+  end
+
+  context 'when there is a problem setting up the fixtures' do
+    include_context 'in a new module', 'bad_fixtures'
+
+    before(:all) do
+      File.open('.fixtures.yml', 'w') do |f|
+        f.puts 'fixtures:'
+        f.puts '  repositories:'
+        f.puts '    "not_exist": "https://localhost/this/does/not/exist"'
+      end
+    end
+
+    describe command('pdk test unit') do
+      its(:exit_status) { is_expected.not_to eq(0) }
+      its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
+      its(:stderr) { is_expected.to match(%r{Failed to clone git repository https://localhost/this/does/not/exist}) }
+      its(:stderr) { is_expected.not_to match(%r{Running unit tests\.}) }
+      its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
     end
   end
 end
