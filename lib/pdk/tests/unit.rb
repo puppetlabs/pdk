@@ -8,8 +8,24 @@ module PDK
     class Unit
       def self.cmd(_tests, opts = {})
         # TODO: test selection
-        rake_task = opts.key?(:parallel) ? 'parallel_spec' : 'spec'
-        [File.join(PDK::Util.module_root, 'bin', 'rake'), rake_task]
+        opts.key?(:parallel) ? 'parallel_spec' : 'spec'
+      end
+
+      def self.rake_bin
+        @rake ||= File.join(PDK::Util.module_root, 'bin', 'rake')
+      end
+
+      def self.rake(task, spinner_text, environment = {})
+        argv = [rake_bin, task]
+        argv.unshift('ruby') if Gem.win_platform?
+
+        command = PDK::CLI::Exec::Command.new(*argv).tap do |c|
+          c.context = :module
+          c.add_spinner(spinner_text)
+          c.environment = environment
+        end
+
+        command.execute!
       end
 
       def self.parallel_with_no_tests?(ran_in_parallel, json_result, result)
@@ -18,25 +34,41 @@ module PDK
           result[:stderr].strip =~ %r{Pass files or folders to run$}
       end
 
+      def self.print_failure(result, exception)
+        $stderr.puts ''
+        result[:stdout].each_line { |line| $stderr.puts line.rstrip } unless result[:stdout].nil?
+        result[:stderr].each_line { |line| $stderr.puts line.rstrip } unless result[:stderr].nil?
+        $stderr.puts ''
+        raise PDK::CLI::FatalError, exception
+      end
+
+      def self.tear_down
+        result = rake('spec_clean', _('Cleaning up after running unit tests.'))
+
+        return if result[:exit_code].zero?
+
+        PDK.logger.error(_('The spec_clean rake task failed with the following error(s):'))
+        print_failure(result, _('Failed to clean up after running unit tests'))
+      end
+
+      def self.setup
+        result = rake('spec_prep', _('Preparing to run the unit tests.'))
+
+        return if result[:exit_code].zero?
+
+        PDK.logger.error(_('The spec_prep rake task failed with the following error(s):'))
+        print_failure(result, _('Failed to prepare to run the unit tests.'))
+      end
+
       def self.invoke(report, options = {})
         PDK::Util::Bundler.ensure_bundle!
         PDK::Util::Bundler.ensure_binstubs!('rake')
 
+        setup
+
         tests = options.fetch(:tests)
-
-        cmd_argv = cmd(tests, options)
-        cmd_argv.unshift('ruby') if Gem.win_platform?
-
-        command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
-          c.context = :module
-          spinner_msg = options.key?(:parallel) ? _('Running unit tests in parallel.') : _('Running unit tests.')
-          c.add_spinner(spinner_msg)
-          c.environment['CI_SPEC_OPTIONS'] = '--format j'
-        end
-
-        PDK.logger.debug(_('Running %{cmd}') % { cmd: command.argv.join(' ') })
-
-        result = command.execute!
+        spinner_msg = options.key?(:parallel) ? _('Running unit tests in parallel.') : _('Running unit tests.')
+        result = rake(cmd(tests, options), spinner_msg, 'CI_SPEC_OPTIONS' => '--format j')
 
         json_result = if options.key?(:parallel)
                         PDK::Util.find_all_json_in(result[:stdout])
@@ -56,6 +88,8 @@ module PDK
         parse_output(report, json_result)
 
         result[:exit_code]
+      ensure
+        tear_down
       end
 
       def self.parse_output(report, json_data)

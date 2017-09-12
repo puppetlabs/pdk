@@ -6,6 +6,16 @@ describe PDK::Test::Unit do
     expect(described_class.methods(false)).to include(:invoke)
   end
 
+  describe '.rake_bin' do
+    subject { described_class.rake_bin }
+
+    before(:each) do
+      allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
+    end
+
+    it { is_expected.to eq(File.join('/path/to/module', 'bin', 'rake')) }
+  end
+
   describe '.parallel_with_no_tests?' do
     context 'when not parallel' do
       it 'is false' do
@@ -15,6 +25,70 @@ describe PDK::Test::Unit do
         }
 
         expect(described_class.parallel_with_no_tests?(false, ['json_result'], result)).to be(false)
+      end
+    end
+  end
+
+  describe '.setup' do
+    before(:each) do
+      mock_result = { stdout: 'some output', stderr: 'some error', exit_code: exit_code }
+      allow(described_class).to receive(:rake).with('spec_prep', any_args).and_return(mock_result)
+    end
+
+    context 'when the rake task succeeds' do
+      let(:exit_code) { 0 }
+
+      it 'does not raise an error' do
+        expect {
+          described_class.setup
+        }.not_to raise_error
+      end
+    end
+
+    context 'when the rake task fails' do
+      let(:exit_code) { 1 }
+
+      it 'prints the output of the command to STDERR and raises a FatalError' do
+        expect($stderr).to receive(:puts).with('').twice
+        expect($stderr).to receive(:puts).with('some output')
+        expect($stderr).to receive(:puts).with('some error')
+        expect(logger).to receive(:error).with(a_string_matching(%r{spec_prep rake task failed}))
+
+        expect {
+          described_class.setup
+        }.to raise_error(PDK::CLI::FatalError, %r{failed to prepare to run the unit tests}i)
+      end
+    end
+  end
+
+  describe '.tear_down' do
+    before(:each) do
+      mock_result = { stdout: 'some output', stderr: 'some error', exit_code: exit_code }
+      allow(described_class).to receive(:rake).with('spec_clean', any_args).and_return(mock_result)
+    end
+
+    context 'when the rake task succeeds' do
+      let(:exit_code) { 0 }
+
+      it 'does not raise an error' do
+        expect {
+          described_class.tear_down
+        }.not_to raise_error
+      end
+    end
+
+    context 'when the rake task fails' do
+      let(:exit_code) { 1 }
+
+      it 'prints the output of the command to STDERR and raises a FatalError' do
+        expect($stderr).to receive(:puts).with('').twice
+        expect($stderr).to receive(:puts).with('some output')
+        expect($stderr).to receive(:puts).with('some error')
+        expect(logger).to receive(:error).with(a_string_matching(%r{spec_clean rake task failed}))
+
+        expect {
+          described_class.tear_down
+        }.to raise_error(PDK::CLI::FatalError, %r{failed to clean up after running unit tests}i)
       end
     end
   end
@@ -68,7 +142,7 @@ describe PDK::Test::Unit do
       it 'uses the parallel_spec rake task' do
         cmd = described_class.cmd(nil, parallel: true)
 
-        expect(cmd.join('/')).to match(%r{bin/rake/parallel_spec})
+        expect(cmd).to eq('parallel_spec')
       end
     end
 
@@ -76,7 +150,7 @@ describe PDK::Test::Unit do
       it 'uses the spec rake task' do
         cmd = described_class.cmd(nil)
 
-        expect(cmd.join('/')).to match(%r{bin/rake/spec})
+        expect(cmd).to eq('spec')
       end
     end
   end
@@ -171,6 +245,8 @@ describe PDK::Test::Unit do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!)
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
+      allow(described_class).to receive(:setup)
+      allow(described_class).to receive(:tear_down)
       allow_any_instance_of(PDK::CLI::Exec::Command).to receive(:execute!).and_return(stdout: rspec_json_output, exit_code: -1)
       allow(described_class).to receive(:parse_output)
     end
