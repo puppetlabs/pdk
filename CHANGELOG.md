@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v1.1.0](https://github.com/puppetlabs/pdk/tree/v1.1.0) (2017-09-13)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.0.1...v1.1.0)
+
+**Implemented enhancements:**
+
+- \(PDK-369\) Improve error context for pdk test unit failures [\#294](https://github.com/puppetlabs/pdk/pull/294) ([rodjek](https://github.com/rodjek))
+- \(PDK-415\) Convert user-input related problems from FATAL to ERROR [\#293](https://github.com/puppetlabs/pdk/pull/293) ([rodjek](https://github.com/rodjek))
+- \(PDK-465\) Improve output from spec\_prep/spec\_clean failures [\#290](https://github.com/puppetlabs/pdk/pull/290) ([rodjek](https://github.com/rodjek))
+- \(PDK-465\) Add vendored git to PATH for package installs [\#287](https://github.com/puppetlabs/pdk/pull/287) ([rodjek](https://github.com/rodjek))
+- \(PDK-370\) Adds a 'pdk module generate' redirect to 'pdk new module'. [\#286](https://github.com/puppetlabs/pdk/pull/286) ([bmjen](https://github.com/bmjen))
+- \(PDK-459\) Improve error message when the generation target exists [\#285](https://github.com/puppetlabs/pdk/pull/285) ([DavidS](https://github.com/DavidS))
+- \(PDK-461\) Update childprocess to current version [\#282](https://github.com/puppetlabs/pdk/pull/282) ([DavidS](https://github.com/DavidS))
+- \(PDK-459\) Add defined type generator [\#280](https://github.com/puppetlabs/pdk/pull/280) ([rodjek](https://github.com/rodjek))
+- \(MAINT\) Copy-edited all the user-visible messages [\#276](https://github.com/puppetlabs/pdk/pull/276) ([jbondpdx](https://github.com/jbondpdx))
+- \(PDK-365\) Inform and prompt user following new module generate [\#270](https://github.com/puppetlabs/pdk/pull/270) ([bmjen](https://github.com/bmjen))
+- \(maint\) Debug output GEM\_HOME and GEM\_PATH before executing module commands [\#268](https://github.com/puppetlabs/pdk/pull/268) ([james-stocks](https://github.com/james-stocks))
+- \(SDK-336\) Add operating system question to the new module interview [\#262](https://github.com/puppetlabs/pdk/pull/262) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- Remove EOL style cop from default configuration [\#267](https://github.com/puppetlabs/pdk/issues/267)
+- \(PDK-450\) remove stdlib dependency [\#278](https://github.com/puppetlabs/pdk/pull/278) ([DavidS](https://github.com/DavidS))
+- \(PDK-420\) Ensure Puppet and Puppet::Util modules are defined [\#277](https://github.com/puppetlabs/pdk/pull/277) ([rodjek](https://github.com/rodjek))
+- \(PDK-430\) Do not cache template-url answer if using the default template [\#265](https://github.com/puppetlabs/pdk/pull/265) ([rodjek](https://github.com/rodjek))
+
 ## [v1.0.1](https://github.com/puppetlabs/pdk/tree/v1.0.1) (2017-08-17)
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.0.0...v1.0.1)
