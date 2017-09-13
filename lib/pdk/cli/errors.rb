@@ -8,5 +8,14 @@ module PDK
         super(msg)
       end
     end
+
+    class ExitWithError < StandardError
+      attr_reader :exit_code
+
+      def initialize(msg, exit_code = 1)
+        @exit_code = exit_code
+        super(msg)
+      end
+    end
   end
 end

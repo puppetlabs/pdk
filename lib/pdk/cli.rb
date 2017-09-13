@@ -15,6 +15,10 @@ require 'pdk/util/version'
 module PDK::CLI
   def self.run(args)
     @base_cmd.run(args)
+  rescue PDK::CLI::ExitWithError => e
+    PDK.logger.error(e.message)
+
+    exit e.exit_code
   rescue PDK::CLI::FatalError => e
     PDK.logger.fatal(e.message) if e.message
 
