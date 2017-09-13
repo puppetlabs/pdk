@@ -96,7 +96,20 @@ module PDK
         location = nil if location.empty?
 
         # TODO: maybe add trace
-        [severity, source, location, message].compact.join(': ')
+        header = [severity, source, location, message].compact.join(': ')
+        if source == 'rspec'
+          result = [header, "  #{test}"]
+          context = context_lines
+          unless context.nil?
+            result << '  Failure/Error:'
+            result.concat(context)
+            result << "\n"
+          end
+
+          result.compact.join("\n")
+        else
+          header
+        end
       end
 
       # Renders the event as a JUnit XML testcase.
@@ -301,6 +314,24 @@ module PDK
         value.reject do |line|
           (line =~ %r{/gems/}) || (line =~ %r{bin/rspec:})
         end
+      end
+
+      # Extract contextual information for the event from the file that it
+      # references.
+      #
+      # @param max_num_lines [Integer] The maximum number of lines to return.
+      #
+      # @return [Array] Array of lines from the file, centred on the line
+      #   number of the event.
+      def context_lines(max_num_lines = 5)
+        return if file.nil? || line.nil?
+
+        file_content = File.read(file).split("\n")
+        delta = (max_num_lines - 1) / 2
+        min = [0, (line - 1) - delta].max
+        max = [(line - 1) + delta, file_content.length].min
+
+        file_content[min..max].map { |r| "  #{r}" }
       end
     end
   end
