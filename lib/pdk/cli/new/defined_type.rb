@@ -18,7 +18,7 @@ module PDK::CLI
       end
 
       unless Util::OptionValidator.valid_defined_type_name?(defined_type_name)
-        raise PDK::CLI::FatalError, _("'%{name}' is not a valid defined type name") % { name: defined_type_name }
+        raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid defined type name") % { name: defined_type_name }
       end
 
       PDK::Generate::DefinedType.new(module_dir, defined_type_name, opts).run

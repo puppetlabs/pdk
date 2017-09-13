@@ -249,8 +249,8 @@ describe PDK::Generate::PuppetObject do
         allow(File).to receive(:exist?).with(target_object_path).and_return(true)
       end
 
-      it 'raises a fatal error' do
-        expect { templated_object.run }.to raise_error(PDK::CLI::FatalError, %r{'#{target_object_path}' already exists})
+      it 'raises an error' do
+        expect { templated_object.run }.to raise_error(PDK::CLI::ExitWithError, %r{'#{target_object_path}' already exists})
       end
     end
 
@@ -260,8 +260,8 @@ describe PDK::Generate::PuppetObject do
         allow(File).to receive(:exist?).with(target_spec_path).and_return(true)
       end
 
-      it 'raises a fatal error' do
-        expect { templated_object.run }.to raise_error(PDK::CLI::FatalError, %r{'#{target_spec_path}' already exists})
+      it 'raises an error' do
+        expect { templated_object.run }.to raise_error(PDK::CLI::ExitWithError, %r{'#{target_spec_path}' already exists})
       end
     end
   end

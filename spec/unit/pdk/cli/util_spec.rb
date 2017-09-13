@@ -6,7 +6,7 @@ describe 'PDK::CLI::Util' do
     subject(:ensure_in_module) { PDK::CLI::Util.ensure_in_module! }
 
     it 'raises an error when not in a module directory' do
-      expect { ensure_in_module }.to raise_error(PDK::CLI::FatalError)
+      expect { ensure_in_module }.to raise_error(PDK::CLI::ExitWithError)
     end
   end
 end

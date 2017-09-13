@@ -20,7 +20,7 @@ module PDK::CLI
       end
 
       unless Util::OptionValidator.valid_class_name?(class_name)
-        raise PDK::CLI::FatalError, _("'%{name}' is not a valid class name") % { name: class_name }
+        raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid class name") % { name: class_name }
       end
 
       PDK::Generate::PuppetClass.new(module_dir, class_name, opts).run

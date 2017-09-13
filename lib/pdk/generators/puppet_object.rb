@@ -78,14 +78,14 @@ module PDK
       # and create the target files from the template. This is the main entry
       # point for the class.
       #
-      # @raise [PDK::CLI::FatalError] if the target files already exist.
+      # @raise [PDK::CLI::ExitWithError] if the target files already exist.
       # @raise [PDK::CLI::FatalError] (see #render_file)
       #
       # @api public
       def run
         [target_object_path, target_spec_path].each do |target_file|
           if File.exist?(target_file)
-            raise PDK::CLI::FatalError, _("Unable to generate %{object_type}; '%{file}' already exists.") % { file: target_file, object_type: object_type }
+            raise PDK::CLI::ExitWithError, _("Unable to generate %{object_type}; '%{file}' already exists.") % { file: target_file, object_type: object_type }
           end
         end
 

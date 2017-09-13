@@ -105,7 +105,11 @@ describe PDK::CLI::Util::OptionNormalizer do
         allow(PDK::CLI::Util::OptionValidator).to receive(:valid_param_name?).with(param_name).and_return(false)
       end
 
-      it { expect { normalised_parameter }.to raise_error(PDK::CLI::FatalError, %r{'#{param_name}' is not a valid parameter name}) }
+      it 'raises an error' do
+        expect {
+          normalised_parameter
+        }.to raise_error(PDK::CLI::ExitWithError, %r{'#{param_name}' is not a valid parameter name})
+      end
     end
 
     context 'when passed an invalid data type' do
@@ -115,7 +119,11 @@ describe PDK::CLI::Util::OptionNormalizer do
         allow(PDK::CLI::Util::OptionValidator).to receive(:valid_data_type?).with(param_type).and_return(false)
       end
 
-      it { expect { normalised_parameter }.to raise_error(PDK::CLI::FatalError, %r{'#{param_type}' is not a valid data type}) }
+      it 'raises an error' do
+        expect {
+          normalised_parameter
+        }.to raise_error(PDK::CLI::ExitWithError, %r{'#{param_type}' is not a valid data type})
+      end
     end
   end
 end

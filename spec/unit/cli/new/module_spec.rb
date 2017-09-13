@@ -15,7 +15,7 @@ describe 'Running `pdk new module`' do
 
   context 'when passed an invalid module name' do
     it 'informs the user that the module name is invalid' do
-      expect(logger).to receive(:fatal).with(a_string_matching(%r{'123test'.*not.*valid module name}m))
+      expect(logger).to receive(:error).with(a_string_matching(%r{'123test'.*not.*valid module name}m))
 
       expect {
         PDK::CLI.run(%w[new module 123test])

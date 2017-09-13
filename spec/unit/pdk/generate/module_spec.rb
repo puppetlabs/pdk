@@ -69,7 +69,7 @@ describe PDK::Generate::Module do
 
         expect {
           described_class.invoke(name: 'foo', target_dir: target_dir)
-        }.to raise_error(PDK::CLI::FatalError, %r{destination directory '.+' already exists}i)
+        }.to raise_error(PDK::CLI::ExitWithError, %r{destination directory '.+' already exists}i)
       end
     end
 

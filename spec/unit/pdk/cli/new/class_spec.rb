@@ -8,8 +8,8 @@ describe 'PDK::CLI new class' do
       allow(PDK::Util).to receive(:module_root).and_return(nil)
     end
 
-    it 'exits with a fatal error' do
-      expect(logger).to receive(:fatal).with(a_string_matching(%r{must be run from inside a valid module}))
+    it 'exits with an error' do
+      expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
 
       expect {
         PDK::CLI.run(%w[new class test_class])
@@ -45,8 +45,8 @@ describe 'PDK::CLI new class' do
     end
 
     context 'and provided an invalid class name' do
-      it 'exits with a fatal error' do
-        expect(logger).to receive(:fatal).with(a_string_matching(%r{'test-class' is not a valid class name}))
+      it 'exits with an error' do
+        expect(logger).to receive(:error).with(a_string_matching(%r{'test-class' is not a valid class name}))
 
         expect {
           PDK::CLI.run(%w[new class test-class])
