@@ -56,6 +56,17 @@ pdk new class class_name
 
 PDK creates the new class manifest and a test file (as `class_name_spec.rb`) in your module's `/spec/classes` directory. 
 
+### Generate a defined type
+
+To generate a defined type in your module, use the `pdk new defined_type` command, specifying the name of your new defined type.
+
+1. From the command line, in your module's directory, run: 
+```
+pdk new defined_type defined_type_name
+```
+
+PDK creates the new defined\_type manifest and a test file (as `defined_type_name_spec.rb`) in your module's `/spec/defines` directory. 
+
 
 ### Validating a module
 
