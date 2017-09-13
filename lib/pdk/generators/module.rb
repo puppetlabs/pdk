@@ -38,12 +38,12 @@ module PDK
             "'%{module_name}' is not a valid module name.\n" \
             'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.',
           ) % { module_name: opts[:name] }
-          raise PDK::CLI::FatalError, error_msg
+          raise PDK::CLI::ExitWithError, error_msg
         end
 
         target_dir = File.expand_path(opts[:target_dir])
 
-        raise PDK::CLI::FatalError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if File.exist?(target_dir)
+        raise PDK::CLI::ExitWithError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if File.exist?(target_dir)
       end
 
       def self.invoke(opts = {})

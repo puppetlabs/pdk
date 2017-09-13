@@ -29,7 +29,7 @@ module PDK
             begin
               OptionValidator.enum(format, PDK::Report.formats)
             rescue ArgumentError
-              raise PDK::CLI::FatalError, _("'%{name}' is not a valid report format (%{valid})") % {
+              raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid report format (%{valid})") % {
                 name:  format,
                 valid: PDK::Report.formats.join(', '),
               }
@@ -53,13 +53,13 @@ module PDK
           param_type = 'String' if param_type.nil?
 
           unless PDK::CLI::Util::OptionValidator.valid_param_name?(param_name)
-            raise PDK::CLI::FatalError, _("'%{name}' is not a valid parameter name") % {
+            raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid parameter name") % {
               name: param_name,
             }
           end
 
           unless PDK::CLI::Util::OptionValidator.valid_data_type?(param_type)
-            raise PDK::CLI::FatalError, _("'%{type}' is not a valid data type") % {
+            raise PDK::CLI::ExitWithError, _("'%{type}' is not a valid data type") % {
               type: param_type,
             }
           end

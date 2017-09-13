@@ -17,9 +17,9 @@ describe 'PDK::CLI new defined_type' do
     end
   end
 
-  shared_examples 'it exits with a fatal error' do |expected_error|
-    it 'exits with a fatal error' do
-      expect(logger).to receive(:fatal).with(a_string_matching(expected_error))
+  shared_examples 'it exits with an error' do |expected_error|
+    it 'exits with an error' do
+      expect(logger).to receive(:error).with(a_string_matching(expected_error))
 
       expect {
         PDK::CLI.run(args)
@@ -33,7 +33,7 @@ describe 'PDK::CLI new defined_type' do
     let(:module_root) { nil }
     let(:args) { %w[new defined_type test_define] }
 
-    it_behaves_like 'it exits with a fatal error', %r{must be run from inside a valid module}
+    it_behaves_like 'it exits with an error', %r{must be run from inside a valid module}
   end
 
   context 'when run from inside a module' do
@@ -54,7 +54,7 @@ describe 'PDK::CLI new defined_type' do
     context 'and provided an invalid defined type name' do
       let(:args) { %w[new defined_type test-define] }
 
-      it_behaves_like 'it exits with a fatal error', %r{'test-define' is not a valid defined type name}
+      it_behaves_like 'it exits with an error', %r{'test-define' is not a valid defined type name}
     end
 
     context 'and provided a valid defined type name' do
