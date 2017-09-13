@@ -386,6 +386,50 @@ describe PDK::Report::Event do
           expect(text_event).to match(%r{testfile\.rb:123:456})
         end
       end
+
+      context 'it includes a snippet of the file for rspec events' do
+        let(:data) do
+          {
+            line:    4,
+            source:  'rspec',
+            message: 'test message',
+            severity: 'failure',
+            test:     'spec description',
+            state:    :failure,
+          }
+        end
+
+        let(:file_content) do
+          [
+            'line 1',
+            'line 2',
+            'line 3',
+            'line 4',
+            'line 5',
+          ].join("\n")
+        end
+
+        let(:expected_text) do
+          <<-END.gsub(%r{^ {12}}, '')
+            failure: rspec: testfile.rb:4: test message
+              spec description
+              Failure/Error:
+              line 2
+              line 3
+              line 4
+              line 5
+
+          END
+        end
+
+        before(:each) do
+          allow(File).to receive(:read).with('testfile.rb').and_return(file_content)
+        end
+
+        it 'renders the event with context' do
+          expect(text_event).to eq(expected_text)
+        end
+      end
     end
 
     context 'and a severity is provided' do
