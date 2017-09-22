@@ -1,6 +1,7 @@
 require 'pdk/generators/module'
 require 'pdk/generators/defined_type'
 require 'pdk/generators/puppet_class'
+require 'pdk/generators/task'
 require 'pdk/module/metadata'
 require 'pdk/module/templatedir'
 

@@ -662,6 +662,7 @@ describe PDK::Generate::Module do
     it 'creates a skeleton directory structure' do
       expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'manifests'))
       expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'templates'))
+      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'tasks'))
 
       described_class.prepare_module_directory(path)
     end
