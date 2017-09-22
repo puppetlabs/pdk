@@ -1,4 +1,3 @@
-
 module PDK::CLI
   @new_cmd = @base_cmd.define_command do
     name 'new'
@@ -14,3 +13,4 @@ end
 require 'pdk/cli/new/class'
 require 'pdk/cli/new/defined_type'
 require 'pdk/cli/new/module'
+require 'pdk/cli/new/task'

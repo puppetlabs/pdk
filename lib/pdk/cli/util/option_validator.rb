@@ -22,6 +22,7 @@ module PDK
         def self.valid_module_name?(string)
           !(string =~ %r{\A[a-z][a-z0-9_]*\Z}).nil?
         end
+        singleton_class.send(:alias_method, :valid_task_name?, :valid_module_name?)
 
         # Validate a Puppet namespace against the regular expression in the
         # documentation: https://docs.puppet.com/puppet/4.10/lang_reserved.html#classes-and-defined-resource-types
