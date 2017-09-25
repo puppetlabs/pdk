@@ -99,6 +99,7 @@ describe PDK::Generate::Task do
           'puppet_task_version' => 1,
           'supports_noop'       => true,
           'description'         => 'A short description of this task',
+          'parameters'          => {},
         )
       end
     end
@@ -111,6 +112,7 @@ describe PDK::Generate::Task do
           'puppet_task_version' => 1,
           'supports_noop'       => true,
           'description'         => 'This is a test task',
+          'parameters'          => {},
         )
       end
     end
