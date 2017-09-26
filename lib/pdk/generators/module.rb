@@ -194,7 +194,7 @@ module PDK
           {
             name:     'license',
             question: _('What license does this module code fall under?'),
-            help:     _('This should be an identifier from https://spdk.org/licenses/. Common values are "Apache-2.0", "MIT", or "proprietary".'),
+            help:     _('This should be an identifier from https://spdx.org/licenses/. Common values are "Apache-2.0", "MIT", or "proprietary".'),
             required: true,
             default:  metadata.data['license'],
           },
