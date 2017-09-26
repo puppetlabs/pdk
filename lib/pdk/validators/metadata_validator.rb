@@ -3,6 +3,7 @@ require 'pdk/cli/exec'
 require 'pdk/validators/base_validator'
 require 'pdk/validators/metadata/metadata_json_lint'
 require 'pdk/validators/metadata/metadata_syntax'
+require 'pdk/validators/metadata/task_metadata_lint'
 
 module PDK
   module Validate
@@ -12,7 +13,7 @@ module PDK
       end
 
       def self.metadata_validators
-        [MetadataSyntax, MetadataJSONLint]
+        [MetadataSyntax, MetadataJSONLint, TaskMetadataLint]
       end
 
       def self.invoke(report, options = {})
