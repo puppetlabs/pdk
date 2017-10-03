@@ -1,4 +1,5 @@
 require 'spec_helper_acceptance'
+require 'fileutils'
 
 describe 'pdk validate puppet', module_command: true do
   let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
@@ -135,6 +136,22 @@ class foo {
           'message' => a_string_matching(%r{double quoted string containing no variables}i),
         )
       end
+    end
+  end
+
+  context 'with a deep file and windows paths', if: Gem.win_platform? do
+    include_context 'in a new module', 'win_path'
+
+    before(:all) do
+      FileUtils.mkdir_p(File.join('manifests', 'test'))
+      File.open(File.join('manifests', 'test', 'test.pp'), 'w') do |f|
+        f.puts 'class win_path::test::test { }'
+      end
+    end
+
+    describe command('pdk validate puppet manifests\test') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(File.join('manifests', 'test', 'test.pp'))}.+class not documented}i) }
     end
   end
 
