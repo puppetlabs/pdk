@@ -36,6 +36,7 @@ module PDK
                     options[:targets]
                   end
 
+        targets.map! { |r| r.gsub(File::ALT_SEPARATOR, File::SEPARATOR) } if File::ALT_SEPARATOR
         skipped = []
         invalid = []
         matched = targets.map { |target|
