@@ -73,7 +73,7 @@ module PDK
         end
 
         # Try to get Windows to install the needed SSL CA Cert for Forge
-        `powershell Invoke-WebRequest #{FORGE_SCHEMA_URL} | Out-Null`
+        `powershell -Command "Invoke-WebRequest #{FORGE_SCHEMA_URL} | Out-Null"`
         retry
       rescue StandardError => e
         raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. Please check internet connectivity and retry this action. %{error}') % { error: e }
