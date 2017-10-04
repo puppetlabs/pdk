@@ -69,7 +69,7 @@ module PDK
         uri = URI.parse(FORGE_SCHEMA_URL)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Gem.win_platform?
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)
 
