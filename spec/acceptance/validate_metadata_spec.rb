@@ -174,7 +174,7 @@ describe 'Running metadata validation' do
     end
 
     describe command('pdk validate metadata') do
-      its(:exit_status) { is_expected.to eq(1) }
+      its(:exit_status) { is_expected.not_to eq(0) }
       its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
       its(:stderr) { is_expected.to match(module_style_spinner) }
       its(:stderr) { is_expected.to match(task_style_spinner) }
@@ -182,7 +182,7 @@ describe 'Running metadata validation' do
     end
 
     describe command('pdk validate metadata --format junit') do
-      its(:exit_status) { is_expected.to eq(1) }
+      its(:exit_status) { is_expected.not_to eq(0) }
       its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
       its(:stderr) { is_expected.to match(module_style_spinner) }
       its(:stderr) { is_expected.to match(task_style_spinner) }

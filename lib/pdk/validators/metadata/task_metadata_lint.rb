@@ -63,8 +63,8 @@ module PDK
 
       def self.download_schema_from_forge
         PDK.logger.debug(_('Task Metadata Schema was not found in the cache. Now downloading from the forge.'))
-        require "net/https"
-        require "openssl"
+        require 'net/https'
+        require 'openssl'
 
         uri = URI.parse(FORGE_SCHEMA_URL)
         http = Net::HTTP.new(uri.host, uri.port)
@@ -73,7 +73,7 @@ module PDK
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)
 
-        raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. %{code}: %{message}.') % { code: response.code, message: response.message } unless response.code == "200"
+        raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. %{code}: %{message}.') % { code: response.code, message: response.message } unless response.code == '200'
 
         response.body
       rescue StandardError => e
