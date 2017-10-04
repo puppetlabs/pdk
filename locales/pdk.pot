@@ -6,11 +6,11 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.0.1-51-g1a5f668\n"
+"Project-Id-Version: puppet development kit v1.1.0-6-g048c02f\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2017-09-13 10:09-0700\n"
-"PO-Revision-Date: 2017-09-13 10:09-0700\n"
+"POT-Creation-Date: 2017-10-04 13:53+0100\n"
+"PO-Revision-Date: 2017-10-04 13:53+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -99,39 +99,39 @@ msgstr ""
 msgid "Unable to find `%{name}`. Check that it is installed and try again."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:56
+#: ../lib/pdk/cli/exec.rb:70
 msgid "PDK package installation not found. Trying '%{fallback}' from the system PATH instead."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:61
+#: ../lib/pdk/cli/exec.rb:75
 msgid "Using '%{vendored_bin_path}' from PDK package."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:64
+#: ../lib/pdk/cli/exec.rb:78
 msgid "Could not find '%{vendored_bin_path}' in PDK package. Trying '%{fallback}' from the system PATH instead."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:102
+#: ../lib/pdk/cli/exec.rb:116
 msgid "Expected execution context to be :system or :module but got '%{context}'."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:166
+#: ../lib/pdk/cli/exec.rb:180
 msgid "Current working directory is not part of a module. (No metadata.json was found.)"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:220
+#: ../lib/pdk/cli/exec.rb:234
 msgid "Executing '%{command}'"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:222
+#: ../lib/pdk/cli/exec.rb:236
 msgid "Command environment: GEM_HOME is '%{gem_home}' and GEM_PATH is '%{gem_path}'"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:229
+#: ../lib/pdk/cli/exec.rb:243
 msgid "Failed to execute '%{command}': %{message}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:243
+#: ../lib/pdk/cli/exec.rb:257
 msgid "Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})"
 msgstr ""
 
@@ -164,7 +164,7 @@ msgid "Creating new module: %{modname}"
 msgstr ""
 
 #: ../lib/pdk/cli/new.rb:5
-msgid "new <type> [options]"
+msgid "new <thing> [options]"
 msgstr ""
 
 #: ../lib/pdk/cli/new.rb:6
@@ -172,7 +172,7 @@ msgid "create a new module, etc."
 msgstr ""
 
 #: ../lib/pdk/cli/new.rb:7
-msgid "Creates a new instance of <type> using relevant options."
+msgid "Creates a new <thing> using relevant options."
 msgstr ""
 
 #: ../lib/pdk/cli/new/class.rb:4
@@ -212,7 +212,7 @@ msgid "Specifies the license this module is written under. This should be a iden
 msgstr ""
 
 #: ../lib/pdk/cli/test.rb:5
-msgid "test [type] [options]"
+msgid "test [subcommand] [options]"
 msgstr ""
 
 #: ../lib/pdk/cli/test.rb:6
@@ -710,23 +710,23 @@ msgid ""
 "%{output}"
 msgstr ""
 
-#: ../lib/pdk/validators/base_validator.rb:72
+#: ../lib/pdk/validators/base_validator.rb:73
 msgid "Invoking %{cmd}"
 msgstr ""
 
-#: ../lib/pdk/validators/base_validator.rb:77
+#: ../lib/pdk/validators/base_validator.rb:78
 msgid "%{validator}: Skipped '%{target}'. Target does not contain any files to validate (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validators/base_validator.rb:81
+#: ../lib/pdk/validators/base_validator.rb:82
 msgid "Target does not contain any files to validate (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validators/base_validator.rb:90
+#: ../lib/pdk/validators/base_validator.rb:91
 msgid "%{validator}: Skipped '%{target}'. Target file not found."
 msgstr ""
 
-#: ../lib/pdk/validators/base_validator.rb:94
+#: ../lib/pdk/validators/base_validator.rb:95
 msgid "File does not exist."
 msgstr ""
 
@@ -758,11 +758,11 @@ msgstr ""
 msgid "Checking Ruby code style (%{pattern})."
 msgstr ""
 
-#: ../lib/puppet/util/windows/api_types.rb:68
+#: ../lib/puppet/util/windows/api_types.rb:72
 msgid "Unable to read wide strings with %{null_terminator} terminal nulls"
 msgstr ""
 
-#: ../lib/puppet/util/windows/api_types.rb:199
+#: ../lib/puppet/util/windows/api_types.rb:203
 msgid "Bad GUID format."
 msgstr ""
 

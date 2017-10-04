@@ -2,9 +2,9 @@
 module PDK::CLI
   @new_cmd = @base_cmd.define_command do
     name 'new'
-    usage _('new <type> [options]')
+    usage _('new <thing> [options]')
     summary _('create a new module, etc.')
-    description _('Creates a new instance of <type> using relevant options.')
+    description _('Creates a new <thing> using relevant options.')
     default_subcommand 'help'
   end
 
