@@ -42,13 +42,14 @@ module PDK
         matched = targets.map { |target|
           if respond_to?(:pattern)
             if File.directory?(target)
-              target_list = Array[pattern].flatten.map { |p| Dir.glob(File.join(target, p)) }
+              pattern_glob = Array(pattern).map { |p| Dir.glob(File.join(PDK::Util.module_root, p)) }
+              target_list = pattern_glob.flatten.select { |file| File.fnmatch(File.join(File.expand_path(target), '*'), file) }
               skipped << target if target_list.flatten.empty?
               target_list
             elsif File.file?(target)
-              if target.eql? pattern
+              if Array(pattern).include? target
                 target
-              elsif Array[pattern].flatten.map { |p| File.fnmatch(p, File.expand_path(target)) }.include? true
+              elsif Array(pattern).any? { |p| File.fnmatch(File.expand_path(p), File.expand_path(target)) }
                 target
               else
                 skipped << target

@@ -3,6 +3,10 @@ require 'spec_helper'
 describe PDK::Validate::MetadataValidator do
   let(:report) { PDK::Report.new }
 
+  before(:each) do
+    allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
+  end
+
   describe '.invoke' do
     subject(:return_value) { described_class.invoke(report, {}) }
 

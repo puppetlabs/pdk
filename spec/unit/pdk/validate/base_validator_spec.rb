@@ -32,6 +32,7 @@ describe PDK::Validate::BaseValidator do
       before(:each) do
         allow(File).to receive(:directory?).and_return(true)
         allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
+        allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
       end
 
       it 'returns the module root' do
@@ -41,23 +42,32 @@ describe PDK::Validate::BaseValidator do
 
     context 'when given specific targets' do
       let(:targets) { ['target1.pp', 'target2/'] }
+      let(:glob_pattern) { File.join(module_root, described_class.pattern) }
 
       let(:globbed_target2) do
         [
-          File.join('target2', 'target.pp'),
+          File.join(module_root, 'target2', 'target.pp'),
         ]
       end
 
       before(:each) do
-        allow(Dir).to receive(:glob).with(File.join('target2', described_class.pattern)).and_return(globbed_target2)
+        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_target2)
         allow(File).to receive(:directory?).with('target1.pp').and_return(false)
         allow(File).to receive(:directory?).with('target2/').and_return(true)
         allow(File).to receive(:file?).with('target1.pp').and_return(true)
+
+        targets.map do |t|
+          allow(File).to receive(:expand_path).with(t).and_return(File.join(module_root, t))
+        end
+
+        Array[described_class.pattern].flatten.map do |p|
+          allow(File).to receive(:expand_path).with(p).and_return(File.join(module_root, p))
+        end
       end
 
       it 'returns the targets' do
-        expect(target_files[0]).to eq(['target1.pp'].concat(globbed_target2))
-        expect(target_files[1]).to be_empty
+        expect(target_files[0]).to eq(globbed_target2)
+        expect(target_files[1]).to eq(['target1.pp'])
         expect(target_files[2]).to be_empty
       end
     end
@@ -70,7 +80,7 @@ describe PDK::Validate::BaseValidator do
       end
 
       before(:each) do
-        allow(Dir).to receive(:glob).with(File.join('target3', described_class.pattern)).and_return(globbed_target2)
+        allow(Dir).to receive(:glob).with(File.join(module_root, described_class.pattern)).and_return(globbed_target2)
         allow(File).to receive(:directory?).with('target3/').and_return(true)
       end
 

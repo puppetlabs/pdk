@@ -7,6 +7,7 @@ RSpec.shared_examples_for 'it accepts .pp targets' do
 
     before(:each) do
       allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
+      allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
     end
 
     context 'when given no targets' do
@@ -33,40 +34,19 @@ RSpec.shared_examples_for 'it accepts .pp targets' do
     end
 
     context 'when given specific target files' do
-      let(:targets) { ['manifest.pp', 'another.pp'] }
+      let(:targets) { ['manifests/manifest.pp', 'manifests/foo/another.pp'] }
 
       before(:each) do
+        allow(File).to receive(:expand_path).with(described_class.pattern).and_return(File.join(module_root, described_class.pattern))
         targets.each do |target|
           allow(File).to receive(:directory?).with(target).and_return(false)
           allow(File).to receive(:file?).with(target).and_return(true)
+          allow(File).to receive(:expand_path).with(target).and_return(File.join(module_root, target))
         end
       end
 
       it 'returns the targets' do
         expect(parsed_targets.first).to eq(targets)
-      end
-    end
-
-    context 'when given a specific target directory' do
-      let(:targets) { [File.join('path', 'to', 'target', 'directory')] }
-      let(:glob_pattern) { File.join(targets.first, described_class.pattern) }
-
-      before(:each) do
-        allow(File).to receive(:directory?).with(targets.first).and_return(true)
-      end
-
-      context 'and the directory contains .pp files' do
-        let(:globbed_files) { [File.join(targets.first, 'test.pp')] }
-
-        it 'returns the paths to the .pp files in the directory' do
-          expect(parsed_targets.first).to eq(globbed_files)
-        end
-      end
-
-      context 'and the directory contains no .pp files' do
-        it 'returns no targets' do
-          expect(parsed_targets.first).to eq([])
-        end
       end
     end
   end

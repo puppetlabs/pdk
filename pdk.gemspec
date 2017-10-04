@@ -28,6 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'tty-spinner', '0.5.0'
   spec.add_runtime_dependency 'tty-prompt', '0.13.1'
   spec.add_runtime_dependency 'json_pure', '~> 2.1.0'
+  spec.add_runtime_dependency 'json-schema', '2.8.0'
   spec.add_runtime_dependency 'tty-which', '0.3.0'
 
   # Used in the pdk-module-template

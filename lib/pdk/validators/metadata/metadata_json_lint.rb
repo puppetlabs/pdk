@@ -20,7 +20,7 @@ module PDK
       end
 
       def self.spinner_text(targets = [])
-        _('Checking metadata style (%{targets}).') % {
+        _('Checking module metadata style (%{targets}).') % {
           targets: PDK::Util.targets_relative_to_pwd(targets).join(' '),
         }
       end

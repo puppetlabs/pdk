@@ -67,6 +67,16 @@ pdk new defined_type defined_type_name
 
 PDK creates the new defined\_type manifest and a test file (as `defined_type_name_spec.rb`) in your module's `/spec/defines` directory. 
 
+### Generate a task
+
+To generate a task in your module, use the `pdk new task` command, specifying the name of your new task.
+
+1. From the command line, in your module's directory, run: 
+```
+pdk new task task_name
+```
+
+PDK creates the new task file and metadata.
 
 ### Validating a module
 
