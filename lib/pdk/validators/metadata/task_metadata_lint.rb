@@ -64,8 +64,8 @@ module PDK
       def self.download_schema_from_forge
         PDK.logger.debug(_('Task Metadata Schema was not found in the cache. Now downloading from the forge.'))
         open(FORGE_SCHEMA_URL).read
-      rescue
-        raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. Please check internet connectivity and retry this action.')
+      rescue Exception => e
+        raise PDK::CLI::FatalError, _("Unable to download Task Metadata Schema file. Please check internet connectivity and retry this action. %{error}") % { error: e }
       end
 
       def self.invoke(report, options = {})
