@@ -2,10 +2,19 @@
 module PDK::CLI
   @bundle_cmd = @base_cmd.define_command do
     name 'bundle'
-    usage _('bundle -- [bundler_options]')
+    if Gem.win_platform?
+      usage _('bundle `-- [bundler_options]')
+    else
+      usage _('bundle -- [bundler_options]')
+    end
     summary _('(Experimental) Command pass-through to bundler')
-    description _('[experimental] For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.' \
-      'Careless use of this command can lead to errors that pdk can\'t help recover from.')
+    description _(<<-EOF
+[experimental] For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.
+Careless use of this command can lead to errors that pdk can't help recover from.
+
+Note that for PowerShell the '--' needs to be escaped using a backtick: '`--' to avoid it being parsed by the shell.
+EOF
+                 )
 
     be_hidden
 
