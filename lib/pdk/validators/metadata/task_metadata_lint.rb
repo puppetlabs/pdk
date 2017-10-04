@@ -63,18 +63,19 @@ module PDK
 
       def self.download_schema_from_forge
         PDK.logger.debug(_('Task Metadata Schema was not found in the cache. Now downloading from the forge.'))
-        ssl_failures ||= 0
-        open(FORGE_SCHEMA_URL).read
-      rescue OpenSSL::SSL::SSLError => e
-        ssl_failures += 1
+        require "net/https"
+        require "openssl"
 
-        unless ssl_failures < 2 && Gem.win_platform? && PDK::Util.gem_install?
-          raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. Please check internet connectivity and retry this action. %{error}') % { error: e }
-        end
+        uri = URI.parse(FORGE_SCHEMA_URL)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true
+        http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+        request = Net::HTTP::Get.new(uri.request_uri)
+        response = http.request(request)
 
-        # Try to get Windows to install the needed SSL CA Cert for Forge
-        `powershell -Command "Invoke-WebRequest #{FORGE_SCHEMA_URL} | Out-Null"`
-        retry
+        raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. %{code}: %{message}.') % { code: response.code, message: response.message } unless response.code == "200"
+
+        response.body
       rescue StandardError => e
         raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. Please check internet connectivity and retry this action. %{error}') % { error: e }
       end
