@@ -99,7 +99,7 @@ describe PDK::Validate::TaskMetadataLint do
       let(:targets) do
         [
           {
-            name: 'tasks/valid.json',
+            name:    'tasks/valid.json',
             content: '{"description": "wow. so. valid.", "version": 1}',
           },
         ]
@@ -119,7 +119,10 @@ describe PDK::Validate::TaskMetadataLint do
     context 'when a target is provided that contains invalid JSON' do
       let(:targets) do
         [
-          { name: 'tasks/invalid.json', content: '{"description": "Invalid Metadata", "version": "definitely the wrong type"}' },
+          {
+            name:    'tasks/invalid.json',
+            content: '{"description": "Invalid Metadata", "version": "definitely the wrong type"}',
+          },
         ]
       end
 
@@ -138,8 +141,14 @@ describe PDK::Validate::TaskMetadataLint do
     context 'when targets are provided that contain valid and invalid JSON' do
       let(:targets) do
         [
-          { name: 'tasks/invalid.json', content: '{"description": "Invalid Metadata", "version": "definitely the wrong type"}' },
-          { name: 'tasks/valid.json', content: '{"description": "wow. so. valid.", "version": 1}' },
+          {
+            name:    'tasks/invalid.json',
+            content: '{"description": "Invalid Metadata", "version": "definitely the wrong type"}',
+          },
+          {
+            name:    'tasks/valid.json',
+            content: '{"description": "wow. so. valid.", "version": 1}',
+          },
         ]
       end
 

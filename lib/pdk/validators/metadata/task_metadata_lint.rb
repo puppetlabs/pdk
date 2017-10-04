@@ -76,11 +76,11 @@ module PDK
         targets.each do |target|
           unless File.readable?(target)
             report.add_event(
-              file: target,
-              source: name,
-              state: :failure,
+              file:     target,
+              source:   name,
+              state:    :failure,
               severity: 'error',
-              message: _('Could not be read.'),
+              message:  _('Could not be read.'),
             )
             return_val = 1
             next
