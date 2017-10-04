@@ -150,6 +150,8 @@ module PDK
 
       def self.prepare_module_directory(target_dir)
         [
+          File.join(target_dir, 'examples'),
+          File.join(target_dir, 'files'),
           File.join(target_dir, 'manifests'),
           File.join(target_dir, 'templates'),
         ].each do |dir|
