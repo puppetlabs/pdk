@@ -8,6 +8,8 @@ require 'json-schema'
 module PDK
   module Validate
     class TaskMetadataLint < BaseValidator
+      FORGE_SCHEMA_URL = 'https://forgeapi.puppet.com/schemas/task.json'.freeze
+
       def self.name
         'task-metadata-lint'
       end
@@ -43,23 +45,27 @@ module PDK
         end
       end
 
+      def self.vendored_task_schema_path
+        @vendored_task_schema_path ||= File.join(PDK::Util.package_cachedir, 'task.json')
+      end
+
       def self.schema_file
-        schema = ''
-        if PDK::Util.package_install? && File.exist?(File.join(PDK::Util.package_cachedir, 'task.json'))
-          schema = File.read(File.join(PDK::Util.package_cachedir, 'task.json'))
-        else
-          PDK.logger.debug(_('Task Metadata Schema was not found in the cache. Now downloading from the forge.'))
-          begin
-            schema = open('https://forgeapi.puppet.com/schemas/task.json').read
-          rescue
-            raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. Please check internet connectivity and retry this action.')
-          end
-        end
-        begin
-          JSON.parse(schema)
-        rescue JSON::ParseError
-          raise PDK::CLI::FatalError, _('Failed to parse Task Metadata Schema file.')
-        end
+        schema = if PDK::Util.package_install? && File.exist?(vendored_task_schema_path)
+                   File.read(vendored_task_schema_path)
+                 else
+                   download_schema_from_forge
+                 end
+
+        JSON.parse(schema)
+      rescue JSON::ParserError
+        raise PDK::CLI::FatalError, _('Failed to parse Task Metadata Schema file.')
+      end
+
+      def self.download_schema_from_forge
+        PDK.logger.debug(_('Task Metadata Schema was not found in the cache. Now downloading from the forge.'))
+        open(FORGE_SCHEMA_URL).read
+      rescue
+        raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. Please check internet connectivity and retry this action.')
       end
 
       def self.invoke(report, options = {})
