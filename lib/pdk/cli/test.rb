@@ -2,7 +2,7 @@
 module PDK::CLI
   @test_cmd = @base_cmd.define_command do
     name 'test'
-    usage _('test [type] [options]')
+    usage _('test [subcommand] [options]')
     summary _('Run tests.')
     default_subcommand 'help'
   end
