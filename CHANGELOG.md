@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 
 
+## [v1.2.0](https://github.com/puppetlabs/pdk/tree/v1.2.0) (2017-10-05)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.1.0...v1.2.0)
+
+**Implemented enhancements:**
+
+- \(PDK-479\) new module: create examples/, and files/ directory [\#308](https://github.com/puppetlabs/pdk/pull/308) ([DavidS](https://github.com/DavidS))
+- \(PDK-470\) Validation of task metadata. [\#301](https://github.com/puppetlabs/pdk/pull/301) ([bmjen](https://github.com/bmjen))
+- \(PDK-468\) `new task` command [\#299](https://github.com/puppetlabs/pdk/pull/299) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- \(PDK-408\) Explain PowerShell escaping for -- on `bundle` [\#309](https://github.com/puppetlabs/pdk/pull/309) ([DavidS](https://github.com/DavidS))
+- \(PDK-482\) Update help messages to be less ambiguous [\#307](https://github.com/puppetlabs/pdk/pull/307) ([DavidS](https://github.com/DavidS))
+- \(PDK-555\) Handle windows style \(backslash separated\) paths when validating [\#306](https://github.com/puppetlabs/pdk/pull/306) ([rodjek](https://github.com/rodjek))
+- \(PDK-543\) Fix spdx.org URLs in messages [\#303](https://github.com/puppetlabs/pdk/pull/303) ([farkasmate](https://github.com/farkasmate))
+- \(PDK-502\) make the private git available to module commands [\#298](https://github.com/puppetlabs/pdk/pull/298) ([rodjek](https://github.com/rodjek))
+
 ## [v1.1.0](https://github.com/puppetlabs/pdk/tree/v1.1.0) (2017-09-13)
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.0.1...v1.1.0)
