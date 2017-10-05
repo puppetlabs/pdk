@@ -17,14 +17,6 @@ shared_examples_for 'it sets the common rubocop options' do
 end
 
 describe PDK::Validate::Rubocop do
-  let(:module_root) { File.join('path', 'to', 'test', 'module') }
-  let(:glob_pattern) { File.join(module_root, described_class.pattern) }
-
-  before(:each) do
-    allow(PDK::Util).to receive(:module_root).and_return(module_root)
-    allow(File).to receive(:directory?).with(module_root).and_return(true)
-  end
-
   it 'defines the base validator attributes' do
     expect(described_class).to have_attributes(
       name:         'rubocop',
@@ -35,6 +27,17 @@ describe PDK::Validate::Rubocop do
 
   describe '.parse_targets' do
     subject(:target_files) { described_class.parse_targets(targets: targets) }
+
+    let(:module_root) { File.join('path', 'to', 'test', 'module') }
+    let(:pattern) { '**/**.rb' }
+    let(:glob_pattern) { File.join(module_root, described_class.pattern) }
+
+    before(:each) do
+      allow(described_class).to receive(:pattern).and_return(pattern)
+      allow(PDK::Util).to receive(:module_root).and_return(module_root)
+      allow(File).to receive(:directory?).with(module_root).and_return(true)
+      allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
+    end
 
     context 'when given no targets' do
       let(:targets) { [] }
@@ -59,19 +62,29 @@ describe PDK::Validate::Rubocop do
 
       let(:globbed_target2) do
         [
-          File.join('target2', 'target.rb'),
+          File.join(module_root, 'target2', 'target.rb'),
         ]
       end
 
       before(:each) do
-        allow(Dir).to receive(:glob).with(File.join('target2', described_class.pattern)).and_return(globbed_target2)
+        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_target2)
         allow(File).to receive(:directory?).with('target1.rb').and_return(false)
         allow(File).to receive(:directory?).with('target2/').and_return(true)
         allow(File).to receive(:file?).with('target1.rb').and_return(true)
+
+        targets.map do |t|
+          allow(File).to receive(:expand_path).with(t).and_return(File.join(module_root, t))
+        end
+
+        Array[pattern].flatten.map do |p|
+          allow(File).to receive(:expand_path).with(p).and_return(File.join(module_root, p))
+        end
       end
 
       it 'returns the targets' do
-        expect(target_files.first).to eq(['target1.rb'].concat(globbed_target2))
+        expect(target_files[0]).to eq(globbed_target2)
+        expect(target_files[1]).to eq(['target1.rb'])
+        expect(target_files[2]).to be_empty
       end
     end
   end
@@ -107,7 +120,7 @@ describe PDK::Validate::Rubocop do
     let(:rubocop_report) { RuboCop::Formatter::JSONFormatter.new(nil) }
     let(:rubocop_json) { rubocop_report.output_hash.to_json }
     let(:report) { PDK::Report.new }
-    let(:test_file) { File.join(module_root, 'lib', 'test.rb') }
+    let(:test_file) { File.join('lib', 'test.rb') }
 
     def mock_offense(severity, message, cop_name, corrected, line, column)
       OpenStruct.new(
@@ -209,8 +222,8 @@ describe PDK::Validate::Rubocop do
     context 'when the rubocop output has information for multiple files' do
       let(:test_files) do
         {
-          File.join(module_root, 'spec', 'spec_helper.rb') => [],
-          File.join(module_root, 'lib', 'fail.rb')         => [
+          File.join('spec', 'spec_helper.rb') => [],
+          File.join('lib', 'fail.rb')         => [
             mock_offense('error', 'correctable error', 'Test/Cop', true, 1, 2),
             mock_offense('warning', 'uncorrectable thing', 'Test/Cop2', false, 3, 4),
           ],
@@ -226,7 +239,7 @@ describe PDK::Validate::Rubocop do
 
       it 'adds a passing event to the report for the file with no offenses' do
         expect(report).to receive(:add_event).with(
-          file:     File.join(module_root, 'spec', 'spec_helper.rb'),
+          file:     File.join('spec', 'spec_helper.rb'),
           source:   described_class.name,
           state:    :passed,
           severity: :ok,
@@ -237,7 +250,7 @@ describe PDK::Validate::Rubocop do
 
       it 'adds a corrected failure event to the report for the file with offenses' do
         expect(report).to receive(:add_event).with(
-          file:     File.join(module_root, 'lib', 'fail.rb'),
+          file:     File.join('lib', 'fail.rb'),
           source:   described_class.name,
           state:    :failure,
           severity: 'corrected',
@@ -252,7 +265,7 @@ describe PDK::Validate::Rubocop do
 
       it 'adds a failure event to the report for the file with offenses' do
         expect(report).to receive(:add_event).with(
-          file:     File.join(module_root, 'lib', 'fail.rb'),
+          file:     File.join('lib', 'fail.rb'),
           source:   described_class.name,
           state:    :failure,
           severity: 'warning',

@@ -11,12 +11,12 @@ module PDK
       end
 
       def self.pattern
-        'metadata.json'
+        ['metadata.json', 'tasks/*.json']
       end
 
-      def self.spinner_text(targets = [])
+      def self.spinner_text(_targets = [])
         _('Checking metadata syntax (%{targets}).') % {
-          targets: PDK::Util.targets_relative_to_pwd(targets).join(' '),
+          targets: pattern.join(' '),
         }
       end
 

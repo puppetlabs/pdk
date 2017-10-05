@@ -11,6 +11,7 @@ module PDK
     class PuppetObject
       attr_reader :module_dir
       attr_reader :object_name
+      attr_reader :options
 
       # Initialises the PDK::Generate::PuppetObject object.
       #
@@ -30,6 +31,7 @@ module PDK
       def initialize(module_dir, object_name, options = {})
         @module_dir = module_dir
         @options = options
+        @object_name = object_name
 
         if [:class, :defined_type].include?(object_type) # rubocop:disable Style/GuardClause
           object_name_parts = object_name.split('::')
@@ -83,10 +85,13 @@ module PDK
       #
       # @api public
       def run
-        [target_object_path, target_spec_path].each do |target_file|
-          if File.exist?(target_file)
-            raise PDK::CLI::ExitWithError, _("Unable to generate %{object_type}; '%{file}' already exists.") % { file: target_file, object_type: object_type }
-          end
+        [target_object_path, target_spec_path].compact.each do |target_file|
+          next unless File.exist?(target_file)
+
+          raise PDK::CLI::ExitWithError, _("Unable to generate %{object_type}; '%{file}' already exists.") % {
+            file:        target_file,
+            object_type: object_type,
+          }
         end
 
         with_templates do |template_path, config_hash|

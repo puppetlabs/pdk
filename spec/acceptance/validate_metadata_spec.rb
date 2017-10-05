@@ -1,7 +1,10 @@
 require 'spec_helper_acceptance'
 
 describe 'Running metadata validation' do
-  let(:spinner_text) { %r{checking metadata}i }
+  let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
+  let(:metadata_syntax_spinner) { %r{checking metadata syntax}i }
+  let(:module_style_spinner) { %r{checking module metadata style}i }
+  let(:task_style_spinner) { %r{checking task metadata style}i }
 
   context 'with a metadata violation' do
     include_context 'in a new module', 'metadata_violation_module'
@@ -19,12 +22,12 @@ describe 'Running metadata validation' do
     describe command('pdk validate metadata') do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stdout) { is_expected.to match(%r{^warning:.*metadata\.json:.+open ended dependency}) }
-      its(:stderr) { is_expected.to match(spinner_text) }
+      its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
     end
 
     describe command('pdk validate metadata --format junit') do
       its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stderr) { is_expected.to match(spinner_text) }
+      its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
       it_behaves_like :it_generates_valid_junit_xml
 
       its(:stdout) do
@@ -59,7 +62,7 @@ describe 'Running metadata validation' do
 
     describe command('pdk validate metadata --format junit') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(spinner_text) }
+      its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
 
       its(:stdout) do
         is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
@@ -76,7 +79,7 @@ describe 'Running metadata validation' do
 
     describe command('pdk validate metadata --format junit broken.json') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.not_to match(spinner_text) }
+      its(:stderr) { is_expected.not_to match(metadata_syntax_spinner) }
 
       its(:stdout) do
         is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]').with_attributes(
@@ -104,7 +107,7 @@ describe 'Running metadata validation' do
 
       describe command('pdk validate metadata --format junit broken.json') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.not_to match(spinner_text) }
+        its(:stderr) { is_expected.not_to match(metadata_syntax_spinner) }
 
         its(:stdout) do
           is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
@@ -118,6 +121,81 @@ describe 'Running metadata validation' do
             'name' => 'broken.json',
           )
         end
+      end
+    end
+  end
+
+  context 'with valid task' do
+    include_context 'in a new module', 'foo'
+
+    before(:all) do
+      File.open(File.join('tasks', 'valid.json'), 'w') do |f|
+        f.puts <<-EOS
+{
+  "puppet_task_version": 1,
+  "supports_noop": true,
+  "description": "A short description of this task"
+}
+        EOS
+      end
+    end
+
+    describe command('pdk validate metadata') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
+      its(:stderr) { is_expected.to match(module_style_spinner) }
+      its(:stderr) { is_expected.to match(task_style_spinner) }
+    end
+
+    describe command('pdk validate metadata --format junit') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
+      its(:stderr) { is_expected.to match(module_style_spinner) }
+      its(:stderr) { is_expected.to match(task_style_spinner) }
+      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+
+      its(:stdout) { is_expected.to have_junit_testsuite('task-metadata-lint') }
+    end
+  end
+
+  context 'with invalid task' do
+    include_context 'in a new module', 'foo'
+
+    before(:all) do
+      File.open(File.join('tasks', 'invalid.json'), 'w') do |f|
+        f.puts <<-EOS
+{
+  "puppet_task_version": 1,
+  "supports_noop": "true",
+  "description": "A short description of this task"
+}
+        EOS
+      end
+    end
+
+    describe command('pdk validate metadata') do
+      its(:exit_status) { is_expected.not_to eq(0) }
+      its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
+      its(:stderr) { is_expected.to match(module_style_spinner) }
+      its(:stderr) { is_expected.to match(task_style_spinner) }
+      its(:stdout) { is_expected.to match(%r{The property '#/supports_noop' of type string did not match the following type: boolean}i) }
+    end
+
+    describe command('pdk validate metadata --format junit') do
+      its(:exit_status) { is_expected.not_to eq(0) }
+      its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
+      its(:stderr) { is_expected.to match(module_style_spinner) }
+      its(:stderr) { is_expected.to match(task_style_spinner) }
+      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+
+      its(:stdout) do
+        is_expected.to have_junit_testcase.in_testsuite('task-metadata-lint').with_attributes(
+          'classname' => 'task-metadata-lint',
+          'name'      => a_string_matching(%r{invalid.json}),
+        ).that_failed(
+          'type'    => a_string_matching(%r{error}i),
+          'message' => a_string_matching(%r{The property '#/supports_noop' of type string did not match the following type: boolean}i),
+        )
       end
     end
   end
