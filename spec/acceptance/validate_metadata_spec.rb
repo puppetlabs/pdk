@@ -133,7 +133,7 @@ describe 'Running metadata validation' do
         f.puts <<-EOS
 {
   "puppet_task_version": 1,
-  "supports_noop": true,
+  "supports_noop": false,
   "description": "A short description of this task"
 }
         EOS
@@ -166,7 +166,7 @@ describe 'Running metadata validation' do
         f.puts <<-EOS
 {
   "puppet_task_version": 1,
-  "supports_noop": "true",
+  "supports_noop": "false",
   "description": "A short description of this task"
 }
         EOS

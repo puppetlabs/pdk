@@ -97,7 +97,7 @@ describe PDK::Generate::Task do
       it 'writes the metadata with a sample description' do
         expect(JSON.parse(mock_file.read)).to eq(
           'puppet_task_version' => 1,
-          'supports_noop'       => true,
+          'supports_noop'       => false,
           'description'         => 'A short description of this task',
           'parameters'          => {},
         )
@@ -110,7 +110,7 @@ describe PDK::Generate::Task do
       it 'writes the metadata with the provided description' do
         expect(JSON.parse(mock_file.read)).to eq(
           'puppet_task_version' => 1,
-          'supports_noop'       => true,
+          'supports_noop'       => false,
           'description'         => 'This is a test task',
           'parameters'          => {},
         )
