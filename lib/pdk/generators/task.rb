@@ -14,7 +14,7 @@ module PDK
         {
           name:                object_name,
           puppet_task_version: 1,
-          supports_noop:       true,
+          supports_noop:       false,
           description:         options.fetch(:description, 'A short description of this task'),
           parameters:          {},
         }
