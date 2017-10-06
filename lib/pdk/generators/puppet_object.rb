@@ -120,8 +120,29 @@ module PDK
       #
       # @api private
       def render_file(dest_path, template_path, data)
+        write_file(dest_path) do
+          PDK::TemplateFile.new(template_path, data).render
+        end
+      end
+
+      # Write the result of the block to disk.
+      #
+      # @param dest_path [String] The path that the rendered file should be
+      #   written to. Any necessary directories will be automatically created.
+      # @param &block [String] The content to be written
+      #
+      # @raise [PDK::CLI::FatalError] if the parent directories to `dest_path`
+      #   do not exist and could not be created.
+      # @raise [PDK::CLI::FatalError] if the rendered file could not be written
+      #   to `dest_path`.
+      #
+      # @return [void]
+      #
+      # @api private
+      def write_file(dest_path)
         PDK.logger.info(_("Creating '%{file}' from template.") % { file: dest_path })
-        file_content = PDK::TemplateFile.new(template_path, data).render
+
+        file_content = yield
 
         begin
           FileUtils.mkdir_p(File.dirname(dest_path))
