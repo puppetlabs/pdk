@@ -65,11 +65,10 @@ module PDK
       #
       # @api private
       def write_task_metadata
-        task_metadata = template_data.dup
-        task_metadata.delete(:name)
-
-        File.open(File.join(module_dir, 'tasks', "#{task_name}.json"), 'w') do |f|
-          f.write(JSON.pretty_generate(task_metadata))
+        write_file(File.join(module_dir, 'tasks', "#{task_name}.json")) do
+          task_metadata = template_data.dup
+          task_metadata.delete(:name)
+          JSON.pretty_generate(task_metadata)
         end
       end
 
