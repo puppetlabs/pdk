@@ -5,6 +5,7 @@
 * [Experimental features](#experimental-features)
 * [Module compatibility](#module-compatibility)
 * [Contributing](#contributing)
+* [Contact Information](#contact-information)
 
 The Puppet Development Kit (PDK) includes key Puppet code development and testing tools for Linux, Windows, and OS X workstations, so you can install one package with the tools you need to create and validate new modules.
 
@@ -144,3 +145,7 @@ For example: `pdk bundle exec "bundle install --binstubs"`
 ## Contributing
 
 PDK encourages community contributions. See the [CONTRIBUTING.md](CONTRIBUTING.md) file for development notes.
+
+## Contact Information
+
+To contact us with questions: [pdk-maintainers@puppet.com](mailto:pdk-maintainers@puppet.com)
