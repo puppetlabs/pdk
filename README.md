@@ -27,11 +27,11 @@ rspec-puppet-facts | Adds support for running rspec-puppet tests against the fac
 
 Download and install the newest package matching your platform from the [download](https://puppet.com/download-puppet-development-kit) page. If you are using Windows, remember to close any open PowerShell windows.
 
-For complete installation information, see the [PDK documentation](https://docs.puppet.com/pdk/latest/pdk_install.html).
+For complete installation information, see the [PDK documentation](https://puppet.com/docs/pdk/latest/pdk_install.html).
 
 ## Basic usage
 
-PDK can generate modules and classes, validate module metadata, style, and syntax, and run unit tests. This README contains very basic usage information---for complete usage information, see the [PDK documentation](https://docs.puppet.com/pdk/).
+PDK can generate modules and classes, validate module metadata, style, and syntax, and run unit tests. This README contains very basic usage information---for complete usage information, see the [PDK documentation](https://puppet.com/docs/pdk/latest/pdk_install.html).
 
 ### Generate a module
 
