@@ -23,7 +23,7 @@ module PDK
       end
 
       def self.parse_options(options, targets)
-        cmd_options = ['--json']
+        cmd_options = ['--json', '--relative']
 
         cmd_options << '--fix' if options[:auto_correct]
 

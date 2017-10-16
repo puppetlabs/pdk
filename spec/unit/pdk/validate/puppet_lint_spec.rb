@@ -5,6 +5,10 @@ shared_examples_for 'it sets the common puppet-lint options' do
     expect(command_args.first).to eq('--json')
   end
 
+  it 'sets the autoload layout plugin to ignore the top-most directory' do
+    expect(command_args[1]).to eq('--relative')
+  end
+
   it 'appends the targets to the command arguments' do
     expect(command_args.last(targets.count)).to eq(targets)
   end
