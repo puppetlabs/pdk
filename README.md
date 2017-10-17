@@ -130,13 +130,8 @@ rake build                 # Build puppet module package
 
 #### Known issues
 
-* `pdk bundle` command on Windows doesn't allow usage suggested by pdk help [PDK-408](https://tickets.puppetlabs.com/browse/PDK-408)
 
-On Windows, the `pdk bundle` command doesn't allow `--` as a separator between pdk option flags and bundler option flags as suggested by `pdk help bundle`.
-
-The issue is that PDK is consuming command line options meant for the subcommand. To work around this, run `pdk bundle exec` with a string specifying the command you want to run with its command line options.
-
-For example: `pdk bundle exec "bundle install --binstubs"`
+Note that for PowerShell the `--` must be escaped using a backtick ( <code>`-- </code> ) or the shell parses it and strips it out of the command. See [PDK-408](https://tickets.puppet.com/browse/PDK-408) for details.
 
 ## Module Compatibility
 
