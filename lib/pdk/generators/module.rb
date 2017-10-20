@@ -170,7 +170,7 @@ module PDK
       def self.module_interview(metadata, opts = {})
         questions = [
           {
-            name:             'name',
+            name:             'forge_username',
             question:         _('If you have a Puppet Forge username, add it here.'),
             help:             _('We can use this to upload your module to the Forge when it\'s complete.'),
             required:         true,
@@ -309,8 +309,8 @@ module PDK
           exit 0
         end
 
-        forge_username = answers['name']
-        answers['name'] = "#{answers['name']}-#{opts[:name]}"
+        forge_username = answers['forge_username']
+        answers['name'] = "#{answers['forge_username']}-#{opts[:name]}"
         answers['license'] = opts[:license] if opts.key?(:license)
         answers['operatingsystem_support'].flatten!
         metadata.update!(answers)
