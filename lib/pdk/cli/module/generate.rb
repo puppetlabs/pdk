@@ -27,7 +27,7 @@ module PDK::CLI
       answer = redirect.run
 
       if answer
-        opts[:name] = module_name
+        opts[:module_name] = module_name
         opts[:target_dir] = module_name
 
         PDK.logger.info(_('Creating new module: %{modname}') % { modname: module_name })

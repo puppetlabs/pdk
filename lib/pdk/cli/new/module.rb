@@ -21,7 +21,7 @@ module PDK::CLI
         exit 1
       end
 
-      opts[:name] = module_name
+      opts[:module_name] = module_name
       opts[:target_dir] = target_dir.nil? ? module_name : target_dir
 
       PDK.logger.info(_('Creating new module: %{modname}') % { modname: module_name })
