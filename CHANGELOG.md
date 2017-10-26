@@ -3,7 +3,15 @@
 All notable changes to this project will be documented in this file.
 
 
-## [v1.2.0](https://github.com/puppetlabs/pdk/tree/v1.2.0) (2017-10-05)
+## [v1.2.1](https://github.com/puppetlabs/pdk/tree/v1.2.1) (2017-10-26)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.2.0...v1.2.1)
+
+**Fixed bugs:**
+
+- Add --relative cli argument for autoload layout testing in puppet-lint [\#325](https://github.com/puppetlabs/pdk/pull/325) ([spacepants](https://github.com/spacepants))
+
+## [v1.2.0](https://github.com/puppetlabs/pdk/tree/v1.2.0) (2017-10-06)
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.1.0...v1.2.0)
 
