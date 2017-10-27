@@ -8,6 +8,7 @@ require 'pdk/logger'
 require 'pdk/module/metadata'
 require 'pdk/module/templatedir'
 require 'pdk/cli/exec'
+require 'pdk/cli/util'
 require 'pdk/cli/util/interview'
 require 'pdk/cli/util/option_validator'
 require 'pdk/util'
@@ -322,14 +323,11 @@ module PDK
         puts '-' * 40
         puts
 
-        begin
-          continue = prompt.yes?(_('About to generate this module; continue?')) do |q|
-            q.validate(proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }, _('Answer "Y" to continue or "n" to cancel.'))
-          end
-        rescue TTY::Prompt::Reader::InputInterrupt
-          PDK.logger.info _('Interview cancelled; not generating the module.')
-          exit 0
-        end
+        continue = PDK::CLI::Util.prompt_for_yes(
+          _('About to generate this module, continue?'),
+          prompt:         prompt,
+          cancel_message: _('Interview cancelled; not generating the module.'),
+        )
 
         unless continue
           PDK.logger.info _('Module not generated.')

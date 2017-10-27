@@ -21,6 +21,23 @@ module PDK
         {}
       end
       module_function :spinner_opts_for_platform
+
+      def prompt_for_yes(question_text, opts = {})
+        prompt = opts[:prompt] || TTY::Prompt.new(help_color: :cyan)
+        validator = proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }
+        response = nil
+
+        begin
+          response = prompt.yes?(question_text) do |q|
+            q.validate(validator, _('Answer "Y" to continue or "n" to cancel.'))
+          end
+        rescue TTY::Prompt::Reader::InputInterrupt
+          PDK.logger.info opts[:cancel_message] if opts[:cancel_message]
+        end
+
+        response
+      end
+      module_function :prompt_for_yes
     end
   end
 end
