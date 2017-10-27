@@ -83,6 +83,7 @@ module PDK::CLI
   end
 
   require 'pdk/cli/bundle'
+  require 'pdk/cli/convert'
   require 'pdk/cli/new'
   require 'pdk/cli/test'
   require 'pdk/cli/validate'
