@@ -30,6 +30,30 @@ Download and install the newest package matching your platform from the [downloa
 
 For complete installation information, see the [PDK documentation](https://puppet.com/docs/pdk/latest/pdk_install.html).
 
+### Dockerized pdk
+
+In addition to the native platform installation options, we've packaged pdk as a docker image, allowing you a puppet development environment that is completely dockerized. This provides a few benefits for development and testing:
+
+- no need to worry about pre-requisites for installing pdk (ruby, git, etc...)
+- ensure a standardized development environment for all contributors of your module
+- you can use the pdk image as a base for your CI/CD tools, ensuring tests will work the same on your development machine as they do on your CI platforms
+
+To utilize this installation method, make sure you have
+[docker](https://www.docker.com/community-edition#/download) installed,
+and `docker pull puppet/pdk` to download. To simulate having
+pdk natively installed, add the following alias to your
+shell's config file (`.bashrc`, `.zshrc`, etc..)
+
+```
+echo "alias pdk=\"docker run -it --rm -v \$(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock puppet/pdk\"" >> ~/.bashrc && source ~/.bashrc
+```
+Test your dockerized installation by running:
+
+```
+$ pdk --version
+1.2.1 (heads/master)
+```
+
 ## Basic usage
 
 PDK can generate modules and classes, validate module metadata, style, and syntax, and run unit tests. This README contains very basic usage information---for complete usage information, see the [PDK documentation](https://puppet.com/docs/pdk/latest/pdk_install.html).
@@ -132,6 +156,8 @@ rake build                 # Build puppet module package
 
 
 Note that for PowerShell the `--` must be escaped using a backtick ( <code>`-- </code> ) or the shell parses it and strips it out of the command. See [PDK-408](https://tickets.puppet.com/browse/PDK-408) for details.
+
+The `puppet/pdk` docker image is built from `docker:dind` so that acceptance tests can be run from within the pdk image. Only the `docker` hypervisor is supported when using the docker-based installation of `pdk`.
 
 ## Module Compatibility
 

@@ -28,6 +28,7 @@ group :test do
   gem 'rubocop', '= 0.49.1'
   gem 'rubocop-rspec', '= 1.15.1'
   gem 'simplecov-console'
+  gem 'dockerspec', '~> 0.5.0'
 end
 
 group :acceptance do
