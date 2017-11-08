@@ -29,7 +29,7 @@ describe 'Running `pdk new module`' do
     let(:module_name) { 'test123' }
 
     it 'validates the module name' do
-      expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(name: module_name))
+      expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(module_name: module_name))
       expect(logger).to receive(:info).with("Creating new module: #{module_name}")
       PDK::CLI.run(['new', 'module', module_name])
     end
@@ -38,7 +38,7 @@ describe 'Running `pdk new module`' do
       let(:target_dir) { 'target' }
 
       it 'passes the target directory to PDK::Generate::Module.invoke' do
-        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(name: module_name, target_dir: target_dir))
+        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(module_name: module_name, target_dir: target_dir))
         expect(logger).to receive(:info).with("Creating new module: #{module_name}")
         PDK::CLI.run(['new', 'module', module_name, target_dir])
       end

@@ -53,7 +53,7 @@ describe PDK::Generate::Module do
     let(:invoke_opts) do
       {
         :target_dir       => target_dir,
-        :name             => 'foo',
+        :module_name      => 'foo',
         :'skip-interview' => true,
       }
     end
@@ -68,7 +68,7 @@ describe PDK::Generate::Module do
         expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
 
         expect {
-          described_class.invoke(name: 'foo', target_dir: target_dir)
+          described_class.invoke(module_name: 'foo', target_dir: target_dir)
         }.to raise_error(PDK::CLI::ExitWithError, %r{destination directory '.+' already exists}i)
       end
     end
@@ -259,7 +259,7 @@ describe PDK::Generate::Module do
 
     let(:module_name) { 'bar' }
     let(:default_metadata) { {} }
-    let(:options) { { name: module_name } }
+    let(:options) { { module_name: module_name } }
 
     before(:each) do
       prompt = TTY::TestPrompt.new
@@ -397,10 +397,45 @@ describe PDK::Generate::Module do
       end
     end
 
+    context 'when there is no module_name provided' do
+      include_context 'allow summary to be printed to stdout'
+
+      let(:options) { { license: 'MIT' } }
+      let(:responses) do
+        [
+          'mymodule',
+          'myforgename',
+          '2.2.0',
+          'William Hopper',
+          '',
+          'A simple module to do some stuff.',
+          'github.com/whopper/bar',
+          'forge.puppet.com/whopper/bar',
+          'tickets.foo.com/whopper/bar',
+          'yes',
+        ]
+      end
+
+      it 'populates the Metadata object based on user input for both module name and forge name' do
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}))
+
+        expect(interview_metadata).to include(
+          'name'         => 'myforgename-mymodule',
+          'version'      => '2.2.0',
+          'author'       => 'William Hopper',
+          'license'      => 'MIT',
+          'summary'      => 'A simple module to do some stuff.',
+          'source'       => 'github.com/whopper/bar',
+          'project_page' => 'forge.puppet.com/whopper/bar',
+          'issues_url'   => 'tickets.foo.com/whopper/bar',
+        )
+      end
+    end
+
     context 'when the user provides the license as a command line option' do
       include_context 'allow summary to be printed to stdout'
 
-      let(:options) { { name: module_name, license: 'MIT' } }
+      let(:options) { { module_name: module_name, license: 'MIT' } }
       let(:responses) do
         [
           'foo',
@@ -587,10 +622,10 @@ describe PDK::Generate::Module do
       allow(described_class).to receive(:username_from_login).and_return('testlogin')
     end
 
-    let(:options) { { name: 'baz' } }
+    let(:options) { { module_name: 'baz' } }
 
     context 'when provided :skip-interview => true' do
-      let(:options) { { :name => 'baz', :'skip-interview' => true } }
+      let(:options) { { :module_name => 'baz', :'skip-interview' => true } }
 
       it 'does not perform the module interview' do
         expect(described_class).not_to receive(:module_interview)
@@ -647,7 +682,7 @@ describe PDK::Generate::Module do
       end
 
       context 'and the user specifies a license as a command line option' do
-        let(:options) { { name: 'baz', license: 'Apache-2.0' } }
+        let(:options) { { module_name: 'baz', license: 'Apache-2.0' } }
 
         it 'prefers the license specified on the command line over the saved license answer' do
           expect(metadata.data).to include('license' => 'Apache-2.0')

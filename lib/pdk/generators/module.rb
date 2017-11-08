@@ -33,11 +33,11 @@ module PDK
       end
 
       def self.validate_options(opts)
-        unless PDK::CLI::Util::OptionValidator.valid_module_name?(opts[:name])
+        unless PDK::CLI::Util::OptionValidator.valid_module_name?(opts[:module_name])
           error_msg = _(
             "'%{module_name}' is not a valid module name.\n" \
             'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.',
-          ) % { module_name: opts[:name] }
+          ) % { module_name: opts[:module_name] }
           raise PDK::CLI::ExitWithError, error_msg
         end
 
@@ -98,7 +98,7 @@ module PDK
 
         begin
           if FileUtils.mv(temp_target_dir, target_dir)
-            PDK.logger.info(_('Module \'%{name}\' generated at path \'%{path}\', from template \'%{template_url}\'.') % { name: opts[:name], path: target_dir, template_url: template_url })
+            PDK.logger.info(_('Module \'%{name}\' generated at path \'%{path}\', from template \'%{template_url}\'.') % { name: opts[:module_name], path: target_dir, template_url: template_url })
             PDK.logger.info(_('In your module directory, add classes with the \'pdk new class\' command.'))
           end
         rescue Errno::EACCES => e
@@ -128,7 +128,7 @@ module PDK
         username = PDK.answers['forge-username'] || username_from_login
 
         defaults = {
-          'name'         => "#{username}-#{opts[:name]}",
+          'name'         => "#{username}-#{opts[:module_name]}",
           'version'      => '0.1.0',
           'dependencies' => [],
           'requirements' => [
@@ -170,7 +170,16 @@ module PDK
       def self.module_interview(metadata, opts = {})
         questions = [
           {
-            name:             'name',
+            name:             'module_name',
+            question:         _('If you have a name for your module, add it here.'),
+            help:             _('This is the name that will be associated with your module, it should be relevant to the modules content.'),
+            required:         true,
+            validate_pattern: %r{\A[a-z0-9]+\Z}i,
+            validate_message: _('Module names can only contain lowercase letters and numbers'),
+            default:          metadata.data['name'],
+          },
+          {
+            name:             'forge_username',
             question:         _('If you have a Puppet Forge username, add it here.'),
             help:             _('We can use this to upload your module to the Forge when it\'s complete.'),
             required:         true,
@@ -290,6 +299,7 @@ module PDK
 
         interview = PDK::CLI::Util::Interview.new(prompt)
 
+        questions.reject! { |q| q[:name] == 'module_name' } if opts.key?(:module_name)
         questions.reject! { |q| q[:name] == 'license' } if opts.key?(:license)
 
         interview.add_questions(questions)
@@ -309,8 +319,8 @@ module PDK
           exit 0
         end
 
-        forge_username = answers['name']
-        answers['name'] = "#{answers['name']}-#{opts[:name]}"
+        forge_username = answers['forge_username']
+        answers['name'] = "#{answers['forge_username']}-" + (opts[:module_name] || answers['module_name'])
         answers['license'] = opts[:license] if opts.key?(:license)
         answers['operatingsystem_support'].flatten!
         metadata.update!(answers)
