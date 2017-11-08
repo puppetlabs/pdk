@@ -1,8 +1,8 @@
 module PDK::CLI
   @new_module_cmd = @new_cmd.define_command do
     name 'module'
-    usage _('module [options] <module_name> [target_dir]')
-    summary _('Create a new module named <module_name> using given options')
+    usage _('module [options] [module_name] [target_dir]')
+    summary _('Create a new module named [module_name] using given options')
 
     PDK::CLI.template_url_option(self)
     PDK::CLI.skip_interview_option(self)
@@ -16,13 +16,10 @@ module PDK::CLI
       module_name = args[0]
       target_dir = args[1]
 
-      if module_name.nil? || module_name.empty?
-        puts command.help
-        exit 1
+      unless module_name.nil? || module_name.empty?
+        opts[:module_name] = module_name
+        opts[:target_dir] = target_dir.nil? ? module_name : target_dir
       end
-
-      opts[:module_name] = module_name
-      opts[:target_dir] = target_dir.nil? ? module_name : target_dir
 
       PDK.logger.info(_('Creating new module: %{modname}') % { modname: module_name })
       PDK::Generate::Module.invoke(opts)

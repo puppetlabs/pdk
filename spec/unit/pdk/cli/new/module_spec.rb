@@ -4,12 +4,10 @@ describe 'Running `pdk new module`' do
   subject { PDK::CLI.instance_variable_get(:@new_module_cmd) }
 
   context 'when not passed a module name' do
-    it do
-      expect {
-        PDK::CLI.run(%w[new module])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(1)
-      }.and output(a_string_matching(%r{^USAGE\s+pdk new module}m)).to_stdout
+    it 'continues to module interview' do
+      expect(PDK::Generate::Module).to receive(:invoke)
+      expect(logger).to receive(:info).with(%r{Creating new module:})
+      PDK::CLI.run(%w[new module])
     end
   end
 

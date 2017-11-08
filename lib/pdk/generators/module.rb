@@ -43,14 +43,15 @@ module PDK
         end
 
         target_dir = File.expand_path(opts[:target_dir])
-
         raise PDK::CLI::ExitWithError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if File.exist?(target_dir)
       end
 
       def self.invoke(opts = {})
-        validate_options(opts)
+        validate_options(opts) unless opts[:module_name].nil?
 
-        target_dir = File.expand_path(opts[:target_dir])
+        metadata = prepare_metadata(opts)
+
+        target_dir = File.expand_path(opts[:target_dir] || opts[:module_name])
         parent_dir = File.dirname(target_dir)
 
         begin
@@ -62,8 +63,6 @@ module PDK
             parent_dir: parent_dir,
           }
         end
-
-        metadata = prepare_metadata(opts)
 
         temp_target_dir = PDK::Util.make_tmpdir_name('pdk-module-target')
 
@@ -129,13 +128,13 @@ module PDK
         username = PDK.answers['forge-username'] || username_from_login
 
         defaults = {
-          'name'         => "#{username}-#{opts[:module_name]}",
           'version'      => '0.1.0',
           'dependencies' => [],
           'requirements' => [
             { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
           ],
         }
+        defaults['name'] = "#{username}-#{opts[:module_name]}" unless opts[:module_name].nil?
         defaults['author'] = PDK.answers['author'] unless PDK.answers['author'].nil?
         defaults['license'] = PDK.answers['license'] unless PDK.answers['license'].nil?
         defaults['license'] = opts[:license] if opts.key? :license
@@ -177,7 +176,6 @@ module PDK
             required:         true,
             validate_pattern: %r{\A[a-z0-9]+\Z}i,
             validate_message: _('Module names can only contain lowercase letters and numbers'),
-            default:          metadata.data['name'],
           },
           {
             name:             'forge_username',
@@ -321,9 +319,15 @@ module PDK
         end
 
         forge_username = answers['forge_username']
-        answers['name'] = "#{answers['forge_username']}-" + (opts[:module_name] || answers['module_name'])
+        opts[:module_name] ||= answers['module_name']
+
+        answers['name'] = "#{answers['forge_username']}-" + (opts[:module_name])
         answers['license'] = opts[:license] if opts.key?(:license)
         answers['operatingsystem_support'].flatten!
+
+        answers.delete('forge_username')
+        answers.delete('module_name')
+
         metadata.update!(answers)
 
         puts '-' * 40
