@@ -45,7 +45,7 @@ pdk natively installed, add the following alias to your
 shell's config file (`.bashrc`, `.zshrc`, etc..)
 
 ```
-echo "alias pdk=\"docker run -it --rm -v \$(pwd):/usr/src/app puppet/pdk\"" >> ~/.bashrc && source ~/.bashrc
+echo "alias pdk=\"docker run -it --rm -v \$(pwd):/usr/src/app -v /var/run/docker.sock:/var/run/docker.sock puppet/pdk\"" >> ~/.bashrc && source ~/.bashrc
 ```
 Test your dockerized installation by running:
 

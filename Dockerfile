@@ -26,5 +26,4 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 VOLUME /usr/src/app
 
-ENTRYPOINT ["dockerd-entrypoint.sh"]
 CMD ["pdk"]
