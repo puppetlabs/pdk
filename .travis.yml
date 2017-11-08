@@ -1,6 +1,10 @@
 sudo: false
 language: ruby
 bundler_args: "--without development"
+before_install:
+  - gem -v
+  - gem update --system 2.6.14
+  - gem install bundler --version 1.16.0 --force
 script:
   - cat Gemfile.lock
   - bundle list
