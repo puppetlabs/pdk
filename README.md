@@ -157,6 +157,8 @@ rake build                 # Build puppet module package
 
 Note that for PowerShell the `--` must be escaped using a backtick ( <code>`-- </code> ) or the shell parses it and strips it out of the command. See [PDK-408](https://tickets.puppet.com/browse/PDK-408) for details.
 
+The `puppet/pdk` docker image is built from `docker:dind` so that acceptance tests can be run from within the pdk image. Only the `docker` hypervisor is supported when using the docker-based installation of `pdk`.
+
 ## Module Compatibility
 
 **PDK Version Compatibility:** Modules created with PDK version validate against and run on all Puppet and Ruby version combinations currently under maintenance (see https://docs.puppet.com/puppet/latest/about_agent.html and https://puppet.com/misc/puppet-enterprise-lifecycle)
