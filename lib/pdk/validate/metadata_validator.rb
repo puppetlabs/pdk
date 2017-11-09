@@ -1,9 +1,9 @@
 require 'pdk'
 require 'pdk/cli/exec'
-require 'pdk/validators/base_validator'
-require 'pdk/validators/metadata/metadata_json_lint'
-require 'pdk/validators/metadata/metadata_syntax'
-require 'pdk/validators/metadata/task_metadata_lint'
+require 'pdk/validate/base_validator'
+require 'pdk/validate/metadata/metadata_json_lint'
+require 'pdk/validate/metadata/metadata_syntax'
+require 'pdk/validate/metadata/task_metadata_lint'
 
 module PDK
   module Validate

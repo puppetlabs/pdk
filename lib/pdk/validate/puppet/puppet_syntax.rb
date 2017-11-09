@@ -1,6 +1,6 @@
 require 'pdk'
 require 'pdk/cli/exec'
-require 'pdk/validators/base_validator'
+require 'pdk/validate/base_validator'
 
 module PDK
   module Validate

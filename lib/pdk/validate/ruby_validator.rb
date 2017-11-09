@@ -1,24 +1,23 @@
 require 'pdk'
 require 'pdk/cli/exec'
-require 'pdk/validators/base_validator'
-require 'pdk/validators/puppet/puppet_lint'
-require 'pdk/validators/puppet/puppet_syntax'
+require 'pdk/validate/base_validator'
+require 'pdk/validate/ruby/rubocop'
 
 module PDK
   module Validate
-    class PuppetValidator < BaseValidator
+    class RubyValidator < BaseValidator
       def self.name
-        'puppet'
+        'ruby'
       end
 
-      def self.puppet_validators
-        [PuppetSyntax, PuppetLint]
+      def self.ruby_validators
+        [Rubocop]
       end
 
       def self.invoke(report, options = {})
         exit_code = 0
 
-        puppet_validators.each do |validator|
+        ruby_validators.each do |validator|
           exit_code = validator.invoke(report, options)
           break if exit_code != 0
         end
