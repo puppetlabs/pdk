@@ -5,6 +5,7 @@ require 'tty-spinner'
 require 'tty-which'
 
 require 'pdk/util'
+require 'pdk/util/git'
 
 module PDK
   module CLI
@@ -19,37 +20,6 @@ module PDK
         }
 
         raise PDK::CLI::FatalError, message unless TTY::Which.exist?(bin_path)
-      end
-
-      def self.git_bindir
-        @git_dir ||= File.join('private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
-      end
-
-      def self.git_paths
-        @paths ||= begin
-          paths = [File.join(PDK::Util.pdk_package_basedir, git_bindir)]
-
-          if Gem.win_platform?
-            paths << File.join(PDK::Util.pdk_package_basedir, 'private', 'git', 'mingw64', 'bin')
-            paths << File.join(PDK::Util.pdk_package_basedir, 'private', 'git', 'mingw64', 'libexec', 'git-core')
-            paths << File.join(PDK::Util.pdk_package_basedir, 'private', 'git', 'usr', 'bin')
-          end
-
-          paths
-        end
-      end
-
-      def self.git_bin
-        git_bin = Gem.win_platform? ? 'git.exe' : 'git'
-        vendored_bin_path = File.join(git_bindir, git_bin)
-
-        try_vendored_bin(vendored_bin_path, git_bin)
-      end
-
-      def self.git(*args)
-        ensure_bin_present!(git_bin, 'git')
-
-        execute(git_bin, *args)
       end
 
       def self.bundle(*args)
@@ -169,7 +139,7 @@ module PDK
               File.join(@process.environment['GEM_PATH'], 'bin'),
               package_binpath,
               ENV['PATH'],
-              PDK::Util.package_install? ? PDK::CLI::Exec.git_paths : nil,
+              PDK::Util.package_install? ? PDK::Util::Git.git_paths : nil,
             ].compact.flatten.join(File::PATH_SEPARATOR)
 
             mod_root = PDK::Util.module_root

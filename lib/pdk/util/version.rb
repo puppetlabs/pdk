@@ -1,5 +1,6 @@
 require 'pdk/version'
 require 'pdk/cli/exec'
+require 'pdk/util/git'
 
 module PDK
   module Util
@@ -27,7 +28,7 @@ module PDK
 
         return nil unless File.directory?(source_git_dir)
 
-        ref_result = PDK::CLI::Exec.git('--git-dir', source_git_dir, 'describe', '--all', '--long')
+        ref_result = PDK::Util::Git.git('--git-dir', source_git_dir, 'describe', '--all', '--long')
         return ref_result[:stdout].strip if ref_result[:exit_code].zero?
       end
 

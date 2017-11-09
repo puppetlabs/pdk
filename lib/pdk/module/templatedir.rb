@@ -1,6 +1,6 @@
 require 'yaml'
 require 'pdk/util'
-require 'pdk/cli/exec'
+require 'pdk/util/git'
 require 'pdk/cli/errors'
 require 'pdk/template_file'
 
@@ -48,7 +48,7 @@ module PDK
           # use.
           temp_dir = PDK::Util.make_tmpdir_name('pdk-module-template')
 
-          clone_result = PDK::CLI::Exec.git('clone', path_or_url, temp_dir)
+          clone_result = PDK::Util::Git.git('clone', path_or_url, temp_dir)
           unless clone_result[:exit_code].zero?
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
@@ -85,7 +85,7 @@ module PDK
       def metadata
         return {} unless @repo
 
-        ref_result = PDK::CLI::Exec.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long', '--always')
+        ref_result = PDK::Util::Git.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long', '--always')
         if ref_result[:exit_code].zero?
           { 'template-url' => @repo, 'template-ref' => ref_result[:stdout].strip }
         else

@@ -17,7 +17,7 @@ describe PDK::Util::Version do
       allow(result).to receive(:[]).with(:stdout).and_return('git_hash')
       allow(result).to receive(:[]).with(:exit_code).and_return(0)
 
-      allow(PDK::CLI::Exec).to receive(:git).with('--git-dir', %r{.git\Z}, 'describe', '--all', '--long').and_return(result)
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', %r{.git\Z}, 'describe', '--all', '--long').and_return(result)
     end
 
     describe '#git_ref' do
