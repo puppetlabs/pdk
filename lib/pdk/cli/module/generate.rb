@@ -11,7 +11,7 @@ module PDK::CLI
     PDK::CLI.skip_interview_option(self)
 
     run do |opts, args, _cmd|
-      require 'pdk/generators/module'
+      require 'pdk/generate/module'
 
       module_name = args[0]
 

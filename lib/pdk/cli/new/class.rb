@@ -7,7 +7,7 @@ module PDK::CLI
     PDK::CLI.template_url_option(self)
 
     run do |opts, args, _cmd|
-      require 'pdk/generators/puppet_class'
+      require 'pdk/generate/puppet_class'
 
       PDK::CLI::Util.ensure_in_module!
 
