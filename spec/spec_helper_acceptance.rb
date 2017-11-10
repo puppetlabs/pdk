@@ -3,7 +3,7 @@ require 'serverspec'
 require 'tmpdir'
 require 'rspec/xsd'
 require 'open3'
-require 'pdk/generators/module'
+require 'pdk/generate/module'
 
 # automatically load any shared examples or contexts
 Dir['./spec/acceptance/support/**/*.rb'].sort.each { |f| require f }

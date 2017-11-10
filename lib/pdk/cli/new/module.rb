@@ -11,7 +11,7 @@ module PDK::CLI
       "This should be a identifier from https://spdx.org/licenses/. Common values are 'Apache-2.0', 'MIT', or 'proprietary'."), argument: :required
 
     run do |opts, args, _cmd|
-      require 'pdk/generators/module'
+      require 'pdk/generate/module'
 
       module_name = args[0]
       target_dir = args[1]

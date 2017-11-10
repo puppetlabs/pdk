@@ -1,6 +1,6 @@
-require 'pdk/validators/metadata_validator'
-require 'pdk/validators/puppet_validator'
-require 'pdk/validators/ruby_validator'
+require 'pdk/validate/metadata_validator'
+require 'pdk/validate/puppet_validator'
+require 'pdk/validate/ruby_validator'
 
 module PDK
   module Validate
