@@ -12,6 +12,8 @@ group :development do
   gem 'github_changelog_generator', git: 'https://github.com/skywinder/github-changelog-generator.git', ref: '33f89614d47a4bca1a3ae02bdcc37edd0b012e86'
   gem 'pry-byebug', '~> 3.4'
   if RUBY_VERSION < '2.2.2'
+    # byebug >= 9.1.0 requires ruby 2.2.0 or newer
+    gem 'byebug', '~> 9.0.6'
     # required for github_changelog_generator
     gem 'rack', '~> 1.0'
   end
@@ -21,7 +23,7 @@ end
 
 group :test do
   gem 'coveralls'
-  gem 'license_finder'
+  gem 'license_finder', '~> 3.0.4'
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
   gem 'rspec-xsd'

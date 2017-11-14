@@ -203,7 +203,8 @@ describe PDK::Test::Unit do
       let(:rspec_json_output) do
         '{
           "examples": [
-            { "id": "./path/to/test[1:1:1]",
+            { "file_path": "./path/to/test",
+              "id": "./path/to/test[1:1:1]",
               "full_description": "a bunch of useful descriptive words",
               "description": "descriptive words" }
           ]
@@ -213,6 +214,7 @@ describe PDK::Test::Unit do
       it 'returns the id and full_description from the rspec output' do
         expected_result = [
           {
+            file_path: './path/to/test',
             id: './path/to/test[1:1:1]',
             full_description: 'a bunch of useful descriptive words',
           },

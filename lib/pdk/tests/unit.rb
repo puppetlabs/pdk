@@ -199,7 +199,7 @@ module PDK
         else
           examples = []
           rspec_json['examples'].each do |example|
-            examples << { id: example['id'], full_description: example['full_description'] }
+            examples << { file_path: example['file_path'], id: example['id'], full_description: example['full_description'] }
           end
           examples
         end

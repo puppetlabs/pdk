@@ -7,10 +7,11 @@ module PDK::CLI
     usage _('unit [options]')
     summary _('Run unit tests.')
 
-    flag nil, :list, _('list all available unit tests and their descriptions')
-    flag nil, :parallel, _('run unit tests in parallel'), hidden: true
+    flag nil, :list, _('List all available unit test files.')
+    flag nil, :parallel, _('Run unit tests in parallel.'), hidden: true
+    flag :v, :verbose, _('More verbose output. Displays examples in each unit test file.')
 
-    option nil, :tests, _('a comma-separated list of tests to run'), argument: :required, default: '' do |values|
+    option nil, :tests, _('Specify a comma-separated list of unit test files to run.'), argument: :required, default: '' do |values|
       PDK::CLI::Util::OptionValidator.comma_separated_list?(values)
     end
 
@@ -27,11 +28,19 @@ module PDK::CLI
       if opts[:list]
         examples = PDK::Test::Unit.list
         if examples.empty?
-          puts _('No examples found.')
+          puts _('No unit test files with examples were found.')
         else
-          puts _('Examples:')
-          examples.each do |example|
-            puts _("%{id}\t%{description}" % { id: example[:id], description: example[:full_description] })
+          puts _('Unit Test Files:')
+          files = examples.map { |example| example[:file_path] }
+          files.uniq.each do |file|
+            puts _(file)
+
+            next unless opts[:verbose]
+
+            file_examples = examples.select { |example| example[:file_path] == file }
+            file_examples.each do |file_example|
+              puts _("\t%{id}\t%{description}" % { id: file_example[:id], description: file_example[:full_description] })
+            end
           end
         end
       else
