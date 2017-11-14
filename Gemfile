@@ -23,7 +23,7 @@ end
 
 group :test do
   gem 'coveralls'
-  gem 'license_finder'
+  gem 'license_finder', '~> 3.0.4'
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
   gem 'rspec-xsd'
