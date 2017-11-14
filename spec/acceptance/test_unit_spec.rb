@@ -7,7 +7,7 @@ describe 'Running unit tests' do
 
     describe command('pdk test unit --list') do
       its(:exit_status) { is_expected.to eq 0 }
-      its(:stdout) { is_expected.to match(%r{No examples found}) }
+      its(:stdout) { is_expected.to match(%r{No unit test files with examples were found}) }
     end
 
     describe command('pdk test unit') do
@@ -54,9 +54,7 @@ describe 'Running unit tests' do
 
     describe command('pdk test unit --list') do
       its(:exit_status) { is_expected.to eq 0 }
-      its(:stdout) { is_expected.to match(%r{Examples:.*passing_spec.rb\[1:1:1\]}m) }
-      its(:stdout) { is_expected.to match(%r{passing_spec.rb\[1:2:1\]}) }
-      its(:stdout) { is_expected.to match(%r{passing_spec.rb\[1:3:1\]}) }
+      its(:stdout) { is_expected.to match(%r{Test Files:.*passing_spec.rb}m) }
     end
 
     describe command('pdk test unit') do
