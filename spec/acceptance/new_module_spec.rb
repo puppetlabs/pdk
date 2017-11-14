@@ -22,7 +22,7 @@ describe 'Creating a new module' do
       it { is_expected.to be_file }
       its(:content_as_json) do
         is_expected.to include('name' => match(%r{-foo}),
-                               'template-ref' => match(%r{master-}),
+                               'template-ref' => match(%r{convert-}),
                                'operatingsystem_support' => include('operatingsystem' => 'Debian',
                                                                     'operatingsystemrelease' => ['8']))
       end

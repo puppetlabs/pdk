@@ -36,7 +36,7 @@ module PDK
       # @raise [ArgumentError] (see #validate_module_template!)
       #
       # @api public
-      def initialize(path_or_url, module_metadata = {})
+      def initialize(path_or_url, module_metadata = {}, init = false)
         if File.directory?(path_or_url)
           @path = path_or_url
         else
@@ -48,18 +48,21 @@ module PDK
           # use.
           temp_dir = PDK::Util.make_tmpdir_name('pdk-module-template')
 
-          clone_result = PDK::Util::Git.git('clone', path_or_url, temp_dir)
+          clone_result = PDK::Util::Git.git('clone', path_or_url, '--branch', 'convert', temp_dir)
           unless clone_result[:exit_code].zero?
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
             raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'.") % { repo: path_or_url, dest: temp_dir }
           end
-
           @path = PDK::Util.canonical_path(temp_dir)
           @repo = path_or_url
         end
 
+        @init = init
         @moduleroot_dir = File.join(@path, 'moduleroot')
+        @moduleroot_init = File.join(@path, 'moduleroot_init')
+        @dirs = [@moduleroot_dir]
+        @dirs << @moduleroot_init if @init
         @object_dir = File.join(@path, 'object_templates')
         validate_module_template!
 
@@ -107,12 +110,12 @@ module PDK
       #
       # @api public
       def render
-        files_in_template.each do |template_file|
+        PDK::Module::TemplateDir.files_in_template(@dirs).each do |template_file, template_loc|
+          template_file = template_file.to_s
           PDK.logger.debug(_("Rendering '%{template}'...") % { template: template_file })
           dest_path = template_file.sub(%r{\.erb\Z}, '')
-
           begin
-            dest_content = PDK::TemplateFile.new(File.join(@moduleroot_dir, template_file), configs: config_for(dest_path)).render
+            dest_content = PDK::TemplateFile.new(File.join(template_loc, template_file), configs: config_for(dest_path)).render
           rescue => e
             error_msg = _(
               "Failed to render template '%{template}'\n" \
@@ -120,7 +123,6 @@ module PDK
             ) % { template: template_file, exception: e.class, message: e.message }
             raise PDK::CLI::FatalError, error_msg
           end
-
           yield dest_path, dest_content
         end
       end
@@ -165,8 +167,6 @@ module PDK
         config_for(nil)
       end
 
-      private
-
       # Validate the content of the template directory.
       #
       # @raise [ArgumentError] If the specified path is not a directory.
@@ -181,27 +181,44 @@ module PDK
           raise ArgumentError, _("The specified template '%{path}' is not a directory.") % { path: @path }
         end
 
-        unless File.directory?(@moduleroot_dir) # rubocop:disable Style/GuardClause
+        unless File.directory?(@moduleroot_dir)
           raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot/' directory.") % { path: @path }
+        end
+
+        unless File.directory?(@moduleroot_init) # rubocop:disable Style/GuardClause
+          # rubocop:disable Metrics/LineLength
+          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot_init/' directory, which indicates you are using an older style of template. Before continuing please use the --template_url flag when running the pdk new or convert commands to pass a new style template.") % { path: @path } unless @init
+
+          PDK.logger.warn(_("The template at '%{path}' doesn't seem to have a 'moduleroot_init' directory, this could indicate that you are using an older style of template.")) % { path: @path } # rubocop:disable Lint/Void
+          PDK.logger.warn(_('To pass in a new template you can use the --template_url flag when running the pdk new or convert commands.'))
+          # rubocop:enable Metrics/LineLength
         end
       end
 
       # Get a list of template files in the template directory.
       #
-      # @return [Array[String]] An array of file names, relative to the
-      # `moduleroot` directory.
+      # @return [Hash{String=>String}] A hash of key file names and
+      # value locations.
       #
-      # @api private
-      def files_in_template
-        @files ||= begin
-          template_paths = Dir.glob(File.join(@moduleroot_dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
+      # @api public
+      def self.files_in_template(dirs)
+        temp_paths = []
+        dirlocs = []
+        dirs.each do |dir|
+          raise ArgumentError, _("The directory '%{dir}' doesn't exist") unless Dir.exist?(dir)
+          temp_paths += Dir.glob(File.join(dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
             File.file?(template_path) && !File.symlink?(template_path)
+            dirlocs << dir
           end
-
-          template_paths.map do |template_path|
-            template_path.sub(%r{\A#{Regexp.escape(@moduleroot_dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
+          temp_paths.map do |template_path|
+            template_path.sub!(%r{\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
           end
         end
+        template_paths = Hash[temp_paths.zip dirlocs]
+        template_paths.delete('.')
+        template_paths.delete('spec')
+        template_paths.delete('spec/.')
+        template_paths
       end
 
       # Generate a hash of data to be used when rendering the specified

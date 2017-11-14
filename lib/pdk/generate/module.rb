@@ -70,7 +70,7 @@ module PDK
 
         template_url = opts.fetch(:'template-url', default_template_url)
 
-        PDK::Module::TemplateDir.new(template_url, metadata.data) do |templates|
+        PDK::Module::TemplateDir.new(template_url, metadata.data, true) do |templates|
           templates.render do |file_path, file_content|
             file = Pathname.new(temp_target_dir) + file_path
             file.dirname.mkpath
