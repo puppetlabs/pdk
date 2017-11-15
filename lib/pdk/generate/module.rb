@@ -122,7 +122,7 @@ module PDK
         login_clean
       end
 
-      def self.prepare_metadata(opts)
+      def self.prepare_metadata(opts = {})
         username = PDK.answers['forge-username'] || username_from_login
 
         defaults = {
