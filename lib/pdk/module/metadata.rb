@@ -71,6 +71,12 @@ module PDK
         JSON.pretty_generate(@data.dup.delete_if { |_key, value| value.nil? })
       end
 
+      def write!(path)
+        File.open(path, 'w') do |file|
+          file.puts to_json
+        end
+      end
+
       private
 
       # Do basic validation and parsing of the name parameter.
