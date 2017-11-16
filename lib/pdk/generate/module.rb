@@ -81,9 +81,7 @@ module PDK
           # metadata (for a future update command).
           metadata.update!(templates.metadata)
 
-          File.open(File.join(temp_target_dir, 'metadata.json'), 'w') do |metadata_file|
-            metadata_file.puts metadata.to_json
-          end
+          metadata.write!(File.join(temp_target_dir, 'metadata.json'))
         end
 
         if template_url == puppetlabs_template_url
@@ -124,7 +122,7 @@ module PDK
         login_clean
       end
 
-      def self.prepare_metadata(opts)
+      def self.prepare_metadata(opts = {})
         username = PDK.answers['forge-username'] || username_from_login
 
         defaults = {
