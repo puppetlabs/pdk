@@ -112,6 +112,22 @@ describe '`pdk test unit`' do
             }
           end
         end
+
+        context 'with specific tests passed in' do
+          let(:tests) { '/path/to/file1,/path/to/file2' }
+
+          before(:each) do
+            expect(PDK::CLI::Util::OptionValidator).to receive(:comma_separated_list?).with(tests).and_return(true)
+          end
+
+          it do
+            expect {
+              test_unit_cmd.run_this(["--tests=#{tests}"])
+            }.to raise_error(SystemExit) { |e|
+              expect(e.status).to eq 0
+            }
+          end
+        end
       end
 
       context 'when tests fail' do

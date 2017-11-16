@@ -153,6 +153,14 @@ describe PDK::Test::Unit do
         expect(cmd).to eq('spec')
       end
     end
+
+    context 'when run with tests option' do
+      it 'passes file paths to rake' do
+        cmd = described_class.cmd('/path/to/test1,/path/to/test2')
+
+        expect(cmd).to eq('spec[/path/to/test1,/path/to/test2]')
+      end
+    end
   end
 
   describe '.parse_output' do
