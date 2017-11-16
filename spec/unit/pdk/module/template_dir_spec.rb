@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'yaml'
 
 describe PDK::Module::TemplateDir do
   subject(:template_dir) do
@@ -18,7 +19,6 @@ describe PDK::Module::TemplateDir do
 
   let(:config_defaults) do
     <<-EOS
-      ---
       foo:
         attr:
           - val: 1
@@ -171,6 +171,49 @@ describe PDK::Module::TemplateDir do
       end
       it 'renders the template file and returns relevant values' do
         expect(described_class.render(template_files)).to eq('filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/where/')
+      end
+    end
+  end
+
+  describe '.config_for(dest_path)' do
+    before(:each) do
+      allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-module-template').and_return('/tmp/path')
+      allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, '/tmp/path').and_return(exit_code: 0)
+      allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
+      allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
+      allow(File).to receive(:readable?).with('/path/to/templates/config_defaults.yml').and_return true
+      allow(YAML).to receive(:safe_load).with(config_defaults, [], [], true).and_return config_hash
+    end
+    context 'when the module has a .sync.yml file' do
+      let(:yaml_text) do
+        <<-EOF
+       appveyor.yml:
+         delete: true
+       .travis.yml:
+         extras:
+         - rvm: 2.1.9
+       foo:
+         attr:
+         - val: 3
+       EOF
+      end
+      let(:yaml_hash) do
+        YAML.load(yaml_text) # rubocop:disable Security/YAMLLoad
+      end
+      let(:config_hash) do
+        YAML.load(config_defaults) # rubocop:disable Security/YAMLLoad
+      end
+
+      before(:each) do
+        allow(File).to receive(:file?).with('/path/to/templates/.sync.yml').and_return true
+        allow(File).to receive(:readable?).with('/path/to/templates/.sync.yml').and_return true
+        allow(File).to receive(:read).with('/path/to/templates/.sync.yml').and_return yaml_text
+        allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_return yaml_hash
+      end
+
+      it 'absorbs config' do
+        expect(template_dir.config_for('/path/to/templates/')).to eq('module_metadata' => { 'name' => 'foo-bar', 'version' => '0.1.0' }, 'appveyor.yml' => { 'delete' => true }, '.travis.yml' => { 'extras' => [{ 'rvm' => '2.1.9' }] }, 'foo' => { 'attr' => [{ 'val' => 3 }] }) # rubocop:disable Metrics/LineLength
       end
     end
   end

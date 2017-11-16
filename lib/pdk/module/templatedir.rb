@@ -224,10 +224,6 @@ module PDK
       # Generate a hash of data to be used when rendering the specified
       # template.
       #
-      # Read `config_defaults.yml` from the root of the template directory (if
-      # it exists) build a hash of values by merging the value of the `:global`
-      # key with the value of the key that matches `dest_path`.
-      #
       # @param dest_path [String] The destination path of the file that the
       # data is for, relative to the root of the module.
       #
@@ -235,26 +231,43 @@ module PDK
       # `@configs` instance variable.
       #
       # @api private
-      def config_for(dest_path)
+      def config_for(dest_path, sync_config_path = nil)
+        sync_config_path ||= File.join(@path, '.sync.yml')
+        config_path = File.join(@path, 'config_defaults.yml')
+
         if @config.nil?
-          config_path = File.join(@path, 'config_defaults.yml')
-
-          if File.file?(config_path) && File.readable?(config_path)
-            begin
-              @config = YAML.safe_load(File.read(config_path), [], [], true)
-            rescue StandardError => e
-              PDK.logger.warn(_("'%{file}' is not a valid YAML file: %{message}") % { file: config_path, message: e.message })
-              @config = {}
-            end
-          else
-            @config = {}
-          end
+          conf_defaults = read_config(config_path)
+          sync_config = read_config(sync_config_path)
+          @config = conf_defaults
+          @config.merge!(sync_config) unless sync_config.nil?
         end
-
         file_config = @config.fetch(:global, {})
         file_config['module_metadata'] = @module_metadata
         file_config.merge!(@config.fetch(dest_path, {})) unless dest_path.nil?
-        file_config
+        file_config.merge!(@config)
+      end
+
+      # Generates a hash of data from a given yaml file location.
+      #
+      # @param loc [String] The path of the yaml config file.
+      #
+      # @warn If the specified path is not a valid yaml file. Returns an empty Hash
+      # if so.
+      #
+      # @return [Hash] The data that has been read in from the given yaml file.
+      #
+      # @api private
+      def read_config(loc)
+        if File.file?(loc) && File.readable?(loc)
+          begin
+            YAML.safe_load(File.read(loc), [], [], true)
+          rescue StandardError => e
+            PDK.logger.warn(_("'%{file}' is not a valid YAML file: %{message}") % { file: config_path, message: e.message })
+            {}
+          end
+        else
+          {}
+        end
       end
     end
   end
