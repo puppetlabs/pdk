@@ -2,6 +2,8 @@ require 'spec_helper_acceptance'
 require 'fileutils'
 
 describe 'Running unit tests' do
+  include_context 'with a fake TTY'
+
   context 'with a fresh module' do
     include_context 'in a new module', 'unit_test_module_new'
 

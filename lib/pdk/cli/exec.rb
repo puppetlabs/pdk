@@ -90,7 +90,7 @@ module PDK
         end
 
         def register_spinner(spinner, opts = {})
-          return if PDK.logger.debug?
+          return unless display_spinner?
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
@@ -98,11 +98,19 @@ module PDK
         end
 
         def add_spinner(message, opts = {})
-          return if PDK.logger.debug?
+          return unless display_spinner?
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
           @spinner = TTY::Spinner.new("[:spinner] #{message}", opts.merge(PDK::CLI::Util.spinner_opts_for_platform))
+        end
+
+        def display_spinner?
+          return false if PDK.logger.debug?
+          return (ENV['PDK_FRONTEND'] != 'NONINTERACTIVE') if ENV['PDK_FRONTEND']
+          return false unless $stderr.isatty
+
+          true
         end
 
         def execute!

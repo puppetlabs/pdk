@@ -3,6 +3,8 @@ require 'spec_helper_acceptance'
 describe 'Running all validations' do
   let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
 
+  include_context 'with a fake TTY'
+
   context 'with a fresh module' do
     include_context 'in a new module', 'validate_all'
 

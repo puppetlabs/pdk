@@ -7,6 +7,8 @@ describe 'pdk validate puppet', module_command: true do
   let(:lint_spinner_text) { %r{checking puppet manifest style}i }
   let(:empty_string) { %r{\A\Z} }
 
+  include_context 'with a fake TTY'
+
   init_pp = File.join('manifests', 'init.pp')
   example_pp = File.join('manifests', 'example.pp')
 

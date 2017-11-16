@@ -25,15 +25,27 @@ describe PDK::CLI::Exec::Command do
     context 'without --debug' do
       before(:each) do
         allow(logger).to receive(:debug?).and_return(false)
+        allow($stderr).to receive(:isatty).and_return(true)
         command.add_spinner('message')
       end
+
       it { expect(command.instance_variable_get(:@spinner)).to be_a TTY::Spinner }
     end
+
     context 'with --debug' do
       before(:each) do
         allow(logger).to receive(:debug?).and_return(true)
         command.add_spinner('message')
       end
+      it { expect(command.instance_variable_get(:@spinner)).to be_nil }
+    end
+
+    context 'when run non-interactive' do
+      before(:each) do
+        allow($stderr).to receive(:isatty).and_return(false)
+        command.add_spinner('message')
+      end
+
       it { expect(command.instance_variable_get(:@spinner)).to be_nil }
     end
   end
@@ -44,15 +56,26 @@ describe PDK::CLI::Exec::Command do
     context 'without --debug' do
       before(:each) do
         allow(logger).to receive(:debug?).and_return(false)
+        allow($stderr).to receive(:isatty).and_return(true)
         command.register_spinner(spinner)
       end
       it { expect(command.instance_variable_get(:@spinner)).to eq spinner }
     end
+
     context 'with --debug' do
       before(:each) do
         allow(logger).to receive(:debug?).and_return(true)
         command.register_spinner(spinner)
       end
+      it { expect(command.instance_variable_get(:@spinner)).to be_nil }
+    end
+
+    context 'when run non-interactive' do
+      before(:each) do
+        allow($stderr).to receive(:isatty).and_return(false)
+        command.register_spinner(spinner)
+      end
+
       it { expect(command.instance_variable_get(:@spinner)).to be_nil }
     end
   end
