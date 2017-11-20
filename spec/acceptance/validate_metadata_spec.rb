@@ -6,6 +6,8 @@ describe 'Running metadata validation' do
   let(:module_style_spinner) { %r{checking module metadata style}i }
   let(:task_style_spinner) { %r{checking task metadata style}i }
 
+  include_context 'with a fake TTY'
+
   context 'with a metadata violation' do
     include_context 'in a new module', 'metadata_violation_module'
 
