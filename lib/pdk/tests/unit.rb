@@ -31,8 +31,8 @@ module PDK
 
       def self.parallel_with_no_tests?(ran_in_parallel, json_result, result)
         ran_in_parallel && json_result.empty? &&
-          !result[:exit_code].zero? &&
-          result[:stderr].strip =~ %r{Pass files or folders to run$}
+          ((!result[:exit_code].zero? && result[:stderr].strip =~ %r{Pass files or folders to run$}) ||
+           result[:stderr].strip =~ %r{No files for parallel_spec to run against$})
       end
 
       def self.print_failure(result, exception)

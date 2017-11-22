@@ -17,14 +17,40 @@ describe PDK::Test::Unit do
   end
 
   describe '.parallel_with_no_tests?' do
-    context 'when not parallel' do
-      it 'is false' do
-        result = {
-          stderr: 'Pass files or folders to run',
-          exit_code: 1,
-        }
+    subject { described_class.parallel_with_no_tests?(ran_in_parallel, json_result, cmd_result) }
 
-        expect(described_class.parallel_with_no_tests?(false, ['json_result'], result)).to be(false)
+    let(:json_result) { [] }
+    let(:cmd_result) { { stderr: '', stdout: '', exit_code: 1 } }
+
+    context 'when not run in parallel' do
+      let(:ran_in_parallel) { false }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when run in parallel' do
+      let(:ran_in_parallel) { true }
+
+      context 'and no tests (puppetlabs_spec_helper <= 2.5.0)' do
+        let(:cmd_result) do
+          { stderr: 'Pass files or folders to run', stdout: '', exit_code: 1 }
+        end
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'and no tests (puppetlabs_spec_helper >= 2.5.1)' do
+        let(:cmd_result) do
+          { stderr: 'No files for parallel_spec to run against', stdout: '', exit_code: 0 }
+        end
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'and there are tests' do
+        let(:json_result) { ['something'] }
+
+        it { is_expected.to be_falsey }
       end
     end
   end
