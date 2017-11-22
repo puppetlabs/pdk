@@ -166,5 +166,23 @@ module PDK
       end
     end
     module_function :targets_relative_to_pwd
+
+    def default_template_url
+      if !PDK.answers['template-url'].nil?
+        PDK.answers['template-url']
+      else
+        puppetlabs_template_url
+      end
+    end
+    module_function :default_template_url
+
+    def puppetlabs_template_url
+      if package_install?
+        'file://' + File.join(package_cachedir, 'pdk-module-template.git')
+      else
+        'https://github.com/puppetlabs/pdk-module-template'
+      end
+    end
+    module_function :puppetlabs_template_url
   end
 end

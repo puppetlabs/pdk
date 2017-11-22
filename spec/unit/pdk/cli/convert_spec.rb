@@ -51,7 +51,7 @@ describe 'PDK::CLI convert' do
       end
 
       it 'invokes the converter with the default template if the user chooses to continue' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(:'template-url' => PDK::Generate::Module.default_template_url)
+        expect(PDK::Module::Convert).to receive(:invoke).with(:'template-url' => PDK::Util.default_template_url)
 
         PDK::CLI.run(['convert'])
       end

@@ -17,22 +17,6 @@ require 'pdk/util/version'
 module PDK
   module Generate
     class Module
-      def self.default_template_url
-        if !PDK.answers['template-url'].nil?
-          PDK.answers['template-url']
-        else
-          puppetlabs_template_url
-        end
-      end
-
-      def self.puppetlabs_template_url
-        if PDK::Util.package_install?
-          'file://' + File.join(PDK::Util.package_cachedir, 'pdk-module-template.git')
-        else
-          'https://github.com/puppetlabs/pdk-module-template'
-        end
-      end
-
       def self.validate_options(opts)
         unless PDK::CLI::Util::OptionValidator.valid_module_name?(opts[:module_name])
           error_msg = _(
@@ -68,7 +52,7 @@ module PDK
 
         prepare_module_directory(temp_target_dir)
 
-        template_url = opts.fetch(:'template-url', default_template_url)
+        template_url = opts.fetch(:'template-url', PDK::Util.default_template_url)
 
         PDK::Module::TemplateDir.new(template_url, metadata.data, true) do |templates|
           templates.render do |file_path, file_content|
@@ -84,7 +68,7 @@ module PDK
           metadata.write!(File.join(temp_target_dir, 'metadata.json'))
         end
 
-        if template_url == puppetlabs_template_url
+        if template_url == PDK::Util.puppetlabs_template_url
           # If the user specifies our template via the command line, remove the
           # saved template-url answer.
           PDK.answers.update!('template-url' => nil) if opts.key?(:'template-url')
