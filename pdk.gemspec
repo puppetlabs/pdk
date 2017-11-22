@@ -30,6 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'json_pure', '~> 2.1.0'
   spec.add_runtime_dependency 'json-schema', '2.8.0'
   spec.add_runtime_dependency 'tty-which', '0.3.0'
+  spec.add_runtime_dependency 'diff-lcs', '1.3'
 
   # Used in the pdk-module-template
   spec.add_runtime_dependency 'deep_merge', '~> 1.1'

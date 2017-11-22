@@ -1,17 +1,30 @@
 require 'pdk/generate/module'
+require 'pdk/module/update_manager'
 
 module PDK
   module Module
     class Convert
-      def self.invoke(_options)
+      def self.invoke(options)
         # TODO: Dummy template metadata, replace with TemplateDir#metadata
         template_metadata = {}
+        update_manager = PDK::Module::UpdateManager.new
 
-        update_metadata('metadata.json', template_metadata)
+        update_manager.modify_file('metadata.json', update_metadata('metadata.json', template_metadata))
 
-        # TODO: Diffing & confirmation
+        return unless update_manager.changes?
 
-        rename_file('metadata.json.pdknew', 'metadata.json')
+        update_manager.changes[:modified].each do |_, diff|
+          puts diff
+        end
+
+        return if options[:noop]
+
+        unless options[:force]
+          continue = PDK::CLI::Util.prompt_for_yes(_('Do you want to continue and make these changes to your module?'))
+          return unless continue
+        end
+
+        update_manager.sync_changes!
       end
 
       def self.update_metadata(metadata_path, template_metadata)
@@ -38,17 +51,7 @@ module PDK
         end
 
         metadata.update!(template_metadata)
-        metadata.write!("#{metadata_path}.pdknew")
-      end
-
-      def self.rename_file(source, destination)
-        FileUtils.mv(source, destination)
-      rescue Errno::EACCES => e
-        raise PDK::CLI::FatalError, _("Failed to move '%{source}' to '%{destination}': %{message}") % {
-          source:      source,
-          destination: destination,
-          message:     e.message,
-        }
+        metadata.to_json
       end
     end
   end
