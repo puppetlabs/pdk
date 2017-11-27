@@ -123,7 +123,7 @@ module PDK
       end
 
       def self.prepare_metadata(opts = {})
-        username = PDK.answers['forge-username'] || username_from_login
+        opts[:username] = (opts[:username] || PDK.answers['forge-username'] || username_from_login).downcase
 
         defaults = {
           'version'      => '0.1.0',
@@ -132,7 +132,7 @@ module PDK
             { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
           ],
         }
-        defaults['name'] = "#{username}-#{opts[:module_name]}" unless opts[:module_name].nil?
+        defaults['name'] = "#{opts[:username]}-#{opts[:module_name]}" unless opts[:module_name].nil?
         defaults['author'] = PDK.answers['author'] unless PDK.answers['author'].nil?
         defaults['license'] = PDK.answers['license'] unless PDK.answers['license'].nil?
         defaults['license'] = opts[:license] if opts.key? :license
@@ -297,6 +297,7 @@ module PDK
         interview = PDK::CLI::Util::Interview.new(prompt)
 
         questions.reject! { |q| q[:name] == 'module_name' } if opts.key?(:module_name)
+        questions.reject! { |q| q[:name] == 'forge_username' } if opts.key?(:username)
         questions.reject! { |q| q[:name] == 'license' } if opts.key?(:license)
 
         interview.add_questions(questions)
@@ -316,10 +317,10 @@ module PDK
           exit 0
         end
 
-        forge_username = answers['forge_username']
+        opts[:username] ||= answers['forge_username']
         opts[:module_name] ||= answers['module_name']
 
-        answers['name'] = "#{answers['forge_username']}-" + (opts[:module_name])
+        answers['name'] = "#{opts[:username]}-" + (opts[:module_name])
         answers['license'] = opts[:license] if opts.key?(:license)
         answers['operatingsystem_support'].flatten!
 
@@ -347,7 +348,7 @@ module PDK
         end
 
         PDK.answers.update!(
-          'forge-username' => forge_username,
+          'forge-username' => opts[:username],
           'author'         => answers['author'],
           'license'        => answers['license'],
         )

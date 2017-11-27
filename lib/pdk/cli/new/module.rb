@@ -17,8 +17,14 @@ module PDK::CLI
       target_dir = args[1]
 
       unless module_name.nil? || module_name.empty?
-        opts[:module_name] = module_name
-        opts[:target_dir] = target_dir.nil? ? module_name : target_dir
+        module_name_parts = module_name.split('-', 2)
+        if module_name_parts.size > 1
+          opts[:username] = module_name_parts[0]
+          opts[:module_name] = module_name_parts[1]
+        else
+          opts[:module_name] = module_name
+        end
+        opts[:target_dir] = target_dir.nil? ? opts[:module_name] : target_dir
       end
 
       PDK.logger.info(_('Creating new module: %{modname}') % { modname: module_name })

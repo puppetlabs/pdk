@@ -70,4 +70,14 @@ describe 'Running `pdk new module`' do
       end
     end
   end
+
+  context 'when passed a module name with a forge user' do
+    let(:module_name) { 'user-test123' }
+
+    it 'validates and parses the module name' do
+      expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(module_name: 'test123', username: 'user'))
+      expect(logger).to receive(:info).with("Creating new module: #{module_name}")
+      PDK::CLI.run(['new', 'module', module_name])
+    end
+  end
 end

@@ -27,8 +27,14 @@ module PDK::CLI
       answer = redirect.run
 
       if answer
-        opts[:module_name] = module_name
-        opts[:target_dir] = module_name
+        module_name_parts = module_name.split('-', 2)
+        if module_name_parts.size > 1
+          opts[:username] = module_name_parts[0]
+          opts[:module_name] = module_name_parts[1]
+        else
+          opts[:module_name] = module_name
+        end
+        opts[:target_dir] = opts[:module_name]
 
         PDK.logger.info(_('Creating new module: %{modname}') % { modname: module_name })
         PDK::Generate::Module.invoke(opts)
