@@ -312,7 +312,7 @@ module PDK
         answers = interview.run
 
         if answers.nil?
-          PDK.logger.info _('Interview cancelled; not generating the module.')
+          PDK.logger.info _('No answers given, interview cancelled.')
           exit 0
         end
 
@@ -338,11 +338,11 @@ module PDK
         continue = PDK::CLI::Util.prompt_for_yes(
           _('About to generate this module, continue?'),
           prompt:         prompt,
-          cancel_message: _('Interview cancelled; not generating the module.'),
+          cancel_message: _('Interview cancelled; exiting.'),
         )
 
         unless continue
-          PDK.logger.info _('Module not generated.')
+          PDK.logger.info _('Process cancelled; exiting.')
           exit 0
         end
 
