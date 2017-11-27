@@ -515,7 +515,7 @@ describe PDK::Generate::Module do
       end
 
       it 'exits cleanly' do
-        allow(logger).to receive(:info).with(a_string_matching(%r{module not generated}i))
+        allow(logger).to receive(:info).with(a_string_matching(%r{Process cancelled; exiting.}i))
         allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}m))
 
         expect { interview_metadata }.to raise_error(SystemExit) { |error|
