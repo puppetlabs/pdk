@@ -17,6 +17,8 @@ describe PDK::Module::Convert do
   describe '.invoke' do
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
+    let(:template_dir) { instance_double(PDK::Module::TemplateDir, metadata: {}) }
+    let(:template_files) { { path: 'a/path/to/file', content: 'file contents' } }
     let(:added_files) { [] }
     let(:removed_files) { [] }
     let(:modified_files) { {} }
@@ -25,9 +27,10 @@ describe PDK::Module::Convert do
       changes = { added: added_files, removed: removed_files, modified: modified_files }
 
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
-      allow(update_manager).to receive(:modify_file).with(any_args)
+      allow(described_class).to receive(:update_metadata).with(anything, anything).and_return('')
+      allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(template_dir)
+      allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content])
       allow(update_manager).to receive(:changes).and_return(changes)
-      allow(described_class).to receive(:update_metadata).with(any_args).and_return('')
     end
 
     after(:each) do
@@ -36,7 +39,12 @@ describe PDK::Module::Convert do
 
     context 'when there are no changes to apply' do
       before(:each) do
+        allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
         allow(update_manager).to receive(:changes?).and_return(false)
+        allow(template_dir).to receive(:render)
+        allow(PDK::Module::TemplateDir).to receive(:files_in_template).and_return({})
+
+        expect(update_manager).to receive(:modify_file).with('metadata.json', anything)
       end
 
       it 'returns without syncing the changes' do
@@ -46,8 +54,13 @@ describe PDK::Module::Convert do
 
     context 'when there are changes to apply' do
       before(:each) do
+        allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
+        allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with('a diff')
+
+        expect(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        expect(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
       end
 
       let(:modified_files) do
@@ -108,6 +121,87 @@ describe PDK::Module::Convert do
 
         it 'prints a diff of the changed files' do
           expect($stdout).to receive(:puts).with('a diff')
+        end
+
+        it 'does not prompt the user to continue' do
+          expect(PDK::CLI::Util).not_to receive(:prompt_for_yes)
+        end
+
+        it 'syncs the pending changes' do
+          expect(update_manager).to receive(:sync_changes!)
+        end
+      end
+    end
+
+    context 'when there are files to add' do
+      let(:added_files) do
+        [{
+          path:   'path/to/file',
+          content: 'file contents',
+        }]
+      end
+
+      before(:each) do
+        allow(File).to receive(:exist?).with('a/path/to/file').and_return(false)
+        allow(update_manager).to receive(:changes?).and_return(true)
+        allow($stdout).to receive(:puts).with('path/to/file')
+
+        expect(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        expect(update_manager).to receive(:add_file).with(template_files[:path], template_files[:content])
+      end
+
+      context 'and run normally' do
+        it 'prints a path of the added files' do
+          allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
+          expect($stdout).to receive(:puts).with('path/to/file')
+        end
+
+        it 'prompts the user to continue' do
+          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
+        end
+
+        context 'if the user chooses to continue' do
+          before(:each) do
+            allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(true)
+          end
+
+          it 'syncs the pending changes' do
+            expect(update_manager).to receive(:sync_changes!)
+          end
+        end
+
+        context 'if the user chooses not to continue' do
+          before(:each) do
+            allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
+          end
+
+          it 'does not sync the changes' do
+            expect(update_manager).not_to receive(:sync_changes!)
+          end
+        end
+      end
+
+      context 'and run in noop mode' do
+        let(:options) { { noop: true } }
+
+        it 'prints a path of the added files' do
+          expect($stdout).to receive(:puts).with('path/to/file')
+        end
+
+        it 'does not prompt the user to continue' do
+          expect(PDK::CLI::Util).not_to receive(:prompt_for_yes)
+        end
+
+        it 'does not sync the changes' do
+          expect(update_manager).not_to receive(:sync_changes!)
+        end
+      end
+
+      context 'and run in force mode' do
+        let(:options) { { force: true } }
+
+        it 'prints a path of the added files' do
+          expect($stdout).to receive(:puts).with('path/to/file')
         end
 
         it 'does not prompt the user to continue' do
