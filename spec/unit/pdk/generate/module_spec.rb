@@ -726,7 +726,7 @@ describe PDK::Generate::Module do
     end
 
     context 'when the login is entirely alphanumeric' do
-      let(:login) { 'testUser123' }
+      let(:login) { 'testuser123' }
 
       it 'returns the unaltered login' do
         is_expected.to eq(login)
@@ -747,6 +747,15 @@ describe PDK::Generate::Module do
       it 'warns the user and returns the login with the characters removed' do
         expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
         is_expected.to eq('testuser')
+      end
+    end
+
+    context 'when the login contains some upper case characters' do
+      let(:login) { 'Administrator' }
+
+      it 'warns the user and returns the login with the characters downcased' do
+        expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
+        is_expected.to eq('administrator')
       end
     end
 
