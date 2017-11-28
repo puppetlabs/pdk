@@ -14,11 +14,116 @@ describe PDK::Module::Convert do
     end
   end
 
+  describe '.invoke' do
+    let(:options) { {} }
+    let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
+    let(:added_files) { [] }
+    let(:removed_files) { [] }
+    let(:modified_files) { {} }
+
+    before(:each) do
+      changes = { added: added_files, removed: removed_files, modified: modified_files }
+
+      allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
+      allow(update_manager).to receive(:modify_file).with(any_args)
+      allow(update_manager).to receive(:changes).and_return(changes)
+      allow(described_class).to receive(:update_metadata).with(any_args).and_return('')
+    end
+
+    after(:each) do
+      described_class.invoke(options)
+    end
+
+    context 'when there are no changes to apply' do
+      before(:each) do
+        allow(update_manager).to receive(:changes?).and_return(false)
+      end
+
+      it 'returns without syncing the changes' do
+        expect(update_manager).not_to receive(:sync_changes!)
+      end
+    end
+
+    context 'when there are changes to apply' do
+      before(:each) do
+        allow(update_manager).to receive(:changes?).and_return(true)
+        allow($stdout).to receive(:puts).with('a diff')
+      end
+
+      let(:modified_files) do
+        {
+          'some/file' => 'a diff',
+        }
+      end
+
+      context 'and run normally' do
+        it 'prints a diff of the changed files' do
+          allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
+          expect($stdout).to receive(:puts).with('a diff')
+        end
+
+        it 'prompts the user to continue' do
+          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
+        end
+
+        context 'if the user chooses to continue' do
+          before(:each) do
+            allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(true)
+          end
+
+          it 'syncs the pending changes' do
+            expect(update_manager).to receive(:sync_changes!)
+          end
+        end
+
+        context 'if the user chooses not to continue' do
+          before(:each) do
+            allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
+          end
+
+          it 'does not sync the changes' do
+            expect(update_manager).not_to receive(:sync_changes!)
+          end
+        end
+      end
+
+      context 'and run in noop mode' do
+        let(:options) { { noop: true } }
+
+        it 'prints a diff of the changed files' do
+          expect($stdout).to receive(:puts).with('a diff')
+        end
+
+        it 'does not prompt the user to continue' do
+          expect(PDK::CLI::Util).not_to receive(:prompt_for_yes)
+        end
+
+        it 'does not sync the changes' do
+          expect(update_manager).not_to receive(:sync_changes!)
+        end
+      end
+
+      context 'and run in force mode' do
+        let(:options) { { force: true } }
+
+        it 'prints a diff of the changed files' do
+          expect($stdout).to receive(:puts).with('a diff')
+        end
+
+        it 'does not prompt the user to continue' do
+          expect(PDK::CLI::Util).not_to receive(:prompt_for_yes)
+        end
+
+        it 'syncs the pending changes' do
+          expect(update_manager).to receive(:sync_changes!)
+        end
+      end
+    end
+  end
+
   describe '.update_metadata' do
     subject(:updated_metadata) do
-      described_class.update_metadata(metadata_path, template_metadata)
-      new_metadata_file.rewind
-      JSON.parse(new_metadata_file.read)
+      JSON.parse(described_class.update_metadata(metadata_path, template_metadata))
     end
 
     let(:metadata_path) { 'metadata.json' }
@@ -32,7 +137,6 @@ describe PDK::Module::Convert do
 
     before(:each) do
       allow(File).to receive(:open).with(any_args).and_call_original
-      allow(File).to receive(:open).with("#{metadata_path}.pdknew", 'w').and_yield(new_metadata_file)
     end
 
     context 'when the metadata file exists' do
