@@ -13,9 +13,7 @@ module PDK
 
         return unless update_manager.changes?
 
-        update_manager.changes[:modified].each do |_, diff|
-          puts diff
-        end
+        generate_report(update_manager)
 
         return if options[:noop]
 
@@ -53,6 +51,13 @@ module PDK
 
         metadata.update!(template_metadata)
         metadata.to_json
+      end
+
+      def self.generate_report(update_manager)
+        update_manager.changes[:modified].each do |_, diff|
+          File.open('convert_report.txt', 'a') { |file| file.write(diff) }
+          puts diff
+        end
       end
     end
   end
