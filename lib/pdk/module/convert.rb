@@ -20,6 +20,7 @@ module PDK
         return if options[:noop]
 
         unless options[:force]
+          PDK.logger.info _('Please review the changes above before continuing.')
           continue = PDK::CLI::Util.prompt_for_yes(_('Do you want to continue and make these changes to your module?'))
           return unless continue
         end
