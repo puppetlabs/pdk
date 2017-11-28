@@ -28,19 +28,19 @@ describe 'PDK::CLI convert' do
     context 'and provided no flags' do
       before(:each) do
         allow(logger).to receive(:info).with(backup_warning)
-        allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{do you want to continue}i)).and_return(true)
+        allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Do you want to proceed with conversion?}i)).and_return(true)
       end
 
       it 'asks the user if they want to continue' do
         expect(logger).to receive(:info).with(backup_warning)
-        expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{do you want to continue}i)).and_return(true)
+        expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Do you want to proceed with conversion?}i)).and_return(true)
         allow(PDK::Module::Convert).to receive(:invoke).with(any_args).and_return(0)
 
         PDK::CLI.run(%w[convert])
       end
 
       it 'exits cleanly if the user chooses not to continue' do
-        allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{do you want to continue}i)).and_return(false)
+        allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Do you want to proceed with conversion?}i)).and_return(false)
         expect(PDK::Module::Convert).not_to receive(:invoke)
 
         expect {
@@ -60,7 +60,7 @@ describe 'PDK::CLI convert' do
     context 'and the --template-url option has been passed' do
       before(:each) do
         allow(logger).to receive(:info).with(backup_warning)
-        allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{do you want to continue}i)).and_return(true)
+        allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Do you want to proceed with conversion?}i)).and_return(true)
       end
 
       it 'invokes the converter with the user supplied template' do
