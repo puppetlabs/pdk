@@ -223,7 +223,7 @@ module PDK
         @templates ||= [
           { type: 'CLI', url: @options[:'template-url'], allow_fallback: false },
           { type: 'metadata', url: module_metadata.data['template-url'], allow_fallback: true },
-          { type: 'default', url: PDK::Generate::Module.default_template_url, allow_fallback: false },
+          { type: 'default', url: PDK::Util.default_template_url, allow_fallback: false },
         ]
       end
 

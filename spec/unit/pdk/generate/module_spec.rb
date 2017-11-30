@@ -191,7 +191,7 @@ describe PDK::Generate::Module do
         it 'clears the saved template-url answer if it is the puppetlabs template' do
           PDK.answers.update!('template-url' => 'custom-url')
           expect(PDK.answers).to receive(:update!).with('template-url' => nil).and_call_original
-          allow(described_class).to receive(:puppetlabs_template_url).and_return('puppetlabs-url')
+          allow(PDK::Util).to receive(:puppetlabs_template_url).and_return('puppetlabs-url')
 
           described_class.invoke(invoke_opts.merge(:'template-url' => 'puppetlabs-url'))
           expect(PDK.answers['template-url']).to eq(nil)
@@ -231,7 +231,7 @@ describe PDK::Generate::Module do
 
           context 'and pdk is not installed from packages' do
             it 'uses the default template to generate the module' do
-              expect(PDK::Module::TemplateDir).to receive(:new).with(described_class.default_template_url, anything, anything).and_yield(test_template_dir)
+              expect(PDK::Module::TemplateDir).to receive(:new).with(PDK::Util.default_template_url, anything, anything).and_yield(test_template_dir)
               expect(PDK.answers).not_to receive(:update!).with(:'template-url' => anything)
 
               described_class.invoke(invoke_opts)

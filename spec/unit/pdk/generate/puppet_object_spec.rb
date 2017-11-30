@@ -140,7 +140,7 @@ describe PDK::Generate::PuppetObject do
       allow(default_templatedir).to receive(:object_config).and_return(configs_hash)
       allow(cli_templatedir).to receive(:object_config).and_return(configs_hash)
       allow(metadata_templatedir).to receive(:object_config).and_return(configs_hash)
-      allow(PDK::Module::TemplateDir).to receive(:new).with(PDK::Generate::Module.default_template_url).and_yield(default_templatedir)
+      allow(PDK::Module::TemplateDir).to receive(:new).with(PDK::Util.default_template_url).and_yield(default_templatedir)
     end
 
     context 'when a template-url is provided on the CLI' do
