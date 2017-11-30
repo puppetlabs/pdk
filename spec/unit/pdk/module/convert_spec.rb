@@ -14,6 +14,12 @@ describe PDK::Module::Convert do
     end
   end
 
+  shared_context 'prompt to continue' do |value|
+    before(:each) do
+      allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(value)
+    end
+  end
+
   describe '.invoke' do
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
@@ -44,7 +50,7 @@ describe PDK::Module::Convert do
         allow(template_dir).to receive(:render)
         allow(PDK::Module::TemplateDir).to receive(:files_in_template).and_return({})
 
-        expect(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
       end
 
       it 'returns without syncing the changes' do
@@ -59,8 +65,8 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with('a diff')
 
-        expect(update_manager).to receive(:modify_file).with('metadata.json', anything)
-        expect(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
+        allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        allow(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
       end
 
       let(:modified_files) do
@@ -70,8 +76,9 @@ describe PDK::Module::Convert do
       end
 
       context 'and run normally' do
+        include_context 'prompt to continue', false
+
         it 'prints a diff of the changed files' do
-          allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
           expect($stdout).to receive(:puts).with('a diff')
         end
 
@@ -80,9 +87,7 @@ describe PDK::Module::Convert do
         end
 
         context 'if the user chooses to continue' do
-          before(:each) do
-            allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(true)
-          end
+          include_context 'prompt to continue', true
 
           it 'syncs the pending changes' do
             expect(update_manager).to receive(:sync_changes!)
@@ -90,10 +95,6 @@ describe PDK::Module::Convert do
         end
 
         context 'if the user chooses not to continue' do
-          before(:each) do
-            allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
-          end
-
           it 'does not sync the changes' do
             expect(update_manager).not_to receive(:sync_changes!)
           end
@@ -135,10 +136,12 @@ describe PDK::Module::Convert do
 
     context 'when there are files to add' do
       let(:added_files) do
-        [{
-          path:   'path/to/file',
-          content: 'file contents',
-        }]
+        [
+          {
+            path:    'path/to/file',
+            content: 'file contents',
+          },
+        ]
       end
 
       before(:each) do
@@ -146,13 +149,14 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with('path/to/file')
 
-        expect(update_manager).to receive(:modify_file).with('metadata.json', anything)
-        expect(update_manager).to receive(:add_file).with(template_files[:path], template_files[:content])
+        allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        allow(update_manager).to receive(:add_file).with(template_files[:path], template_files[:content])
       end
 
       context 'and run normally' do
+        include_context 'prompt to continue', false
+
         it 'prints a path of the added files' do
-          allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
           expect($stdout).to receive(:puts).with('path/to/file')
         end
 
@@ -161,9 +165,7 @@ describe PDK::Module::Convert do
         end
 
         context 'if the user chooses to continue' do
-          before(:each) do
-            allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(true)
-          end
+          include_context 'prompt to continue', true
 
           it 'syncs the pending changes' do
             expect(update_manager).to receive(:sync_changes!)
@@ -171,10 +173,6 @@ describe PDK::Module::Convert do
         end
 
         context 'if the user chooses not to continue' do
-          before(:each) do
-            allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
-          end
-
           it 'does not sync the changes' do
             expect(update_manager).not_to receive(:sync_changes!)
           end
