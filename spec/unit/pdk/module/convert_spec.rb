@@ -63,7 +63,7 @@ describe PDK::Module::Convert do
         allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
         allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
-        allow($stdout).to receive(:puts).with('a diff')
+        allow($stdout).to receive(:puts).with(['some/file'])
 
         allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
         allow(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
@@ -79,7 +79,7 @@ describe PDK::Module::Convert do
         include_context 'prompt to continue', false
 
         it 'prints a diff of the changed files' do
-          expect($stdout).to receive(:puts).with('a diff')
+          expect($stdout).to receive(:puts).with(['some/file'])
         end
 
         it 'prompts the user to continue' do
@@ -105,7 +105,7 @@ describe PDK::Module::Convert do
         let(:options) { { noop: true } }
 
         it 'prints a diff of the changed files' do
-          expect($stdout).to receive(:puts).with('a diff')
+          expect($stdout).to receive(:puts).with(['some/file'])
         end
 
         it 'does not prompt the user to continue' do
@@ -121,7 +121,7 @@ describe PDK::Module::Convert do
         let(:options) { { force: true } }
 
         it 'prints a diff of the changed files' do
-          expect($stdout).to receive(:puts).with('a diff')
+          expect($stdout).to receive(:puts).with(['some/file'])
         end
 
         it 'does not prompt the user to continue' do

@@ -28,16 +28,15 @@ module PDK
         [:added, :removed].each do |category|
           PDK.logger.info(_('Files to be %{category}:') % { category: category })
           update_manager.changes[category].each do |file|
-            # This is where we add the entries to the report
             puts file[:path]
           end
         end
 
         PDK.logger.info(_('Files to be modified:'))
-        update_manager.changes[:modified].each do |_, diff|
-          # This is where we add the entries to the report
-          puts diff
-        end
+        puts update_manager.changes[:modified].keys unless update_manager.changes[:modified].empty?
+
+        # Generates the full convert report
+        fullreport(update_manager)
 
         return if options[:noop]
 
@@ -75,6 +74,13 @@ module PDK
 
         metadata.update!(template_metadata)
         metadata.to_json
+      end
+
+      def self.fullreport(update_manager)
+        File.open('convert_report.txt', 'w')
+        update_manager.changes[:modified].each do |_, diff|
+          File.open('convert_report.txt', 'a') { |f| f.write("\n" + diff) }
+        end
       end
     end
   end
