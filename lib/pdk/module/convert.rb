@@ -6,14 +6,12 @@ module PDK
   module Module
     class Convert
       def self.invoke(options)
-        # TODO: Dummy template metadata, replace with TemplateDir#metadata
-        template_metadata = {}
         update_manager = PDK::Module::UpdateManager.new
         template_url = options.fetch(:'template-url', PDK::Util.default_template_url)
 
-        update_manager.modify_file('metadata.json', update_metadata('metadata.json', template_metadata))
-
         PDK::Module::TemplateDir.new(template_url, nil, false) do |templates|
+          update_manager.modify_file('metadata.json', update_metadata('metadata.json', templates.metadata))
+
           templates.render do |file_path, file_content|
             if File.exist? file_path
               update_manager.modify_file(file_path, file_content)
