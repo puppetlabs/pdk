@@ -5,7 +5,6 @@ module PDK::CLI
     name 'convert'
     usage _('convert [options]')
     summary _('Convert an existing module to be compatible with the PDK.')
-    be_hidden
 
     PDK::CLI.template_url_option(self)
     flag nil, :noop, _('Do not convert the module, just output what would be done.')
