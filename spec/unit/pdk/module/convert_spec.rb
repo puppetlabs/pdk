@@ -20,13 +20,49 @@ describe PDK::Module::Convert do
     end
   end
 
+  shared_context 'no changes in the summary' do
+    before(:each) do
+      allow($stdout).to receive(:puts).with(%r{No changes required})
+    end
+  end
+
+  shared_context 'has changes in the summary' do
+    before(:each) do
+      allow($stdout).to receive(:puts).with("\n--------------------------------------------------------------------------------")
+    end
+  end
+
+  shared_context 'added files in the summary' do
+    before(:each) do
+      allow($stdout).to receive(:puts).with(%r{-Files added-})
+    end
+  end
+
+  shared_context 'modified files in the summary' do
+    before(:each) do
+      allow($stdout).to receive(:puts).with(%r{-Files modified-})
+    end
+  end
+
+  shared_context 'removed files in the summary' do
+    before(:each) do
+      allow($stdout).to receive(:puts).with(%r{-Files removed-})
+    end
+  end
+
+  shared_context 'outputs a convert report' do
+    before(:each) do
+      allow($stdout).to receive(:puts).with(%r{You can find detailed differences in convert_report.txt.})
+    end
+  end
+
   describe '.invoke' do
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
     let(:template_dir) { instance_double(PDK::Module::TemplateDir, metadata: {}) }
     let(:template_files) { { path: 'a/path/to/file', content: 'file contents' } }
-    let(:added_files) { [] }
-    let(:removed_files) { [] }
+    let(:added_files) { Set.new }
+    let(:removed_files) { Set.new }
     let(:modified_files) { {} }
 
     before(:each) do
@@ -41,9 +77,12 @@ describe PDK::Module::Convert do
 
     after(:each) do
       described_class.invoke(options)
+      FileUtils.rm_f('convert_report.txt')
     end
 
     context 'when there are no changes to apply' do
+      include_context 'no changes in the summary'
+
       before(:each) do
         allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
         allow(update_manager).to receive(:changes?).and_return(false)
@@ -59,14 +98,19 @@ describe PDK::Module::Convert do
     end
 
     context 'when there are changes to apply' do
+      include_context 'has changes in the summary'
+      include_context 'modified files in the summary'
+      include_context 'outputs a convert report'
+
       before(:each) do
         allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
         allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
-        allow($stdout).to receive(:puts).with('a diff')
+        allow($stdout).to receive(:puts).with(['some/file'])
 
         allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
         allow(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
+        allow($stdout).to receive(:puts).with(%r{1 files modified})
       end
 
       let(:modified_files) do
@@ -79,7 +123,7 @@ describe PDK::Module::Convert do
         include_context 'prompt to continue', false
 
         it 'prints a diff of the changed files' do
-          expect($stdout).to receive(:puts).with('a diff')
+          expect($stdout).to receive(:puts).with(['some/file'])
         end
 
         it 'prompts the user to continue' do
@@ -105,7 +149,7 @@ describe PDK::Module::Convert do
         let(:options) { { noop: true } }
 
         it 'prints a diff of the changed files' do
-          expect($stdout).to receive(:puts).with('a diff')
+          expect($stdout).to receive(:puts).with(['some/file'])
         end
 
         it 'does not prompt the user to continue' do
@@ -121,7 +165,7 @@ describe PDK::Module::Convert do
         let(:options) { { force: true } }
 
         it 'prints a diff of the changed files' do
-          expect($stdout).to receive(:puts).with('a diff')
+          expect($stdout).to receive(:puts).with(['some/file'])
         end
 
         it 'does not prompt the user to continue' do
@@ -135,29 +179,34 @@ describe PDK::Module::Convert do
     end
 
     context 'when there are files to add' do
+      include_context 'has changes in the summary'
+      include_context 'added files in the summary'
+      include_context 'outputs a convert report'
+
       let(:added_files) do
-        [
-          {
+        Set.new(
+          [{
             path:    'path/to/file',
             content: 'file contents',
-          },
-        ]
+          }],
+        )
       end
 
       before(:each) do
         allow(File).to receive(:exist?).with('a/path/to/file').and_return(false)
         allow(update_manager).to receive(:changes?).and_return(true)
-        allow($stdout).to receive(:puts).with('path/to/file')
+        allow($stdout).to receive(:puts).with(['path/to/file'])
 
         allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
         allow(update_manager).to receive(:add_file).with(template_files[:path], template_files[:content])
+        allow($stdout).to receive(:puts).with(%r{1 files added})
       end
 
       context 'and run normally' do
         include_context 'prompt to continue', false
 
         it 'prints a path of the added files' do
-          expect($stdout).to receive(:puts).with('path/to/file')
+          expect($stdout).to receive(:puts).with(['path/to/file'])
         end
 
         it 'prompts the user to continue' do
@@ -183,7 +232,7 @@ describe PDK::Module::Convert do
         let(:options) { { noop: true } }
 
         it 'prints a path of the added files' do
-          expect($stdout).to receive(:puts).with('path/to/file')
+          expect($stdout).to receive(:puts).with(['path/to/file'])
         end
 
         it 'does not prompt the user to continue' do
@@ -199,7 +248,7 @@ describe PDK::Module::Convert do
         let(:options) { { force: true } }
 
         it 'prints a path of the added files' do
-          expect($stdout).to receive(:puts).with('path/to/file')
+          expect($stdout).to receive(:puts).with(['path/to/file'])
         end
 
         it 'does not prompt the user to continue' do
