@@ -1,6 +1,7 @@
 require 'pdk/generate/module'
 require 'pdk/module/update_manager'
 require 'pdk/util'
+require 'pdk/report'
 
 module PDK
   module Module
@@ -23,17 +24,13 @@ module PDK
           end
         end
 
-        return unless update_manager.changes?
-
-        [:added, :removed].each do |category|
-          PDK.logger.info(_('Files to be %{category}:') % { category: category })
-          update_manager.changes[category].each do |file|
-            puts file[:path]
-          end
+        unless update_manager.changes?
+          PDK::Report.default_target.puts(_('No changes required.'))
+          return
         end
 
-        PDK.logger.info(_('Files to be modified:'))
-        puts update_manager.changes[:modified].keys unless update_manager.changes[:modified].empty?
+        # Print the summary to the default target of reports
+        print_summary(update_manager)
 
         # Generates the full convert report
         fullreport(update_manager)
@@ -76,11 +73,47 @@ module PDK
         metadata.to_json
       end
 
+      def self.print_summary(update_manager)
+        summary = {}
+        update_manager.changes.each do |category, update_category|
+          updated_files = if update_category.respond_to?(:keys)
+                            update_category.keys
+                          else
+                            update_category.map { |file| file[:path] }
+                          end
+
+          summary[category] = updated_files.length
+
+          next if updated_files.empty?
+
+          PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner("Files #{category}") })
+          PDK::Report.default_target.puts(updated_files)
+        end
+
+        summary_to_print = summary.map { |k, v| "#{v} files #{k}" unless v < 1 }.compact
+        PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner('') }) unless summary_to_print.empty?
+        PDK::Report.default_target.puts(_("\n%{summary}") % { summary: "#{summary_to_print.join(', ')}." })
+      end
+
       def self.fullreport(update_manager)
         File.open('convert_report.txt', 'w')
         update_manager.changes[:modified].each do |_, diff|
-          File.open('convert_report.txt', 'a') { |f| f.write("\n" + diff) }
+          File.open('convert_report.txt', 'a') { |f| f.write("\n\n\n" + diff) }
         end
+        PDK::Report.default_target.puts(_('You can find detailed differences in convert_report.txt.'))
+      end
+
+      def self.generate_banner(text)
+        width = 80 # 80char banner
+        padding = width - text.length
+        banner = ''
+        padding_char = '-'
+
+        (padding / 2.0).ceil.times { banner << padding_char }
+        banner << text
+        (padding / 2.0).floor.times { banner << padding_char }
+
+        banner
       end
     end
   end
