@@ -77,7 +77,7 @@ module PDK
           PDK.logger.debug(_('Checking for missing Gemfile dependencies.'))
 
           argv = ['check', "--gemfile=#{gemfile}"]
-          argv << "--path=#{bundle_cachedir}" if PDK::Util.gem_install?
+          argv << "--path=#{bundle_cachedir}" unless PDK::Util.package_install?
 
           result = bundle_command(*argv).execute!
 
@@ -104,7 +104,7 @@ module PDK
 
         def install!
           argv = ['install', "--gemfile=#{gemfile}", '-j4']
-          argv << "--path=#{bundle_cachedir}" if PDK::Util.gem_install?
+          argv << "--path=#{bundle_cachedir}" unless PDK::Util.package_install?
 
           command = bundle_command(*argv).tap do |c|
             c.add_spinner(_('Installing missing Gemfile dependencies.'))
