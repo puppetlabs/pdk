@@ -144,14 +144,46 @@ describe PDK::Util do
     end
   end
 
+  describe '.development_mode?' do
+    subject { described_class.development_mode? }
+
+    context 'when version ends with pre' do
+      before(:each) do
+        stub_const('PDK::VERSION', '1.0.0.pre')
+      end
+
+      it { is_expected.to be true }
+    end
+
+    context 'when version does not end with pre' do
+      before(:each) do
+        stub_const('PDK::VERSION', '1.0.0')
+      end
+
+      it { is_expected.to be false }
+    end
+  end
+
   describe '.gem_install?' do
     subject { described_class.gem_install? }
+
+    before(:each) do
+      allow(described_class).to receive(:development_mode?).and_return(false)
+    end
 
     context 'when there is no version file', version_file: false do
       it { is_expected.to be true }
     end
 
     context 'when a version file is present', version_file: true do
+      it { is_expected.to be false }
+    end
+
+    context 'when a version file is present and in development mode is true', version_file: false do
+      before(:each) do
+        allow(described_class).to receive(:development_mode?).and_return(true)
+      end
+
       it { is_expected.to be false }
     end
   end
