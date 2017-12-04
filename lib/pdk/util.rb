@@ -58,8 +58,13 @@ module PDK
     end
     module_function :package_install?
 
+    def development_mode?
+      PDK::VERSION.end_with? 'pre'
+    end
+    module_function :development_mode?
+
     def gem_install?
-      !package_install?
+      !(package_install? || development_mode?)
     end
     module_function :gem_install?
 
