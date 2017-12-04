@@ -144,14 +144,46 @@ describe PDK::Util do
     end
   end
 
+  describe '.development_mode?' do
+    subject { described_class.development_mode? }
+
+    context 'when the source is not using git' do
+      before(:each) do
+        allow(PDK::Util::Version).to receive(:git_ref).and_return(nil)
+      end
+
+      it { is_expected.to be false }
+    end
+
+    context 'when the source is using git' do
+      before(:each) do
+        allow(PDK::Util::Version).to receive(:git_ref).and_return('abc')
+      end
+
+      it { is_expected.to be true }
+    end
+  end
+
   describe '.gem_install?' do
     subject { described_class.gem_install? }
+
+    before(:each) do
+      allow(described_class).to receive(:development_mode?).and_return(false)
+    end
 
     context 'when there is no version file', version_file: false do
       it { is_expected.to be true }
     end
 
     context 'when a version file is present', version_file: true do
+      it { is_expected.to be false }
+    end
+
+    context 'when a version file is present and in development mode is true', version_file: false do
+      before(:each) do
+        allow(described_class).to receive(:development_mode?).and_return(true)
+      end
+
       it { is_expected.to be false }
     end
   end

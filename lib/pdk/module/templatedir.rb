@@ -48,7 +48,14 @@ module PDK
           # use.
           temp_dir = PDK::Util.make_tmpdir_name('pdk-module-template')
 
-          clone_result = PDK::Util::Git.git('clone', path_or_url, '--branch', 'convert', temp_dir)
+          clone_result = if PDK::Util.package_install?
+                           PDK::Util::Git.git('clone', path_or_url, temp_dir)
+                         elsif PDK::Util.gem_install?
+                           PDK::Util::Git.git('clone', path_or_url, '--branch', PDK::TEMPLATE_VERSION, temp_dir)
+                         else # TODO: Once we decide on a branching strategy for the pdk-module-template, this needs to be updated.
+                           PDK::Util::Git.git('clone', path_or_url, '--branch', 'convert', temp_dir)
+                         end
+
           unless clone_result[:exit_code].zero?
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
@@ -187,10 +194,7 @@ module PDK
 
         unless File.directory?(@moduleroot_init) # rubocop:disable Style/GuardClause
           # rubocop:disable Metrics/LineLength
-          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot_init/' directory, which indicates you are using an older style of template. Before continuing please use the --template_url flag when running the pdk new or convert commands to pass a new style template.") % { path: @path } unless @init
-
-          PDK.logger.warn(_("The template at '%{path}' doesn't seem to have a 'moduleroot_init' directory, this could indicate that you are using an older style of template.")) % { path: @path } # rubocop:disable Lint/Void
-          PDK.logger.warn(_('To pass in a new template you can use the --template_url flag when running the pdk new or convert commands.'))
+          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot_init/' directory, which indicates you are using an older style of template. Before continuing please use the --template-url flag when running the pdk new commands to pass a new style template.") % { path: @path }
           # rubocop:enable Metrics/LineLength
         end
       end
