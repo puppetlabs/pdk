@@ -189,5 +189,23 @@ module PDK
       end
     end
     module_function :puppetlabs_template_url
+
+    def default_template_ref
+      if !PDK.answers['template-ref'].nil?
+        PDK.answers['template-ref']
+      else
+        puppetlabs_template_ref
+      end
+    end
+    module_function :default_template_ref
+
+    def puppetlabs_template_ref
+      if PDK::Util.package_install? || PDK::Util.gem_install?
+        PDK::TEMPLATE_REF
+      else
+        'origin/convert' # should be master
+      end
+    end
+    module_function :puppetlabs_template_ref
   end
 end

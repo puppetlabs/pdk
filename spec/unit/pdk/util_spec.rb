@@ -328,4 +328,41 @@ describe PDK::Util do
       expect(described_class.find_all_json_in(text)).to eq([])
     end
   end
+
+  describe '.default_template_ref' do
+    subject { described_class.default_template_ref }
+
+    context 'it is a package_install' do
+      before(:each) do
+        allow(described_class).to receive(:package_install?).and_return(true)
+        allow(described_class).to receive(:gem_install?).and_return(false)
+      end
+
+      it 'returns the built-in TEMPLATE_REF' do
+        is_expected.to eq(PDK::TEMPLATE_REF)
+      end
+    end
+
+    context 'it is a gem install' do
+      before(:each) do
+        allow(described_class).to receive(:package_install?).and_return(false)
+        allow(described_class).to receive(:gem_install?).and_return(true)
+      end
+
+      it 'returns the built-in TEMPLATE_REF' do
+        is_expected.to eq(PDK::TEMPLATE_REF)
+      end
+    end
+
+    context 'it is neither package or gem install' do
+      before(:each) do
+        allow(described_class).to receive(:package_install?).and_return(false)
+        allow(described_class).to receive(:gem_install?).and_return(false)
+      end
+
+      it 'returns the built-in TEMPLATE_REF' do
+        is_expected.to eq('origin/convert')
+      end
+    end
+  end
 end
