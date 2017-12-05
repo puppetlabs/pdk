@@ -41,7 +41,16 @@ module PDK
           return unless continue
         end
 
+        # Mark these files for removal after generating the report as these
+        # changes are not something that the user needs to review.
+        if update_manager.changed?('Gemfile')
+          update_manager.remove_file('Gemfile.lock')
+          update_manager.remove_file(File.join('.bundle', 'config'))
+        end
+
         update_manager.sync_changes!
+
+        PDK::Util::Bundler.ensure_bundle! if update_manager.changed?('Gemfile')
       end
 
       def self.update_metadata(metadata_path, template_metadata)

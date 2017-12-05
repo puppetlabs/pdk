@@ -27,6 +27,10 @@ describe PDK::Module::UpdateManager do
       expect(update_manager.changes).to include(added: [{ path: dummy_file, content: content }])
     end
 
+    it 'knows that the file will be changed' do
+      expect(update_manager.changed?(dummy_file)).to be_truthy
+    end
+
     context 'when syncing the changes' do
       let(:dummy_file_io) { StringIO.new }
 
@@ -66,6 +70,10 @@ describe PDK::Module::UpdateManager do
 
     it 'creates a file removed change' do
       expect(update_manager.changes).to include(removed: [dummy_file])
+    end
+
+    it 'knows that the file will be changed' do
+      expect(update_manager.changed?(dummy_file)).to be_truthy
     end
 
     context 'when syncing the changes' do
@@ -175,6 +183,10 @@ describe PDK::Module::UpdateManager do
         expect(diff_lines[2..-1].join("\n")).to eq(expected_diff)
       end
 
+      it 'knows that the file will be changed' do
+        expect(update_manager.changed?(dummy_file)).to be_truthy
+      end
+
       context 'when syncing the changes' do
         let(:dummy_file_io) { StringIO.new }
 
@@ -214,6 +226,10 @@ describe PDK::Module::UpdateManager do
 
       it 'does not create a file modified change' do
         expect(update_manager.changes).to include(modified: {})
+      end
+
+      it 'knows that the file will not be changed' do
+        expect(update_manager.changed?(dummy_file)).to be_falsey
       end
 
       context 'when syncing the changes' do
