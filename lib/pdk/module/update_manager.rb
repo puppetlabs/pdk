@@ -111,6 +111,7 @@ module PDK
       #
       # @raise [PDK::CLI::ExitWithError] if the file is not writeable.
       def write_file(path, content)
+        FileUtils.mkdir_p(File.dirname(path))
         File.open(path, 'w') { |f| f.puts content }
       rescue Errno::EACCES
         raise PDK::CLI::ExitWithError, _("You do not have permission to write to '%{path}'") % { path: path }
