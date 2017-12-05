@@ -1,4 +1,5 @@
 require 'yaml'
+require 'deep_merge'
 require 'pdk/util'
 require 'pdk/util/git'
 require 'pdk/cli/errors'
@@ -236,14 +237,15 @@ module PDK
       #
       # @api private
       def config_for(dest_path, sync_config_path = nil)
-        sync_config_path ||= File.join(@path, '.sync.yml')
+        module_root = PDK::Util.module_root
+        sync_config_path ||= File.join(module_root, '.sync.yml') unless module_root.nil?
         config_path = File.join(@path, 'config_defaults.yml')
 
         if @config.nil?
           conf_defaults = read_config(config_path)
-          sync_config = read_config(sync_config_path)
+          sync_config = read_config(sync_config_path) unless sync_config_path.nil?
           @config = conf_defaults
-          @config.merge!(sync_config) unless sync_config.nil?
+          @config.deep_merge!(sync_config) unless sync_config.nil?
         end
         file_config = @config.fetch(:global, {})
         file_config['module_metadata'] = @module_metadata
