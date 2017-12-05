@@ -19,6 +19,9 @@ describe PDK::Module::TemplateDir do
 
   let(:config_defaults) do
     <<-EOS
+      appveyor.yml:
+        environment:
+          PUPPET_GEM_VERSION: "~> 4.0"
       foo:
         attr:
           - val: 1
@@ -185,11 +188,13 @@ describe PDK::Module::TemplateDir do
       allow(File).to receive(:readable?).with('/path/to/templates/config_defaults.yml').and_return true
       allow(YAML).to receive(:safe_load).with(config_defaults, [], [], true).and_return config_hash
     end
+
     context 'when the module has a .sync.yml file' do
       let(:yaml_text) do
         <<-EOF
        appveyor.yml:
-         delete: true
+         environment:
+           PUPPET_GEM_VERSION: "~> 5.0"
        .travis.yml:
          extras:
          - rvm: 2.1.9
@@ -206,14 +211,18 @@ describe PDK::Module::TemplateDir do
       end
 
       before(:each) do
-        allow(File).to receive(:file?).with('/path/to/templates/.sync.yml').and_return true
-        allow(File).to receive(:readable?).with('/path/to/templates/.sync.yml').and_return true
-        allow(File).to receive(:read).with('/path/to/templates/.sync.yml').and_return yaml_text
+        allow(File).to receive(:file?).with('/path/to/module/.sync.yml').and_return true
+        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return true
+        allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return yaml_text
         allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_return yaml_hash
+        allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
       end
 
       it 'absorbs config' do
-        expect(template_dir.config_for('/path/to/templates/')).to eq('module_metadata' => { 'name' => 'foo-bar', 'version' => '0.1.0' }, 'appveyor.yml' => { 'delete' => true }, '.travis.yml' => { 'extras' => [{ 'rvm' => '2.1.9' }] }, 'foo' => { 'attr' => [{ 'val' => 3 }] }) # rubocop:disable Metrics/LineLength
+        expect(template_dir.config_for('/path/to/templates/')).to eq('module_metadata' => { 'name' => 'foo-bar', 'version' => '0.1.0' },
+                                                                     'appveyor.yml' => { 'environment' => { 'PUPPET_GEM_VERSION' => '~> 5.0' } },
+                                                                     '.travis.yml' => { 'extras' => [{ 'rvm' => '2.1.9' }] },
+                                                                     'foo' => { 'attr' => [{ 'val' => 1 }, { 'val' => 3 }] })
       end
     end
   end
