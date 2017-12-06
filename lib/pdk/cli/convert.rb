@@ -18,11 +18,6 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when converting a module')
       end
 
-      unless opts[:noop] || opts[:force]
-        PDK.logger.info _('Module conversion is a potentially destructive action. Please ensure that you have committed it to a version control system or have a backup before continuing.')
-        exit 0 unless PDK::CLI::Util.prompt_for_yes(_('Do you want to proceed with conversion?'))
-      end
-
       PDK::Module::Convert.invoke(opts)
     end
   end
