@@ -48,20 +48,23 @@ module PDK
           # template repo in `%AppData%` or `$XDG_CACHE_DIR` and update before
           # use.
           temp_dir = PDK::Util.make_tmpdir_name('pdk-module-template')
+          git_ref = PDK::Util.default_template_ref
 
-          clone_result = if PDK::Util.package_install?
-                           PDK::Util::Git.git('clone', path_or_url, temp_dir)
-                         elsif PDK::Util.gem_install?
-                           PDK::Util::Git.git('clone', path_or_url, '--branch', PDK::TEMPLATE_VERSION, temp_dir)
-                         else # TODO: Once we decide on a branching strategy for the pdk-module-template, this needs to be updated.
-                           PDK::Util::Git.git('clone', path_or_url, '--branch', 'convert', temp_dir)
-                         end
+          clone_result = PDK::Util::Git.git('clone', path_or_url, temp_dir)
 
-          unless clone_result[:exit_code].zero?
+          if clone_result[:exit_code].zero?
+            reset_result = PDK::Util::Git.git('-C', temp_dir, 'reset', '--hard', git_ref)
+            unless reset_result[:exit_code].zero?
+              PDK.logger.error reset_result[:stdout]
+              PDK.logger.error reset_result[:stderr]
+              raise PDK::CLI::FatalError, _("Unable to set git repository '%{repo}' to ref:'%{ref}'.") % { repo: temp_dir, ref: git_ref }
+            end
+          else
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
             raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'.") % { repo: path_or_url, dest: temp_dir }
           end
+
           @path = PDK::Util.canonical_path(temp_dir)
           @repo = path_or_url
         end
