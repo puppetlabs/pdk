@@ -4,9 +4,7 @@ describe 'PDK::CLI new class' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new class}m) }
 
   context 'when not run from inside a module' do
-    before(:each) do
-      allow(PDK::Util).to receive(:module_root).and_return(nil)
-    end
+    include_context 'run outside module'
 
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
