@@ -1,13 +1,30 @@
 module PDK
   module CLI
     module Util
+      MODULE_FOLDERS = %w[
+        manifests
+        lib
+        tasks
+        facts.d
+        functions
+        types
+      ].freeze
+
       # Ensures the calling code is being run from inside a module directory.
       #
-      # @raise [PDK::CLI::ExitWithError] if the current directory or parents do
-      #   not contain a `metadata.json` file.
-      def ensure_in_module!
+      # @param opts [Hash] options to change the behavior of the check logic.
+      # @option opts [Boolean] :check_module_layout Set to true to check for
+      #   stardard module folder layout if the module does not contain
+      #   a metadata.json file.
+      #
+      # @raise [PDK::CLI::ExitWithError] if the current directory does not
+      #   contain a Puppet module.
+      def ensure_in_module!(opts = {})
+        return unless PDK::Util.module_root.nil?
+        return if opts[:check_module_layout] && PDK::CLI::Util::MODULE_FOLDERS.any? { |dir| File.directory?(dir) }
+
         message = _('This command must be run from inside a valid module (no metadata.json found).')
-        raise PDK::CLI::ExitWithError, message if PDK::Util.module_root.nil?
+        raise PDK::CLI::ExitWithError, message
       end
       module_function :ensure_in_module!
 

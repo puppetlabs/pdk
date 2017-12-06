@@ -30,6 +30,7 @@ describe 'PDK::CLI new defined_type' do
   end
 
   context 'when not run from inside a module' do
+    include_context 'run outside module'
     let(:module_root) { nil }
     let(:args) { %w[new defined_type test_define] }
 

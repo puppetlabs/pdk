@@ -14,6 +14,8 @@ describe PDK::CLI do
 
   ['validate', 'test unit', 'bundle'].each do |command|
     context "when #{command} command used but not in a module folder" do
+      include_context 'run outside module'
+
       it 'informs the user that this is not a module folder' do
         expect {
           described_class.run(command.split(' '))
