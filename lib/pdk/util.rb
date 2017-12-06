@@ -183,9 +183,9 @@ module PDK
 
     def puppetlabs_template_url
       if package_install?
-        'file://' + File.join(package_cachedir, 'pdk-module-template.git')
+        'file://' + File.join(package_cachedir, 'pdk-templates.git')
       else
-        'https://github.com/puppetlabs/pdk-module-template'
+        'https://github.com/puppetlabs/pdk-templates'
       end
     end
     module_function :puppetlabs_template_url
@@ -203,7 +203,7 @@ module PDK
       if PDK::Util.package_install? || PDK::Util.gem_install?
         PDK::TEMPLATE_REF
       else
-        'origin/convert' # should be master
+        'origin/master'
       end
     end
     module_function :puppetlabs_template_ref

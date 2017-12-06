@@ -361,7 +361,7 @@ describe PDK::Util do
       end
 
       it 'returns the built-in TEMPLATE_REF' do
-        is_expected.to eq('origin/convert')
+        is_expected.to eq('origin/master')
       end
     end
   end

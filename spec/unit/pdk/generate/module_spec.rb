@@ -222,7 +222,7 @@ describe PDK::Generate::Module do
             end
 
             it 'uses the vendored template url' do
-              expect(PDK::Module::TemplateDir).to receive(:new).with('file:///tmp/package/cache/pdk-module-template.git', anything, anything).and_yield(test_template_dir)
+              expect(PDK::Module::TemplateDir).to receive(:new).with('file:///tmp/package/cache/pdk-templates.git', anything, anything).and_yield(test_template_dir)
               expect(PDK.answers).not_to receive(:update!).with(:'template-url' => anything)
 
               described_class.invoke(invoke_opts)

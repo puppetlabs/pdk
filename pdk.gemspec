@@ -32,6 +32,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'tty-which', '0.3.0'
   spec.add_runtime_dependency 'diff-lcs', '1.3'
 
-  # Used in the pdk-module-template
+  # Used in the pdk-templates
   spec.add_runtime_dependency 'deep_merge', '~> 1.1'
 end
