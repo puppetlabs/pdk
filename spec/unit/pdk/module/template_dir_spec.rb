@@ -31,7 +31,7 @@ describe PDK::Module::TemplateDir do
   context 'with a valid template path' do
     it 'returns config hash with module metadata' do
       allow(File).to receive(:directory?).with(anything).and_return(true)
-      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-module-template').and_return('/tmp/path')
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return('/tmp/path')
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, '/tmp/path').and_return(exit_code: 0)
       allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
@@ -120,7 +120,7 @@ describe PDK::Module::TemplateDir do
   describe '.render(template_files)' do
     before(:each) do
       allow(File).to receive(:directory?).with(anything).and_return(true)
-      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-module-template').and_return('/tmp/path')
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return('/tmp/path')
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, '/tmp/path').and_return(exit_code: 0)
     end
 
@@ -181,7 +181,7 @@ describe PDK::Module::TemplateDir do
   describe '.config_for(dest_path)' do
     before(:each) do
       allow(File).to receive(:directory?).with(anything).and_return(true)
-      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-module-template').and_return('/tmp/path')
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return('/tmp/path')
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, '/tmp/path').and_return(exit_code: 0)
       allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)

@@ -22,7 +22,7 @@ module PDK
       # the template available on disk.
       #
       # @example Using a git repository as a template
-      #   PDK::Module::TemplateDir.new('https://github.com/puppetlabs/pdk-module-template') do |t|
+      #   PDK::Module::TemplateDir.new('https://github.com/puppetlabs/pdk-templates') do |t|
       #     t.render do |filename, content|
       #       File.open(filename, 'w') do |file|
       #         file.write(content)
@@ -47,7 +47,7 @@ module PDK
           # @todo When switching this over to using rugged, cache the cloned
           # template repo in `%AppData%` or `$XDG_CACHE_DIR` and update before
           # use.
-          temp_dir = PDK::Util.make_tmpdir_name('pdk-module-template')
+          temp_dir = PDK::Util.make_tmpdir_name('pdk-templates')
           git_ref = PDK::Util.default_template_ref
 
           clone_result = PDK::Util::Git.git('clone', path_or_url, temp_dir)
