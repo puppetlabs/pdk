@@ -73,6 +73,7 @@ describe PDK::Module::Convert do
       allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(template_dir)
       allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content])
       allow(update_manager).to receive(:changes).and_return(changes)
+      allow(update_manager).to receive(:changed?).with('Gemfile').and_return(false)
     end
 
     after(:each) do
@@ -94,6 +95,45 @@ describe PDK::Module::Convert do
 
       it 'returns without syncing the changes' do
         expect(update_manager).not_to receive(:sync_changes!)
+      end
+    end
+
+    context 'when the Gemfile has been modified' do
+      include_context 'has changes in the summary'
+      include_context 'modified files in the summary'
+      include_context 'outputs a convert report'
+      include_context 'prompt to continue', true
+
+      before(:each) do
+        allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
+        allow(update_manager).to receive(:modify_file).with(any_args)
+        allow(update_manager).to receive(:changes?).and_return(true)
+        allow($stdout).to receive(:puts).with(['Gemfile'])
+
+        allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        allow(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
+        allow($stdout).to receive(:puts).with(%r{1 files modified})
+        allow(update_manager).to receive(:changed?).with('Gemfile').and_return(true)
+        allow(update_manager).to receive(:remove_file).with(anything)
+        allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
+      end
+
+      let(:modified_files) do
+        {
+          'Gemfile' => 'a diff',
+        }
+      end
+
+      it 'removes the old Gemfile.lock' do
+        expect(update_manager).to receive(:remove_file).with('Gemfile.lock')
+      end
+
+      it 'removes the old bundler config' do
+        expect(update_manager).to receive(:remove_file).with(File.join('.bundle', 'config'))
+      end
+
+      it 'updates the bundled gems' do
+        expect(PDK::Util::Bundler).to receive(:ensure_bundle!)
       end
     end
 

@@ -63,6 +63,18 @@ module PDK
           changes[:modified].any? { |_, value| !value.nil? }
       end
 
+      # Check if the update manager will change the specified file upon sync.
+      #
+      # @param path [String] The path to the file.
+      #
+      # @raise (see #changes)
+      # @return [Boolean] true if the file will be changed.
+      def changed?(path)
+        changes[:added].any? { |add| add[:path] == path } ||
+          changes[:removed].include?(path) ||
+          changes[:modified].keys.include?(path)
+      end
+
       # Apply any pending changes stored in the UpdateManager to the module.
       #
       # @raise (see #calculate_diffs)
