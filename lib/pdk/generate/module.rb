@@ -321,7 +321,7 @@ module PDK
         puts
 
         continue = PDK::CLI::Util.prompt_for_yes(
-          _('About to generate this module, continue?'),
+          _('Metadata will be generated based on this information, continue?'),
           prompt:         prompt,
           cancel_message: _('Interview cancelled; exiting.'),
         )
