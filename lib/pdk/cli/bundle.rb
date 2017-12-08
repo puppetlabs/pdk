@@ -16,8 +16,6 @@ Note that for PowerShell the '--' needs to be escaped using a backtick: '`--' to
 EOF
                  )
 
-    be_hidden
-
     run do |_opts, args, _cmd|
       PDK::CLI::Util.ensure_in_module!
 
