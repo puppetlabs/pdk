@@ -28,31 +28,37 @@ describe PDK::Module::Convert do
 
   shared_context 'has changes in the summary' do
     before(:each) do
-      allow($stdout).to receive(:puts).with("\n--------------------------------------------------------------------------------")
+      allow($stdout).to receive(:puts).with("\n----------------------------------------")
     end
   end
 
   shared_context 'added files in the summary' do
     before(:each) do
-      allow($stdout).to receive(:puts).with(%r{-Files added-})
+      allow($stdout).to receive(:puts).with(%r{-Files to be added-}i)
     end
   end
 
   shared_context 'modified files in the summary' do
     before(:each) do
-      allow($stdout).to receive(:puts).with(%r{-Files modified-})
+      allow($stdout).to receive(:puts).with(%r{-Files to be modified-}i)
     end
   end
 
   shared_context 'removed files in the summary' do
     before(:each) do
-      allow($stdout).to receive(:puts).with(%r{-Files removed-})
+      allow($stdout).to receive(:puts).with(%r{-Files to be removed-}i)
     end
   end
 
   shared_context 'outputs a convert report' do
     before(:each) do
       allow($stdout).to receive(:puts).with(%r{You can find detailed differences in convert_report.txt.})
+    end
+  end
+
+  shared_context 'completes a convert' do
+    before(:each) do
+      allow($stdout).to receive(:puts).with(%r{-Convert completed-}i)
     end
   end
 
@@ -103,6 +109,7 @@ describe PDK::Module::Convert do
       include_context 'modified files in the summary'
       include_context 'outputs a convert report'
       include_context 'prompt to continue', true
+      include_context 'completes a convert'
 
       before(:each) do
         allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
@@ -141,6 +148,7 @@ describe PDK::Module::Convert do
       include_context 'has changes in the summary'
       include_context 'modified files in the summary'
       include_context 'outputs a convert report'
+      include_context 'completes a convert'
 
       before(:each) do
         allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
@@ -222,6 +230,7 @@ describe PDK::Module::Convert do
       include_context 'has changes in the summary'
       include_context 'added files in the summary'
       include_context 'outputs a convert report'
+      include_context 'completes a convert'
 
       let(:added_files) do
         Set.new(

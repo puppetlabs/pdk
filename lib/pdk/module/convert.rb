@@ -28,7 +28,8 @@ module PDK
         end
 
         # Print the summary to the default target of reports
-        print_summary(update_manager)
+        summary = get_summary(update_manager)
+        print_summary(summary)
 
         # Generates the full convert report
         fullreport(update_manager)
@@ -55,6 +56,8 @@ module PDK
         update_manager.sync_changes!
 
         PDK::Util::Bundler.ensure_bundle! if update_manager.changed?('Gemfile')
+
+        print_result(summary)
       end
 
       def self.update_metadata(metadata_path, template_metadata)
@@ -84,7 +87,7 @@ module PDK
         metadata.to_json
       end
 
-      def self.print_summary(update_manager)
+      def self.get_summary(update_manager)
         summary = {}
         update_manager.changes.each do |category, update_category|
           updated_files = if update_category.respond_to?(:keys)
@@ -93,17 +96,30 @@ module PDK
                             update_category.map { |file| file[:path] }
                           end
 
-          summary[category] = updated_files.length
-
-          next if updated_files.empty?
-
-          PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner("Files #{category}") })
-          PDK::Report.default_target.puts(updated_files)
+          summary[category] = updated_files
         end
 
-        summary_to_print = summary.map { |k, v| "#{v} files #{k}" unless v < 1 }.compact
-        PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner('') }) unless summary_to_print.empty?
-        PDK::Report.default_target.puts(_("\n%{summary}") % { summary: "#{summary_to_print.join(', ')}." })
+        summary
+      end
+
+      def self.print_summary(summary)
+        footer = false
+
+        summary.keys.each do |category|
+          next if summary[category].empty?
+
+          PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner("Files to be #{category}", 40) })
+          PDK::Report.default_target.puts(summary[category])
+          footer = true
+        end
+
+        PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner('', 40) }) if footer
+      end
+
+      def self.print_result(summary)
+        PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner('Convert completed', 40) })
+        summary_to_print = summary.map { |k, v| "#{v.length} files #{k}" unless v.empty? }.compact
+        PDK::Report.default_target.puts(_("\n%{summary}\n\n") % { summary: "#{summary_to_print.join(', ')}." })
       end
 
       def self.fullreport(update_manager)
@@ -113,11 +129,10 @@ module PDK
             f.write("\n\n\n" + diff)
           end
         end
-        PDK::Report.default_target.puts(_('You can find detailed differences in convert_report.txt.'))
+        PDK::Report.default_target.puts(_("\nYou can find detailed differences in convert_report.txt.\n\n"))
       end
 
-      def self.generate_banner(text)
-        width = 80 # 80char banner
+      def self.generate_banner(text, width = 80)
         padding = width - text.length
         banner = ''
         padding_char = '-'
