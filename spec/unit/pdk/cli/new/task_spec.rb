@@ -30,6 +30,7 @@ describe 'PDK::CLI new task' do
   end
 
   context 'when not run from inside a module' do
+    include_context 'run outside module'
     let(:module_root) { nil }
     let(:args) { %w[new task test_task] }
 

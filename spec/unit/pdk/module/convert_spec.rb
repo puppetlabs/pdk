@@ -96,7 +96,7 @@ describe PDK::Module::Convert do
         allow(template_dir).to receive(:render)
         allow(PDK::Module::TemplateDir).to receive(:files_in_template).and_return({})
 
-        allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        allow(update_manager).to receive(:add_file).with('metadata.json', anything)
       end
 
       it 'returns without syncing the changes' do
@@ -117,7 +117,7 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['Gemfile'])
 
-        allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        allow(update_manager).to receive(:add_file).with('metadata.json', anything)
         allow(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
         allow($stdout).to receive(:puts).with(%r{1 files modified})
         allow(update_manager).to receive(:changed?).with('Gemfile').and_return(true)
@@ -156,7 +156,7 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['some/file'])
 
-        allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        allow(update_manager).to receive(:add_file).with('metadata.json', anything)
         allow(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
         allow($stdout).to receive(:puts).with(%r{1 files modified})
       end
@@ -246,7 +246,7 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['path/to/file'])
 
-        allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
+        allow(update_manager).to receive(:add_file).with('metadata.json', anything)
         allow(update_manager).to receive(:add_file).with(template_files[:path], template_files[:content])
         allow($stdout).to receive(:puts).with(%r{1 files added})
       end

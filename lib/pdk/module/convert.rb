@@ -11,7 +11,11 @@ module PDK
         template_url = options.fetch(:'template-url', PDK::Util.default_template_url)
 
         PDK::Module::TemplateDir.new(template_url, nil, false) do |templates|
-          update_manager.modify_file('metadata.json', update_metadata('metadata.json', templates.metadata))
+          if File.file?('metadata.json')
+            update_manager.modify_file('metadata.json', update_metadata('metadata.json', templates.metadata))
+          else
+            update_manager.add_file('metadata.json', update_metadata('metadata.json', templates.metadata))
+          end
 
           templates.render do |file_path, file_content|
             if File.exist? file_path
