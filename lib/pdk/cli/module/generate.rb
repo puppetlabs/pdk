@@ -5,7 +5,6 @@ module PDK::CLI
     name 'generate'
     usage _('generate [options] <module_name>')
     summary _('This command is now \'pdk new module\'.')
-    be_hidden
 
     PDK::CLI.template_url_option(self)
     PDK::CLI.skip_interview_option(self)
