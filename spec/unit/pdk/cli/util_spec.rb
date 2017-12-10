@@ -57,4 +57,42 @@ describe PDK::CLI::Util do
       end
     end
   end
+
+  describe '.interactive?' do
+    subject { described_class.interactive? }
+
+    before(:each) do
+      allow(PDK.logger).to receive(:debug?).and_return(false)
+      allow($stderr).to receive(:isatty).and_return(true)
+      ENV.delete('PDK_FRONTEND')
+    end
+
+    context 'by default' do
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when the logger is in debug mode' do
+      before(:each) do
+        allow(PDK.logger).to receive(:debug?).and_return(true)
+      end
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when PDK_FRONTEND env var is set to noninteractive' do
+      before(:each) do
+        ENV['PDK_FRONTEND'] = 'noninteractive'
+      end
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when STDERR is not a TTY' do
+      before(:each) do
+        allow($stderr).to receive(:isatty).and_return(false)
+      end
+
+      it { is_expected.to be_falsey }
+    end
+  end
 end

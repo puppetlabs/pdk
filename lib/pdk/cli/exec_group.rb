@@ -11,7 +11,7 @@ module PDK
       def initialize(message, opts = {})
         @options = opts.merge(PDK::CLI::Util.spinner_opts_for_platform)
 
-        unless PDK.logger.debug?
+        if PDK::CLI::Util.interactive?
           @multi_spinner = TTY::Spinner::Multi.new("[:spinner] #{message}", @options)
           @multi_spinner.auto_spin
         end
@@ -31,7 +31,7 @@ module PDK
       end
 
       def add_spinner(message, opts = {})
-        return if PDK.logger.debug?
+        return unless PDK::CLI::Util.interactive?
         @multi_spinner.register("[:spinner] #{message}", @options.merge(opts).merge(PDK::CLI::Util.spinner_opts_for_platform))
       end
 

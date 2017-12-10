@@ -55,6 +55,15 @@ module PDK
         response
       end
       module_function :prompt_for_yes
+
+      def interactive?
+        return false if PDK.logger.debug?
+        return !ENV['PDK_FRONTEND'].casecmp('noninteractive').zero? if ENV['PDK_FRONTEND']
+        return false unless $stderr.isatty
+
+        true
+      end
+      module_function :interactive?
     end
   end
 end
