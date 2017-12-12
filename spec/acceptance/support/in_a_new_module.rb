@@ -1,11 +1,12 @@
 require 'open3'
 
-shared_context 'in a new module' do |name|
+shared_context 'in a new module' do |name, options = {}|
   before(:all) do
+    template = options.fetch(:template, "file:///#{RSpec.configuration.template_dir}")
     argv = [
       'pdk', 'new', 'module', name,
       '--skip-interview',
-      '--template-url', "file:///#{RSpec.configuration.template_dir}",
+      '--template-url', template,
       '--answer-file', File.join(Dir.pwd, "#{name}_answers.json")
     ]
     output, status = Open3.capture2e(*argv)
