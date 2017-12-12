@@ -123,6 +123,7 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:changed?).with('Gemfile').and_return(true)
         allow(update_manager).to receive(:remove_file).with(anything)
         allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
+        allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
       end
 
       let(:modified_files) do
@@ -159,6 +160,7 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
         allow(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
         allow($stdout).to receive(:puts).with(%r{1 files modified})
+        allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
       end
 
       let(:modified_files) do
@@ -249,6 +251,7 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:modify_file).with('metadata.json', anything)
         allow(update_manager).to receive(:add_file).with(template_files[:path], template_files[:content])
         allow($stdout).to receive(:puts).with(%r{1 files added})
+        allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
       end
 
       context 'and run normally' do
