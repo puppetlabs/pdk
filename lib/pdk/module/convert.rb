@@ -43,7 +43,7 @@ module PDK
         unless options[:force]
           PDK.logger.info _(
             'Module conversion is a potentially destructive action. ' \
-            'Please ensure that you have committed your module to a version control ' \
+            'Ensure that you have committed your module to a version control ' \
             'system or have a backup, and review the changes above before continuing.',
           )
           continue = PDK::CLI::Util.prompt_for_yes(_('Do you want to continue and make these changes to your module?'))
@@ -133,7 +133,7 @@ module PDK
             f.write("\n\n\n" + diff)
           end
         end
-        PDK::Report.default_target.puts(_("\nYou can find detailed differences in convert_report.txt.\n\n"))
+        PDK::Report.default_target.puts(_("\nYou can find a report of differences in convert_report.txt.\n\n"))
       end
 
       def self.generate_banner(text, width = 80)
