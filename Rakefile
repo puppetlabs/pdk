@@ -92,7 +92,9 @@ begin
   GitHubChangelogGenerator::RakeTask.new :changelog do |config|
     require 'pdk/version'
     config.future_release = "v#{PDK::VERSION}"
-    config.header = "# Changelog\n\nAll notable changes to this project will be documented in this file.\n"
+    config.header = "# Changelog\n\n" \
+      "All changes to this repo will be documented in this file.\n" \
+      "See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.\n"
     config.include_labels = %w[enhancement bug]
     config.user = 'puppetlabs'
     config.project = 'pdk'

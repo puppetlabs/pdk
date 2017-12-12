@@ -9,7 +9,7 @@ gem 'nokogiri', '1.7.2'
 group :development do
   gem 'activesupport', '4.2.9'
   # TODO: Use gem instead of git. Section mapping is merged into master, but not yet released
-  gem 'github_changelog_generator', git: 'https://github.com/skywinder/github-changelog-generator.git', ref: '33f89614d47a4bca1a3ae02bdcc37edd0b012e86'
+  gem 'github_changelog_generator', '~> 1.14'
   gem 'pry-byebug', '~> 3.4'
   if RUBY_VERSION < '2.2.2'
     # byebug >= 9.1.0 requires ruby 2.2.0 or newer
