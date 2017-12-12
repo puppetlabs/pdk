@@ -333,7 +333,7 @@ describe PDK::Generate::Module do
       end
 
       it 'saves the forge username to the answer file' do
-        expect(answers['forge-username']).to eq('foo')
+        expect(answers['forge_username']).to eq('foo')
       end
 
       it 'saves the module author to the answer file' do
@@ -348,6 +348,7 @@ describe PDK::Generate::Module do
     context 'when the user chooses the default values for everything' do
       include_context 'allow summary to be printed to stdout'
 
+      let(:options) { { module_name: 'bar', username: 'defaultauthor' } }
       let(:default_metadata) do
         {
           'author'  => 'defaultauthor',
@@ -386,7 +387,7 @@ describe PDK::Generate::Module do
       end
 
       it 'saves the forge username to the answer file' do
-        expect(answers['forge-username']).to eq('defaultauthor')
+        expect(answers['forge_username']).to eq('defaultauthor')
       end
 
       it 'saves the module author to the answer file' do
@@ -467,7 +468,7 @@ describe PDK::Generate::Module do
       end
 
       it 'saves the forge username to the answer file' do
-        expect(answers['forge-username']).to eq('foo')
+        expect(answers['forge_username']).to eq('foo')
       end
 
       it 'saves the module author to the answer file' do
@@ -664,13 +665,13 @@ describe PDK::Generate::Module do
         allow(described_class).to receive(:module_interview).with(any_args)
 
         PDK.answers.update!(
-          'forge-username' => 'testuser123',
+          'forge_username' => 'testuser123',
           'license'        => 'MIT',
           'author'         => 'Test User',
         )
       end
 
-      it 'uses the saved forge-username answer' do
+      it 'uses the saved forge_username answer' do
         expect(metadata.data).to include('name' => 'testuser123-baz')
       end
 

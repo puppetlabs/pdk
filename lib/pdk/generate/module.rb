@@ -107,7 +107,7 @@ module PDK
       end
 
       def self.prepare_metadata(opts = {})
-        opts[:username] = (opts[:username] || PDK.answers['forge-username'] || username_from_login).downcase
+        opts[:username] = (opts[:username] || PDK.answers['forge_username'] || username_from_login).downcase
 
         defaults = {
           'version'      => '0.1.0',
@@ -116,6 +116,7 @@ module PDK
             { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
           ],
         }
+
         defaults['name'] = "#{opts[:username]}-#{opts[:module_name]}" unless opts[:module_name].nil?
         defaults['author'] = PDK.answers['author'] unless PDK.answers['author'].nil?
         defaults['license'] = PDK.answers['license'] unless PDK.answers['license'].nil?
@@ -166,7 +167,7 @@ module PDK
             required:         true,
             validate_pattern: %r{\A[a-z0-9]+\Z}i,
             validate_message: _('Forge usernames can only contain lowercase letters and numbers'),
-            default:          PDK.answers['forge-username'] || metadata.data['author'],
+            default:          opts[:username],
           },
           {
             name:             'version',
@@ -281,7 +282,6 @@ module PDK
         interview = PDK::CLI::Util::Interview.new(prompt)
 
         questions.reject! { |q| q[:name] == 'module_name' } if opts.key?(:module_name)
-        questions.reject! { |q| q[:name] == 'forge_username' } if opts.key?(:username)
         questions.reject! { |q| q[:name] == 'license' } if opts.key?(:license)
 
         interview.add_questions(questions)
@@ -301,8 +301,8 @@ module PDK
           exit 0
         end
 
-        opts[:username] ||= answers['forge_username']
-        opts[:module_name] ||= answers['module_name']
+        opts[:username] = answers['forge_username']
+        opts[:module_name] = answers['module_name'] unless answers['module_name'].nil?
 
         answers['name'] = "#{opts[:username]}-" + (opts[:module_name])
         answers['license'] = opts[:license] if opts.key?(:license)
@@ -332,7 +332,7 @@ module PDK
         end
 
         PDK.answers.update!(
-          'forge-username' => opts[:username],
+          'forge_username' => opts[:username],
           'author'         => answers['author'],
           'license'        => answers['license'],
         )
