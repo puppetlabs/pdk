@@ -13,7 +13,9 @@ module PDK
         PDK::Module::TemplateDir.new(template_url, nil, false) do |templates|
           new_metadata = update_metadata('metadata.json', templates.metadata, options)
 
-          if File.file?('metadata.json')
+          if options[:noop] && new_metadata.nil?
+            update_manager.add_file('metadata.json', '')
+          elsif File.file?('metadata.json')
             update_manager.modify_file('metadata.json', new_metadata)
           else
             update_manager.add_file('metadata.json', new_metadata)
@@ -74,7 +76,7 @@ module PDK
               new_values = PDK::Module::Metadata::DEFAULTS.reject { |key, _| metadata.data.key?(key) }
               metadata.update!(new_values)
             rescue ArgumentError
-              metadata = PDK::Generate::Module.prepare_metadata(options)
+              metadata = PDK::Generate::Module.prepare_metadata(options) unless options[:noop]
             end
           else
             raise PDK::CLI::ExitWithError, _('Unable to convert module metadata; %{path} exists but it is not readable.') % {
@@ -86,6 +88,13 @@ module PDK
             path: metadata_path,
           }
         else
+          return nil if options[:noop]
+
+          project_dir = File.basename(Dir.pwd)
+          options[:module_name] = project_dir.split('-', 2).compact[-1]
+          options[:prompt] = false
+          options[:'skip-interview'] = true if options[:force]
+
           metadata = PDK::Generate::Module.prepare_metadata(options)
         end
 
