@@ -36,9 +36,7 @@ describe 'pdk convert', module_command: true do
     end
 
     describe file('convert_report.txt') do
-      it { is_expected.to be_file }
-      # TODO: This currently generates a report with nothing but the header
-      # timestamp. Expected?
+      it { is_expected.not_to be_file }
     end
 
     describe file('metadata.json') do
@@ -60,7 +58,7 @@ describe 'pdk convert', module_command: true do
     end
 
     describe file('convert_report.txt') do
-      it { is_expected.to be_file }
+      it { is_expected.not_to be_file }
     end
 
     describe file('metadata.json') do
