@@ -11,10 +11,12 @@ module PDK
         template_url = options.fetch(:'template-url', PDK::Util.default_template_url)
 
         PDK::Module::TemplateDir.new(template_url, nil, false) do |templates|
+          new_metadata = update_metadata('metadata.json', templates.metadata, options)
+
           if File.file?('metadata.json')
-            update_manager.modify_file('metadata.json', update_metadata('metadata.json', templates.metadata))
+            update_manager.modify_file('metadata.json', new_metadata)
           else
-            update_manager.add_file('metadata.json', update_metadata('metadata.json', templates.metadata))
+            update_manager.add_file('metadata.json', new_metadata)
           end
 
           templates.render do |file_path, file_content|
@@ -64,7 +66,7 @@ module PDK
         print_result(summary)
       end
 
-      def self.update_metadata(metadata_path, template_metadata)
+      def self.update_metadata(metadata_path, template_metadata, options = {})
         if File.file?(metadata_path)
           if File.readable?(metadata_path)
             begin
@@ -72,7 +74,7 @@ module PDK
               new_values = PDK::Module::Metadata::DEFAULTS.reject { |key, _| metadata.data.key?(key) }
               metadata.update!(new_values)
             rescue ArgumentError
-              metadata = PDK::Generate::Module.prepare_metadata
+              metadata = PDK::Generate::Module.prepare_metadata(options)
             end
           else
             raise PDK::CLI::ExitWithError, _('Unable to convert module metadata; %{path} exists but it is not readable.') % {
@@ -84,7 +86,7 @@ module PDK
             path: metadata_path,
           }
         else
-          metadata = PDK::Generate::Module.prepare_metadata
+          metadata = PDK::Generate::Module.prepare_metadata(options)
         end
 
         metadata.update!(template_metadata)

@@ -75,7 +75,7 @@ describe PDK::Module::Convert do
       changes = { added: added_files, removed: removed_files, modified: modified_files }
 
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
-      allow(described_class).to receive(:update_metadata).with(anything, anything).and_return('')
+      allow(described_class).to receive(:update_metadata).with(any_args).and_return('')
       allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(template_dir)
       allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content])
       allow(update_manager).to receive(:changes).and_return(changes)

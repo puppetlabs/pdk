@@ -7,6 +7,7 @@ module PDK::CLI
     summary _('Convert an existing module to be compatible with the PDK.')
 
     PDK::CLI.template_url_option(self)
+    PDK::CLI.skip_interview_option(self)
     flag nil, :noop, _('Do not convert the module, just output what would be done.')
     flag nil, :force, _('Convert the module automatically, with no prompts.')
 
