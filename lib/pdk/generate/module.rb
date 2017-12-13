@@ -123,7 +123,6 @@ module PDK
         defaults['license'] = opts[:license] if opts.key? :license
 
         metadata = PDK::Module::Metadata.new(defaults)
-
         module_interview(metadata, opts) unless opts[:'skip-interview']
 
         metadata.update!('pdk-version' => PDK::Util::Version.version_string)
@@ -313,22 +312,17 @@ module PDK
 
         metadata.update!(answers)
 
-        puts '-' * 40
-        puts _('SUMMARY')
-        puts '-' * 40
-        puts metadata.to_json
-        puts '-' * 40
-        puts
+        if opts[:prompt].nil? || opts[:prompt]
+          continue = PDK::CLI::Util.prompt_for_yes(
+            _('Metadata will be generated based on this information, continue?'),
+            prompt:         prompt,
+            cancel_message: _('Interview cancelled; exiting.'),
+          )
 
-        continue = PDK::CLI::Util.prompt_for_yes(
-          _('Metadata will be generated based on this information, continue?'),
-          prompt:         prompt,
-          cancel_message: _('Interview cancelled; exiting.'),
-        )
-
-        unless continue
-          PDK.logger.info _('Process cancelled; exiting.')
-          exit 0
+          unless continue
+            PDK.logger.info _('Process cancelled; exiting.')
+            exit 0
+          end
         end
 
         PDK.answers.update!(

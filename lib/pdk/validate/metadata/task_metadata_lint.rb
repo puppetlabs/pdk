@@ -77,7 +77,7 @@ module PDK
 
         response.body
       rescue StandardError => e
-        raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. Please check internet connectivity and retry this action. %{error}') % { error: e }
+        raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. Check internet connectivity and retry this action. %{error}') % { error: e }
       end
 
       def self.invoke(report, options = {})
