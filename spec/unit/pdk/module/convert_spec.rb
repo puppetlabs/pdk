@@ -366,6 +366,18 @@ describe PDK::Module::Convert do
             expect(updated_metadata).to include('template-url' => 'http://my.test/template.git', 'template-ref' => 'v1.2.3')
           end
 
+          it 'creates a requirements array with a puppet requirement' do
+            expect(updated_metadata).to include(
+              'requirements' => [
+                { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
+              ],
+            )
+          end
+
+          it 'creates an empty dependencies array' do
+            expect(updated_metadata).to include('dependencies' => [])
+          end
+
           context 'but contains invalid JSON' do
             let(:existing_metadata) { '' }
 

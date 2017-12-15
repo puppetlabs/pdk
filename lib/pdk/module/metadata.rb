@@ -7,14 +7,14 @@ module PDK
 
       DEFAULTS = {
         'name'          => nil,
-        'version'       => nil,
+        'version'       => '0.1.0',
         'author'        => nil,
         'summary'       => '',
         'license'       => 'Apache-2.0',
         'source'        => '',
         'project_page'  => nil,
         'issues_url'    => nil,
-        'dependencies'  => Set.new.freeze,
+        'dependencies'  => [],
         'data_provider' => nil,
         'operatingsystem_support' => [
           {
@@ -34,7 +34,9 @@ module PDK
             'operatingsystemrelease' => ['2012 R2'],
           },
         ],
-        'requirements' => Set.new.freeze,
+        'requirements' => [
+          { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
+        ],
       }.freeze
 
       def initialize(params = {})
