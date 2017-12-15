@@ -4,11 +4,13 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
-## [v1.3.0.pre](https://github.com/puppetlabs/pdk/tree/v1.3.0.pre) (2017-12-11)
-[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.2.1...v1.3.0.pre)
+## [v1.3.0](https://github.com/puppetlabs/pdk/tree/v1.3.0) (2017-12-15)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.2.1...v1.3.0)
 
 **Implemented enhancements:**
 
+- \(PDK-715\) Transition pdk to use pdk-templates as template repo [\#380](https://github.com/puppetlabs/pdk/pull/380) ([bmjen](https://github.com/bmjen))
+- \(PDK-622\) Unhide convert subcommand [\#367](https://github.com/puppetlabs/pdk/pull/367) ([bmjen](https://github.com/bmjen))
 - \(maint\) Add/update template metadata on convert [\#366](https://github.com/puppetlabs/pdk/pull/366) ([rodjek](https://github.com/rodjek))
 - \(PDK-625\) Formatting of modified status report and addition of full c… [\#365](https://github.com/puppetlabs/pdk/pull/365) ([HelenCampbell](https://github.com/HelenCampbell))
 - \(PDK-672\) List files changed from convert [\#363](https://github.com/puppetlabs/pdk/pull/363) ([bmjen](https://github.com/bmjen))
@@ -21,6 +23,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 **Fixed bugs:**
 
 - add in readline support to ruby [\#305](https://github.com/puppetlabs/pdk/issues/305)
+- \(PDK-643\) Disable non-exec validator spinners when noninteractive [\#385](https://github.com/puppetlabs/pdk/pull/385) ([rodjek](https://github.com/rodjek))
 - \(PDK-596\) Accept "forgeuser-modulename" as argument to `new module`  [\#358](https://github.com/puppetlabs/pdk/pull/358) ([DavidS](https://github.com/DavidS))
 - \(PDK-429\) Fix --tests to pass through to unit test handler. [\#351](https://github.com/puppetlabs/pdk/pull/351) ([bmjen](https://github.com/bmjen))
 
@@ -31,10 +34,16 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- \(PDK-729\) Remove Set usage in metadata [\#393](https://github.com/puppetlabs/pdk/pull/393) ([rodjek](https://github.com/rodjek))
+- \(maint\) Various UX fixes [\#391](https://github.com/puppetlabs/pdk/pull/391) ([bmjen](https://github.com/bmjen))
+- Minor updates to convert dialog [\#390](https://github.com/puppetlabs/pdk/pull/390) ([HelenCampbell](https://github.com/HelenCampbell))
+- \(maint\) pdk convert acceptance tests [\#389](https://github.com/puppetlabs/pdk/pull/389) ([rodjek](https://github.com/rodjek))
+- \(maint\) Fixes module metadata interview to as for forge username [\#388](https://github.com/puppetlabs/pdk/pull/388) ([bmjen](https://github.com/bmjen))
+- \(MAINT\) Update to released version of GCG [\#387](https://github.com/puppetlabs/pdk/pull/387) ([DavidS](https://github.com/DavidS))
+- \(maint\) Manually load lib/pdk/version.rb in spec [\#386](https://github.com/puppetlabs/pdk/pull/386) ([rodjek](https://github.com/rodjek))
 - \(PDK-489\) unhide experimental commands [\#384](https://github.com/puppetlabs/pdk/pull/384) ([DavidS](https://github.com/DavidS))
 - \(PDK 719\) Directory layout and metadata fixes during convert [\#383](https://github.com/puppetlabs/pdk/pull/383) ([HelenCampbell](https://github.com/HelenCampbell))
 - \(maint\) Some tweaks to improve UX. [\#382](https://github.com/puppetlabs/pdk/pull/382) ([bmjen](https://github.com/bmjen))
-- \(PDK-715\) Transition pdk to use pdk-templates as template repo [\#380](https://github.com/puppetlabs/pdk/pull/380) ([bmjen](https://github.com/bmjen))
 - \(PDK-722\) Remove prompt to continue from start of convert [\#378](https://github.com/puppetlabs/pdk/pull/378) ([rodjek](https://github.com/rodjek))
 - \(PDK-728\) Add default\_template\_ref handler. [\#377](https://github.com/puppetlabs/pdk/pull/377) ([bmjen](https://github.com/bmjen))
 - \(PDK-725\) Add timestamp to PDK Convert Report [\#376](https://github.com/puppetlabs/pdk/pull/376) ([bmjen](https://github.com/bmjen))
@@ -42,7 +51,6 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-723\) Fixes bug where sync.yml wasn't being applied on convert [\#374](https://github.com/puppetlabs/pdk/pull/374) ([bmjen](https://github.com/bmjen))
 - \(PDK-713\) Clean up old bundler env during convert [\#373](https://github.com/puppetlabs/pdk/pull/373) ([rodjek](https://github.com/rodjek))
 - \(PDK-715\) Use correct module template branch/ref [\#368](https://github.com/puppetlabs/pdk/pull/368) ([bmjen](https://github.com/bmjen))
-- \(PDK-622\) Unhide convert subcommand [\#367](https://github.com/puppetlabs/pdk/pull/367) ([bmjen](https://github.com/bmjen))
 - Tweaks to dialog around module conversion [\#362](https://github.com/puppetlabs/pdk/pull/362) ([HelenCampbell](https://github.com/HelenCampbell))
 - Additional user prompt [\#361](https://github.com/puppetlabs/pdk/pull/361) ([rickmonro](https://github.com/rickmonro))
 - Making exit errors generic for interview qs [\#357](https://github.com/puppetlabs/pdk/pull/357) ([HelenCampbell](https://github.com/HelenCampbell))
