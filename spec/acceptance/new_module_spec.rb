@@ -1,4 +1,5 @@
 require 'spec_helper_acceptance'
+require 'pdk/version'
 
 describe 'Creating a new module' do
   context 'when the --skip-interview option is used' do
@@ -22,7 +23,7 @@ describe 'Creating a new module' do
       it { is_expected.to be_file }
       its(:content_as_json) do
         is_expected.to include('name' => match(%r{-foo}),
-                               'template-ref' => match(%r{master-}),
+                               'template-ref' => match(%r{master-|#{PDK::TEMPLATE_REF}}),
                                'operatingsystem_support' => include('operatingsystem' => 'Debian',
                                                                     'operatingsystemrelease' => ['8']))
       end
