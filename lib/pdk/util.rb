@@ -173,11 +173,15 @@ module PDK
     module_function :targets_relative_to_pwd
 
     def default_template_url
-      if !PDK.answers['template-url'].nil?
-        PDK.answers['template-url']
-      else
-        puppetlabs_template_url
-      end
+      answer_file_url = PDK.answers['template-url']
+
+      return puppetlabs_template_url if answer_file_url.nil?
+
+      # Ignore answer file template-url if the value is the old or new default.
+      return puppetlabs_template_url if answer_file_url == 'https://github.com/puppetlabs/pdk-module-template'
+      return puppetlabs_template_url if answer_file_url == puppetlabs_template_url
+
+      answer_file_url
     end
     module_function :default_template_url
 
@@ -191,19 +195,18 @@ module PDK
     module_function :puppetlabs_template_url
 
     def default_template_ref
-      if !PDK.answers['template-ref'].nil?
-        PDK.answers['template-ref']
-      else
-        puppetlabs_template_ref
-      end
+      # TODO: This should respect a --template-ref option if we add that
+      return 'origin/master' if default_template_url != puppetlabs_template_url
+
+      puppetlabs_template_ref
     end
     module_function :default_template_ref
 
     def puppetlabs_template_ref
-      if PDK::Util.package_install? || PDK::Util.gem_install?
-        PDK::TEMPLATE_REF
-      else
+      if PDK::Util.development_mode?
         'origin/master'
+      else
+        PDK::TEMPLATE_REF
       end
     end
     module_function :puppetlabs_template_ref

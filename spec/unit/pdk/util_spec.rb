@@ -329,39 +329,94 @@ describe PDK::Util do
     end
   end
 
+  describe '.default_template_url' do
+    subject { described_class.default_template_url }
+
+    before(:each) do
+      allow(described_class).to receive(:puppetlabs_template_url).and_return('puppetlabs_template_url')
+    end
+
+    context 'when there is no template-url in answers file' do
+      before(:each) do
+        allow(PDK).to receive(:answers).and_return('template-url' => nil)
+      end
+
+      it 'returns puppetlabs template url' do
+        is_expected.to eq('puppetlabs_template_url')
+      end
+    end
+
+    context 'when the template-url in answers file matches current puppetlabs template' do
+      before(:each) do
+        allow(PDK).to receive(:answers).and_return('template-url' => 'puppetlabs_template_url')
+      end
+
+      it 'returns puppetlabs template url' do
+        is_expected.to eq('puppetlabs_template_url')
+      end
+    end
+
+    context 'when the template-url in answers file matches old puppetlabs template' do
+      before(:each) do
+        allow(PDK).to receive(:answers).and_return('template-url' => 'https://github.com/puppetlabs/pdk-module-template')
+      end
+
+      it 'returns puppetlabs template url' do
+        is_expected.to eq('puppetlabs_template_url')
+      end
+    end
+
+    context 'when the template-url in answers file is custom' do
+      before(:each) do
+        allow(PDK).to receive(:answers).and_return('template-url' => 'custom_template_url')
+      end
+
+      it 'returns custom url' do
+        is_expected.to eq('custom_template_url')
+      end
+    end
+  end
+
   describe '.default_template_ref' do
     subject { described_class.default_template_ref }
 
-    context 'it is a package_install' do
-      before(:each) do
-        allow(described_class).to receive(:package_install?).and_return(true)
-        allow(described_class).to receive(:gem_install?).and_return(false)
-      end
-
-      it 'returns the built-in TEMPLATE_REF' do
-        is_expected.to eq(PDK::TEMPLATE_REF)
-      end
+    before(:each) do
+      allow(described_class).to receive(:puppetlabs_template_url).and_return('puppetlabs_template_url')
     end
 
-    context 'it is a gem install' do
+    context 'with a custom template repo' do
       before(:each) do
-        allow(described_class).to receive(:package_install?).and_return(false)
-        allow(described_class).to receive(:gem_install?).and_return(true)
+        allow(described_class).to receive(:default_template_url).and_return('custom_template_url')
       end
 
-      it 'returns the built-in TEMPLATE_REF' do
-        is_expected.to eq(PDK::TEMPLATE_REF)
-      end
-    end
-
-    context 'it is neither package or gem install' do
-      before(:each) do
-        allow(described_class).to receive(:package_install?).and_return(false)
-        allow(described_class).to receive(:gem_install?).and_return(false)
-      end
-
-      it 'returns the built-in TEMPLATE_REF' do
+      it 'returns origin/master' do
         is_expected.to eq('origin/master')
+      end
+    end
+
+    context 'with the default template repo' do
+      before(:each) do
+        allow(described_class).to receive(:default_template_url).and_return('puppetlabs_template_url')
+      end
+
+      context 'not in development mode' do
+        before(:each) do
+          allow(described_class).to receive(:development_mode?).and_return(false)
+        end
+
+        it 'returns the built-in TEMPLATE_REF' do
+          is_expected.to eq(PDK::TEMPLATE_REF)
+        end
+      end
+
+      context 'in development mode' do
+        before(:each) do
+          allow(described_class).to receive(:development_mode?).and_return(true)
+        end
+
+        it 'returns origin/master' do
+          is_expected.to eq('origin/master')
+        end
       end
     end
   end
