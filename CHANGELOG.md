@@ -4,6 +4,13 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.3.1](https://github.com/puppetlabs/pdk/tree/v1.3.1) (2017-12-20)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.0...v1.3.1)
+
+**Fixed bugs:**
+
+- \(PDK-736\) Improve handling of old template-url and template-ref [\#397](https://github.com/puppetlabs/pdk/pull/397) ([scotje](https://github.com/scotje))
+
 ## [v1.3.0](https://github.com/puppetlabs/pdk/tree/v1.3.0) (2017-12-15)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.2.1...v1.3.0)
 
@@ -34,6 +41,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- Release 1.3.0 [\#394](https://github.com/puppetlabs/pdk/pull/394) ([bmjen](https://github.com/bmjen))
 - \(PDK-729\) Remove Set usage in metadata [\#393](https://github.com/puppetlabs/pdk/pull/393) ([rodjek](https://github.com/rodjek))
 - \(maint\) Various UX fixes [\#391](https://github.com/puppetlabs/pdk/pull/391) ([bmjen](https://github.com/bmjen))
 - Minor updates to convert dialog [\#390](https://github.com/puppetlabs/pdk/pull/390) ([HelenCampbell](https://github.com/HelenCampbell))
