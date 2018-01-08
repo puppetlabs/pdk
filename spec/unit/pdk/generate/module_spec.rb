@@ -204,6 +204,10 @@ describe PDK::Generate::Module do
         end
 
         context 'and a template-url answer exists' do
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:repo_exists?).with('answer-template').and_return(true)
+          end
+
           it 'uses the template-url from the answer file to generate the module' do
             PDK.answers.update!('template-url' => 'answer-template')
             expect(PDK::Module::TemplateDir).to receive(:new).with('answer-template', anything, anything).and_yield(test_template_dir)

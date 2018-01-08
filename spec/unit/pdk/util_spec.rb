@@ -371,8 +371,25 @@ describe PDK::Util do
         allow(PDK).to receive(:answers).and_return('template-url' => 'custom_template_url')
       end
 
-      it 'returns custom url' do
-        is_expected.to eq('custom_template_url')
+      context 'and the template is a valid repo' do
+        before(:each) do
+          allow(PDK::Util::Git).to receive(:repo_exists?).with('custom_template_url').and_return(true)
+        end
+
+        it 'returns custom url' do
+          is_expected.to eq('custom_template_url')
+        end
+      end
+
+      context 'and the template is not a valid repo' do
+        before(:each) do
+          allow(PDK::Util::Git).to receive(:repo_exists?).with('custom_template_url').and_return(false)
+        end
+
+        it 'returns the puppetlabs template url' do
+          expect(logger).to receive(:warn).with(a_string_matching(%r{using the default template}))
+          is_expected.to eq('puppetlabs_template_url')
+        end
       end
     end
   end

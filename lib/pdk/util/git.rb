@@ -31,6 +31,12 @@ module PDK
 
         PDK::CLI::Exec.execute(git_bin, *args)
       end
+
+      def self.repo_exists?(repo, ref = nil)
+        args = ['ls-remote', '--exit-code', repo, ref].compact
+
+        git(*args)[:exit_code].zero?
+      end
     end
   end
 end
