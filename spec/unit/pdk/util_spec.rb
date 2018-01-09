@@ -384,6 +384,7 @@ describe PDK::Util do
       context 'and the template is not a valid repo' do
         before(:each) do
           allow(PDK::Util::Git).to receive(:repo_exists?).with('custom_template_url').and_return(false)
+          allow(PDK.answers).to receive(:update!).with('template-url' => nil)
         end
 
         it 'returns the puppetlabs template url' do

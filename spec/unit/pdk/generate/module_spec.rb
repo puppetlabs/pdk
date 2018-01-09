@@ -166,6 +166,7 @@ describe PDK::Generate::Module do
       context 'when a template-url is supplied on the command line' do
         before(:each) do
           allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
+          allow(PDK::Util).to receive(:default_template_url).and_return('https://github.com/puppetlabs/pdk-templates')
         end
 
         it 'uses that template to generate the module' do
