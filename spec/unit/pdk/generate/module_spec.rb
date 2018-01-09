@@ -166,6 +166,7 @@ describe PDK::Generate::Module do
       context 'when a template-url is supplied on the command line' do
         before(:each) do
           allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
+          allow(PDK::Util).to receive(:default_template_url).and_return('https://github.com/puppetlabs/pdk-templates')
         end
 
         it 'uses that template to generate the module' do
@@ -204,6 +205,10 @@ describe PDK::Generate::Module do
         end
 
         context 'and a template-url answer exists' do
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:repo_exists?).with('answer-template').and_return(true)
+          end
+
           it 'uses the template-url from the answer file to generate the module' do
             PDK.answers.update!('template-url' => 'answer-template')
             expect(PDK::Module::TemplateDir).to receive(:new).with('answer-template', anything, anything).and_yield(test_template_dir)
