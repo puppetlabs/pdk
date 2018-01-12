@@ -18,7 +18,7 @@ describe '`pdk test unit`' do
 
   context 'when executing' do
     before(:each) do
-      expect(PDK::CLI::Util).to receive(:ensure_in_module!).with(no_args).once
+      expect(PDK::CLI::Util).to receive(:ensure_in_module!).with(any_args).once
     end
 
     context 'when listing tests' do
