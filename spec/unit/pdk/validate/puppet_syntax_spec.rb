@@ -24,6 +24,10 @@ describe PDK::Validate::PuppetSyntax do
     let(:options) { {} }
     let(:targets) { %w[target1 target2.pp] }
 
+    before(:each) do
+      allow(Gem).to receive(:win_platform?).and_return(false)
+    end
+
     it 'invokes `puppet parser validate`' do
       expect(command_args.first(2)).to eq(%w[parser validate])
     end
@@ -36,7 +40,7 @@ describe PDK::Validate::PuppetSyntax do
       let(:options) { { auto_correct: true } }
 
       it 'has no effect' do
-        expect(command_args).to eq(%w[parser validate].concat(targets))
+        expect(command_args).to eq(%w[parser validate --config /dev/null].concat(targets))
       end
     end
   end
@@ -89,6 +93,26 @@ describe PDK::Validate::PuppetSyntax do
 
         parse_output
       end
+    end
+  end
+
+  describe '.null_file' do
+    subject { described_class.null_file }
+
+    context 'on a Windows host' do
+      before(:each) do
+        allow(Gem).to receive(:win_platform?).and_return(true)
+      end
+
+      it { is_expected.to eq('NUL') }
+    end
+
+    context 'on a POSIX host' do
+      before(:each) do
+        allow(Gem).to receive(:win_platform?).and_return(false)
+      end
+
+      it { is_expected.to eq('/dev/null') }
     end
   end
 end
