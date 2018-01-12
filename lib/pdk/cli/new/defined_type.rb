@@ -7,7 +7,10 @@ module PDK::CLI
     PDK::CLI.template_url_option(self)
 
     run do |opts, args, _cmd|
-      PDK::CLI::Util.ensure_in_module!
+      PDK::CLI::Util.ensure_in_module!(
+        message: _('Defined types can only be created from inside a valid module directory.'),
+        log_level: :info,
+      )
 
       defined_type_name = args[0]
       module_dir = Dir.pwd

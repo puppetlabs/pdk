@@ -32,7 +32,10 @@ module PDK::CLI
         exit 0
       end
 
-      PDK::CLI::Util.ensure_in_module!
+      PDK::CLI::Util.ensure_in_module!(
+        message:   _('Code validation can only be run from inside a valid module directory'),
+        log_level: :info,
+      )
 
       if args[0]
         # This may be a single validator, a list of validators, or a target.

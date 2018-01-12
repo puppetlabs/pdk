@@ -13,7 +13,12 @@ module PDK::CLI
 
     run do |opts, _args, _cmd|
       require 'pdk/module/convert'
-      PDK::CLI::Util.ensure_in_module!(check_module_layout: true)
+
+      PDK::CLI::Util.ensure_in_module!(
+        check_module_layout: true,
+        message:             _('`pdk convert` can only be run from inside a valid module directory.'),
+        log_level:           :info,
+      )
 
       if opts[:noop] && opts[:force]
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when converting a module')
