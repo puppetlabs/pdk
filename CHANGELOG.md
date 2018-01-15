@@ -4,12 +4,30 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.3.2](https://github.com/puppetlabs/pdk/tree/v1.3.2) (2018-01-16)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.1...v1.3.2)
+
+**Closed issues:**
+
+- "pdk convert" and "pdk new module" fails on OSX Sierra [\#396](https://github.com/puppetlabs/pdk/issues/396)
+- Update shipped ruby [\#395](https://github.com/puppetlabs/pdk/issues/395)
+
+**Merged pull requests:**
+
+- \(maint\) Default PDK::TEMPLATE\_REF to PDK::VERSION [\#405](https://github.com/puppetlabs/pdk/pull/405) ([rodjek](https://github.com/rodjek))
+- \(PDK-552\) Soften PDK::CLI::Util.ensure\_in\_module! error messages [\#401](https://github.com/puppetlabs/pdk/pull/401) ([rodjek](https://github.com/rodjek))
+- \(PDK-739\) Fall back to default template if necessary [\#400](https://github.com/puppetlabs/pdk/pull/400) ([rodjek](https://github.com/rodjek))
+
 ## [v1.3.1](https://github.com/puppetlabs/pdk/tree/v1.3.1) (2017-12-20)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.0...v1.3.1)
 
 **Fixed bugs:**
 
 - \(PDK-736\) Improve handling of old template-url and template-ref [\#397](https://github.com/puppetlabs/pdk/pull/397) ([scotje](https://github.com/scotje))
+
+**Merged pull requests:**
+
+- Release Prep for 1.3.1 Hotfix [\#398](https://github.com/puppetlabs/pdk/pull/398) ([HelenCampbell](https://github.com/HelenCampbell))
 
 ## [v1.3.0](https://github.com/puppetlabs/pdk/tree/v1.3.0) (2017-12-15)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.2.1...v1.3.0)
