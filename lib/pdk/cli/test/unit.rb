@@ -21,7 +21,10 @@ module PDK::CLI
     run do |opts, _args, _cmd|
       require 'pdk/tests/unit'
 
-      PDK::CLI::Util.ensure_in_module!
+      PDK::CLI::Util.ensure_in_module!(
+        message:   _('Unit tests can only be run from inside a valid module directory.'),
+        log_level: :info,
+      )
 
       report = nil
 

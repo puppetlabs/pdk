@@ -23,8 +23,8 @@ module PDK
         return unless PDK::Util.module_root.nil?
         return if opts[:check_module_layout] && PDK::CLI::Util::MODULE_FOLDERS.any? { |dir| File.directory?(dir) }
 
-        message = _('This command must be run from inside a valid module (no metadata.json found).')
-        raise PDK::CLI::ExitWithError, message
+        message = opts.fetch(:message, _('This command must be run from inside a valid module (no metadata.json found).'))
+        raise PDK::CLI::ExitWithError.new(message, opts)
       end
       module_function :ensure_in_module!
 

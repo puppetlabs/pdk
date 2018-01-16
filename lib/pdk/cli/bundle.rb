@@ -17,7 +17,9 @@ EOF
                  )
 
     run do |_opts, args, _cmd|
-      PDK::CLI::Util.ensure_in_module!
+      PDK::CLI::Util.ensure_in_module!(
+        message: _('`pdk bundle` can only be run from inside a valid module directory.'),
+      )
 
       command = PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
         c.context = :module
