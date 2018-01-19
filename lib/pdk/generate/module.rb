@@ -98,7 +98,7 @@ module PDK
         login_clean = 'username' if login_clean.empty?
 
         if login_clean != login
-          PDK.logger.warn _('Your username is not a valid Forge username. Proceeding with the username %{username}. You can fix this later in metadata.json.') % {
+          PDK.logger.debug _('Your username is not a valid Forge username. Proceeding with the username %{username}. You can fix this later in metadata.json.') % {
             username: login_clean,
           }
         end
