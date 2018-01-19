@@ -265,7 +265,7 @@ describe PDK::Generate::Module do
 
     let(:module_name) { 'bar' }
     let(:default_metadata) { {} }
-    let(:options) { { module_name: module_name } }
+    let(:options) { { :module_name => module_name, :'full-interview' => true } }
 
     before(:each) do
       prompt = TTY::TestPrompt.new
@@ -353,7 +353,7 @@ describe PDK::Generate::Module do
     context 'when the user chooses the default values for everything' do
       include_context 'allow summary to be printed to stdout'
 
-      let(:options) { { module_name: 'bar', username: 'defaultauthor' } }
+      let(:options) { { :module_name => 'bar', :username => 'defaultauthor', :'full-interview' => true } }
       let(:default_metadata) do
         {
           'author'  => 'defaultauthor',
@@ -407,7 +407,7 @@ describe PDK::Generate::Module do
     context 'when there is no module_name provided' do
       include_context 'allow summary to be printed to stdout'
 
-      let(:options) { { license: 'MIT' } }
+      let(:options) { { :license => 'MIT', :'full-interview' => true } }
       let(:responses) do
         [
           'mymodule',
@@ -442,7 +442,7 @@ describe PDK::Generate::Module do
     context 'when the user provides the license as a command line option' do
       include_context 'allow summary to be printed to stdout'
 
-      let(:options) { { module_name: module_name, license: 'MIT' } }
+      let(:options) { { :module_name => module_name, :license => 'MIT', :'full-interview' => true } }
       let(:responses) do
         [
           'foo',
@@ -751,7 +751,7 @@ describe PDK::Generate::Module do
       let(:login) { 'test_user' }
 
       it 'warns the user and returns the login with the characters removed' do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
+        expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
         is_expected.to eq('testuser')
       end
     end
@@ -760,7 +760,7 @@ describe PDK::Generate::Module do
       let(:login) { 'Administrator' }
 
       it 'warns the user and returns the login with the characters downcased' do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
+        expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
         is_expected.to eq('administrator')
       end
     end
@@ -769,7 +769,7 @@ describe PDK::Generate::Module do
       let(:login) { 'Αρίσταρχος ό Σάμιος' }
 
       it 'warns the user and returns the string "username"' do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
+        expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
         is_expected.to eq('username')
       end
     end

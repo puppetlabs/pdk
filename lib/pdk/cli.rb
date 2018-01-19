@@ -45,6 +45,10 @@ module PDK::CLI
     dsl.option nil, 'skip-interview', _('When specified, skips interactive querying of metadata.')
   end
 
+  def self.full_interview_option(dsl)
+    dsl.option nil, 'full-interview', _('When specified, interactive querying of metadata will include all optional questions.')
+  end
+
   @base_cmd = Cri::Command.define do
     name 'pdk'
     usage _('pdk command [options]')
