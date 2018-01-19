@@ -213,7 +213,7 @@ module PDK
         temp_paths = []
         dirlocs = []
         dirs.each do |dir|
-          raise ArgumentError, _("The directory '%{dir}' doesn't exist") unless Dir.exist?(dir)
+          raise ArgumentError, _("The directory '%{dir}' doesn't exist") % { dir: dir } unless Dir.exist?(dir)
           temp_paths += Dir.glob(File.join(dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
             File.file?(template_path) && !File.symlink?(template_path)
             dirlocs << dir
