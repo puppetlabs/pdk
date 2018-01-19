@@ -46,33 +46,6 @@ module PDK
 
           !(string =~ %r{\A[a-z][a-zA-Z0-9_]*\Z}).nil?
         end
-
-        # Naive validation of a data type declaration. Extracts all the bare
-        # words and compares them against a list of known data types.
-        #
-        # @todo This prevents the use of dynamic data types like TypeReferences
-        #   but that shouldn't be a problem for the current feature set. This
-        #   should be replaced eventually by something better (or just call
-        #   Puppet::Pops::Types::TypesParser)
-        def self.valid_data_type?(string)
-          valid_types = %w[
-            String Integer Float Numeric Boolean Array Hash Regexp Undef
-            Default Class Resource Scalar Collection Variant Data Pattern Enum
-            Tuple Struct Optional Catalogentry Type Any Callable NotUndef
-          ].freeze
-
-          string.scan(%r{\b(([a-zA-Z0-9_]+)(,|\[|\]|\Z))}) do |result|
-            type = result[1]
-
-            return false unless string =~ %r{\A[A-Z]}
-
-            unless valid_types.include?(type)
-              PDK.logger.warn(_("Non-standard data type '%{type}', make sure the type is available in your code, or dependencies") % { type: type })
-            end
-          end
-
-          true
-        end
       end
     end
   end

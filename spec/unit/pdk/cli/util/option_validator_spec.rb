@@ -135,34 +135,4 @@ describe PDK::CLI::Util::OptionValidator do
       end
     end
   end
-
-  context 'valid_data_type?' do
-    it { is_expected.to respond_to(:valid_data_type?).with(1).argument }
-
-    it 'accepts known data types' do
-      %w[String Integer Float Numeric Boolean Array Hash Regexp Undef Default
-         Class Resource Scalar Collection Variant Data Pattern Enum Tuple Struct
-         Optional Catalogentry Type Any Callable NotUndef].each do |data_type|
-        expect(validator.valid_data_type?(data_type)).to be true
-      end
-    end
-
-    it 'accepts abstract data types' do
-      expect(validator.valid_data_type?('Variant[Integer, Enum["absent", "present"]]')).to be true
-    end
-
-    it 'rejects non-capitalised data types' do
-      expect(validator.valid_data_type?('string')).to be false
-    end
-
-    it 'warns the user about non-standard data types' do
-      expect(logger).to receive(:warn).with(a_string_matching(%r{Non-standard data type 'Test123'}))
-      expect(validator.valid_data_type?('Test123')).to be true
-    end
-
-    it 'checks all the data types in an abstract data type' do
-      expect(logger).to receive(:warn).with(a_string_matching(%r{Non-standard data type 'Test123'}))
-      expect(validator.valid_data_type?('Variant[Integer, Test123, String]')).to be true
-    end
-  end
 end
