@@ -65,7 +65,7 @@ describe PDK::Module::TemplateDir do
         allow(Dir).to receive(:exists?).with('/the/file/is/nothere').and_return false
       end
       it 'raises an error' do
-        expect { described_class.files_in_template(dirs) }.to raise_error(ArgumentError, %r{The directory '%\{dir\}' doesn't exist})
+        expect { described_class.files_in_template(dirs) }.to raise_error(ArgumentError, %r{The directory '/the/file/is/nothere' doesn't exist})
       end
     end
 
