@@ -17,6 +17,11 @@ module PDK::CLI
       module_name = args[0]
       target_dir = args[1]
 
+      if opts[:'skip-interview'] && opts[:'full-interview']
+        PDK.logger.info _('Ignoring --full-interview and continuing with --skip-interview.')
+        opts[:'full-interview'] = false
+      end
+
       unless module_name.nil? || module_name.empty?
         module_name_parts = module_name.split('-', 2)
         if module_name_parts.size > 1

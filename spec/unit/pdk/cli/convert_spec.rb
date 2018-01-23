@@ -65,5 +65,39 @@ describe 'PDK::CLI convert' do
         }
       end
     end
+
+    context 'and the --skip-interview flag has been passed' do
+      it 'passes the skip-interview option through to the converter' do
+        expect(PDK::Module::Convert).to receive(:invoke).with(:'skip-interview' => true, :'template-url' => anything)
+
+        PDK::CLI.run(['convert', '--skip-interview'])
+      end
+    end
+
+    context 'and the --full-interview flag has been passed' do
+      it 'passes the full-interview option through to the converter' do
+        expect(PDK::Module::Convert).to receive(:invoke).with(:'full-interview' => true, :'template-url' => anything)
+
+        PDK::CLI.run(['convert', '--full-interview'])
+      end
+    end
+
+    context 'and the --skip-interview and --full-interview flags have been passed' do
+      it 'ignores full-interview and continues with a log message' do
+        expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --skip-interview.}i))
+        expect(PDK::Module::Convert).to receive(:invoke).with(:'skip-interview' => true, :'full-interview' => false, :'template-url' => anything)
+
+        PDK::CLI.run(['convert', '--skip-interview', '--full-interview'])
+      end
+    end
+
+    context 'and the --force and --full-interview flags have been passed' do
+      it 'ignores full-interview and continues with a log message' do
+        expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --force.}i))
+        expect(PDK::Module::Convert).to receive(:invoke).with(:force => true, :'full-interview' => false, :'template-url' => anything)
+
+        PDK::CLI.run(['convert', '--force', '--full-interview'])
+      end
+    end
   end
 end
