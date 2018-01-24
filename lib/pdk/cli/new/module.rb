@@ -6,6 +6,7 @@ module PDK::CLI
 
     PDK::CLI.template_url_option(self)
     PDK::CLI.skip_interview_option(self)
+    PDK::CLI.full_interview_option(self)
 
     option nil, 'license', _('Specifies the license this module is written under. ' \
       "This should be a identifier from https://spdx.org/licenses/. Common values are 'Apache-2.0', 'MIT', or 'proprietary'."), argument: :required
@@ -15,6 +16,11 @@ module PDK::CLI
 
       module_name = args[0]
       target_dir = args[1]
+
+      if opts[:'skip-interview'] && opts[:'full-interview']
+        PDK.logger.info _('Ignoring --full-interview and continuing with --skip-interview.')
+        opts[:'full-interview'] = false
+      end
 
       unless module_name.nil? || module_name.empty?
         module_name_parts = module_name.split('-', 2)

@@ -69,6 +69,23 @@ describe 'Running `pdk new module`' do
         PDK::CLI.run(['new', 'module', '--skip-interview', module_name])
       end
     end
+
+    context 'and the full-interview flag' do
+      it 'passes true as the value of the full-interview option to PDK::Generate::Module.invoke' do
+        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(:'full-interview' => true))
+        expect(logger).to receive(:info).with("Creating new module: #{module_name}")
+        PDK::CLI.run(['new', 'module', '--full-interview', module_name])
+      end
+    end
+
+    context 'and the --skip-interview and --full-interview flags have been passed' do
+      it 'ignores full-interview and continues with a log message' do
+        expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --skip-interview.}i))
+        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(:'skip-interview' => true, :'full-interview' => false))
+
+        PDK::CLI.run(['new', 'module', '--skip-interview', '--full-interview'])
+      end
+    end
   end
 
   context 'when passed a module name with a forge user' do

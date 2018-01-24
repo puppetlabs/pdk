@@ -98,7 +98,7 @@ module PDK
         login_clean = 'username' if login_clean.empty?
 
         if login_clean != login
-          PDK.logger.warn _('Your username is not a valid Forge username. Proceeding with the username %{username}. You can fix this later in metadata.json.') % {
+          PDK.logger.debug _('Your username is not a valid Forge username. Proceeding with the username %{username}. You can fix this later in metadata.json.') % {
             username: login_clean,
           }
         end
@@ -176,6 +176,7 @@ module PDK
             validate_pattern: %r{\A[0-9]+\.[0-9]+\.[0-9]+},
             validate_message: _('Semantic Version numbers must be in the form MAJOR.MINOR.PATCH'),
             default:          metadata.data['version'],
+            forge_only:       true,
           },
           {
             name:     'author',
@@ -249,30 +250,34 @@ module PDK
             default: [1, 2, 7],
           },
           {
-            name:     'summary',
-            question: _('Summarize the purpose of this module in a single sentence.'),
-            help:     _('This helps other Puppet users understand what the module does.'),
-            required: true,
-            default:  metadata.data['summary'],
+            name:       'summary',
+            question:   _('Summarize the purpose of this module in a single sentence.'),
+            help:       _('This helps other Puppet users understand what the module does.'),
+            required:   true,
+            default:    metadata.data['summary'],
+            forge_only: true,
           },
           {
-            name:     'source',
-            question: _('If there is a source code repository for this module, enter the URL here.'),
-            help:     _('Skip this if no repository exists yet. You can update this later in the metadata.json.'),
-            required: true,
-            default:  metadata.data['source'],
+            name:       'source',
+            question:   _('If there is a source code repository for this module, enter the URL here.'),
+            help:       _('Skip this if no repository exists yet. You can update this later in the metadata.json.'),
+            required:   true,
+            default:    metadata.data['source'],
+            forge_only: true,
           },
           {
-            name:     'project_page',
-            question: _('If there is a URL where others can learn more about this module, enter it here.'),
-            help:     _('Optional. You can update this later in the metadata.json.'),
-            default:  metadata.data['project_page'],
+            name:       'project_page',
+            question:   _('If there is a URL where others can learn more about this module, enter it here.'),
+            help:       _('Optional. You can update this later in the metadata.json.'),
+            default:    metadata.data['project_page'],
+            forge_only: true,
           },
           {
-            name:     'issues_url',
-            question: _('If there is a public issue tracker for this module, enter its URL here.'),
-            help:     _('Optional. You can update this later in the metadata.json.'),
-            default:  metadata.data['issues_url'],
+            name:       'issues_url',
+            question:   _('If there is a public issue tracker for this module, enter its URL here.'),
+            help:       _('Optional. You can update this later in the metadata.json.'),
+            default:    metadata.data['issues_url'],
+            forge_only: true,
           },
         ]
 
@@ -282,6 +287,7 @@ module PDK
 
         questions.reject! { |q| q[:name] == 'module_name' } if opts.key?(:module_name)
         questions.reject! { |q| q[:name] == 'license' } if opts.key?(:license)
+        questions.reject! { |q| q[:forge_only] } unless opts.key?(:'full-interview')
 
         interview.add_questions(questions)
 

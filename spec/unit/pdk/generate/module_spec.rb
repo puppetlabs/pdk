@@ -274,133 +274,137 @@ describe PDK::Generate::Module do
       prompt.input.rewind
     end
 
-    context 'when provided answers to all the questions' do
-      include_context 'allow summary to be printed to stdout'
+    context 'with --full-interview' do
+      let(:options) { { :module_name => module_name, :'full-interview' => true } }
 
-      let(:responses) do
-        [
-          'foo',
-          '2.2.0',
-          'William Hopper',
-          'Apache-2.0',
-          '',
-          'A simple module to do some stuff.',
-          'github.com/whopper/bar',
-          'forge.puppet.com/whopper/bar',
-          'tickets.foo.com/whopper/bar',
-          'yes',
-        ]
+      context 'when provided answers to all the questions' do
+        include_context 'allow summary to be printed to stdout'
+
+        let(:responses) do
+          [
+            'foo',
+            '2.2.0',
+            'William Hopper',
+            'Apache-2.0',
+            '',
+            'A simple module to do some stuff.',
+            'github.com/whopper/bar',
+            'forge.puppet.com/whopper/bar',
+            'tickets.foo.com/whopper/bar',
+            'yes',
+          ]
+        end
+
+        it 'populates the Metadata object based on user input' do
+          allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}m))
+
+          expect(interview_metadata).to include(
+            'name'                    => 'foo-bar',
+            'version'                 => '2.2.0',
+            'author'                  => 'William Hopper',
+            'license'                 => 'Apache-2.0',
+            'summary'                 => 'A simple module to do some stuff.',
+            'source'                  => 'github.com/whopper/bar',
+            'project_page'            => 'forge.puppet.com/whopper/bar',
+            'issues_url'              => 'tickets.foo.com/whopper/bar',
+            'operatingsystem_support' => [
+              {
+                'operatingsystem'        => 'CentOS',
+                'operatingsystemrelease' => ['7'],
+              },
+              {
+                'operatingsystem'        => 'OracleLinux',
+                'operatingsystemrelease' => ['7'],
+              },
+              {
+                'operatingsystem'        => 'RedHat',
+                'operatingsystemrelease' => ['7'],
+              },
+              {
+                'operatingsystem'        => 'Scientific',
+                'operatingsystemrelease' => ['7'],
+              },
+              {
+                'operatingsystem'        => 'Debian',
+                'operatingsystemrelease' => ['8'],
+              },
+              {
+                'operatingsystem'        => 'Ubuntu',
+                'operatingsystemrelease' => ['16.04'],
+              },
+              {
+                'operatingsystem'        => 'windows',
+                'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+              },
+            ],
+          )
+        end
+
+        it 'saves the forge username to the answer file' do
+          expect(answers['forge_username']).to eq('foo')
+        end
+
+        it 'saves the module author to the answer file' do
+          expect(answers['author']).to eq('William Hopper')
+        end
+
+        it 'saves the license to the answer file' do
+          expect(answers['license']).to eq('Apache-2.0')
+        end
       end
 
-      it 'populates the Metadata object based on user input' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}m))
+      context 'when the user chooses the default values for everything' do
+        include_context 'allow summary to be printed to stdout'
 
-        expect(interview_metadata).to include(
-          'name'                    => 'foo-bar',
-          'version'                 => '2.2.0',
-          'author'                  => 'William Hopper',
-          'license'                 => 'Apache-2.0',
-          'summary'                 => 'A simple module to do some stuff.',
-          'source'                  => 'github.com/whopper/bar',
-          'project_page'            => 'forge.puppet.com/whopper/bar',
-          'issues_url'              => 'tickets.foo.com/whopper/bar',
-          'operatingsystem_support' => [
-            {
-              'operatingsystem'        => 'CentOS',
-              'operatingsystemrelease' => ['7'],
-            },
-            {
-              'operatingsystem'        => 'OracleLinux',
-              'operatingsystemrelease' => ['7'],
-            },
-            {
-              'operatingsystem'        => 'RedHat',
-              'operatingsystemrelease' => ['7'],
-            },
-            {
-              'operatingsystem'        => 'Scientific',
-              'operatingsystemrelease' => ['7'],
-            },
-            {
-              'operatingsystem'        => 'Debian',
-              'operatingsystemrelease' => ['8'],
-            },
-            {
-              'operatingsystem'        => 'Ubuntu',
-              'operatingsystemrelease' => ['16.04'],
-            },
-            {
-              'operatingsystem'        => 'windows',
-              'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
-            },
-          ],
-        )
-      end
+        let(:options) { { :module_name => 'bar', :username => 'defaultauthor', :'full-interview' => true } }
+        let(:default_metadata) do
+          {
+            'author'  => 'defaultauthor',
+            'version' => '0.0.1',
+            'summary' => 'default summary',
+            'source'  => 'default source',
+            'license' => 'default license',
+          }
+        end
 
-      it 'saves the forge username to the answer file' do
-        expect(answers['forge_username']).to eq('foo')
-      end
+        let(:responses) do
+          [
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+            '',
+          ]
+        end
 
-      it 'saves the module author to the answer file' do
-        expect(answers['author']).to eq('William Hopper')
-      end
+        it 'populates the interview question defaults with existing metadata values' do
+          allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}))
 
-      it 'saves the license to the answer file' do
-        expect(answers['license']).to eq('Apache-2.0')
-      end
-    end
+          expect(interview_metadata).to include(
+            'name'    => 'defaultauthor-bar',
+            'version' => '0.0.1',
+            'author'  => 'defaultauthor',
+            'license' => 'default license',
+            'summary' => 'default summary',
+            'source'  => 'default source',
+          )
+        end
 
-    context 'when the user chooses the default values for everything' do
-      include_context 'allow summary to be printed to stdout'
+        it 'saves the forge username to the answer file' do
+          expect(answers['forge_username']).to eq('defaultauthor')
+        end
 
-      let(:options) { { module_name: 'bar', username: 'defaultauthor' } }
-      let(:default_metadata) do
-        {
-          'author'  => 'defaultauthor',
-          'version' => '0.0.1',
-          'summary' => 'default summary',
-          'source'  => 'default source',
-          'license' => 'default license',
-        }
-      end
+        it 'saves the module author to the answer file' do
+          expect(answers['author']).to eq('defaultauthor')
+        end
 
-      let(:responses) do
-        [
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-        ]
-      end
-
-      it 'populates the interview question defaults with existing metadata values' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}))
-
-        expect(interview_metadata).to include(
-          'name'    => 'defaultauthor-bar',
-          'version' => '0.0.1',
-          'author'  => 'defaultauthor',
-          'license' => 'default license',
-          'summary' => 'default summary',
-          'source'  => 'default source',
-        )
-      end
-
-      it 'saves the forge username to the answer file' do
-        expect(answers['forge_username']).to eq('defaultauthor')
-      end
-
-      it 'saves the module author to the answer file' do
-        expect(answers['author']).to eq('defaultauthor')
-      end
-
-      it 'saves the license to the answer file' do
-        expect(answers['license']).to eq('default license')
+        it 'saves the license to the answer file' do
+          expect(answers['license']).to eq('default license')
+        end
       end
     end
 
@@ -412,29 +416,24 @@ describe PDK::Generate::Module do
         [
           'mymodule',
           'myforgename',
-          '2.2.0',
           'William Hopper',
           '',
-          'A simple module to do some stuff.',
-          'github.com/whopper/bar',
-          'forge.puppet.com/whopper/bar',
-          'tickets.foo.com/whopper/bar',
           'yes',
         ]
       end
 
       it 'populates the Metadata object based on user input for both module name and forge name' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{4 questions}))
 
         expect(interview_metadata).to include(
           'name'         => 'myforgename-mymodule',
-          'version'      => '2.2.0',
+          'version'      => '0.1.0',
           'author'       => 'William Hopper',
           'license'      => 'MIT',
-          'summary'      => 'A simple module to do some stuff.',
-          'source'       => 'github.com/whopper/bar',
-          'project_page' => 'forge.puppet.com/whopper/bar',
-          'issues_url'   => 'tickets.foo.com/whopper/bar',
+          'summary'      => '',
+          'source'       => '',
+          'project_page' => nil,
+          'issues_url'   => nil,
         )
       end
     end
@@ -446,29 +445,24 @@ describe PDK::Generate::Module do
       let(:responses) do
         [
           'foo',
-          '2.2.0',
           'William Hopper',
           '',
-          'A simple module to do some stuff.',
-          'github.com/whopper/bar',
-          'forge.puppet.com/whopper/bar',
-          'tickets.foo.com/whopper/bar',
           'yes',
         ]
       end
 
       it 'populates the Metadata object based on user input' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{8 questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{3 questions}m))
 
         expect(interview_metadata).to include(
           'name'         => 'foo-bar',
-          'version'      => '2.2.0',
+          'version'      => '0.1.0',
           'author'       => 'William Hopper',
           'license'      => 'MIT',
-          'summary'      => 'A simple module to do some stuff.',
-          'source'       => 'github.com/whopper/bar',
-          'project_page' => 'forge.puppet.com/whopper/bar',
-          'issues_url'   => 'tickets.foo.com/whopper/bar',
+          'summary'      => '',
+          'source'       => '',
+          'project_page' => nil,
+          'issues_url'   => nil,
         )
       end
 
@@ -494,7 +488,7 @@ describe PDK::Generate::Module do
 
       it 'exits cleanly' do
         allow(logger).to receive(:info).with(a_string_matching(%r{interview cancelled}i))
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{4 questions}m))
 
         expect { interview_metadata }.to raise_error(SystemExit) { |error|
           expect(error.status).to eq(0)
@@ -508,21 +502,16 @@ describe PDK::Generate::Module do
       let(:responses) do
         [
           'foo',
-          '2.2.0',
           'William Hopper',
           'Apache-2.0',
           '',
-          'A simple module to do some stuff.',
-          'github.com/whopper/bar',
-          'forge.puppet.com/whopper/bar',
-          'tickets.foo.com/whopper/bar',
           'no',
         ]
       end
 
       it 'exits cleanly' do
         allow(logger).to receive(:info).with(a_string_matching(%r{Process cancelled; exiting.}i))
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{4 questions}m))
 
         expect { interview_metadata }.to raise_error(SystemExit) { |error|
           expect(error.status).to eq(0)
@@ -536,14 +525,9 @@ describe PDK::Generate::Module do
       let(:responses) do
         [
           'foo',
-          '2.2.0',
           'William Hopper',
           'Apache-2.0',
           '',
-          'A simple module to do some stuff.',
-          'github.com/whopper/bar',
-          'forge.puppet.com/whopper/bar',
-          'tickets.foo.com/whopper/bar',
           'test', # incorrect confirmation
           'yes',  # reattempted confirmation
         ]
@@ -555,13 +539,13 @@ describe PDK::Generate::Module do
 
         expect(interview_metadata).to include(
           'name'         => 'foo-bar',
-          'version'      => '2.2.0',
+          'version'      => '0.1.0',
           'author'       => 'William Hopper',
           'license'      => 'Apache-2.0',
-          'summary'      => 'A simple module to do some stuff.',
-          'source'       => 'github.com/whopper/bar',
-          'project_page' => 'forge.puppet.com/whopper/bar',
-          'issues_url'   => 'tickets.foo.com/whopper/bar',
+          'summary'      => '',
+          'source'       => '',
+          'project_page' => nil,
+          'issues_url'   => nil,
         )
       end
     end
@@ -572,14 +556,9 @@ describe PDK::Generate::Module do
       let(:responses) do
         [
           'foo',
-          '2.2.0',
           'William Hopper',
           'Apache-2.0',
           "\e[A 1 ", # \e[A == up arrow
-          'A simple module to do some stuff.',
-          'github.com/whopper/bar',
-          'forge.puppet.com/whopper/bar',
-          'tickets.foo.com/whopper/bar',
           'yes',
         ]
       end
@@ -590,13 +569,13 @@ describe PDK::Generate::Module do
 
         expect(interview_metadata).to include(
           'name'         => 'foo-bar',
-          'version'      => '2.2.0',
+          'version'      => '0.1.0',
           'author'       => 'William Hopper',
           'license'      => 'Apache-2.0',
-          'summary'      => 'A simple module to do some stuff.',
-          'source'       => 'github.com/whopper/bar',
-          'project_page' => 'forge.puppet.com/whopper/bar',
-          'issues_url'   => 'tickets.foo.com/whopper/bar',
+          'summary'      => '',
+          'source'       => '',
+          'project_page' => nil,
+          'issues_url'   => nil,
           'operatingsystem_support' => [
             {
               'operatingsystem'        => 'Debian',
@@ -751,7 +730,7 @@ describe PDK::Generate::Module do
       let(:login) { 'test_user' }
 
       it 'warns the user and returns the login with the characters removed' do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
+        expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
         is_expected.to eq('testuser')
       end
     end
@@ -760,7 +739,7 @@ describe PDK::Generate::Module do
       let(:login) { 'Administrator' }
 
       it 'warns the user and returns the login with the characters downcased' do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
+        expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
         is_expected.to eq('administrator')
       end
     end
@@ -769,7 +748,7 @@ describe PDK::Generate::Module do
       let(:login) { 'Αρίσταρχος ό Σάμιος' }
 
       it 'warns the user and returns the string "username"' do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{not a valid forge username}i))
+        expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
         is_expected.to eq('username')
       end
     end

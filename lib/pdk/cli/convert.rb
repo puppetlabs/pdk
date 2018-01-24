@@ -8,6 +8,7 @@ module PDK::CLI
 
     PDK::CLI.template_url_option(self)
     PDK::CLI.skip_interview_option(self)
+    PDK::CLI.full_interview_option(self)
     flag nil, :noop, _('Do not convert the module, just output what would be done.')
     flag nil, :force, _('Convert the module automatically, with no prompts.')
 
@@ -22,6 +23,16 @@ module PDK::CLI
 
       if opts[:noop] && opts[:force]
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when converting a module')
+      end
+
+      if opts[:'skip-interview'] && opts[:'full-interview']
+        PDK.logger.info _('Ignoring --full-interview and continuing with --skip-interview.')
+        opts[:'full-interview'] = false
+      end
+
+      if opts[:force] && opts[:'full-interview']
+        PDK.logger.info _('Ignoring --full-interview and continuing with --force.')
+        opts[:'full-interview'] = false
       end
 
       PDK::Module::Convert.invoke(opts)
