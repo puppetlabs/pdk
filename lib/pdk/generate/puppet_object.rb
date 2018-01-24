@@ -76,15 +76,13 @@ module PDK
         self.class::OBJECT_TYPE
       end
 
-      # Check that the target files do not exist, find an appropriate template
-      # and create the target files from the template. This is the main entry
-      # point for the class.
+      # Check preconditions of this template group. By default this only makes sure that the target files do not
+      # already exist. Override this (and call super) to add your own preconditions.
       #
       # @raise [PDK::CLI::ExitWithError] if the target files already exist.
-      # @raise [PDK::CLI::FatalError] (see #render_file)
       #
       # @api public
-      def run
+      def check_preconditions
         [target_object_path, target_spec_path].compact.each do |target_file|
           next unless File.exist?(target_file)
 
@@ -93,6 +91,18 @@ module PDK
             object_type: object_type,
           }
         end
+      end
+
+      # Check that the templates can be rendered. Find an appropriate template
+      # and create the target files from the template. This is the main entry
+      # point for the class.
+      #
+      # @raise [PDK::CLI::ExitWithError] if the target files already exist.
+      # @raise [PDK::CLI::FatalError] (see #render_file)
+      #
+      # @api public
+      def run
+        check_preconditions
 
         with_templates do |template_path, config_hash|
           data = template_data.merge(configs: config_hash)
