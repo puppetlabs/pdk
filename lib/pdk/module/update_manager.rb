@@ -86,12 +86,12 @@ module PDK
         files_to_write = @added_files
         files_to_write += @modified_files.reject { |file| @diff_cache[file[:path]].nil? }
 
-        files_to_write.each do |file|
-          write_file(file[:path], file[:content])
-        end
-
         @removed_files.each do |file|
           unlink_file(file)
+        end
+
+        files_to_write.each do |file|
+          write_file(file[:path], file[:content])
         end
       end
 
