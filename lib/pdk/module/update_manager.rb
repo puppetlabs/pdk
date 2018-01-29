@@ -1,8 +1,8 @@
-require 'set'
 require 'diff/lcs'
 require 'diff/lcs/hunk'
 require 'English'
 require 'fileutils'
+require 'set'
 
 module PDK
   module Module
@@ -124,6 +124,7 @@ module PDK
       # @raise [PDK::CLI::ExitWithError] if the file is not writeable.
       def write_file(path, content)
         FileUtils.mkdir_p(File.dirname(path))
+        PDK.logger.debug(_("writing '%{path}'") % { path: path })
         File.open(path, 'w') { |f| f.puts content }
       rescue Errno::EACCES
         raise PDK::CLI::ExitWithError, _("You do not have permission to write to '%{path}'") % { path: path }
@@ -139,7 +140,12 @@ module PDK
       #
       # @raise [PDK::CLI::ExitWithError] if the file could not be removed.
       def unlink_file(path)
-        FileUtils.rm(path) if File.file?(path)
+        if File.file?(path)
+          PDK.logger.debug(_("unlinking '%{path}'") % { path: path })
+          FileUtils.rm(path)
+        else
+          PDK.logger.debug(_("'%{path}': already gone") % { path: path })
+        end
       rescue => e
         raise PDK::CLI::ExitWithError, _("Unable to remove '%{path}': %{message}") % {
           path:    path,
