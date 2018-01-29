@@ -59,7 +59,7 @@ module PDK
     module_function :package_install?
 
     def development_mode?
-      !PDK::Util::Version.git_ref.nil?
+      (!PDK::Util::Version.git_ref.nil? || PDK::VERSION.end_with?('.pre'))
     end
     module_function :development_mode?
 

@@ -147,12 +147,14 @@ describe PDK::Util do
   describe '.development_mode?' do
     subject { described_class.development_mode? }
 
+    let(:result) { PDK::VERSION.end_with? '.pre' }
+
     context 'when the source is not using git' do
       before(:each) do
         allow(PDK::Util::Version).to receive(:git_ref).and_return(nil)
       end
 
-      it { is_expected.to be false }
+      it { is_expected.to be result }
     end
 
     context 'when the source is using git' do
