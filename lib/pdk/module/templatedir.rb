@@ -153,10 +153,12 @@ module PDK
       # @api public
       def object_template_for(object_type)
         object_path = File.join(@object_dir, "#{object_type}.erb")
+        addon_path = File.join(@object_dir, "#{object_type}_addon.erb")
         spec_path = File.join(@object_dir, "#{object_type}_spec.erb")
 
         if File.file?(object_path) && File.readable?(object_path)
           result = { object: object_path }
+          result[:addon] = addon_path if File.file?(addon_path) && File.readable?(addon_path)
           result[:spec] = spec_path if File.file?(spec_path) && File.readable?(spec_path)
           result
         else

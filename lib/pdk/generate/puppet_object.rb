@@ -58,6 +58,14 @@ module PDK
         raise NotImplementedError
       end
 
+      # @abstract Subclass and implement {#target_addon_path}. Implementations
+      #   of this method should return a String containing the destination path
+      #   of the additional object file being generated.
+      # @return [String] returns nil if there is no additional object file
+      def target_addon_path
+        nil
+      end
+
       # @abstract Subclass and implement {#target_spec_path}. Implementations
       #   of this method should return a String containing the destination path
       #   of the tests for the object being generated.
@@ -76,7 +84,24 @@ module PDK
         self.class::OBJECT_TYPE
       end
 
-      # Check that the target files do not exist, find an appropriate template
+      # Check preconditions of this template group. By default this only makes sure that the target files do not
+      # already exist. Override this (and call super) to add your own preconditions.
+      #
+      # @raise [PDK::CLI::ExitWithError] if the target files already exist.
+      #
+      # @api public
+      def check_preconditions
+        [target_object_path, target_addon_path, target_spec_path].compact.each do |target_file|
+          next unless File.exist?(target_file)
+
+          raise PDK::CLI::ExitWithError, _("Unable to generate %{object_type}; '%{file}' already exists.") % {
+            file:        target_file,
+            object_type: object_type,
+          }
+        end
+      end
+
+      # Check that the templates can be rendered. Find an appropriate template
       # and create the target files from the template. This is the main entry
       # point for the class.
       #
@@ -85,19 +110,13 @@ module PDK
       #
       # @api public
       def run
-        [target_object_path, target_spec_path].compact.each do |target_file|
-          next unless File.exist?(target_file)
-
-          raise PDK::CLI::ExitWithError, _("Unable to generate %{object_type}; '%{file}' already exists.") % {
-            file:        target_file,
-            object_type: object_type,
-          }
-        end
+        check_preconditions
 
         with_templates do |template_path, config_hash|
           data = template_data.merge(configs: config_hash)
 
           render_file(target_object_path, template_path[:object], data)
+          render_file(target_addon_path, template_path[:addon], data) if template_path[:addon]
           render_file(target_spec_path, template_path[:spec], data) if template_path[:spec]
         end
       end

@@ -13,4 +13,5 @@ end
 require 'pdk/cli/new/class'
 require 'pdk/cli/new/defined_type'
 require 'pdk/cli/new/module'
+require 'pdk/cli/new/provider'
 require 'pdk/cli/new/task'

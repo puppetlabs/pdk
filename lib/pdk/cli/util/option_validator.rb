@@ -24,6 +24,10 @@ module PDK
         end
         singleton_class.send(:alias_method, :valid_task_name?, :valid_module_name?)
 
+        # https://puppet.com/docs/puppet/5.3/custom_types.html#creating-a-type only says the name has to be a ruby symbol.
+        # Let's assume that only strings similar to module names can actually be resolved by the puppet language.
+        singleton_class.send(:alias_method, :valid_provider_name?, :valid_module_name?)
+
         # Validate a Puppet namespace against the regular expression in the
         # documentation: https://docs.puppet.com/puppet/4.10/lang_reserved.html#classes-and-defined-resource-types
         def self.valid_namespace?(string)
