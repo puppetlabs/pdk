@@ -147,17 +147,25 @@ describe PDK::Util do
   describe '.development_mode?' do
     subject { described_class.development_mode? }
 
-    let(:result) { PDK::VERSION.end_with? '.pre' }
-
-    context 'when the source is not using git' do
+    context 'when running from a release' do
       before(:each) do
         allow(PDK::Util::Version).to receive(:git_ref).and_return(nil)
+        stub_const('PDK::VERSION', '1.3.0')
       end
 
-      it { is_expected.to be result }
+      it { is_expected.to be false }
     end
 
-    context 'when the source is using git' do
+    context 'when running from a pre-release' do
+      before(:each) do
+        allow(PDK::Util::Version).to receive(:git_ref).and_return(nil)
+        stub_const('PDK::VERSION', '1.3.0.pre')
+      end
+
+      it { is_expected.to be true }
+    end
+
+    context 'when running from git' do
       before(:each) do
         allow(PDK::Util::Version).to receive(:git_ref).and_return('abc')
       end
