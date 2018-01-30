@@ -35,6 +35,11 @@ module PDK::CLI
         opts[:'full-interview'] = false
       end
 
+      # avoid environment variables that could confuse bundler during conversion
+      %w[FACTER_GEM_VERSION HIERA_GEM_VERSION PUPPET_GEM_VERSION].each do |env|
+        ENV.delete env
+      end
+
       PDK::Module::Convert.invoke(opts)
     end
   end
