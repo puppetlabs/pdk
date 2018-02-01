@@ -22,7 +22,11 @@ module PDK
       end
 
       def self.parse_options(_options, targets)
-        %w[parser validate].concat(targets)
+        ['parser', 'validate', '--config', null_file].concat(targets)
+      end
+
+      def self.null_file
+        Gem.win_platform? ? 'NUL' : '/dev/null'
       end
 
       def self.parse_output(report, result, targets)
