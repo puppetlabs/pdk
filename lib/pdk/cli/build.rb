@@ -21,12 +21,50 @@ module PDK::CLI
         log_level: :info,
       )
 
+      module_metadata = PDK::Module::Metadata.from_file('metadata.json')
+
       # TODO: Ensure forge metadata has been set, or call out to interview
       #       to set it.
       #
       # module_metadata.interview_for_forge! unless module_metadata.forge_ready?
 
-      PDK::Module::Build.invoke(opts)
+      builder = PDK::Module::Build.new(opts)
+
+      unless opts[:force]
+        if builder.package_already_exists?
+          continue = PDK::CLI::Util.prompt_for_yes(
+            _("The file '%{package}' already exists. Overwrite?") % { package: builder.package_file },
+            default: false,
+          )
+
+          unless continue
+            PDK.logger.info _('Build cancelled; exiting.')
+            exit 0
+          end
+        end
+
+        unless builder.module_pdk_compatible?
+          PDK.logger.info _('This module is not compatible with PDK, so PDK can not validate or test this build. ' \
+                            'Unvalidated modules may have errors when uploading to the Forge. ' \
+                            'To make this module PDK compatible and use validate features, cancel the build and run `pdk convert`.')
+          unless PDK::CLI::Util.prompt_for_yes(_('Continue with this build?'))
+            PDK.logger.info _('Build cancelled; exiting.')
+            exit 0
+          end
+        end
+      end
+
+      PDK.logger.info _('Building %{module_name} version %{module_version}') % {
+        module_name:    module_metadata.data['name'],
+        module_version: module_metadata.data['version'],
+      }
+
+      builder.build
+
+      PDK.logger.info _('Build of %{package_name} has completed successfully. Built package can be found here: %{package_path}') % {
+        package_name: module_metadata.data['name'],
+        package_path: builder.package_file,
+      }
     end
   end
 end

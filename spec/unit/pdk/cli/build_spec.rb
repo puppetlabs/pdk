@@ -23,7 +23,7 @@ describe 'PDK::CLI build' do
 
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
       allow(PDK::Module::Metadata).to receive(:from_file).with('metadata.json').and_return(mock_metadata_obj)
-      allow(PDK::Module::Build).to receive(:invoke).with(:'target-dir' => File.join(Dir.pwd, 'pkg')).and_return(package_path)
+      allow(PDK::Module::Build).to receive(:new).with(anything).and_return(mock_builder)
     end
 
     after(:each) do
@@ -38,10 +38,19 @@ describe 'PDK::CLI build' do
       }
     end
     let(:package_path) { File.join(Dir.pwd, 'pkg', 'testuser-testmodule-2.3.4.tar.gz') }
+    let(:mock_builder) do
+      instance_double(
+        PDK::Module::Build,
+        build:                   true,
+        module_pdk_compatible?:  true,
+        package_already_exists?: false,
+        package_file:            package_path,
+      )
+    end
 
     context 'and provided no flags' do
       it 'invokes the builder with the default target directory' do
-        expect(PDK::Module::Build).to receive(:invoke).with(:'target-dir' => File.join(Dir.pwd, 'pkg'))
+        expect(PDK::Module::Build).to receive(:new).with(:'target-dir' => File.join(Dir.pwd, 'pkg')).and_return(mock_builder)
       end
     end
 
@@ -49,7 +58,7 @@ describe 'PDK::CLI build' do
       let(:command_opts) { ['--target-dir', '/tmp/pdk_builds'] }
 
       it 'invokes the builder with the specified target directory' do
-        expect(PDK::Module::Build).to receive(:invoke).with(:'target-dir' => '/tmp/pdk_builds')
+        expect(PDK::Module::Build).to receive(:new).with(:'target-dir' => '/tmp/pdk_builds').and_return(mock_builder)
       end
     end
   end
