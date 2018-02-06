@@ -10,34 +10,23 @@ module PDK::CLI
            _('The target directory where you want PDK to write the package.'),
            argument: :required, default: File.join(Dir.pwd, 'pkg')
 
-    be_hidden
+    option nil, 'force', _('Skips the prompts and builds the module package.')
 
     run do |opts, _args, _cmd|
       require 'pdk/module/build'
 
+      # Make sure build is being run in a valid module directory with a metadata.json
       PDK::CLI::Util.ensure_in_module!(
-        message:   _('`pdk build` can only be run from inside a valid module directory.'),
+        message:   _('`pdk build` can only be run from inside a valid module with a metadata.json.'),
         log_level: :info,
       )
-
-      module_metadata = PDK::Module::Metadata.from_file('metadata.json')
 
       # TODO: Ensure forge metadata has been set, or call out to interview
       #       to set it.
       #
       # module_metadata.interview_for_forge! unless module_metadata.forge_ready?
 
-      PDK.logger.info _('Building %{module_name} version %{module_version}') % {
-        module_name:    module_metadata.data['name'],
-        module_version: module_metadata.data['version'],
-      }
-
-      package_path = PDK::Module::Build.invoke(opts)
-
-      PDK.logger.info _('Build of %{package_name} has completed successfully. Built package can be found here: %{package_path}') % {
-        package_name: 'something',
-        package_path: package_path,
-      }
+      PDK::Module::Build.invoke(opts)
     end
   end
 end

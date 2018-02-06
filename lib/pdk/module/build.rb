@@ -13,10 +13,12 @@ module PDK
 
       attr_reader :module_dir
       attr_reader :target_dir
+      attr_reader :force
 
       def initialize(options = {})
         @module_dir = options[:module_dir] || Dir.pwd
         @target_dir = options[:target_dir] || File.join(module_dir, 'pkg')
+        @force      = options[:force] || false
       end
 
       # Read and parse the values from metadata.json for the module that is
@@ -36,14 +38,65 @@ module PDK
       #
       # @return [String] The path to the built package file.
       def build
+        existing_package_check unless force
+        pdk_compatibility_check unless force
+
+        module_name = metadata['name']
+        PDK.logger.info _('Building %{module_name} version %{module_version}') % {
+          module_name:    module_name,
+          module_version: metadata['version'],
+        }
+
         create_build_dir
 
         stage_module_in_build_dir
         build_package
 
-        package_file
+        PDK.logger.info _('Build of %{package_name} has completed successfully. Built package can be found here: %{package_path}') % {
+          package_name: module_name,
+          package_path: package_file,
+        }
       ensure
         cleanup_build_dir
+      end
+
+      # Verify if there is an existing package in the target directory and prompts
+      # the user if they want to overwrite it.
+      def existing_package_check
+        if File.exist? package_file
+          continue = PDK::CLI::Util.prompt_for_yes(
+            _('The file \'%{package}\' already exists. Overwrite?') % { package: package_file },
+            default: false,
+          )
+        end
+
+        unless continue # rubocop:disable Style/GuardClause
+          PDK.logger.info _('Build cancelled; exiting.')
+          exit 0
+        end
+      end
+
+      # Check if the module is PDK Compatible. If not, then prompt the user if
+      # they want to run PDK Convert.
+      def pdk_compatibility_check
+        pdk_compatible = false
+
+        ['pdk-version', 'template-url'].each do |key|
+          pdk_compatible = true if metadata.key? key
+          break if pdk_compatible
+        end
+
+        unless pdk_compatible # rubocop:disable Style/GuardClause
+          # rubocop:disable Metrics/LineLength
+          PDK.logger.info(_('This module is not compatible with PDK, so PDK cannot validate or test this build. Unvalidated modules may have errors when uploading the Forge. To make this module PDK compatible and use validation features, cancel the build and run \'pdk convert\'.'))
+          # rubocop:enable Metrics/LineLength
+          continue = PDK::CLI::Util.prompt_for_yes(_('Continue with this build?'))
+
+          unless continue
+            PDK.logger.info _('Build cancelled; exiting.')
+            exit 0
+          end
+        end
       end
 
       # Return the path to the temporary build directory, which will be placed

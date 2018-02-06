@@ -39,14 +39,6 @@ describe 'PDK::CLI build' do
     end
     let(:package_path) { File.join(Dir.pwd, 'pkg', 'testuser-testmodule-2.3.4.tar.gz') }
 
-    it 'informs the user of the module that is being built' do
-      expect(logger).to receive(:info).with(a_string_matching(%r{#{mock_metadata['name']} version #{mock_metadata['version']}}i))
-    end
-
-    it 'informs the user of the path to the package on successful build' do
-      expect(logger).to receive(:info).with(a_string_matching(%r{package can be found.+#{Regexp.escape(package_path)}}i))
-    end
-
     context 'and provided no flags' do
       it 'invokes the builder with the default target directory' do
         expect(PDK::Module::Build).to receive(:invoke).with(:'target-dir' => File.join(Dir.pwd, 'pkg'))
