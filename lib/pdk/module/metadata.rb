@@ -79,7 +79,20 @@ module PDK
         end
       end
 
+      def forge_ready?
+        missing_fields.empty?
+      end
+
+      def interview_for_forge!
+        PDK::Generate::Module.module_interview(self, only_ask: missing_fields)
+      end
+
       private
+
+      def missing_fields
+        fields = DEFAULTS.keys - %w[data_provider requirements dependencies]
+        fields.select { |key| @data[key].nil? || @data[key].empty? }
+      end
 
       # Do basic validation and parsing of the name parameter.
       def process_name(data)
