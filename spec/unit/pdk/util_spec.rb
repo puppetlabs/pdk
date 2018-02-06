@@ -443,7 +443,7 @@ describe PDK::Util do
         end
 
         it 'returns origin/master' do
-          is_expected.to eq('e07e4fdef2cf410a7006a3612f53ef1563ea829f') # 'origin/master')
+          is_expected.to eq('origin/master')
         end
       end
     end
