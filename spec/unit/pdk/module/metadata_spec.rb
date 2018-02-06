@@ -62,4 +62,88 @@ describe PDK::Module::Metadata do
       expect { metadata.update!('name' => 'foo-1bar') }.to raise_error(ArgumentError, %r{Invalid 'name' field in metadata.json: module name must begin with a letter}i)
     end
   end
+
+  describe '#forge_ready?' do
+    subject { described_class.new(metadata).forge_ready? }
+
+    context 'when the metadata contains all the required fields' do
+      let(:metadata) do
+        {
+          'name'                    => 'test-module',
+          'version'                 => '0.1.0',
+          'author'                  => 'Test User',
+          'summary'                 => 'This module is amazing. Really.',
+          'license'                 => 'Apache-2.0',
+          'source'                  => 'https://github.com/puppetlabs/test-module',
+          'project_page'            => 'https://github.com/puppetlabs/test-module',
+          'issues_url'              => 'https://github.com/puppetlabs/test-module/issues',
+          'dependencies'            => [],
+          'operatingsystem_support' => [
+            {
+              'operatingsystem'        => 'Debian',
+              'operatingsystemrelease' => ['8'],
+            },
+          ],
+          'requirements' => [
+            {
+              'name'                => 'puppet',
+              'version_requirement' => '>= 4.7.0 < 6.0.0',
+            },
+          ],
+        }
+      end
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when the metadata is missing fields' do
+      let(:metadata) do
+        {
+          'name'    => 'test-module',
+          'version' => '0.1.0',
+        }
+      end
+
+      it { is_expected.to be_falsey }
+    end
+  end
+
+  describe '#interview_for_forge!' do
+    let(:metadata_instance) { described_class.new(metadata) }
+
+    after(:each) do
+      metadata_instance.interview_for_forge!
+    end
+
+    context 'when the metadata is missing fields' do
+      let(:metadata) do
+        {
+          'name'                    => 'test-module',
+          'version'                 => '0.1.0',
+          'author'                  => 'Test User',
+          'summary'                 => 'This module is amazing. Really.',
+          'license'                 => 'Apache-2.0',
+          'project_page'            => 'https://github.com/puppetlabs/test-module',
+          'issues_url'              => 'https://github.com/puppetlabs/test-module/issues',
+          'dependencies'            => [],
+          'operatingsystem_support' => [
+            {
+              'operatingsystem'        => 'Debian',
+              'operatingsystemrelease' => ['8'],
+            },
+          ],
+          'requirements' => [
+            {
+              'name'                => 'puppet',
+              'version_requirement' => '>= 4.7.0 < 6.0.0',
+            },
+          ],
+        }
+      end
+
+      it 'interviews the user for only the missing fields' do
+        expect(PDK::Generate::Module).to receive(:module_interview).with(metadata_instance, only_ask: ['source'])
+      end
+    end
+  end
 end
