@@ -46,6 +46,7 @@ module PDK
 
         begin
           response = prompt.yes?(question_text) do |q|
+            q.default opts[:default] unless opts[:default].nil?
             q.validate(validator, _('Answer "Y" to continue or "n" to cancel.'))
           end
         rescue TTY::Prompt::Reader::InputInterrupt

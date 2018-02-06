@@ -13,6 +13,7 @@ module PDK
 
       attr_reader :module_dir
       attr_reader :target_dir
+      attr_reader :force
 
       def initialize(options = {})
         @module_dir = options[:module_dir] || Dir.pwd
@@ -44,6 +45,18 @@ module PDK
         package_file
       ensure
         cleanup_build_dir
+      end
+
+      # Verify if there is an existing package in the target directory and prompts
+      # the user if they want to overwrite it.
+      def package_already_exists?
+        File.exist? package_file
+      end
+
+      # Check if the module is PDK Compatible. If not, then prompt the user if
+      # they want to run PDK Convert.
+      def module_pdk_compatible?
+        ['pdk-version', 'template-url'].any? { |key| metadata.key?(key) }
       end
 
       # Return the path to the temporary build directory, which will be placed

@@ -209,11 +209,12 @@ module PDK
     module_function :default_template_ref
 
     def puppetlabs_template_ref
-      if PDK::Util.development_mode?
-        'origin/master'
-      else
-        PDK::TEMPLATE_REF
-      end
+      PDK::TEMPLATE_REF
+      # if PDK::Util.development_mode?
+      #   'origin/master'
+      # else
+      #   PDK::TEMPLATE_REF
+      # end
     end
     module_function :puppetlabs_template_ref
   end
