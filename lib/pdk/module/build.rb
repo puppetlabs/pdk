@@ -160,8 +160,10 @@ module PDK
       def build_package
         FileUtils.rm_f(package_file)
 
-        Zlib::GzipWriter.open(package_file) do |package_fd|
-          Minitar.pack(build_dir, package_fd)
+        Dir.chdir(target_dir) do
+          Zlib::GzipWriter.open(package_file) do |package_fd|
+            Minitar.pack(release_name, package_fd)
+          end
         end
       end
 

@@ -19,8 +19,6 @@ describe 'PDK::CLI build' do
 
   context 'when run from inside a module' do
     before(:each) do
-      mock_metadata_obj = instance_double(PDK::Module::Metadata, data: mock_metadata)
-
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
       allow(PDK::Module::Metadata).to receive(:from_file).with('metadata.json').and_return(mock_metadata_obj)
       allow(PDK::Module::Build).to receive(:new).with(anything).and_return(mock_builder)
@@ -37,6 +35,14 @@ describe 'PDK::CLI build' do
         'version' => '2.3.4',
       }
     end
+    let(:mock_metadata_obj) do
+      instance_double(
+        PDK::Module::Metadata,
+        data:                 mock_metadata,
+        forge_ready?:         true,
+        interview_for_forge!: true,
+      )
+    end
     let(:package_path) { File.join(Dir.pwd, 'pkg', 'testuser-testmodule-2.3.4.tar.gz') }
     let(:mock_builder) do
       instance_double(
@@ -46,6 +52,30 @@ describe 'PDK::CLI build' do
         package_already_exists?: false,
         package_file:            package_path,
       )
+    end
+
+    context 'and the module contains incomplete metadata' do
+      before(:each) do
+        allow(mock_metadata_obj).to receive(:forge_ready?).and_return(false)
+        allow(PDK::Module::Build).to receive(:new).with(any_args).and_return(mock_builder)
+      end
+
+      it 'interviews the user for the missing data and updates the metadata.json file' do
+        expect(mock_metadata_obj).to receive(:interview_for_forge!)
+        expect(mock_metadata_obj).to receive(:write!).with('metadata.json')
+      end
+    end
+
+    context 'and the module contains complete metadata' do
+      before(:each) do
+        allow(mock_metadata_obj).to receive(:forge_ready?).and_return(true)
+        allow(PDK::Module::Build).to receive(:new).with(any_args).and_return(mock_builder)
+      end
+
+      it 'does not interview the user' do
+        expect(mock_metadata_obj).not_to receive(:interview_for_forge!)
+        expect(mock_metadata_obj).not_to receive(:write!)
+      end
     end
 
     context 'and provided no flags' do
