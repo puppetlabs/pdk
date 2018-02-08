@@ -27,8 +27,13 @@ module PDK::CLI
       #       to set it.
       #
       unless module_metadata.forge_ready?
-        module_metadata.interview_for_forge!
-        module_metadata.write!('metadata.json')
+        if opts[:force]
+          PDK.logger.error _('This module is missing required fields in the metadata.json. Re-run the build command without --force to add this information.')
+          exit 1
+        else
+          module_metadata.interview_for_forge!
+          module_metadata.write!('metadata.json')
+        end
       end
 
       builder = PDK::Module::Build.new(opts)
