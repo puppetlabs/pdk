@@ -51,7 +51,7 @@ module PDK
 
         PDK::Util::Bundler.ensure_bundle! if needs_bundle_update?
 
-        print_result
+        print_result 'Convert completed'
       end
 
       def noop?
@@ -103,12 +103,12 @@ module PDK
               metadata = PDK::Generate::Module.prepare_metadata(options) unless options[:noop] # rubocop:disable Metrics/BlockNesting
             end
           else
-            raise PDK::CLI::ExitWithError, _('Unable to convert module metadata; %{path} exists but it is not readable.') % {
+            raise PDK::CLI::ExitWithError, _('Unable to update module metadata; %{path} exists but it is not readable.') % {
               path: metadata_path,
             }
           end
         elsif File.exist?(metadata_path)
-          raise PDK::CLI::ExitWithError, _('Unable to convert module metadata; %{path} exists but it is not a file.') % {
+          raise PDK::CLI::ExitWithError, _('Unable to update module metadata; %{path} exists but it is not a file.') % {
             path: metadata_path,
           }
         else
@@ -155,8 +155,8 @@ module PDK
         PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner('', 40) }) if footer
       end
 
-      def print_result
-        PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner('Convert completed', 40) })
+      def print_result(banner_text)
+        PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner(banner_text, 40) })
         summary_to_print = summary.map { |k, v| "#{v.length} files #{k}" unless v.empty? }.compact
         PDK::Report.default_target.puts(_("\n%{summary}\n\n") % { summary: "#{summary_to_print.join(', ')}." })
       end
