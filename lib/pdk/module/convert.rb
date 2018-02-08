@@ -7,11 +7,64 @@ module PDK
   module Module
     class Convert
       def self.invoke(options)
-        update_manager = PDK::Module::UpdateManager.new
-        template_url = options.fetch(:'template-url', PDK::Util.default_template_url)
+        new(options).run
+      end
 
+      attr_reader :options
+
+      def initialize(options = {})
+        @options = options
+      end
+
+      def run
+        stage_changes!
+
+        unless update_manager.changes?
+          PDK::Report.default_target.puts(_('No changes required.'))
+          return
+        end
+
+        print_summary
+
+        full_report('convert_report.txt') unless update_manager.changes[:modified].empty?
+
+        return if noop?
+
+        unless force?
+          PDK.logger.info _(
+            'Module conversion is a potentially destructive action. ' \
+            'Ensure that you have committed your module to a version control ' \
+            'system or have a backup, and review the changes above before continuing.',
+          )
+          continue = PDK::CLI::Util.prompt_for_yes(_('Do you want to continue and make these changes to your module?'))
+          return unless continue
+        end
+
+        # Mark these files for removal after generating the report as these
+        # changes are not something that the user needs to review.
+        if needs_bundle_update?
+          update_manager.remove_file('Gemfile.lock')
+          update_manager.remove_file(File.join('.bundle', 'config'))
+        end
+
+        update_manager.sync_changes!
+
+        PDK::Util::Bundler.ensure_bundle! if needs_bundle_update?
+
+        print_result
+      end
+
+      def noop?
+        options[:noop]
+      end
+
+      def force?
+        options[:force]
+      end
+
+      def stage_changes!
         PDK::Module::TemplateDir.new(template_url, nil, false) do |templates|
-          new_metadata = update_metadata('metadata.json', templates.metadata, options)
+          new_metadata = update_metadata('metadata.json', templates.metadata)
 
           if options[:noop] && new_metadata.nil?
             update_manager.add_file('metadata.json', '')
@@ -29,46 +82,17 @@ module PDK
             end
           end
         end
-
-        unless update_manager.changes?
-          PDK::Report.default_target.puts(_('No changes required.'))
-          return
-        end
-
-        # Print the summary to the default target of reports
-        summary = get_summary(update_manager)
-        print_summary(summary)
-
-        # Generates the full convert report
-        full_report(update_manager, 'convert_report.txt') unless update_manager.changes[:modified].empty?
-
-        return if options[:noop]
-
-        unless options[:force]
-          PDK.logger.info _(
-            'Module conversion is a potentially destructive action. ' \
-            'Ensure that you have committed your module to a version control ' \
-            'system or have a backup, and review the changes above before continuing.',
-          )
-          continue = PDK::CLI::Util.prompt_for_yes(_('Do you want to continue and make these changes to your module?'))
-          return unless continue
-        end
-
-        # Mark these files for removal after generating the report as these
-        # changes are not something that the user needs to review.
-        if update_manager.changed?('Gemfile')
-          update_manager.remove_file('Gemfile.lock')
-          update_manager.remove_file(File.join('.bundle', 'config'))
-        end
-
-        update_manager.sync_changes!
-
-        PDK::Util::Bundler.ensure_bundle! if update_manager.changed?('Gemfile')
-
-        print_result(summary)
       end
 
-      def self.update_metadata(metadata_path, template_metadata, options = {})
+      def update_manager
+        @update_manager ||= PDK::Module::UpdateManager.new
+      end
+
+      def template_url
+        @template_url ||= options.fetch(:'template-url', PDK::Util.default_template_url)
+      end
+
+      def update_metadata(metadata_path, template_metadata)
         if File.file?(metadata_path)
           if File.readable?(metadata_path)
             begin
@@ -102,7 +126,7 @@ module PDK
         metadata.to_json
       end
 
-      def self.get_summary(update_manager)
+      def summary
         summary = {}
         update_manager.changes.each do |category, update_category|
           updated_files = if update_category.respond_to?(:keys)
@@ -117,7 +141,7 @@ module PDK
         summary
       end
 
-      def self.print_summary(summary)
+      def print_summary
         footer = false
 
         summary.keys.each do |category|
@@ -131,13 +155,13 @@ module PDK
         PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner('', 40) }) if footer
       end
 
-      def self.print_result(summary)
+      def print_result
         PDK::Report.default_target.puts(_("\n%{banner}") % { banner: generate_banner('Convert completed', 40) })
         summary_to_print = summary.map { |k, v| "#{v.length} files #{k}" unless v.empty? }.compact
         PDK::Report.default_target.puts(_("\n%{summary}\n\n") % { summary: "#{summary_to_print.join(', ')}." })
       end
 
-      def self.full_report(update_manager, path)
+      def full_report(path)
         File.open(path, 'w') do |f|
           f.write("/* Report generated by PDK at #{Time.now} */")
           update_manager.changes[:modified].each do |_, diff|
@@ -147,7 +171,7 @@ module PDK
         PDK::Report.default_target.puts(_("\nYou can find a report of differences in %{path}.\n\n") % { path: path })
       end
 
-      def self.generate_banner(text, width = 80)
+      def generate_banner(text, width = 80)
         padding = width - text.length
         banner = ''
         padding_char = '-'

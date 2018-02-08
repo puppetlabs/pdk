@@ -5,7 +5,7 @@ describe PDK::Module::Convert do
   shared_examples_for 'it interviews the user for the metadata' do
     it 'interviews the user for the metadata' do
       expect(PDK::Generate::Module).to receive(:prepare_metadata).and_return(PDK::Module::Metadata.new)
-      described_class.update_metadata(metadata_path, template_metadata)
+      described_class.new.update_metadata(metadata_path, template_metadata)
     end
 
     it 'updates the metadata with information about the template used to convert the module' do
@@ -63,6 +63,19 @@ describe PDK::Module::Convert do
   end
 
   describe '.invoke' do
+    let(:options) { { noop: true } }
+    let(:mock_instance) { instance_double(described_class) }
+
+    it 'instantiates a new object with the provided options and calls #run' do
+      allow(described_class).to receive(:new).with(options).and_return(mock_instance)
+      expect(mock_instance).to receive(:run)
+
+      described_class.invoke(options)
+    end
+  end
+
+  describe '.new' do
+    let(:instance) { described_class.new(options) }
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
     let(:template_dir) { instance_double(PDK::Module::TemplateDir, metadata: {}) }
@@ -75,7 +88,7 @@ describe PDK::Module::Convert do
       changes = { added: added_files, removed: removed_files, modified: modified_files }
 
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
-      allow(described_class).to receive(:update_metadata).with(any_args).and_return('')
+      allow(instance).to receive(:update_metadata).with(any_args).and_return('')
       allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(template_dir)
       allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content])
       allow(update_manager).to receive(:changes).and_return(changes)
@@ -83,7 +96,7 @@ describe PDK::Module::Convert do
     end
 
     after(:each) do
-      described_class.invoke(options)
+      instance.run
       FileUtils.rm_f('convert_report.txt')
     end
 
@@ -314,9 +327,9 @@ describe PDK::Module::Convert do
     end
   end
 
-  describe '.update_metadata' do
+  describe '#update_metadata' do
     subject(:updated_metadata) do
-      JSON.parse(described_class.update_metadata(metadata_path, template_metadata))
+      JSON.parse(described_class.new.update_metadata(metadata_path, template_metadata))
     end
 
     let(:metadata_path) { 'metadata.json' }
@@ -392,7 +405,7 @@ describe PDK::Module::Convert do
 
           it 'exits with an error' do
             expect {
-              described_class.update_metadata(metadata_path, template_metadata)
+              described_class.new.update_metadata(metadata_path, template_metadata)
             }.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not readable})
           end
         end
@@ -405,7 +418,7 @@ describe PDK::Module::Convert do
 
         it 'exits with an error' do
           expect {
-            described_class.update_metadata(metadata_path, template_metadata)
+            described_class.new.update_metadata(metadata_path, template_metadata)
           }.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not a file})
         end
       end
