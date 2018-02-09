@@ -13,7 +13,6 @@ module PDK
 
       attr_reader :module_dir
       attr_reader :target_dir
-      attr_reader :force
 
       def initialize(options = {})
         @module_dir = options[:module_dir] || Dir.pwd
