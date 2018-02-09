@@ -285,9 +285,19 @@ module PDK
 
         interview = PDK::CLI::Util::Interview.new(prompt)
 
-        questions.reject! { |q| q[:name] == 'module_name' } if opts.key?(:module_name)
-        questions.reject! { |q| q[:name] == 'license' } if opts.key?(:license)
-        questions.reject! { |q| q[:forge_only] } unless opts.key?(:'full-interview')
+        if opts[:only_ask]
+          questions.reject! do |question|
+            if %w[module_name forge_username].include?(question[:name])
+              metadata.data['name'] && metadata.data['name'] =~ %r{\A[a-z0-9]+-[a-z0-9]+\Z}i
+            else
+              !opts[:only_ask].include?(question[:name])
+            end
+          end
+        else
+          questions.reject! { |q| q[:name] == 'module_name' } if opts.key?(:module_name)
+          questions.reject! { |q| q[:name] == 'license' } if opts.key?(:license)
+          questions.reject! { |q| q[:forge_only] } unless opts.key?(:'full-interview')
+        end
 
         interview.add_questions(questions)
 
@@ -306,15 +316,21 @@ module PDK
           exit 0
         end
 
-        opts[:username] = answers['forge_username']
-        opts[:module_name] = answers['module_name'] unless answers['module_name'].nil?
+        unless answers['forge_username'].nil?
+          opts[:username] = answers['forge_username']
 
-        answers['name'] = "#{opts[:username]}-" + (opts[:module_name])
+          unless answers['module_name'].nil?
+            opts[:module_name] = answers['module_name']
+
+            answers.delete('module_name')
+          end
+
+          answers['name'] = "#{opts[:username]}-" + (opts[:module_name])
+          answers.delete('forge_username')
+        end
+
         answers['license'] = opts[:license] if opts.key?(:license)
-        answers['operatingsystem_support'].flatten!
-
-        answers.delete('forge_username')
-        answers.delete('module_name')
+        answers['operatingsystem_support'].flatten! if answers.key?('operatingsystem_support')
 
         metadata.update!(answers)
 
@@ -332,9 +348,11 @@ module PDK
         end
 
         PDK.answers.update!(
-          'forge_username' => opts[:username],
-          'author'         => answers['author'],
-          'license'        => answers['license'],
+          {
+            'forge_username' => opts[:username],
+            'author'         => answers['author'],
+            'license'        => answers['license'],
+          }.delete_if { |_key, value| value.nil? },
         )
       end
     end

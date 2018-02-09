@@ -274,6 +274,34 @@ describe PDK::Generate::Module do
       prompt.input.rewind
     end
 
+    context 'when only interviewing for specific missing fields' do
+      let(:options) do
+        { only_ask: ['source'] }
+      end
+
+      let(:default_metadata) do
+        {
+          'name' => 'test-module',
+        }
+      end
+
+      let(:responses) do
+        [
+          'https://something',
+          'yes',
+        ]
+      end
+
+      it 'populates the metadata object based on user input' do
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{1 question}m))
+
+        expected_metadata = PDK::Module::Metadata.new.update!(default_metadata).data.dup
+        expected_metadata['source'] = 'https://something'
+
+        expect(interview_metadata).to eq(expected_metadata)
+      end
+    end
+
     context 'with --full-interview' do
       let(:options) { { :module_name => module_name, :'full-interview' => true } }
 
