@@ -15,8 +15,8 @@ module PDK
       attr_reader :target_dir
 
       def initialize(options = {})
-        @module_dir = options[:module_dir] || Dir.pwd
-        @target_dir = options[:target_dir] || File.join(module_dir, 'pkg')
+        @module_dir = File.expand_path(options[:module_dir] || Dir.pwd)
+        @target_dir = File.expand_path(options[:'target-dir'] || File.join(module_dir, 'pkg'))
       end
 
       # Read and parse the values from metadata.json for the module that is
@@ -195,6 +195,13 @@ module PDK
 
                              PathSpec.new(data)
                            end
+
+        # Also ignore the target directory if it is in the module dir and not already ignored
+        if Find.find(@module_dir).include?(target_dir) && !@ignored_files.match(File.basename(target_dir) + '/')
+          @ignored_files = @ignored_files.add("\/#{File.basename(target_dir)}\/")
+        end
+
+        @ignored_files
       end
     end
   end

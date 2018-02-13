@@ -5,6 +5,7 @@ describe PDK::Module::Build do
   subject { described_class.new(initialize_options) }
 
   let(:initialize_options) { {} }
+  let(:root_dir) { Gem.win_platform? ? 'C:/' : '/' }
 
   shared_context 'with mock metadata' do
     let(:mock_metadata) { PDK::Module::Metadata.new('name' => 'my-module') }
@@ -30,7 +31,7 @@ describe PDK::Module::Build do
       allow(Dir).to receive(:pwd).and_return(pwd)
     end
 
-    let(:pwd) { '/path/to/my/module' }
+    let(:pwd) { File.join(root_dir, 'path', 'to', 'module') }
 
     context 'by default' do
       it 'uses the current working directory as the module directory' do
@@ -45,7 +46,7 @@ describe PDK::Module::Build do
     context 'if module_dir has been customised' do
       let(:initialize_options) do
         {
-          module_dir: '/some/other/module',
+          module_dir: File.join(root_dir, 'some', 'other', 'module'),
         }
       end
 
@@ -61,7 +62,7 @@ describe PDK::Module::Build do
     context 'if target_dir has been customised' do
       let(:initialize_options) do
         {
-          target_dir: '/tmp',
+          :'target-dir' => File.join(root_dir, 'tmp'),
         }
       end
 
@@ -70,15 +71,15 @@ describe PDK::Module::Build do
       end
 
       it 'places the built packages in the provided path' do
-        is_expected.to have_attributes(target_dir: initialize_options[:target_dir])
+        is_expected.to have_attributes(target_dir: initialize_options[:'target-dir'])
       end
     end
 
     context 'if both module_dir and target_dir have been customised' do
       let(:initialize_options) do
         {
-          target_dir: '/var/cache',
-          module_dir: '/tmp/git/my-module',
+          :'target-dir' => File.join(root_dir, 'var', 'cache'),
+          module_dir: File.join(root_dir, 'tmp', 'git', 'my-module'),
         }
       end
 
@@ -87,7 +88,7 @@ describe PDK::Module::Build do
       end
 
       it 'places the built packages in the provided target_dir path' do
-        is_expected.to have_attributes(target_dir: initialize_options[:target_dir])
+        is_expected.to have_attributes(target_dir: initialize_options[:'target-dir'])
       end
     end
   end
@@ -110,9 +111,9 @@ describe PDK::Module::Build do
   end
 
   describe '#package_file' do
-    subject { described_class.new(target_dir: target_dir).package_file }
+    subject { described_class.new(:'target-dir' => target_dir).package_file }
 
-    let(:target_dir) { '/tmp' }
+    let(:target_dir) { File.join(root_dir, 'tmp') }
 
     include_context 'with mock metadata'
 
@@ -120,9 +121,9 @@ describe PDK::Module::Build do
   end
 
   describe '#build_dir' do
-    subject { described_class.new(target_dir: target_dir).build_dir }
+    subject { described_class.new(:'target-dir' => target_dir).build_dir }
 
-    let(:target_dir) { '/tmp' }
+    let(:target_dir) { File.join(root_dir, 'tmp') }
 
     include_context 'with mock metadata'
 
@@ -131,7 +132,7 @@ describe PDK::Module::Build do
 
   describe '#stage_module_in_build_dir' do
     let(:instance) { described_class.new(module_dir: module_dir) }
-    let(:module_dir) { '/tmp/my-module' }
+    let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
 
     before(:each) do
       allow(instance).to receive(:ignored_files).and_return(PathSpec.new("/spec/\n"))
@@ -170,7 +171,7 @@ describe PDK::Module::Build do
 
   describe '#stage_path' do
     let(:instance) { described_class.new(module_dir: module_dir) }
-    let(:module_dir) { '/tmp/my-module' }
+    let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
     let(:path_to_stage) { File.join(module_dir, 'test') }
     let(:path_in_build_dir) { File.join(module_dir, 'pkg', release_name, 'test') }
     let(:release_name) { 'my-module-0.0.1' }
@@ -227,7 +228,7 @@ describe PDK::Module::Build do
         'foo',
       ]
     end
-    let(:module_dir) { '/tmp/my-module' }
+    let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
 
     before(:each) do
       allow(instance).to receive(:ignored_files).and_return(PathSpec.new(ignore_patterns.join("\n")))
@@ -249,7 +250,7 @@ describe PDK::Module::Build do
   describe '#ignore_file' do
     subject { described_class.new(module_dir: module_dir).ignore_file }
 
-    let(:module_dir) { '/tmp/my-module' }
+    let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
     let(:possible_files) do
       [
         '.pdkignore',
@@ -307,17 +308,19 @@ describe PDK::Module::Build do
   describe '#ignored_files' do
     subject { instance.ignored_files }
 
-    let(:module_dir) { '/tmp/my-module' }
+    let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
     let(:instance) { described_class.new(module_dir: module_dir) }
 
     context 'when no ignore file is present in the module' do
       before(:each) do
+        allow(Find).to receive(:find).with(module_dir).and_return([File.join(module_dir, 'pkg')])
         allow(instance).to receive(:ignore_file).and_return(nil)
       end
 
-      it 'returns a empty PathSpec object' do
+      it 'returns a PathSpec object with the target dir' do
         is_expected.to be_a(PathSpec)
-        is_expected.to have_attributes(specs: [])
+        is_expected.not_to be_empty
+        is_expected.to match('pkg/')
       end
     end
 
@@ -328,6 +331,7 @@ describe PDK::Module::Build do
 
         allow(instance).to receive(:ignore_file).and_return(ignore_file_path)
         allow(File).to receive(:open).with(ignore_file_path, 'rb:UTF-8').and_return(ignore_file_content)
+        allow(Find).to receive(:find).with(module_dir).and_return([File.join(module_dir, 'pkg')])
       end
 
       it 'returns a PathSpec object populated by the ignore file' do
