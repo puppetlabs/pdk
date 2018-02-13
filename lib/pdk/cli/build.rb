@@ -55,7 +55,7 @@ module PDK::CLI
           PDK.logger.info _('This module is not compatible with PDK, so PDK can not validate or test this build. ' \
                             'Unvalidated modules may have errors when uploading to the Forge. ' \
                             'To make this module PDK compatible and use validate features, cancel the build and run `pdk convert`.')
-          unless PDK::CLI::Util.prompt_for_yes(_('Continue with this build?'))
+          unless PDK::CLI::Util.prompt_for_yes(_('Continue build without converting?'))
             PDK.logger.info _('Build cancelled; exiting.')
             exit 0
           end
