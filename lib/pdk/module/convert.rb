@@ -62,6 +62,10 @@ module PDK
         options[:force]
       end
 
+      def needs_bundle_update?
+        update_manager.changed?('Gemfile')
+      end
+
       def stage_changes!
         PDK::Module::TemplateDir.new(template_url, nil, false) do |templates|
           new_metadata = update_metadata('metadata.json', templates.metadata)

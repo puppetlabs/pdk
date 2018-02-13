@@ -23,7 +23,15 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when updating a module')
       end
 
-      PDK::Module::Update.invoke(opts)
+      updater = PDK::Module::Update.new(opts)
+
+      if updater.current_version == updater.new_version
+        PDK.logger.info _('This module is already up to date with version %{version} of the template.') % {
+          version: updater.new_version,
+        }
+      else
+        updater.run
+      end
     end
   end
 end
