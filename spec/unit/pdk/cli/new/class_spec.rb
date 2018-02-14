@@ -9,11 +9,7 @@ describe 'PDK::CLI new class' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
 
-      expect {
-        PDK::CLI.run(%w[new class test_class])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).not_to eq(0)
-      }
+      expect { PDK::CLI.run(%w[new class test_class]) }.to exit_nonzero
     end
   end
 
@@ -24,21 +20,13 @@ describe 'PDK::CLI new class' do
 
     context 'and not provided with a class name' do
       it 'exits non-zero and prints the `pdk new class` help' do
-        expect {
-          PDK::CLI.run(%w[new class])
-        }.to raise_error(SystemExit) { |error|
-          expect(error.status).not_to eq(0)
-        }.and output(help_text).to_stdout
+        expect { PDK::CLI.run(%w[new class]) }.to exit_nonzero.and output(help_text).to_stdout
       end
     end
 
     context 'and provided an empty string as the class name' do
       it 'exits non-zero and prints the `pdk new class` help' do
-        expect {
-          PDK::CLI.run(['new', 'class', ''])
-        }.to raise_error(SystemExit) { |error|
-          expect(error.status).not_to eq(0)
-        }.and output(help_text).to_stdout
+        expect { PDK::CLI.run(['new', 'class', '']) }.to exit_nonzero.and output(help_text).to_stdout
       end
     end
 
@@ -46,11 +34,7 @@ describe 'PDK::CLI new class' do
       it 'exits with an error' do
         expect(logger).to receive(:error).with(a_string_matching(%r{'test-class' is not a valid class name}))
 
-        expect {
-          PDK::CLI.run(%w[new class test-class])
-        }.to raise_error(SystemExit) { |error|
-          expect(error.status).not_to eq(0)
-        }
+        expect { PDK::CLI.run(%w[new class test-class]) }.to exit_nonzero
       end
     end
 

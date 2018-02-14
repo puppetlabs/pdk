@@ -16,7 +16,7 @@ describe 'PDK::CLI build' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
 
-      expect { PDK::CLI.run(['build']) }.to exit_with_status(1)
+      expect { PDK::CLI.run(['build']) }.to exit_nonzero
     end
   end
 
@@ -73,7 +73,7 @@ describe 'PDK::CLI build' do
 
         it 'outputs an error message' do
           expect(logger).to receive(:error).with(a_string_matching(%r{This module is missing required fields in the metadata.json}i))
-          expect { PDK::CLI.run(['build'] + command_opts) }.to exit_with_status(1)
+          expect { PDK::CLI.run(['build'] + command_opts) }.to exit_nonzero
         end
       end
     end
@@ -138,7 +138,7 @@ describe 'PDK::CLI build' do
         it 'cancel' do
           expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{The file 'testuser-testmodule' already exists. Overwrite}i), default: false).and_return(false)
 
-          expect { PDK::CLI.run(['build'] + command_opts) }.to exit_with_status(0)
+          expect { PDK::CLI.run(['build'] + command_opts) }.to exit_zero
         end
       end
     end
@@ -172,7 +172,7 @@ describe 'PDK::CLI build' do
         it 'cancel' do
           expect(logger).to receive(:info).with(a_string_matching(%r{This module is not compatible with PDK}))
           expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Continue build without converting}i)).and_return(false)
-          expect { PDK::CLI.run(['build'] + command_opts) }.to exit_with_status(0)
+          expect { PDK::CLI.run(['build'] + command_opts) }.to exit_zero
         end
       end
     end

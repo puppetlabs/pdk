@@ -4,11 +4,8 @@ describe PDK::CLI do
   context 'when invoking help' do
     it 'outputs basic help' do
       expect($stdout).to receive(:puts).with(a_string_matching(%r{NAME.*USAGE.*DESCRIPTION.*COMMANDS.*OPTIONS}m))
-      expect {
-        described_class.run(['--help'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+
+      expect { described_class.run(['--help']) }.to exit_zero
     end
   end
 
@@ -17,12 +14,9 @@ describe PDK::CLI do
       include_context 'run outside module'
 
       it 'informs the user that this is not a module folder' do
-        expect {
-          described_class.run(command.split(' '))
-        }.to raise_error(SystemExit) { |error|
-          expect(error.status).not_to eq(0)
-          expect(error.cause.to_s).to match(%r{no metadata\.json found}i)
-        }
+        expect(logger).to receive(:error).with(a_string_matching(%r{no metadata\.json found}i))
+
+        expect { described_class.run(command.split(' ')) }.to exit_nonzero
       end
     end
   end
@@ -31,11 +25,7 @@ describe PDK::CLI do
     it 'informs the user and exits' do
       expect(logger).to receive(:error).with(a_string_matching(%r{'non_existant_format'.*valid report format}))
 
-      expect {
-        described_class.run(['--format', 'non_existant_format'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).not_to eq(0)
-      }
+      expect { described_class.run(%w[--format non_existant_format]) }.to exit_nonzero
     end
   end
 

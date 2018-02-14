@@ -9,11 +9,7 @@ describe 'PDK::CLI new task' do
 
   shared_examples 'it exits non-zero and prints the help text' do
     it 'exits non-zero and prints the `pdk new task` help' do
-      expect {
-        PDK::CLI.run(args)
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).not_to be_zero
-      }.and output(help_text).to_stdout
+      expect { PDK::CLI.run(args) }.to exit_nonzero.and output(help_text).to_stdout
     end
   end
 
@@ -21,11 +17,7 @@ describe 'PDK::CLI new task' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(expected_error))
 
-      expect {
-        PDK::CLI.run(args)
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).not_to be_zero
-      }
+      expect { PDK::CLI.run(args) }.to exit_nonzero
     end
   end
 

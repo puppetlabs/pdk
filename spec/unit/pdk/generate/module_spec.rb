@@ -518,9 +518,7 @@ describe PDK::Generate::Module do
         allow(logger).to receive(:info).with(a_string_matching(%r{interview cancelled}i))
         allow($stdout).to receive(:puts).with(a_string_matching(%r{4 questions}m))
 
-        expect { interview_metadata }.to raise_error(SystemExit) { |error|
-          expect(error.status).to eq(0)
-        }
+        expect { interview_metadata }.to exit_zero
       end
     end
 
@@ -541,9 +539,7 @@ describe PDK::Generate::Module do
         allow(logger).to receive(:info).with(a_string_matching(%r{Process cancelled; exiting.}i))
         allow($stdout).to receive(:puts).with(a_string_matching(%r{4 questions}m))
 
-        expect { interview_metadata }.to raise_error(SystemExit) { |error|
-          expect(error.status).to eq(0)
-        }
+        expect { interview_metadata }.to exit_zero
       end
     end
 

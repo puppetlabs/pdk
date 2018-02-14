@@ -9,11 +9,7 @@ describe 'PDK::CLI convert' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
 
-      expect {
-        PDK::CLI.run(%w[convert])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).not_to eq(0)
-      }
+      expect { PDK::CLI.run(%w[convert]) }.to exit_nonzero
     end
   end
 
@@ -58,11 +54,7 @@ describe 'PDK::CLI convert' do
       it 'exits with an error' do
         expect(logger).to receive(:error).with(a_string_matching(%r{can not specify --noop and --force}i))
 
-        expect {
-          PDK::CLI.run(['convert', '--noop', '--force'])
-        }.to raise_error(SystemExit) { |error|
-          expect(error.status).not_to eq(0)
-        }
+        expect { PDK::CLI.run(['convert', '--noop', '--force']) }.to exit_nonzero
       end
     end
 
