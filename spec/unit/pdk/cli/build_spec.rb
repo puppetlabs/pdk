@@ -125,7 +125,8 @@ describe 'PDK::CLI build' do
         end
 
         it 'continue to build' do
-          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{The file 'testuser-testmodule' already exists. Overwrite}i), default: false).and_return(true)
+          expect(logger).to receive(:info).with(a_string_matching(%r{The file 'testuser-testmodule' already exists}i))
+          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Overwrite}i), default: false).and_return(true)
         end
       end
 
@@ -136,7 +137,8 @@ describe 'PDK::CLI build' do
         end
 
         it 'cancel' do
-          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{The file 'testuser-testmodule' already exists. Overwrite}i), default: false).and_return(false)
+          expect(logger).to receive(:info).with(a_string_matching(%r{The file 'testuser-testmodule' already exists}i))
+          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Overwrite}i), default: false).and_return(false)
 
           expect { PDK::CLI.run(['build'] + command_opts) }.to exit_with_status(0)
         end
