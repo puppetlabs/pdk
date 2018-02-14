@@ -15,3 +15,19 @@ RSpec::Matchers.define(:exit_with_status) do |expected_status|
     expectation_passed
   end
 end
+
+RSpec::Matchers.define(:exit_zero) do
+  supports_block_expectations
+
+  match do |block|
+    expect { block.call }.to exit_with_status(0)
+  end
+end
+
+RSpec::Matchers.define(:exit_nonzero) do
+  supports_block_expectations
+
+  match do |block|
+    expect { block.call }.to exit_with_status(be_nonzero)
+  end
+end
