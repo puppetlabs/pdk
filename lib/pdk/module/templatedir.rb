@@ -97,18 +97,16 @@ module PDK
       #
       # @api public
       def metadata
-        return {} unless @repo
+        result = {
+          'pdk-version' => PDK::Util::Version.version_string,
+        }
+
+        result['template-url'] = @repo ? @repo : @path
 
         ref_result = PDK::Util::Git.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long', '--always')
-        if ref_result[:exit_code].zero?
-          {
-            'pdk-version'  => PDK::Util::Version.version_string,
-            'template-url' => @repo,
-            'template-ref' => ref_result[:stdout].strip,
-          }
-        else
-          {}
-        end
+        result['template-ref'] = ref_result[:stdout].strip if ref_result[:exit_code].zero?
+
+        result
       end
 
       # Loop through the files in the template, yielding each rendered file to
