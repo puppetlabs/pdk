@@ -9,9 +9,7 @@ describe 'Running pdk module generate' do
     it do
       expect {
         PDK::CLI.run(%w[module generate])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(1)
-      }.and output(a_string_matching(%r{^USAGE\s+pdk module generate}m)).to_stdout
+      }.to exit_nonzero.and output(a_string_matching(%r{^USAGE\s+pdk module generate}m)).to_stdout
     end
   end
 

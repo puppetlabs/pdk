@@ -8,11 +8,7 @@ describe '`pdk test unit`' do
 
   context 'with --help' do
     it do
-      expect {
-        PDK::CLI.run(['test', 'unit', '--help'])
-      }.to raise_error(SystemExit) { |e|
-        expect(e.status).to eq 0
-      }.and output(%r{^USAGE\s+pdk test unit}m).to_stdout
+      expect { PDK::CLI.run(['test', 'unit', '--help']) }.to exit_zero.and output(%r{^USAGE\s+pdk test unit}m).to_stdout
     end
   end
 
@@ -92,11 +88,7 @@ describe '`pdk test unit`' do
         end
 
         it do
-          expect {
-            test_unit_cmd.run_this([])
-          }.to raise_error(SystemExit) { |e|
-            expect(e.status).to eq 0
-          }
+          expect { test_unit_cmd.run_this([]) }.to exit_zero
         end
 
         context 'with a format option' do
@@ -105,11 +97,7 @@ describe '`pdk test unit`' do
           end
 
           it do
-            expect {
-              test_unit_cmd.run_this(['--format=text:results.txt'])
-            }.to raise_error(SystemExit) { |e|
-              expect(e.status).to eq 0
-            }
+            expect { test_unit_cmd.run_this(['--format=text:results.txt']) }.to exit_zero
           end
         end
 
@@ -121,11 +109,7 @@ describe '`pdk test unit`' do
           end
 
           it do
-            expect {
-              test_unit_cmd.run_this(["--tests=#{tests}"])
-            }.to raise_error(SystemExit) { |e|
-              expect(e.status).to eq 0
-            }
+            expect { test_unit_cmd.run_this(["--tests=#{tests}"]) }.to exit_zero
           end
         end
       end
@@ -136,11 +120,7 @@ describe '`pdk test unit`' do
         end
 
         it do
-          expect {
-            test_unit_cmd.run_this([])
-          }.to raise_error(SystemExit) { |e|
-            expect(e.status).not_to eq 0
-          }
+          expect { test_unit_cmd.run_this([]) }.to exit_nonzero
         end
       end
     end

@@ -22,11 +22,7 @@ describe 'Running `pdk validate` in a module' do
 
       expect(logger).to receive(:info).with('Running all available validators...')
 
-      expect {
-        PDK::CLI.run(['validate'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      expect { PDK::CLI.run(['validate']) }.to exit_zero
     end
 
     context 'with --parallel' do
@@ -41,11 +37,7 @@ describe 'Running `pdk validate` in a module' do
 
         expect(logger).to receive(:info).with('Running all available validators...')
 
-        expect {
-          PDK::CLI.run(['validate', '--parallel'])
-        }.to raise_error(SystemExit) { |error|
-          expect(error.status).to eq(0)
-        }
+        expect { PDK::CLI.run(['validate', '--parallel']) }.to exit_zero
       end
     end
   end
@@ -54,11 +46,7 @@ describe 'Running `pdk validate` in a module' do
     it 'lists all of the available validators and exits zero' do
       expect(logger).to receive(:info).with("Available validators: #{validator_names}")
 
-      expect {
-        PDK::CLI.run(['validate', '--list'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      expect { PDK::CLI.run(['validate', '--list']) }.to exit_zero
     end
   end
 
@@ -72,11 +60,7 @@ describe 'Running `pdk validate` in a module' do
         expect(v).not_to receive(:invoke)
       end
 
-      expect {
-        PDK::CLI.run(%w[validate metadata])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      expect { PDK::CLI.run(%w[validate metadata]) }.to exit_zero
     end
   end
 
@@ -95,11 +79,7 @@ describe 'Running `pdk validate` in a module' do
         expect(validator).not_to receive(:invoke)
       end
 
-      expect {
-        PDK::CLI.run(['validate', 'puppet,metadata'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      expect { PDK::CLI.run(['validate', 'puppet,metadata']) }.to exit_zero
     end
   end
 
@@ -110,11 +90,7 @@ describe 'Running `pdk validate` in a module' do
       expect(logger).to receive(:warn).with(%r{Unknown validator 'bad-val'. Available validators: #{validator_names}}i)
       expect(validator).to receive(:invoke).with(report, {}).and_return(0)
 
-      expect {
-        PDK::CLI.run(['validate', 'puppet,bad-val'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      expect { PDK::CLI.run(['validate', 'puppet,bad-val']) }.to exit_zero
     end
   end
 
@@ -124,11 +100,7 @@ describe 'Running `pdk validate` in a module' do
     it 'invokes the specified validator with the target as an option' do
       expect(validator).to receive(:invoke).with(report, targets: ['lib/', 'manifests/']).and_return(0)
 
-      expect {
-        PDK::CLI.run(['validate', 'metadata', 'lib/', 'manifests/'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      expect { PDK::CLI.run(['validate', 'metadata', 'lib/', 'manifests/']) }.to exit_zero
     end
   end
 
@@ -138,11 +110,7 @@ describe 'Running `pdk validate` in a module' do
 
       expect(logger).to receive(:info).with('Running all available validators...')
 
-      expect {
-        PDK::CLI.run(['validate', 'lib/', 'manifests/'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      expect { PDK::CLI.run(['validate', 'lib/', 'manifests/']) }.to exit_zero
     end
   end
 
@@ -152,11 +120,7 @@ describe 'Running `pdk validate` in a module' do
       expect(report).to receive(:write_text).with($stdout)
       expect(report).not_to receive(:write_junit)
 
-      expect {
-        PDK::CLI.run(['validate'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      expect { PDK::CLI.run(['validate']) }.to exit_zero
     end
   end
 
@@ -166,11 +130,7 @@ describe 'Running `pdk validate` in a module' do
       expect(report).to receive(:write_junit).with($stdout)
       expect(report).not_to receive(:write_text)
 
-      expect {
-        PDK::CLI.run(['validate', '--format', 'junit'])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      expect { PDK::CLI.run(['validate', '--format', 'junit']) }.to exit_zero
     end
   end
 
@@ -183,9 +143,7 @@ describe 'Running `pdk validate` in a module' do
 
       expect {
         PDK::CLI.run(%w[validate --format text:stderr --format junit:testfile.xml --format text])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(0)
-      }
+      }.to exit_zero
     end
   end
 end

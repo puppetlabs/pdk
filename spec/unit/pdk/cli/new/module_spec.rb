@@ -15,11 +15,7 @@ describe 'Running `pdk new module`' do
     it 'informs the user that the module name is invalid' do
       expect(logger).to receive(:error).with(a_string_matching(%r{'123test'.*not.*valid module name}m))
 
-      expect {
-        PDK::CLI.run(%w[new module 123test])
-      }.to raise_error(SystemExit) { |error|
-        expect(error.status).to eq(1)
-      }
+      expect { PDK::CLI.run(%w[new module 123test]) }.to exit_nonzero
     end
   end
 
