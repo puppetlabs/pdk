@@ -125,8 +125,6 @@ module PDK
         metadata = PDK::Module::Metadata.new(defaults)
         module_interview(metadata, opts) unless opts[:'skip-interview']
 
-        metadata.update!('pdk-version' => PDK::Util::Version.version_string)
-
         metadata
       end
 

@@ -226,4 +226,24 @@ describe PDK::Module::TemplateDir do
       end
     end
   end
+
+  describe '.metadata' do
+    before(:each) do
+      allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(File).to receive(:directory?).with(path_or_url).and_return(false)
+      allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return('/tmp/path')
+      allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, '/tmp/path').and_return(exit_code: 0)
+      allow(PDK::Util::Git).to receive(:git).with('-C', '/tmp/path', 'reset', '--hard', 'default-ref').and_return(exit_code: 0)
+      allow(FileUtils).to receive(:remove_dir).with('/tmp/path')
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
+    end
+
+    context 'pdk data' do
+      it 'includes the PDK version and template info' do
+        expect(template_dir.metadata).to include('pdk-version' => '0.0.0', 'template-url' => '/path/to/templates', 'template-ref' => '1234abcd')
+      end
+    end
+  end
 end

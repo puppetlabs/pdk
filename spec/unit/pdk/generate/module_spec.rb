@@ -666,10 +666,6 @@ describe PDK::Generate::Module do
           'dependencies' => [],
         )
       end
-
-      it 'includes the PDK version number' do
-        expect(metadata.data).to include('pdk-version' => PDK::Util::Version.version_string)
-      end
     end
 
     context 'when an answer file exists with answers' do

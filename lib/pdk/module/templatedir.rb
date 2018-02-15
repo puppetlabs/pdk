@@ -101,7 +101,11 @@ module PDK
 
         ref_result = PDK::Util::Git.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long', '--always')
         if ref_result[:exit_code].zero?
-          { 'template-url' => @repo, 'template-ref' => ref_result[:stdout].strip }
+          {
+            'pdk-version'  => PDK::Util::Version.version_string,
+            'template-url' => @repo,
+            'template-ref' => ref_result[:stdout].strip,
+          }
         else
           {}
         end
