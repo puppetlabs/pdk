@@ -8,7 +8,9 @@ describe PDK::Module::TemplateDir do
     end
   end
 
-  let(:path_or_url) { '/path/to/templates' }
+  let(:root_dir) { Gem.win_platform? ? 'C:/' : '/' }
+  let(:path_or_url) { File.join(root_dir, 'path', 'to', 'templates') }
+  let(:tmp_path) { File.join(root_dir, 'tmp', 'path') }
 
   let(:module_metadata) do
     {
@@ -31,11 +33,11 @@ describe PDK::Module::TemplateDir do
   context 'with a valid template path' do
     it 'returns config hash with module metadata' do
       allow(File).to receive(:directory?).with(anything).and_return(true)
-      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return('/tmp/path')
-      allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, '/tmp/path').and_return(exit_code: 0)
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
+      allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
-      allow(Dir).to receive(:rmdir).with('/tmp/path').and_return(0)
+      allow(Dir).to receive(:rmdir).with(tmp_path).and_return(0)
 
       allow(described_class).to receive(:new).with(path_or_url, module_metadata).and_yield(template_dir)
       expect(template_dir.object_config).to include('module_metadata' => module_metadata)
@@ -97,7 +99,6 @@ describe PDK::Module::TemplateDir do
     end
 
     context 'when passing in more than one directory with a file' do
-      let(:path_or_url) { '/path/to/templates' }
       let(:dirs) { ['/path/to/templates/moduleroot', '/path/to/templates/moduleroot_init'] }
 
       before(:each) do
@@ -110,6 +111,7 @@ describe PDK::Module::TemplateDir do
         allow(Dir).to receive(:glob).with('/path/to/templates/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/path/to/templates/moduleroot/.', '/path/to/templates/moduleroot/filename']
         allow(Dir).to receive(:glob).with('/path/to/templates/moduleroot_init/**/*', File::FNM_DOTMATCH).and_return ['/path/to/templates/moduleroot_init/filename2']
       end
+
       it 'returns the file names from both directories' do
         expect(described_class.files_in_template(dirs)).to eq('filename' => '/path/to/templates/moduleroot',
                                                               'filename2' => '/path/to/templates/moduleroot_init')
@@ -120,8 +122,8 @@ describe PDK::Module::TemplateDir do
   describe '.render(template_files)' do
     before(:each) do
       allow(File).to receive(:directory?).with(anything).and_return(true)
-      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return('/tmp/path')
-      allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, '/tmp/path').and_return(exit_code: 0)
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
+      allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
     end
 
     context 'when passing in a template file' do
@@ -181,11 +183,11 @@ describe PDK::Module::TemplateDir do
   describe '.config_for(dest_path)' do
     before(:each) do
       allow(File).to receive(:directory?).with(anything).and_return(true)
-      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return('/tmp/path')
-      allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, '/tmp/path').and_return(exit_code: 0)
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
+      allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
-      allow(File).to receive(:readable?).with('/path/to/templates/config_defaults.yml').and_return true
+      allow(File).to receive(:readable?).with(File.join(path_or_url, 'config_defaults.yml')).and_return true
       allow(YAML).to receive(:safe_load).with(config_defaults, [], [], true).and_return config_hash
     end
 
@@ -219,10 +221,10 @@ describe PDK::Module::TemplateDir do
       end
 
       it 'absorbs config' do
-        expect(template_dir.config_for('/path/to/templates/')).to eq('module_metadata' => { 'name' => 'foo-bar', 'version' => '0.1.0' },
-                                                                     'appveyor.yml' => { 'environment' => { 'PUPPET_GEM_VERSION' => '~> 5.0' } },
-                                                                     '.travis.yml' => { 'extras' => [{ 'rvm' => '2.1.9' }] },
-                                                                     'foo' => { 'attr' => [{ 'val' => 1 }, { 'val' => 3 }] })
+        expect(template_dir.config_for(path_or_url)).to eq('module_metadata' => { 'name' => 'foo-bar', 'version' => '0.1.0' },
+                                                           'appveyor.yml'    => { 'environment' => { 'PUPPET_GEM_VERSION' => '~> 5.0' } },
+                                                           '.travis.yml'     => { 'extras' => [{ 'rvm' => '2.1.9' }] },
+                                                           'foo'             => { 'attr' => [{ 'val' => 1 }, { 'val' => 3 }] })
       end
     end
   end
@@ -232,18 +234,18 @@ describe PDK::Module::TemplateDir do
       allow(File).to receive(:directory?).with(anything).and_return(true)
       allow(File).to receive(:directory?).with(path_or_url).and_return(false)
       allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
-      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return('/tmp/path')
-      allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, '/tmp/path').and_return(exit_code: 0)
-      allow(PDK::Util::Git).to receive(:git).with('-C', '/tmp/path', 'reset', '--hard', 'default-ref').and_return(exit_code: 0)
-      allow(FileUtils).to receive(:remove_dir).with('/tmp/path')
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
+      allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
+      allow(PDK::Util::Git).to receive(:git).with('-C', tmp_path, 'reset', '--hard', 'default-ref').and_return(exit_code: 0)
+      allow(FileUtils).to receive(:remove_dir).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
-      allow(PDK::Util).to receive(:canonical_path).with('/path/to/templates').and_return('/path/to/templates')
+      allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
     end
 
     context 'pdk data' do
       it 'includes the PDK version and template info' do
-        expect(template_dir.metadata).to include('pdk-version' => '0.0.0', 'template-url' => '/path/to/templates', 'template-ref' => '1234abcd')
+        expect(template_dir.metadata).to include('pdk-version' => '0.0.0', 'template-url' => path_or_url, 'template-ref' => '1234abcd')
       end
     end
   end
