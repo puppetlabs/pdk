@@ -238,6 +238,7 @@ describe PDK::Module::TemplateDir do
       allow(FileUtils).to receive(:remove_dir).with('/tmp/path')
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
+      allow(PDK::Util).to receive(:canonical_path).with('/path/to/templates').and_return('/path/to/templates')
     end
 
     context 'pdk data' do
