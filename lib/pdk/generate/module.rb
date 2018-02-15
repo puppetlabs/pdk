@@ -301,13 +301,17 @@ module PDK
 
         interview.add_questions(questions)
 
+        action = File.file?('metadata.json') ? _('update') : _('create')
         puts _(
-          "\nWe need to create a metadata.json file for this module, so we\'re going to ask you %{count} " \
+          "\nWe need to %{action} the metadata.json file for this module, so we\'re going to ask you %{count} " \
           "questions.\n" \
           'If the question is not applicable to this module, accept the default option ' \
           'shown after each question. You can modify any answers at any time by manually updating ' \
           "the metadata.json file.\n\n",
-        ) % { count: interview.num_questions }
+        ) % {
+          count: interview.num_questions,
+          action: action,
+        }
 
         answers = interview.run
 
