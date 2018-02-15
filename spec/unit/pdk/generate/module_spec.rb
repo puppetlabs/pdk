@@ -292,8 +292,12 @@ describe PDK::Generate::Module do
         ]
       end
 
+      before(:each) do
+        allow(File).to receive(:file?).with('metadata.json').and_return(true)
+      end
+
       it 'populates the metadata object based on user input' do
-        allow($stdout).to receive(:puts).with(a_string_matching(%r{1 question}m))
+        allow($stdout).to receive(:puts).with(a_string_matching(%r{update the metadata\.json.+1 question}m))
 
         expected_metadata = PDK::Module::Metadata.new.update!(default_metadata).data.dup
         expected_metadata['source'] = 'https://something'
@@ -323,8 +327,12 @@ describe PDK::Generate::Module do
           ]
         end
 
+        before(:each) do
+          allow(File).to receive(:file?).with('metadata.json').and_return(false)
+        end
+
         it 'populates the Metadata object based on user input' do
-          allow($stdout).to receive(:puts).with(a_string_matching(%r{9 questions}m))
+          allow($stdout).to receive(:puts).with(a_string_matching(%r{create the metadata\.json.+9 questions}m))
 
           expect(interview_metadata).to include(
             'name'                    => 'foo-bar',
