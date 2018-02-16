@@ -37,6 +37,21 @@ module PDK
 
         git(*args)[:exit_code].zero?
       end
+
+      def self.ls_remote(repo, ref)
+        output = git('ls-remote', '--refs', repo, ref)
+
+        unless output[:exit_code].zero?
+          PDK.logger.error output[:stdout]
+          PDK.logger.error output[:stderr]
+          raise PDK::CLI::ExitWithError, _('Unable to access the template repository "%{repository}"') % {
+            repository: repo,
+          }
+        end
+
+        matching_refs = output[:stdout].split("\n").map { |r| r.split("\t") }
+        matching_refs.find { |_sha, remote_ref| remote_ref == ref }.first
+      end
     end
   end
 end
