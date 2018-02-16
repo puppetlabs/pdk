@@ -154,8 +154,8 @@ module PDK
             question:         _('If you have a name for your module, add it here.'),
             help:             _('This is the name that will be associated with your module, it should be relevant to the modules content.'),
             required:         true,
-            validate_pattern: %r{\A[a-z0-9]+\Z}i,
-            validate_message: _('Module names can only contain lowercase letters and numbers'),
+            validate_pattern: %r{\A[a-z][a-z0-9_]*\Z}i,
+            validate_message: _('Module names must begin with a lowercase letter and can only include lowercase letters, numbers, and underscores.'),
           },
           {
             name:             'forge_username',
