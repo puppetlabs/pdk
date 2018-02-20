@@ -46,6 +46,7 @@ describe PDK::Module::Update do
   describe '#run' do
     let(:instance) { described_class.new(options) }
     let(:template_ref) { '1.3.2-0-g1234567' }
+    let(:changes) { true }
 
     include_context 'with mock metadata'
 
@@ -55,10 +56,35 @@ describe PDK::Module::Update do
       allow(instance).to receive(:new_version).and_return('1.4.0')
       allow(instance).to receive(:print_result)
       allow(instance.update_manager).to receive(:sync_changes!)
+      allow(instance.update_manager).to receive(:changes?).and_return(changes)
     end
 
     after(:each) do
       instance.run
+    end
+
+    context 'when the version is the same' do
+      let(:options) { { noop: true } }
+
+      before(:each) do
+        allow(instance).to receive(:current_version).and_return('1.4.0')
+      end
+
+      context 'but there are changes' do
+        let(:changes) { true }
+
+        it 'doesn\'t print message' do
+          expect(logger).not_to receive(:info).with(a_string_matching(%r{This module is already up to date with version 1.4.0 of the template}i))
+        end
+      end
+
+      context 'but there are no changes' do
+        let(:changes) { false }
+
+        it 'doesn\'t print message' do
+          expect(logger).to receive(:info).with(a_string_matching(%r{This module is already up to date with version 1.4.0 of the template}))
+        end
+      end
     end
 
     context 'when using the default template' do
