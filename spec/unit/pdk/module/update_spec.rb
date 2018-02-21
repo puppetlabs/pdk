@@ -211,7 +211,7 @@ describe PDK::Module::Update do
       let(:template_ref) { '1.3.2-0-g07678c8' }
 
       it 'returns the tag name' do
-        is_expected.to eq('1.3.2')
+        is_expected.to eq('1.3.2@07678c8')
       end
     end
 
@@ -226,6 +226,8 @@ describe PDK::Module::Update do
 
   describe '#new_version' do
     subject { described_class.new(options).new_version }
+
+    include_context 'with mock metadata'
 
     context 'when the default_template_ref specifies a tag' do
       before(:each) do
