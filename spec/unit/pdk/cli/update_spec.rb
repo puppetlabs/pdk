@@ -57,17 +57,5 @@ describe 'PDK::CLI update' do
         expect { PDK::CLI.run(%w[update --noop --force]) }.to exit_nonzero
       end
     end
-
-    context 'and the module is already up to date' do
-      let(:current_version) { new_version }
-
-      it 'does not run the updater' do
-        expect(logger).to receive(:info).with(a_string_matching(%r{already up to date with version #{current_version}}i))
-        expect(PDK::Module::Update).to receive(:new).with({}).and_return(updater)
-        expect(updater).not_to receive(:run)
-
-        PDK::CLI.run(%w[update])
-      end
-    end
   end
 end

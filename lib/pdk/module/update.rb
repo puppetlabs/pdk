@@ -13,6 +13,13 @@ module PDK
         print_summary
         full_report('update_report.txt') unless update_manager.changes[:modified].empty?
 
+        if !update_manager.changes? && current_version == new_version
+          PDK.logger.info _('This module is already up to date with version %{version} of the template.') % {
+            version: new_version,
+          }
+          return
+        end
+
         return if noop?
 
         unless force?
