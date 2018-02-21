@@ -4,7 +4,49 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
-## [v1.3.2](https://github.com/puppetlabs/pdk/tree/v1.3.2) (2018-01-16)
+## [v1.4.0](https://github.com/puppetlabs/pdk/tree/v1.4.0) (2018-02-21)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.2...v1.4.0)
+
+**Implemented enhancements:**
+
+- \(PDK-771\) Wireframe `pdk update` CLI [\#419](https://github.com/puppetlabs/pdk/pull/419) ([rodjek](https://github.com/rodjek))
+- \(PDK-550\) Removes unrequired questions from module interview [\#410](https://github.com/puppetlabs/pdk/pull/410) ([bmjen](https://github.com/bmjen))
+-  \(PDK-506\) pdk new provider [\#409](https://github.com/puppetlabs/pdk/pull/409) ([DavidS](https://github.com/DavidS))
+- \(PDK-748\) Wireframe `pdk build` CLI [\#407](https://github.com/puppetlabs/pdk/pull/407) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- if a newer rubocop version is installed, pdk should fall-back to safe defaults [\#420](https://github.com/puppetlabs/pdk/issues/420)
+- Update validation regex and error message for module name question [\#430](https://github.com/puppetlabs/pdk/pull/430) ([ardrigh](https://github.com/ardrigh))
+- \(PDK-789\) Add pdk metadata to all generated templatedirs. [\#428](https://github.com/puppetlabs/pdk/pull/428) ([bmjen](https://github.com/bmjen))
+
+**Closed issues:**
+
+- WS1.Reputation - Symantec Endpoint Protection [\#403](https://github.com/puppetlabs/pdk/issues/403)
+- task input\_method 'powershell' fails validation [\#369](https://github.com/puppetlabs/pdk/issues/369)
+- PDK should have an option to disable progress indicator to make it usable in CI [\#323](https://github.com/puppetlabs/pdk/issues/323)
+
+**Merged pull requests:**
+
+- \(PDK-808\) Fix to pdk update when there are sync.yml changes [\#431](https://github.com/puppetlabs/pdk/pull/431) ([bmjen](https://github.com/bmjen))
+- \(PDK-806\) Update metadata interview text if metadata.json already exists [\#429](https://github.com/puppetlabs/pdk/pull/429) ([rodjek](https://github.com/rodjek))
+- \(FIXUP\) Make `pdk build` overwrite prompt consistent [\#427](https://github.com/puppetlabs/pdk/pull/427) ([scotje](https://github.com/scotje))
+- \(maint\) Update unit tests to use exit\_zero/exit\_nonzero matchers [\#426](https://github.com/puppetlabs/pdk/pull/426) ([rodjek](https://github.com/rodjek))
+- \(PDK-804\) Fixes error in build without ignore file [\#425](https://github.com/puppetlabs/pdk/pull/425) ([bmjen](https://github.com/bmjen))
+- \(PDK-799\) Adds unit tests for the UX validation [\#423](https://github.com/puppetlabs/pdk/pull/423) ([bmjen](https://github.com/bmjen))
+- \(PDK-754\) Interview for missing or Forge only metadata before build [\#422](https://github.com/puppetlabs/pdk/pull/422) ([bmjen](https://github.com/bmjen))
+- \(PDK-772\) Refactor PDK::Module::Convert for re-use in PDK::Module::Update [\#421](https://github.com/puppetlabs/pdk/pull/421) ([rodjek](https://github.com/rodjek))
+- Revert "\(maint\) pin pdk-templates version ref to workaround puppet 5.… [\#418](https://github.com/puppetlabs/pdk/pull/418) ([bmjen](https://github.com/bmjen))
+- \(PDK-799\) Adds validations and checks to pdk build workflow [\#416](https://github.com/puppetlabs/pdk/pull/416) ([bmjen](https://github.com/bmjen))
+- Small fixes [\#415](https://github.com/puppetlabs/pdk/pull/415) ([DavidS](https://github.com/DavidS))
+- \(maint\) Make sure we use pdk-templates master if in development [\#414](https://github.com/puppetlabs/pdk/pull/414) ([bmjen](https://github.com/bmjen))
+- \(maint\) bump version for dev. [\#412](https://github.com/puppetlabs/pdk/pull/412) ([bmjen](https://github.com/bmjen))
+- \(PDK-758\) Initial port & cleanup of the module build code [\#411](https://github.com/puppetlabs/pdk/pull/411) ([rodjek](https://github.com/rodjek))
+- \(maint\) Fix error templatedir error message [\#408](https://github.com/puppetlabs/pdk/pull/408) ([DavidS](https://github.com/DavidS))
+- \(MAINT\) remove dead code [\#406](https://github.com/puppetlabs/pdk/pull/406) ([DavidS](https://github.com/DavidS))
+- \(PDK-575\) Run puppet parser validate with an dummy empty puppet.conf [\#402](https://github.com/puppetlabs/pdk/pull/402) ([rodjek](https://github.com/rodjek))
+
+## [v1.3.2](https://github.com/puppetlabs/pdk/tree/v1.3.2) (2018-01-17)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.1...v1.3.2)
 
 **Closed issues:**
@@ -15,6 +57,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 **Merged pull requests:**
 
 - \(maint\) Default PDK::TEMPLATE\_REF to PDK::VERSION [\#405](https://github.com/puppetlabs/pdk/pull/405) ([rodjek](https://github.com/rodjek))
+- 1.3.2 Release Prep [\#404](https://github.com/puppetlabs/pdk/pull/404) ([HelenCampbell](https://github.com/HelenCampbell))
 - \(PDK-552\) Soften PDK::CLI::Util.ensure\_in\_module! error messages [\#401](https://github.com/puppetlabs/pdk/pull/401) ([rodjek](https://github.com/rodjek))
 - \(PDK-739\) Fall back to default template if necessary [\#400](https://github.com/puppetlabs/pdk/pull/400) ([rodjek](https://github.com/rodjek))
 
