@@ -4,6 +4,13 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.4.1](https://github.com/puppetlabs/pdk/tree/v1.4.1) (2018-02-22)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.4.0...v1.4.1)
+
+**Fixed bugs:**
+
+- pdk update and convert fixes [\#433](https://github.com/puppetlabs/pdk/pull/433) ([bmjen](https://github.com/bmjen))
+
 ## [v1.4.0](https://github.com/puppetlabs/pdk/tree/v1.4.0) (2018-02-21)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.2...v1.4.0)
 
@@ -28,6 +35,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- Release 1.4.0 [\#432](https://github.com/puppetlabs/pdk/pull/432) ([bmjen](https://github.com/bmjen))
 - \(PDK-808\) Fix to pdk update when there are sync.yml changes [\#431](https://github.com/puppetlabs/pdk/pull/431) ([bmjen](https://github.com/bmjen))
 - \(PDK-806\) Update metadata interview text if metadata.json already exists [\#429](https://github.com/puppetlabs/pdk/pull/429) ([rodjek](https://github.com/rodjek))
 - \(FIXUP\) Make `pdk build` overwrite prompt consistent [\#427](https://github.com/puppetlabs/pdk/pull/427) ([scotje](https://github.com/scotje))
