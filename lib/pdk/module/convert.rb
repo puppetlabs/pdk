@@ -133,11 +133,15 @@ module PDK
       def summary
         summary = {}
         update_manager.changes.each do |category, update_category|
-          updated_files = if update_category.respond_to?(:keys)
-                            update_category.keys
-                          else
-                            update_category.map { |file| file[:path] }
-                          end
+          if update_category.respond_to?(:keys)
+            updated_files = update_category.keys
+          else
+            begin
+              updated_files = update_category.map { |file| file[:path] }
+            rescue TypeError
+              updated_files = update_category.to_a
+            end
+          end
 
           summary[category] = updated_files
         end
