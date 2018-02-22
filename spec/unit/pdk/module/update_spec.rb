@@ -211,7 +211,7 @@ describe PDK::Module::Update do
       let(:template_ref) { '1.3.2-0-g07678c8' }
 
       it 'returns the tag name' do
-        is_expected.to eq('1.3.2@07678c8')
+        is_expected.to eq('1.3.2')
       end
     end
 

@@ -13,8 +13,8 @@ describe 'pdk update', module_command: true do
 
     describe command('pdk update') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(no_output) }
-      its(:stderr) { is_expected.to match(%r{already up to date}i) }
+      its(:stdout) { is_expected.to match(%r{No changes required}i) }
+      its(:stderr) { is_expected.to match(no_output) }
     end
 
     describe file('update_report.txt') do
