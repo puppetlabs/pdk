@@ -39,7 +39,8 @@ module PDK
       end
 
       def self.repo?(maybe_repo)
-        return bare_repo?(maybe_repo) if File.directory?(maybe_repo)
+        # The behavior of file://... paths remote appears to be on purpose.
+        return bare_repo?(maybe_repo) if File.directory?(maybe_repo) # || (uri.scheme == 'file' && File.directory?(PDK::Util.template_path(uri)))
 
         remote_repo?(maybe_repo)
       end
@@ -55,8 +56,27 @@ module PDK
         git('ls-remote', '--exit-code', maybe_repo)[:exit_code].zero?
       end
 
+      def self.work_dir_clean?(repo)
+        raise PDK::CLI::ExitWithError, _('Unable to locate git work dir "%{workdir}') % { workdir: repo } unless File.directory?(repo)
+        raise PDK::CLI::ExitWithError, _('Unable to locate git dir "%{gitdir}') % { gitdir: repo } unless File.directory?(File.join(repo, '.git'))
+
+        git('--work-tree', repo, '--git-dir', File.join(repo, '.git'), 'status', '--untracked-files=no', '--porcelain', repo)[:stdout].empty?
+      end
+
+      def self.current_branch(repo)
+        env = { 'GIT_DIR' => repo }
+        rev_parse = git_with_env(env, 'rev-parse', '--abbrev-ref', 'HEAD')
+
+        rev_parse[:stdout].strip
+      end
+
       def self.ls_remote(repo, ref)
-        output = git('ls-remote', '--refs', repo, ref)
+        output = if File.directory?(repo)
+                   # Appveyor doesn't like windows-path repository targets
+                   git('--git-dir', File.join(repo, '.git'), 'ls-remote', '--refs', 'origin', ref)
+                 else
+                   git('ls-remote', '--refs', repo, ref)
+                 end
 
         unless output[:exit_code].zero?
           PDK.logger.error output[:stdout]
@@ -67,7 +87,9 @@ module PDK
         end
 
         matching_refs = output[:stdout].split("\n").map { |r| r.split("\t") }
-        matching_refs.find { |_sha, remote_ref| remote_ref == ref }.first
+        matching_ref = matching_refs.find { |_sha, remote_ref| remote_ref == "refs/tags/#{ref}" || remote_ref == "refs/remotes/origin/#{ref}" || remote_ref == "refs/heads/#{ref}" }
+        raise PDK::CLI::ExitWithError, _('Unable to find a branch or tag named "%{ref}" in %{repo}') % { ref: ref, repo: repo } if matching_ref.nil?
+        matching_ref.first
       end
     end
   end

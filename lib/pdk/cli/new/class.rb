@@ -4,8 +4,6 @@ module PDK::CLI
     usage _('class [options] <class_name>')
     summary _('Create a new class named <class_name> using given options')
 
-    PDK::CLI.template_url_option(self)
-
     run do |opts, args, _cmd|
       require 'pdk/generate/puppet_class'
 

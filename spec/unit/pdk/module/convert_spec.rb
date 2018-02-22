@@ -91,6 +91,7 @@ describe PDK::Module::Convert do
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
       allow(instance).to receive(:update_metadata).with(any_args).and_return(metadata)
       allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(template_dir)
+      allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
       allow(template_dir).to receive(:module_metadata=)
       allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content], template_files[:status])
       allow(update_manager).to receive(:changes).and_return(changes)

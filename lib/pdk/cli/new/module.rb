@@ -5,6 +5,7 @@ module PDK::CLI
     summary _('Create a new module named [module_name] using given options')
 
     PDK::CLI.template_url_option(self)
+    PDK::CLI.template_ref_option(self)
     PDK::CLI.skip_interview_option(self)
     PDK::CLI.full_interview_option(self)
 

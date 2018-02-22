@@ -65,7 +65,7 @@ describe PDK::Util::Git do
     subject { described_class.ls_remote(repo, ref) }
 
     let(:repo) { 'https://github.com/puppetlabs/pdk-templates' }
-    let(:ref) { 'refs/heads/master' }
+    let(:ref) { 'master' }
 
     before(:each) do
       allow(described_class).to receive(:git).with('ls-remote', '--refs', repo, ref).and_return(git_result)

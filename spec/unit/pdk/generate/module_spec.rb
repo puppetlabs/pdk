@@ -34,8 +34,10 @@ shared_context 'mock template dir' do
     dir_double = instance_double(Pathname, mkpath: true, to_path: '/a/path')
     allow(dir_double).to receive(:+).with(anything).and_return(dir_double)
     allow(dir_double).to receive(:dirname).and_return(dir_double)
-    allow(Pathname).to receive(:new).with(temp_target_dir).and_return(dir_double)
+    allow(dir_double).to receive(:relative?).and_return(true)
+    allow(Pathname).to receive(:new).with(anything).and_return(dir_double)
     allow(File).to receive(:open).with(dir_double, 'wb').and_yield(test_template_file)
+    allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
   end
 end
 
@@ -178,11 +180,11 @@ describe PDK::Generate::Module do
       context 'when a template-url is supplied on the command line' do
         before(:each) do
           allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
-          allow(PDK::Util).to receive(:default_template_url).and_return('https://github.com/puppetlabs/pdk-templates')
+          allow(PDK::Util).to receive(:default_template_uri).and_return(Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'))
         end
 
         it 'uses that template to generate the module' do
-          expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template', anything, anything).and_yield(test_template_dir)
+          expect(PDK::Module::TemplateDir).to receive(:new).with(Addressable::URI.parse('cli-template'), anything, anything).and_yield(test_template_dir)
           expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
           expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
 
@@ -191,22 +193,22 @@ describe PDK::Generate::Module do
 
         it 'takes precedence over the template-url answer' do
           PDK.answers.update!('template-url' => 'answer-template')
-          expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template', anything, anything).and_yield(test_template_dir)
+          expect(PDK::Module::TemplateDir).to receive(:new).with(Addressable::URI.parse('cli-template'), anything, anything).and_yield(test_template_dir)
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
 
-        it 'saves the template-url to the answer file if it is not the puppetlabs template' do
-          expect(PDK.answers).to receive(:update!).with('template-url' => 'cli-template')
+        it 'saves the template-url and template-ref to the answer file if it is not the default template' do
+          expect(PDK::Util).to receive(:template_uri).and_return(Addressable::URI.parse('cli-template'))
+          expect(PDK.answers).to receive(:update!).with('template-url' => Addressable::URI.parse('cli-template'))
 
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
 
-        it 'clears the saved template-url answer if it is the puppetlabs template' do
-          PDK.answers.update!('template-url' => 'custom-url')
+        it 'clears the saved template-url answer if it is the default template' do
+          expect(PDK::Util).to receive(:template_uri).and_return(Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'))
           expect(PDK.answers).to receive(:update!).with('template-url' => nil).and_call_original
-          allow(PDK::Util).to receive(:puppetlabs_template_url).and_return('puppetlabs-url')
 
-          described_class.invoke(invoke_opts.merge(:'template-url' => 'puppetlabs-url'))
+          described_class.invoke(invoke_opts.merge(:'template-url' => 'https://github.com/puppetlabs/pdk-templates'))
           expect(PDK.answers['template-url']).to eq(nil)
         end
       end
@@ -214,16 +216,13 @@ describe PDK::Generate::Module do
       context 'when a template-url is not supplied on the command line' do
         before(:each) do
           allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
+          allow(PDK::Util).to receive(:development_mode?).and_return(true)
         end
 
         context 'and a template-url answer exists' do
-          before(:each) do
-            allow(PDK::Util::Git).to receive(:repo?).with('answer-template').and_return(true)
-          end
-
           it 'uses the template-url from the answer file to generate the module' do
             PDK.answers.update!('template-url' => 'answer-template')
-            expect(PDK::Module::TemplateDir).to receive(:new).with('answer-template', anything, anything).and_yield(test_template_dir)
+            expect(PDK::Module::TemplateDir).to receive(:new).with(Addressable::URI.parse('answer-template'), anything, anything).and_yield(test_template_dir)
             expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
             expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
 
@@ -239,7 +238,7 @@ describe PDK::Generate::Module do
             end
 
             it 'uses the vendored template url' do
-              expect(PDK::Module::TemplateDir).to receive(:new).with('file:///tmp/package/cache/pdk-templates.git', anything, anything).and_yield(test_template_dir)
+              expect(PDK::Module::TemplateDir).to receive(:new).with(Addressable::URI.parse('file:///tmp/package/cache/pdk-templates.git'), anything, anything).and_yield(test_template_dir)
               expect(PDK.answers).not_to receive(:update!).with(:'template-url' => anything)
 
               described_class.invoke(invoke_opts)
@@ -248,7 +247,7 @@ describe PDK::Generate::Module do
 
           context 'and pdk is not installed from packages' do
             it 'uses the default template to generate the module' do
-              expect(PDK::Module::TemplateDir).to receive(:new).with(PDK::Util.default_template_url, anything, anything).and_yield(test_template_dir)
+              expect(PDK::Module::TemplateDir).to receive(:new).with(PDK::Util.default_template_uri, anything, anything).and_yield(test_template_dir)
               expect(PDK.answers).not_to receive(:update!).with(:'template-url' => anything)
 
               described_class.invoke(invoke_opts)

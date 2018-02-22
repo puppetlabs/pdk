@@ -7,6 +7,7 @@ module PDK::CLI
     summary _('This command is now \'pdk new module\'.')
 
     PDK::CLI.template_url_option(self)
+    PDK::CLI.template_ref_option(self)
     PDK::CLI.skip_interview_option(self)
 
     run do |opts, args, _cmd|

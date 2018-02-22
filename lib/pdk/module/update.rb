@@ -50,8 +50,11 @@ module PDK
         raise PDK::CLI::ExitWithError, e.message
       end
 
-      def template_url
-        @template_url ||= module_metadata.data['template-url']
+      # TODO: update should be able to use exsting url. uri fragments should be
+      # tracked if existing, but the template-ref in the metadata is not for
+      # tracking simply for referencing the last update target.
+      def metadata_template_uri
+        @metadata_template_uri ||= Addressable::URI.parse(module_metadata.data['template-url'])
       end
 
       def current_version
@@ -65,6 +68,8 @@ module PDK
       private
 
       def current_template_version
+        # TODO: Should the current/new versions be queried here or should that
+        # come from the util class?
         @current_template_version ||= module_metadata.data['template-ref']
       end
 
@@ -81,19 +86,19 @@ module PDK
       end
 
       def new_template_version
-        PDK::Util.default_template_ref
+        metadata_template_uri.fragment || PDK::Util.default_template_ref
       end
 
-      def fetch_remote_version(version)
-        return version unless version.include?('/')
+      def fetch_remote_version(template_ref)
+        return template_ref unless current_template_version.is_a?(String)
+        return template_ref if template_ref == PDK::TEMPLATE_REF
 
-        branch = version.partition('/').last
         sha_length = GIT_DESCRIBE_PATTERN.match(current_template_version)[:sha].length - 1
-        "#{branch}@#{PDK::Util::Git.ls_remote(template_url, "refs/heads/#{branch}")[0..sha_length]}"
+        "#{template_ref}@#{PDK::Util::Git.ls_remote(PDK::Util.template_url(metadata_template_uri), template_ref)[0..sha_length]}"
       end
 
       def update_message
-        format_string = if template_url == PDK::Util.puppetlabs_template_url
+        format_string = if metadata_template_uri == PDK::Util.default_template_uri
                           _('Updating %{module_name} using the default template, from %{current_version} to %{new_version}')
                         else
                           _('Updating %{module_name} using the template at %{template_url}, from %{current_version} to %{new_version}')
@@ -101,7 +106,7 @@ module PDK
 
         format_string % {
           module_name:     module_metadata.data['name'],
-          template_url:    template_url,
+          template_url:    PDK::Util.template_url(metadata_template_uri),
           current_version: current_version,
           new_version:     new_version,
         }

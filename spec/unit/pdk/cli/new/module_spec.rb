@@ -48,6 +48,16 @@ describe 'Running `pdk new module`' do
       end
     end
 
+    context 'and the template-ref option' do
+      let(:template_ref) { '1.0.0' }
+
+      it 'passes the value of the template-ref option to PDK::Generate::Module.invoke' do
+        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(:'template-ref' => template_ref))
+        expect(logger).to receive(:info).with("Creating new module: #{module_name}")
+        PDK::CLI.run(['new', 'module', '--template-ref', template_ref, module_name])
+      end
+    end
+
     context 'and the license option' do
       let(:license) { 'MIT' }
 

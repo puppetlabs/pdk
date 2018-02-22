@@ -4,8 +4,6 @@ module PDK::CLI
     usage _('provider [options] <name>')
     summary _('[experimental] Create a new ruby provider named <name> using given options')
 
-    PDK::CLI.template_url_option(self)
-
     run do |opts, args, _cmd|
       PDK::CLI::Util.ensure_in_module!
 

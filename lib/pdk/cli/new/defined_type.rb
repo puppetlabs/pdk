@@ -4,8 +4,6 @@ module PDK::CLI
     usage _('defined_type [options] <name>')
     summary _('Create a new defined type named <name> using given options')
 
-    PDK::CLI.template_url_option(self)
-
     run do |opts, args, _cmd|
       PDK::CLI::Util.ensure_in_module!(
         message: _('Defined types can only be created from inside a valid module directory.'),

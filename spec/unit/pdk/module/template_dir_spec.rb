@@ -3,13 +3,14 @@ require 'yaml'
 
 describe PDK::Module::TemplateDir do
   subject(:template_dir) do
-    described_class.new(path_or_url, module_metadata, true) do |foo|
+    described_class.new(uri, module_metadata, true) do |foo|
       # block does nothing
     end
   end
 
   let(:root_dir) { Gem.win_platform? ? 'C:/' : '/' }
   let(:path_or_url) { File.join(root_dir, 'path', 'to', 'templates') }
+  let(:uri) { Gem.win_platform? ? Addressable::URI.parse('/' + path_or_url) : Addressable::URI.parse(path_or_url) }
   let(:tmp_path) { File.join(root_dir, 'tmp', 'path') }
 
   let(:module_metadata) do
@@ -40,7 +41,7 @@ describe PDK::Module::TemplateDir do
       allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
       allow(Dir).to receive(:rmdir).with(tmp_path).and_return(0)
 
-      allow(described_class).to receive(:new).with(path_or_url, module_metadata).and_yield(template_dir)
+      allow(described_class).to receive(:new).with(uri, module_metadata).and_yield(template_dir)
       expect(template_dir.object_config).to include('module_metadata' => module_metadata)
     end
   end
@@ -329,9 +330,13 @@ describe PDK::Module::TemplateDir do
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
-      allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-ref').and_return(exit_code: 0)
+      allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
       allow(FileUtils).to receive(:remove_dir).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'ls-remote', '--refs', 'origin', 'default-ref').and_return(exit_code: 0, stdout:
+                                                                                                        "default-sha\trefs/heads/default-ref\n" \
+                                                                                                        "default-sha\trefs/remotes/origin/default-ref")
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
       allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
     end
@@ -352,9 +357,13 @@ describe PDK::Module::TemplateDir do
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
-      allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'origin/master').and_return(exit_code: 0)
+      allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
       allow(FileUtils).to receive(:remove_dir).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'ls-remote', '--refs', 'origin', 'default-ref').and_return(exit_code: 0, stdout:
+                                                                                                        "default-sha\trefs/heads/default-ref\n" \
+                                                                                                        "default-sha\trefs/remotes/origin/default-ref")
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
       allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
     end

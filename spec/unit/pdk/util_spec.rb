@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe PDK::Util do
   let(:pdk_version) { '1.2.3' }
-  let(:template_url) { 'https://github.com/puppetlabs/pdk-templates' }
+  let(:template_url) { 'metadata-templates' }
   let(:template_ref) { nil }
   let(:mock_metadata) do
     instance_double(
@@ -363,100 +363,296 @@ describe PDK::Util do
     end
   end
 
-  describe '.default_template_url' do
-    subject { described_class.default_template_url }
+  describe '.template_url' do
+    let(:uri) { Addressable::URI.parse(template_url) }
 
+    context 'when the uri has a fragment' do
+      let(:template_url) { 'https://github.com/my/pdk-templates.git#custom' }
+
+      it 'returns just the url portion' do
+        expect(described_class.template_url(uri)).to eq 'https://github.com/my/pdk-templates.git'
+      end
+    end
+
+    context 'when the uri has no fragment' do
+      let(:template_url) { 'https://github.com/my/pdk-templates.git' }
+
+      it 'returns just the url portion' do
+        expect(described_class.template_url(uri)).to eq 'https://github.com/my/pdk-templates.git'
+      end
+    end
+
+    context 'when the uri is an absolute path' do
+      context 'on linux' do
+        let(:template_url) { '/my/pdk-templates.git#custom' }
+
+        it 'returns url portion' do
+          allow(Gem).to receive(:win_platform?).and_return(false)
+          expect(described_class.template_url(uri)).to eq '/my/pdk-templates.git'
+        end
+      end
+      context 'on windows' do
+        let(:template_url) { '/C:/my/pdk-templates.git#custom' }
+
+        it 'returns url portion' do
+          allow(Gem).to receive(:win_platform?).and_return(true)
+          expect(described_class.template_url(uri)).to eq 'C:/my/pdk-templates.git'
+        end
+      end
+    end
+  end
+
+  describe '.template_ref' do
+    let(:uri) { Addressable::URI.parse(template_url) }
+
+    context 'when the uri has a fragment' do
+      let(:template_url) { 'https://github.com/my/pdk-templates.git#custom' }
+
+      it 'returns just the ref portion' do
+        expect(described_class.template_ref(uri)).to eq 'custom'
+      end
+    end
+
+    context 'when the uri has no fragment' do
+      let(:template_url) { 'https://github.com/my/pdk-templates.git' }
+
+      it 'returns the default ref' do
+        expect(described_class.template_ref(uri)).to eq described_class.default_template_ref
+      end
+    end
+  end
+
+  describe '.template_path' do
+    let(:uri) { Addressable::URI.parse(template_url) }
+
+    context 'when the uri has a schema' do
+      context 'on linux' do
+        let(:template_url) { 'file:///my/pdk-templates.git#fragment' }
+
+        it 'returns the path' do
+          allow(Gem).to receive(:win_platform?).and_return(false)
+          expect(described_class.template_path(uri)).to eq '/my/pdk-templates.git'
+        end
+      end
+
+      context 'on windows' do
+        let(:template_url) { 'file:///C:/my/pdk-templates.git#fragment' }
+
+        it 'returns the path' do
+          allow(Gem).to receive(:win_platform?).and_return(true)
+          expect(described_class.template_path(uri)).to eq 'C:/my/pdk-templates.git'
+        end
+      end
+    end
+
+    context 'when the uri is just an absolute path' do
+      context 'on linux' do
+        let(:template_url) { '/my/pdk-templates.git#custom' }
+
+        it 'returns url portion' do
+          allow(Gem).to receive(:win_platform?).and_return(false)
+          expect(described_class.template_url(uri)).to eq '/my/pdk-templates.git'
+        end
+      end
+      context 'on windows' do
+        let(:template_url) { '/C:/my/pdk-templates.git#custom' }
+
+        it 'returns url portion' do
+          allow(Gem).to receive(:win_platform?).and_return(true)
+          expect(described_class.template_url(uri)).to eq 'C:/my/pdk-templates.git'
+        end
+      end
+    end
+  end
+
+  describe '.template_uri' do
     before(:each) do
-      allow(described_class).to receive(:puppetlabs_template_url).and_return('puppetlabs_template_url')
+      allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
+      allow(described_class).to receive(:module_root).and_return('/path/to/module')
     end
 
-    context 'when there is no template-url in answers file' do
-      before(:each) do
-        allow(PDK).to receive(:answers).and_return('template-url' => nil)
-      end
-
-      it 'returns puppetlabs template url' do
-        is_expected.to eq('puppetlabs_template_url')
-      end
-    end
-
-    context 'when the template-url in answers file matches current puppetlabs template' do
-      before(:each) do
-        allow(PDK).to receive(:answers).and_return('template-url' => 'puppetlabs_template_url')
-      end
-
-      it 'returns puppetlabs template url' do
-        is_expected.to eq('puppetlabs_template_url')
-      end
-    end
-
-    context 'when the template-url in answers file matches old puppetlabs template' do
-      before(:each) do
-        allow(PDK).to receive(:answers).and_return('template-url' => 'https://github.com/puppetlabs/pdk-module-template')
-      end
-
-      it 'returns puppetlabs template url' do
-        is_expected.to eq('puppetlabs_template_url')
-      end
-    end
-
-    context 'when the template-url in answers file is custom' do
-      before(:each) do
-        allow(PDK).to receive(:answers).and_return('template-url' => 'custom_template_url')
-      end
-
-      context 'and the template is a directory' do
+    context 'when passed no options' do
+      context 'and there are no metadata or answers' do
         before(:each) do
-          allow(File).to receive(:directory?).with('custom_template_url').and_return(true)
+          PDK.answers.update!('template-url' => nil)
+        end
+
+        it 'returns the default template' do
+          expect(described_class.template_uri({})).to eq(described_class.default_template_uri)
+        end
+      end
+
+      context 'and there are only answers' do
+        before(:each) do
+          PDK.answers.update!('template-url' => 'answer-templates')
+        end
+
+        it 'returns the answers template' do
+          expect(described_class.template_uri({})).to eq(Addressable::URI.parse('answer-templates'))
+        end
+
+        context 'and the answer file template is invalid' do
+          before(:each) do
+            allow(described_class).to receive(:valid_template?).with(anything).and_call_original
+            allow(described_class).to receive(:valid_template?).with(uri: anything, allow_fallback: true, type: anything).and_return(false)
+          end
+
+          it 'returns the default template' do
+            expect(described_class.template_uri({})).to eq(described_class.default_template_uri)
+          end
+        end
+      end
+
+      context 'and there are metadata and answers' do
+        before(:each) do
+          PDK.answers.update!('template-url' => 'answer-templates')
+        end
+
+        it 'returns the metadata template' do
+          allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
+          allow(File).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
+          allow(File).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+          expect(described_class.template_uri({})).to eq(Addressable::URI.parse('metadata-templates'))
+        end
+      end
+    end
+
+    context 'when there are metadata and answers' do
+      before(:each) do
+        PDK.answers.update!('template-url' => 'answer-templates')
+        allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(described_class.module_root, 'metadata.json')).and_return(mock_metadata)
+      end
+
+      context 'and passed template-url' do
+        it 'returns the specified template' do
+          expect(described_class.template_uri(:'template-url' => 'cli-templates')).to eq(Addressable::URI.parse('cli-templates'))
+        end
+      end
+
+      context 'and passed windows template-url' do
+        it 'returns the specified template' do
+          allow(Gem).to receive(:win_platform?).and_return(true)
+          expect(described_class.template_uri(:'template-url' => 'C:\cli-templates')).to eq(Addressable::URI.parse('/C:\cli-templates'))
+        end
+      end
+
+      context 'and passed template-ref' do
+        it 'errors because it requires url with ref' do
+          expect { described_class.template_uri(:'template-ref' => 'cli-ref') }.to raise_error(PDK::CLI::FatalError, %r{--template-ref requires --template-url})
+        end
+      end
+
+      context 'and passed template-url and template-ref' do
+        it 'returns the specified template and ref' do
+          uri = Addressable::URI.parse('cli-templates')
+          uri.fragment = 'cli-ref'
+          expect(described_class.template_uri(:'template-url' => 'cli-templates', :'template-ref' => 'cli-ref')).to eq(uri)
+        end
+      end
+    end
+  end
+
+  describe '.valid_template?' do
+    subject { described_class.valid_template?(template) }
+
+    context 'when template is nil' do
+      let(:template) { nil }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when template is a Hash' do
+      context 'and template[:uri] => nil' do
+        let(:template) { { uri: nil } }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and template[:path] => directory' do
+        let(:template) do
+          {
+            uri:  Addressable::URI.parse('file:///a/template/on/disk'),
+            path: '/a/template/on/disk',
+          }
+        end
+
+        before(:each) do
+          allow(Gem).to receive(:win_platform?).and_return(true)
           allow(described_class).to receive(:package_install?).and_return(false)
+          allow(PDK::Util::Git).to receive(:repo?).with(template[:uri]).and_return(false)
         end
 
-        let(:moduleroot_dir) { File.join('custom_template_url', 'moduleroot') }
-        let(:moduleroot_init) { File.join('custom_template_url', 'moduleroot_init') }
-
-        context 'that contains a valid PDK template' do
+        context 'that exists and contains a valid template' do
           before(:each) do
-            allow(File).to receive(:directory?).with(moduleroot_dir).and_return(true)
-            allow(File).to receive(:directory?).with(moduleroot_init).and_return(true)
+            allow(File).to receive(:directory?).with(template[:path]).and_return(true)
+            allow(File).to receive(:directory?).with(File.join(template[:path], 'moduleroot')).and_return(true)
+            allow(File).to receive(:directory?).with(File.join(template[:path], 'moduleroot_init')).and_return(true)
           end
 
-          it 'returns the custom url' do
-            is_expected.to eq('custom_template_url')
-          end
+          it { is_expected.to be_truthy }
         end
 
-        context 'that does not contain a valid PDK template' do
+        context 'that exists and does not contain a valid template' do
           before(:each) do
-            allow(File).to receive(:directory?).with(moduleroot_dir).and_return(false)
+            allow(File).to receive(:directory?).with(template[:path]).and_return(true)
+            allow(File).to receive(:directory?).with(File.join(template[:path], 'moduleroot')).and_return(false)
+            allow(File).to receive(:directory?).with(File.join(template[:path], 'moduleroot_init')).and_return(false)
           end
 
-          it 'returns the puppetlabs template url' do
-            expect(PDK.answers).to receive(:update!).with('template-url' => nil)
-            is_expected.to eq('puppetlabs_template_url')
+          it { is_expected.to be_falsey }
+        end
+
+        context 'that does not exist' do
+          before(:each) do
+            allow(File).to receive(:directory?).with(template[:path]).and_return(false)
           end
+
+          it { is_expected.to be_falsey }
         end
       end
 
-      context 'and the template is a valid repo' do
-        before(:each) do
-          allow(PDK::Util::Git).to receive(:repo?).with('custom_template_url').and_return(true)
+      context 'and template[:uri] => URI' do
+        let(:template) { { uri: Addressable::URI.parse('https://this.is/a/repo.git') } }
+
+        context 'that points to a git repo' do
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:repo?).with(template[:uri]).and_return(true)
+          end
+
+          it { is_expected.to be_truthy }
         end
 
-        it 'returns custom url' do
-          is_expected.to eq('custom_template_url')
+        context 'that does not point to a git repo' do
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:repo?).with(template[:uri]).and_return(false)
+          end
+
+          it { is_expected.to be_falsey }
         end
       end
+    end
+  end
 
-      context 'and the template is not a valid repo' do
-        before(:each) do
-          allow(PDK::Util::Git).to receive(:repo?).with('custom_template_url').and_return(false)
-          allow(PDK.answers).to receive(:update!).with('template-url' => nil)
-        end
+  describe '.default_template_uri' do
+    subject { described_class.default_template_uri }
 
-        it 'returns the puppetlabs template url' do
-          expect(logger).to receive(:warn).with(a_string_matching(%r{using the default template}))
-          is_expected.to eq('puppetlabs_template_url')
-        end
+    context 'when it is a package install' do
+      before(:each) do
+        allow(described_class).to receive(:package_install?).and_return(true)
+      end
+
+      it 'returns the file template repo' do
+        allow(described_class).to receive(:package_cachedir).and_return('/path/to/pdk')
+        is_expected.to eq(Addressable::URI.parse('file:///path/to/pdk/pdk-templates.git'))
+      end
+    end
+    context 'when it is not a package install' do
+      before(:each) do
+        allow(described_class).to receive(:package_install?).and_return(false)
+      end
+
+      it 'returns puppetlabs template url' do
+        is_expected.to eq(Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'))
       end
     end
   end
@@ -464,17 +660,13 @@ describe PDK::Util do
   describe '.default_template_ref' do
     subject { described_class.default_template_ref }
 
-    before(:each) do
-      allow(described_class).to receive(:puppetlabs_template_url).and_return('puppetlabs_template_url')
-    end
-
     context 'with a custom template repo' do
       before(:each) do
         allow(described_class).to receive(:default_template_url).and_return('custom_template_url')
       end
 
-      it 'returns origin/master' do
-        is_expected.to eq('origin/master')
+      it 'returns master' do
+        is_expected.to eq('master')
       end
     end
 
@@ -498,8 +690,8 @@ describe PDK::Util do
           allow(described_class).to receive(:development_mode?).and_return(true)
         end
 
-        it 'returns origin/master' do
-          is_expected.to eq('origin/master')
+        it 'returns master' do
+          is_expected.to eq('master')
         end
       end
     end

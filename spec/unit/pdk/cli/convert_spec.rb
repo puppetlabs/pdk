@@ -34,6 +34,14 @@ describe 'PDK::CLI convert' do
       end
     end
 
+    context 'and the --template-ref option has been passed' do
+      it 'invokes the converter with the user supplied template' do
+        expect(PDK::Module::Convert).to receive(:invoke).with(:'template-url' => anything, :'template-ref' => '1.0.0')
+
+        PDK::CLI.run(['convert', '--template-url', anything, '--template-ref', '1.0.0'])
+      end
+    end
+
     context 'and the --noop flag has been passed' do
       it 'passes the noop option through to the converter' do
         expect(PDK::Module::Convert).to receive(:invoke).with(noop: true)

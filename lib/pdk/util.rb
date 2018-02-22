@@ -197,62 +197,164 @@ module PDK
     end
     module_function :targets_relative_to_pwd
 
-    def default_template_url
-      answer_file_url = PDK.answers['template-url']
-
-      return puppetlabs_template_url if answer_file_url.nil?
-
-      # Ignore answer file template-url if the value is the old or new default.
-      return puppetlabs_template_url if answer_file_url == 'https://github.com/puppetlabs/pdk-module-template'
-      return puppetlabs_template_url if answer_file_url == puppetlabs_template_url
-
-      if File.directory?(answer_file_url)
-        # Instantiating a new TemplateDir object pointing to the directory
-        # will cause the directory contents to be validated, raising
-        # ArgumentError if it does not appear to be a valid template.
-        PDK::Module::TemplateDir.new(answer_file_url) {}
-        return answer_file_url
-      end
-
-      raise ArgumentError unless PDK::Util::Git.repo?(answer_file_url)
-
-      answer_file_url
-    rescue ArgumentError
-      PDK.logger.warn(
-        _("Unable to access the previously used template '%{template}', using the default template instead.") % {
-          template: answer_file_url,
-        },
-      )
-      PDK.answers.update!('template-url' => nil)
-      return puppetlabs_template_url
-    end
-    module_function :default_template_url
-
-    def puppetlabs_template_url
-      if package_install?
-        'file://' + File.join(package_cachedir, 'pdk-templates.git')
+    # @returns String
+    def template_url(uri)
+      if uri.is_a?(Addressable::URI) && uri.fragment
+        deuri_path(uri.to_s.chomp('#' + uri.fragment))
       else
-        'https://github.com/puppetlabs/pdk-templates'
+        deuri_path(uri.to_s)
       end
     end
-    module_function :puppetlabs_template_url
-
-    def default_template_ref
-      # TODO: This should respect a --template-ref option if we add that
-      return 'origin/master' if default_template_url != puppetlabs_template_url
-
-      puppetlabs_template_ref
+    module_function :template_url
+    # @returns String
+    def template_ref(uri)
+      if uri.fragment
+        uri.fragment
+      else
+        default_template_ref
+      end
     end
-    module_function :default_template_ref
+    module_function :template_ref
+    # @returns String
+    def template_path(uri)
+      deuri_path(uri.path)
+    end
+    module_function :template_path
+    # C:\... urls are not URI-safe. They should be /C:\... to be so.
+    # @returns String
+    def uri_path(path)
+      (Gem.win_platform? && path =~ %r{^[a-zA-Z][\|:]}) ? "/#{path}" : path
+    end
+    module_function :uri_path
+    # @returns String
+    def deuri_path(path)
+      (Gem.win_platform? && path =~ %r{^\/[a-zA-Z][\|:]}) ? path[1..-1] : path
+    end
+    module_function :deuri_path
 
-    def puppetlabs_template_ref
+    # @returns Addressable::URI
+    def template_uri(opts)
+      # 1. Get the four sources of URIs
+      # 2. Pick the first non-nil URI
+      # 3. Error if the URI is not a valid git repo (missing directory or http 404)
+      # 4. Leave updating answers/metadata to other code
+      # XXX Make it work before making it pretty.
+      found_template = templates(opts).find { |t| valid_template?(t) }
+
+      raise PDK::CLI::FatalError, _('Unable to find a valid module template to use.') if found_template.nil?
+      found_template[:uri]
+    end
+    module_function :template_uri
+
+    def valid_template?(template)
+      return false if template.nil?
+      return false if template[:uri].nil?
+
+      if template[:path] && File.directory?(template[:path])
+        PDK::Module::TemplateDir.new(template[:uri]) {}
+        return true
+      end
+      return true if PDK::Util::Git.repo?(template[:uri])
+
+      false
+    rescue ArgumentError
+      return false
+    end
+    module_function :valid_template?
+
+    # @return [Array<Hash{Symbol => Object}>] an array of hashes. Each hash
+    #   contains 3 keys: :type contains a String that describes the template
+    #   directory, :url contains a String with the URL to the template
+    #   directory, and :allow_fallback contains a Boolean that specifies if
+    #   the lookup process should proceed to the next template directory if
+    #   the template file is not in this template directory.
+    #
+    def templates(opts)
+      explicit_url = opts.fetch(:'template-url', nil)
+      explicit_ref = opts.fetch(:'template-ref', nil)
+
+      if explicit_ref && explicit_url.nil?
+        raise PDK::CLI::FatalError, _('--template-ref requires --template-url to also be specified.')
+      end
+      if explicit_url && explicit_url.include?('#')
+        raise PDK::CLI::FatalError, _('--template-url may not be used to specify paths containing #\'s')
+      end
+
+      # 1. Get the CLI, metadata (or answers if no metadata), and default URIs
+      # 2. Construct the hash
+      if explicit_url
+        # Valid URIs to avoid catching:
+        # - absolute local paths
+        # - have :'s in paths when preceeded by a slash
+        # - have only digits following the : and preceeding a / or end-of-string that is 0-65535
+        # The last item is ambiguous in the case of scp/git paths vs. URI port
+        # numbers, but can be made unambiguous by making the form to
+        # ssh://git@github.com/1234/repo.git or
+        # ssh://git@github.com:1234/user/repo.git
+        scp_url_m = explicit_url.match(%r{\A(.*@[^/:]+):(.+)\z})
+        if Pathname.new(explicit_url).relative? && scp_url_m
+          # "^git@..." is also malformed as it is missing a scheme
+          # "ssh://git@..." is correct.
+          check_url = Addressable::URI.parse(scp_url_m[1])
+          scheme = 'ssh://' unless check_url.scheme
+
+          numbers_m = scp_url_m[2].split('/')[0].match(%r{\A[0-9]+\z})
+          if numbers_m && numbers_m[0].to_i < 65_536
+            # consider it an explicit-port URI, even though it's ambiguous.
+            explicit_url = Addressable::URI.parse(scheme + scp_url_m[1] + ':' + scp_url_m[2])
+          else
+            explicit_url = Addressable::URI.parse(scheme + scp_url_m[1] + '/' + scp_url_m[2])
+            PDK.logger.warn(_('--template-url appears to be an SCP-style url; it will be converted to an RFC-compliant URI: %{uri}') % { uri: explicit_url })
+          end
+        end
+        explicit_uri = Addressable::URI.parse(uri_path(explicit_url))
+        explicit_uri.fragment = explicit_ref
+      else
+        explicit_uri = nil
+      end
+      metadata_uri = if module_root && File.file?(File.join(module_root, 'metadata.json'))
+                       Addressable::URI.parse(uri_path(module_metadata['template-url']))
+                     else
+                       nil
+                     end
+      answers_uri = if PDK.answers['template-url'] == 'https://github.com/puppetlabs/pdk-module-template'
+                      # use the new github template-url if it is still the old one.
+                      default_template_uri
+                    elsif PDK.answers['template-url']
+                      Addressable::URI.parse(uri_path(PDK.answers['template-url']))
+                    else
+                      nil
+                    end
+      default_uri = default_template_uri
+
+      ary = []
+      ary << { type: _('--template-url'), uri: explicit_uri, allow_fallback: false }
+      ary << { type: _('metadata.json'), uri: metadata_uri, allow_fallback: true } if metadata_uri
+      ary << { type: _('PDK answers'), uri: answers_uri, allow_fallback: true } unless metadata_uri
+      ary << { type: _('default'), uri: default_uri, allow_fallback: false }
+      ary
+    end
+    module_function :templates
+
+    # @returns Addressable::URI
+    def default_template_uri
+      if package_install?
+        Addressable::URI.new(scheme: 'file', host: '', path: File.join(package_cachedir, 'pdk-templates.git'))
+      else
+        Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates')
+      end
+    end
+    module_function :default_template_uri
+
+    # @returns String
+    def default_template_ref
       if PDK::Util.development_mode?
-        'origin/master'
+        'master'
       else
         PDK::TEMPLATE_REF
       end
     end
-    module_function :puppetlabs_template_ref
+    module_function :default_template_ref
 
     # TO-DO: Refactor replacement of lib/pdk/module/build.rb:metadata to use this function instead
     def module_metadata
