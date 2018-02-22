@@ -8,17 +8,21 @@ module PDK
       def run
         stage_changes!
 
+        unless update_manager.changes?
+          if current_version == new_version
+            PDK.logger.info _('This module is already up to date with version %{version} of the template.') % {
+              version: new_version,
+            }
+          else
+            PDK::Report.default_target.puts(_('No changes required.'))
+          end
+          return
+        end
+
         PDK.logger.info(update_message)
 
         print_summary
         full_report('update_report.txt') unless update_manager.changes[:modified].empty?
-
-        if !update_manager.changes? && get_sha(current_version) == get_sha(new_version)
-          PDK.logger.info _('This module is already up to date with version %{version} of the template.') % {
-            version: new_version,
-          }
-          return
-        end
 
         return if noop?
 
@@ -59,10 +63,6 @@ module PDK
 
       private
 
-      def get_sha(version_ref)
-        version_ref.split('@')[-1]
-      end
-
       def current_template_version
         @current_template_version ||= module_metadata.data['template-ref']
       end
@@ -74,8 +74,6 @@ module PDK
 
         if data[:base].start_with?('heads/')
           "#{data[:base].gsub(%r{^heads/}, '')}@#{data[:sha]}"
-        elsif data[:sha]
-          "#{data[:base]}@#{data[:sha]}"
         else
           data[:base]
         end
@@ -86,12 +84,10 @@ module PDK
       end
 
       def fetch_remote_version(version)
-        data = GIT_DESCRIBE_PATTERN.match(current_template_version)
+        return version unless version.include?('/')
 
-        return version if data.nil?
-
-        branch = version.partition('/').last if version.include?('/')
-        sha_length = data[:sha].length - 1
+        branch = version.partition('/').last
+        sha_length = GIT_DESCRIBE_PATTERN.match(current_template_version)[:sha].length - 1
         "#{branch}@#{PDK::Util::Git.ls_remote(template_url, "refs/heads/#{branch}")[0..sha_length]}"
       end
 
