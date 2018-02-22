@@ -233,10 +233,33 @@ describe PDK::Module::TemplateDir do
     before(:each) do
       allow(File).to receive(:directory?).with(anything).and_return(true)
       allow(File).to receive(:directory?).with(path_or_url).and_return(false)
+      allow(PDK::Util).to receive(:default_template_url).and_return(path_or_url)
       allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(PDK::Util::Git).to receive(:git).with('-C', tmp_path, 'reset', '--hard', 'default-ref').and_return(exit_code: 0)
+      allow(FileUtils).to receive(:remove_dir).with(tmp_path)
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
+      allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
+    end
+
+    context 'pdk data' do
+      it 'includes the PDK version and template info' do
+        expect(template_dir.metadata).to include('pdk-version' => '0.0.0', 'template-url' => path_or_url, 'template-ref' => '1234abcd')
+      end
+    end
+  end
+
+  describe 'custom template' do
+    before(:each) do
+      allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(File).to receive(:directory?).with(path_or_url).and_return(false)
+      allow(PDK::Util).to receive(:default_template_url).and_return('default-url')
+      allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
+      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
+      allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
+      allow(PDK::Util::Git).to receive(:git).with('-C', tmp_path, 'reset', '--hard', 'origin/master').and_return(exit_code: 0)
       allow(FileUtils).to receive(:remove_dir).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
