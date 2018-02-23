@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'Running pdk module generate' do
-  subject { PDK::CLI.instance_variable_get(:@new_module_cmd) }
+  subject { PDK::CLI.instance_variable_get(:@module_generate_cmd) }
 
   let(:module_name) { 'foo' }
 
