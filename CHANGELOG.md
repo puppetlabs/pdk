@@ -4,12 +4,19 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
-## [v1.4.1](https://github.com/puppetlabs/pdk/tree/v1.4.1) (2018-02-22)
+## [v1.4.1](https://github.com/puppetlabs/pdk/tree/v1.4.1) (2018-02-23)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.4.0...v1.4.1)
 
 **Fixed bugs:**
 
 - pdk update and convert fixes [\#433](https://github.com/puppetlabs/pdk/pull/433) ([bmjen](https://github.com/bmjen))
+
+**Merged pull requests:**
+
+- \(maint\) add a `pdk module build` command to point to `pdk build` [\#438](https://github.com/puppetlabs/pdk/pull/438) ([DavidS](https://github.com/DavidS))
+- \(maint\) unhide the `update` command [\#437](https://github.com/puppetlabs/pdk/pull/437) ([DavidS](https://github.com/DavidS))
+- \(maint\) update: don't mention deleted Gemfile.lock and .bundle/config [\#436](https://github.com/puppetlabs/pdk/pull/436) ([DavidS](https://github.com/DavidS))
+- Release 1.4.1 [\#435](https://github.com/puppetlabs/pdk/pull/435) ([bmjen](https://github.com/bmjen))
 
 ## [v1.4.0](https://github.com/puppetlabs/pdk/tree/v1.4.0) (2018-02-21)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.2...v1.4.0)
