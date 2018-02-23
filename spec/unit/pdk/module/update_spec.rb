@@ -26,15 +26,16 @@ describe PDK::Module::Update do
       before(:each) do
         allow(instance).to receive(:needs_bundle_update?).and_return(true)
         allow(instance.update_manager).to receive(:remove_file)
+        allow(instance.update_manager).to receive(:unlink_file)
         allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
       end
 
       it 'removes the existing Gemfile.lock' do
-        expect(instance.update_manager).to receive(:remove_file).with('Gemfile.lock')
+        expect(instance.update_manager).to receive(:unlink_file).with('Gemfile.lock')
       end
 
       it 'removes the bundler project config' do
-        expect(instance.update_manager).to receive(:remove_file).with(File.join('.bundle', 'config'))
+        expect(instance.update_manager).to receive(:unlink_file).with(File.join('.bundle', 'config'))
       end
 
       it 'triggers a bundle install' do
