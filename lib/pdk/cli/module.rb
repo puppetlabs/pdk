@@ -10,4 +10,5 @@ module PDK::CLI
   @module_cmd.add_command Cri::Command.new_basic_help
 end
 
+require 'pdk/cli/module/build'
 require 'pdk/cli/module/generate'
