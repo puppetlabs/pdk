@@ -95,6 +95,29 @@ module PDK
         end
       end
 
+      # Remove a file from disk.
+      #
+      # Like FileUtils.rm_f, this method will not fail if the file does not
+      # exist. Unlike FileUtils.rm_f, this method will not blindly swallow all
+      # exceptions.
+      #
+      # @param path [String] The path to the file to be removed.
+      #
+      # @raise [PDK::CLI::ExitWithError] if the file could not be removed.
+      def unlink_file(path)
+        if File.file?(path)
+          PDK.logger.debug(_("unlinking '%{path}'") % { path: path })
+          FileUtils.rm(path)
+        else
+          PDK.logger.debug(_("'%{path}': already gone") % { path: path })
+        end
+      rescue => e
+        raise PDK::CLI::ExitWithError, _("Unable to remove '%{path}': %{message}") % {
+          path:    path,
+          message: e.message,
+        }
+      end
+
       private
 
       # Loop through all the files to be modified and cache of unified diff of
@@ -128,29 +151,6 @@ module PDK
         File.open(path, 'w') { |f| f.puts content }
       rescue Errno::EACCES
         raise PDK::CLI::ExitWithError, _("You do not have permission to write to '%{path}'") % { path: path }
-      end
-
-      # Remove a file from disk.
-      #
-      # Like FileUtils.rm_f, this method will not fail if the file does not
-      # exist. Unlink FileUtils.rm_f, this method will not blindly swallow all
-      # exceptions.
-      #
-      # @param path [String] The path to the file to be removed.
-      #
-      # @raise [PDK::CLI::ExitWithError] if the file could not be removed.
-      def unlink_file(path)
-        if File.file?(path)
-          PDK.logger.debug(_("unlinking '%{path}'") % { path: path })
-          FileUtils.rm(path)
-        else
-          PDK.logger.debug(_("'%{path}': already gone") % { path: path })
-        end
-      rescue => e
-        raise PDK::CLI::ExitWithError, _("Unable to remove '%{path}': %{message}") % {
-          path:    path,
-          message: e.message,
-        }
       end
 
       # Generate a unified diff of the changes to be made to a file.

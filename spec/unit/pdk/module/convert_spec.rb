@@ -135,6 +135,7 @@ describe PDK::Module::Convert do
         allow($stdout).to receive(:puts).with(%r{1 files modified})
         allow(update_manager).to receive(:changed?).with('Gemfile').and_return(true)
         allow(update_manager).to receive(:remove_file).with(anything)
+        allow(update_manager).to receive(:unlink_file).with(anything)
         allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
         allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
       end
@@ -146,11 +147,11 @@ describe PDK::Module::Convert do
       end
 
       it 'removes the old Gemfile.lock' do
-        expect(update_manager).to receive(:remove_file).with('Gemfile.lock')
+        expect(update_manager).to receive(:unlink_file).with('Gemfile.lock')
       end
 
       it 'removes the old bundler config' do
-        expect(update_manager).to receive(:remove_file).with(File.join('.bundle', 'config'))
+        expect(update_manager).to receive(:unlink_file).with(File.join('.bundle', 'config'))
       end
 
       it 'updates the bundled gems' do

@@ -40,11 +40,10 @@ module PDK
           return unless continue
         end
 
-        # Mark these files for removal after generating the report as these
-        # changes are not something that the user needs to review.
+        # Remove these files straight away as these changes are not something that the user needs to review.
         if needs_bundle_update?
-          update_manager.remove_file('Gemfile.lock')
-          update_manager.remove_file(File.join('.bundle', 'config'))
+          update_manager.unlink_file('Gemfile.lock')
+          update_manager.unlink_file(File.join('.bundle', 'config'))
         end
 
         update_manager.sync_changes!
