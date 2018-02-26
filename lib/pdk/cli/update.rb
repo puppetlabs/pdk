@@ -1,4 +1,5 @@
 require 'pdk/cli/util'
+require 'pdk/util'
 
 module PDK::CLI
   @update_cmd = @base_cmd.define_command do
@@ -16,6 +17,8 @@ module PDK::CLI
         message:   _('`pdk update` can only be run from inside a valid module directory.'),
         log_level: :info,
       )
+
+      raise PDK::CLI::ExitWithError, _('This module does not appear to be PDK compatible, run `pdk convert` to address this.') unless PDK::Util.module_pdk_compatible?
 
       if opts[:noop] && opts[:force]
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when updating a module')
