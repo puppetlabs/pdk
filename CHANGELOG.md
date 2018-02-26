@@ -13,6 +13,8 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- Updates msg in pdk update on unconverted module [\#442](https://github.com/puppetlabs/pdk/pull/442) ([bmjen](https://github.com/bmjen))
+- Release 1.4.1 amend [\#441](https://github.com/puppetlabs/pdk/pull/441) ([bmjen](https://github.com/bmjen))
 - \(maint\) pdk update checks if module is pdk compat [\#440](https://github.com/puppetlabs/pdk/pull/440) ([bmjen](https://github.com/bmjen))
 - Release 1.4.1 amend [\#439](https://github.com/puppetlabs/pdk/pull/439) ([bmjen](https://github.com/bmjen))
 - \(maint\) add a `pdk module build` command to point to `pdk build` [\#438](https://github.com/puppetlabs/pdk/pull/438) ([DavidS](https://github.com/DavidS))
