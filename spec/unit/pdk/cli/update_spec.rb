@@ -21,6 +21,7 @@ describe 'PDK::CLI update' do
   context 'when run from inside a module' do
     before(:each) do
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
+      allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
     end
 
     context 'and provided no flags' do
@@ -55,6 +56,21 @@ describe 'PDK::CLI update' do
         expect(logger).to receive(:error).with(a_string_matching(%r{can not specify --noop and --force}i))
 
         expect { PDK::CLI.run(%w[update --noop --force]) }.to exit_nonzero
+      end
+    end
+  end
+
+  context 'when run from inside an unconverted module' do
+    before(:each) do
+      allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
+      allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(false)
+    end
+
+    context 'and provided no flags' do
+      it 'raises ExitWithError' do
+        expect(logger).to receive(:error).with(a_string_matching(%r{This module does not appear to be PDK compatible}i))
+
+        expect { PDK::CLI.run(%w[update]) }.to exit_nonzero
       end
     end
   end

@@ -216,5 +216,17 @@ module PDK
       end
     end
     module_function :puppetlabs_template_ref
+
+    # TO-DO: Refactor replacement of lib/pdk/module/build.rb:metadata to use this function instead
+    def module_metadata
+      PDK::Module::Metadata.from_file(File.join(module_root, 'metadata.json')).data
+    end
+    module_function :module_metadata
+
+    # TO-DO: Refactor replacement of lib/pdk/module/build.rb:module_pdk_compatible? to use this function instead
+    def module_pdk_compatible?
+      ['pdk-version', 'template-url'].any? { |key| module_metadata.key?(key) }
+    end
+    module_function :module_pdk_compatible?
   end
 end
