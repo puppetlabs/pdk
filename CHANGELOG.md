@@ -4,7 +4,7 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
-## [v1.4.1](https://github.com/puppetlabs/pdk/tree/v1.4.1) (2018-02-23)
+## [v1.4.1](https://github.com/puppetlabs/pdk/tree/v1.4.1) (2018-02-26)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.4.0...v1.4.1)
 
 **Fixed bugs:**
@@ -13,6 +13,8 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- \(maint\) pdk update checks if module is pdk compat [\#440](https://github.com/puppetlabs/pdk/pull/440) ([bmjen](https://github.com/bmjen))
+- Release 1.4.1 amend [\#439](https://github.com/puppetlabs/pdk/pull/439) ([bmjen](https://github.com/bmjen))
 - \(maint\) add a `pdk module build` command to point to `pdk build` [\#438](https://github.com/puppetlabs/pdk/pull/438) ([DavidS](https://github.com/DavidS))
 - \(maint\) unhide the `update` command [\#437](https://github.com/puppetlabs/pdk/pull/437) ([DavidS](https://github.com/DavidS))
 - \(maint\) update: don't mention deleted Gemfile.lock and .bundle/config [\#436](https://github.com/puppetlabs/pdk/pull/436) ([DavidS](https://github.com/DavidS))

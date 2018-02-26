@@ -6,11 +6,11 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.4.0-12-g9878190\n"
+"Project-Id-Version: puppet development kit v1.4.0-16-gcf8f4bb\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2018-02-23 09:18-0700\n"
-"PO-Revision-Date: 2018-02-23 09:18-0700\n"
+"POT-Creation-Date: 2018-02-26 12:54-0700\n"
+"PO-Revision-Date: 2018-02-26 12:54-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -411,27 +411,31 @@ msgstr ""
 msgid "\t%{id}\t%{description}"
 msgstr ""
 
-#: ../lib/pdk/cli/update.rb:6
+#: ../lib/pdk/cli/update.rb:7
 msgid "update [options]"
 msgstr ""
 
-#: ../lib/pdk/cli/update.rb:7
+#: ../lib/pdk/cli/update.rb:8
 msgid "Update a module that has been created by or converted for use by PDK."
 msgstr ""
 
-#: ../lib/pdk/cli/update.rb:9
+#: ../lib/pdk/cli/update.rb:10
 msgid "Do not update the module, just output what would be done."
 msgstr ""
 
-#: ../lib/pdk/cli/update.rb:10
+#: ../lib/pdk/cli/update.rb:11
 msgid "Update the module automatically, with no prompts."
 msgstr ""
 
-#: ../lib/pdk/cli/update.rb:16
+#: ../lib/pdk/cli/update.rb:17
 msgid "`pdk update` can only be run from inside a valid module directory."
 msgstr ""
 
 #: ../lib/pdk/cli/update.rb:21
+msgid "This module does not appear to be PDK compatible, run `pdk convert` to address this."
+msgstr ""
+
+#: ../lib/pdk/cli/update.rb:24
 msgid "You can not specify --noop and --force when updating a module"
 msgstr ""
 
@@ -639,11 +643,11 @@ msgid "If there is a public issue tracker for this module, enter its URL here."
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:302
-msgid "create"
+msgid "update"
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:302
-msgid "update"
+msgid "create"
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:303
