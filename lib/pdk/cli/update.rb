@@ -18,7 +18,7 @@ module PDK::CLI
         log_level: :info,
       )
 
-      raise PDK::CLI::ExitWithError, _('This module does not appear to be PDK compatible, run `pdk convert` to address this.') unless PDK::Util.module_pdk_compatible?
+      raise PDK::CLI::ExitWithError, _('This module does not appear to be PDK compatible. To make the module compatible with PDK, run `pdk convert`.') unless PDK::Util.module_pdk_compatible?
 
       if opts[:noop] && opts[:force]
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when updating a module')
