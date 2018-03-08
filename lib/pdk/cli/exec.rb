@@ -6,6 +6,7 @@ require 'tty-which'
 
 require 'pdk/util'
 require 'pdk/util/git'
+require 'pdk/util/ruby_version'
 
 module PDK
   module CLI
@@ -115,21 +116,8 @@ module PDK
           end
 
           if context == :module
-            # `bundle install --path` ignores all "system" installed gems and causes unnecessary package installs
-            # `bundle install` (without --path) installs into GEM_HOME, which by default is non-user writeable
-            # To still use the pre-installed packages, but allow folks to install additional gems
-            # we set GEM_HOME to the user's cachedir, and put all other cache locations onto GEM_PATH
-            # See https://stackoverflow.com/a/11277228 for background
-            @process.environment['GEM_HOME'] = File.join(PDK::Util.cachedir, 'ruby', RbConfig::CONFIG['ruby_version'])
-
-            if PDK::Util.package_install?
-              # Subprocesses use their own set of gems which are managed by pdk or installed with the package.
-              @process.environment['GEM_PATH'] = File.join(PDK::Util.package_cachedir, 'ruby', RbConfig::CONFIG['ruby_version'])
-            else
-              # This allows the subprocess to find the 'bundler' gem, which isn't in the cachedir above for gem installs.
-              bundler_gem_path = File.absolute_path(File.join(`gem which bundler`, '..', '..', '..', '..'))
-              @process.environment['GEM_PATH'] = bundler_gem_path
-            end
+            @process.environment['GEM_HOME'] = PDK::Util::RubyVersion.gem_home
+            @process.environment['GEM_PATH'] = PDK::Util::RubyVersion.gem_path
 
             # Make sure invocation of Ruby prefers our private installation.
             package_binpath = PDK::Util.package_install? ? File.join(PDK::Util.pdk_package_basedir, 'bin') : nil

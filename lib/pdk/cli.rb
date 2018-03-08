@@ -11,6 +11,7 @@ require 'pdk/i18n'
 require 'pdk/logger'
 require 'pdk/report'
 require 'pdk/util/version'
+require 'pdk/util/puppet_version'
 
 module PDK::CLI
   def self.run(args)
@@ -47,6 +48,16 @@ module PDK::CLI
 
   def self.full_interview_option(dsl)
     dsl.option nil, 'full-interview', _('When specified, interactive querying of metadata will include all optional questions.')
+  end
+
+  def self.puppet_version_options(dsl)
+    dsl.option nil, 'puppet-version', _('Puppet version to run tests or validations against.'), argument: :required do |value|
+      PDK::Util::PuppetVersion.find_gem_for(value)
+    end
+
+    dsl.option nil, 'pe-version', _('Puppet Enterprise version to run tests or validations against.'), argument: :required do |value|
+      PDK::Util::PuppetVersion.from_pe_version(value)
+    end
   end
 
   @base_cmd = Cri::Command.define do
