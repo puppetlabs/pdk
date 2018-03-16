@@ -58,11 +58,11 @@ module PDK
         raise NotImplementedError
       end
 
-      # @abstract Subclass and implement {#target_addon_path}. Implementations
+      # @abstract Subclass and implement {#target_type_path}. Implementations
       #   of this method should return a String containing the destination path
       #   of the additional object file being generated.
       # @return [String] returns nil if there is no additional object file
-      def target_addon_path
+      def target_type_path
         nil
       end
 
@@ -71,6 +71,13 @@ module PDK
       #   of the tests for the object being generated.
       def target_spec_path
         raise NotImplementedError
+      end
+
+      # @abstract Subclass and implement {#target_type_spec_path}. Implementations
+      #   of this method should return a String containing the destination path
+      #   of the tests for the object being generated.
+      def target_type_spec_path
+        nil
       end
 
       # Retrieves the type of the object being generated, e.g. :class,
@@ -91,7 +98,7 @@ module PDK
       #
       # @api public
       def check_preconditions
-        [target_object_path, target_addon_path, target_spec_path].compact.each do |target_file|
+        [target_object_path, target_type_path, target_spec_path, target_type_spec_path].compact.each do |target_file|
           next unless File.exist?(target_file)
 
           raise PDK::CLI::ExitWithError, _("Unable to generate %{object_type}; '%{file}' already exists.") % {
@@ -116,8 +123,9 @@ module PDK
           data = template_data.merge(configs: config_hash)
 
           render_file(target_object_path, template_path[:object], data)
-          render_file(target_addon_path, template_path[:addon], data) if template_path[:addon]
+          render_file(target_type_path, template_path[:type], data) if template_path[:type]
           render_file(target_spec_path, template_path[:spec], data) if template_path[:spec]
+          render_file(target_type_spec_path, template_path[:type_spec], data) if template_path[:type_spec]
         end
       end
 
