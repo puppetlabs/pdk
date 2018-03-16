@@ -52,23 +52,25 @@ module PDK
         end
       end
 
-      # @return [String] the path where the new type will be written.
-      def target_object_path
-        @target_object_path ||= File.join(module_dir, 'lib', 'puppet', 'type', object_name) + '.rb'
-      end
-
       # @return [String] the path where the new provider will be written.
-      def target_addon_path
-        @target_addon_path ||= File.join(module_dir, 'lib', 'puppet', 'provider', object_name, object_name) + '.rb'
+      def target_object_path
+        @target_object_path ||= File.join(module_dir, 'lib', 'puppet', 'provider', object_name, object_name) + '.rb'
       end
 
-      # Calculates the path to the file where the tests for the new defined
-      # type will be written.
-      #
-      # @return [String] the path where the tests for the new defined type
+      # @return [String] the path where the new type will be written.
+      def target_type_path
+        @target_type_path ||= File.join(module_dir, 'lib', 'puppet', 'type', object_name) + '.rb'
+      end
+
+      # @return [String] the path where the tests for the new provider
       # will be written.
       def target_spec_path
         @target_spec_path ||= File.join(module_dir, 'spec', 'unit', 'puppet', 'provider', object_name, object_name) + '_spec.rb'
+      end
+
+      # @return [String] the path where the tests for the new type will be written.
+      def target_type_spec_path
+        @target_type_spec_path ||= File.join(module_dir, 'spec', 'unit', 'puppet', 'type', object_name) + '_spec.rb'
       end
 
       # transform a object name into a ruby class name

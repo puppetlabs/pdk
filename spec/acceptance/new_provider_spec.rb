@@ -55,6 +55,15 @@ SYNC
         its(:content) { is_expected.to match(%r{RSpec.describe Puppet::Provider::TestProvider::TestProvider do}) }
       end
 
+      describe file('spec/unit/puppet/type') do
+        it { is_expected.to be_directory }
+      end
+
+      describe file('spec/unit/puppet/type/test_provider_spec.rb') do
+        it { is_expected.to be_file }
+        its(:content) { is_expected.to match(%r{RSpec.describe 'the test_provider type' do}) }
+      end
+
       context 'when validating the generated code' do
         describe command('pdk validate ruby') do
           its(:stdout) { is_expected.to be_empty }
