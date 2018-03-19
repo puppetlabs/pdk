@@ -7,6 +7,7 @@ module PDK::CLI
     usage _('unit [options]')
     summary _('Run unit tests.')
 
+    PDK::CLI.puppet_version_options(self)
     flag nil, :list, _('List all available unit test files.')
     flag nil, :parallel, _('Run unit tests in parallel.'), hidden: true
     flag :v, :verbose, _('More verbose output. Displays examples in each unit test file.')
@@ -20,6 +21,10 @@ module PDK::CLI
 
     run do |opts, _args, _cmd|
       require 'pdk/tests/unit'
+
+      if opts[:'puppet-version'] && opts[:'pe-version']
+        raise PDK::CLI::ExitWithError, _('You can not specify both --puppet-version and --pe-version at the same time.')
+      end
 
       PDK::CLI::Util.ensure_in_module!(
         message:   _('Unit tests can only be run from inside a valid module directory.'),

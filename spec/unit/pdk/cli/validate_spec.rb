@@ -146,4 +146,19 @@ describe 'Running `pdk validate` in a module' do
       }.to exit_zero
     end
   end
+
+  context 'when --puppet-version and --pe-version are specified' do
+    before(:each) do
+      allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with('4.10.10').and_return('4.10.10')
+      allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with('2018.1.1').and_return('4.10.10')
+    end
+
+    it 'exits with an error' do
+      expect(logger).to receive(:error).with(a_string_matching(%r{both --puppet-version and --pe-version}i))
+
+      expect {
+        PDK::CLI.run(%w[validate --puppet-version 4.10.10 --pe-version 2018.1.1])
+      }.to exit_nonzero
+    end
+  end
 end

@@ -13,6 +13,7 @@ module PDK::CLI
       'If not specified, validators are run against all applicable files in the module.',
     )
 
+    PDK::CLI.puppet_version_options(self)
     flag nil, :list, _('List all available validators.')
     flag :a, 'auto-correct', _('Automatically correct problems where possible.')
     flag nil, :parallel, _('Run validations in parallel.')
@@ -30,6 +31,10 @@ module PDK::CLI
       if opts[:list]
         PDK.logger.info(_('Available validators: %{validator_names}') % { validator_names: validator_names.join(', ') })
         exit 0
+      end
+
+      if opts[:'puppet-version'] && opts[:'pe-version']
+        raise PDK::CLI::ExitWithError, _('You can not specify both --puppet-version and --pe-version at the same time.')
       end
 
       PDK::CLI::Util.ensure_in_module!(
