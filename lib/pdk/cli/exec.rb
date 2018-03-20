@@ -31,7 +31,7 @@ module PDK
 
       def self.bundle_bin
         bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
-        vendored_bin_path = File.join('private', 'ruby', '2.1.9', 'bin', bundle_bin)
+        vendored_bin_path = File.join('private', 'ruby', '2.4.3', 'bin', bundle_bin)
 
         try_vendored_bin(vendored_bin_path, bundle_bin)
       end
