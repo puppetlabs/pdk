@@ -74,3 +74,5 @@ module PDK::CLI
     end
   end
 end
+
+require 'pdk/cli/build/changelog'
