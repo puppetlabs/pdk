@@ -64,8 +64,8 @@ describe PDK::Util::RubyVersion do
     context 'when running from a package install' do
       include_context 'is a package install'
 
-      it 'returns Ruby 2.1.9' do
-        is_expected.to include('2.1.9' => '2.1.0')
+      it 'returns Ruby 2.4.3' do
+        is_expected.to include('2.4.3' => '2.4.0')
       end
     end
 

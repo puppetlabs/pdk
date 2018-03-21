@@ -66,7 +66,7 @@ module PDK
       private
 
       def scan_for_packaged_rubies
-        { '2.1.9' => '2.1.0' }
+        { '2.4.3' => '2.4.0' }
       end
 
       def default_ruby_version
