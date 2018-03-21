@@ -1,9 +1,9 @@
 module PDK
   module Build
     class Changelog
-      def self.build(module_dir)
+      def self.build(module_dir, opts)
         require 'github_changelog_generator'
-        pdk_options = {
+        gcg_options = {
           verbose: true,
           release_branch: 'release',
           # XXX Gonna need to make that better
@@ -34,19 +34,15 @@ module PDK
             },
           },
         }
-        # if .github_changelog_generator exists then use that, else ask
-        # question about the since_version and make the file
-        unless File.exist?(File.join(module_dir, '.github_changelog_generator'))
-          File.open(File.join(module_dir, '.github_changelog_generator'), 'w') do |f|
-            f.write "user=puppetlabs\n"
-            f.write "project=#{YAML.load_file('metadata.json')['name']}\n"
-            f.write "since_tag=5.3.0\n"
-          end
+        File.open(File.join(module_dir, '.github_changelog_generator'), 'w') do |f|
+          f.write "user=#{opts[:user]}\n"
+          f.write "project=#{opts[:project]}\n"
+          f.write "since_tag=#{opts[:'since-tag']}\n"
         end
 
         options = GitHubChangelogGenerator::Parser.default_options
 
-        pdk_options.each do |k,v|
+        gcg_options.each do |k, v|
           options[k] = v
         end
         # Updates options in-place
