@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk'
 require 'pdk/cli/exec'
 require 'pdk/util/bundler'
@@ -37,8 +39,8 @@ module PDK
 
       def self.print_failure(result, exception)
         $stderr.puts ''
-        result[:stdout].each_line { |line| $stderr.puts line.rstrip } unless result[:stdout].nil?
-        result[:stderr].each_line { |line| $stderr.puts line.rstrip } unless result[:stderr].nil?
+        result[:stdout]&.each_line { |line| $stderr.puts line.rstrip }
+        result[:stderr]&.each_line { |line| $stderr.puts line.rstrip }
         $stderr.puts ''
         raise PDK::CLI::FatalError, exception
       end
@@ -134,7 +136,7 @@ module PDK
         return unless json_data['summary']
 
         # TODO: standardize summary output
-        $stderr.puts '  ' << _('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.') % {
+        $stderr.puts '  ' + _('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.') % {
           total: json_data['summary']['example_count'],
           duration: json_data['summary']['duration'],
           failures: json_data['summary']['failure_count'],

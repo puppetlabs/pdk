@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'pdk new provider foo', module_command: true do
@@ -7,14 +9,14 @@ describe 'pdk new provider foo', module_command: true do
     context 'when creating a provider' do
       before(:all) do
         File.open('.sync.yml', 'w') do |f|
-          f.write(<<SYNC)
----
-Gemfile:
-  optional:
-    ':development':
-      - gem: 'puppet-resource_api'
-spec/spec_helper.rb:
-  mock_with: ':rspec'
+          f.write(<<~SYNC)
+            ---
+            Gemfile:
+              optional:
+                ':development':
+                  - gem: 'puppet-resource_api'
+            spec/spec_helper.rb:
+              mock_with: ':rspec'
 SYNC
         end
         system('pdk convert --force')
@@ -95,14 +97,14 @@ SYNC
       context 'with invalid .sync.yml' do
         before(:all) do
           File.open('.sync.yml', 'w') do |f|
-            f.write(<<SYNC)
----
-Gemfile:
-  optional:
-    ':wrong_group':
-      - gem: 'puppet-resource_api'
-spec/spec_helper.rb:
-  mock_with: ':rspec'
+            f.write(<<~SYNC)
+              ---
+              Gemfile:
+                optional:
+                  ':wrong_group':
+                    - gem: 'puppet-resource_api'
+              spec/spec_helper.rb:
+                mock_with: ':rspec'
 SYNC
           end
           system('pdk convert --force')

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/generate/puppet_object'
 
 module PDK

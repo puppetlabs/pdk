@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PDK
   module CLI
     class FatalError < StandardError

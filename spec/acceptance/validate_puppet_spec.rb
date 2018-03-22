@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 require 'fileutils'
 
@@ -38,10 +40,10 @@ describe 'pdk validate puppet', module_command: true do
 
     before(:all) do
       File.open(init_pp, 'w') do |f|
-        f.puts <<-EOS
-# foo
-class foo {
-}
+        f.puts <<~EOS
+          # foo
+          class foo {
+          }
         EOS
       end
     end
@@ -69,13 +71,13 @@ class foo {
 
     before(:all) do
       File.open(init_pp, 'w') do |f|
-        f.puts <<-EOS
-# foo
-class foo {
-  notify { 'this should raise a warning':
-    message => "because of \\[\\] escape characters",
-  }
-}
+        f.puts <<~EOS
+          # foo
+          class foo {
+            notify { 'this should raise a warning':
+              message => "because of \\[\\] escape characters",
+            }
+          }
         EOS
       end
     end
@@ -216,11 +218,11 @@ class foo {
 
     before(:all) do
       File.open(init_pp, 'w') do |f|
-        f.puts <<-EOS
-# foo
-class foo {
-  Fails here because of gibberish
-}
+        f.puts <<~EOS
+          # foo
+          class foo {
+            Fails here because of gibberish
+          }
         EOS
       end
     end

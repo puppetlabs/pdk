@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 load File.expand_path(File.join(__FILE__, '..', '..', '..', '..', 'lib', 'pdk', 'version.rb'))
 

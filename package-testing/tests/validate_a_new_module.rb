@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 test_name 'C100321 - Generate a module and validate it (i.e. ensure bundle install works)' do
   require 'pdk/pdk_helper.rb'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'PDK::CLI build' do
@@ -96,7 +98,7 @@ describe 'PDK::CLI build' do
       include_context 'exits cleanly'
 
       it 'invokes the builder with the default target directory' do
-        expect(PDK::Module::Build).to receive(:new).with(:'target-dir' => File.join(Dir.pwd, 'pkg')).and_return(mock_builder)
+        expect(PDK::Module::Build).to receive(:new).with('target-dir': File.join(Dir.pwd, 'pkg')).and_return(mock_builder)
       end
     end
 
@@ -106,7 +108,7 @@ describe 'PDK::CLI build' do
       let(:command_opts) { ['--target-dir', '/tmp/pdk_builds'] }
 
       it 'invokes the builder with the specified target directory' do
-        expect(PDK::Module::Build).to receive(:new).with(:'target-dir' => '/tmp/pdk_builds').and_return(mock_builder)
+        expect(PDK::Module::Build).to receive(:new).with('target-dir': '/tmp/pdk_builds').and_return(mock_builder)
       end
     end
 

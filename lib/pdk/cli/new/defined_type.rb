@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PDK::CLI
   @new_define_cmd = @new_cmd.define_command do
     name 'defined_type'

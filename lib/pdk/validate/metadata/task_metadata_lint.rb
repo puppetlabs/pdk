@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk'
 require 'pdk/cli/exec'
 require 'pdk/validate/base_validator'
@@ -8,7 +10,7 @@ require 'json-schema'
 module PDK
   module Validate
     class TaskMetadataLint < BaseValidator
-      FORGE_SCHEMA_URL = 'https://forgeapi.puppet.com/schemas/task.json'.freeze
+      FORGE_SCHEMA_URL = 'https://forgeapi.puppet.com/schemas/task.json'
 
       def self.name
         'task-metadata-lint'

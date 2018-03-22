@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'Running all validations' do
@@ -12,9 +14,9 @@ describe 'Running all validations' do
 
     before(:all) do
       File.open(init_pp, 'w') do |f|
-        f.puts <<-EOS
-# validate_all
-class validate_all { }
+        f.puts <<~EOS
+          # validate_all
+          class validate_all { }
         EOS
       end
     end
@@ -37,11 +39,11 @@ class validate_all { }
 
     before(:all) do
       File.open(init_pp, 'w') do |f|
-        f.puts <<-EOS
-# foo
-class validate_all {
-  Fails here because of gibberish
-}
+        f.puts <<~EOS
+          # foo
+          class validate_all {
+            Fails here because of gibberish
+          }
         EOS
       end
     end

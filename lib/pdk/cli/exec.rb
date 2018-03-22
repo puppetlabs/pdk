@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'bundler'
 require 'childprocess'
 require 'tempfile'
@@ -108,7 +110,7 @@ module PDK
 
         def execute!
           # Start spinning if configured.
-          @spinner.auto_spin if @spinner
+          @spinner&.auto_spin
 
           # Add custom env vars.
           @environment.each do |k, v|
@@ -133,7 +135,7 @@ module PDK
             mod_root = PDK::Util.module_root
 
             unless mod_root
-              @spinner.error if @spinner
+              @spinner&.error
 
               raise PDK::CLI::FatalError, _('Current working directory is not part of a module. (No metadata.json was found.)')
             end

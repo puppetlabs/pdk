@@ -1,10 +1,9 @@
+# frozen_string_literal: true
+
 source 'https://rubygems.org'
 
 # Specify your gem's dependencies in pdk.gemspec
 gemspec
-
-# avoid newer versions that do not support ruby 2.1 anymore
-gem 'nokogiri', '1.7.2'
 
 group :development do
   gem 'activesupport', '4.2.9'

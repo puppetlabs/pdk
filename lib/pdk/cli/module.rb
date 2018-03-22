@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PDK::CLI
   @module_cmd = @base_cmd.define_command do
     name 'module'

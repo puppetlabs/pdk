@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe PDK::Validate::PuppetSyntax do
@@ -70,13 +72,13 @@ describe PDK::Validate::PuppetSyntax do
     def mock_validate(file, line, column, message, severity)
       output = "#{severity}: #{message}"
       if file && line && column
-        output << " at #{file}:#{line}:#{column}\n"
+        output += " at #{file}:#{line}:#{column}\n"
       elsif file && line
-        output << " at #{file}:#{line}\n"
+        output += " at #{file}:#{line}\n"
       elsif line
-        output << " at line #{line}\n"
+        output += " at line #{line}\n"
       elsif file
-        output << " in #{file}\n"
+        output += " in #{file}\n"
       end
 
       output

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 test_name 'C100022 - pdk --help' do
   require 'pdk/pdk_helper.rb'
 

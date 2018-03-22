@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/validate/metadata_validator'
 require 'pdk/validate/puppet_validator'
 require 'pdk/validate/ruby_validator'

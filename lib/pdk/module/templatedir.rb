@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'yaml'
 require 'deep_merge'
 require 'pdk/util'
@@ -224,8 +226,8 @@ module PDK
             File.file?(template_path) && !File.symlink?(template_path)
             dirlocs << dir
           end
-          temp_paths.map do |template_path|
-            template_path.sub!(%r{\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
+          temp_paths = temp_paths.map do |template_path|
+            template_path.sub(%r{\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
           end
         end
         template_paths = Hash[temp_paths.zip dirlocs]

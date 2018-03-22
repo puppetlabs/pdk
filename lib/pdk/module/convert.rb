@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/generate/module'
 require 'pdk/module/update_manager'
 require 'pdk/util'
@@ -180,13 +182,14 @@ module PDK
 
       def generate_banner(text, width = 80)
         padding = width - text.length
-        banner = ''
+        banner = String.new
         padding_char = '-'
 
         (padding / 2.0).ceil.times { banner << padding_char }
         banner << text
         (padding / 2.0).floor.times { banner << padding_char }
 
+        banner.freeze
         banner
       end
     end

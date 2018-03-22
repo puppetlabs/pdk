@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/util'
 
 module PDK
@@ -62,7 +64,7 @@ module PDK
       private
 
       def ensure_semver_version!(version_str)
-        return if version_str =~ %r{\A\d+\.\d+\.\d+\Z}
+        return if version_str.match?(%r{\A\d+\.\d+\.\d+\Z})
 
         raise ArgumentError, _('%{version} is not a valid version number') % {
           version: version_str,
@@ -95,7 +97,7 @@ module PDK
       end
 
       def requirement_from_forge_range(range_str)
-        range_str.gsub!(%r{\.x\Z}, '.0')
+        range_str = range_str.gsub(%r{\.x\Z}, '.0')
         Gem::Requirement.create("~> #{range_str}")
       end
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper_acceptance'
 
 describe 'Running metadata validation' do
@@ -132,12 +134,12 @@ describe 'Running metadata validation' do
 
     before(:all) do
       File.open(File.join('tasks', 'valid.json'), 'w') do |f|
-        f.puts <<-EOS
-{
-  "puppet_task_version": 1,
-  "supports_noop": false,
-  "description": "A short description of this task"
-}
+        f.puts <<~EOS
+          {
+            "puppet_task_version": 1,
+            "supports_noop": false,
+            "description": "A short description of this task"
+          }
         EOS
       end
     end
@@ -165,12 +167,12 @@ describe 'Running metadata validation' do
 
     before(:all) do
       File.open(File.join('tasks', 'invalid.json'), 'w') do |f|
-        f.puts <<-EOS
-{
-  "puppet_task_version": 1,
-  "supports_noop": "false",
-  "description": "A short description of this task"
-}
+        f.puts <<~EOS
+          {
+            "puppet_task_version": 1,
+            "supports_noop": "false",
+            "description": "A short description of this task"
+          }
         EOS
       end
     end

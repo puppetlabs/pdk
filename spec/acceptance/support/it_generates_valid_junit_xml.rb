@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples_for :it_generates_valid_junit_xml do
   its(:stdout) do
     xsd = File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd')

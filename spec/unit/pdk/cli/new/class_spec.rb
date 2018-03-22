@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'PDK::CLI new class' do
@@ -51,7 +53,7 @@ describe 'PDK::CLI new class' do
       context 'and a custom template URL' do
         it 'generates the class from the custom template' do
           expect(PDK::Generate::PuppetClass).to receive(:new)
-            .with(anything, 'test_class', :'template-url' => 'https://custom/template')
+            .with(anything, 'test_class', 'template-url': 'https://custom/template')
             .and_return(generator)
           expect(generator).to receive(:run)
 
