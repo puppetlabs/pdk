@@ -68,7 +68,7 @@ describe 'PDK::CLI new defined_type' do
       end
 
       context 'and a custom template URL' do
-        let(:generator_opts) { { :'template-url' => 'https://custom/template' } }
+        let(:generator_opts) { { 'template-url': 'https://custom/template' } }
 
         it 'generates the defined type from the custom template' do
           expect(generator_double).to receive(:run)

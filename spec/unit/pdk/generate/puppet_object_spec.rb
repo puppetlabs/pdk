@@ -146,7 +146,7 @@ describe PDK::Generate::PuppetObject do
     end
 
     context 'when a template-url is provided on the CLI' do
-      let(:options) { { :'template-url' => '/some/path' } }
+      let(:options) { { 'template-url': '/some/path' } }
 
       before(:each) do
         allow(PDK::Module::TemplateDir).to receive(:new).with(options[:'template-url']).and_yield(cli_templatedir)

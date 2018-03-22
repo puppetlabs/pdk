@@ -64,7 +64,7 @@ module PDK
       private
 
       def ensure_semver_version!(version_str)
-        return if version_str =~ %r{\A\d+\.\d+\.\d+\Z}
+        return if version_str.match?(%r{\A\d+\.\d+\.\d+\Z})
 
         raise ArgumentError, _('%{version} is not a valid version number') % {
           version: version_str,

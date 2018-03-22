@@ -54,9 +54,9 @@ describe PDK::Generate::Module do
     let(:target_dir) { File.expand_path('/path/to/target/module') }
     let(:invoke_opts) do
       {
-        :target_dir       => target_dir,
-        :module_name      => 'foo',
-        :'skip-interview' => true,
+        target_dir: target_dir,
+        module_name: 'foo',
+        'skip-interview': true,
       }
     end
 
@@ -176,19 +176,19 @@ describe PDK::Generate::Module do
           expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
           expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
 
-          described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+          described_class.invoke(invoke_opts.merge('template-url': 'cli-template'))
         end
 
         it 'takes precedence over the template-url answer' do
           PDK.answers.update!('template-url' => 'answer-template')
           expect(PDK::Module::TemplateDir).to receive(:new).with('cli-template', anything, anything).and_yield(test_template_dir)
-          described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+          described_class.invoke(invoke_opts.merge('template-url': 'cli-template'))
         end
 
         it 'saves the template-url to the answer file if it is not the puppetlabs template' do
           expect(PDK.answers).to receive(:update!).with('template-url' => 'cli-template')
 
-          described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+          described_class.invoke(invoke_opts.merge('template-url': 'cli-template'))
         end
 
         it 'clears the saved template-url answer if it is the puppetlabs template' do
@@ -196,7 +196,7 @@ describe PDK::Generate::Module do
           expect(PDK.answers).to receive(:update!).with('template-url' => nil).and_call_original
           allow(PDK::Util).to receive(:puppetlabs_template_url).and_return('puppetlabs-url')
 
-          described_class.invoke(invoke_opts.merge(:'template-url' => 'puppetlabs-url'))
+          described_class.invoke(invoke_opts.merge('template-url': 'puppetlabs-url'))
           expect(PDK.answers['template-url']).to eq(nil)
         end
       end
@@ -230,7 +230,7 @@ describe PDK::Generate::Module do
 
             it 'uses the vendored template url' do
               expect(PDK::Module::TemplateDir).to receive(:new).with('file:///tmp/package/cache/pdk-templates.git', anything, anything).and_yield(test_template_dir)
-              expect(PDK.answers).not_to receive(:update!).with(:'template-url' => anything)
+              expect(PDK.answers).not_to receive(:update!).with('template-url': anything)
 
               described_class.invoke(invoke_opts)
             end
@@ -239,7 +239,7 @@ describe PDK::Generate::Module do
           context 'and pdk is not installed from packages' do
             it 'uses the default template to generate the module' do
               expect(PDK::Module::TemplateDir).to receive(:new).with(PDK::Util.default_template_url, anything, anything).and_yield(test_template_dir)
-              expect(PDK.answers).not_to receive(:update!).with(:'template-url' => anything)
+              expect(PDK.answers).not_to receive(:update!).with('template-url': anything)
 
               described_class.invoke(invoke_opts)
             end
@@ -309,7 +309,7 @@ describe PDK::Generate::Module do
     end
 
     context 'with --full-interview' do
-      let(:options) { { :module_name => module_name, :'full-interview' => true } }
+      let(:options) { { module_name: module_name, 'full-interview': true } }
 
       context 'when provided answers to all the questions' do
         include_context 'allow summary to be printed to stdout'
@@ -394,7 +394,7 @@ describe PDK::Generate::Module do
       context 'when the user chooses the default values for everything' do
         include_context 'allow summary to be printed to stdout'
 
-        let(:options) { { :module_name => 'bar', :username => 'defaultauthor', :'full-interview' => true } }
+        let(:options) { { module_name: 'bar', username: 'defaultauthor', 'full-interview': true } }
         let(:default_metadata) do
           {
             'author'  => 'defaultauthor',
@@ -645,7 +645,7 @@ describe PDK::Generate::Module do
     let(:options) { { module_name: 'baz' } }
 
     context 'when provided :skip-interview => true' do
-      let(:options) { { :module_name => 'baz', :'skip-interview' => true } }
+      let(:options) { { module_name: 'baz', 'skip-interview': true } }
 
       it 'does not perform the module interview' do
         expect(described_class).not_to receive(:module_interview)

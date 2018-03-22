@@ -12,8 +12,8 @@ describe 'Saves report to a file' do
 
     before(:all) do
       File.open(init_pp, 'w') do |f|
-        f.puts <<-EOS
-class foo { }
+        f.puts <<~EOS
+          class foo { }
         EOS
       end
     end

@@ -68,7 +68,7 @@ describe 'PDK::CLI new task' do
       end
 
       context 'and a custom template URL' do
-        let(:generator_opts) { { :'template-url' => 'https://custom/template' } }
+        let(:generator_opts) { { 'template-url': 'https://custom/template' } }
 
         it 'generates the task from the custom template' do
           expect(generator_double).to receive(:run)
@@ -80,8 +80,8 @@ describe 'PDK::CLI new task' do
       context 'and provided a description for the task' do
         let(:generator_opts) do
           {
-            :description    => 'test_task description',
-            :'template-url' => anything,
+            description: 'test_task description',
+            'template-url': anything,
           }
         end
 

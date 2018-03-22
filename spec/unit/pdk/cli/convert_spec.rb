@@ -22,7 +22,7 @@ describe 'PDK::CLI convert' do
 
     context 'and provided no flags' do
       it 'invokes the converter with the default template' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(:'template-url' => PDK::Util.default_template_url)
+        expect(PDK::Module::Convert).to receive(:invoke).with('template-url': PDK::Util.default_template_url)
 
         PDK::CLI.run(['convert'])
       end
@@ -30,7 +30,7 @@ describe 'PDK::CLI convert' do
 
     context 'and the --template-url option has been passed' do
       it 'invokes the converter with the user supplied template' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(:'template-url' => 'https://my/template')
+        expect(PDK::Module::Convert).to receive(:invoke).with('template-url': 'https://my/template')
 
         PDK::CLI.run(['convert', '--template-url', 'https://my/template'])
       end
@@ -38,7 +38,7 @@ describe 'PDK::CLI convert' do
 
     context 'and the --noop flag has been passed' do
       it 'passes the noop option through to the converter' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(:noop => true, :'template-url' => anything)
+        expect(PDK::Module::Convert).to receive(:invoke).with(noop: true, 'template-url': anything)
 
         PDK::CLI.run(['convert', '--noop'])
       end
@@ -46,7 +46,7 @@ describe 'PDK::CLI convert' do
 
     context 'and the --force flag has been passed' do
       it 'passes the force option through to the converter' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(:force => true, :'template-url' => anything)
+        expect(PDK::Module::Convert).to receive(:invoke).with(force: true, 'template-url': anything)
 
         PDK::CLI.run(['convert', '--force'])
       end
@@ -62,7 +62,7 @@ describe 'PDK::CLI convert' do
 
     context 'and the --skip-interview flag has been passed' do
       it 'passes the skip-interview option through to the converter' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(:'skip-interview' => true, :'template-url' => anything)
+        expect(PDK::Module::Convert).to receive(:invoke).with('skip-interview': true, 'template-url': anything)
 
         PDK::CLI.run(['convert', '--skip-interview'])
       end
@@ -70,7 +70,7 @@ describe 'PDK::CLI convert' do
 
     context 'and the --full-interview flag has been passed' do
       it 'passes the full-interview option through to the converter' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(:'full-interview' => true, :'template-url' => anything)
+        expect(PDK::Module::Convert).to receive(:invoke).with('full-interview': true, 'template-url': anything)
 
         PDK::CLI.run(['convert', '--full-interview'])
       end
@@ -79,7 +79,7 @@ describe 'PDK::CLI convert' do
     context 'and the --skip-interview and --full-interview flags have been passed' do
       it 'ignores full-interview and continues with a log message' do
         expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --skip-interview.}i))
-        expect(PDK::Module::Convert).to receive(:invoke).with(:'skip-interview' => true, :'full-interview' => false, :'template-url' => anything)
+        expect(PDK::Module::Convert).to receive(:invoke).with('skip-interview': true, 'full-interview': false, 'template-url': anything)
 
         PDK::CLI.run(['convert', '--skip-interview', '--full-interview'])
       end
@@ -88,7 +88,7 @@ describe 'PDK::CLI convert' do
     context 'and the --force and --full-interview flags have been passed' do
       it 'ignores full-interview and continues with a log message' do
         expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --force.}i))
-        expect(PDK::Module::Convert).to receive(:invoke).with(:force => true, :'full-interview' => false, :'template-url' => anything)
+        expect(PDK::Module::Convert).to receive(:invoke).with(force: true, 'full-interview': false, 'template-url': anything)
 
         PDK::CLI.run(['convert', '--force', '--full-interview'])
       end

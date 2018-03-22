@@ -39,8 +39,8 @@ module PDK
 
       def self.print_failure(result, exception)
         $stderr.puts ''
-        result[:stdout].each_line { |line| $stderr.puts line.rstrip } unless result[:stdout].nil?
-        result[:stderr].each_line { |line| $stderr.puts line.rstrip } unless result[:stderr].nil?
+        result[:stdout]&.each_line { |line| $stderr.puts line.rstrip }
+        result[:stderr]&.each_line { |line| $stderr.puts line.rstrip }
         $stderr.puts ''
         raise PDK::CLI::FatalError, exception
       end
