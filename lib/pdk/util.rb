@@ -32,7 +32,9 @@ module PDK
     #
     # @return [String] The temporary directory path.
     def make_tmpdir_name(base)
-      Dir::Tmpname.make_tmpname(File.join(Dir.tmpdir, base), nil)
+      t = Time.now.strftime('%Y%m%d')
+      name = "#{base}#{t}-#{Process.pid}-#{rand(0x100000000).to_s(36)}"
+      File.join(Dir.tmpdir, name)
     end
     module_function :make_tmpdir_name
 
