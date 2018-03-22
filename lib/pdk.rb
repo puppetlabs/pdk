@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/answer_file'
 require 'pdk/generate'
 require 'pdk/i18n'

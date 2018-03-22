@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/version'
 require 'pdk/cli/exec'
 require 'pdk/util/git'

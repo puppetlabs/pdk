@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'open3'
 
 shared_context 'in a new module' do |name, options = {}|

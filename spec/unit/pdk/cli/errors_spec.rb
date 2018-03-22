@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe PDK::CLI::FatalError do # rubocop:disable RSpec/MultipleDescribes

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/util'
 
 module PDK
@@ -95,7 +97,7 @@ module PDK
       end
 
       def requirement_from_forge_range(range_str)
-        range_str.gsub!(%r{\.x\Z}, '.0')
+        range_str = range_str.gsub(%r{\.x\Z}, '.0')
         Gem::Requirement.create("~> #{range_str}")
       end
 

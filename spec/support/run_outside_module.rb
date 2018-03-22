@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_context 'run outside module' do
   before(:each) do
     msg = 'must be run from inside a valid module (no metadata.json found)'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 RSpec.shared_examples_for 'it accepts .pp targets' do
   describe '.parse_targets' do
     subject(:parsed_targets) { described_class.parse_targets(targets: targets) }

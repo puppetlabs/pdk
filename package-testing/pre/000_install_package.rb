@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 test_name 'Install pdk package on workstation host' do
   workstation = find_at_most_one('workstation')
 

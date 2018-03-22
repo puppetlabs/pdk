@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/cli/util/option_validator'
 require 'pdk/report'
 

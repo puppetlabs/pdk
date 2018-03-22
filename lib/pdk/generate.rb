@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/generate/defined_type'
 require 'pdk/generate/module'
 require 'pdk/generate/provider'

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk/util/bundler'
 
 module PDK::CLI

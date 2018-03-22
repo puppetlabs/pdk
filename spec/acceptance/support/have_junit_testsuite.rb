@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rexml/document'
 
 RSpec::Matchers.define :have_junit_testsuite do |testsuite_name|

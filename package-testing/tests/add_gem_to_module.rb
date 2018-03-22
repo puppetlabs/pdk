@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 test_name 'C100545 - Generate a module, add a gem to it, and validate it' do
   require 'pdk/pdk_helper.rb'
 

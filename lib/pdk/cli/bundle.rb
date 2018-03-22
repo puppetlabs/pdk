@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 module PDK::CLI
   @bundle_cmd = @base_cmd.define_command do

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 def install_dir(host)
   if host.platform =~ %r{windows}
     '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit'

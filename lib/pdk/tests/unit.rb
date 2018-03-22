@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'pdk'
 require 'pdk/cli/exec'
 require 'pdk/util/bundler'
@@ -134,7 +136,7 @@ module PDK
         return unless json_data['summary']
 
         # TODO: standardize summary output
-        $stderr.puts '  ' << _('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.') % {
+        $stderr.puts '  ' + _('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.') % {
           total: json_data['summary']['example_count'],
           duration: json_data['summary']['duration'],
           failures: json_data['summary']['failure_count'],
