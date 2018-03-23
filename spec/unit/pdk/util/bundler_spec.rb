@@ -53,6 +53,9 @@ RSpec.describe PDK::Util::Bundler do
 
     context 'when there is no Gemfile.lock' do
       before(:each) do
+        mock_spinner = instance_double(TTY::Spinner, 'auto_spin' => true, 'success' => true, 'error' => true)
+        allow(TTY::Spinner).to receive(:new).and_return(mock_spinner)
+
         allow(described_class).to receive(:already_bundled?).and_return(false)
 
         allow(File).to receive(:file?).with(%r{Gemfile$}).and_return(true)
@@ -83,7 +86,8 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'generates Gemfile.lock' do
-        expect_command([bundle_regex, 'lock', any_args], nil, %r{resolving gemfile}i)
+        expect_command([bundle_regex, 'lock'], nil)
+        expect_command([bundle_regex, 'lock', '--update=json', '--local'], nil)
 
         described_class.ensure_bundle!
       end
@@ -91,7 +95,7 @@ RSpec.describe PDK::Util::Bundler do
       context 'and it fails to generate Gemfile.lock' do
         before(:each) do
           allow(described_class).to receive(:already_bundled?).and_return(false)
-          allow_command([bundle_regex, 'lock'], exit_code: 1, stdout: 'lock stdout', stderr: 'lock stderr')
+          allow_command([bundle_regex, 'lock', any_args], exit_code: 1, stdout: 'lock stdout', stderr: 'lock stderr')
           allow($stderr).to receive(:puts).with('lock stdout')
           allow($stderr).to receive(:puts).with('lock stderr')
         end
