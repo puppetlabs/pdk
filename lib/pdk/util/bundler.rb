@@ -89,17 +89,32 @@ module PDK
         end
 
         def lock!
-          command = bundle_command('lock').tap do |c|
-            c.add_spinner(_('Resolving Gemfile dependencies.'))
+          spinner = TTY::Spinner.new("[:spinner] #{_('Resolving Gemfile dependencies.')}", PDK::CLI::Util.spinner_opts_for_platform)
+          spinner.auto_spin
+
+          # After initial lockfile generation, re-resolve json gem to built-in
+          # version to avoid unncessary native compilation attempts.
+          lock_commands = [
+            bundle_command('lock'),
+            bundle_command('lock', '--update=json', '--local'),
+          ]
+
+          results = lock_commands.collect do |cmd|
+            result = cmd.execute!
+
+            unless result[:exit_code].zero?
+              spinner.error
+              PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n"))
+              break [result]
+            end
+
+            result
           end
 
-          result = command.execute!
+          return false unless results.all? { |result| result[:exit_code].zero? }
 
-          unless result[:exit_code].zero?
-            PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n"))
-          end
-
-          result[:exit_code].zero?
+          spinner.success
+          true
         end
 
         def install!
