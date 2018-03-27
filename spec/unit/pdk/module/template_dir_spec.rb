@@ -33,6 +33,7 @@ describe PDK::Module::TemplateDir do
   context 'with a valid template path' do
     it 'returns config hash with module metadata' do
       allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(described_class).to receive(:repo?).with(path_or_url).and_return(false)
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
@@ -122,6 +123,7 @@ describe PDK::Module::TemplateDir do
   describe '.render(template_files)' do
     before(:each) do
       allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(described_class).to receive(:repo?).with(path_or_url).and_return(false)
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
     end
@@ -183,6 +185,7 @@ describe PDK::Module::TemplateDir do
   describe '.config_for(dest_path)' do
     before(:each) do
       allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(described_class).to receive(:repo?).with(path_or_url).and_return(false)
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
@@ -232,7 +235,7 @@ describe PDK::Module::TemplateDir do
   describe '.metadata' do
     before(:each) do
       allow(File).to receive(:directory?).with(anything).and_return(true)
-      allow(File).to receive(:directory?).with(path_or_url).and_return(false)
+      allow(described_class).to receive(:repo?).with(path_or_url).and_return(true)
       allow(PDK::Util).to receive(:default_template_url).and_return(path_or_url)
       allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
@@ -254,7 +257,7 @@ describe PDK::Module::TemplateDir do
   describe 'custom template' do
     before(:each) do
       allow(File).to receive(:directory?).with(anything).and_return(true)
-      allow(File).to receive(:directory?).with(path_or_url).and_return(false)
+      allow(described_class).to receive(:repo?).with(path_or_url).and_return(true)
       allow(PDK::Util).to receive(:default_template_url).and_return('default-url')
       allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
