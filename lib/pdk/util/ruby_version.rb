@@ -6,26 +6,62 @@ module PDK
       class << self
         extend Forwardable
 
-        def_delegators :instance, :gem_path, :gem_home, :versions, :available_puppet_versions
+        def_delegators :instance, :gem_path, :gem_home, :available_puppet_versions
 
-        attr_writer :instance
+        attr_reader :instance
 
         def instance
-          @instance ||= new
+          if @instance.nil?
+            @instance = {}
+            @instance.default_proc = proc do |hash, key|
+              hash[key] = new(key)
+            end
+          end
+          @instance[active_ruby_version]
+        end
+
+        def active_ruby_version
+          @active_ruby_version || default_ruby_version
+        end
+
+        def use(version)
+          if versions.key?(version)
+            @active_ruby_version = version
+          else
+            raise ArgumentError, _('Unknown Ruby version "%{ruby_version}"') % {
+              ruby_version: version,
+            }
+          end
+        end
+
+        def scan_for_packaged_rubies
+          { '2.4.3' => '2.4.0' }
+        end
+
+        def default_ruby_version
+          versions.keys.sort { |a, b| Gem::Version.new(b) <=> Gem::Version.new(a) }.first
+        end
+
+        def versions
+          @versions ||= if PDK::Util.package_install?
+                          scan_for_packaged_rubies
+                        else
+                          { RbConfig::CONFIG['RUBY_PROGRAM_VERSION'] => RbConfig::CONFIG['ruby_version'] }
+                        end
         end
       end
 
-      attr_reader :active_ruby_version
+      attr_reader :ruby_version
 
-      def initialize
-        @active_ruby_version = default_ruby_version
+      def initialize(ruby_version = nil)
+        @ruby_version = ruby_version || default_ruby_version
       end
 
       def gem_path
         if PDK::Util.package_install?
           # Subprocesses use their own set of gems which are managed by pdk or
           # installed with the package.
-          File.join(PDK::Util.package_cachedir, 'ruby', versions[active_ruby_version])
+          File.join(PDK::Util.package_cachedir, 'ruby', versions[ruby_version])
         else
           # This allows the subprocess to find the 'bundler' gem, which isn't
           # in the cachedir above for gem installs.
@@ -44,15 +80,7 @@ module PDK
         # additional gems, we set GEM_HOME to the user's cachedir and put all
         # other cache locations onto GEM_PATH.
         # See https://stackoverflow.com/a/11277228 for background
-        File.join(PDK::Util.cachedir, 'ruby', versions[active_ruby_version])
-      end
-
-      def versions
-        @versions ||= if PDK::Util.package_install?
-                        scan_for_packaged_rubies
-                      else
-                        { RbConfig::CONFIG['RUBY_PROGRAM_VERSION'] => RbConfig::CONFIG['ruby_version'] }
-                      end
+        File.join(PDK::Util.cachedir, 'ruby', versions[ruby_version])
       end
 
       def available_puppet_versions
@@ -65,12 +93,12 @@ module PDK
 
       private
 
-      def scan_for_packaged_rubies
-        { '2.4.3' => '2.4.0' }
+      def default_ruby_version
+        self.class.default_ruby_version
       end
 
-      def default_ruby_version
-        versions.keys.sort { |a, b| Gem::Version.new(b) <=> Gem::Version.new(a) }.first
+      def versions
+        self.class.versions
       end
     end
   end

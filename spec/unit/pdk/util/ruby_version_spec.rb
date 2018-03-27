@@ -30,7 +30,7 @@ describe PDK::Util::RubyVersion do
       include_context 'is a package install'
 
       it 'returns the path to the packaged ruby cachedir' do
-        is_expected.to eq(File.join(package_cachedir, 'ruby', instance.versions[instance.active_ruby_version]))
+        is_expected.to eq(File.join(package_cachedir, 'ruby', described_class.versions[described_class.active_ruby_version]))
       end
     end
 
@@ -54,12 +54,16 @@ describe PDK::Util::RubyVersion do
     end
 
     it 'returns a Ruby version specific path under the user cachedir' do
-      is_expected.to eq(File.join(cachedir, 'ruby', instance.versions[instance.active_ruby_version]))
+      is_expected.to eq(File.join(cachedir, 'ruby', described_class.versions[described_class.active_ruby_version]))
     end
   end
 
-  describe '#versions' do
-    subject { instance.versions }
+  describe '.versions' do
+    subject { described_class.versions }
+
+    before(:each) do
+      described_class.instance_variable_set('@versions', nil)
+    end
 
     context 'when running from a package install' do
       include_context 'is a package install'
