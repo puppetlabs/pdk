@@ -40,8 +40,8 @@ module PDK
           raise ArgumentError, _('%{class_name} must be initialized with a block.') % { class_name: self.class.name }
         end
 
-        if self.class.repo?(path_or_url)
-          @path = self.class.clone_repo(path_or_url)
+        if PDK::Util::Git.repo?(path_or_url)
+          @path = self.class.clone_template_repo(path_or_url)
           @repo = path_or_url
         else
           @path = path_or_url
@@ -264,36 +264,13 @@ module PDK
         end
       end
 
-      # @return [Boolean] Whether or not the given string points to a git URL or bare repo
-      #
-      # @api private
-      def self.repo?(path_or_url)
-        if File.directory?(path_or_url)
-          Dir.chdir(path_or_url) do |_|
-            git_check_result = PDK::Util::Git.git('rev-parse', '--is-bare-repository')
-
-            if git_check_result[:exit_code].zero? && git_check_result[:stdout].strip == 'true'
-              # value is a local bare repo
-              return true
-            end
-          end
-
-          # value is a local directory that is not a bare repo, assume it is a templatedir
-          return false
-        end
-
-        # value is not a local directory, assume it is a git repo URL
-        # @todo this could be validated more explicitly
-        true
-      end
-
       # @return [String] Path to working directory into which template repo has been cloned and reset
       #
       # @raise [PDK::CLI::FatalError] If unable to clone the given origin_repo into a tempdir.
       # @raise [PDK::CLI::FatalError] If reset HEAD of the cloned repo to desired ref.
       #
       # @api private
-      def self.clone_repo(origin_repo)
+      def self.clone_template_repo(origin_repo)
         # @todo When switching this over to using rugged, cache the cloned
         # template repo in `%AppData%` or `$XDG_CACHE_DIR` and update before
         # use.

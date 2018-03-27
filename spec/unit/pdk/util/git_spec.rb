@@ -1,29 +1,63 @@
 require 'spec_helper'
 
 describe PDK::Util::Git do
-  describe '.repo_exists?' do
-    subject { described_class.repo_exists?(repo) }
+  describe '.repo?' do
+    subject { described_class.repo?(maybe_repo) }
 
-    let(:repo) { 'pdk-templates' }
+    let(:maybe_repo) { 'pdk-templates' }
 
-    before(:each) do
-      allow(described_class).to receive(:git).with('ls-remote', '--exit-code', repo).and_return(result)
-    end
-
-    context 'when git ls-remote finds refs in the repository' do
-      let(:result) do
-        { exit_code: 0 }
+    context 'when maybe_repo is a directory' do
+      before(:each) do
+        allow(File).to receive(:directory?).with(maybe_repo).and_return(true)
+        allow(described_class).to receive(:git_with_env).with(hash_including('GIT_DIR' => maybe_repo), 'rev-parse', '--is-bare-repository').and_return(result)
       end
 
-      it { is_expected.to be_truthy }
-    end
+      context 'when `rev-parse --is-bare-repository` returns true' do
+        let(:result) do
+          { exit_code: 0, stdout: 'true' }
+        end
 
-    context 'when git ls-remote can not find any refs in the repository' do
-      let(:result) do
-        { exit_code: 2 }
+        it { is_expected.to be_truthy }
       end
 
-      it { is_expected.to be_falsey }
+      context 'when `rev-parse --is-bare-repository` returns false' do
+        let(:result) do
+          { exit_code: 0, stdout: 'false' }
+        end
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'when `rev-parse --is-bare-repository` exits non-zero' do
+        let(:result) do
+          { exit_code: 1 }
+        end
+
+        it { is_expected.to be_falsey }
+      end
+    end
+
+    context 'when maybe_repo is not a directory' do
+      before(:each) do
+        allow(File).to receive(:directory?).with(maybe_repo).and_return(false)
+        allow(described_class).to receive(:git).with('ls-remote', '--exit-code', maybe_repo).and_return(result)
+      end
+
+      context 'when `ls-remote` exits zero' do
+        let(:result) do
+          { exit_code: 0 }
+        end
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'when `ls-remote` exits non-zero' do
+        let(:result) do
+          { exit_code: 2 }
+        end
+
+        it { is_expected.to be_falsey }
+      end
     end
   end
 

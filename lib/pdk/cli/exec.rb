@@ -15,6 +15,10 @@ module PDK
         Command.new(*cmd).execute!
       end
 
+      def self.execute_with_env(env, *cmd)
+        Command.new(*cmd).tap { |c| c.environment = env }.execute!
+      end
+
       def self.ensure_bin_present!(bin_path, bin_name)
         message = _('Unable to find `%{name}`. Check that it is installed and try again.') % {
           name: bin_name,

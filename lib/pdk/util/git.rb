@@ -32,10 +32,27 @@ module PDK
         PDK::CLI::Exec.execute(git_bin, *args)
       end
 
-      def self.repo_exists?(repo, ref = nil)
-        args = ['ls-remote', '--exit-code', repo, ref].compact
+      def self.git_with_env(env, *args)
+        PDK::CLI::Exec.ensure_bin_present!(git_bin, 'git')
 
-        git(*args)[:exit_code].zero?
+        PDK::CLI::Exec.execute_with_env(env, git_bin, *args)
+      end
+
+      def self.repo?(maybe_repo)
+        return bare_repo?(maybe_repo) if File.directory?(maybe_repo)
+
+        remote_repo?(maybe_repo)
+      end
+
+      def self.bare_repo?(maybe_repo)
+        env = { 'GIT_DIR' => maybe_repo }
+        rev_parse = git_with_env(env, 'rev-parse', '--is-bare-repository')
+
+        rev_parse[:exit_code].zero? && rev_parse[:stdout].strip == 'true'
+      end
+
+      def self.remote_repo?(maybe_repo)
+        git('ls-remote', '--exit-code', maybe_repo)[:exit_code].zero?
       end
 
       def self.ls_remote(repo, ref)
