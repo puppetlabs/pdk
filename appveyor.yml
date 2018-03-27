@@ -1,29 +1,48 @@
 # version: 1.0.{build}-{branch}
 
 environment:
+  LOG_SPEC_ORDER: true
   matrix:
+    # FIXME: enable ruby 2.5 on windows once puppet and puppet-module gems have unpinned ffi
+    # - RUBY_VERSION: 25-x64
+    #   USE_MSYS: true
+    #   SUITES: "spec"
+    - RUBY_VERSION: 24-x64
+      USE_MSYS: true
+      SUITES: "spec acceptance:local"
     - RUBY_VERSION: 23-x64
+      USE_CYGWIN: true
+      SUITES: "spec"
     - RUBY_VERSION: 21-x64
+      USE_CYGWIN: true
+      SUITES: "spec"
 
 install:
-  - set PATH=C:\Ruby%RUBY_VERSION%\bin;C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;%PATH%
-  - SET LOG_SPEC_ORDER=true
+  - ps: |
+      if ($ENV:USE_MSYS -ne $Null) {
+        Push-Location "C:\Ruby${ENV:RUBY_VERSION}\bin"
+        .\ridk.ps1 install 2 3
+        .\ridk.ps1 enable
+        Pop-Location
+      }
+      ElseIf ($ENV:USE_CYGWIN) {
+        $ENV:PATH = "C:\Ruby${ENV:RUBY_VERSION}\bin;C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;" + $ENV:PATH
+      }
+  - echo %PATH%
   - bundle install --jobs 4 --retry 2 --without development
 
 build: off
 
 before_test:
-  - ruby -v
-  - gem -v
-  - bundle -v
+  - bundle env
   - type Gemfile.lock
 
 test_script:
-  - bundle exec rake spec acceptance:local
+  - bundle exec rake %SUITES%
 
 # Uncomment this block to enable RDP access to the AppVeyor test instance for
 # debugging purposes.
-#on_finish:
+# on_finish:
 #  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 
 notifications:

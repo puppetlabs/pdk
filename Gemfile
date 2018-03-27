@@ -3,12 +3,16 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in pdk.gemspec
 gemspec
 
-# avoid newer versions that do not support ruby 2.1 anymore
-gem 'nokogiri', '1.7.2'
+if RUBY_VERSION < '2.4.0'
+  # avoid newer versions that do not support ruby 2.1 anymore
+  gem 'nokogiri', '1.7.2'
+else
+  # rubocop:disable Bundler/DuplicatedGem
+  gem 'nokogiri', '~> 1.8.2'
+end
 
 group :development do
   gem 'activesupport', '4.2.9'
-  # TODO: Use gem instead of git. Section mapping is merged into master, but not yet released
   gem 'github_changelog_generator', '~> 1.14'
   gem 'pry-byebug', '~> 3.4'
   if RUBY_VERSION < '2.2.2'
