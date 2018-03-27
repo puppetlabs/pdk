@@ -183,7 +183,7 @@ module PDK
       return puppetlabs_template_url if answer_file_url == 'https://github.com/puppetlabs/pdk-module-template'
       return puppetlabs_template_url if answer_file_url == puppetlabs_template_url
 
-      unless PDK::Util::Git.repo_exists?(answer_file_url)
+      unless PDK::Util::Git.repo?(answer_file_url)
         PDK.logger.warn(_("Unable to access the previously used template '%{template}', using the default template instead.") % { template: answer_file_url })
         PDK.answers.update!('template-url' => nil)
         return puppetlabs_template_url

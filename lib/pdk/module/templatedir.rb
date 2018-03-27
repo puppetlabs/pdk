@@ -30,43 +30,21 @@ module PDK
       #     end
       #   end
       #
-      # @raise [PDK::CLI::FatalError] If the template is a git repository and
-      # the git binary is unavailable.
-      # @raise [PDK::CLI::FatalError] If the template is a git repository and
-      # the git clone operation fails.
+      # @raise [ArgumentError] If no block is given to this method.
+      # @raise [PDK::CLI::FatalError] (see #clone_repo)
       # @raise [ArgumentError] (see #validate_module_template!)
       #
       # @api public
       def initialize(path_or_url, module_metadata = {}, init = false)
-        if File.directory?(path_or_url)
-          @path = path_or_url
-        else
-          # If path_or_url isn't a directory on disk, we assume that it is
-          # a remote git repository.
+        unless block_given?
+          raise ArgumentError, _('%{class_name} must be initialized with a block.') % { class_name: self.class.name }
+        end
 
-          # @todo When switching this over to using rugged, cache the cloned
-          # template repo in `%AppData%` or `$XDG_CACHE_DIR` and update before
-          # use.
-          temp_dir = PDK::Util.make_tmpdir_name('pdk-templates')
-          git_ref = (path_or_url == PDK::Util.default_template_url) ? PDK::Util.default_template_ref : 'origin/master'
-
-          clone_result = PDK::Util::Git.git('clone', path_or_url, temp_dir)
-
-          if clone_result[:exit_code].zero?
-            reset_result = PDK::Util::Git.git('-C', temp_dir, 'reset', '--hard', git_ref)
-            unless reset_result[:exit_code].zero?
-              PDK.logger.error reset_result[:stdout]
-              PDK.logger.error reset_result[:stderr]
-              raise PDK::CLI::FatalError, _("Unable to set git repository '%{repo}' to ref:'%{ref}'.") % { repo: temp_dir, ref: git_ref }
-            end
-          else
-            PDK.logger.error clone_result[:stdout]
-            PDK.logger.error clone_result[:stderr]
-            raise PDK::CLI::FatalError, _("Unable to clone git repository '%{repo}' to '%{dest}'.") % { repo: path_or_url, dest: temp_dir }
-          end
-
-          @path = PDK::Util.canonical_path(temp_dir)
+        if PDK::Util::Git.repo?(path_or_url)
+          @path = self.class.clone_template_repo(path_or_url)
           @repo = path_or_url
+        else
+          @path = path_or_url
         end
 
         @init = init
@@ -75,6 +53,7 @@ module PDK
         @dirs = [@moduleroot_dir]
         @dirs << @moduleroot_init if @init
         @object_dir = File.join(@path, 'object_templates')
+
         validate_module_template!
 
         @module_metadata = module_metadata
@@ -283,6 +262,37 @@ module PDK
         else
           {}
         end
+      end
+
+      # @return [String] Path to working directory into which template repo has been cloned and reset
+      #
+      # @raise [PDK::CLI::FatalError] If unable to clone the given origin_repo into a tempdir.
+      # @raise [PDK::CLI::FatalError] If reset HEAD of the cloned repo to desired ref.
+      #
+      # @api private
+      def self.clone_template_repo(origin_repo)
+        # @todo When switching this over to using rugged, cache the cloned
+        # template repo in `%AppData%` or `$XDG_CACHE_DIR` and update before
+        # use.
+        temp_dir = PDK::Util.make_tmpdir_name('pdk-templates')
+        git_ref = (origin_repo == PDK::Util.default_template_url) ? PDK::Util.default_template_ref : 'origin/master'
+
+        clone_result = PDK::Util::Git.git('clone', origin_repo, temp_dir)
+
+        if clone_result[:exit_code].zero?
+          reset_result = PDK::Util::Git.git('-C', temp_dir, 'reset', '--hard', git_ref)
+          unless reset_result[:exit_code].zero?
+            PDK.logger.error reset_result[:stdout]
+            PDK.logger.error reset_result[:stderr]
+            raise PDK::CLI::FatalError, _("Unable to set HEAD of git repository at '%{repo}' to ref:'%{ref}'.") % { repo: temp_dir, ref: git_ref }
+          end
+        else
+          PDK.logger.error clone_result[:stdout]
+          PDK.logger.error clone_result[:stderr]
+          raise PDK::CLI::FatalError, _("Unable to clone git repository at '%{repo}' into '%{dest}'.") % { repo: origin_repo, dest: temp_dir }
+        end
+
+        PDK::Util.canonical_path(temp_dir)
       end
     end
   end

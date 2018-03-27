@@ -2,7 +2,9 @@ require 'open3'
 
 shared_context 'in a new module' do |name, options = {}|
   before(:all) do
-    template = options.fetch(:template, "file:///#{RSpec.configuration.template_dir}")
+    default_template = RSpec.configuration.template_dir
+    default_template = 'file:///' + default_template unless Gem.win_platform?
+    template = options.fetch(:template, default_template)
     argv = [
       'pdk', 'new', 'module', name,
       '--skip-interview',
