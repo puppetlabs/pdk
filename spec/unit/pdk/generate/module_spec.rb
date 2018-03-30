@@ -346,31 +346,35 @@ describe PDK::Generate::Module do
             'operatingsystem_support' => [
               {
                 'operatingsystem'        => 'CentOS',
-                'operatingsystemrelease' => ['7'],
+                'operatingsystemrelease' => %w[6 7],
               },
               {
                 'operatingsystem'        => 'OracleLinux',
-                'operatingsystemrelease' => ['7'],
+                'operatingsystemrelease' => %w[6 7],
               },
               {
                 'operatingsystem'        => 'RedHat',
-                'operatingsystemrelease' => ['7'],
+                'operatingsystemrelease' => %w[5 6 7],
               },
               {
                 'operatingsystem'        => 'Scientific',
-                'operatingsystemrelease' => ['7'],
+                'operatingsystemrelease' => %w[6 7],
+              },
+              {
+                'operatingsystem'        => 'Amazon Linux',
+                'operatingsystemrelease' => ['2'],
               },
               {
                 'operatingsystem'        => 'Debian',
-                'operatingsystemrelease' => ['8'],
+                'operatingsystemrelease' => %w[7 8 9],
               },
               {
                 'operatingsystem'        => 'Ubuntu',
-                'operatingsystemrelease' => ['16.04'],
+                'operatingsystemrelease' => ['14.04', '16.04'],
               },
               {
                 'operatingsystem'        => 'windows',
-                'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+                'operatingsystemrelease' => ['Vista', '7', '8.1', '10', '2008', '2008 R2', '2012', '2012 R2', '2012 R2 core', '2016'],
               },
             ],
           )
@@ -611,19 +615,19 @@ describe PDK::Generate::Module do
           'operatingsystem_support' => [
             {
               'operatingsystem'        => 'Debian',
-              'operatingsystemrelease' => ['8'],
+              'operatingsystemrelease' => %w[7 8 9],
             },
             {
               'operatingsystem'        => 'Ubuntu',
-              'operatingsystemrelease' => ['16.04'],
+              'operatingsystemrelease' => ['14.04', '16.04'],
             },
             {
               'operatingsystem'        => 'windows',
-              'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+              'operatingsystemrelease' => ['Vista', '7', '8.1', '10', '2008', '2008 R2', '2012', '2012 R2', '2012 R2 core', '2016'],
             },
             {
               'operatingsystem'        => 'Solaris',
-              'operatingsystemrelease' => ['11'],
+              'operatingsystemrelease' => %w[10 11],
             },
           ],
         )

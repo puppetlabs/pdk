@@ -199,51 +199,73 @@ module PDK
               'RedHat based Linux' => [
                 {
                   'operatingsystem'        => 'CentOS',
-                  'operatingsystemrelease' => ['7'],
+                  'operatingsystemrelease' => %w[6 7],
                 },
                 {
                   'operatingsystem'        => 'OracleLinux',
-                  'operatingsystemrelease' => ['7'],
+                  'operatingsystemrelease' => %w[6 7],
                 },
                 {
                   'operatingsystem'        => 'RedHat',
-                  'operatingsystemrelease' => ['7'],
+                  'operatingsystemrelease' => %w[5 6 7],
                 },
                 {
                   'operatingsystem'        => 'Scientific',
-                  'operatingsystemrelease' => ['7'],
+                  'operatingsystemrelease' => %w[6 7],
+                },
+                {
+                  'operatingsystem'        => 'Amazon Linux',
+                  'operatingsystemrelease' => ['2'],
                 },
               ],
               'Debian based Linux' => [
                 {
                   'operatingsystem'        => 'Debian',
-                  'operatingsystemrelease' => ['8'],
+                  'operatingsystemrelease' => %w[7 8 9],
                 },
                 {
                   'operatingsystem'        => 'Ubuntu',
-                  'operatingsystemrelease' => ['16.04'],
+                  'operatingsystemrelease' => ['14.04', '16.04'],
                 },
               ],
               'Fedora' => {
                 'operatingsystem'        => 'Fedora',
-                'operatingsystemrelease' => ['25'],
+                'operatingsystemrelease' => %w[25 26],
               },
               'OSX' => {
                 'operatingsystem'        => 'Darwin',
-                'operatingsystemrelease' => ['16'],
+                'operatingsystemrelease' => ['10.10', '10.11', '10.12', '10.13'],
               },
               'SLES' => {
                 'operatingsystem'        => 'SLES',
-                'operatingsystemrelease' => ['12'],
+                'operatingsystemrelease' => %w[11 12],
               },
               'Solaris' => {
                 'operatingsystem'        => 'Solaris',
-                'operatingsystemrelease' => ['11'],
+                'operatingsystemrelease' => %w[10 11],
               },
               'Windows' => {
                 'operatingsystem'        => 'windows',
-                'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+                'operatingsystemrelease' => ['Vista', '7', '8.1', '10', '2008', '2008 R2', '2012', '2012 R2', '2012 R2 core', '2016'],
               },
+              'AIX' => {
+                'operatingsystem'        => 'AIX',
+                'operatingsystemrelease' => ['6.1', '7.1', '7.2'],
+              },
+              'Network Devices' => [
+                {
+                  'operatingsystem' => 'Arista EOS',
+                },
+                {
+                  'operatingsystem' => 'Cisco IOS-XR',
+                },
+                {
+                  'operatingsystem' => 'Cisco NX-OS',
+                },
+                {
+                  'operatingsystem' => 'Cumulus Linux',
+                },
+              ],
             },
             default: [1, 2, 7],
           },
