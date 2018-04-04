@@ -111,6 +111,10 @@ This command executes arbitrary commands in a bundler context within the module 
 
 Note that for most uses, you must use the `--` to separate bundler options from pdk options. Compare the following two commands:
 
+### `pdk git` command
+
+This command executes arbitrary git commands in the context of the module you're currently working on. Arguments to this command are passed straight through to git. This command is experimental  and can lead to errors that can't be resolved by the pdk itself.
+
 ## Module Compatibility
 
 **PDK Version Compatibility:** Modules created with PDK version validate against and run on all Puppet and Ruby version combinations currently under maintenance (see https://docs.puppet.com/puppet/latest/about_agent.html and https://puppet.com/misc/puppet-enterprise-lifecycle)
