@@ -68,8 +68,15 @@ describe PDK::Util::RubyVersion do
     context 'when running from a package install' do
       include_context 'is a package install'
 
-      it 'returns Ruby 2.4.3' do
-        is_expected.to include('2.4.3' => '2.4.0')
+      before(:each) do
+        basedir = File.join('/', 'basedir')
+        ruby_dirs = ['2.1.9', '2.4.3'].map { |r| File.join(basedir, 'private', 'ruby', r) }
+        allow(PDK::Util).to receive(:pdk_package_basedir).and_return(basedir)
+        allow(Dir).to receive(:[]).with(File.join(basedir, 'private', 'ruby', '*')).and_return(ruby_dirs)
+      end
+
+      it 'returns the Ruby versions included in the package' do
+        is_expected.to eq('2.1.9' => '2.1.0', '2.4.3' => '2.4.0')
       end
     end
 

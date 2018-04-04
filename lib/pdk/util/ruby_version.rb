@@ -35,7 +35,11 @@ module PDK
         end
 
         def scan_for_packaged_rubies
-          { '2.4.3' => '2.4.0' }
+          ruby_basedir = File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', '*')
+          Dir[ruby_basedir].map { |ruby_dir|
+            version = File.basename(ruby_dir)
+            [version, version.split('.').take(2).concat(['0']).join('.')]
+          }.to_h
         end
 
         def default_ruby_version
