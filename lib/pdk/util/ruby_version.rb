@@ -10,7 +10,9 @@ module PDK
 
         attr_reader :instance
 
-        def instance
+        def instance(version = nil)
+          use(version) unless version.nil?
+
           if @instance.nil?
             @instance = {}
             @instance.default_proc = proc do |hash, key|

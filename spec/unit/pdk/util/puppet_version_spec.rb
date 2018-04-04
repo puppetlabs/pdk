@@ -26,10 +26,8 @@ describe PDK::Util::PuppetVersion do
       allow(PDK::Util).to receive(:package_install?).and_return(true)
       allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.1.9' => '2.1.0', '2.4.3' => '2.4.0')
 
-      PDK::Util::RubyVersion.use('2.1.9')
-      instance219 = PDK::Util::RubyVersion.instance
-      PDK::Util::RubyVersion.use('2.4.3')
-      instance243 = PDK::Util::RubyVersion.instance
+      instance219 = PDK::Util::RubyVersion.instance('2.1.9')
+      instance243 = PDK::Util::RubyVersion.instance('2.4.3')
 
       versions219 = cache_versions.select { |r| r.start_with?('4') }.map { |r| Gem::Version.new(r) }
       versions243 = cache_versions.reject { |r| r.start_with?('4') }.map { |r| Gem::Version.new(r) }
