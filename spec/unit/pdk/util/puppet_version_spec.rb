@@ -250,75 +250,42 @@ describe PDK::Util::PuppetVersion do
   end
 
   describe '.from_module_metadata' do
-    context 'when passed something other than a PDK::Module::Metadata instance' do
-      it 'raises an ArgumentError' do
-        expect {
-          described_class.from_module_metadata('')
-        }.to raise_error(ArgumentError, %r{not a valid pdk::module::metadata object}i)
-      end
-    end
-
-    context 'when passed a metadata object with no requirements' do
-      it 'raises an ArgumentError' do
-        metadata = PDK::Module::Metadata.new
-        metadata.data.delete('requirements')
-
-        expect {
-          described_class.from_module_metadata(metadata)
-        }.to raise_error(ArgumentError, %r{does not contain any requirements}i)
-      end
-    end
-
-    context 'when passed a metadata object without a "puppet" requirement' do
-      it 'raises an ArgumentError' do
-        metadata = PDK::Module::Metadata.new
-        metadata.data['requirements'] = [{ 'name' => 'not_puppet', 'version_requirement' => '1.0.0' }]
-
-        expect {
-          described_class.from_module_metadata(metadata)
-        }.to raise_error(ArgumentError, %r{does not contain a "puppet" requirement}i)
-      end
-    end
-
-    context 'when the puppet requirement does not have a "version_requirement"' do
-      it 'raises an ArgumentError' do
-        metadata = PDK::Module::Metadata.new
-        metadata.data['requirements'] = [{ 'name' => 'puppet' }]
-
-        expect {
-          described_class.from_module_metadata(metadata)
-        }.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
-      end
-    end
-
-    context 'when the puppet requirement has a blank "version_requirement"' do
-      it 'raises an ArgumentError' do
-        metadata = PDK::Module::Metadata.new
-        metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '' }]
-
-        expect {
-          described_class.from_module_metadata(metadata)
-        }.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
-      end
-    end
+    let(:metadata) { PDK::Module::Metadata.new }
 
     context 'with default metadata' do
+      after(:each) do
+        described_class.from_module_metadata(metadata)
+      end
+
       it 'searches for a Puppet gem >= 4.7.0 < 6.0.0' do
         requirement = Gem::Requirement.create(['>= 4.7.0', '< 6.0.0'])
         expect(described_class.instance).to receive(:find_gem).with(requirement)
-
-        described_class.from_module_metadata(PDK::Module::Metadata.new)
       end
     end
 
     context 'with a pinned version requirement' do
-      it 'searches for a Puppet gem matching the exact version' do
-        metadata = PDK::Module::Metadata.new
+      before(:each) do
         metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '4.10.10' }]
+      end
 
-        expect(described_class.instance).to receive(:find_gem).with(Gem::Requirement.create('4.10.10'))
-
+      after(:each) do
         described_class.from_module_metadata(metadata)
+      end
+
+      it 'searches for a Puppet gem matching the exact version' do
+        expect(described_class.instance).to receive(:find_gem).with(Gem::Requirement.create('4.10.10'))
+      end
+    end
+
+    context 'with an invalid version requirement' do
+      before(:each) do
+        metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '' }]
+      end
+
+      it 'raises an ArgumentError' do
+        expect {
+          described_class.from_module_metadata(metadata)
+        }.to raise_error(ArgumentError)
       end
     end
   end

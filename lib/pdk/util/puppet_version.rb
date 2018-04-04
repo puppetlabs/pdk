@@ -60,23 +60,8 @@ module PDK
       end
 
       def from_module_metadata(metadata)
-        msgs = {
-          not_metadata:  _('Not a valid PDK::Module::Metadata object'),
-          no_reqs:       _('Module metadata does not contain any requirements'),
-          no_puppet_req: _('Module metadata does not contain a "puppet" requirement'),
-          no_puppet_ver: _('"puppet" requirement in module metadata does not specify a "version_requirement"'),
-        }
-
-        raise ArgumentError, msgs[:not_metadata] unless metadata.is_a?(PDK::Module::Metadata)
-        raise ArgumentError, msgs[:no_reqs] unless metadata.data.key?('requirements')
-
-        metadata_requirement = metadata.data['requirements'].find do |r|
-          r.key?('name') && r['name'] == 'puppet'
-        end
-
-        raise ArgumentError, msgs[:no_puppet_req] if metadata_requirement.nil?
-        raise ArgumentError, msgs[:no_puppet_ver] unless metadata_requirement.key?('version_requirement')
-        raise ArgumentError, msgs[:no_puppet_ver] if metadata_requirement['version_requirement'].empty?
+        metadata.validate_puppet_version_requirement!
+        metadata_requirement = metadata.puppet_requirement
 
         # Split combined requirements like ">= 4.7.0 < 6.0.0" into their
         # component requirements [">= 4.7.0", "< 6.0.0"]
