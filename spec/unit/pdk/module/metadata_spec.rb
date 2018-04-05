@@ -146,4 +146,64 @@ describe PDK::Module::Metadata do
       end
     end
   end
+
+  describe '#validate_puppet_version_requirement!' do
+    let(:metadata) { described_class.new }
+
+    context 'when the metadata contains a puppet requirement with a version_requirement' do
+      it 'does not raise an error' do
+        expect {
+          metadata.validate_puppet_version_requirement!
+        }.not_to raise_error
+      end
+    end
+
+    context 'when the metadata does not contain any requirements' do
+      before(:each) do
+        metadata.data.delete('requirements')
+      end
+
+      it 'raises an ArgumentError' do
+        expect {
+          metadata.validate_puppet_version_requirement!
+        }.to raise_error(ArgumentError, %r{does not contain any requirements}i)
+      end
+    end
+
+    context 'when the metadata does not contain a puppet requirement' do
+      before(:each) do
+        metadata.data['requirements'] = [{ 'name' => 'not_puppet', 'version_requirement' => '1.0.0' }]
+      end
+
+      it 'raises an ArgumentError' do
+        expect {
+          metadata.validate_puppet_version_requirement!
+        }.to raise_error(ArgumentError, %r{does not contain a "puppet" requirement}i)
+      end
+    end
+
+    context 'when the puppet requirement does not have a version_requirement' do
+      before(:each) do
+        metadata.data['requirements'] = [{ 'name' => 'puppet' }]
+      end
+
+      it 'raises an ArgumentError' do
+        expect {
+          metadata.validate_puppet_version_requirement!
+        }.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
+      end
+    end
+
+    context 'when the puppet requirement has a blank version_requirement' do
+      before(:each) do
+        metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '' }]
+      end
+
+      it 'raises an ArgumentError' do
+        expect {
+          metadata.validate_puppet_version_requirement!
+        }.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
+      end
+    end
+  end
 end

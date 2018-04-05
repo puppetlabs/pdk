@@ -24,9 +24,20 @@ describe PDK::Util::PuppetVersion do
   shared_context 'is a package install' do
     before(:each) do
       allow(PDK::Util).to receive(:package_install?).and_return(true)
+      allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.1.9' => '2.1.0', '2.4.3' => '2.4.0')
 
-      mock_response = cache_versions.map { |r| Gem::Version.new(r) }
-      allow(PDK::Util::RubyVersion).to receive(:available_puppet_versions).and_return(mock_response)
+      instance219 = PDK::Util::RubyVersion.instance('2.1.9')
+      instance243 = PDK::Util::RubyVersion.instance('2.4.3')
+
+      versions219 = cache_versions.select { |r| r.start_with?('4') }.map { |r| Gem::Version.new(r) }
+      versions243 = cache_versions.reject { |r| r.start_with?('4') }.map { |r| Gem::Version.new(r) }
+      allow(instance219).to receive(:available_puppet_versions).and_return(versions219)
+      allow(instance243).to receive(:available_puppet_versions).and_return(versions243)
+    end
+
+    after(:each) do
+      PDK::Util::RubyVersion.instance_variable_set('@instance', nil)
+      PDK::Util::RubyVersion.instance_variable_set('@active_ruby_version', nil)
     end
   end
 
@@ -64,7 +75,11 @@ describe PDK::Util::PuppetVersion do
       end
 
       it 'returns the specified version if it exists in the cache' do
-        expect(described_class.find_gem_for('5.3.5')).to eq('5.3.5')
+        expected_result = {
+          gem_version:  Gem::Version.new('5.3.5'),
+          ruby_version: '2.4.3',
+        }
+        expect(described_class.find_gem_for('5.3.5')).to eq(expected_result)
       end
 
       context 'when the specified version does not exist in the cache' do
@@ -74,7 +89,11 @@ describe PDK::Util::PuppetVersion do
         end
 
         it 'returns the latest Z release' do
-          expect(described_class.find_gem_for('5.3.1')).to eq('5.3.5')
+          expected_result = {
+            gem_version:  Gem::Version.new('5.3.5'),
+            ruby_version: '2.4.3',
+          }
+          expect(described_class.find_gem_for('5.3.1')).to eq(expected_result)
         end
 
         it 'raises an ArgumentError if no version can be found' do
@@ -89,6 +108,13 @@ describe PDK::Util::PuppetVersion do
       include_context 'is not a package install'
       include_context 'with a mocked rubygems response'
 
+      def result(version)
+        {
+          gem_version:  Gem::Version.new(version),
+          ruby_version: PDK::Util::RubyVersion.default_ruby_version,
+        }
+      end
+
       it 'raises an ArgumentError if passed a non X.Y.Z version' do
         expect {
           described_class.find_gem_for('5')
@@ -96,7 +122,7 @@ describe PDK::Util::PuppetVersion do
       end
 
       it 'returns the specified version if it exists on Rubygems' do
-        expect(described_class.find_gem_for('4.9.0')).to eq('4.9.0')
+        expect(described_class.find_gem_for('4.9.0')).to eq(result('4.9.0'))
       end
 
       context 'when the specified version does not exist on Rubygems' do
@@ -106,7 +132,7 @@ describe PDK::Util::PuppetVersion do
         end
 
         it 'returns the latest Z release' do
-          expect(described_class.find_gem_for('4.10.999')).to eq('4.10.10')
+          expect(described_class.find_gem_for('4.10.999')).to eq(result('4.10.10'))
         end
 
         it 'raises an ArgumentError if no version can be found' do
@@ -122,6 +148,13 @@ describe PDK::Util::PuppetVersion do
     context 'when running from a package install' do
       include_context 'is a package install'
 
+      def result(gem_version, ruby_version)
+        {
+          gem_version:  Gem::Version.new(gem_version),
+          ruby_version: ruby_version,
+        }
+      end
+
       it 'raises an ArgumentError if passed a non X.Y.Z version' do
         expect {
           described_class.from_pe_version('5')
@@ -129,31 +162,31 @@ describe PDK::Util::PuppetVersion do
       end
 
       it 'returns the latest Puppet Z release for PE 2017.3.x' do
-        expect(described_class.from_pe_version('2017.3.1')).to eq('5.3.5')
+        expect(described_class.from_pe_version('2017.3.1')).to eq(result('5.3.5', '2.4.3'))
       end
 
       it 'returns the latest Puppet Z release for PE 2017.2.x' do
-        expect(described_class.from_pe_version('2017.2.1')).to eq('4.10.10')
+        expect(described_class.from_pe_version('2017.2.1')).to eq(result('4.10.10', '2.1.9'))
       end
 
       it 'returns the latest Puppet Z release for PE 2017.1.x' do
-        expect(described_class.from_pe_version('2017.1.1')).to eq('4.9.4')
+        expect(described_class.from_pe_version('2017.1.1')).to eq(result('4.9.4', '2.1.9'))
       end
 
       it 'returns the latest Puppet Z release for PE 2016.5.x' do
-        expect(described_class.from_pe_version('2016.5.1')).to eq('4.8.1')
+        expect(described_class.from_pe_version('2016.5.1')).to eq(result('4.8.1', '2.1.9'))
       end
 
       it 'returns the latest Puppet Z release for PE 2016.4.x' do
-        expect(described_class.from_pe_version('2016.4.1')).to eq('4.7.0')
+        expect(described_class.from_pe_version('2016.4.1')).to eq(result('4.7.0', '2.1.9'))
       end
 
       it 'returns the latest Puppet Z release for PE 2016.2.x' do
-        expect(described_class.from_pe_version('2016.2.1')).to eq('4.5.3')
+        expect(described_class.from_pe_version('2016.2.1')).to eq(result('4.5.3', '2.1.9'))
       end
 
       it 'returns the latest Puppet Z release for PE 2016.1.x' do
-        expect(described_class.from_pe_version('2016.1.1')).to eq('4.4.2')
+        expect(described_class.from_pe_version('2016.1.1')).to eq(result('4.4.2', '2.1.9'))
       end
 
       it 'raises an ArgumentError if given an unknown PE version' do
@@ -167,6 +200,13 @@ describe PDK::Util::PuppetVersion do
       include_context 'is not a package install'
       include_context 'with a mocked rubygems response'
 
+      def result(version)
+        {
+          gem_version:  Gem::Version.new(version),
+          ruby_version: PDK::Util::RubyVersion.default_ruby_version,
+        }
+      end
+
       it 'raises an ArgumentError if passed a non X.Y.Z version' do
         expect {
           described_class.from_pe_version('5')
@@ -174,37 +214,78 @@ describe PDK::Util::PuppetVersion do
       end
 
       it 'returns the latest Puppet Z release for PE 2017.3.x' do
-        expect(described_class.from_pe_version('2017.3.1')).to eq('5.3.2')
+        expect(described_class.from_pe_version('2017.3.1')).to eq(result('5.3.2'))
       end
 
       it 'returns the latest Puppet Z release for PE 2017.2.x' do
-        expect(described_class.from_pe_version('2017.2.1')).to eq('4.10.1')
+        expect(described_class.from_pe_version('2017.2.1')).to eq(result('4.10.1'))
       end
 
       it 'returns the latest Puppet Z release for PE 2017.1.x' do
-        expect(described_class.from_pe_version('2017.1.1')).to eq('4.9.4')
+        expect(described_class.from_pe_version('2017.1.1')).to eq(result('4.9.4'))
       end
 
       it 'returns the latest Puppet Z release for PE 2016.5.x' do
-        expect(described_class.from_pe_version('2016.5.1')).to eq('4.8.1')
+        expect(described_class.from_pe_version('2016.5.1')).to eq(result('4.8.1'))
       end
 
       it 'returns the latest Puppet Z release for PE 2016.4.x' do
-        expect(described_class.from_pe_version('2016.4.1')).to eq('4.7.0')
+        expect(described_class.from_pe_version('2016.4.1')).to eq(result('4.7.0'))
       end
 
       it 'returns the latest Puppet Z release for PE 2016.2.x' do
-        expect(described_class.from_pe_version('2016.2.1')).to eq('4.5.2')
+        expect(described_class.from_pe_version('2016.2.1')).to eq(result('4.5.2'))
       end
 
       it 'returns the latest Puppet Z release for PE 2016.1.x' do
-        expect(described_class.from_pe_version('2016.1.1')).to eq('4.4.1')
+        expect(described_class.from_pe_version('2016.1.1')).to eq(result('4.4.1'))
       end
 
       it 'raises an ArgumentError if given an unknown PE version' do
         expect {
           described_class.from_pe_version('9999.1.1')
         }.to raise_error(ArgumentError, %r{unable to map puppet enterprise version}i)
+      end
+    end
+  end
+
+  describe '.from_module_metadata' do
+    let(:metadata) { PDK::Module::Metadata.new }
+
+    context 'with default metadata' do
+      after(:each) do
+        described_class.from_module_metadata(metadata)
+      end
+
+      it 'searches for a Puppet gem >= 4.7.0 < 6.0.0' do
+        requirement = Gem::Requirement.create(['>= 4.7.0', '< 6.0.0'])
+        expect(described_class.instance).to receive(:find_gem).with(requirement)
+      end
+    end
+
+    context 'with a pinned version requirement' do
+      before(:each) do
+        metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '4.10.10' }]
+      end
+
+      after(:each) do
+        described_class.from_module_metadata(metadata)
+      end
+
+      it 'searches for a Puppet gem matching the exact version' do
+        expect(described_class.instance).to receive(:find_gem).with(Gem::Requirement.create('4.10.10'))
+      end
+    end
+
+    context 'with an invalid version requirement' do
+      before(:each) do
+        metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '' }]
+      end
+
+      it 'raises an ArgumentError' do
+        expect {
+          described_class.from_module_metadata(metadata)
+        }.to raise_error(ArgumentError)
       end
     end
   end

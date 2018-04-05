@@ -6,7 +6,7 @@ module PDK
       class << self
         extend Forwardable
 
-        def_delegators :instance, :find_gem_for, :from_pe_version
+        def_delegators :instance, :find_gem_for, :from_pe_version, :from_module_metadata
 
         attr_writer :instance
 
@@ -20,17 +20,17 @@ module PDK
         version = Gem::Version.new(version_str)
 
         exact_requirement = Gem::Requirement.create(version)
-        gem_version = find_gem(exact_requirement)
-        return gem_version.version unless gem_version.nil?
+        found_gem = find_gem(exact_requirement)
+        return found_gem unless found_gem.nil?
 
         latest_requirement = Gem::Requirement.create("#{version.approximate_recommendation}.0")
-        gem_version = find_gem(latest_requirement)
-        unless gem_version.nil?
+        found_gem = find_gem(latest_requirement)
+        unless found_gem.nil?
           PDK.logger.info _('Unable to find Puppet %{requested_version}, using %{found_version} instead') % {
             requested_version: version_str,
-            found_version:     gem_version.version,
+            found_version:     found_gem[:gem_version].version,
           }
-          return gem_version.version
+          return found_gem
         end
 
         raise ArgumentError, _('Unable to find a Puppet version matching %{requirement}') % {
@@ -57,6 +57,21 @@ module PDK
           puppet_version: gem_version[:gem_version],
         }
         find_gem_for(gem_version[:gem_version])
+      end
+
+      def from_module_metadata(metadata)
+        metadata.validate_puppet_version_requirement!
+        metadata_requirement = metadata.puppet_requirement
+
+        # Split combined requirements like ">= 4.7.0 < 6.0.0" into their
+        # component requirements [">= 4.7.0", "< 6.0.0"]
+        pattern = %r{#{Gem::Requirement::PATTERN_RAW}}
+        requirement_strings = metadata_requirement['version_requirement'].scan(pattern).map do |req|
+          req.compact.join(' ')
+        end
+
+        gem_requirement = Gem::Requirement.create(requirement_strings)
+        find_gem(gem_requirement)
       end
 
       private
@@ -119,11 +134,18 @@ module PDK
       end
 
       def find_in_rubygems(requirement)
-        rubygems_puppet_versions.find { |r| requirement.satisfied_by?(r) }
+        version = rubygems_puppet_versions.find { |r| requirement.satisfied_by?(r) }
+        version.nil? ? nil : { gem_version: version, ruby_version: PDK::Util::RubyVersion.default_ruby_version }
       end
 
       def find_in_package_cache(requirement)
-        PDK::Util::RubyVersion.available_puppet_versions.find { |r| requirement.satisfied_by?(r) }
+        PDK::Util::RubyVersion.versions.each do |ruby_version, _|
+          PDK::Util::RubyVersion.use(ruby_version)
+          version = PDK::Util::RubyVersion.available_puppet_versions.find { |r| requirement.satisfied_by?(r) }
+          return { gem_version: version, ruby_version: ruby_version } unless version.nil?
+        end
+
+        nil
       end
     end
   end

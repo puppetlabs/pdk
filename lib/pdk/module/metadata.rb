@@ -87,6 +87,25 @@ module PDK
         PDK::Generate::Module.module_interview(self, only_ask: missing_fields)
       end
 
+      def validate_puppet_version_requirement!
+        msgs = {
+          no_reqs:       _('Module metadata does not contain any requirements'),
+          no_puppet_req: _('Module metadata does not contain a "puppet" requirement'),
+          no_puppet_ver: _('"puppet" requirement in module metadata does not specify a "version_requirement"'),
+        }
+
+        raise ArgumentError, msgs[:no_reqs] unless @data.key?('requirements')
+        raise ArgumentError, msgs[:no_puppet_req] if puppet_requirement.nil?
+        raise ArgumentError, msgs[:no_puppet_ver] unless puppet_requirement.key?('version_requirement')
+        raise ArgumentError, msgs[:no_puppet_ver] if puppet_requirement['version_requirement'].empty?
+      end
+
+      def puppet_requirement
+        @data['requirements'].find do |r|
+          r.key?('name') && r['name'] == 'puppet'
+        end
+      end
+
       private
 
       def missing_fields
