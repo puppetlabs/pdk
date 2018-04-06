@@ -77,6 +77,15 @@ module PDK
     end
     module_function :pdk_package_basedir
 
+    def default_package_basedir
+      if Gem.win_platform?
+        File.join(ENV['ProgramFiles'], 'Puppet Labs', 'DevelopmentKit')
+      else
+        File.join('/', 'opt', 'puppetlabs', 'pdk')
+      end
+    end
+    module_function :default_package_basedir
+
     def package_cachedir
       File.join(pdk_package_basedir, 'share', 'cache')
     end

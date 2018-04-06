@@ -5,13 +5,26 @@ describe PDK::Util::RubyVersion do
   let(:instance) { described_class.new }
 
   shared_context 'is a package install' do
-    before(:each) do
-      allow(PDK::Util).to receive(:package_install?).and_return(true)
-      allow(PDK::Util).to receive(:package_cachedir).and_return(package_cachedir)
+    let(:pdk_package_basedir) do
+      File.join('/', 'path', 'to', 'pdk')
     end
 
     let(:package_cachedir) do
-      File.join('/', 'path', 'to', 'pdk', 'share', 'cache')
+      File.join(pdk_package_basedir, 'share', 'cache')
+    end
+
+    let(:packaged_rubies) do
+      {
+        '2.4.3' => '2.4.0',
+        '2.1.9' => '2.1.0',
+      }
+    end
+
+    before(:each) do
+      allow(PDK::Util).to receive(:package_install?).and_return(true)
+      allow(PDK::Util).to receive(:pdk_package_basedir).and_return(pdk_package_basedir)
+      allow(PDK::Util).to receive(:package_cachedir).and_return(package_cachedir)
+      allow(described_class).to receive(:scan_for_packaged_rubies).and_return(packaged_rubies)
     end
   end
 
@@ -29,8 +42,8 @@ describe PDK::Util::RubyVersion do
     context 'when running from a package install' do
       include_context 'is a package install'
 
-      it 'returns the path to the packaged ruby cachedir' do
-        is_expected.to eq(File.join(package_cachedir, 'ruby', described_class.versions[described_class.active_ruby_version]))
+      it 'includes the path to the packaged ruby cachedir' do
+        is_expected.to include(File.join(package_cachedir, 'ruby', described_class.versions[described_class.active_ruby_version]))
       end
     end
 

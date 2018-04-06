@@ -1,6 +1,7 @@
 require 'pdk/version'
 require 'pdk/cli/exec'
 require 'pdk/util/git'
+require 'pdk/logger'
 
 module PDK
   module Util
@@ -33,6 +34,7 @@ module PDK
       end
 
       def self.version_file
+        # FIXME: this gets called a LOT and doesn't currently get cached
         PDK::Util.find_upwards('PDK_VERSION', File.dirname(__FILE__))
       end
     end

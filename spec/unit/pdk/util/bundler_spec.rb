@@ -13,25 +13,33 @@ RSpec.describe PDK::Util::Bundler do
   # @todo: untangle tests of PDK::Util::Bundler and
   #   PDK::Util::Bundler::BundleHelper
 
-  # TODO: deduplicate code in these two methods and extract them to a shared location
+  def command_double(result, overrides = {})
+    instance_double(PDK::CLI::Exec::Command, {
+      'execute!' => result,
+      'context=' => true,
+      'add_spinner' => true,
+      'environment' => {},
+    }.merge(overrides))
+  end
+
   def allow_command(argv, result = nil)
     result ||= { exit_code: 0, stdout: '', stderr: '' }
 
-    command_double = instance_double(PDK::CLI::Exec::Command, 'context=' => true, 'execute!' => result, 'add_spinner' => true)
+    cmd = command_double(result)
 
-    allow(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(command_double)
+    allow(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(cmd)
   end
 
   def expect_command(argv, result = nil, spinner_message = nil)
     result ||= { exit_code: 0, stdout: '', stderr: '' }
 
-    command_double = instance_double(PDK::CLI::Exec::Command, 'context=' => true, 'execute!' => result)
+    cmd = command_double(result)
 
     if spinner_message
-      expect(command_double).to receive(:add_spinner).with(spinner_message, any_args)
+      expect(cmd).to receive(:add_spinner).with(spinner_message, any_args)
     end
 
-    expect(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(command_double)
+    expect(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(cmd)
   end
 
   def bundle_regex
