@@ -62,6 +62,10 @@ module PDK
       private_class_method :bundle_cache_key
 
       class BundleHelper
+        def gemfile
+          @gemfile ||= PDK::Util.find_upwards('Gemfile')
+        end
+
         def gemfile?
           !gemfile.nil?
         end
@@ -77,7 +81,7 @@ module PDK
           argv << "--path=#{bundle_cachedir}" unless PDK::Util.package_install?
 
           cmd = bundle_command(*argv).tap do |c|
-            c.environment.merge!(gemfile_env(gem_overrides))
+            c.update_environment(gemfile_env(gem_overrides)) unless gem_overrides.empty?
           end
 
           result = cmd.execute!
@@ -103,12 +107,15 @@ module PDK
 
             PDK.logger.debug(_('Using vendored Gemfile.lock from %{source}.') % { source: vendored_gemfile_lock })
             FileUtils.cp(vendored_gemfile_lock, File.join(PDK::Util.module_root, 'Gemfile.lock'))
+
+            # Update the vendored lock with any overrides
+            update_lock!(gem_overrides, local: true) unless gem_overrides.empty?
           else
             argv = ['lock']
 
             cmd = bundle_command(*argv).tap do |c|
               c.add_spinner(_('Resolving Gemfile dependencies.'))
-              c.environment.merge!(gemfile_env(gem_overrides))
+              c.update_environment(gemfile_env(gem_overrides)) unless gem_overrides.empty?
             end
 
             result = cmd.execute!
@@ -137,7 +144,7 @@ module PDK
           argv << '--local' if options && options[:local]
 
           cmd = bundle_command(*argv).tap do |c|
-            c.environment.merge!(gemfile_env(gem_overrides))
+            c.update_environment(gemfile_env(gem_overrides))
           end
 
           result = cmd.execute!
@@ -156,7 +163,7 @@ module PDK
 
           cmd = bundle_command(*argv).tap do |c|
             c.add_spinner(_('Installing missing Gemfile dependencies.'))
-            c.environment.merge!(gemfile_env(gem_overrides))
+            c.update_environment(gemfile_env(gem_overrides)) unless gem_overrides.empty?
           end
 
           result = cmd.execute!
@@ -182,10 +189,6 @@ module PDK
           end
 
           true
-        end
-
-        def gemfile
-          @gemfile ||= PDK::Util.find_upwards('Gemfile')
         end
 
         private

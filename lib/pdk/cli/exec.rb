@@ -110,6 +110,10 @@ module PDK
           @spinner = TTY::Spinner.new("[:spinner] #{message}", opts.merge(PDK::CLI::Util.spinner_opts_for_platform))
         end
 
+        def update_environment(additional_env)
+          @environment.merge!(additional_env)
+        end
+
         def execute!
           # Start spinning if configured.
           @spinner.auto_spin if @spinner
