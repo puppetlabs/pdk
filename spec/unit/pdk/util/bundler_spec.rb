@@ -276,7 +276,7 @@ RSpec.describe PDK::Util::Bundler do
       # Doesn't matter where this is since all the execs get mocked.
       allow(PDK::Util).to receive(:module_root).and_return('/')
 
-      allow(instance).to receive(:bundle_cachedir).and_return(bundle_cachedir)
+      allow(PDK::Util).to receive(:cachedir).and_return(bundle_cachedir)
     end
 
     describe '#gemfile' do
@@ -468,6 +468,16 @@ RSpec.describe PDK::Util::Bundler do
           expect(logger).to receive(:debug).with(%r{vendored gemfile\.lock}i)
 
           instance.lock!
+        end
+
+        context 'when vendored Gemfile.lock does not exist' do
+          before(:each) do
+            allow(File).to receive(:exist?).with("#{package_cachedir}/Gemfile.lock").and_return(false)
+          end
+
+          it 'raises FatalError' do
+            expect { instance.lock! }.to raise_error(PDK::CLI::FatalError, %r{vendored gemfile\.lock.*not found}i)
+          end
         end
 
         context 'with gem overrides' do
