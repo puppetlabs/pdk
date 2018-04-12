@@ -45,6 +45,7 @@ module PDK
         end
 
         def default_ruby_version
+          # TODO: may not be a safe assumption that highest available version should be default
           versions.keys.sort { |a, b| Gem::Version.new(b) <=> Gem::Version.new(a) }.first
         end
 
@@ -66,11 +67,15 @@ module PDK
       def gem_path
         if PDK::Util.package_install?
           # Subprocesses use their own set of gems which are managed by pdk or
-          # installed with the package.
-          File.join(PDK::Util.package_cachedir, 'ruby', versions[ruby_version])
+          # installed with the package. We also include the separate gem path
+          # where our packaged multi-puppet installations live.
+          [
+            File.join(PDK::Util.package_cachedir, 'ruby', versions[ruby_version]),
+            File.join(PDK::Util.pdk_package_basedir, 'private', 'puppet', 'ruby', versions[ruby_version]),
+          ].join(File::PATH_SEPARATOR)
         else
           # This allows the subprocess to find the 'bundler' gem, which isn't
-          # in the cachedir above for gem installs.
+          # in GEM_HOME for gem installs.
           # TODO: There must be a better way to do this than shelling out to
           # gem...
           File.absolute_path(File.join(`gem which bundler`, '..', '..', '..', '..'))
@@ -91,10 +96,21 @@ module PDK
 
       def available_puppet_versions
         return @available_puppet_versions unless @available_puppet_versions.nil?
-        puppet_spec_files = Dir[File.join(gem_path, 'specifications', '**', 'puppet*.gemspec')]
-        puppet_spec_files += Dir[File.join(gem_home, 'specifications', '**', 'puppet*.gemspec')]
-        puppet_specs = puppet_spec_files.map { |r| Gem::Specification.load(r) }
-        @available_puppet_versions = puppet_specs.select { |r| r.name == 'puppet' }.map { |r| r.version }.sort { |a, b| b <=> a }
+
+        puppet_spec_files = Dir[File.join(gem_home, 'specifications', '**', 'puppet*.gemspec')]
+
+        gem_path.split(File::PATH_SEPARATOR).each do |path|
+          puppet_spec_files += Dir[File.join(path, 'specifications', '**', 'puppet*.gemspec')]
+        end
+
+        puppet_specs = []
+
+        puppet_spec_files.each do |specfile|
+          spec = Gem::Specification.load(specfile)
+          puppet_specs << spec if spec.name == 'puppet'
+        end
+
+        @available_puppet_versions = puppet_specs.map(&:version).sort { |a, b| b <=> a }
       end
 
       private

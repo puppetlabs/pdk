@@ -110,6 +110,10 @@ module PDK
           @spinner = TTY::Spinner.new("[:spinner] #{message}", opts.merge(PDK::CLI::Util.spinner_opts_for_platform))
         end
 
+        def update_environment(additional_env)
+          @environment.merge!(additional_env)
+        end
+
         def execute!
           # Start spinning if configured.
           @spinner.auto_spin if @spinner
@@ -193,12 +197,18 @@ module PDK
 
         def run_process!
           command_string = argv.join(' ')
+
           PDK.logger.debug(_("Executing '%{command}'") % { command: command_string })
+
           if context == :module
-            PDK.logger.debug(_("Command environment: GEM_HOME is '%{gem_home}' and GEM_PATH is '%{gem_path}'") % { gem_home: @process.environment['GEM_HOME'],
-                                                                                                                   gem_path: @process.environment['GEM_PATH'] })
+            PDK.logger.debug(_('Command environment:'))
+            @process.environment.each do |var, val|
+              PDK.logger.debug("  #{var}: #{val}")
+            end
           end
+
           start_time = Time.now
+
           begin
             @process.start
           rescue ChildProcess::LaunchError => e
@@ -215,7 +225,9 @@ module PDK
             # Wait indfinitely if no timeout set.
             @process.wait
           end
+
           @duration = Time.now - start_time
+
           PDK.logger.debug(_("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})") %
             { command: command_string, duration_in_seconds: @duration, exit_code: @process.exit_code })
         end
