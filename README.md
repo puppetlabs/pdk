@@ -50,29 +50,29 @@ This command asks a series of metadata questions and then generates the basic co
 
 To generate a class in your module, use the `pdk new class` command, specifying the name of your new class. To generate the main class of the module, which is defined in an `init.pp` file, give the class the same name as the module.
 
-1. From the command line, in your module's directory, run: 
+1. From the command line, in your module's directory, run:
 ```
-pdk new class class_name 
+pdk new class class_name
 ```
 
-PDK creates the new class manifest and a test file (as `class_name_spec.rb`) in your module's `/spec/classes` directory. 
+PDK creates the new class manifest and a test file (as `class_name_spec.rb`) in your module's `/spec/classes` directory.
 
 ### Generate a defined type
 
 To generate a defined type in your module, use the `pdk new defined_type` command, specifying the name of your new defined type.
 
-1. From the command line, in your module's directory, run: 
+1. From the command line, in your module's directory, run:
 ```
 pdk new defined_type defined_type_name
 ```
 
-PDK creates the new defined\_type manifest and a test file (as `defined_type_name_spec.rb`) in your module's `/spec/defines` directory. 
+PDK creates the new defined\_type manifest and a test file (as `defined_type_name_spec.rb`) in your module's `/spec/defines` directory.
 
 ### Generate a task
 
 To generate a task in your module, use the `pdk new task` command, specifying the name of your new task.
 
-1. From the command line, in your module's directory, run: 
+1. From the command line, in your module's directory, run:
 ```
 pdk new task task_name
 ```
@@ -110,28 +110,6 @@ This command runs all available unit tests.
 This command executes arbitrary commands in a bundler context within the module you're currently working on. Arguments to this command are passed straight through to bundler. This command is experimental  and can lead to errors that can't be resolved by the pdk itself.
 
 Note that for most uses, you must use the `--` to separate bundler options from pdk options. Compare the following two commands:
-
-```
-$ pdk bundle exec rake -T
-bundle: illegal option -- T
-
-```
-
-and
-
-```
-$ pdk bundle -- exec rake -T
-rake beaker                # Run beaker acceptance tests
-rake beaker:sets           # List available beaker nodesets
-rake beaker:ssh[set,node]  # Try to use vagrant to login to the Beaker node
-rake build                 # Build puppet module package
-[...]
-```
-
-#### Known issues
-
-
-Note that for PowerShell the `--` must be escaped using a backtick ( <code>`-- </code> ) or the shell parses it and strips it out of the command. See [PDK-408](https://tickets.puppet.com/browse/PDK-408) for details.
 
 ## Module Compatibility
 
