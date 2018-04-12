@@ -93,7 +93,7 @@ This command validates the metadata, Puppet code syntax and style, and Ruby synt
 
 ### Run unit tests
 
-PDK's default template sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing.
+PDK's [default template](https://github.com/puppetlabs/pdk-templates) sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing.
 
 In the module's directory, run unit tests with:
 
