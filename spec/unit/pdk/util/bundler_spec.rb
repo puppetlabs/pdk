@@ -401,7 +401,7 @@ RSpec.describe PDK::Util::Bundler do
 
     describe '#lock!' do
       before(:each) do
-        allow_command([bundle_regex, 'lock', '--update=json', '--local'], exit_code: 0)
+        allow_command([bundle_regex, 'lock', '--update', 'json', '--local'], exit_code: 0)
       end
 
       it 'invokes `bundle lock`' do
@@ -499,7 +499,7 @@ RSpec.describe PDK::Util::Bundler do
       let(:overridden_gems) { overrides.keys.map(&:to_s) }
 
       it 'updates env before invoking `bundle lock --update`' do
-        cmd_double = allow_command([bundle_regex, 'lock', "--update=#{overridden_gems.join(' ')}"], exit_code: 0)
+        cmd_double = allow_command([bundle_regex, 'lock', '--update', overridden_gems].flatten, exit_code: 0)
 
         expect(cmd_double).to receive(:update_environment).with(hash_including('PUPPET_GEM_VERSION' => '1.2.3'))
 
@@ -507,14 +507,14 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'invokes `bundle lock --update`' do
-        expect_command([bundle_regex, 'lock', "--update=#{overridden_gems.join(' ')}"], exit_code: 0)
+        expect_command([bundle_regex, 'lock', '--update', overridden_gems].flatten, exit_code: 0)
 
         instance.update_lock!(overrides)
       end
 
       context 'when `bundle lock --update` exits non-zero' do
         before(:each) do
-          allow_command([bundle_regex, 'lock', "--update=#{overridden_gems.join(' ')}"], exit_code: 1, stderr: 'bundle lock update error message')
+          allow_command([bundle_regex, 'lock', '--update', overridden_gems].flatten, exit_code: 1, stderr: 'bundle lock update error message')
         end
 
         it 'logs a fatal message with output and raises FatalError' do
@@ -527,7 +527,7 @@ RSpec.describe PDK::Util::Bundler do
         let(:overrides) { { puppet: '1.2.3', facter: '2.3.4' } }
 
         it 'includes all gem names in `bundle lock --update` invocation' do
-          expect_command([bundle_regex, 'lock', "--update=#{overridden_gems.join(' ')}"], exit_code: 0)
+          expect_command([bundle_regex, 'lock', '--update', overridden_gems].flatten, exit_code: 0)
 
           instance.update_lock!(overrides)
         end
@@ -537,7 +537,7 @@ RSpec.describe PDK::Util::Bundler do
         let(:options) { { local: true } }
 
         it 'includes \'--local\' in `bundle lock --update` invocation' do
-          expect_command([bundle_regex, 'lock', "--update=#{overridden_gems.join(' ')}", '--local'], exit_code: 0)
+          expect_command([bundle_regex, 'lock', '--update', overridden_gems, '--local'].flatten, exit_code: 0)
 
           instance.update_lock!(overrides, options)
         end

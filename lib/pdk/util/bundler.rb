@@ -138,9 +138,9 @@ module PDK
 
           PDK.logger.debug(_('Updating Gemfile dependencies.'))
 
-          update_gems = gem_overrides.keys.join(' ')
+          update_gems = gem_overrides.keys.map(&:to_s)
 
-          argv = ['lock', "--update=#{update_gems}"]
+          argv = ['lock', '--update', update_gems].flatten
           argv << '--local' if options && options[:local]
 
           cmd = bundle_command(*argv).tap do |c|
@@ -213,9 +213,9 @@ module PDK
           return gemfile_env unless gem_overrides.respond_to?(:each)
 
           gem_overrides.each do |gem, version|
-            gemfile_env['PUPPET_GEM_VERSION'] = version if gem.respond_to?(:to_s) && gem.to_s == 'puppet'
-            gemfile_env['FACTER_GEM_VERSION'] = version if gem.respond_to?(:to_s) && gem.to_s == 'facter'
-            gemfile_env['HIERA_GEM_VERSION'] = version if gem.respond_to?(:to_s) && gem.to_s == 'hiera'
+            gemfile_env['PUPPET_GEM_VERSION'] = version if gem.respond_to?(:to_s) && gem.to_s == 'puppet' && !version.nil?
+            gemfile_env['FACTER_GEM_VERSION'] = version if gem.respond_to?(:to_s) && gem.to_s == 'facter' && !version.nil?
+            gemfile_env['HIERA_GEM_VERSION'] = version if gem.respond_to?(:to_s) && gem.to_s == 'hiera' && !version.nil?
           end
 
           gemfile_env
