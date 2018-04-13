@@ -35,7 +35,7 @@ module PDK
 
       def self.bundle_bin
         bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
-        vendored_bin_path = File.join('private', 'ruby', PDK::Util::RubyVersion.active_ruby_version, 'bin', bundle_bin)
+        vendored_bin_path = File.join(PDK::Util::RubyVersion.bin_path, bundle_bin)
 
         try_vendored_bin(vendored_bin_path, bundle_bin)
       end
@@ -130,7 +130,7 @@ module PDK
             # Make sure invocation of Ruby prefers our private installation.
             package_binpath = PDK::Util.package_install? ? File.join(PDK::Util.pdk_package_basedir, 'bin') : nil
             @process.environment['PATH'] = [
-              PDK::Util::RubyVersion.path,
+              PDK::Util::RubyVersion.bin_path,
               File.join(@process.environment['GEM_HOME'], 'bin'),
               File.join(@process.environment['GEM_PATH'], 'bin'),
               package_binpath,

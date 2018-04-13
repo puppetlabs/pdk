@@ -36,8 +36,8 @@ describe PDK::Util::RubyVersion do
     end
   end
 
-  describe '#path' do
-    subject { instance.path }
+  describe '#bin_path' do
+    subject { instance.bin_path }
 
     context 'when running from a package install' do
       include_context 'is a package install'

@@ -6,7 +6,7 @@ module PDK
       class << self
         extend Forwardable
 
-        def_delegators :instance, :gem_path, :gem_home, :available_puppet_versions, :path
+        def_delegators :instance, :gem_path, :gem_home, :available_puppet_versions, :bin_path
 
         attr_reader :instance
 
@@ -64,7 +64,7 @@ module PDK
         @ruby_version = ruby_version || default_ruby_version
       end
 
-      def path
+      def bin_path
         if PDK::Util.package_install?
           File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', ruby_version, 'bin')
         else
