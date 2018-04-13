@@ -16,32 +16,39 @@ module PDK
       end
 
       def find_gem_for(version_str)
-        ensure_semver_version!(version_str)
-        version = Gem::Version.new(version_str)
+        version = parse_specified_version(version_str)
 
-        exact_requirement = Gem::Requirement.create(version)
-        found_gem = find_gem(exact_requirement)
-        return found_gem unless found_gem.nil?
-
-        latest_requirement = Gem::Requirement.create("#{version.approximate_recommendation}.0")
-        found_gem = find_gem(latest_requirement)
-        unless found_gem.nil?
-          PDK.logger.info _('Unable to find Puppet %{requested_version}, using %{found_version} instead') % {
-            requested_version: version_str,
-            found_version:     found_gem[:gem_version].version,
-          }
-          return found_gem
+        # Look for a gem matching exactly the version passed in.
+        if version.segments.length == 3
+          exact_match_gem = find_gem(Gem::Requirement.create(version))
+          return exact_match_gem unless exact_match_gem.nil?
         end
 
-        raise ArgumentError, _('Unable to find a Puppet version matching %{requirement}') % {
-          requirement: latest_requirement,
+        # Construct a pessimistic version constraint to find the latest
+        # available gem matching the level of specificity of version_str.
+        requirement_string = version.approximate_recommendation
+        requirement_string += '.0' unless version.segments.length == 1
+        latest_requirement = Gem::Requirement.create(requirement_string)
+
+        latest_available_gem = find_gem(latest_requirement)
+
+        if latest_available_gem.nil?
+          raise ArgumentError, _('Unable to find a Puppet gem matching %{requirement}') % {
+            requirement: latest_requirement,
+          }
+        end
+
+        PDK.logger.info _('Unable to find Puppet gem matching %{requested_version}, using %{found_version} instead') % {
+          requested_version: version_str,
+          found_version:     latest_available_gem[:gem_version].version,
         }
+
+        latest_available_gem
       end
 
       def from_pe_version(version_str)
-        ensure_semver_version!(version_str)
+        version = parse_specified_version(version_str)
 
-        version = Gem::Version.new(version_str)
         gem_version = pe_version_map.find do |version_map|
           version_map[:requirement].satisfied_by?(version)
         end
@@ -56,6 +63,7 @@ module PDK
           pe_version:     version_str,
           puppet_version: gem_version[:gem_version],
         }
+
         find_gem_for(gem_version[:gem_version])
       end
 
@@ -76,9 +84,9 @@ module PDK
 
       private
 
-      def ensure_semver_version!(version_str)
-        return if version_str =~ %r{\A\d+\.\d+\.\d+\Z}
-
+      def parse_specified_version(version_str)
+        Gem::Version.new(version_str)
+      rescue ArgumentError
         raise ArgumentError, _('%{version} is not a valid version number') % {
           version: version_str,
         }
