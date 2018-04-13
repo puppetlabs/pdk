@@ -42,17 +42,24 @@ module PDK
 
       def self.try_vendored_bin(vendored_bin_path, fallback)
         unless PDK::Util.package_install?
-          PDK.logger.debug(_("PDK package installation not found. Trying '%{fallback}' from the system PATH instead.") % { fallback: fallback })
+          PDK.logger.debug(_("PDK package installation not found. Trying '%{fallback}' from the system PATH instead.") % {
+            fallback: fallback,
+          })
           return fallback
         end
 
-        if File.exist?(File.join(PDK::Util.pdk_package_basedir, vendored_bin_path))
-          PDK.logger.debug(_("Using '%{vendored_bin_path}' from PDK package.") % { vendored_bin_path: vendored_bin_path })
-          File.join(PDK::Util.pdk_package_basedir, vendored_bin_path)
-        else
-          PDK.logger.debug(_("Could not find '%{vendored_bin_path}' in PDK package. Trying '%{fallback}' from the system PATH instead.") % { fallback: fallback, vendored_bin_path: vendored_bin_path })
-          fallback
+        vendored_bin_full_path = File.join(PDK::Util.pdk_package_basedir, vendored_bin_path)
+
+        unless File.exist?(vendored_bin_full_path)
+          PDK.logger.debug(_("Could not find '%{vendored_bin}' in PDK package. Trying '%{fallback}' from the system PATH instead.") % {
+            fallback: fallback,
+            vendored_bin: vendored_bin_full_path,
+          })
+          return fallback
         end
+
+        PDK.logger.debug(_("Using '%{vendored_bin}' from PDK package.") % { vendored_bin: vendored_bin_full_path })
+        vendored_bin_full_path
       end
 
       # TODO: decide how/when to connect stdin to child process for things like pry

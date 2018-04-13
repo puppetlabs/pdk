@@ -6,6 +6,12 @@ describe '`pdk test unit`' do
 
   it { is_expected.not_to be_nil }
 
+  before(:each) do
+    allow(PDK::CLI::Util).to receive(:puppet_env_from_opts).and_return(ruby_version: '2.4.3', gemset: { puppet: '5.4.0' })
+    allow(PDK::Util::RubyVersion).to receive(:use)
+    allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(hash_including(:puppet))
+  end
+
   context 'with --help' do
     it do
       expect { PDK::CLI.run(['test', 'unit', '--help']) }.to exit_zero.and output(%r{^USAGE\s+pdk test unit}m).to_stdout
@@ -128,17 +134,76 @@ describe '`pdk test unit`' do
   end
 
   context 'when --puppet-version and --pe-version are specified' do
-    before(:each) do
-      allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with('4.10.10').and_return('4.10.10')
-      allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with('2018.1.1').and_return('4.10.10')
-    end
-
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{both --puppet-version and --pe-version}i))
 
       expect {
         PDK::CLI.run(%w[test unit --puppet-version 4.10.10 --pe-version 2018.1.1])
       }.to exit_nonzero
+    end
+  end
+
+  context 'with --puppet-version' do
+    let(:puppet_version) { '5.3' }
+    let(:puppet_env) do
+      {
+        ruby_version: '2.4.3',
+        gemset: { puppet: '5.3.5' },
+      }
+    end
+
+    before(:each) do
+      allow(PDK::CLI::Util).to receive(:puppet_env_from_opts).with(hash_including(:'puppet-version' => puppet_version)).and_return(puppet_env)
+      allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
+      allow(PDK::CLI::Util).to receive(:module_version_check)
+    end
+
+    it 'activates resolved puppet version' do
+      expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
+
+      expect {
+        test_unit_cmd.run_this(["--puppet-version=#{puppet_version}"])
+      }.to exit_zero
+    end
+
+    it 'activates resolved ruby version' do
+      expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
+
+      expect {
+        test_unit_cmd.run_this(["--puppet-version=#{puppet_version}"])
+      }.to exit_zero
+    end
+  end
+
+  context 'when --pe-version is specified' do
+    let(:pe_version) { '2017.2' }
+    let(:puppet_env) do
+      {
+        ruby_version: '2.1.9',
+        gemset: { puppet: '4.10.9' },
+      }
+    end
+
+    before(:each) do
+      allow(PDK::CLI::Util).to receive(:puppet_env_from_opts).with(hash_including(:'pe-version' => pe_version)).and_return(puppet_env)
+      allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
+      allow(PDK::CLI::Util).to receive(:module_version_check)
+    end
+
+    it 'activates resolved puppet version' do
+      expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
+
+      expect {
+        test_unit_cmd.run_this(["--pe-version=#{pe_version}"])
+      }.to exit_zero
+    end
+
+    it 'activates resolved ruby version' do
+      expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
+
+      expect {
+        test_unit_cmd.run_this(["--pe-version=#{pe_version}"])
+      }.to exit_zero
     end
   end
 end

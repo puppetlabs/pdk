@@ -60,7 +60,8 @@ class foo { }
     context 'when not run interactively' do
       describe command('pdk validate puppet manifests/init.pp') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{\A\Z}) }
+        its(:stderr) { is_expected.to match(%r{using ruby \d+\.\d+\.\d+}i) }
+        its(:stderr) { is_expected.to match(%r{using puppet \d+\.\d+\.\d+}i) }
         its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented}) }
       end
     end

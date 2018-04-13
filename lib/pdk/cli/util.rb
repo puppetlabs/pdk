@@ -81,6 +81,40 @@ module PDK
         end
       end
       module_function :module_version_check
+
+      def puppet_env_from_opts(opts)
+        puppet_env =
+          if opts && opts.key?(:'puppet-version')
+            PDK::Util::PuppetVersion.find_gem_for(opts[:'puppet-version'])
+          elsif opts && opts.key?(:'pe-version')
+            PDK::Util::PuppetVersion.from_pe_version(opts[:'pe-version'])
+          else
+            PDK::Util::PuppetVersion.from_module_metadata || PDK::Util::PuppetVersion.latest_available
+          end
+
+        # Notify user of what Ruby version will be used.
+        PDK.logger.info(_('Using Ruby %{version}') % {
+          version: puppet_env[:ruby_version],
+        })
+
+        gemset = { puppet: puppet_env[:gem_version].to_s }
+
+        # Notify user of what gems are being activated.
+        gemset.each do |gem, version|
+          next if version.nil?
+
+          PDK.logger.info(_('Using %{gem} %{version}') % {
+            gem: gem.to_s.capitalize,
+            version: version,
+          })
+        end
+
+        {
+          gemset: gemset,
+          ruby_version: puppet_env[:ruby_version],
+        }
+      end
+      module_function :puppet_env_from_opts
     end
   end
 end

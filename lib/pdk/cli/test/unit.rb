@@ -64,6 +64,11 @@ module PDK::CLI
                            }]
                          end
 
+        # Ensure that the bundled gems are up to date and correct Ruby is activated before running tests.
+        puppet_env = PDK::CLI::Util.puppet_env_from_opts(opts)
+        PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
+        PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
+
         exit_code = PDK::Test::Unit.invoke(report, opts)
 
         report_formats.each do |format|

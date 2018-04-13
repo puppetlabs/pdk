@@ -6,13 +6,23 @@ module PDK
       class << self
         extend Forwardable
 
-        def_delegators :instance, :find_gem_for, :from_pe_version, :from_module_metadata
+        def_delegators :instance, :find_gem_for, :from_pe_version, :from_module_metadata, :latest_available
 
         attr_writer :instance
 
         def instance
           @instance ||= new
         end
+      end
+
+      def latest_available
+        latest = find_gem(Gem::Requirement.create('>= 0'))
+
+        if latest.nil?
+          raise ArgumentError, _('Unable to find a Puppet gem in current Ruby environment or from Rubygems.org')
+        end
+
+        latest
       end
 
       def find_gem_for(version_str)
@@ -38,10 +48,13 @@ module PDK
           }
         end
 
-        PDK.logger.info _('Unable to find Puppet gem matching %{requested_version}, using %{found_version} instead') % {
-          requested_version: version_str,
-          found_version:     latest_available_gem[:gem_version].version,
-        }
+        # Only issue this warning if they requested an exact version that isn't available.
+        if version.segments.length == 3
+          PDK.logger.warn(_('Puppet %{requested_version} is not available, activating %{found_version} instead') % {
+            requested_version: version_str,
+            found_version:     latest_available_gem[:gem_version].version,
+          })
+        end
 
         latest_available_gem
       end
@@ -67,7 +80,8 @@ module PDK
         find_gem_for(gem_version[:gem_version])
       end
 
-      def from_module_metadata(metadata)
+      def from_module_metadata(metadata = nil)
+        metadata ||= PDK::Module::Metadata.from_file(PDK::Util.find_upwards('metadata.json'))
         metadata.validate_puppet_version_requirement!
         metadata_requirement = metadata.puppet_requirement
 

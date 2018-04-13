@@ -106,7 +106,7 @@ describe PDK::Util::PuppetVersion do
 
       context 'and the specified version does not exist in the cache' do
         it 'notifies the user that it is using the latest Z release instead' do
-          expect(logger).to receive(:info).with(a_string_matching(%r{using 5\.3\.5 instead}i))
+          expect(logger).to receive(:warn).with(a_string_matching(%r{activating 5\.3\.5 instead}i))
           described_class.find_gem_for('5.3.1')
         end
 
@@ -163,7 +163,7 @@ describe PDK::Util::PuppetVersion do
 
       context 'and the specified version does not exist on Rubygems' do
         it 'notifies the user that it is using the latest Z release instead' do
-          expect(logger).to receive(:info).with(a_string_matching(%r{using 4\.10\.10 instead}i))
+          expect(logger).to receive(:warn).with(a_string_matching(%r{activating 4\.10\.10 instead}i))
           described_class.find_gem_for('4.10.999')
         end
 

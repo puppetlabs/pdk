@@ -67,7 +67,8 @@ SYNC
       context 'when validating the generated code' do
         describe command('pdk validate ruby') do
           its(:stdout) { is_expected.to be_empty }
-          its(:stderr) { is_expected.to be_empty }
+          its(:stderr) { is_expected.to match(%r{using ruby \d+\.\d+\.\d+}i) }
+          its(:stderr) { is_expected.to match(%r{using puppet \d+\.\d+\.\d+}i) }
           its(:exit_status) { is_expected.to eq(0) }
         end
       end

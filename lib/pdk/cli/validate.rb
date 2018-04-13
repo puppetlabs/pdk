@@ -87,8 +87,10 @@ module PDK::CLI
       options = targets.empty? ? {} : { targets: targets }
       options[:auto_correct] = true if opts.key?(:'auto-correct')
 
-      # Ensure that the bundle is installed and tools are available before running any validations.
-      PDK::Util::Bundler.ensure_bundle!
+      # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
+      puppet_env = PDK::CLI::Util.puppet_env_from_opts(opts)
+      PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
+      PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
       exit_code = 0
       if opts[:parallel]

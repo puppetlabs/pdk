@@ -38,10 +38,10 @@ module PDK
 
         def scan_for_packaged_rubies
           ruby_basedir = File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', '*')
-          Dir[ruby_basedir].map { |ruby_dir|
+          Dir[ruby_basedir].sort.map { |ruby_dir|
             version = File.basename(ruby_dir)
             [version, version.split('.').take(2).concat(['0']).join('.')]
-          }.to_h
+          }.reverse.to_h
         end
 
         def default_ruby_version
@@ -78,6 +78,7 @@ module PDK
           # installed with the package. We also include the separate gem path
           # where our packaged multi-puppet installations live.
           [
+            File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', ruby_version, 'lib', 'ruby', 'gems', versions[ruby_version]),
             File.join(PDK::Util.package_cachedir, 'ruby', versions[ruby_version]),
             File.join(PDK::Util.pdk_package_basedir, 'private', 'puppet', 'ruby', versions[ruby_version]),
           ].join(File::PATH_SEPARATOR)
@@ -85,7 +86,7 @@ module PDK
           # This allows the subprocess to find the 'bundler' gem, which isn't
           # in GEM_HOME for gem installs.
           # TODO: There must be a better way to do this than shelling out to
-          # gem...
+          # gem... Perhaps can be replaced with "Gem.path"?
           File.absolute_path(File.join(`gem which bundler`, '..', '..', '..', '..'))
         end
       end
