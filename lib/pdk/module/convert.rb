@@ -80,11 +80,17 @@ module PDK
             update_manager.add_file(metadata_path, new_metadata.to_json)
           end
 
-          templates.render do |file_path, file_content|
-            if File.exist? file_path
-              update_manager.modify_file(file_path, file_content)
-            else
-              update_manager.add_file(file_path, file_content)
+          templates.render do |file_path, file_content, file_status|
+            if file_status == :unmanage
+              PDK.logger.debug(_("skipping '%{path}'") % { path: file_path })
+            elsif file_status == :delete
+              update_manager.remove_file(file_path)
+            elsif file_status == :manage
+              if File.exist? file_path
+                update_manager.modify_file(file_path, file_content)
+              else
+                update_manager.add_file(file_path, file_content)
+              end
             end
           end
         end
