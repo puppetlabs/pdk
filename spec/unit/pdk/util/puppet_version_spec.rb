@@ -121,7 +121,7 @@ describe PDK::Util::PuppetVersion do
         it 'raises an ArgumentError if no version can be found' do
           expect {
             described_class.find_gem_for('1.0.0')
-          }.to raise_error(ArgumentError, %r{unable to find a puppet version}i)
+          }.to raise_error(ArgumentError, %r{unable to find a puppet gem matching}i)
         end
       end
     end
@@ -174,7 +174,7 @@ describe PDK::Util::PuppetVersion do
         it 'raises an ArgumentError if no version can be found' do
           expect {
             described_class.find_gem_for('1.0.0')
-          }.to raise_error(ArgumentError, %r{unable to find a puppet version}i)
+          }.to raise_error(ArgumentError, %r{unable to find a puppet gem matching}i)
         end
       end
     end
