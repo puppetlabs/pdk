@@ -36,6 +36,32 @@ describe PDK::Util::RubyVersion do
     end
   end
 
+  describe '#bin_path' do
+    subject { instance.bin_path }
+
+    context 'when running from a package install' do
+      include_context 'is a package install'
+
+      ['2.1.9', '2.4.3'].each do |ruby_version|
+        context "when the active ruby version is #{ruby_version}" do
+          let(:instance) { described_class.new(ruby_version) }
+
+          it "returns the path to the bin dir for the vendored Ruby #{ruby_version}" do
+            is_expected.to eq(File.join(pdk_package_basedir, 'private', 'ruby', ruby_version, 'bin'))
+          end
+        end
+      end
+    end
+
+    context 'when not running from a package install' do
+      include_context 'is not a package install'
+
+      it 'returns the path to the bin dir for the running ruby' do
+        is_expected.to eq(RbConfig::CONFIG['bindir'])
+      end
+    end
+  end
+
   describe '#gem_path' do
     subject { instance.gem_path }
 
