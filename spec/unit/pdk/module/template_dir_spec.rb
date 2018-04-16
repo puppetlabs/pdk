@@ -206,6 +206,10 @@ describe PDK::Module::TemplateDir do
        foo:
          attr:
          - val: 3
+       .project:
+         delete: true
+       .gitlab-ci.yml:
+         unmanaged: true
        EOF
       end
       let(:yaml_hash) do
@@ -227,7 +231,9 @@ describe PDK::Module::TemplateDir do
         expect(template_dir.config_for(path_or_url)).to eq('module_metadata' => { 'name' => 'foo-bar', 'version' => '0.1.0' },
                                                            'appveyor.yml'    => { 'environment' => { 'PUPPET_GEM_VERSION' => '~> 5.0' } },
                                                            '.travis.yml'     => { 'extras' => [{ 'rvm' => '2.1.9' }] },
-                                                           'foo'             => { 'attr' => [{ 'val' => 1 }, { 'val' => 3 }] })
+                                                           'foo'             => { 'attr' => [{ 'val' => 1 }, { 'val' => 3 }] },
+                                                           '.project'        => { 'delete' => true },
+                                                           '.gitlab-ci.yml'  => { 'unmanaged' => true })
       end
     end
   end

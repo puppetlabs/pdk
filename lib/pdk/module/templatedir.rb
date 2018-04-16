@@ -8,6 +8,8 @@ require 'pdk/template_file'
 module PDK
   module Module
     class TemplateDir
+      attr_accessor :module_metadata
+
       # Initialises the TemplateDir object with the path or URL to the template
       # and the block of code to run to be run while the template is available.
       #

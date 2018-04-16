@@ -66,15 +66,18 @@ module PDK
       end
 
       def stage_changes!
+        metadata_path = 'metadata.json'
+
         PDK::Module::TemplateDir.new(template_url, nil, false) do |templates|
-          new_metadata = update_metadata('metadata.json', templates.metadata)
+          new_metadata = update_metadata(metadata_path, templates.metadata)
+          templates.module_metadata = new_metadata.data unless new_metadata.nil?
 
           if options[:noop] && new_metadata.nil?
-            update_manager.add_file('metadata.json', '')
-          elsif File.file?('metadata.json')
-            update_manager.modify_file('metadata.json', new_metadata)
+            update_manager.add_file(metadata_path, '')
+          elsif File.file?(metadata_path)
+            update_manager.modify_file(metadata_path, new_metadata.to_json)
           else
-            update_manager.add_file('metadata.json', new_metadata)
+            update_manager.add_file(metadata_path, new_metadata.to_json)
           end
 
           templates.render do |file_path, file_content|
@@ -126,7 +129,7 @@ module PDK
         end
 
         metadata.update!(template_metadata)
-        metadata.to_json
+        metadata
       end
 
       def summary
