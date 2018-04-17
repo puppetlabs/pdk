@@ -79,7 +79,8 @@ describe PDK::Module::Convert do
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
     let(:template_dir) { instance_double(PDK::Module::TemplateDir, metadata: {}) }
-    let(:template_files) { { path: 'a/path/to/file', content: 'file contents' } }
+    let(:metadata) { instance_double(PDK::Module::Metadata, data: {}) }
+    let(:template_files) { { path: 'a/path/to/file', content: 'file contents', status: :manage } }
     let(:added_files) { Set.new }
     let(:removed_files) { Set.new }
     let(:modified_files) { {} }
@@ -88,9 +89,10 @@ describe PDK::Module::Convert do
       changes = { added: added_files, removed: removed_files, modified: modified_files }
 
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
-      allow(instance).to receive(:update_metadata).with(any_args).and_return('')
+      allow(instance).to receive(:update_metadata).with(any_args).and_return(metadata)
       allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(template_dir)
-      allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content])
+      allow(template_dir).to receive(:module_metadata=)
+      allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content], template_files[:status])
       allow(update_manager).to receive(:changes).and_return(changes)
       allow(update_manager).to receive(:changed?).with('Gemfile').and_return(false)
     end
@@ -330,7 +332,7 @@ describe PDK::Module::Convert do
 
   describe '#update_metadata' do
     subject(:updated_metadata) do
-      JSON.parse(described_class.new.update_metadata(metadata_path, template_metadata))
+      JSON.parse(described_class.new.update_metadata(metadata_path, template_metadata).to_json)
     end
 
     let(:metadata_path) { 'metadata.json' }

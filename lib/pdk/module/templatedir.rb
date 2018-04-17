@@ -8,6 +8,8 @@ require 'pdk/template_file'
 module PDK
   module Module
     class TemplateDir
+      attr_accessor :module_metadata
+
       # Initialises the TemplateDir object with the path or URL to the template
       # and the block of code to run to be run while the template is available.
       #
@@ -106,16 +108,26 @@ module PDK
           template_file = template_file.to_s
           PDK.logger.debug(_("Rendering '%{template}'...") % { template: template_file })
           dest_path = template_file.sub(%r{\.erb\Z}, '')
-          begin
-            dest_content = PDK::TemplateFile.new(File.join(template_loc, template_file), configs: config_for(dest_path)).render
-          rescue => e
-            error_msg = _(
-              "Failed to render template '%{template}'\n" \
-              '%{exception}: %{message}',
-            ) % { template: template_file, exception: e.class, message: e.message }
-            raise PDK::CLI::FatalError, error_msg
+          config = config_for(dest_path)
+          dest_status = :manage
+
+          if config['unmanaged']
+            dest_status = :unmanage
+          elsif config['delete']
+            dest_status = :delete
+          else
+            begin
+              dest_content = PDK::TemplateFile.new(File.join(template_loc, template_file), configs: config).render
+            rescue => e
+              error_msg = _(
+                "Failed to render template '%{template}'\n" \
+                '%{exception}: %{message}',
+              ) % { template: template_file, exception: e.class, message: e.message }
+              raise PDK::CLI::FatalError, error_msg
+            end
           end
-          yield dest_path, dest_content
+
+          yield dest_path, dest_content, dest_status
         end
       end
 

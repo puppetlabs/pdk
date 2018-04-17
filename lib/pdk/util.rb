@@ -6,6 +6,15 @@ require 'pdk/util/windows'
 
 module PDK
   module Util
+    MODULE_FOLDERS = %w[
+      manifests
+      lib
+      tasks
+      facts.d
+      functions
+      types
+    ].freeze
+
     # Searches upwards from current working directory for the given target file.
     #
     # @param target [String] Name of file to search for.
@@ -102,11 +111,23 @@ module PDK
       metadata_path = find_upwards('metadata.json')
       if metadata_path
         File.dirname(metadata_path)
+      elsif in_module_root?
+        Dir.pwd
       else
         nil
       end
     end
     module_function :module_root
+
+    # Returns true or false depending on if any of the common directories in a module
+    # are found in the current directory
+    #
+    # @return [boolean] True if any folders from MODULE_FOLDERS are found in the current dir,
+    #   false otherwise.
+    def in_module_root?
+      PDK::Util::MODULE_FOLDERS.any? { |dir| File.directory?(dir) }
+    end
+    module_function :in_module_root?
 
     # Iterate through possible JSON documents until we find one that is valid.
     #

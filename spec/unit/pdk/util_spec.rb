@@ -265,18 +265,28 @@ describe PDK::Util do
 
     before(:each) do
       allow(described_class).to receive(:find_upwards).with('metadata.json').and_return(metadata_path)
+      allow(described_class).to receive(:in_module_root?).and_return(in_module_root)
     end
 
     context 'when a metadata.json file can be found upwards' do
       let(:metadata_path) { '/path/to/the/module/metadata.json' }
+      let(:in_module_root) { true }
 
       it 'returns the path to the directory containing the metadata.json file' do
         is_expected.to eq(File.dirname(metadata_path))
       end
     end
 
-    context 'when a metadata.json file could not be found' do
+    context 'when a metadata.json file could not be found but module dirs can' do
       let(:metadata_path) { nil }
+      let(:in_module_root) { true }
+
+      it { is_expected.to eq(Dir.pwd) }
+    end
+
+    context 'when a metadata.json file and module dirs could not be found' do
+      let(:metadata_path) { nil }
+      let(:in_module_root) { false }
 
       it { is_expected.to be_nil }
     end
