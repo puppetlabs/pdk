@@ -235,5 +235,33 @@ describe PDK::CLI::Util do
         it_behaves_like 'it returns a puppet environment'
       end
     end
+
+    context 'when puppet-version is unmappable' do
+      let(:options) { { :'puppet-version' => '99.99.0' } }
+      let(:ruby_version) { '2.1.9' }
+      let(:puppet_version) { '99.99.0' }
+
+      before(:each) do
+        allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_raise(ArgumentError, 'error msg')
+      end
+
+      it 'raises a PDK::CLI::ExitWithError' do
+        expect { puppet_env }.to raise_error(PDK::CLI::ExitWithError, 'error msg')
+      end
+    end
+
+    context 'when pe-version is unmappable' do
+      let(:options) { { :'pe-version' => '99.99.0' } }
+      let(:ruby_version) { '2.1.9' }
+      let(:pe_version) { '99.99.0' }
+
+      before(:each) do
+        allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with(anything).and_raise(ArgumentError, 'error msg')
+      end
+
+      it 'raises a PDK::CLI::ExitWithError' do
+        expect { puppet_env }.to raise_error(PDK::CLI::ExitWithError, 'error msg')
+      end
+    end
   end
 end

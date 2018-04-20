@@ -86,14 +86,18 @@ module PDK
         desired_puppet_version = (opts || {})[:'puppet-version'] || ENV['PDK_PUPPET_VERSION']
         desired_pe_version = (opts || {})[:'pe-version'] || ENV['PDK_PE_VERSION']
 
-        puppet_env =
-          if desired_puppet_version
-            PDK::Util::PuppetVersion.find_gem_for(desired_puppet_version)
-          elsif desired_pe_version
-            PDK::Util::PuppetVersion.from_pe_version(desired_pe_version)
-          else
-            PDK::Util::PuppetVersion.from_module_metadata || PDK::Util::PuppetVersion.latest_available
-          end
+        begin
+          puppet_env =
+            if desired_puppet_version
+              PDK::Util::PuppetVersion.find_gem_for(desired_puppet_version)
+            elsif desired_pe_version
+              PDK::Util::PuppetVersion.from_pe_version(desired_pe_version)
+            else
+              PDK::Util::PuppetVersion.from_module_metadata || PDK::Util::PuppetVersion.latest_available
+            end
+        rescue ArgumentError => e
+          raise PDK::CLI::ExitWithError, e.message
+        end
 
         # Notify user of what Ruby version will be used.
         PDK.logger.info(_('Using Ruby %{version}') % {
