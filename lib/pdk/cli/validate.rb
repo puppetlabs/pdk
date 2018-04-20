@@ -42,6 +42,8 @@ module PDK::CLI
         log_level: :info,
       )
 
+      PDK::CLI::Util.module_version_check
+
       if args[0]
         # This may be a single validator, a list of validators, or a target.
         if Util::OptionValidator.comma_separated_list?(args[0])

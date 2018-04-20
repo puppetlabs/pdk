@@ -1,6 +1,20 @@
 require 'spec_helper'
 
 describe PDK::Util do
+  let(:pdk_version) { '1.2.3' }
+  let(:template_url) { 'https://github.com/puppetlabs/pdk-templates' }
+  let(:template_ref) { nil }
+  let(:mock_metadata) do
+    instance_double(
+      PDK::Module::Metadata,
+      data: {
+        'pdk-version'  => pdk_version,
+        'template-url' => template_url,
+        'template-ref' => template_ref,
+      },
+    )
+  end
+
   shared_context :with_version_file, version_file: true do
     let(:version_file) { File.join('path', 'to', 'the', 'version', 'file') }
 
@@ -456,6 +470,70 @@ describe PDK::Util do
           is_expected.to eq('origin/master')
         end
       end
+    end
+  end
+
+  describe 'module_metadata' do
+    subject(:result) { described_class.module_metadata }
+
+    before(:each) do
+      allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(described_class.module_root, 'metadata.json')).and_return(mock_metadata)
+    end
+
+    context 'when the metadata.json can be read' do
+      it 'returns the metadata object' do
+        is_expected.to eq(mock_metadata.data)
+      end
+    end
+
+    context 'when the metadata.json can not be read' do
+      before(:each) do
+        allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(described_class.module_root, 'metadata.json')).and_raise(ArgumentError, 'some error')
+      end
+
+      it 'raises an ExitWithError exception' do
+        expect { -> { result }.call }.to raise_error(ArgumentError, %r{some error}i)
+      end
+    end
+  end
+
+  describe 'module_pdk_compatible?' do
+    subject(:result) { described_class.module_pdk_compatible? }
+
+    context 'is compatible' do
+      before(:each) do
+        allow(described_class).to receive(:module_metadata).and_return(mock_metadata.data)
+      end
+
+      it { is_expected.to be true }
+    end
+
+    context 'is not compatible' do
+      before(:each) do
+        allow(described_class).to receive(:module_metadata).and_return({})
+      end
+
+      it { is_expected.to be false }
+    end
+  end
+
+  describe 'module_pdk_version' do
+    subject(:result) { described_class.module_pdk_version }
+
+    context 'is in metadata' do
+      before(:each) do
+        allow(described_class).to receive(:module_metadata).and_return(mock_metadata.data)
+      end
+
+      it { is_expected.to match(pdk_version) }
+    end
+
+    context 'is not in metadata' do
+      before(:each) do
+        allow(described_class).to receive(:module_metadata).and_return({})
+      end
+
+      it { is_expected.to be nil }
     end
   end
 end

@@ -31,6 +31,8 @@ module PDK::CLI
         log_level: :info,
       )
 
+      PDK::CLI::Util.module_version_check
+
       report = nil
 
       if opts[:list]
