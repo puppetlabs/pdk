@@ -7,7 +7,7 @@ describe '`pdk test unit`' do
   it { is_expected.not_to be_nil }
 
   before(:each) do
-    allow(PDK::CLI::Util).to receive(:puppet_env_from_opts).and_return(ruby_version: '2.4.3', gemset: { puppet: '5.4.0' })
+    allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: '2.4.3', gemset: { puppet: '5.4.0' })
     allow(PDK::Util::RubyVersion).to receive(:use)
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(hash_including(:puppet))
   end
@@ -135,7 +135,7 @@ describe '`pdk test unit`' do
 
   context 'when --puppet-version and --pe-version are specified' do
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{both --puppet-version and --pe-version}i))
+      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-version.*and.*--pe-version}i))
 
       expect {
         PDK::CLI.run(%w[test unit --puppet-version 4.10.10 --pe-version 2018.1.1])
@@ -153,7 +153,7 @@ describe '`pdk test unit`' do
     end
 
     before(:each) do
-      allow(PDK::CLI::Util).to receive(:puppet_env_from_opts).with(hash_including(:'puppet-version' => puppet_version)).and_return(puppet_env)
+      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including(:'puppet-version' => puppet_version)).and_return(puppet_env)
       allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
       allow(PDK::CLI::Util).to receive(:module_version_check)
     end
@@ -185,7 +185,7 @@ describe '`pdk test unit`' do
     end
 
     before(:each) do
-      allow(PDK::CLI::Util).to receive(:puppet_env_from_opts).with(hash_including(:'pe-version' => pe_version)).and_return(puppet_env)
+      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including(:'pe-version' => pe_version)).and_return(puppet_env)
       allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
       allow(PDK::CLI::Util).to receive(:module_version_check)
     end

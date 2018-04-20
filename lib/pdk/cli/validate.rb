@@ -33,9 +33,7 @@ module PDK::CLI
         exit 0
       end
 
-      if opts[:'puppet-version'] && opts[:'pe-version']
-        raise PDK::CLI::ExitWithError, _('You can not specify both --puppet-version and --pe-version at the same time.')
-      end
+      PDK::CLI::Util.validate_puppet_version_opts(opts)
 
       PDK::CLI::Util.ensure_in_module!(
         message:   _('Code validation can only be run from inside a valid module directory'),
@@ -88,7 +86,7 @@ module PDK::CLI
       options[:auto_correct] = true if opts.key?(:'auto-correct')
 
       # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
-      puppet_env = PDK::CLI::Util.puppet_env_from_opts(opts)
+      puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
       PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 

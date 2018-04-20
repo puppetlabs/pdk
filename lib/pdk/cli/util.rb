@@ -82,12 +82,15 @@ module PDK
       end
       module_function :module_version_check
 
-      def puppet_env_from_opts(opts)
+      def puppet_from_opts_or_env(opts)
+        desired_puppet_version = (opts || {})[:'puppet-version'] || ENV['PDK_PUPPET_VERSION']
+        desired_pe_version = (opts || {})[:'pe-version'] || ENV['PDK_PE_VERSION']
+
         puppet_env =
-          if opts && opts.key?(:'puppet-version')
-            PDK::Util::PuppetVersion.find_gem_for(opts[:'puppet-version'])
-          elsif opts && opts.key?(:'pe-version')
-            PDK::Util::PuppetVersion.from_pe_version(opts[:'pe-version'])
+          if desired_puppet_version
+            PDK::Util::PuppetVersion.find_gem_for(desired_puppet_version)
+          elsif desired_pe_version
+            PDK::Util::PuppetVersion.from_pe_version(desired_pe_version)
           else
             PDK::Util::PuppetVersion.from_module_metadata || PDK::Util::PuppetVersion.latest_available
           end
@@ -114,7 +117,45 @@ module PDK
           ruby_version: puppet_env[:ruby_version],
         }
       end
-      module_function :puppet_env_from_opts
+      module_function :puppet_from_opts_or_env
+
+      def validate_puppet_version_opts(opts)
+        puppet_ver_specs = []
+        puppet_ver_specs << '--puppet-version option' if opts[:'puppet-version']
+        puppet_ver_specs << 'PDK_PUPPET_VERSION environment variable' if ENV['PDK_PUPPET_VERSION'] && !ENV['PDK_PUPPET_VERSION'].empty?
+
+        pe_ver_specs = []
+        pe_ver_specs << '--pe-version option' if opts[:'pe-version']
+        pe_ver_specs << 'PDK_PE_VERSION environment variable' if ENV['PDK_PE_VERSION'] && !ENV['PDK_PE_VERSION'].empty?
+
+        puppet_ver_specs.each do |pup_ver_spec|
+          next if pe_ver_specs.empty?
+
+          raise PDK::CLI::ExitWithError, _('You cannot specify a %{pup_ver_spec} and %{pe_ver_spec} at the same time.') % {
+            pup_ver_spec: pup_ver_spec,
+            pe_ver_spec: pe_ver_specs[0],
+          }
+        end
+
+        if puppet_ver_specs.size == 2
+          warning_str = 'Puppet version option from command line: "--puppet-version=%{pup_ver_opt}" \
+            overrides value from environment: "PDK_PUPPET_VERSION=%{pup_ver_env}". You should not specify both.'
+
+          PDK.logger.warn(_(warning_str) % {
+            pup_ver_opt: opts[:'puppet-version'],
+            pup_ver_env: ENV['PDK_PUPPET_VERSION'],
+          })
+        elsif pe_ver_specs.size == 2
+          warning_str = 'Puppet Enterprise version option from command line: "--pe-version=%{pe_ver_opt}" \
+            overrides value from environment: "PDK_PE_VERSION=%{pe_ver_env}". You should not specify both.'
+
+          PDK.logger.warn(_(warning_str) % {
+            pup_ver_opt: opts[:'pe-version'],
+            pup_ver_env: ENV['PDK_PE_VERSION'],
+          })
+        end
+      end
+      module_function :validate_puppet_version_opts
     end
   end
 end

@@ -173,8 +173,8 @@ describe PDK::CLI::Util do
     end
   end
 
-  describe '.puppet_env_from_opts' do
-    subject(:puppet_env) { described_class.puppet_env_from_opts(options) }
+  describe '.puppet_from_opts_or_env' do
+    subject(:puppet_env) { described_class.puppet_from_opts_or_env(options) }
 
     let(:version_result) do
       { ruby_version: ruby_version, gem_version: Gem::Version.new(puppet_version) }
