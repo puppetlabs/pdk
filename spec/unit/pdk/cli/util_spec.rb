@@ -95,4 +95,61 @@ describe PDK::CLI::Util do
       it { is_expected.to be_falsey }
     end
   end
+
+  describe 'module_version_check' do
+    subject(:module_version_check) { described_class.module_version_check }
+
+    before(:each) do
+      stub_const('PDK::VERSION', '1.5.0')
+      allow(PDK::Util).to receive(:module_pdk_version).and_return(module_pdk_ver)
+    end
+
+    context 'if module doesn\'t have pdk-version in metadata' do
+      let(:module_pdk_ver) { nil }
+
+      before(:each) do
+        expect(logger).to receive(:warn).with(a_string_matching(%r{This module is not PDK compatible. Run `pdk convert` to make it compatible with your version of PDK.}i))
+      end
+
+      it 'does not raise an error' do
+        expect { module_version_check }.not_to raise_error
+      end
+    end
+
+    context 'if module version is older than 1.3.1' do
+      let(:module_pdk_ver) { '1.2.0' }
+
+      before(:each) do
+        expect(logger).to receive(:warn).with(a_string_matching(%r{This module template is out of date. Run `pdk convert` to make it compatible with your version of PDK.}i))
+      end
+
+      it 'does not raise an error' do
+        expect { module_version_check }.not_to raise_error
+      end
+    end
+
+    context 'if module version is newer than installed version' do
+      let(:module_pdk_ver) { '1.5.1' }
+
+      before(:each) do
+        expect(logger).to receive(:warn).with(a_string_matching(%r{This module is compatible with a newer version of PDK. Upgrade your version of PDK to ensure compatibility.}i))
+      end
+
+      it 'does not raise an error' do
+        expect { module_version_check }.not_to raise_error
+      end
+    end
+
+    context 'if module version is older than installed version' do
+      let(:module_pdk_ver) { '1.3.1' }
+
+      before(:each) do
+        expect(logger).to receive(:warn).with(a_string_matching(%r{This module is compatible with an older version of PDK. Run `pdk update` to update it to your version of PDK.}i))
+      end
+
+      it 'does not raise an error' do
+        expect { module_version_check }.not_to raise_error
+      end
+    end
+  end
 end

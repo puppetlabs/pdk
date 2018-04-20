@@ -14,6 +14,7 @@ describe 'Running `pdk validate` in a module' do
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
     allow(PDK::Util).to receive(:module_root).and_return('/path/to/testmodule')
     allow(PDK::Report).to receive(:new).and_return(report)
+    allow(PDK::Util).to receive(:module_pdk_version).and_return(PDK::VERSION)
   end
 
   context 'when no arguments or options are provided' do

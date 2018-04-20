@@ -251,5 +251,16 @@ module PDK
       ['pdk-version', 'template-url'].any? { |key| module_metadata.key?(key) }
     end
     module_function :module_pdk_compatible?
+
+    def module_pdk_version
+      metadata = module_metadata
+
+      if !metadata.nil? && metadata.include?('pdk-version')
+        metadata['pdk-version'].split.first
+      else
+        nil
+      end
+    end
+    module_function :module_pdk_version
   end
 end
