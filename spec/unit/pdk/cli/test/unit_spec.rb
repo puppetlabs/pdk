@@ -135,7 +135,7 @@ describe '`pdk test unit`' do
 
   context 'when --puppet-version and --pe-version are specified' do
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-version.*and.*--pe-version}i))
+      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
 
       expect {
         PDK::CLI.run(%w[test unit --puppet-version 4.10.10 --pe-version 2018.1.1])
@@ -175,7 +175,7 @@ describe '`pdk test unit`' do
     end
   end
 
-  context 'when --pe-version is specified' do
+  context 'with --pe-version' do
     let(:pe_version) { '2017.2' }
     let(:puppet_env) do
       {

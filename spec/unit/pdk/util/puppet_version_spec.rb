@@ -64,6 +64,30 @@ describe PDK::Util::PuppetVersion do
     %w[5.4.0 5.3.5 4.10.10 4.8.1 4.9.4 4.7.0 4.5.3 4.4.2]
   end
 
+  describe '.latest_available' do
+    subject { described_class.latest_available }
+
+    let(:expected_version) do
+      versions.sort { |a, b| b <=> a }.first
+    end
+
+    context 'when running from a package install' do
+      include_context 'is a package install'
+      let(:versions) { PDK::Util::RubyVersion.available_puppet_versions }
+
+      it { is_expected.to include(gem_version: expected_version) }
+    end
+
+    context 'when not running from a package install' do
+      include_context 'is not a package install'
+      include_context 'with a mocked rubygems response'
+
+      let(:versions) { rubygems_versions.map { |r| Gem::Version.new(r) } }
+
+      it { is_expected.to include(gem_version: expected_version) }
+    end
+  end
+
   describe '.find_gem_for' do
     context 'when running from a package install' do
       include_context 'is a package install'

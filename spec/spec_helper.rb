@@ -49,6 +49,11 @@ RSpec.configure do |c|
   end
 
   c.include_context :stubbed_logger
+
+  # This should catch any tests where we are not mocking out the actual calls to Rubygems.org
+  c.before(:each) do
+    allow(Gem::SpecFetcher).to receive(:fetcher).and_raise('Unmocked call to Gem::SpecFetcher.fetcher!')
+  end
 end
 
 RSpec.shared_context :validators do

@@ -192,6 +192,23 @@ describe PDK::CLI::Util do
       it_behaves_like 'it returns a puppet environment'
     end
 
+    context 'when PDK_PUPPET_VERSION has been set' do
+      let(:options) { {} }
+      let(:ruby_version) { '2.1.9' }
+      let(:puppet_version) { '4.10.10' }
+
+      before(:each) do
+        allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
+        ENV['PDK_PUPPET_VERSION'] = '4.10.10'
+      end
+
+      after(:each) do
+        ENV.delete('PDK_PUPPET_VERSION')
+      end
+
+      it_behaves_like 'it returns a puppet environment'
+    end
+
     context 'when pe-version has been set' do
       let(:options) { { :'pe-version' => '2017.3.1' } }
       let(:ruby_version) { '2.4.3' }
@@ -199,6 +216,23 @@ describe PDK::CLI::Util do
 
       before(:each) do
         allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with(anything).and_return(version_result)
+      end
+
+      it_behaves_like 'it returns a puppet environment'
+    end
+
+    context 'when PDK_PE_VERSION has been set' do
+      let(:options) { {} }
+      let(:ruby_version) { '2.4.3' }
+      let(:puppet_version) { '5.3.2' }
+
+      before(:each) do
+        allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with(anything).and_return(version_result)
+        ENV['PDK_PE_VERSION'] = '2017.3.1'
+      end
+
+      after(:each) do
+        ENV.delete('PDK_PE_VERSION')
       end
 
       it_behaves_like 'it returns a puppet environment'
@@ -261,6 +295,211 @@ describe PDK::CLI::Util do
 
       it 'raises a PDK::CLI::ExitWithError' do
         expect { puppet_env }.to raise_error(PDK::CLI::ExitWithError, 'error msg')
+      end
+    end
+  end
+
+  describe '.validate_puppet_version_opts' do
+    subject(:validate_puppet_version_opts) { described_class.validate_puppet_version_opts(options) }
+
+    let(:cli_puppet_version) { '5.3' }
+    let(:env_puppet_version) { '5.1' }
+    let(:cli_pe_version) { '2016.2' }
+    let(:env_pe_version) { '2017.3' }
+
+    context 'when --puppet-version is set' do
+      let(:options) { { :'puppet-version' => cli_puppet_version } }
+
+      it 'is silent' do
+        expect(logger).not_to receive(:warn)
+
+        expect { validate_puppet_version_opts }.not_to raise_error
+      end
+
+      context 'when PDK_PUPPET_VERSION is also set' do
+        before(:each) do
+          ENV['PDK_PUPPET_VERSION'] = env_puppet_version
+        end
+
+        after(:each) do
+          ENV.delete('PDK_PUPPET_VERSION')
+        end
+
+        it 'warns about option precedence' do
+          expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
+
+          validate_puppet_version_opts
+        end
+      end
+
+      context 'when --pe-version is also set' do
+        let(:options) { { :'puppet-version' => cli_puppet_version, :'pe-version' => cli_pe_version } }
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*option}i)
+        end
+      end
+
+      context 'when PDK_PE_VERSION is also set' do
+        before(:each) do
+          ENV['PDK_PE_VERSION'] = env_puppet_version
+        end
+
+        after(:each) do
+          ENV.delete('PDK_PE_VERSION')
+        end
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)
+        end
+      end
+    end
+
+    context 'when --pe-version is set' do
+      let(:options) { { :'pe-version' => cli_pe_version } }
+
+      it 'is silent' do
+        expect(logger).not_to receive(:warn)
+
+        expect { validate_puppet_version_opts }.not_to raise_error
+      end
+
+      context 'when PDK_PE_VERSION is also set' do
+        before(:each) do
+          ENV['PDK_PE_VERSION'] = env_pe_version
+        end
+
+        after(:each) do
+          ENV.delete('PDK_PE_VERSION')
+        end
+
+        it 'warns about option precedence' do
+          expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
+
+          validate_puppet_version_opts
+        end
+      end
+
+      context 'when --puppet-version is also set' do
+        let(:options) { { :'puppet-version' => cli_puppet_version, :'pe-version' => cli_pe_version } }
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*option}i)
+        end
+      end
+
+      context 'when PDK_PUPPET_VERSION is also set' do
+        before(:each) do
+          ENV['PDK_PUPPET_VERSION'] = env_puppet_version
+        end
+
+        after(:each) do
+          ENV.delete('PDK_PUPPET_VERSION')
+        end
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)
+        end
+      end
+    end
+
+    context 'when PDK_PUPPET_VERSION is set' do
+      let(:options) { {} }
+
+      before(:each) do
+        ENV['PDK_PUPPET_VERSION'] = env_puppet_version
+      end
+
+      after(:each) do
+        ENV.delete('PDK_PUPPET_VERSION')
+      end
+
+      it 'is silent' do
+        expect(logger).not_to receive(:warn)
+
+        expect { validate_puppet_version_opts }.not_to raise_error
+      end
+
+      context 'when --puppet-version is also set' do
+        let(:options) { { :'puppet-version' => cli_puppet_version } }
+
+        it 'warns about option precedence' do
+          expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
+
+          validate_puppet_version_opts
+        end
+      end
+
+      context 'when PDK_PE_VERSION is also set' do
+        before(:each) do
+          ENV['PDK_PE_VERSION'] = env_puppet_version
+        end
+
+        after(:each) do
+          ENV.delete('PDK_PE_VERSION')
+        end
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*environment.*and.*environment}i)
+        end
+      end
+
+      context 'when --pe-version is also set' do
+        let(:options) { { :'pe-version' => cli_pe_version } }
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)
+        end
+      end
+    end
+
+    context 'when PDK_PE_VERSION is set' do
+      let(:options) { {} }
+
+      before(:each) do
+        ENV['PDK_PE_VERSION'] = env_pe_version
+      end
+
+      after(:each) do
+        ENV.delete('PDK_PE_VERSION')
+      end
+
+      it 'is silent' do
+        expect(logger).not_to receive(:warn)
+
+        expect { validate_puppet_version_opts }.not_to raise_error
+      end
+
+      context 'when --pe-version is also set' do
+        let(:options) { { :'pe-version' => cli_pe_version } }
+
+        it 'warns about option precedence' do
+          expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
+
+          validate_puppet_version_opts
+        end
+      end
+
+      context 'when PDK_PUPPET_VERSION is also set' do
+        before(:each) do
+          ENV['PDK_PUPPET_VERSION'] = env_puppet_version
+        end
+
+        after(:each) do
+          ENV.delete('PDK_PUPPET_VERSION')
+        end
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*environment.*and.*environment}i)
+        end
+      end
+
+      context 'when --puppet-version is also set' do
+        let(:options) { { :'puppet-version' => cli_puppet_version } }
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)
+        end
       end
     end
   end
