@@ -22,9 +22,7 @@ module PDK::CLI
     run do |opts, _args, _cmd|
       require 'pdk/tests/unit'
 
-      if opts[:'puppet-version'] && opts[:'pe-version']
-        raise PDK::CLI::ExitWithError, _('You can not specify both --puppet-version and --pe-version at the same time.')
-      end
+      PDK::CLI::Util.validate_puppet_version_opts(opts)
 
       PDK::CLI::Util.ensure_in_module!(
         message:   _('Unit tests can only be run from inside a valid module directory.'),
@@ -63,6 +61,11 @@ module PDK::CLI
                              target: PDK::Report.default_target,
                            }]
                          end
+
+        # Ensure that the bundled gems are up to date and correct Ruby is activated before running tests.
+        puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
+        PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
+        PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
         exit_code = PDK::Test::Unit.invoke(report, opts)
 

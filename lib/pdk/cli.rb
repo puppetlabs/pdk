@@ -51,13 +51,8 @@ module PDK::CLI
   end
 
   def self.puppet_version_options(dsl)
-    dsl.option nil, 'puppet-version', _('Puppet version to run tests or validations against.'), argument: :required do |value|
-      PDK::Util::PuppetVersion.find_gem_for(value)
-    end
-
-    dsl.option nil, 'pe-version', _('Puppet Enterprise version to run tests or validations against.'), argument: :required do |value|
-      PDK::Util::PuppetVersion.from_pe_version(value)
-    end
+    dsl.option nil, 'puppet-version', _('Puppet version to run tests or validations against.'), argument: :required
+    dsl.option nil, 'pe-version', _('Puppet Enterprise version to run tests or validations against.'), argument: :required
   end
 
   @base_cmd = Cri::Command.define do

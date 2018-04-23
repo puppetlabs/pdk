@@ -62,7 +62,6 @@ module PDK
       end
 
       def self.invoke(report, options = {})
-        PDK::Util::Bundler.ensure_bundle!
         PDK::Util::Bundler.ensure_binstubs!('rake')
 
         setup
@@ -181,7 +180,6 @@ module PDK
 
       # @return array of { :id, :full_description }
       def self.list
-        PDK::Util::Bundler.ensure_bundle!
         PDK::Util::Bundler.ensure_binstubs!('rake')
 
         command_argv = [File.join(PDK::Util.module_root, 'bin', 'rake'), 'spec_list_json']

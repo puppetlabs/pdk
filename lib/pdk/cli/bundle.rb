@@ -18,6 +18,13 @@ EOF
         message: _('`pdk bundle` can only be run from inside a valid module directory.'),
       )
 
+      PDK::CLI::Util.validate_puppet_version_opts({})
+
+      # Ensure that the bundled gems are up to date and correct Ruby is activated before running commend.
+      puppet_env = PDK::CLI::Util.puppet_from_opts_or_env({})
+      PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
+      PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
+
       command = PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
         c.context = :module
       end

@@ -11,7 +11,11 @@ describe 'Running `pdk validate` in a module' do
 
   before(:each) do
     allow(Dir).to receive(:chdir) { |_dir, &block| block.call }
-    allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
+
+    allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: '2.4.3', gemset: { puppet: '5.4.0' })
+    allow(PDK::Util::RubyVersion).to receive(:use)
+    allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(hash_including(:puppet))
+
     allow(PDK::Util).to receive(:module_root).and_return('/path/to/testmodule')
     allow(PDK::Report).to receive(:new).and_return(report)
     allow(PDK::Util).to receive(:module_pdk_version).and_return(PDK::VERSION)
@@ -148,18 +152,73 @@ describe 'Running `pdk validate` in a module' do
     end
   end
 
-  context 'when --puppet-version and --pe-version are specified' do
-    before(:each) do
-      allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with('4.10.10').and_return('4.10.10')
-      allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with('2018.1.1').and_return('4.10.10')
-    end
-
+  context 'with both --puppet-version and --pe-version' do
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{both --puppet-version and --pe-version}i))
+      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
 
       expect {
         PDK::CLI.run(%w[validate --puppet-version 4.10.10 --pe-version 2018.1.1])
       }.to exit_nonzero
+    end
+  end
+
+  context 'with --puppet-version' do
+    let(:puppet_version) { '5.3' }
+    let(:puppet_env) do
+      {
+        ruby_version: '2.4.3',
+        gemset: { puppet: '5.3.5' },
+      }
+    end
+
+    before(:each) do
+      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including(:'puppet-version' => puppet_version)).and_return(puppet_env)
+    end
+
+    it 'activates resolved puppet version' do
+      expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
+
+      expect {
+        PDK::CLI.run(['validate', "--puppet-version=#{puppet_version}"])
+      }.to exit_zero
+    end
+
+    it 'activates resolved ruby version' do
+      expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
+
+      expect {
+        PDK::CLI.run(['validate', "--puppet-version=#{puppet_version}"])
+      }.to exit_zero
+    end
+  end
+
+  context 'with --pe-version' do
+    let(:pe_version) { '2017.2' }
+    let(:puppet_env) do
+      {
+        ruby_version: '2.1.9',
+        gemset: { puppet: '4.10.9' },
+      }
+    end
+
+    before(:each) do
+      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including(:'pe-version' => pe_version)).and_return(puppet_env)
+    end
+
+    it 'activates resolved puppet version' do
+      expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
+
+      expect {
+        PDK::CLI.run(['validate', "--pe-version=#{pe_version}"])
+      }.to exit_zero
+    end
+
+    it 'activates resolved ruby version' do
+      expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
+
+      expect {
+        PDK::CLI.run(['validate', "--pe-version=#{pe_version}"])
+      }.to exit_zero
     end
   end
 end

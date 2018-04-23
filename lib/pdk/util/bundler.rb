@@ -9,8 +9,11 @@ module PDK
     module Bundler
       class BundleHelper; end
 
-      def self.ensure_bundle!(gem_overrides = {})
+      def self.ensure_bundle!(gem_overrides = nil)
         bundle = BundleHelper.new
+
+        # This will default ensure_bundle! to re-resolving everything to latest
+        gem_overrides ||= { puppet: nil, hiera: nil, facter: nil }
 
         if already_bundled?(bundle.gemfile, gem_overrides)
           PDK.logger.debug(_('Bundler managed gems already up to date.'))
@@ -22,19 +25,33 @@ module PDK
           return
         end
 
-        # Generate initial Gemfile.lock
-        if bundle.locked?
-          # Update puppet-related gem dependencies by re-resolving them specifically.
-          # If this is a packaged install, only consider already available gems at this point.
-          bundle.update_lock!(gem_overrides, local: PDK::Util.package_install?)
-        else
-          bundle.lock!(gem_overrides)
+        unless bundle.locked?
+          # Generate initial default Gemfile.lock, either from package cache or
+          # by invoking `bundle lock`
+          bundle.lock!
         end
 
-        # Check for any still-unresolved dependencies. For packaged installs, this should
-        # only evaluate to false if the user has added custom gems that we don't vendor, in
-        # which case `bundle install` will resolve new dependencies as needed.
-        unless bundle.installed?(gem_overrides)
+        # Check if all dependencies will be available once we update the lockfile.
+        begin
+          original_lockfile = bundle.gemfile_lock
+          temp_lockfile = "#{original_lockfile}.tmp"
+
+          FileUtils.mv(original_lockfile, temp_lockfile)
+
+          all_deps_available = bundle.installed?(gem_overrides)
+        ensure
+          FileUtils.mv(temp_lockfile, original_lockfile, force: true)
+        end
+
+        # Update puppet-related gem dependencies by re-resolving them specifically.
+        # If there are additional dependencies that aren't available locally, allow
+        # `bundle lock` to reach out to rubygems.org
+        bundle.update_lock!(gem_overrides, local: all_deps_available)
+
+        # If there were missing dependencies when we checked above, let `bundle install`
+        # go out and get them. For packaged installs, this should only be true if the user
+        # has added custom gems that we don't vendor.
+        unless bundle.installed?
           bundle.install!(gem_overrides)
         end
 
@@ -66,18 +83,23 @@ module PDK
           @gemfile ||= PDK::Util.find_upwards('Gemfile')
         end
 
+        def gemfile_lock
+          return nil if gemfile.nil?
+          @gemfile_lock ||= File.join(File.dirname(gemfile), 'Gemfile.lock')
+        end
+
         def gemfile?
           !gemfile.nil?
         end
 
         def locked?
-          !gemfile_lock.nil?
+          !gemfile_lock.nil? && File.file?(gemfile_lock)
         end
 
         def installed?(gem_overrides = {})
           PDK.logger.debug(_('Checking for missing Gemfile dependencies.'))
 
-          argv = ['check', "--gemfile=#{gemfile}"]
+          argv = ['check', "--gemfile=#{gemfile}", '--dry-run']
           argv << "--path=#{bundle_cachedir}" unless PDK::Util.package_install?
 
           cmd = bundle_command(*argv).tap do |c|
@@ -93,13 +115,18 @@ module PDK
           result[:exit_code].zero?
         end
 
-        def lock!(gem_overrides = {})
+        def lock!
           if PDK::Util.package_install?
             # In packaged installs, use vendored Gemfile.lock as a starting point.
             # Subsequent 'bundle install' will still pick up any new dependencies.
-            vendored_gemfile_lock = File.join(PDK::Util.package_cachedir, 'Gemfile.lock')
+            vendored_lockfiles = [
+              File.join(PDK::Util.package_cachedir, "Gemfile-#{PDK::Util::RubyVersion.active_ruby_version}.lock"),
+              File.join(PDK::Util.package_cachedir, 'Gemfile.lock'),
+            ]
 
-            unless File.exist?(vendored_gemfile_lock)
+            vendored_gemfile_lock = vendored_lockfiles.find { |lockfile| File.exist?(lockfile) }
+
+            unless vendored_gemfile_lock
               raise PDK::CLI::FatalError, _('Vendored Gemfile.lock (%{source}) not found.') % {
                 source: vendored_gemfile_lock,
               }
@@ -107,28 +134,25 @@ module PDK
 
             PDK.logger.debug(_('Using vendored Gemfile.lock from %{source}.') % { source: vendored_gemfile_lock })
             FileUtils.cp(vendored_gemfile_lock, File.join(PDK::Util.module_root, 'Gemfile.lock'))
-
-            # Update the vendored lock with any overrides
-            update_lock!(gem_overrides, local: true) unless gem_overrides.empty?
           else
             argv = ['lock']
 
             cmd = bundle_command(*argv).tap do |c|
-              c.add_spinner(_('Resolving Gemfile dependencies.'))
-              c.update_environment(gemfile_env(gem_overrides)) unless gem_overrides.empty?
+              c.add_spinner(_('Resolving default Gemfile dependencies.'))
             end
 
             result = cmd.execute!
 
             unless result[:exit_code].zero?
               PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n"))
-              raise PDK::CLI::FatalError, _('Unable to resolve Gemfile dependencies.')
+              raise PDK::CLI::FatalError, _('Unable to resolve default Gemfile dependencies.')
             end
-          end
 
-          # After initial lockfile generation, re-resolve json gem to built-in
-          # version to avoid unncessary native compilation attempts.
-          update_lock!({ json: nil }, local: true)
+            # After initial lockfile generation, re-resolve json gem to built-in
+            # version to avoid unncessary native compilation attempts. For packaged
+            # installs this is done during the generation of the vendored Gemfile.lock
+            update_lock!({ json: nil }, local: true)
+          end
 
           true
         end
@@ -197,10 +221,6 @@ module PDK
           PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
             c.context = :module
           end
-        end
-
-        def gemfile_lock
-          @gemfile_lock ||= PDK::Util.find_upwards('Gemfile.lock')
         end
 
         def bundle_cachedir

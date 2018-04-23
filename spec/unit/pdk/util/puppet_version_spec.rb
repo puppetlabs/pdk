@@ -64,6 +64,30 @@ describe PDK::Util::PuppetVersion do
     %w[5.4.0 5.3.5 4.10.10 4.8.1 4.9.4 4.7.0 4.5.3 4.4.2]
   end
 
+  describe '.latest_available' do
+    subject { described_class.latest_available }
+
+    let(:expected_version) do
+      versions.sort { |a, b| b <=> a }.first
+    end
+
+    context 'when running from a package install' do
+      include_context 'is a package install'
+      let(:versions) { PDK::Util::RubyVersion.available_puppet_versions }
+
+      it { is_expected.to include(gem_version: expected_version) }
+    end
+
+    context 'when not running from a package install' do
+      include_context 'is not a package install'
+      include_context 'with a mocked rubygems response'
+
+      let(:versions) { rubygems_versions.map { |r| Gem::Version.new(r) } }
+
+      it { is_expected.to include(gem_version: expected_version) }
+    end
+  end
+
   describe '.find_gem_for' do
     context 'when running from a package install' do
       include_context 'is a package install'
@@ -106,7 +130,7 @@ describe PDK::Util::PuppetVersion do
 
       context 'and the specified version does not exist in the cache' do
         it 'notifies the user that it is using the latest Z release instead' do
-          expect(logger).to receive(:info).with(a_string_matching(%r{using 5\.3\.5 instead}i))
+          expect(logger).to receive(:warn).with(a_string_matching(%r{activating 5\.3\.5 instead}i))
           described_class.find_gem_for('5.3.1')
         end
 
@@ -163,7 +187,7 @@ describe PDK::Util::PuppetVersion do
 
       context 'and the specified version does not exist on Rubygems' do
         it 'notifies the user that it is using the latest Z release instead' do
-          expect(logger).to receive(:info).with(a_string_matching(%r{using 4\.10\.10 instead}i))
+          expect(logger).to receive(:warn).with(a_string_matching(%r{activating 4\.10\.10 instead}i))
           described_class.find_gem_for('4.10.999')
         end
 

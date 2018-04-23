@@ -6,13 +6,17 @@ RSpec.describe PDK::Util::Bundler do
     # Default to non-package install
     include_context 'not packaged install'
 
+    let(:gemfile) { '/Gemfile' }
+    let(:gemfile_lock) { "#{gemfile}.lock" }
     let(:bundle_helper) do
-      instance_double(PDK::Util::Bundler::BundleHelper, gemfile: '/Gemfile', gemfile?: true)
+      instance_double(PDK::Util::Bundler::BundleHelper, gemfile: gemfile, gemfile?: true, gemfile_lock: gemfile_lock)
     end
 
     before(:each) do
       # Allow us to mock/stub/expect calls to the internal bundle helper.
       allow(PDK::Util::Bundler::BundleHelper).to receive(:new).and_return(bundle_helper)
+      allow(FileUtils).to receive(:mv).with(gemfile_lock, anything)
+      allow(FileUtils).to receive(:mv).with(anything, gemfile_lock, force: true)
     end
 
     describe '.ensure_bundle!' do
@@ -61,7 +65,7 @@ RSpec.describe PDK::Util::Bundler do
         end
 
         it 'updates Gemfile.lock using default sources' do
-          expect(bundle_helper).to receive(:update_lock!).with(anything, hash_including(local: false))
+          expect(bundle_helper).to receive(:update_lock!).with(anything, hash_including(local: true))
 
           described_class.ensure_bundle!
         end
@@ -81,6 +85,7 @@ RSpec.describe PDK::Util::Bundler do
         before(:each) do
           allow(bundle_helper).to receive(:locked?).and_return(false)
           allow(bundle_helper).to receive(:installed?).and_return(true)
+          allow(bundle_helper).to receive(:update_lock!).with(any_args)
         end
 
         it 'generates Gemfile.lock' do
@@ -326,7 +331,8 @@ RSpec.describe PDK::Util::Bundler do
 
       context 'when Gemfile.lock exists' do
         before(:each) do
-          allow(PDK::Util).to receive(:find_upwards).with(%r{Gemfile\.lock$}).and_return('/Gemfile.lock')
+          allow(PDK::Util).to receive(:find_upwards).with(%r{Gemfile$}).and_return('/Gemfile')
+          allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(true)
         end
 
         it { is_expected.to be true }
@@ -334,7 +340,8 @@ RSpec.describe PDK::Util::Bundler do
 
       context 'when Gemfile.lock does not exist' do
         before(:each) do
-          allow(PDK::Util).to receive(:find_upwards).with(%r{Gemfile\.lock$}).and_return(nil)
+          allow(PDK::Util).to receive(:find_upwards).with(%r{Gemfile$}).and_return(nil)
+          allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(false)
         end
 
         it { is_expected.to be false }
@@ -349,20 +356,20 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'invokes `bundle check`' do
-        expect_command([bundle_regex, 'check', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}"], exit_code: 0)
+        expect_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run', "--path=#{bundle_cachedir}"], exit_code: 0)
 
         instance.installed?
       end
 
       it 'returns true if `bundle check` exits zero' do
-        allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}"], exit_code: 0)
+        allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run', "--path=#{bundle_cachedir}"], exit_code: 0)
 
         expect(instance.installed?).to be true
       end
 
       context 'when `bundle check` exits non-zero' do
         before(:each) do
-          allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}"], exit_code: 1, stderr: 'this is an error message')
+          allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run', "--path=#{bundle_cachedir}"], exit_code: 1, stderr: 'this is an error message')
         end
 
         it 'returns false' do
@@ -380,7 +387,7 @@ RSpec.describe PDK::Util::Bundler do
         include_context 'packaged install'
 
         it 'invokes `bundle check` without --path option' do
-          expect_command([bundle_regex, 'check', "--gemfile=#{gemfile}"], exit_code: 0)
+          expect_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 0)
 
           instance.installed?
         end
@@ -390,7 +397,7 @@ RSpec.describe PDK::Util::Bundler do
         let(:overrides) { { puppet: '1.2.3' } }
 
         it 'updates env before invoking `bundle check`' do
-          cmd_double = allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}"], exit_code: 0)
+          cmd_double = allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run', "--path=#{bundle_cachedir}"], exit_code: 0)
 
           expect(cmd_double).to receive(:update_environment).with(hash_including('PUPPET_GEM_VERSION' => '1.2.3'))
 
@@ -435,31 +442,24 @@ RSpec.describe PDK::Util::Bundler do
         end
       end
 
-      context 'with gem overrides' do
-        let(:overrides) { { puppet: '1.2.3' } }
-
-        it 'updates env before invoking `bundle lock`' do
-          cmd_double = allow_command([bundle_regex, 'lock'], exit_code: 0)
-
-          expect(cmd_double).to receive(:update_environment).with(hash_including('PUPPET_GEM_VERSION' => '1.2.3'))
-
-          instance.lock!(overrides)
-        end
-      end
-
       context 'packaged install' do
         include_context 'packaged install'
 
         before(:each) do
           # package_cachedir comes from 'packaged install' context
           allow(File).to receive(:exist?).with("#{package_cachedir}/Gemfile.lock").and_return(true)
+          PDK::Util::RubyVersion.versions.keys.each do |ruby_version|
+            lockfile = File.join(package_cachedir, "Gemfile-#{ruby_version}.lock")
+            allow(File).to receive(:exist?).with(lockfile).and_return(true)
+          end
 
           allow(FileUtils).to receive(:cp)
         end
 
         it 'copies a Gemfile.lock from vendored location' do
           # package_cachedir comes from 'packaged install' context
-          expect(FileUtils).to receive(:cp).with("#{package_cachedir}/Gemfile.lock", %r{Gemfile\.lock$})
+          lockfile = File.join(package_cachedir, "Gemfile-#{PDK::Util::RubyVersion.active_ruby_version}.lock")
+          expect(FileUtils).to receive(:cp).with(lockfile, %r{Gemfile\.lock$})
 
           instance.lock!
         end
@@ -473,22 +473,14 @@ RSpec.describe PDK::Util::Bundler do
         context 'when vendored Gemfile.lock does not exist' do
           before(:each) do
             allow(File).to receive(:exist?).with("#{package_cachedir}/Gemfile.lock").and_return(false)
+            PDK::Util::RubyVersion.versions.keys.each do |ruby_version|
+              lockfile = File.join(package_cachedir, "Gemfile-#{ruby_version}.lock")
+              allow(File).to receive(:exist?).with(lockfile).and_return(false)
+            end
           end
 
           it 'raises FatalError' do
             expect { instance.lock! }.to raise_error(PDK::CLI::FatalError, %r{vendored gemfile\.lock.*not found}i)
-          end
-        end
-
-        context 'with gem overrides' do
-          let(:overrides) { { puppet: '1.2.3' } }
-
-          it 'invokes #update_lock! with overrides to re-resolve locally' do
-            allow(instance).to receive(:update_lock!).with(hash_including(:json), hash_including(local: true)).and_return(true)
-
-            expect(instance).to receive(:update_lock!).with(overrides, hash_including(local: true)).and_return(true)
-
-            instance.lock!(overrides)
           end
         end
       end
