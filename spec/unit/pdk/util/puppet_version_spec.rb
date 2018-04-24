@@ -1,7 +1,13 @@
 require 'spec_helper'
 require 'pdk/util/puppet_version'
+require 'json'
+require 'open-uri'
 
 describe PDK::Util::PuppetVersion do
+  def forge_version_map
+    @forge_version_map ||= JSON.parse(open('https://forgeapi.puppet.com/private/versions/pe').read)
+  end
+
   shared_context 'with a mocked rubygems response' do
     before(:each) do
       mock_fetcher = instance_double(Gem::SpecFetcher)
@@ -39,6 +45,12 @@ describe PDK::Util::PuppetVersion do
       PDK::Util::RubyVersion.instance_variable_set('@instance', nil)
       PDK::Util::RubyVersion.instance_variable_set('@active_ruby_version', nil)
     end
+  end
+
+  # This noop looking bit of code actually abuses a bit rspec internals to
+  # correctly memoize the value of @forge_version_map.
+  before(:all) do
+    forge_version_map
   end
 
   let(:rubygems_versions) do
@@ -85,6 +97,54 @@ describe PDK::Util::PuppetVersion do
       let(:versions) { rubygems_versions.map { |r| Gem::Version.new(r) } }
 
       it { is_expected.to include(gem_version: expected_version) }
+    end
+  end
+
+  describe '#fetch_pe_version_map' do
+    subject(:fetch_pe_version_map) { described_class.new.from_pe_version('2017.3.2') }
+
+    let(:vendored_file) { instance_double(PDK::Util::VendoredFile) }
+
+    before(:each) do
+      allow(PDK::Util::VendoredFile).to receive(:new).with('pe_versions.json', anything).and_return(vendored_file)
+    end
+
+    include_context 'is a package install'
+
+    context 'when the vendored file contents are valid JSON' do
+      before(:each) do
+        allow(vendored_file).to receive(:read).and_return(forge_version_map.to_json)
+      end
+
+      it 'does not raise an error' do
+        expect {
+          fetch_pe_version_map
+        }.not_to raise_error
+      end
+    end
+
+    context 'when the vendored file contents are invalid JSON' do
+      before(:each) do
+        allow(vendored_file).to receive(:read).and_raise(JSON::ParserError)
+      end
+
+      it 'raises a FatalError' do
+        expect {
+          fetch_pe_version_map
+        }.to raise_error(PDK::CLI::FatalError, %r{failed to parse puppet enterprise version map file}i)
+      end
+    end
+
+    context 'when the vendored file fails to download' do
+      before(:each) do
+        allow(vendored_file).to receive(:read).and_raise(PDK::Util::VendoredFile::DownloadError, 'download message')
+      end
+
+      it 'raises a FatalError' do
+        expect {
+          fetch_pe_version_map
+        }.to raise_error(PDK::CLI::FatalError, %r{download message})
+      end
     end
   end
 
@@ -205,6 +265,10 @@ describe PDK::Util::PuppetVersion do
   end
 
   describe '.from_pe_version' do
+    before(:each) do
+      allow(described_class.instance).to receive(:fetch_pe_version_map).and_return(forge_version_map)
+    end
+
     context 'when running from a package install' do
       include_context 'is a package install'
 

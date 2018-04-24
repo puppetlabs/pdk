@@ -15,6 +15,8 @@ module PDK
         end
       end
 
+      PE_VERSIONS_URL = 'https://forgeapi.puppet.com/private/versions/pe'.freeze
+
       def latest_available
         latest = find_gem(Gem::Requirement.create('>= 0'))
 
@@ -115,20 +117,14 @@ module PDK
         end
       end
 
-      # TODO: Replace this with a cached forge lookup like we do for the task
-      # metadata schema (PDK-828)
       def fetch_pe_version_map
-        [
-          { 'name' => '2017.3.x', 'puppet_range' => '5.3.x',  'puppet' => '5.3.2'  },
-          { 'name' => '2017.2.x', 'puppet_range' => '4.10.x', 'puppet' => '4.10.1' },
-          { 'name' => '2017.1.x', 'puppet_range' => '4.9.x',  'puppet' => '4.9.4'  },
-          { 'name' => '2016.5.x', 'puppet_range' => '4.8.x',  'puppet' => '4.8.1'  },
-          { 'name' => '2016.4.x', 'puppet_range' => '4.7.x',  'puppet' => '4.7.0'  },
-          { 'name' => '2016.2.x', 'puppet_range' => '4.5.x',  'puppet' => '4.5.2'  },
-          { 'name' => '2016.1.x', 'puppet_range' => '4.4.x',  'puppet' => '4.4.1'  },
-          { 'name' => '2015.3.x', 'puppet_range' => '4.3.x',  'puppet' => '4.3.2'  },
-          { 'name' => '2015.2.x', 'puppet_range' => '4.2.x',  'puppet' => '4.2.3'  },
-        ]
+        map = PDK::Util::VendoredFile.new('pe_versions.json', PE_VERSIONS_URL).read
+
+        JSON.parse(map)
+      rescue PDK::Util::VendoredFile::DownloadError => e
+        raise PDK::CLI::FatalError, e.message
+      rescue JSON::ParserError
+        raise PDK::CLI::FatalError, _('Failed to parse Puppet Enterprise version map file.')
       end
 
       def requirement_from_forge_range(range_str)
