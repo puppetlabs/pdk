@@ -89,9 +89,9 @@ module PDK
 
       def validate_puppet_version_requirement!
         msgs = {
-          no_reqs:       _('Module metadata does not contain any requirements'),
-          no_puppet_req: _('Module metadata does not contain a "puppet" requirement'),
-          no_puppet_ver: _('"puppet" requirement in module metadata does not specify a "version_requirement"'),
+          no_reqs:       _('Module metadata does not contain any requirements.'),
+          no_puppet_req: _('Module metadata does not contain a "puppet" requirement.'),
+          no_puppet_ver: _('The "puppet" requirement in module metadata does not specify a "version_requirement".'),
         }
 
         raise ArgumentError, msgs[:no_reqs] unless @data.key?('requirements')
