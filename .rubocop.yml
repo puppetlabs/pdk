@@ -55,7 +55,6 @@ RSpec/BeforeAfterAll:
   Description: Beware of using after(:all) as it may cause state to leak between tests. A necessary evil in acceptance testing.
   Exclude:
     - 'spec/acceptance/**/*.rb'
-    - 'spec/unit/pdk/util/puppet_version_spec.rb'
 
 RSpec/DescribeClass:
   Description: This cop does not account for rspec-puppet, and beaker-rspec usage.

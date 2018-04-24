@@ -32,6 +32,9 @@ module PDK
         return File.read(gem_vendored_path) if File.file?(gem_vendored_path)
 
         content = download_file
+
+        # TODO: should only write if it's valid JSON
+        # TODO: need a way to invalidate if out of date
         FileUtils.mkdir_p(File.dirname(gem_vendored_path))
         File.open(gem_vendored_path, 'w') do |fd|
           fd.write(content)
@@ -67,6 +70,7 @@ module PDK
         response.body
       rescue *HTTP_ERRORS => e
         raise DownloadError, _('Unable to download %{url}. Check internet connectivity and try again. %{error}') % {
+          url: url,
           error: e,
         }
       end

@@ -54,6 +54,9 @@ RSpec.configure do |c|
   c.before(:each) do
     allow(Gem::SpecFetcher).to receive(:fetcher).and_raise('Unmocked call to Gem::SpecFetcher.fetcher!')
   end
+
+  c.add_setting :root
+  c.root = File.dirname(__FILE__)
 end
 
 RSpec.shared_context :validators do

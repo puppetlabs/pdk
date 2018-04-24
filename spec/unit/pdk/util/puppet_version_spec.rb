@@ -1,13 +1,8 @@
 require 'spec_helper'
 require 'pdk/util/puppet_version'
 require 'json'
-require 'open-uri'
 
 describe PDK::Util::PuppetVersion do
-  def forge_version_map
-    @forge_version_map ||= JSON.parse(open('https://forgeapi.puppet.com/private/versions/pe').read)
-  end
-
   shared_context 'with a mocked rubygems response' do
     before(:each) do
       mock_fetcher = instance_double(Gem::SpecFetcher)
@@ -21,12 +16,14 @@ describe PDK::Util::PuppetVersion do
     end
   end
 
+  # TODO: use existing shared context from spec/support/packaged_install.rb
   shared_context 'is not a package install' do
     before(:each) do
       allow(PDK::Util).to receive(:package_install?).and_return(false)
     end
   end
 
+  # TODO: use existing shared context from spec/support/packaged_install.rb
   shared_context 'is a package install' do
     before(:each) do
       allow(PDK::Util).to receive(:package_install?).and_return(true)
@@ -47,10 +44,8 @@ describe PDK::Util::PuppetVersion do
     end
   end
 
-  # This noop looking bit of code actually abuses a bit rspec internals to
-  # correctly memoize the value of @forge_version_map.
-  before(:all) do
-    forge_version_map
+  let(:forge_version_map) do
+    JSON.parse(open(File.join(RSpec.configuration.root, 'fixtures', 'pe_versions.json')).read)
   end
 
   let(:rubygems_versions) do
@@ -97,54 +92,6 @@ describe PDK::Util::PuppetVersion do
       let(:versions) { rubygems_versions.map { |r| Gem::Version.new(r) } }
 
       it { is_expected.to include(gem_version: expected_version) }
-    end
-  end
-
-  describe '#fetch_pe_version_map' do
-    subject(:fetch_pe_version_map) { described_class.new.from_pe_version('2017.3.2') }
-
-    let(:vendored_file) { instance_double(PDK::Util::VendoredFile) }
-
-    before(:each) do
-      allow(PDK::Util::VendoredFile).to receive(:new).with('pe_versions.json', anything).and_return(vendored_file)
-    end
-
-    include_context 'is a package install'
-
-    context 'when the vendored file contents are valid JSON' do
-      before(:each) do
-        allow(vendored_file).to receive(:read).and_return(forge_version_map.to_json)
-      end
-
-      it 'does not raise an error' do
-        expect {
-          fetch_pe_version_map
-        }.not_to raise_error
-      end
-    end
-
-    context 'when the vendored file contents are invalid JSON' do
-      before(:each) do
-        allow(vendored_file).to receive(:read).and_raise(JSON::ParserError)
-      end
-
-      it 'raises a FatalError' do
-        expect {
-          fetch_pe_version_map
-        }.to raise_error(PDK::CLI::FatalError, %r{failed to parse puppet enterprise version map file}i)
-      end
-    end
-
-    context 'when the vendored file fails to download' do
-      before(:each) do
-        allow(vendored_file).to receive(:read).and_raise(PDK::Util::VendoredFile::DownloadError, 'download message')
-      end
-
-      it 'raises a FatalError' do
-        expect {
-          fetch_pe_version_map
-        }.to raise_error(PDK::CLI::FatalError, %r{download message})
-      end
     end
   end
 
@@ -269,6 +216,11 @@ describe PDK::Util::PuppetVersion do
       allow(described_class.instance).to receive(:fetch_pe_version_map).and_return(forge_version_map)
     end
 
+    after(:each) do
+      # Clear memoization of the version map between specs
+      described_class.instance.instance_variable_set(:@pe_version_map, nil)
+    end
+
     context 'when running from a package install' do
       include_context 'is a package install'
 
@@ -290,14 +242,6 @@ describe PDK::Util::PuppetVersion do
           gem_version:  Gem::Version.new(gem_version),
           ruby_version: a_string_starting_with(version_info['ruby'].gsub(%r{\.\d+\Z}, '')),
         }
-      end
-
-      context 'and passed an invalid version number' do
-        it 'raises an ArgumentError' do
-          expect {
-            described_class.from_pe_version('irving')
-          }.to raise_error(ArgumentError, %r{not a valid version number}i)
-        end
       end
 
       it 'returns the latest Puppet Z release for PE 2017.3.x' do
@@ -330,6 +274,27 @@ describe PDK::Util::PuppetVersion do
           described_class.from_pe_version('9999.1.1')
         }.to raise_error(ArgumentError, %r{unable to map puppet enterprise version}i)
       end
+
+      it 'raises an ArgumentError if given an invalid version string' do
+        expect {
+          described_class.from_pe_version('irving')
+        }.to raise_error(ArgumentError, %r{not a valid version number}i)
+      end
+
+      context 'when the vendored mapping file is invalid JSON' do
+        let(:vendored_file) { instance_double(PDK::Util::VendoredFile, read: 'invalid json') }
+
+        before(:each) do
+          allow(described_class.instance).to receive(:fetch_pe_version_map).and_call_original
+          allow(PDK::Util::VendoredFile).to receive(:new).with('pe_versions.json', anything).and_return(vendored_file)
+        end
+
+        it 'raises a FatalError' do
+          expect {
+            described_class.from_pe_version('2017.3')
+          }.to raise_error(PDK::CLI::FatalError, %r{failed to parse puppet enterprise version map file}i)
+        end
+      end
     end
 
     context 'when not running from a package install' do
@@ -347,14 +312,6 @@ describe PDK::Util::PuppetVersion do
           gem_version:  Gem::Version.new(version_info['puppet']),
           ruby_version: PDK::Util::RubyVersion.default_ruby_version,
         }
-      end
-
-      context 'and passed an invalid version number' do
-        it 'raises an ArgumentError' do
-          expect {
-            described_class.from_pe_version('irving')
-          }.to raise_error(ArgumentError, %r{not a valid version number}i)
-        end
       end
 
       it 'returns the latest Puppet Z release for PE 2017.3.x' do
@@ -386,6 +343,40 @@ describe PDK::Util::PuppetVersion do
         expect {
           described_class.from_pe_version('9999.1.1')
         }.to raise_error(ArgumentError, %r{unable to map puppet enterprise version}i)
+      end
+
+      it 'raises an ArgumentError if given an invalid version string' do
+        expect {
+          described_class.from_pe_version('irving')
+        }.to raise_error(ArgumentError, %r{not a valid version number}i)
+      end
+
+      context 'when there is an error downloading the mapping file' do
+        before(:each) do
+          allow(described_class.instance).to receive(:fetch_pe_version_map).and_call_original
+          allow(PDK::Util::VendoredFile).to receive(:new).with('pe_versions.json', anything).and_raise(PDK::Util::VendoredFile::DownloadError, 'download failed for reasons')
+        end
+
+        it 'raises a FatalError' do
+          expect {
+            described_class.from_pe_version('2017.3')
+          }.to raise_error(PDK::CLI::FatalError, %r{download failed for reasons}i)
+        end
+      end
+
+      context 'when the vendored mapping file is invalid JSON' do
+        let(:vendored_file) { instance_double(PDK::Util::VendoredFile, read: 'invalid json') }
+
+        before(:each) do
+          allow(described_class.instance).to receive(:fetch_pe_version_map).and_call_original
+          allow(PDK::Util::VendoredFile).to receive(:new).with('pe_versions.json', anything).and_return(vendored_file)
+        end
+
+        it 'raises a FatalError' do
+          expect {
+            described_class.from_pe_version('2017.3')
+          }.to raise_error(PDK::CLI::FatalError, %r{failed to parse puppet enterprise version map file}i)
+        end
       end
     end
   end
