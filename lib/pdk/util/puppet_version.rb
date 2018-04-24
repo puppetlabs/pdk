@@ -19,7 +19,7 @@ module PDK
         latest = find_gem(Gem::Requirement.create('>= 0'))
 
         if latest.nil?
-          raise ArgumentError, _('Unable to find a Puppet gem in current Ruby environment or from Rubygems.org')
+          raise ArgumentError, _('Unable to find a Puppet gem in current Ruby environment or from Rubygems.org.')
         end
 
         latest
@@ -43,14 +43,14 @@ module PDK
         latest_available_gem = find_gem(latest_requirement)
 
         if latest_available_gem.nil?
-          raise ArgumentError, _('Unable to find a Puppet gem matching %{requirement}') % {
+          raise ArgumentError, _('Unable to find a Puppet gem matching %{requirement}.') % {
             requirement: latest_requirement,
           }
         end
 
         # Only issue this warning if they requested an exact version that isn't available.
         if version.segments.length == 3
-          PDK.logger.warn(_('Puppet %{requested_version} is not available, activating %{found_version} instead') % {
+          PDK.logger.warn(_('Puppet %{requested_version} is not available, activating %{found_version} instead.') % {
             requested_version: version_str,
             found_version:     latest_available_gem[:gem_version].version,
           })
@@ -67,12 +67,12 @@ module PDK
         end
 
         if gem_version.nil?
-          raise ArgumentError, _('Unable to map Puppet Enterprise version %{pe_version} to a Puppet version') % {
+          raise ArgumentError, _('Unable to map Puppet Enterprise version %{pe_version} to a Puppet version.') % {
             pe_version: version_str,
           }
         end
 
-        PDK.logger.info _('Puppet Enterprise %{pe_version} maps to Puppet %{puppet_version}') % {
+        PDK.logger.info _('Puppet Enterprise %{pe_version} maps to Puppet %{puppet_version}.') % {
           pe_version:     version_str,
           puppet_version: gem_version[:gem_version],
         }
@@ -101,7 +101,7 @@ module PDK
       def parse_specified_version(version_str)
         Gem::Version.new(version_str)
       rescue ArgumentError
-        raise ArgumentError, _('%{version} is not a valid version number') % {
+        raise ArgumentError, _('%{version} is not a valid version number.') % {
           version: version_str,
         }
       end
