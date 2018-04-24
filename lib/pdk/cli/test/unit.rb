@@ -9,7 +9,7 @@ module PDK::CLI
 
     PDK::CLI.puppet_version_options(self)
     flag nil, :list, _('List all available unit test files.')
-    flag nil, :parallel, _('Run unit tests in parallel.'), hidden: true
+    flag nil, :parallel, _('Run unit tests in parallel.')
     flag :v, :verbose, _('More verbose output. Displays examples in each unit test file.')
 
     option nil, :tests, _('Specify a comma-separated list of unit test files to run.'), argument: :required, default: '' do |values|
