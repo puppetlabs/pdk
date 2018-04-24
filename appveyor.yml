@@ -28,6 +28,13 @@ install:
       ElseIf ($ENV:USE_CYGWIN) {
         $ENV:PATH = "C:\Ruby${ENV:RUBY_VERSION}\bin;C:\mingw-w64\x86_64-6.3.0-posix-seh-rt_v5-rev1\mingw64\bin;" + $ENV:PATH
       }
+  - ps: |
+      $CACertFile = Join-Path -Path $ENV:AppData -ChildPath "RubyCACert.pem"
+      If (-Not (Test-Path -Path $CACertFile)) {
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        Invoke-WebRequest -Uri "https://curl.haxx.se/ca/cacert.pem" -UseBasicParsing -OutFile $CACertFile | Out-Null
+      }
+      $ENV:SSL_CERT_FILE = $CACertFile
   - echo %PATH%
   - bundle install --jobs 4 --retry 2 --without development
 
