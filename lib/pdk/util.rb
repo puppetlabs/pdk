@@ -3,6 +3,7 @@ require 'tempfile'
 
 require 'pdk/util/version'
 require 'pdk/util/windows'
+require 'pdk/util/vendored_file'
 
 module PDK
   module Util

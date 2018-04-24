@@ -45,39 +45,14 @@ module PDK
         end
       end
 
-      def self.vendored_task_schema_path
-        @vendored_task_schema_path ||= File.join(PDK::Util.package_cachedir, 'task.json')
-      end
-
       def self.schema_file
-        schema = if PDK::Util.package_install? && File.exist?(vendored_task_schema_path)
-                   File.read(vendored_task_schema_path)
-                 else
-                   download_schema_from_forge
-                 end
+        schema = PDK::Util::VendoredFile.new('task.json', FORGE_SCHEMA_URL).read
 
         JSON.parse(schema)
+      rescue PDK::Util::VendoredFile::DownloadError => e
+        raise PDK::CLI::FatalError, e.message
       rescue JSON::ParserError
         raise PDK::CLI::FatalError, _('Failed to parse Task Metadata Schema file.')
-      end
-
-      def self.download_schema_from_forge
-        PDK.logger.debug(_('Task Metadata Schema was not found in the cache. Now downloading from the forge.'))
-        require 'net/https'
-        require 'openssl'
-
-        uri = URI.parse(FORGE_SCHEMA_URL)
-        http = Net::HTTP.new(uri.host, uri.port)
-        http.use_ssl = true
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Gem.win_platform?
-        request = Net::HTTP::Get.new(uri.request_uri)
-        response = http.request(request)
-
-        raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. %{code}: %{message}.') % { code: response.code, message: response.message } unless response.code == '200'
-
-        response.body
-      rescue StandardError => e
-        raise PDK::CLI::FatalError, _('Unable to download Task Metadata Schema file. Check internet connectivity and retry this action. %{error}') % { error: e }
       end
 
       def self.invoke(report, options = {})
