@@ -109,12 +109,25 @@ module PDK
       end
 
       def pe_version_map
-        @pe_version_map ||= fetch_pe_version_map.map do |version_map|
-          {
-            requirement: requirement_from_forge_range(version_map['name']),
-            gem_version: version_map['puppet'],
+        @pe_version_map ||= fetch_pe_version_map.map { |version_map|
+          maps = version_map['versions'].map do |pe_release|
+            requirements = ["= #{pe_release['version']}"]
+
+            # Some PE release have a .0 Z release, which causes problems when
+            # the user specifies "X.Y" expecting to get the latest Z and
+            # instead getting the oldest.
+            requirements << "!= #{pe_release['version'].gsub(%r{\.\d+\Z}, '')}" if pe_release['version'].end_with?('.0')
+            {
+              requirement: Gem::Requirement.create(requirements),
+              gem_version: pe_release['puppet'],
+            }
+          end
+
+          maps << {
+            requirement: requirement_from_forge_range(version_map['release']),
+            gem_version: version_map['versions'].find { |r| r['version'] == version_map['latest'] }['puppet'],
           }
-        end
+        }.flatten
       end
 
       def fetch_pe_version_map
@@ -128,8 +141,7 @@ module PDK
       end
 
       def requirement_from_forge_range(range_str)
-        range_str.gsub!(%r{\.x\Z}, '.0')
-        Gem::Requirement.create("~> #{range_str}")
+        Gem::Requirement.create("~> #{range_str.gsub(%r{\.x\Z}, '.0')}")
       end
 
       def rubygems_puppet_versions
