@@ -43,14 +43,10 @@ module PDK
           FileUtils.mv(temp_lockfile, original_lockfile, force: true)
         end
 
-        # Update puppet-related gem dependencies by re-resolving them specifically.
-        # If there are additional dependencies that aren't available locally, allow
-        # `bundle lock` to reach out to rubygems.org
-        bundle.update_lock!(gem_overrides, local: all_deps_available)
+        bundle.update_lock!(with: gem_overrides, local: all_deps_available)
 
-        # If there were missing dependencies when we checked above, let `bundle install`
-        # go out and get them. For packaged installs, this should only be true if the user
-        # has added custom gems that we don't vendor.
+        # If there are missing dependencies after updating the lockfile, let `bundle install`
+        # go out and get them.
         unless bundle.installed?
           bundle.install!(gem_overrides)
         end
@@ -151,24 +147,34 @@ module PDK
             # After initial lockfile generation, re-resolve json gem to built-in
             # version to avoid unncessary native compilation attempts. For packaged
             # installs this is done during the generation of the vendored Gemfile.lock
-            update_lock!({ json: nil }, local: true)
+            update_lock!(only: { json: nil }, local: true)
           end
 
           true
         end
 
-        def update_lock!(gem_overrides, options = {})
-          return true if gem_overrides.empty?
-
+        def update_lock!(options = {})
           PDK.logger.debug(_('Updating Gemfile dependencies.'))
 
-          update_gems = gem_overrides.keys.map(&:to_s)
+          argv = ['lock', '--update']
 
-          argv = ['lock', '--update', update_gems].flatten
+          overrides = nil
+
+          if options && options[:only]
+            update_gems = options[:only].keys.map(&:to_s)
+            argv << update_gems
+            argv.flatten!
+
+            overrides = options[:only]
+          elsif options && options[:with]
+            overrides = options[:with]
+          end
+
           argv << '--local' if options && options[:local]
+          argv << '--conservative' if options && options[:conservative]
 
           cmd = bundle_command(*argv).tap do |c|
-            c.update_environment(gemfile_env(gem_overrides))
+            c.update_environment(gemfile_env(overrides)) if overrides
           end
 
           result = cmd.execute!
