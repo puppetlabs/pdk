@@ -304,6 +304,23 @@ describe PDK::Generate::Module do
 
         expect(interview_metadata).to eq(expected_metadata)
       end
+
+      context 'and the module name contains underscores' do
+        let(:default_metadata) do
+          {
+            'name' => 'test-long_module_name',
+          }
+        end
+
+        it 'does not reinterview for the module name' do
+          allow($stdout).to receive(:puts).with(a_string_matching(%r{update the metadata\.json.+1 question}m))
+
+          expected_metadata = PDK::Module::Metadata.new.update!(default_metadata).data.dup
+          expected_metadata['source'] = 'https://something'
+
+          expect(interview_metadata).to eq(expected_metadata)
+        end
+      end
     end
 
     context 'with --full-interview' do
