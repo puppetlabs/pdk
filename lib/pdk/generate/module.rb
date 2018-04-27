@@ -286,7 +286,7 @@ module PDK
         if opts[:only_ask]
           questions.reject! do |question|
             if %w[module_name forge_username].include?(question[:name])
-              metadata.data['name'] && metadata.data['name'] =~ %r{\A[a-z0-9]+-[a-z0-9]+\Z}i
+              metadata.data['name'] && metadata.data['name'] =~ %r{\A[a-z0-9]+-[a-z][a-z0-9_]*\Z}i
             else
               !opts[:only_ask].include?(question[:name])
             end
