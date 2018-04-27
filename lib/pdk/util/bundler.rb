@@ -221,19 +221,7 @@ module PDK
           true
         end
 
-        private
-
-        def bundle_command(*args)
-          PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
-            c.context = :module
-          end
-        end
-
-        def bundle_cachedir
-          @bundle_cachedir ||= PDK::Util.package_install? ? PDK::Util.package_cachedir : File.join(PDK::Util.cachedir)
-        end
-
-        def gemfile_env(gem_overrides)
+        def self.gemfile_env(gem_overrides)
           gemfile_env = {}
 
           return gemfile_env unless gem_overrides.respond_to?(:each)
@@ -245,6 +233,22 @@ module PDK
           end
 
           gemfile_env
+        end
+
+        private
+
+        def gemfile_env(gem_overrides)
+          self.class.gemfile_env(gem_overrides)
+        end
+
+        def bundle_command(*args)
+          PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
+            c.context = :module
+          end
+        end
+
+        def bundle_cachedir
+          @bundle_cachedir ||= PDK::Util.package_install? ? PDK::Util.package_cachedir : File.join(PDK::Util.cachedir)
         end
       end
     end

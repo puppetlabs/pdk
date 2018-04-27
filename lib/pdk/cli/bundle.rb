@@ -24,14 +24,7 @@ EOF
       puppet_env = PDK::CLI::Util.puppet_from_opts_or_env({})
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
 
-      # TODO: deduplicate this with the private helper in PDK::Util::Bundler::BundleHelper
-      gemfile_env = {}
-
-      puppet_env[:gemset].each do |gem, version|
-        gemfile_env['PUPPET_GEM_VERSION'] = version if gem.respond_to?(:to_s) && gem.to_s == 'puppet' && !version.nil?
-        gemfile_env['FACTER_GEM_VERSION'] = version if gem.respond_to?(:to_s) && gem.to_s == 'facter' && !version.nil?
-        gemfile_env['HIERA_GEM_VERSION'] = version if gem.respond_to?(:to_s) && gem.to_s == 'hiera' && !version.nil?
-      end
+      gemfile_env = PDK::Util::Bundler::BundleHelper.gemfile_env(puppet_env[:gemset])
 
       command = PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
         c.context = :module
