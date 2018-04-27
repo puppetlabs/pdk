@@ -20,13 +20,15 @@ EOF
 
       PDK::CLI::Util.validate_puppet_version_opts({})
 
-      # Ensure that the bundled gems are up to date and correct Ruby is activated before running commend.
+      # Ensure that the correct Ruby is activated before running commend.
       puppet_env = PDK::CLI::Util.puppet_from_opts_or_env({})
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
-      PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
+
+      gemfile_env = PDK::Util::Bundler::BundleHelper.gemfile_env(puppet_env[:gemset])
 
       command = PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
         c.context = :module
+        c.update_environment(gemfile_env)
       end
 
       result = command.execute!
