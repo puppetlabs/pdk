@@ -162,7 +162,7 @@ describe PDK::Validate::MetadataJSONLint do
 
     let(:expected_args) do
       if Gem.win_platform?
-        %w[ruby -W0].concat([described_class.cmd_path, described_class.parse_options({}, [])])
+        [%r{ruby\.exe$}, '-W0'].concat([described_class.cmd_path, described_class.parse_options({}, [])])
       else
         [described_class.cmd_path, described_class.parse_options({}, [])]
       end
@@ -176,6 +176,7 @@ describe PDK::Validate::MetadataJSONLint do
     end
 
     before(:each) do
+      allow(PDK::Util::RubyVersion).to receive(:bin_path).and_return('')
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!).with(described_class.cmd)
       targets.each do |target|
         allow(File).to receive(:directory?).with(target).and_return(false)
