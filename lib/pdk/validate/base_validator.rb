@@ -120,7 +120,7 @@ module PDK
 
         targets.each do |invokation_targets|
           cmd_argv = parse_options(options, invokation_targets).unshift(cmd_path)
-          cmd_argv.unshift('ruby', '-W0') if Gem.win_platform?
+          cmd_argv.unshift(File.join(PDK::Util::RubyVersion.bin_path, 'ruby.exe'), '-W0') if Gem.win_platform?
 
           command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
             c.context = :module

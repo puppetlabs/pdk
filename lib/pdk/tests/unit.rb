@@ -18,7 +18,7 @@ module PDK
 
       def self.rake(task, spinner_text, environment = {})
         argv = [rake_bin, task]
-        argv.unshift('ruby') if Gem.win_platform?
+        argv.unshift(File.join(PDK::Util::RubyVersion.bin_path, 'ruby.exe')) if Gem.win_platform?
 
         command = PDK::CLI::Exec::Command.new(*argv).tap do |c|
           c.context = :module
@@ -183,7 +183,8 @@ module PDK
         PDK::Util::Bundler.ensure_binstubs!('rake')
 
         command_argv = [File.join(PDK::Util.module_root, 'bin', 'rake'), 'spec_list_json']
-        command_argv.unshift('ruby') if Gem.win_platform?
+        command_argv.unshift(File.join(PDK::Util::RubyVersion.bin_path, 'ruby.exe')) if Gem.win_platform?
+
         list_command = PDK::CLI::Exec::Command.new(*command_argv)
         list_command.context = :module
         output = list_command.execute!
