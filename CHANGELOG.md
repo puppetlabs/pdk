@@ -4,6 +4,58 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.5.0](https://github.com/puppetlabs/pdk/tree/v1.5.0) (2018-04-30)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.4.1...v1.5.0)
+
+**Implemented enhancements:**
+
+- \(PDK-904\) Warns users of pdk version compatibility  [\#482](https://github.com/puppetlabs/pdk/pull/482) ([bmjen](https://github.com/bmjen))
+- \(maint\) Allow `pdk bundle` to work without `--` [\#466](https://github.com/puppetlabs/pdk/pull/466) ([DavidS](https://github.com/DavidS))
+- \(PDK-877\) Make PDK compatible with Ruby 2.5 [\#459](https://github.com/puppetlabs/pdk/pull/459) ([scotje](https://github.com/scotje))
+- Ruby 2.4.3 transition [\#453](https://github.com/puppetlabs/pdk/pull/453) ([bmjen](https://github.com/bmjen))
+- \(PDK-846\) add Resource API type unit test template [\#451](https://github.com/puppetlabs/pdk/pull/451) ([tphoney](https://github.com/tphoney))
+- \(PDK-785\) Add --puppet-version and --pe-version CLI options [\#448](https://github.com/puppetlabs/pdk/pull/448) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- \(PDK-877\) `make\_tmpdir\_name': undefined method `make\_tmpname' for Dir::Tmpname:Module [\#455](https://github.com/puppetlabs/pdk/issues/455)
+- pdk validate fails if host puppet.conf contains deprecated settings [\#304](https://github.com/puppetlabs/pdk/issues/304)
+- \(maint\) Allow module name to contain underscores when verifying [\#491](https://github.com/puppetlabs/pdk/pull/491) ([rodjek](https://github.com/rodjek))
+- \(MAINT\) Make Bundler update\_lock! helper more resilient [\#489](https://github.com/puppetlabs/pdk/pull/489) ([scotje](https://github.com/scotje))
+- \(maint\) Unhide parallel flag in test unit. [\#486](https://github.com/puppetlabs/pdk/pull/486) ([bmjen](https://github.com/bmjen))
+- \(PDK-831, PDK-832\) Fix ability to unmanage/delete files via .sync.yml  [\#479](https://github.com/puppetlabs/pdk/pull/479) ([bmjen](https://github.com/bmjen))
+- \(MAINT\) Use `bundle lock --update` to pin json to built-in versions [\#460](https://github.com/puppetlabs/pdk/pull/460) ([scotje](https://github.com/scotje))
+
+**Closed issues:**
+
+- PDK should default to mock\_with :rspec and resolve deprecation message [\#477](https://github.com/puppetlabs/pdk/issues/477)
+- Support for template URL with a branch [\#447](https://github.com/puppetlabs/pdk/issues/447)
+- Any interest in adding a `--parallel` option to `pdk test unit`? [\#446](https://github.com/puppetlabs/pdk/issues/446)
+- Installing PDK from .deb causes unmet dependencies on Ubuntu 17.10 Artful [\#370](https://github.com/puppetlabs/pdk/issues/370)
+- Repo Configs Contain Invalid URLs [\#319](https://github.com/puppetlabs/pdk/issues/319)
+- Gems not found in pre-release [\#254](https://github.com/puppetlabs/pdk/issues/254)
+
+**Merged pull requests:**
+
+- \(FIXUP\) Fix issue where PDK was invoking wrong Ruby on Windows [\#492](https://github.com/puppetlabs/pdk/pull/492) ([scotje](https://github.com/scotje))
+- \(maint\) Update package testing for ruby 2.4.4. [\#488](https://github.com/puppetlabs/pdk/pull/488) ([bmjen](https://github.com/bmjen))
+- \(MAINT\) Fix package tests for version selection and airgapped usage [\#485](https://github.com/puppetlabs/pdk/pull/485) ([scotje](https://github.com/scotje))
+- \(maint\) Some minor corrections to CLI strings. [\#484](https://github.com/puppetlabs/pdk/pull/484) ([bmjen](https://github.com/bmjen))
+- \(maint\) Remove static PE version map from PDK::Util::PuppetVersion [\#483](https://github.com/puppetlabs/pdk/pull/483) ([rodjek](https://github.com/rodjek))
+- \(PDK-842\) Wire puppet-version and pe-version options into subcommands [\#480](https://github.com/puppetlabs/pdk/pull/480) ([scotje](https://github.com/scotje))
+- \(FIXUP\) Revert incorrect path change in PDK::CLI::Exec.bundle\_bin [\#478](https://github.com/puppetlabs/pdk/pull/478) ([scotje](https://github.com/scotje))
+- \(maint\) Allow users to major or major.minor versions [\#475](https://github.com/puppetlabs/pdk/pull/475) ([rodjek](https://github.com/rodjek))
+- \(PDK-923\) Honour PDK::Util::RubyVersion.active\_ruby\_version when executing commands [\#474](https://github.com/puppetlabs/pdk/pull/474) ([rodjek](https://github.com/rodjek))
+- \(MAINT\) Fix argument bug with BundleHelper\#update\_lock! [\#473](https://github.com/puppetlabs/pdk/pull/473) ([scotje](https://github.com/scotje))
+- \(PDK-921\) Update PDK::Util::Bundler helpers to support gem switching [\#472](https://github.com/puppetlabs/pdk/pull/472) ([scotje](https://github.com/scotje))
+- Link to PDK template repo [\#470](https://github.com/puppetlabs/pdk/pull/470) ([turbodog](https://github.com/turbodog))
+- \(maint\) Update bundler before build because Ruby 2.5 [\#465](https://github.com/puppetlabs/pdk/pull/465) ([DavidS](https://github.com/DavidS))
+- \(MAINT\) Refactor templatedir path\_or\_url calculation [\#462](https://github.com/puppetlabs/pdk/pull/462) ([scotje](https://github.com/scotje))
+- \(PDK-840\) Add PDK::Util::PuppetVersion.from\_module\_metadata [\#461](https://github.com/puppetlabs/pdk/pull/461) ([rodjek](https://github.com/rodjek))
+- \(maint\) bump dev version [\#458](https://github.com/puppetlabs/pdk/pull/458) ([bmjen](https://github.com/bmjen))
+- \(MAINT\) Add Ruby 2.5 to Travis and Appveyor config [\#457](https://github.com/puppetlabs/pdk/pull/457) ([scotje](https://github.com/scotje))
+- \(maint\) Fixup remaining ruby 2.4.3 issues [\#454](https://github.com/puppetlabs/pdk/pull/454) ([bmjen](https://github.com/bmjen))
+
 ## [v1.4.1](https://github.com/puppetlabs/pdk/tree/v1.4.1) (2018-02-26)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.4.0...v1.4.1)
 
@@ -13,6 +65,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- Release 1.4.1 amend [\#443](https://github.com/puppetlabs/pdk/pull/443) ([bmjen](https://github.com/bmjen))
 - Updates msg in pdk update on unconverted module [\#442](https://github.com/puppetlabs/pdk/pull/442) ([bmjen](https://github.com/bmjen))
 - Release 1.4.1 amend [\#441](https://github.com/puppetlabs/pdk/pull/441) ([bmjen](https://github.com/bmjen))
 - \(maint\) pdk update checks if module is pdk compat [\#440](https://github.com/puppetlabs/pdk/pull/440) ([bmjen](https://github.com/bmjen))

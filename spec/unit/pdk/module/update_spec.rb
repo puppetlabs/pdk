@@ -74,16 +74,24 @@ describe PDK::Module::Update do
       context 'but there are changes' do
         let(:changes) { true }
 
-        it 'doesn\'t print message' do
-          expect(logger).not_to receive(:info).with(a_string_matching(%r{This module is already up to date with version 1.4.0 of the template}i))
+        it 'does add debug message' do
+          expect(logger).to receive(:debug).with(a_string_matching(%r{This module is already up to date with version 1.4.0 of the template}i))
+        end
+
+        it 'doesn\'t add report with no changes' do
+          expect(PDK::Report.default_target).not_to receive(:puts).with(a_string_matching(%r{No changes required.}i))
         end
       end
 
       context 'but there are no changes' do
         let(:changes) { false }
 
-        it 'doesn\'t print message' do
-          expect(logger).to receive(:info).with(a_string_matching(%r{This module is already up to date with version 1.4.0 of the template}))
+        it 'does add debug message' do
+          expect(logger).to receive(:debug).with(a_string_matching(%r{This module is already up to date with version 1.4.0 of the template}))
+        end
+
+        it 'does add report with no changes' do
+          expect(PDK::Report.default_target).to receive(:puts).with(a_string_matching(%r{No changes required.}i))
         end
       end
     end
