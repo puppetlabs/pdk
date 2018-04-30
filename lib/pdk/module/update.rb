@@ -8,14 +8,14 @@ module PDK
       def run
         stage_changes!
 
+        if current_version == new_version
+          PDK.logger.debug _('This module is already up to date with version %{version} of the template.') % {
+            version: new_version,
+          }
+        end
+
         unless update_manager.changes?
-          if current_version == new_version
-            PDK.logger.info _('This module is already up to date with version %{version} of the template.') % {
-              version: new_version,
-            }
-          else
-            PDK::Report.default_target.puts(_('No changes required.'))
-          end
+          PDK::Report.default_target.puts(_('No changes required.'))
           return
         end
 
