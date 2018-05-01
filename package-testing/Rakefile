@@ -1,63 +1,73 @@
 require 'json'
 require 'open-uri'
+require 'rspec/core/rake_task'
 
-desc 'Run acceptance tests against a pdk package'
-task(:acceptance) do
-  require 'beaker-hostgenerator'
+namespace :acceptance do
+  task :hostgen do
+    require 'beaker-hostgenerator'
 
-  unless ENV['SHA'] || ENV['LOCAL_PKG']
-    abort "SHA or LOCAL_PKG must be set:\n" \
-      "  SHA: git sha or tag of a pdk package build available on the server\n" \
-      '  LOCAL_PKG: path to a locally built package to use for testing'
-  end
-
-  if ENV['SHA'] && ENV['LOCAL_PKG']
-    abort 'Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other.'
-  end
-
-  if ENV['LOCAL_PKG'] && !File.exist?(ENV['LOCAL_PKG'])
-    abort "LOCAL_PKG is set to '#{ENV['LOCAL_PKG']}' but that file does not exist."
-  end
-
-  test_target = ENV['TEST_TARGET']
-  abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. "redhat7-64workstation."' unless test_target
-
-  # to use this beaker suite outside of Puppet Inc, set BUILD_SERVER to the hostname of a build server that uses the directory hierarchy beaker assumes
-  ENV['BUILD_SERVER'] ||= 'builds.delivery.puppetlabs.net'
-
-  # If testing on OSX or Windows, SUITE_VERSION should be set to the build's version string (it forms part of the installer file naming)
-  # If it's not set, it's possible to fall back to finding it on BUILD_SERVER if SHA is available
-  # or in the package filename if LOCAL_PKG is being used.
-  unless ENV['SUITE_VERSION'] || test_target !~ %r{osx|win}
-    if ENV['LOCAL_PKG']
-      $stderr.puts "SUITE_VERSION has not been set. Trying to determine it from the filename: '#{ENV['LOCAL_PKG']}'"
-
-      ENV['SUITE_VERSION'] = %r{^pdk[-_](\d+\.\d+\.\d+\.\d+(\.\d+\.g[a-f\d]+)?)}.match(File.basename(ENV['LOCAL_PKG']))[1]
-
-      unless ENV['SUITE_VERSION']
-        abort "Could not find a valid SUITE_VERSION in the filename: '#{ENV['LOCAL_PKG']}'"
-      end
-    else
-      metadata_url = "http://#{ENV['BUILD_SERVER']}/pdk/#{ENV['SHA']}/artifacts/#{ENV['SHA']}.build_metadata.json"
-      $stderr.puts "SUITE_VERSION has not been set. Fetching it from build metadata for '#{ENV['SHA']}' at '#{metadata_url}'"
-
-      begin
-        ENV['SUITE_VERSION'] = JSON.parse(open(metadata_url).read)['version']
-      rescue StandardError => e
-        abort("Could not get build metadata from build server. Tried to request '#{metadata_url}' and got: #{e.message}")
-      end
+    unless ENV['SHA'] || ENV['LOCAL_PKG']
+      abort "SHA or LOCAL_PKG must be set:\n" \
+        "  SHA: git sha or tag of a pdk package build available on the server\n" \
+        '  LOCAL_PKG: path to a locally built package to use for testing'
     end
 
-    $stderr.puts "Resolved SUITE_VERSION to '#{ENV['SUITE_VERSION']}'"
+    if ENV['SHA'] && ENV['LOCAL_PKG']
+      abort 'Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other.'
+    end
+
+    if ENV['LOCAL_PKG'] && !File.exist?(ENV['LOCAL_PKG'])
+      abort "LOCAL_PKG is set to '#{ENV['LOCAL_PKG']}' but that file does not exist."
+    end
+
+    test_target = ENV['TEST_TARGET']
+    abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. "redhat7-64workstation."' unless test_target
+
+    # to use this beaker suite outside of Puppet Inc, set BUILD_SERVER to the hostname of a build server that uses the directory hierarchy beaker assumes
+    ENV['BUILD_SERVER'] ||= 'builds.delivery.puppetlabs.net'
+
+    # If testing on OSX or Windows, SUITE_VERSION should be set to the build's version string (it forms part of the installer file naming)
+    # If it's not set, it's possible to fall back to finding it on BUILD_SERVER if SHA is available
+    # or in the package filename if LOCAL_PKG is being used.
+    unless ENV['SUITE_VERSION'] || test_target !~ %r{osx|win}
+      if ENV['LOCAL_PKG']
+        $stderr.puts "SUITE_VERSION has not been set. Trying to determine it from the filename: '#{ENV['LOCAL_PKG']}'"
+
+        ENV['SUITE_VERSION'] = %r{^pdk[-_](\d+\.\d+\.\d+\.\d+(\.\d+\.g[a-f\d]+)?)}.match(File.basename(ENV['LOCAL_PKG']))[1]
+
+        unless ENV['SUITE_VERSION']
+          abort "Could not find a valid SUITE_VERSION in the filename: '#{ENV['LOCAL_PKG']}'"
+        end
+      else
+        metadata_url = "http://#{ENV['BUILD_SERVER']}/pdk/#{ENV['SHA']}/artifacts/#{ENV['SHA']}.build_metadata.json"
+        $stderr.puts "SUITE_VERSION has not been set. Fetching it from build metadata for '#{ENV['SHA']}' at '#{metadata_url}'"
+
+        begin
+          ENV['SUITE_VERSION'] = JSON.parse(open(metadata_url).read)['version']
+        rescue StandardError => e
+          abort("Could not get build metadata from build server. Tried to request '#{metadata_url}' and got: #{e.message}")
+        end
+      end
+
+      $stderr.puts "Resolved SUITE_VERSION to '#{ENV['SUITE_VERSION']}'"
+    end
+
+    puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
+
+    cli = BeakerHostGenerator::CLI.new(["#{test_target}{type=foss}", '--disable-default-role'])
+
+    File.open('acceptance_hosts.yml', 'w') do |hosts_file|
+      hosts_file.print(cli.execute)
+    end
+
+    ENV['BEAKER_setfile'] = File.expand_path('acceptance_hosts.yml')
+    ENV['BEAKER_options_file'] = File.expand_path('config/options.rb')
   end
 
-  puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
-
-  cli = BeakerHostGenerator::CLI.new(["#{test_target}{type=foss}", '--disable-default-role'])
-
-  File.open('acceptance_hosts.yml', 'w') do |hosts_file|
-    hosts_file.print(cli.execute)
+  desc 'Run acceptance tests against a pdk package'
+  RSpec::Core::RakeTask.new(:package) do |t|
+    t.rspec_opts = ['--format documentation']
+    t.pattern = 'spec/package/**/*_spec.rb'
   end
-
-  sh('bundle exec beaker -h acceptance_hosts.yml --options-file config/options.rb --tests tests/')
+  task package: [:hostgen]
 end
