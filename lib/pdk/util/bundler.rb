@@ -188,7 +188,8 @@ module PDK
         end
 
         def install!(gem_overrides = {})
-          argv = ['install', "--gemfile=#{gemfile}", '-j4']
+          argv = ['install', "--gemfile=#{gemfile}"]
+          argv << '-j4' unless Gem.win_platform? && Gem::Version.new(PDK::Util::RubyVersion.active_ruby_version) < Gem::Version.new('2.3.5')
           argv << "--path=#{bundle_cachedir}" unless PDK::Util.package_install?
 
           cmd = bundle_command(*argv).tap do |c|

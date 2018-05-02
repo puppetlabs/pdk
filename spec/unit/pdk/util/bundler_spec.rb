@@ -558,26 +558,29 @@ RSpec.describe PDK::Util::Bundler do
 
     describe '#install!' do
       let(:gemfile) { '/Gemfile' }
+      let(:expected_bundle_install) { [bundle_regex, 'install', "--gemfile=#{gemfile}", '-j4', "--path=#{bundle_cachedir}"] }
 
       before(:each) do
         allow(instance).to receive(:gemfile).and_return(gemfile)
+        allow(Gem).to receive(:win_platform?).and_return(false)
+        allow(PDK::Util::RubyVersion).to receive(:active_ruby_version).and_return('2.4.4')
       end
 
       it 'invokes `bundle install`' do
-        expect_command([bundle_regex, 'install', "--gemfile=#{gemfile}", '-j4', "--path=#{bundle_cachedir}"], exit_code: 0)
+        expect_command(expected_bundle_install, exit_code: 0)
 
         instance.install!
       end
 
       it 'returns true if `bundle install` exits zero' do
-        allow_command([bundle_regex, 'install', "--gemfile=#{gemfile}", '-j4', "--path=#{bundle_cachedir}"], exit_code: 0)
+        allow_command(expected_bundle_install, exit_code: 0)
 
         expect(instance.install!).to be true
       end
 
       context 'when `bundle install` exits non-zero' do
         before(:each) do
-          allow_command([bundle_regex, 'install', "--gemfile=#{gemfile}", '-j4', "--path=#{bundle_cachedir}"], exit_code: 1, stderr: 'bundle install error message')
+          allow_command(expected_bundle_install, exit_code: 1, stderr: 'bundle install error message')
         end
 
         it 'logs a fatal message with output and raises FatalError' do
@@ -589,8 +592,10 @@ RSpec.describe PDK::Util::Bundler do
       context 'packaged install' do
         include_context 'packaged install'
 
+        let(:expected_bundle_install) { [bundle_regex, 'install', "--gemfile=#{gemfile}", '-j4'] }
+
         it 'invokes `bundle install` without --path option' do
-          expect_command([bundle_regex, 'install', "--gemfile=#{gemfile}", '-j4'], exit_code: 0)
+          expect_command(expected_bundle_install, exit_code: 0)
 
           instance.install!
         end
@@ -600,11 +605,26 @@ RSpec.describe PDK::Util::Bundler do
         let(:overrides) { { puppet: '1.2.3' } }
 
         it 'updates env before invoking `bundle install`' do
-          cmd_double = allow_command([bundle_regex, 'install', "--gemfile=#{gemfile}", '-j4', "--path=#{bundle_cachedir}"], exit_code: 0)
+          cmd_double = allow_command(expected_bundle_install, exit_code: 0)
 
           expect(cmd_double).to receive(:update_environment).with(hash_including('PUPPET_GEM_VERSION' => '1.2.3'))
 
           instance.install!(overrides)
+        end
+      end
+
+      context 'on Windows running older Ruby' do
+        let(:expected_bundle_install) { [bundle_regex, 'install', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}"] }
+
+        before(:each) do
+          allow(Gem).to receive(:win_platform?).and_return(true)
+          allow(PDK::Util::RubyVersion).to receive(:active_ruby_version).and_return('2.1.9')
+        end
+
+        it 'invokes `bundle install` without -j4 option' do
+          expect_command(expected_bundle_install, exit_code: 0)
+
+          instance.install!
         end
       end
     end

@@ -8,15 +8,19 @@ environment:
     # - RUBY_VERSION: 25-x64
     #   USE_MSYS: true
     #   SUITES: "spec"
+    #   BUNDLE_JOBS: 4
     - RUBY_VERSION: 24-x64
       USE_MSYS: true
       SUITES: "spec acceptance:local"
+      BUNDLE_JOBS: 4
     - RUBY_VERSION: 23-x64
       USE_CYGWIN: true
       SUITES: "spec"
+      BUNDLE_JOBS: 1
     - RUBY_VERSION: 21-x64
       USE_CYGWIN: true
       SUITES: "spec"
+      BUNDLE_JOBS: 1
 
 install:
   - ps: |
@@ -37,7 +41,7 @@ install:
       }
       $ENV:SSL_CERT_FILE = $CACertFile
   - echo %PATH%
-  - bundle install --jobs 4 --retry 2 --without development
+  - bundle install --retry 2 --without development
 
 build: off
 
