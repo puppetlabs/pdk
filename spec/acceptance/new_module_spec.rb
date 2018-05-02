@@ -22,10 +22,14 @@ describe 'Creating a new module' do
     describe file('foo/metadata.json') do
       it { is_expected.to be_file }
       its(:content_as_json) do
-        is_expected.to include('name' => match(%r{-foo}),
-                               'template-ref' => match(%r{master-|#{PDK::TEMPLATE_REF}}),
-                               'operatingsystem_support' => include('operatingsystem' => 'Debian',
-                                                                    'operatingsystemrelease' => ['8']))
+        is_expected.to include(
+          'name' => match(%r{-foo}),
+          'template-ref' => match(%r{(master-)|(^(\d+)\.(\d+)\.(\d+))}),
+          'operatingsystem_support' => include(
+            'operatingsystem' => 'Debian',
+            'operatingsystemrelease' => ['8'],
+          ),
+        )
       end
     end
 
