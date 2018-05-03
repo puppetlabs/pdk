@@ -194,7 +194,7 @@ describe PDK::Module::TemplateDir do
       allow(YAML).to receive(:safe_load).with(config_defaults, [], [], true).and_return config_hash
     end
 
-    context 'when the module has a .sync.yml file' do
+    context 'when the module has a valid .sync.yml file' do
       let(:yaml_text) do
         <<-EOF
        appveyor.yml:
@@ -228,12 +228,45 @@ describe PDK::Module::TemplateDir do
       end
 
       it 'absorbs config' do
-        expect(template_dir.config_for(path_or_url)).to eq('module_metadata' => { 'name' => 'foo-bar', 'version' => '0.1.0' },
+        expect(template_dir.config_for(path_or_url)).to eq('module_metadata' => module_metadata,
                                                            'appveyor.yml'    => { 'environment' => { 'PUPPET_GEM_VERSION' => '~> 5.0' } },
                                                            '.travis.yml'     => { 'extras' => [{ 'rvm' => '2.1.9' }] },
                                                            'foo'             => { 'attr' => [{ 'val' => 1 }, { 'val' => 3 }] },
                                                            '.project'        => { 'delete' => true },
                                                            '.gitlab-ci.yml'  => { 'unmanaged' => true })
+      end
+    end
+
+    context 'when the module has an invalid .sync.yml file' do
+      let(:yaml_text) do
+        <<-EOF
+       appveyor.yml:
+         environment:
+           PUPPET_GEM_VERSION: "~> 5.0
+       EOF
+      end
+
+      let(:config_hash) do
+        YAML.load(config_defaults) # rubocop:disable Security/YAMLLoad
+      end
+
+      before(:each) do
+        allow(File).to receive(:file?).with('/path/to/module/.sync.yml').and_return true
+        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return true
+        allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return yaml_text
+        allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_call_original
+        allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
+      end
+
+      it 'logs a warning' do
+        expect(logger).to receive(:warn).with(%r{not a valid yaml file}i)
+
+        template_dir.config_for(path_or_url)
+      end
+
+      it 'returns default config' do
+        expected = { 'module_metadata' => module_metadata }.merge(config_hash)
+        expect(template_dir.config_for(path_or_url)).to eq(expected)
       end
     end
   end

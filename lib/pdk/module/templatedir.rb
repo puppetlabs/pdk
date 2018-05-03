@@ -268,7 +268,7 @@ module PDK
           begin
             YAML.safe_load(File.read(loc), [], [], true)
           rescue StandardError => e
-            PDK.logger.warn(_("'%{file}' is not a valid YAML file: %{message}") % { file: config_path, message: e.message })
+            PDK.logger.warn(_("'%{file}' is not a valid YAML file: %{message}") % { file: loc, message: e.message })
             {}
           end
         else
