@@ -29,6 +29,13 @@ test_name 'Install pdk package on workstation host' do
       if ENV['LOCAL_PKG']
         workstation.install_local_package(pkg)
       else
+        # It looks like Ubuntu Bionic changed the default behavior for
+        # unsigned repositories from warn to error.
+        if workstation['platform'] =~ %r{18\.04}
+          on(workstation, "echo 'Acquire::AllowInsecureRepositories \"true\";' >> /etc/apt/apt.conf.d/99allow-insecure-repos")
+          on(workstation, "echo 'Acquire::AllowDowngradeToInsecureRepositories \"true\";' >> /etc/apt/apt.conf.d/99allow-insecure-repos")
+        end
+
         install_puppetlabs_dev_repo(workstation, 'pdk', ENV['SHA'], 'repo-config')
         workstation.install_package(pkg)
       end
