@@ -1,6 +1,7 @@
 require 'json'
 require 'open-uri'
 require 'rspec/core/rake_task'
+require 'nokogiri'
 
 namespace :acceptance do
   task :hostgen do
@@ -25,6 +26,20 @@ namespace :acceptance do
 
     # to use this beaker suite outside of Puppet Inc, set BUILD_SERVER to the hostname of a build server that uses the directory hierarchy beaker assumes
     ENV['BUILD_SERVER'] ||= 'builds.delivery.puppetlabs.net'
+
+    if ENV['SHA'] && ENV['SHA'] == 'latest'
+      page = Nokogiri::HTML(open("https://#{ENV['BUILD_SERVER']}/pdk?C=M&O=D"))
+
+      table_rows = page.xpath('//tr[td]').select do |r|
+        r.css('a').attribute('href').value =~ %r{\A[0-9a-f]+/.*?\Z}
+      end
+
+      available_shas = table_rows.map do |r|
+        r.css('a').attribute('href').value.gsub(%r{/.*?\Z}, '')
+      end
+
+      ENV['SHA'] = available_shas.first
+    end
 
     # If testing on OSX or Windows, SUITE_VERSION should be set to the build's version string (it forms part of the installer file naming)
     # If it's not set, it's possible to fall back to finding it on BUILD_SERVER if SHA is available
