@@ -86,3 +86,5 @@ namespace :acceptance do
   end
   task package: [:hostgen]
 end
+
+task acceptance: ['acceptance:package']
