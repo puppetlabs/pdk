@@ -17,4 +17,14 @@ RSpec.configure do |c|
   end
 
   c.include_context :set_path
+
+  # rubocop:disable RSpec/BeforeAfterAll
+  c.before(:all) do
+    RSpec.configuration.logger.log_level = :warn
+  end
+
+  c.after(:all) do
+    RSpec.configuration.logger.log_level = :verbose
+  end
+  # rubocop:enable RSpec/BeforeAfterAll
 end
