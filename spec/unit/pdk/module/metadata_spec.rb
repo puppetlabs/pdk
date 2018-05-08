@@ -206,4 +206,30 @@ describe PDK::Module::Metadata do
       end
     end
   end
+
+  describe '#to_json' do
+    subject { JSON.parse(described_class.new(values).to_json) }
+
+    context 'when there are dependencies' do
+      let(:values) do
+        {
+          'dependencies' => [
+            { 'name' => 'puppetlabs/stdlib', 'version_requirement' => '> 0' },
+          ],
+        }
+      end
+
+      it { is_expected.to include('dependencies' => [include('name' => 'puppetlabs/stdlib')]) }
+    end
+
+    context 'when there are no dependencies' do
+      let(:values) do
+        {
+          'dependencies' => [],
+        }
+      end
+
+      it { is_expected.not_to have_key('dependencies') }
+    end
+  end
 end

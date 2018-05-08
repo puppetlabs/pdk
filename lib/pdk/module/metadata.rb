@@ -70,7 +70,10 @@ module PDK
       end
 
       def to_json
-        JSON.pretty_generate(@data.dup.delete_if { |_key, value| value.nil? })
+        data_to_render = @data.dup.delete_if do |_key, value|
+          value.nil? || (value.is_a?(Array) && value.empty?)
+        end
+        JSON.pretty_generate(data_to_render)
       end
 
       def write!(path)
