@@ -183,6 +183,7 @@ module PDK
           update_manager.changes[:modified].each do |_, diff|
             f.write("\n\n\n" + diff)
           end
+          f.write("\n")
         end
         PDK::Report.default_target.puts(_("\nYou can find a report of differences in %{path}.\n\n") % { path: path })
       end
