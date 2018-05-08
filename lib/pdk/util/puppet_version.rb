@@ -83,7 +83,17 @@ module PDK
       end
 
       def from_module_metadata(metadata = nil)
-        metadata ||= PDK::Module::Metadata.from_file(PDK::Util.find_upwards('metadata.json'))
+        if metadata.nil?
+          metadata_file = PDK::Util.find_upwards('metadata.json')
+
+          unless metadata_file
+            PDK.logger.warn _('Unable to determine Puppet version for module: no metadata.json present in module.')
+            return nil
+          end
+
+          metadata = PDK::Module::Metadata.from_file(metadata_file)
+        end
+
         metadata.validate_puppet_version_requirement!
         metadata_requirement = metadata.puppet_requirement
 
