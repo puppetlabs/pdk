@@ -45,7 +45,7 @@ module PDK
       end
 
       def self.from_file(metadata_json_path)
-        unless File.file?(metadata_json_path)
+        unless metadata_json_path && File.file?(metadata_json_path)
           raise ArgumentError, _("'%{file}' does not exist or is not a file.") % { file: metadata_json_path }
         end
 
