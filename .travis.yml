@@ -24,6 +24,9 @@ matrix:
       env: CHECK=spec
     - rvm: 2.1.9
       env: CHECK=spec
+branches:
+  only:
+  - master
 notifications:
   hipchat:
     rooms:
