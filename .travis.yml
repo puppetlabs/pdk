@@ -14,24 +14,19 @@ matrix:
     - rvm: 2.4.3
       env: CHECK=acceptance:local
     - rvm: 2.4.3
-      env: CHECK=spec
-    - rvm: 2.4.3
       env: CHECK=spec:coverage
     - rvm: 2.4.3
       env: CHECK=license_finder
       bundler_args: "" # license_finder requires all gems installed
     - rvm: 2.5
-      env: CHECK=rubocop
-    - rvm: 2.5
       env: CHECK=spec
-    - rvm: 2.3
-      env: CHECK=rubocop
     - rvm: 2.3
       env: CHECK=spec
     - rvm: 2.1.9
-      env: CHECK=rubocop
-    - rvm: 2.1.9
       env: CHECK=spec
+branches:
+  only:
+    - master
 notifications:
   hipchat:
     rooms:

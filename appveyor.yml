@@ -45,6 +45,10 @@ install:
 
 build: off
 
+branches:
+  only:
+    - master
+
 before_test:
   - bundle env
   - type Gemfile.lock
