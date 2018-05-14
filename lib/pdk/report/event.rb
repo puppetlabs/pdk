@@ -326,7 +326,10 @@ module PDK
       def context_lines(max_num_lines = 5)
         return if file.nil? || line.nil?
 
-        file_content = File.read(file).split("\n")
+        file_path = [file, File.join(PDK::Util.module_root, file)].find { |r| File.file?(r) }
+        return if file_path.nil?
+
+        file_content = File.read(file_path).split("\n")
         delta = (max_num_lines - 1) / 2
         min = [0, (line - 1) - delta].max
         max = [(line - 1) + delta, file_content.length].min
