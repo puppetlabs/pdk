@@ -18,7 +18,7 @@ module PDK
           @spinner.auto_spin
         end
 
-        @threads = []
+        @threads_or_procs = []
         @exit_codes = []
       end
 
@@ -29,15 +29,15 @@ module PDK
       def register(&block)
         raise PDK::CLI::FatalError, 'No block registered' unless block_given?
 
-        @threads << if parallel?
-                      Thread.new do
-                        GettextSetup.initialize(File.absolute_path('../../../locales', File.dirname(__FILE__)))
-                        GettextSetup.negotiate_locale!(GettextSetup.candidate_locales)
-                        @exit_codes << yield
-                      end
-                    else
-                      block
-                    end
+        @threads_or_procs << if parallel?
+                               Thread.new do
+                                 GettextSetup.initialize(File.absolute_path('../../../locales', File.dirname(__FILE__)))
+                                 GettextSetup.negotiate_locale!(GettextSetup.candidate_locales)
+                                 @exit_codes << yield
+                               end
+                             else
+                               block
+                             end
       end
 
       def add_spinner(message, opts = {})
@@ -47,9 +47,9 @@ module PDK
 
       def exit_code
         if parallel?
-          @threads.each(&:join)
+          @threads_or_procs.each(&:join)
         else
-          @exit_codes = @threads.map(&:call)
+          @exit_codes = @threads_or_procs.map(&:call)
         end
 
         exit_code = @exit_codes.max

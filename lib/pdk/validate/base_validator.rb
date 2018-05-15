@@ -115,7 +115,14 @@ module PDK
         # targets array in another array. This is so we can loop through the
         # invokes with the same logic, regardless of which invoke style is
         # needed.
-        targets = (self::INVOKE_STYLE == :per_target) ? targets.combination(1).to_a : Array[targets]
+        #
+        if self::INVOKE_STYLE == :per_target
+          targets = targets.combination(1).to_a
+        else
+          targets = targets.each_slice(1000).to_a
+          options[:split_exec] = PDK::CLI::ExecGroup.new(spinner_text(targets), parallel: false)
+        end
+
         exit_codes = []
 
         targets.each do |invokation_targets|
@@ -124,22 +131,32 @@ module PDK
 
           command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
             c.context = :module
-            exec_group = options[:exec_group]
-            if exec_group
-              sub_spinner = exec_group.add_spinner(spinner_text(invokation_targets))
-              c.register_spinner(sub_spinner)
-            else
-              c.add_spinner(spinner_text(invokation_targets))
+            unless options[:split_exec]
+              exec_group = options[:exec_group]
+              if exec_group
+                sub_spinner = exec_group.add_spinner(spinner_text(invokation_targets))
+                c.register_spinner(sub_spinner)
+              else
+                c.add_spinner(spinner_text(invokation_targets))
+              end
             end
           end
 
-          result = command.execute!
-          exit_codes << result[:exit_code]
+          if options[:split_exec]
+            options[:split_exec].register do
+              result = command.execute!
+              parse_output(report, result, invokation_targets)
+              result[:exit_code]
+            end
+          else
+            result = command.execute!
+            exit_codes << result[:exit_code]
 
-          parse_output(report, result, invokation_targets)
+            parse_output(report, result, invokation_targets)
+          end
         end
 
-        exit_codes.max
+        options.key?(:split_exec) ? options[:split_exec].exit_code : exit_codes.max
       end
     end
   end

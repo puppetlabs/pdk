@@ -9,6 +9,43 @@ describe PDK::Validate::BaseValidator do
     end
   end
 
+  describe '.invoke' do
+    before(:each) do
+      allow(described_class).to receive(:parse_targets).and_return([(1..1001).map(&:to_s), [], []])
+      allow(described_class).to receive(:cmd).and_return('dummy_cmd')
+      allow(PDK::Util::Bundler).to receive(:ensure_binstubs!).with('dummy_cmd')
+      allow(described_class).to receive(:parse_output)
+    end
+
+    let(:dummy_exec) do
+      instance_double(PDK::CLI::Exec::Command, :context= => nil, :execute! => { exit_code: 0 })
+    end
+
+    after(:each) do
+      described_class.invoke(instance_double(PDK::Report))
+    end
+
+    context 'when validating less than 1000 targets' do
+      before(:each) do
+        allow(described_class).to receive(:parse_targets).and_return([(1..999).map(&:to_s), [], []])
+      end
+
+      it 'executes the validator once' do
+        expect(PDK::CLI::Exec::Command).to receive(:new).and_return(dummy_exec).once
+      end
+    end
+
+    context 'when validating more than 1000 targets' do
+      before(:each) do
+        allow(described_class).to receive(:parse_targets).and_return([(1..1001).map(&:to_s), [], []])
+      end
+
+      it 'executes the validator for each block of up to 1000 targets' do
+        expect(PDK::CLI::Exec::Command).to receive(:new).and_return(dummy_exec).twice
+      end
+    end
+  end
+
   describe '.parse_targets' do
     subject(:target_files) { described_class.parse_targets(targets: targets) }
 
