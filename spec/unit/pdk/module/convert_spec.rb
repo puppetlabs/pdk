@@ -390,8 +390,8 @@ describe PDK::Module::Convert do
             )
           end
 
-          it 'creates an empty dependencies array' do
-            expect(updated_metadata).to include('dependencies' => [])
+          it 'does not include an empty dependencies array' do
+            expect(updated_metadata).not_to have_key('dependencies')
           end
 
           context 'but contains invalid JSON' do
