@@ -107,12 +107,10 @@ describe PDK::CLI::Util do
     context 'if module doesn\'t have pdk-version in metadata' do
       let(:module_pdk_ver) { nil }
 
-      before(:each) do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{This module is not PDK compatible. Run `pdk convert` to make it compatible with your version of PDK.}i))
-      end
-
       it 'does not raise an error' do
-        expect { module_version_check }.not_to raise_error
+        expect {
+          module_version_check
+        }.to raise_error(PDK::CLI::ExitWithError, %r{this module is not pdk compatible}i)
       end
     end
 
