@@ -95,11 +95,12 @@ module PDK::CLI
   require 'pdk/cli/bundle'
   require 'pdk/cli/build'
   require 'pdk/cli/convert'
+  require 'pdk/cli/git'
+  require 'pdk/cli/module'
   require 'pdk/cli/new'
   require 'pdk/cli/test'
   require 'pdk/cli/update'
   require 'pdk/cli/validate'
-  require 'pdk/cli/module'
 
   @base_cmd.add_command Cri::Command.new_basic_help
 end
