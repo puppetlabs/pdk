@@ -57,7 +57,7 @@ describe PDK::Module::TemplateDir do
         allow(Dir).to receive(:exist?).with('/the/file/is/here').and_return true
       end
       it 'returns an empty list' do
-        expect(described_class.files_in_template(dirs)).to eq({})
+        expect(described_class.files_in_template(dirs)).to eq([])
       end
     end
 
@@ -81,7 +81,7 @@ describe PDK::Module::TemplateDir do
         allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
       end
       it 'returns the file name' do
-        expect(described_class.files_in_template(dirs)).to eq('filename' => '/here/moduleroot')
+        expect(described_class.files_in_template(dirs)).to eq(['/here/moduleroot/filename'])
       end
     end
 
@@ -95,7 +95,7 @@ describe PDK::Module::TemplateDir do
         allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename', '/here/moduleroot/filename2']
       end
       it 'returns both the file names' do
-        expect(described_class.files_in_template(dirs)).to eq('filename' => '/here/moduleroot', 'filename2' => '/here/moduleroot')
+        expect(described_class.files_in_template(dirs)).to eq(['/here/moduleroot/filename', '/here/moduleroot/filename2'])
       end
     end
 
@@ -106,7 +106,7 @@ describe PDK::Module::TemplateDir do
         allow(Dir).to receive(:exist?).with('/path/to/templates').and_return true
         allow(Dir).to receive(:exist?).with('/path/to/templates/moduleroot').and_return true
         allow(Dir).to receive(:exist?).with('/path/to/templates/moduleroot_init').and_return true
-        allow(File).to receive(:file?).with('/path/to/templates/moduleroot/.').and_return true
+        allow(File).to receive(:file?).with('/path/to/templates/moduleroot/.').and_return false
         allow(File).to receive(:file?).with('/path/to/templates/moduleroot/filename').and_return true
         allow(File).to receive(:file?).with('/path/to/templates/moduleroot_init/filename2').and_return true
         allow(Dir).to receive(:glob).with('/path/to/templates/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/path/to/templates/moduleroot/.', '/path/to/templates/moduleroot/filename']
@@ -114,8 +114,8 @@ describe PDK::Module::TemplateDir do
       end
 
       it 'returns the file names from both directories' do
-        expect(described_class.files_in_template(dirs)).to eq('filename' => '/path/to/templates/moduleroot',
-                                                              'filename2' => '/path/to/templates/moduleroot_init')
+        expect(described_class.files_in_template(dirs)).to eq(['/path/to/templates/moduleroot/filename',
+                                                               '/path/to/templates/moduleroot_init/filename2'])
       end
     end
   end
