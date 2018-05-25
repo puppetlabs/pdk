@@ -156,7 +156,7 @@ module PDK
         def update_lock!(options = {})
           PDK.logger.debug(_('Updating Gemfile dependencies.'))
 
-          argv = ['lock', '--update']
+          argv = ['lock', "--lockfile=#{gemfile_lock}", '--update']
 
           overrides = nil
 
@@ -174,6 +174,7 @@ module PDK
           argv << '--conservative' if options && options[:conservative]
 
           cmd = bundle_command(*argv).tap do |c|
+            c.update_environment('BUNDLE_GEMFILE' => gemfile)
             c.update_environment(gemfile_env(overrides)) if overrides
           end
 
