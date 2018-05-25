@@ -244,8 +244,10 @@ module PDK
         if @config.nil?
           conf_defaults = read_config(config_path)
           sync_config = read_config(sync_config_path) unless sync_config_path.nil?
+          merge_options = sync_config.delete('merge_options') || {} unless sync_config.nil?
+          merge_options = merge_options.each_with_object({}) { |(k, v), memo| memo[k.to_sym] = v; } unless merge_options.nil?
           @config = conf_defaults
-          @config.deep_merge!(sync_config) unless sync_config.nil?
+          @config.deep_merge!(sync_config, merge_options) unless sync_config.nil?
         end
         file_config = @config.fetch(:global, {})
         file_config['module_metadata'] = @module_metadata

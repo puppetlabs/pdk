@@ -235,6 +235,57 @@ describe PDK::Module::TemplateDir do
                                                            '.project'        => { 'delete' => true },
                                                            '.gitlab-ci.yml'  => { 'unmanaged' => true })
       end
+      context 'contains a knockout prefix' do
+        let(:config_defaults) do
+          <<-EOS
+            appveyor.yml:
+              environment:
+                PUPPET_GEM_VERSION: "~> 4.0"
+            foo:
+              attr:
+                - val: 1
+              ko:
+                - valid
+                - removed
+          EOS
+        end
+        let(:yaml_text) do
+          <<-EOF
+         appveyor.yml:
+           environment:
+             PUPPET_GEM_VERSION: "~> 5.0"
+         .travis.yml:
+           extras:
+           - rvm: 2.1.9
+         foo:
+           attr:
+           - val: 3
+           ko:
+           - ---removed
+         .project:
+           delete: true
+         .gitlab-ci.yml:
+           unmanaged: true
+         merge_options:
+           knockout_prefix: "---"
+         EOF
+        end
+        let(:yaml_hash) do
+          YAML.load(yaml_text) # rubocop:disable Security/YAMLLoad
+        end
+        let(:config_hash) do
+          YAML.load(config_defaults) # rubocop:disable Security/YAMLLoad
+        end
+
+        it 'removes the knocked out default options' do
+          expect(template_dir.config_for(path_or_url)).to eq('module_metadata' => module_metadata,
+                                                             'appveyor.yml'    => { 'environment' => { 'PUPPET_GEM_VERSION' => '~> 5.0' } },
+                                                             '.travis.yml'     => { 'extras' => [{ 'rvm' => '2.1.9' }] },
+                                                             'foo'             => { 'attr' => [{ 'val' => 1 }, { 'val' => 3 }], 'ko' => ['valid'] },
+                                                             '.project'        => { 'delete' => true },
+                                                             '.gitlab-ci.yml'  => { 'unmanaged' => true })
+        end
+      end
     end
 
     context 'when the module has an invalid .sync.yml file' do
