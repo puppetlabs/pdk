@@ -7,7 +7,7 @@ module PDK
   module Test
     class Unit
       def self.cmd(tests, opts = {})
-        rake_args = opts.key?(:parallel) ? 'parallel_spec' : 'spec'
+        rake_args = opts.key?(:parallel) ? 'parallel_spec_standalone' : 'spec_standalone'
         rake_args += "[#{tests}]" unless tests.nil?
         rake_args
       end
@@ -89,7 +89,7 @@ module PDK
 
         result[:exit_code]
       ensure
-        tear_down
+        tear_down if options[:'clean-fixtures']
       end
 
       def self.parse_output(report, json_data)

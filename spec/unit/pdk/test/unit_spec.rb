@@ -168,7 +168,7 @@ describe PDK::Test::Unit do
       it 'uses the parallel_spec rake task' do
         cmd = described_class.cmd(nil, parallel: true)
 
-        expect(cmd).to eq('parallel_spec')
+        expect(cmd).to eq('parallel_spec_standalone')
       end
     end
 
@@ -176,7 +176,7 @@ describe PDK::Test::Unit do
       it 'uses the spec rake task' do
         cmd = described_class.cmd(nil)
 
-        expect(cmd).to eq('spec')
+        expect(cmd).to eq('spec_standalone')
       end
     end
 
@@ -184,7 +184,7 @@ describe PDK::Test::Unit do
       it 'passes file paths to rake' do
         cmd = described_class.cmd('/path/to/test1,/path/to/test2')
 
-        expect(cmd).to eq('spec[/path/to/test1,/path/to/test2]')
+        expect(cmd).to eq('spec_standalone[/path/to/test1,/path/to/test2]')
       end
     end
   end
@@ -298,6 +298,56 @@ describe PDK::Test::Unit do
         exit_code = -1
         expect { exit_code = described_class.invoke(report, tests: 'a_test_spec.rb') }.not_to raise_exception
         expect(exit_code).to eq(0)
+      end
+    end
+
+    context 'configurable fixture cleaning' do
+      after(:each) do
+        described_class.invoke(report, options)
+      end
+
+      let(:rspec_json_output) do
+        '{
+          "examples":
+          [
+            {
+              "id": "./spec/fixtures/modules/testmod/spec/classes/testmod_spec.rb[1:3:1]",
+              "status": "passed",
+              "pending_message": null
+            }
+          ],
+          "summary": {
+            "duration": 0.295112,
+            "example_count": 1,
+            "failure_count": 0,
+            "pending_count": 0
+          }
+        }'
+      end
+
+      context 'when enabled' do
+        let(:options) do
+          {
+            :'clean-fixtures' => true,
+            :tests            => 'testmod_spec.rb',
+          }
+        end
+
+        it 'calls tear_down' do
+          expect(described_class).to receive(:tear_down)
+        end
+      end
+
+      context 'when disabled' do
+        let(:options) do
+          {
+            tests: 'testmod_spec.rb',
+          }
+        end
+
+        it 'does not call tear_down' do
+          expect(described_class).not_to receive(:tear_down)
+        end
       end
     end
 
