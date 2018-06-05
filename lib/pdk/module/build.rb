@@ -3,6 +3,7 @@ require 'minitar'
 require 'zlib'
 require 'pathspec'
 require 'find'
+require 'pdk/tests/unit'
 
 module PDK
   module Module
@@ -36,6 +37,7 @@ module PDK
       #
       # @return [String] The path to the built package file.
       def build
+        cleanup_module
         create_build_dir
 
         stage_module_in_build_dir
@@ -79,6 +81,14 @@ module PDK
       # @return nil.
       def cleanup_build_dir
         FileUtils.rm_rf(build_dir, secure: true)
+      end
+
+      # Clean up any files created during use of the PDK that shouldn't be part
+      # of the built module (e.g. test fixtures).
+      #
+      # @return nil
+      def cleanup_module
+        PDK::Test::Unit.tear_down
       end
 
       # Combine the module name and version into a Forge-compatible dash
