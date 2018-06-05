@@ -57,6 +57,8 @@ module PDK
 
         return if result[:exit_code].zero?
 
+        tear_down
+
         PDK.logger.error(_('The spec_prep rake task failed with the following error(s):'))
         print_failure(result, _('Failed to prepare to run the unit tests.'))
       end

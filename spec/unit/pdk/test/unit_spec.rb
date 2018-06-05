@@ -79,6 +79,7 @@ describe PDK::Test::Unit do
         expect($stderr).to receive(:puts).with('some output')
         expect($stderr).to receive(:puts).with('some error')
         expect(logger).to receive(:error).with(a_string_matching(%r{spec_prep rake task failed}))
+        expect(described_class).to receive(:tear_down)
 
         expect {
           described_class.setup
