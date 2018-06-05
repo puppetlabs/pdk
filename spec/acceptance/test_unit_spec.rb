@@ -18,7 +18,6 @@ describe 'Running unit tests' do
       its(:stderr) { is_expected.to match(%r{running unit tests}i) }
       its(:stderr) { is_expected.to match(%r{no examples found}i) }
       its(:stderr) { is_expected.to match(%r{evaluated 0 tests}i) }
-      its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
     end
 
     describe command('pdk test unit --parallel') do
@@ -27,7 +26,6 @@ describe 'Running unit tests' do
       its(:stderr) { is_expected.to match(%r{running unit tests in parallel}i) }
       its(:stderr) { is_expected.to match(%r{no examples found}i) }
       its(:stderr) { is_expected.to match(%r{evaluated 0 tests}i) }
-      its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
     end
   end
 
@@ -63,14 +61,12 @@ describe 'Running unit tests' do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
       its(:stderr) { is_expected.to match(%r{running unit tests.*4 tests.*0 failures}im) }
-      its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
     end
 
     describe command('pdk test unit --parallel') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
       its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*4 tests.*0 failures}im) }
-      its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
     end
   end
 
