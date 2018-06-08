@@ -30,6 +30,8 @@ module PDK
                  rescue Addressable::URI::InvalidURIError
                    raise PDK::CLI::FatalError, _('PDK::Util::TemplateURI attempted initialization with a non-uri string: {string}') % { string: opts_or_uri }
                  end
+               elsif opts_or_uri.is_a?(Addressable::URI)
+                 opts_or_uri.dup
                else
                  first_valid_uri(templates(opts_or_uri))
                end
@@ -68,6 +70,15 @@ module PDK
           @uri.fragment
         else
           default_template_ref
+        end
+      end
+
+      # @returns PDK::Util::TemplateURI
+      def self.default_template_uri
+        if package_install?
+          PDK::Util::TemplateURI.new(Addressable::URI.new(scheme: 'file', host: '', path: File.join(package_cachedir, 'pdk-templates.git')))
+        else
+          PDK::Util::TemplateURI.new('https://github.com/puppetlabs/pdk-templates')
         end
       end
 
@@ -189,15 +200,6 @@ module PDK
         ary << { type: _('PDK answers'), uri: answers_uri, allow_fallback: true } unless metadata_uri
         ary << { type: _('default'), uri: default_uri, allow_fallback: false }
         ary
-      end
-
-      # @returns Addressable::URI
-      def default_template_uri
-        if package_install?
-          Addressable::URI.new(scheme: 'file', host: '', path: File.join(package_cachedir, 'pdk-templates.git'))
-        else
-          Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates')
-        end
       end
 
       # @returns String
