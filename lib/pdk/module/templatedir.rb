@@ -16,7 +16,7 @@ module PDK
       # The template directory is only guaranteed to be available on disk
       # within the scope of the block passed to this method.
       #
-      # @param uri [Addressable::URI] The path to a directory to use as the
+      # @param uri [PDK::Util::TemplateURI] The path to a directory to use as the
       # template or a URI to a git repository.
       # @param module_metadata [Hash] A Hash containing the module metadata.
       # Defaults to an empty Hash.
@@ -41,21 +41,20 @@ module PDK
         unless block_given?
           raise ArgumentError, _('%{class_name} must be initialized with a block.') % { class_name: self.class.name }
         end
-        unless uri.is_a? Addressable::URI
-          raise ArgumentError, _('PDK::Module::TemplateDir.new must be initialized with an Addressable::URI, got a %{uri_type}') % { uri_type: uri.class }
+        unless uri.is_a? PDK::Util::TemplateURI
+          raise ArgumentError, _('PDK::Module::TemplateDir.new must be initialized with a PDK::Util::TemplateURI, got a %{uri_type}') % { uri_type: uri.class }
         end
 
-        if PDK::Util::Git.repo?(PDK::Util.template_url(uri))
+        if PDK::Util::Git.repo?(uri.location)
           # This is either a bare local repo or a remote. either way it needs cloning.
           @path = self.class.clone_template_repo(uri)
           temp_dir_clone = true
         else
           # if it is a local path & non-bare repo then we can use it directly.
           # Still have to check the branch.
-          @path = PDK::Util.template_path(uri)
+          @path = uri.shell_path
           # We don't do a checkout of local-path repos. There are lots of edge
           # cases or user un-expectations.
-          # self.class.checkout_template_ref(@path, PDK::Util.template_ref(uri))
           PDK.logger.warn _("Repository '%{repo}' has a work-tree; skipping git reset.") % { repo: @path }
         end
         @cloned_from = PDK::Util.deuri_path(uri.to_s)

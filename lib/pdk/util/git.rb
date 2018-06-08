@@ -39,8 +39,7 @@ module PDK
       end
 
       def self.repo?(maybe_repo)
-        # The behavior of file://... paths remote appears to be on purpose.
-        return bare_repo?(maybe_repo) if File.directory?(maybe_repo) # || (uri.scheme == 'file' && File.directory?(PDK::Util.template_path(uri)))
+        return bare_repo?(maybe_repo) if File.directory?(maybe_repo)
 
         remote_repo?(maybe_repo)
       end
@@ -61,13 +60,6 @@ module PDK
         raise PDK::CLI::ExitWithError, _('Unable to locate git dir "%{gitdir}') % { gitdir: repo } unless File.directory?(File.join(repo, '.git'))
 
         git('--work-tree', repo, '--git-dir', File.join(repo, '.git'), 'status', '--untracked-files=no', '--porcelain', repo)[:stdout].empty?
-      end
-
-      def self.current_branch(repo)
-        env = { 'GIT_DIR' => repo }
-        rev_parse = git_with_env(env, 'rev-parse', '--abbrev-ref', 'HEAD')
-
-        rev_parse[:stdout].strip
       end
 
       def self.ls_remote(repo, ref)

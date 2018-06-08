@@ -103,7 +103,7 @@ module PDK
       end
 
       def template_uri
-        @template_uri ||= PDK::Util.template_uri(options)
+        @template_uri ||= PDK::Util::TemplateURI.new(options)
       end
 
       def update_metadata(metadata_path, template_metadata)

@@ -54,7 +54,7 @@ module PDK
       # tracked if existing, but the template-ref in the metadata is not for
       # tracking simply for referencing the last update target.
       def metadata_template_uri
-        @metadata_template_uri ||= Addressable::URI.parse(module_metadata.data['template-url'])
+        @metadata_template_uri ||= PDK::Util::TemplateURI.new(module_metadata.data['template-url'])
       end
 
       def current_version

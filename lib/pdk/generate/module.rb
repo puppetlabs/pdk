@@ -54,7 +54,7 @@ module PDK
 
         prepare_module_directory(temp_target_dir)
 
-        template_uri = PDK::Util.template_uri(opts)
+        template_uri = PDK::Util::TemplateURI.new(opts)
 
         begin
           PDK::Module::TemplateDir.new(template_uri, metadata.data, true) do |templates|
@@ -81,8 +81,8 @@ module PDK
           # resolution can find new default URLs in the future.
           PDK.answers.update!('template-url' => nil) if opts.key?(:'template-url')
         else
-          # Save the template-url + template-ref answers if the module was
-          # generated using a template/reference other than ours.
+          # Save the template-url answers if the module was generated using a
+          # template/reference other than ours.
           PDK.answers.update!('template-url' => template_uri)
         end
 
