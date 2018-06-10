@@ -75,7 +75,7 @@ module PDK
         end
 
         # Only update the answers files after metadata has been written.
-        if template_uri == PDK::Util.default_template_uri
+        if template_uri == PDK::Util::TemplateURI.default_template_uri
           # If the user specifies our default template url via the command
           # line, remove the saved template-url answer so that the template_uri
           # resolution can find new default URLs in the future.
@@ -83,7 +83,7 @@ module PDK
         else
           # Save the template-url answers if the module was generated using a
           # template/reference other than ours.
-          PDK.answers.update!('template-url' => template_uri)
+          PDK.answers.update!('template-url' => template_uri.metadata_format)
         end
 
         begin

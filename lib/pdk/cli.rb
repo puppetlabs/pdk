@@ -39,7 +39,7 @@ module PDK::CLI
   end
 
   def self.template_url_option(dsl)
-    desc = _('Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})') % { default_url: PDK::Util.default_template_uri }
+    desc = _('Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})') % { default_url: PDK::Util::TemplateURI.default_template_uri }
 
     dsl.option nil, 'template-url', desc, argument: :required
   end

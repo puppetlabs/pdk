@@ -45,7 +45,7 @@ module PDK
           raise ArgumentError, _('PDK::Module::TemplateDir.new must be initialized with a PDK::Util::TemplateURI, got a %{uri_type}') % { uri_type: uri.class }
         end
 
-        if PDK::Util::Git.repo?(uri.location)
+        if PDK::Util::Git.repo?(uri.git_remote)
           # This is either a bare local repo or a remote. either way it needs cloning.
           @path = self.class.clone_template_repo(uri)
           temp_dir_clone = true
@@ -57,7 +57,7 @@ module PDK
           # cases or user un-expectations.
           PDK.logger.warn _("Repository '%{repo}' has a work-tree; skipping git reset.") % { repo: @path }
         end
-        @cloned_from = PDK::Util.deuri_path(uri.to_s)
+        @cloned_from = uri.metadata_format
 
         @init = init
         @moduleroot_dir = File.join(@path, 'moduleroot')

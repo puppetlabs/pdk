@@ -24,7 +24,7 @@ module PDK
       #
       def initialize(opts_or_uri)
         # If a uri string is passed, skip the valid uri finding code.
-        @uri = if opts_or_uri.is_a?(String)
+        @uri = if opts_or_uri.is_a?(String) || opts_or_uri.is_a?(self.class)
                  begin
                    Addressable::URI.parse(opts_or_uri)
                  rescue Addressable::URI::InvalidURIError
@@ -33,7 +33,7 @@ module PDK
                elsif opts_or_uri.is_a?(Addressable::URI)
                  opts_or_uri.dup
                else
-                 first_valid_uri(templates(opts_or_uri))
+                 first_valid_uri(self.class.templates(opts_or_uri))
                end
       end
 
@@ -41,27 +41,27 @@ module PDK
       # metadata.
       #
       # @returns String
-      def url
-        human_readable(@uri.to_s)
+      def metadata_format
+        self.class.human_readable(@uri.to_s)
       end
-      alias to_s url
+      alias to_s metadata_format
+      alias to_str metadata_format
 
-      # This is the url without a fragment, suitable for git clones. I couldn't
-      # think of a better name.
+      # This is the url without a fragment, suitable for git clones.
       #
       # @returns String
-      def location
+      def git_remote
         if @uri.is_a?(Addressable::URI) && @uri.fragment
-          human_readable(@uri.to_s.chomp('#' + @uri.fragment))
+          self.class.human_readable(@uri.to_s.chomp('#' + @uri.fragment))
         else
-          human_readable(@uri.to_s)
+          self.class.human_readable(@uri.to_s)
         end
       end
 
       # This is the path of the URI, suitable for accessing directly from the shell.
       # @returns String
       def shell_path
-        human_readable(@uri.path)
+        self.class.human_readable(@uri.path)
       end
 
       # @returns String
@@ -69,13 +69,13 @@ module PDK
         if @uri.fragment
           @uri.fragment
         else
-          default_template_ref
+          self.class.default_template_ref
         end
       end
 
       # @returns PDK::Util::TemplateURI
       def self.default_template_uri
-        if package_install?
+        if PDK::Util.package_install?
           PDK::Util::TemplateURI.new(Addressable::URI.new(scheme: 'file', host: '', path: File.join(package_cachedir, 'pdk-templates.git')))
         else
           PDK::Util::TemplateURI.new('https://github.com/puppetlabs/pdk-templates')
@@ -89,7 +89,7 @@ module PDK
       # either but are not handled here. Should they be?
       #
       # @returns String
-      def uri_safe(string)
+      def self.uri_safe(string)
         (Gem.win_platform? && string =~ %r{^[a-zA-Z][\|:]}) ? "/#{string}" : string
       end
 
@@ -98,7 +98,7 @@ module PDK
       # passed value is left alone.
       #
       # @returns String
-      def human_readable(string)
+      def self.human_readable(string)
         (Gem.win_platform? && string =~ %r{^\/[a-zA-Z][\|:]}) ? string[1..-1] : string
       end
 
@@ -136,7 +136,7 @@ module PDK
       #   the lookup process should proceed to the next template directory if
       #   the template file is not in this template directory.
       #
-      def templates(opts)
+      def self.templates(opts)
         explicit_url = opts.fetch(:'template-url', nil)
         explicit_ref = opts.fetch(:'template-ref', nil)
 
@@ -174,25 +174,25 @@ module PDK
               PDK.logger.warn(_('--template-url appears to be an SCP-style url; it will be converted to an RFC-compliant URI: %{uri}') % { uri: explicit_url })
             end
           end
-          explicit_uri = Addressable::URI.parse(uri_safe_location(explicit_url))
+          explicit_uri = Addressable::URI.parse(uri_safe(explicit_url))
           explicit_uri.fragment = explicit_ref
         else
           explicit_uri = nil
         end
-        metadata_uri = if PDK::Util.module_root && File.file?(File.join(module_root, 'metadata.json'))
+        metadata_uri = if PDK::Util.module_root && File.file?(File.join(PDK::Util.module_root, 'metadata.json'))
                          Addressable::URI.parse(uri_safe(PDK::Util.module_metadata['template-url']))
                        else
                          nil
                        end
         answers_uri = if PDK.answers['template-url'] == 'https://github.com/puppetlabs/pdk-module-template'
                         # use the new github template-url if it is still the old one.
-                        default_template_uri
+                        Addressable::URI.parse(default_template_uri)
                       elsif PDK.answers['template-url']
                         Addressable::URI.parse(uri_safe(PDK.answers['template-url']))
                       else
                         nil
                       end
-        default_uri = default_template_uri
+        default_uri = Addressable::URI.parse(default_template_uri)
 
         ary = []
         ary << { type: _('--template-url'), uri: explicit_uri, allow_fallback: false }
@@ -203,7 +203,7 @@ module PDK
       end
 
       # @returns String
-      def default_template_ref
+      def self.default_template_ref
         if PDK::Util.development_mode?
           'master'
         else

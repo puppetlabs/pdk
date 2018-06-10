@@ -94,7 +94,7 @@ module PDK
         return template_ref if template_ref == PDK::TEMPLATE_REF
 
         sha_length = GIT_DESCRIBE_PATTERN.match(current_template_version)[:sha].length - 1
-        "#{template_ref}@#{PDK::Util::Git.ls_remote(metadata_template_uri.location, template_ref)[0..sha_length]}"
+        "#{template_ref}@#{PDK::Util::Git.ls_remote(metadata_template_uri.git_remote, template_ref)[0..sha_length]}"
       end
 
       def update_message
@@ -106,7 +106,7 @@ module PDK
 
         format_string % {
           module_name:     module_metadata.data['name'],
-          template_url:    metadata_template_uri.location,
+          template_url:    metadata_template_uri.git_remote,
           current_version: current_version,
           new_version:     new_version,
         }
