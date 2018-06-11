@@ -43,7 +43,10 @@ module PackageHelpers
   end
 
   def install_dev_pdk_package(host)
-    install_puppetlabs_dev_repo(host, 'pdk', ENV['SHA'], 'repo-config')
+    dev_builds_url = ENV['DEV_BUILDS_URL'] || 'http://builds.delivery.puppetlabs.net'
+    sha_yaml_url = "#{dev_builds_url}/pdk/#{ENV['SHA']}/artifacts/#{ENV['SHA']}.yaml"
+
+    install_from_build_data_url('pdk', sha_yaml_url)
     host.install_package('pdk')
   end
 
