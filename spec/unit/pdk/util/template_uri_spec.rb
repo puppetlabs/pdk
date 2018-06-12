@@ -37,6 +37,109 @@ describe PDK::Util::TemplateURI do
         expect(template_uri.to_s).to eq('https://github.com/my/pdk-templates.git#custom')
       end
     end
+    context 'combinations of answers, options, and defaults' do
+      before :each do
+        allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
+        allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
+        allow(PDK::Util).to receive(:development_mode?).and_return(false)
+      end
+
+      let(:pdk_version) { '1.2.3' }
+      let(:template_url) { 'metadata-templates' }
+      let(:template_ref) { nil }
+      let(:mock_metadata) do
+        instance_double(
+          PDK::Module::Metadata,
+          data: {
+            'pdk-version'  => pdk_version,
+            'template-url' => template_url,
+            'template-ref' => template_ref,
+          },
+        )
+      end
+
+      let(:opts_or_uri) { {} }
+
+      context 'when passed no options' do
+        context 'and there are no metadata or answers' do
+          before :each do
+            PDK.answers.update!('template-url' => nil)
+          end
+          it 'returns the default template' do
+            expect(template_uri.to_s).to eq(described_class.default_template_uri.to_s)
+          end
+        end
+        context 'and there are only answers' do
+          before :each do
+            PDK.answers.update!('template-url' => 'answer-templates')
+          end
+          it 'returns the answers template' do
+            expect(template_uri.to_s).to eq('answer-templates')
+          end
+
+          context 'and the answer file template is invalid' do
+            before(:each) do
+              allow(template_uri).to receive(:valid_template?).with(anything).and_call_original
+              allow(template_uri).to receive(:valid_template?).with(uri: anything, type: anything, allow_fallback: true).and_return(false)
+            end
+
+            it 'returns the default template' do
+              pending
+              expect(template_uri.to_s).to eq(described_class.default_template_uri.to_s)
+            end
+          end
+        end
+        context 'and there are metadata and answers' do
+          before :each do
+            PDK.answers.update!('template-url' => 'answer-templates')
+          end
+          it 'returns the metadata template' do
+            allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
+            allow(File).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
+            allow(File).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+            expect(template_uri.to_s).to eq('metadata-templates')
+          end
+        end
+      end
+      context 'when there are metadata and answers' do
+        before :each do
+          PDK.answers.update!('template-url' => 'answer-templates')
+          allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(PDK::Util.module_root, 'metadata.json')).and_return(mock_metadata)
+        end
+
+        context 'and passed template-url' do
+          let(:opts_or_uri) { { :'template-url' => 'cli-templates' } }
+
+          it 'returns the specified template' do
+            expect(template_uri.to_s).to eq('cli-templates')
+          end
+        end
+        context 'and passed windows template-url' do
+          let(:opts_or_uri) { { :'template-url' => 'C:\cli-templates' } }
+
+          it 'returns the specified template' do
+            allow(Gem).to receive(:win_platform?).and_return(true)
+            expect(template_uri.to_s).to eq('C:\cli-templates')
+          end
+        end
+        context 'and passed template-ref' do
+          let(:opts_or_uri) { { :'template-ref' => 'cli-ref' } }
+
+          it 'errors because it requires url with ref' do
+            expect { template_uri }.to raise_error(PDK::CLI::FatalError, %r{--template-ref requires --template-url})
+          end
+        end
+        context 'and passed template-url and template-ref' do
+          let(:opts_or_uri) { { :'template-url' => 'cli-templates', :'template-ref' => 'cli-ref' } }
+
+          it 'returns the specified template and ref' do
+            uri = Addressable::URI.parse('cli-templates')
+            uri.fragment = 'cli-ref'
+            expect(template_uri.to_s).to eq(uri.to_s)
+          end
+        end
+      end
+    end
   end
 
   describe '.git_remote' do
@@ -130,82 +233,6 @@ describe PDK::Util::TemplateURI do
         it 'returns url portion' do
           allow(Gem).to receive(:win_platform?).and_return(true)
           expect(template_uri.shell_path).to eq 'C:/my/pdk-templates.git'
-        end
-      end
-    end
-  end
-
-  describe '.template_uri' do
-    before :each do
-      allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
-      allow(described_class).to receive(:module_root).and_return('/path/to/module')
-    end
-    context 'when passed no options' do
-      context 'and there are no metadata or answers' do
-        before :each do
-          PDK.answers.update!('template-url' => nil)
-        end
-        it 'returns the default template' do
-          expect(described_class.template_uri({})).to eq(described_class.default_template_uri)
-        end
-      end
-      context 'and there are only answers' do
-        before :each do
-          PDK.answers.update!('template-url' => 'answer-templates')
-        end
-        it 'returns the answers template' do
-          expect(described_class.template_uri({})).to eq(Addressable::URI.parse('answer-templates'))
-        end
-
-        context 'and the answer file template is invalid' do
-          before(:each) do
-            allow(described_class).to receive(:valid_template?).with(anything).and_call_original
-            allow(described_class).to receive(:valid_template?).with(uri: anything, type: anything, allow_fallback: true).and_return(false)
-          end
-
-          it 'returns the default template' do
-            expect(described_class.template_uri({})).to eq(described_class.default_template_uri)
-          end
-        end
-      end
-      context 'and there are metadata and answers' do
-        before :each do
-          PDK.answers.update!('template-url' => 'answer-templates')
-        end
-        it 'returns the metadata template' do
-          allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
-          allow(File).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
-          allow(File).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
-          expect(described_class.template_uri({})).to eq(Addressable::URI.parse('metadata-templates'))
-        end
-      end
-    end
-    context 'when there are metadata and answers' do
-      before :each do
-        PDK.answers.update!('template-url' => 'answer-templates')
-        allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(described_class.module_root, 'metadata.json')).and_return(mock_metadata)
-      end
-      context 'and passed template-url' do
-        it 'returns the specified template' do
-          expect(described_class.template_uri(:'template-url' => 'cli-templates')).to eq(Addressable::URI.parse('cli-templates'))
-        end
-      end
-      context 'and passed windows template-url' do
-        it 'returns the specified template' do
-          allow(Gem).to receive(:win_platform?).and_return(true)
-          expect(described_class.template_uri(:'template-url' => 'C:\cli-templates')).to eq(Addressable::URI.parse('/C:\cli-templates'))
-        end
-      end
-      context 'and passed template-ref' do
-        it 'errors because it requires url with ref' do
-          expect { described_class.template_uri(:'template-ref' => 'cli-ref') }.to raise_error(PDK::CLI::FatalError, %r{--template-ref requires --template-url})
-        end
-      end
-      context 'and passed template-url and template-ref' do
-        it 'returns the specified template and ref' do
-          uri = Addressable::URI.parse('cli-templates')
-          uri.fragment = 'cli-ref'
-          expect(described_class.template_uri(:'template-url' => 'cli-templates', :'template-ref' => 'cli-ref')).to eq(uri)
         end
       end
     end
