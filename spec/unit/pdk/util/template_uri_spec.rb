@@ -95,43 +95,41 @@ describe PDK::Util::TemplateURI do
   end
 
   describe '.shell_path' do
-    let(:uri) { Addressable::URI.parse(template_url) }
-
     context 'when the uri has a schema' do
       context 'on linux' do
-        let(:template_url) { 'file:///my/pdk-templates.git#fragment' }
+        let(:opts_or_uri) { 'file:///my/pdk-templates.git#fragment' }
 
         it 'returns the path' do
           allow(Gem).to receive(:win_platform?).and_return(false)
-          expect(described_class.template_path(uri)).to eq '/my/pdk-templates.git'
+          expect(template_uri.shell_path).to eq '/my/pdk-templates.git'
         end
       end
 
       context 'on windows' do
-        let(:template_url) { 'file:///C:/my/pdk-templates.git#fragment' }
+        let(:opts_or_uri) { 'file:///C:/my/pdk-templates.git#fragment' }
 
         it 'returns the path' do
           allow(Gem).to receive(:win_platform?).and_return(true)
-          expect(described_class.template_path(uri)).to eq 'C:/my/pdk-templates.git'
+          expect(template_uri.shell_path).to eq 'C:/my/pdk-templates.git'
         end
       end
     end
 
     context 'when the uri is just an absolute path' do
       context 'on linux' do
-        let(:template_url) { '/my/pdk-templates.git#custom' }
+        let(:opts_or_uri) { '/my/pdk-templates.git#custom' }
 
         it 'returns url portion' do
           allow(Gem).to receive(:win_platform?).and_return(false)
-          expect(described_class.template_url(uri)).to eq '/my/pdk-templates.git'
+          expect(template_uri.shell_path).to eq '/my/pdk-templates.git'
         end
       end
       context 'on windows' do
-        let(:template_url) { '/C:/my/pdk-templates.git#custom' }
+        let(:opts_or_uri) { '/C:/my/pdk-templates.git#custom' }
 
         it 'returns url portion' do
           allow(Gem).to receive(:win_platform?).and_return(true)
-          expect(described_class.template_url(uri)).to eq 'C:/my/pdk-templates.git'
+          expect(template_uri.shell_path).to eq 'C:/my/pdk-templates.git'
         end
       end
     end
