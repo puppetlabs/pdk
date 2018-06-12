@@ -76,7 +76,7 @@ module PDK
       # @returns PDK::Util::TemplateURI
       def self.default_template_uri
         if PDK::Util.package_install?
-          PDK::Util::TemplateURI.new(Addressable::URI.new(scheme: 'file', host: '', path: File.join(package_cachedir, 'pdk-templates.git')))
+          PDK::Util::TemplateURI.new(Addressable::URI.new(scheme: 'file', host: '', path: File.join(PDK::Util.package_cachedir, 'pdk-templates.git')))
         else
           PDK::Util::TemplateURI.new('https://github.com/puppetlabs/pdk-templates')
         end

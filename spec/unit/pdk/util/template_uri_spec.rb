@@ -239,25 +239,25 @@ describe PDK::Util::TemplateURI do
   end
 
   describe '.default_template_uri' do
-    subject { described_class.default_template_uri }
+    subject(:default_uri) { described_class.default_template_uri }
 
     context 'when it is a package install' do
       before(:each) do
-        allow(described_class).to receive(:package_install?).and_return(true)
+        allow(PDK::Util).to receive(:package_install?).and_return(true)
       end
 
       it 'returns the file template repo' do
-        allow(described_class).to receive(:package_cachedir).and_return('/path/to/pdk')
-        is_expected.to eq(Addressable::URI.parse('file:///path/to/pdk/pdk-templates.git'))
+        allow(PDK::Util).to receive(:package_cachedir).and_return('/path/to/pdk')
+        expect(default_uri.to_s).to eq('file:///path/to/pdk/pdk-templates.git')
       end
     end
     context 'when it is not a package install' do
       before(:each) do
-        allow(described_class).to receive(:package_install?).and_return(false)
+        allow(PDK::Util).to receive(:package_install?).and_return(false)
       end
 
       it 'returns puppetlabs template url' do
-        is_expected.to eq(Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'))
+        expect(default_uri.to_s).to eq('https://github.com/puppetlabs/pdk-templates')
       end
     end
   end
@@ -282,7 +282,7 @@ describe PDK::Util::TemplateURI do
 
       context 'not in development mode' do
         before(:each) do
-          allow(described_class).to receive(:development_mode?).and_return(false)
+          allow(PDK::Util).to receive(:development_mode?).and_return(false)
         end
 
         it 'returns the built-in TEMPLATE_REF' do
@@ -292,7 +292,7 @@ describe PDK::Util::TemplateURI do
 
       context 'in development mode' do
         before(:each) do
-          allow(described_class).to receive(:development_mode?).and_return(true)
+          allow(PDK::Util).to receive(:development_mode?).and_return(true)
         end
 
         it 'returns master' do
