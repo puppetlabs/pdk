@@ -4,6 +4,7 @@ require 'spec_helper_acceptance'
 # avoid unnecessary changes in the metadata.json during convert (template-url
 # key).
 template_repo = 'https://github.com/puppetlabs/pdk-templates'
+pdk_convert_base = "pdk convert --template-url=#{template_repo}"
 
 describe 'pdk convert', module_command: true do
   let(:no_output) { %r{\A\Z} }
@@ -11,7 +12,7 @@ describe 'pdk convert', module_command: true do
   context 'with a fresh module' do
     include_context 'in a new module', 'clean_module', template: template_repo
 
-    describe command('pdk convert --force') do
+    describe command("#{pdk_convert_base} --force") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(no_output) }
       its(:stdout) { is_expected.to match(%r{no changes required}i) }
@@ -36,7 +37,7 @@ describe 'pdk convert', module_command: true do
       end
     end
 
-    describe command('pdk convert --noop --skip-interview') do
+    describe command("#{pdk_convert_base} --noop --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(no_output) }
       its(:stdout) { is_expected.to match(%r{-+files to be added-+\nmetadata\.json}mi) }
@@ -65,7 +66,7 @@ describe 'pdk convert', module_command: true do
       end
     end
 
-    describe command('pdk convert --force --skip-interview') do
+    describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(no_output) }
       its(:stdout) { is_expected.to match(%r{-+files to be added-+\nmetadata\.json}mi) }
@@ -98,7 +99,7 @@ describe 'pdk convert', module_command: true do
       end
     end
 
-    describe command('pdk convert --force --skip-interview') do
+    describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(no_output) }
       its(:stdout) { is_expected.to match(%r{No changes required}i) }
@@ -116,19 +117,19 @@ describe 'pdk convert', module_command: true do
       File.open('.sync.yml', 'w') do |f|
         f.puts <<-EOS
 ---
-.project:
+.travis.yml:
   delete: true
         EOS
       end
     end
 
-    describe command('pdk convert --force --skip-interview') do
+    describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(no_output) }
-      its(:stdout) { is_expected.to match(%r{-+files to be removed-+\n\.project}mi) }
+      its(:stdout) { is_expected.to match(%r{-+files to be removed-+\n\.travis.yml}mi) }
     end
 
-    describe file('.project') do
+    describe file('.travis.yml') do
       it { is_expected.not_to be_file }
     end
 

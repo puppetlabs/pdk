@@ -62,12 +62,12 @@ module PDK
 
         # This means the module does not have a pdk-version tag in the metadata.json
         # and will require a pdk convert.
-        if module_pdk_ver.nil?
-          PDK.logger.warn _('This module is not PDK compatible. Run `pdk convert` to make it compatible with your version of PDK.')
+        raise PDK::CLI::ExitWithError, _('This module is not PDK compatible. Run `pdk convert` to make it compatible with your version of PDK.') if module_pdk_ver.nil?
+
         # This checks that the version of pdk in the module's metadata is older
         # than 1.3.1, which means the module will need to run pdk convert to the
         # new templates.
-        elsif Gem::Version.new(module_pdk_ver) < Gem::Version.new('1.3.1')
+        if Gem::Version.new(module_pdk_ver) < Gem::Version.new('1.3.1')
           PDK.logger.warn _('This module template is out of date. Run `pdk convert` to make it compatible with your version of PDK.')
         # This checks if the version of the installed PDK is older than the
         # version in the module's metadata, and advises the user to upgrade to

@@ -385,13 +385,11 @@ describe PDK::Util::PuppetVersion do
     let(:metadata) { PDK::Module::Metadata.new }
 
     context 'with default metadata' do
-      after(:each) do
-        described_class.from_module_metadata(metadata)
-      end
-
       it 'searches for a Puppet gem >= 4.7.0 < 6.0.0' do
         requirement = Gem::Requirement.create(['>= 4.7.0', '< 6.0.0'])
         expect(described_class.instance).to receive(:find_gem).with(requirement)
+
+        described_class.from_module_metadata(metadata)
       end
     end
 
@@ -400,12 +398,10 @@ describe PDK::Util::PuppetVersion do
         metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '4.10.10' }]
       end
 
-      after(:each) do
-        described_class.from_module_metadata(metadata)
-      end
-
       it 'searches for a Puppet gem matching the exact version' do
         expect(described_class.instance).to receive(:find_gem).with(Gem::Requirement.create('4.10.10'))
+
+        described_class.from_module_metadata(metadata)
       end
     end
 
@@ -418,6 +414,22 @@ describe PDK::Util::PuppetVersion do
         expect {
           described_class.from_module_metadata(metadata)
         }.to raise_error(ArgumentError)
+      end
+    end
+
+    context 'when module has no metadata.json' do
+      before(:each) do
+        allow(PDK::Util).to receive(:find_upwards).with('metadata.json').and_return(nil)
+      end
+
+      it 'logs a warning' do
+        expect(logger).to receive(:warn).with(%r{no metadata\.json present}i)
+
+        described_class.from_module_metadata
+      end
+
+      it 'returns nil' do
+        expect(described_class.from_module_metadata).to be_nil
       end
     end
   end

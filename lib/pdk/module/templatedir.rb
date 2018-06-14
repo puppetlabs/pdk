@@ -242,7 +242,7 @@ module PDK
           conf_defaults = read_config(config_path)
           sync_config = read_config(sync_config_path) unless sync_config_path.nil?
           @config = conf_defaults
-          @config.deep_merge!(sync_config) unless sync_config.nil?
+          @config.deep_merge!(sync_config, knockout_prefix: '---') unless sync_config.nil?
         end
         file_config = @config.fetch(:global, {})
         file_config['module_metadata'] = @module_metadata
@@ -265,7 +265,7 @@ module PDK
           begin
             YAML.safe_load(File.read(loc), [], [], true)
           rescue StandardError => e
-            PDK.logger.warn(_("'%{file}' is not a valid YAML file: %{message}") % { file: config_path, message: e.message })
+            PDK.logger.warn(_("'%{file}' is not a valid YAML file: %{message}") % { file: loc, message: e.message })
             {}
           end
         else

@@ -390,9 +390,9 @@ describe PDK::Report::Event do
       context 'it includes a snippet of the file for rspec events' do
         let(:data) do
           {
-            line:    4,
-            source:  'rspec',
-            message: 'test message',
+            line:     4,
+            source:   'rspec',
+            message:  'test message',
             severity: 'failure',
             test:     'spec description',
             state:    :failure,
@@ -424,10 +424,19 @@ describe PDK::Report::Event do
 
         before(:each) do
           allow(File).to receive(:read).with('testfile.rb').and_return(file_content)
+          allow(File).to receive(:file?).with('testfile.rb').and_return(true)
+          allow(PDK::Util).to receive(:module_root).and_return(File.join('my', 'module_root'))
         end
 
         it 'renders the event with context' do
           expect(text_event).to eq(expected_text)
+        end
+
+        it 'falls back to using the path to the spec file relative to the module root' do
+          allow(File).to receive(:file?).with('testfile.rb').and_return(false)
+          expect(File).to receive(:file?).with(File.join('my', 'module_root', 'testfile.rb')).and_return(nil)
+
+          text_event
         end
       end
     end

@@ -11,6 +11,7 @@ module PDK::CLI
     flag nil, :list, _('List all available unit test files.')
     flag nil, :parallel, _('Run unit tests in parallel.')
     flag :v, :verbose, _('More verbose output. Displays examples in each unit test file.')
+    flag :c, 'clean-fixtures', _('Clean up downloaded fixtures after the test run.')
 
     option nil, :tests, _('Specify a comma-separated list of unit test files to run.'), argument: :required, default: '' do |values|
       PDK::CLI::Util::OptionValidator.comma_separated_list?(values)

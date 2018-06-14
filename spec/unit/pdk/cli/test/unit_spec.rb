@@ -89,6 +89,23 @@ describe '`pdk test unit`' do
         allow(PDK::Report).to receive(:new).and_return(reporter)
       end
 
+      context 'when passed --clean-fixtures' do
+        it 'invokes the command with :clean-fixtures => true' do
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, :tests => anything, :'clean-fixtures' => true).once.and_return(0)
+          expect {
+            test_unit_cmd.run_this(['--clean-fixtures'])
+          }.to exit_zero
+        end
+      end
+
+      context 'when not passed --clean-fixtures' do
+        it 'invokes the command without :clean-fixtures' do
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, tests: anything).once.and_return(0)
+          expect {
+            test_unit_cmd.run_this([])
+          }.to exit_zero
+        end
+      end
       context 'when tests pass' do
         before(:each) do
           expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_including(:tests)).once.and_return(0)

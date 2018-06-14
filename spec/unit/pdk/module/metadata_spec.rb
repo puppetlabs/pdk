@@ -18,6 +18,10 @@ describe PDK::Module::Metadata do
       expect(described_class.from_file(metadata_json_path).data).to include('name' => 'foo-bar', 'version' => '0.1.0')
     end
 
+    it 'raises an ArgumentError if passed nil' do
+      expect { described_class.from_file(nil) }.to raise_error(ArgumentError, %r{no path to file}i)
+    end
+
     it 'raises an ArgumentError if the file does not exist' do
       allow(File).to receive(:file?).with(metadata_json_path).and_return(false)
       expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, %r{'#{metadata_json_path}'.*not exist})
