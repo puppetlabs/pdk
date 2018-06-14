@@ -212,18 +212,15 @@ module PDK
         dirs.each do |dir|
           raise ArgumentError, _("The directory '%{dir}' doesn't exist") % { dir: dir } unless Dir.exist?(dir)
           temp_paths += Dir.glob(File.join(dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
-            File.file?(template_path) && !File.symlink?(template_path)
-            dirlocs << dir
+            if File.file?(template_path) && !File.symlink?(template_path)
+              dirlocs << dir
+            end
           end
           temp_paths.map do |template_path|
             template_path.sub!(%r{\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
           end
         end
-        template_paths = Hash[temp_paths.zip dirlocs]
-        template_paths.delete('.')
-        template_paths.delete('spec')
-        template_paths.delete('spec/.')
-        template_paths
+        temp_paths.zip dirlocs
       end
 
       # Generate a hash of data to be used when rendering the specified
