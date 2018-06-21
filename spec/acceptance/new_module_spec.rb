@@ -24,7 +24,7 @@ describe 'Creating a new module' do
       its(:content_as_json) do
         is_expected.to include(
           'name' => match(%r{-foo}),
-          'template-ref' => match(%r{(master-)|(^(\d+)\.(\d+)\.(\d+))}),
+          'template-ref' => match(%r{(master-)|(^(tags/)?(\d+)\.(\d+)\.(\d+))}),
           'operatingsystem_support' => include(
             'operatingsystem' => 'Debian',
             'operatingsystemrelease' => ['8'],
