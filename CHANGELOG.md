@@ -4,6 +4,42 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.6.0](https://github.com/puppetlabs/pdk/tree/v1.6.0) (2018-06-20)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.5.0...v1.6.0)
+
+**Implemented enhancements:**
+
+- \(PDK-949\) Add a default knockout\_prefix for options [\#517](https://github.com/puppetlabs/pdk/pull/517) ([jarretlavallee](https://github.com/jarretlavallee))
+- \(PDK-636\) Make fixture cleaning optional [\#515](https://github.com/puppetlabs/pdk/pull/515) ([rodjek](https://github.com/rodjek))
+- \(PDK-809\) Exit early if the module is not PDK compatible [\#506](https://github.com/puppetlabs/pdk/pull/506) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- pdk \(FATAL\): Could not locate Gemfile [\#505](https://github.com/puppetlabs/pdk/issues/505)
+- pdk convert ignoring .sync.yml `delete` values [\#444](https://github.com/puppetlabs/pdk/issues/444)
+- \(PDK-979\) Set path to Gemfile when invoking `bundle lock` [\#513](https://github.com/puppetlabs/pdk/pull/513) ([scotje](https://github.com/scotje))
+- \(PDK-985\) Split validation targets into chunks of 1000 [\#509](https://github.com/puppetlabs/pdk/pull/509) ([rodjek](https://github.com/rodjek))
+- \(PDK-926\) Read rspec event context relative to module root [\#508](https://github.com/puppetlabs/pdk/pull/508) ([rodjek](https://github.com/rodjek))
+- Change Metadata.from\_file to reliably raise [\#503](https://github.com/puppetlabs/pdk/pull/503) ([DavidS](https://github.com/DavidS))
+- \(PDK-475\) Set BUNDLE\_IGNORE\_CONFIG for all commands [\#502](https://github.com/puppetlabs/pdk/pull/502) ([rodjek](https://github.com/rodjek))
+- \(MAINT\) Fixup error in log output when parsing invalid .sync.yml [\#498](https://github.com/puppetlabs/pdk/pull/498) ([scotje](https://github.com/scotje))
+- Add yaml header to make yamllint happy [\#496](https://github.com/puppetlabs/pdk/pull/496) ([wmuizelaar](https://github.com/wmuizelaar))
+- \(PDK-802\) Work around OpenSSL multi-threading errors when needed [\#494](https://github.com/puppetlabs/pdk/pull/494) ([scotje](https://github.com/scotje))
+
+**Closed issues:**
+
+- Creating packages from this repo [\#519](https://github.com/puppetlabs/pdk/issues/519)
+- PDK fails to checkout template from git repo on CentOS 7 [\#490](https://github.com/puppetlabs/pdk/issues/490)
+
+**Merged pull requests:**
+
+- \(maint\) Switch package-testing to install from build\_data\_url. [\#522](https://github.com/puppetlabs/pdk/pull/522) ([bmjen](https://github.com/bmjen))
+- CI cleanups [\#507](https://github.com/puppetlabs/pdk/pull/507) ([DavidS](https://github.com/DavidS))
+- Ensure that the report.txt ends with a newline [\#501](https://github.com/puppetlabs/pdk/pull/501) ([DavidS](https://github.com/DavidS))
+- \(MAINT\) Bump beaker and beaker-hostgenerator for new platforms [\#499](https://github.com/puppetlabs/pdk/pull/499) ([scotje](https://github.com/scotje))
+- \(maint\) Bumps version for 1.6.0 dev cycle. [\#497](https://github.com/puppetlabs/pdk/pull/497) ([bmjen](https://github.com/bmjen))
+- Convert package acceptance tests over to beaker-rspec & serverspec [\#495](https://github.com/puppetlabs/pdk/pull/495) ([rodjek](https://github.com/rodjek))
+
 ## [v1.5.0](https://github.com/puppetlabs/pdk/tree/v1.5.0) (2018-04-30)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.4.1...v1.5.0)
 
@@ -34,9 +70,11 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Installing PDK from .deb causes unmet dependencies on Ubuntu 17.10 Artful [\#370](https://github.com/puppetlabs/pdk/issues/370)
 - Repo Configs Contain Invalid URLs [\#319](https://github.com/puppetlabs/pdk/issues/319)
 - Gems not found in pre-release [\#254](https://github.com/puppetlabs/pdk/issues/254)
+- Running PDK behind a corporate proxy fails [\#227](https://github.com/puppetlabs/pdk/issues/227)
 
 **Merged pull requests:**
 
+- Release 1.5.0 [\#493](https://github.com/puppetlabs/pdk/pull/493) ([bmjen](https://github.com/bmjen))
 - \(FIXUP\) Fix issue where PDK was invoking wrong Ruby on Windows [\#492](https://github.com/puppetlabs/pdk/pull/492) ([scotje](https://github.com/scotje))
 - \(maint\) Update package testing for ruby 2.4.4. [\#488](https://github.com/puppetlabs/pdk/pull/488) ([bmjen](https://github.com/bmjen))
 - \(MAINT\) Fix package tests for version selection and airgapped usage [\#485](https://github.com/puppetlabs/pdk/pull/485) ([scotje](https://github.com/scotje))
@@ -125,6 +163,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 - "pdk convert" and "pdk new module" fails on OSX Sierra [\#396](https://github.com/puppetlabs/pdk/issues/396)
 - Update shipped ruby [\#395](https://github.com/puppetlabs/pdk/issues/395)
+- Puppet and PDK T-Shirts [\#381](https://github.com/puppetlabs/pdk/issues/381)
 
 **Merged pull requests:**
 

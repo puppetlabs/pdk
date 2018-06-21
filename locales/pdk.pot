@@ -6,11 +6,11 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.4.1-78-g3268a07\n"
+"Project-Id-Version: puppet development kit v1.5.0-43-ga5c5c15\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2018-04-30 11:41-0700\n"
-"PO-Revision-Date: 2018-04-30 11:41-0700\n"
+"POT-Creation-Date: 2018-06-20 21:35-0700\n"
+"PO-Revision-Date: 2018-06-20 21:35-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -219,23 +219,23 @@ msgstr ""
 msgid "Expected execution context to be :system or :module but got '%{context}'."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:153
+#: ../lib/pdk/cli/exec.rb:155
 msgid "Current working directory is not part of a module. (No metadata.json was found.)"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:208
+#: ../lib/pdk/cli/exec.rb:210
 msgid "Executing '%{command}'"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:211
+#: ../lib/pdk/cli/exec.rb:213
 msgid "Command environment:"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:222
+#: ../lib/pdk/cli/exec.rb:224
 msgid "Failed to execute '%{command}': %{message}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:238
+#: ../lib/pdk/cli/exec.rb:240
 msgid "Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})"
 msgstr ""
 
@@ -395,23 +395,27 @@ msgstr ""
 msgid "More verbose output. Displays examples in each unit test file."
 msgstr ""
 
-#: ../lib/pdk/cli/test/unit.rb:15
+#: ../lib/pdk/cli/test/unit.rb:14
+msgid "Clean up downloaded fixtures after the test run."
+msgstr ""
+
+#: ../lib/pdk/cli/test/unit.rb:16
 msgid "Specify a comma-separated list of unit test files to run."
 msgstr ""
 
-#: ../lib/pdk/cli/test/unit.rb:28
+#: ../lib/pdk/cli/test/unit.rb:29
 msgid "Unit tests can only be run from inside a valid module directory."
 msgstr ""
 
-#: ../lib/pdk/cli/test/unit.rb:39
+#: ../lib/pdk/cli/test/unit.rb:40
 msgid "No unit test files with examples were found."
 msgstr ""
 
-#: ../lib/pdk/cli/test/unit.rb:41
+#: ../lib/pdk/cli/test/unit.rb:42
 msgid "Unit Test Files:"
 msgstr ""
 
-#: ../lib/pdk/cli/test/unit.rb:50
+#: ../lib/pdk/cli/test/unit.rb:51
 msgid "\t%{id}\t%{description}"
 msgstr ""
 
@@ -451,7 +455,7 @@ msgstr ""
 msgid "Answer \"Y\" to continue or \"n\" to cancel."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:66
+#: ../lib/pdk/cli/util.rb:65
 msgid "This module is not PDK compatible. Run `pdk convert` to make it compatible with your version of PDK."
 msgstr ""
 
@@ -675,11 +679,11 @@ msgid "If there is a public issue tracker for this module, enter its URL here."
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:302
-msgid "create"
+msgid "update"
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:302
-msgid "update"
+msgid "create"
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:303
@@ -782,7 +786,7 @@ msgstr ""
 msgid "A task named '%{name}' already exists in this module; defined in %{file}"
 msgstr ""
 
-#: ../lib/pdk/module/build.rb:147
+#: ../lib/pdk/module/build.rb:157
 msgid "Symlinks in modules are not supported and will not be included in the package. Please investigate symlink %{from} -> %{to}."
 msgstr ""
 
@@ -823,7 +827,7 @@ msgid ""
 "\n"
 msgstr ""
 
-#: ../lib/pdk/module/convert.rb:187
+#: ../lib/pdk/module/convert.rb:188
 msgid ""
 "\n"
 "You can find a report of differences in %{path}.\n"
@@ -831,46 +835,50 @@ msgid ""
 msgstr ""
 
 #: ../lib/pdk/module/metadata.rb:49
-msgid "'%{file}' does not exist or is not a file."
+msgid "Cannot read metadata from file: no path to file was given."
 msgstr ""
 
 #: ../lib/pdk/module/metadata.rb:53
+msgid "'%{file}' does not exist or is not a file."
+msgstr ""
+
+#: ../lib/pdk/module/metadata.rb:57
 msgid "Unable to open '%{file}' for reading."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:59
+#: ../lib/pdk/module/metadata.rb:63
 msgid "Invalid JSON in metadata.json: %{msg}"
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:92
+#: ../lib/pdk/module/metadata.rb:96
 msgid "Module metadata does not contain any requirements."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:93
+#: ../lib/pdk/module/metadata.rb:97
 msgid "Module metadata does not contain a \"puppet\" requirement."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:94
+#: ../lib/pdk/module/metadata.rb:98
 msgid "The \"puppet\" requirement in module metadata does not specify a \"version_requirement\"."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:133
+#: ../lib/pdk/module/metadata.rb:137
 msgid "Field must be a dash-separated user name and module name."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:135
+#: ../lib/pdk/module/metadata.rb:139
 msgid "Module name must contain only alphanumeric or underscore characters."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:137
+#: ../lib/pdk/module/metadata.rb:141
 msgid "Module name must begin with a letter."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:139
+#: ../lib/pdk/module/metadata.rb:143
 msgid "Namespace must contain only alphanumeric characters."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:142
+#: ../lib/pdk/module/metadata.rb:146
 msgid "Invalid 'name' field in metadata.json: %{err}"
 msgstr ""
 
@@ -914,6 +922,10 @@ msgstr ""
 
 #: ../lib/pdk/module/templatedir.rb:304
 msgid "Unable to clone git repository at '%{repo}' into '%{dest}'."
+msgstr ""
+
+#: ../lib/pdk/module/update.rb:12
+msgid "This module is already up to date with version %{version} of the template."
 msgstr ""
 
 #: ../lib/pdk/module/update.rb:97
@@ -1012,35 +1024,35 @@ msgstr ""
 msgid "Preparing to run the unit tests."
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:60
+#: ../lib/pdk/tests/unit.rb:62
 msgid "The spec_prep rake task failed with the following error(s):"
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:61
+#: ../lib/pdk/tests/unit.rb:63
 msgid "Failed to prepare to run the unit tests."
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:70
-msgid "Running unit tests in parallel."
-msgstr ""
-
-#: ../lib/pdk/tests/unit.rb:70
+#: ../lib/pdk/tests/unit.rb:72
 msgid "Running unit tests."
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:84
+#: ../lib/pdk/tests/unit.rb:72
+msgid "Running unit tests in parallel."
+msgstr ""
+
+#: ../lib/pdk/tests/unit.rb:86
 msgid "Unit test output did not contain a valid JSON result: %{output}"
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:136
+#: ../lib/pdk/tests/unit.rb:138
 msgid "Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending."
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:193
+#: ../lib/pdk/tests/unit.rb:195
 msgid "Failed to find valid JSON in output from rspec: %{output}"
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:198
+#: ../lib/pdk/tests/unit.rb:200
 msgid "Unable to enumerate examples. rspec reported: %{message}"
 msgstr ""
 
@@ -1088,25 +1100,25 @@ msgstr ""
 msgid "Updating Gemfile dependencies."
 msgstr ""
 
-#: ../lib/pdk/util/bundler.rb:184
+#: ../lib/pdk/util/bundler.rb:185
 msgid "Unable to resolve Gemfile dependencies."
 msgstr ""
 
-#: ../lib/pdk/util/bundler.rb:195
+#: ../lib/pdk/util/bundler.rb:197
 msgid "Installing missing Gemfile dependencies."
 msgstr ""
 
-#: ../lib/pdk/util/bundler.rb:203
+#: ../lib/pdk/util/bundler.rb:205
 msgid "Unable to install missing Gemfile dependencies."
 msgstr ""
 
-#: ../lib/pdk/util/bundler.rb:217
+#: ../lib/pdk/util/bundler.rb:219
 msgid ""
 "Failed to generate binstubs for '%{gems}':\n"
 "%{output}"
 msgstr ""
 
-#: ../lib/pdk/util/bundler.rb:218
+#: ../lib/pdk/util/bundler.rb:220
 msgid "Unable to install requested binstubs."
 msgstr ""
 
@@ -1134,11 +1146,15 @@ msgstr ""
 msgid "Puppet Enterprise %{pe_version} maps to Puppet %{puppet_version}."
 msgstr ""
 
-#: ../lib/pdk/util/puppet_version.rb:106
+#: ../lib/pdk/util/puppet_version.rb:90
+msgid "Unable to determine Puppet version for module: no metadata.json present in module."
+msgstr ""
+
+#: ../lib/pdk/util/puppet_version.rb:116
 msgid "%{version} is not a valid version number."
 msgstr ""
 
-#: ../lib/pdk/util/puppet_version.rb:140
+#: ../lib/pdk/util/puppet_version.rb:150
 msgid "Failed to parse Puppet Enterprise version map file."
 msgstr ""
 
