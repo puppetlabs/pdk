@@ -305,8 +305,8 @@ module PDK
         # template repo in `%AppData%` or `$XDG_CACHE_DIR` and update before
         # use.
         temp_dir = PDK::Util.make_tmpdir_name('pdk-templates')
-        origin_repo = PDK::Util.template_url(uri)
-        git_ref = PDK::Util.template_ref(uri)
+        origin_repo = uri.git_remote
+        git_ref = uri.git_ref
 
         clone_result = PDK::Util::Git.git('clone', origin_repo, temp_dir)
 
