@@ -77,6 +77,28 @@ describe PDK::Validate::BaseValidator do
       end
     end
 
+    context 'when the globbed files include spec/fixtures files' do
+      let(:targets) { [] }
+      let(:glob_pattern) { File.join(module_root, described_class.pattern) }
+      let(:fixture_file) { File.join(module_root, 'spec', 'fixtures', 'test', 'manifests', 'init.pp') }
+      let(:globbed_files) do
+        [
+          File.join(module_root, 'manifests', 'init.pp'),
+          fixture_file,
+        ]
+      end
+
+      before(:each) do
+        allow(File).to receive(:directory?).and_return(true)
+        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
+        allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
+      end
+
+      it 'does not return the files under spec/fixtures' do
+        expect(target_files[0]).not_to include(fixture_file)
+      end
+    end
+
     context 'when given specific targets' do
       let(:targets) { ['target1.pp', 'target2/'] }
       let(:glob_pattern) { File.join(module_root, described_class.pattern) }

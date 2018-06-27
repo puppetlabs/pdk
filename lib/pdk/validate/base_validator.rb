@@ -36,6 +36,7 @@ module PDK
                     options[:targets]
                   end
 
+        fixtures_pattern = File.join('**', 'spec', 'fixtures', '**', '*')
         targets.map! { |r| r.gsub(File::ALT_SEPARATOR, File::SEPARATOR) } if File::ALT_SEPARATOR
         skipped = []
         invalid = []
@@ -44,6 +45,7 @@ module PDK
             if File.directory?(target)
               pattern_glob = Array(pattern).map { |p| Dir.glob(File.join(PDK::Util.module_root, p)) }
               target_list = pattern_glob.flatten.select { |file| File.fnmatch(File.join(File.expand_path(target), '*'), file) }
+              target_list = target_list.reject { |file| File.fnmatch(fixtures_pattern, file) }
               skipped << target if target_list.flatten.empty?
               target_list
             elsif File.file?(target)
