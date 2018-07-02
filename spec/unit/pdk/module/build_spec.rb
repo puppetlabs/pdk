@@ -344,4 +344,20 @@ describe PDK::Module::Build do
       end
     end
   end
+
+  describe '#cleanup_module' do
+    subject(:instance) { described_class.new(module_dir: module_dir) }
+
+    let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
+
+    after(:each) do
+      instance.cleanup_module
+    end
+
+    it 'ensures the rake binstub is present before cleaning up spec fixtures' do
+      expect(PDK::Util::Bundler).to receive(:ensure_bundle!).ordered
+      expect(PDK::Util::Bundler).to receive(:ensure_binstubs!).with('rake').ordered
+      expect(PDK::Test::Unit).to receive(:tear_down).ordered
+    end
+  end
 end
