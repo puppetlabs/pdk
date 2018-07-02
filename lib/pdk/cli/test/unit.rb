@@ -10,7 +10,7 @@ module PDK::CLI
     PDK::CLI.puppet_version_options(self)
     flag nil, :list, _('List all available unit test files.')
     flag nil, :parallel, _('Run unit tests in parallel.')
-    flag :v, :verbose, _('More verbose output. Displays examples in each unit test file.')
+    flag :v, :verbose, _('More verbose --list output. Displays a list of examples in each unit test file.')
     flag :c, 'clean-fixtures', _('Clean up downloaded fixtures after the test run.')
 
     option nil, :tests, _('Specify a comma-separated list of unit test files to run.'), argument: :required, default: '' do |values|
@@ -53,6 +53,8 @@ module PDK::CLI
           end
         end
       else
+        PDK.logger.info _('--verbose has no effect when not used with --list') if opts[:verbose]
+
         report = PDK::Report.new
         report_formats = if opts[:format]
                            PDK::CLI::Util::OptionNormalizer.report_formats(opts[:format])
