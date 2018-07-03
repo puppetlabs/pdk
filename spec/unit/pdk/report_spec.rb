@@ -25,9 +25,15 @@ describe PDK::Report do
   context 'when adding events to the report' do
     subject(:report) do
       r = described_class.new
-      r.add_event(source: 'puppet-lint', state: :failure, file: 'testfile.pp')
-      r.add_event(source: 'rubocop', state: :passed, file: 'testfile.rb')
+      events.each { |event| r.add_event(event) }
       r
+    end
+
+    let(:events) do
+      [
+        { source: 'puppet-lint', state: :failure, file: 'testfile.pp' },
+        { source: 'rubocop', state: :passed, file: 'testfile.rb' },
+      ]
     end
 
     it 'stores the events in the report by source' do
@@ -58,6 +64,29 @@ describe PDK::Report do
 
       it 'finishes with a trailing newline' do
         expect(text_report[-1]).to eq("\n")
+      end
+
+      context 'and the report contains an rspec-puppet coverage report' do
+        let(:events) do
+          [
+            {
+              source:  'rspec',
+              state:   :passed,
+              file:    "#{File.expand_path(Dir.pwd)}/private/cache/ruby/lib/rspec-puppet/coverage.rb",
+              message: 'coverage report text',
+            },
+            {
+              source:  'rspec',
+              state:   :failure,
+              file:    'spec/classes/foo_spec.rb',
+              message: 'some failure happened',
+            },
+          ]
+        end
+
+        it 'prints the coverage report last' do
+          expect(text_report.split("\n")[-1]).to eq('coverage report text')
+        end
       end
     end
 

@@ -88,10 +88,26 @@ module PDK
         state == :skipped
       end
 
+      # Checks if the event stores the result of an rspec-puppet coverage
+      # check.
+      #
+      # Due to the implementation details of this check, the `file` value for
+      # this event will always point to the coverage.rb file in rspec-puppet,
+      # making it easy to filter out.
+      #
+      # @return [Boolean] true if the event contains rspec-puppet coverage
+      #   results.
+      def rspec_puppet_coverage?
+        @rspec_puppet_coverage_pattern ||= File.join('**', 'lib', 'rspec-puppet', 'coverage.rb')
+        source == 'rspec' && File.fnmatch?(@rspec_puppet_coverage_pattern, File.expand_path(file))
+      end
+
       # Renders the event in a clang style text format.
       #
       # @return [String] The rendered event.
       def to_text
+        return message if rspec_puppet_coverage?
+
         location = [file, line, column].compact.join(':')
         location = nil if location.empty?
 
