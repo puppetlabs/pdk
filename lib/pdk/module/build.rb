@@ -88,6 +88,9 @@ module PDK
       #
       # @return nil
       def cleanup_module
+        PDK::Util::Bundler.ensure_bundle!
+        PDK::Util::Bundler.ensure_binstubs!('rake')
+
         PDK::Test::Unit.tear_down
       end
 
