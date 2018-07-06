@@ -65,6 +65,7 @@ describe PDK::Validate::PuppetSyntax do
         "error: language validaton logged 2 errors. giving up\n",
       ].join('')
     end
+
     let(:targets) { ['pass.pp', 'fail.pp'] }
 
     def mock_validate(file, line, column, message, severity)
@@ -198,6 +199,23 @@ describe PDK::Validate::PuppetSyntax do
           state:    :failure,
           message:  '5.3.4 test-type-5',
           severity: 'error',
+        )
+      end
+    end
+
+    context 'Parser encounters a Ruby error' do
+      let(:targets) { ['ruby_error.pp'] }
+      let(:validate_output) do
+        "C:/PWKit/Puppet/sys/ruby/lib/ruby/gems/2.4.0/gems/puppet-5.5.2-x64-mingw32/lib/puppet/environments.rb:38:in \`"\
+        "get!': Could not find a directory environment named 'PUPPET_MASTER_SERVER=' anywhere in the path: "\
+        "C:/ProgramData/PuppetLabs/code/environments. Does the directory exist? (Puppet::Environments::EnvironmentNotFound)\n"
+      end
+
+      it 'handles the Ruby error and prints it out as the message' do
+        expect(report).to receive(:add_event).with(
+          source:   described_class.name,
+          state:    :failure,
+          message:  validate_output.split("\n").first,
         )
       end
     end
