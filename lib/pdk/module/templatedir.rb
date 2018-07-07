@@ -220,7 +220,7 @@ module PDK
           end
         end
         template_paths = Hash[temp_paths.zip dirlocs]
-        delete_paths = ['.', 'spec/.', 'hieradata', 'hieradata/.', 'manifests', 'manifests/.']
+        delete_paths = ['.', 'spec', 'spec/.', 'hieradata', 'hieradata/.', 'manifests', 'manifests/.']
         for path in delete_paths do
           template_paths.delete(path)
         end
