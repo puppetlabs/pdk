@@ -14,6 +14,7 @@ module PDK
       #   - "in file_path"
       ERROR_CONTEXT_LEGACY = %r{(?:at\sline\s(?<line>\d+)|at\s(?<file>.+?):(?<line>\d+):(?<column>\d+)|at\s(?<file>.+?):(?<line>\d+)|in\s(?<file>.+?))}
 
+      PUPPET_LOGGER_PREFIX = %r{^(debug|info|notice|warning|error|alert|critical):\s.+?$}i
       PUPPET_SYNTAX_PATTERN = %r{^
         (?<severity>.+?):\s
         (?<message>.+?)
@@ -84,10 +85,16 @@ module PDK
           state:  :failure,
         }
 
-        attributes = offense.match(PUPPET_SYNTAX_PATTERN)
+        if offense.match(PUPPET_LOGGER_PREFIX)
+          attributes = offense.match(PUPPET_SYNTAX_PATTERN)
 
-        attributes.names.each do |name|
-          offense_data[name.to_sym] = attributes[name] unless attributes[name].nil?
+          unless attributes.nil?
+            attributes.names.each do |name|
+              offense_data[name.to_sym] = attributes[name] unless attributes[name].nil?
+            end
+          end
+        else
+          offense_data[:message] = offense
         end
 
         offense_data
