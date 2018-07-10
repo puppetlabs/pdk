@@ -64,7 +64,7 @@ module PDK
       end
 
       def self.invoke(report, options = {})
-        PDK::Util::Bundler.ensure_binstubs!('rake')
+        PDK::Util::Bundler.ensure_binstubs!('rake', 'rspec-core')
 
         setup
 
