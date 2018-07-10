@@ -93,13 +93,19 @@ module PDK
     def write_text(target = self.class.default_target)
       # Open a File Object for IO if target is a string containing a filename or path
       target = File.open(target, 'w') if target.is_a? String
+      coverage_report = nil
 
       events.each do |_tool, tool_events|
         tool_events.each do |event|
-          target.puts(event.to_text) unless event.pass?
+          if event.rspec_puppet_coverage?
+            coverage_report = event.to_text
+          else
+            target.puts(event.to_text) unless event.pass?
+          end
         end
       end
     ensure
+      target.puts "\n#{coverage_report}" if coverage_report
       target.close if target.is_a? File
     end
   end
