@@ -40,7 +40,7 @@ module PDK
         begin
           json_data = JSON.parse(result[:stdout])
         rescue JSON::ParserError
-          json_data = {}
+          raise PDK::Validate::ParseOutputError, result[:stdout]
         end
 
         return unless json_data.key?('files')

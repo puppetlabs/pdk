@@ -34,7 +34,7 @@ module PDK
         begin
           json_data = JSON.parse(result[:stdout]).flatten
         rescue JSON::ParserError
-          json_data = []
+          raise PDK::Validate::ParseOutputError, result[:stdout]
         end
 
         # puppet-lint does not include files without problems in its JSON

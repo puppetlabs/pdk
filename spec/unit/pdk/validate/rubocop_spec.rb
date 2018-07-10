@@ -135,12 +135,12 @@ describe PDK::Validate::Rubocop do
     end
 
     context 'when rubocop generates bad JSON' do
-      let(:rubocop_json) { '' }
+      let(:rubocop_json) { 'this is not JSON' }
 
       it 'does not add any events to the report' do
-        expect(report).not_to receive(:add_event)
-
-        parse_output
+        expect {
+          parse_output
+        }.to raise_error(PDK::Validate::ParseOutputError, 'this is not JSON')
       end
     end
 

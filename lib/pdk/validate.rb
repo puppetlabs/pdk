@@ -7,5 +7,7 @@ module PDK
     def self.validators
       @validators ||= [MetadataValidator, PuppetValidator, RubyValidator].freeze
     end
+
+    class ParseOutputError < StandardError; end
   end
 end

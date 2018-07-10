@@ -147,14 +147,22 @@ module PDK
           if options[:split_exec]
             options[:split_exec].register do
               result = command.execute!
-              parse_output(report, result, invokation_targets)
+              begin
+                parse_output(report, result, invokation_targets)
+              rescue PDK::Validate::ParseOutputError => e
+                $stderr.puts e.message
+              end
               result[:exit_code]
             end
           else
             result = command.execute!
             exit_codes << result[:exit_code]
 
-            parse_output(report, result, invokation_targets)
+            begin
+              parse_output(report, result, invokation_targets)
+            rescue PDK::Validate::ParseOutputError => e
+              $stderr.puts e.message
+            end
           end
         end
 

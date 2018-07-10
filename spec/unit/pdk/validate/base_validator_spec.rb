@@ -33,6 +33,18 @@ describe PDK::Validate::BaseValidator do
       it 'executes the validator once' do
         expect(PDK::CLI::Exec::Command).to receive(:new).and_return(dummy_exec).once
       end
+
+      context 'if the output fails to parse' do
+        before(:each) do
+          allow(described_class).to receive(:parse_output)
+            .with(any_args).and_raise(PDK::Validate::ParseOutputError, 'test')
+          allow(PDK::CLI::Exec::Command).to receive(:new).and_return(dummy_exec)
+        end
+
+        it 'prints the validator output to STDERR' do
+          expect($stderr).to receive(:puts).with('test')
+        end
+      end
     end
 
     context 'when validating more than 1000 targets' do
@@ -42,6 +54,18 @@ describe PDK::Validate::BaseValidator do
 
       it 'executes the validator for each block of up to 1000 targets' do
         expect(PDK::CLI::Exec::Command).to receive(:new).and_return(dummy_exec).twice
+      end
+
+      context 'if the output fails to parse' do
+        before(:each) do
+          allow(described_class).to receive(:parse_output)
+            .with(any_args).and_raise(PDK::Validate::ParseOutputError, 'test').twice
+          allow(PDK::CLI::Exec::Command).to receive(:new).and_return(dummy_exec).twice
+        end
+
+        it 'prints the validator output to STDERR' do
+          expect($stderr).to receive(:puts).with('test').twice
+        end
       end
     end
   end
