@@ -24,7 +24,7 @@ RSpec.shared_examples_for 'it accepts metadata.json targets' do
         end
 
         it 'returns the path to metadata.json in the module' do
-          expect(parsed_targets.first).to eq([module_metadata_json])
+          expect(parsed_targets.first).to eq(['metadata.json'])
         end
       end
 

@@ -63,7 +63,7 @@ module PDK
         # puppet parser validate does not include files without problems in its
         # output, so we need to go through the list of targets and add passing
         # events to the report for any target not listed in the output.
-        targets.reject { |target| results_data.any? { |j| j[:file] == target } }.each do |target|
+        targets.reject { |target| results_data.any? { |j| j[:file] =~ %r{#{target}} } }.each do |target|
           report.add_event(
             file:     target,
             source:   name,

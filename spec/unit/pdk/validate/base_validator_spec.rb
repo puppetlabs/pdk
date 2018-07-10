@@ -84,11 +84,8 @@ describe PDK::Validate::BaseValidator do
     context 'when given no targets' do
       let(:targets) { [] }
       let(:glob_pattern) { File.join(module_root, described_class.pattern) }
-      let(:globbed_files) do
-        [
-          File.join(module_root, 'manifests', 'init.pp'),
-        ]
-      end
+      let(:files) { [File.join('manifests', 'init.pp')] }
+      let(:globbed_files) { files.map { |file| File.join(module_root, file) } }
 
       before(:each) do
         allow(File).to receive(:directory?).and_return(true)
@@ -97,13 +94,14 @@ describe PDK::Validate::BaseValidator do
       end
 
       it 'returns the module root' do
-        expect(target_files[0]).to eq(globbed_files)
+        expect(target_files[0]).to eq(files)
       end
     end
 
     context 'when the globbed files include spec/fixtures files' do
       let(:targets) { [] }
       let(:glob_pattern) { File.join(module_root, described_class.pattern) }
+      let(:files) { [File.join('manifests', 'init.pp')] }
       let(:fixture_file) { File.join(module_root, 'spec', 'fixtures', 'test', 'manifests', 'init.pp') }
       let(:globbed_files) do
         [
@@ -126,12 +124,8 @@ describe PDK::Validate::BaseValidator do
     context 'when given specific targets' do
       let(:targets) { ['target1.pp', 'target2/'] }
       let(:glob_pattern) { File.join(module_root, described_class.pattern) }
-
-      let(:globbed_target2) do
-        [
-          File.join(module_root, 'target2', 'target.pp'),
-        ]
-      end
+      let(:targets2) { [File.join('target2', 'target.pp')] }
+      let(:globbed_target2) { targets2.map { |target| File.join(module_root, target) } }
 
       before(:each) do
         allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_target2)
@@ -149,7 +143,7 @@ describe PDK::Validate::BaseValidator do
       end
 
       it 'returns the targets' do
-        expect(target_files[0]).to eq(globbed_target2)
+        expect(target_files[0]).to eq(targets2)
         expect(target_files[1]).to eq(['target1.pp'])
         expect(target_files[2]).to be_empty
       end

@@ -43,9 +43,16 @@ module PDK
         matched = targets.map { |target|
           if respond_to?(:pattern)
             if File.directory?(target)
-              pattern_glob = Array(pattern).map { |p| Dir.glob(File.join(PDK::Util.module_root, p)) }
-              target_list = pattern_glob.flatten.select { |file| File.fnmatch(File.join(File.expand_path(target), '*'), file) }
-              target_list = target_list.reject { |file| File.fnmatch(fixtures_pattern, file) }
+              target_root = PDK::Util.module_root
+              pattern_glob = Array(pattern).map { |p| Dir.glob(File.join(target_root, p)) }
+              pattern_glob = pattern_glob.flatten.reject { |file| File.fnmatch(fixtures_pattern, file) }
+
+              target_list = pattern_glob.map do |file|
+                if File.fnmatch(File.join(File.expand_path(target), '*'), file)
+                  Pathname.new(file).relative_path_from(Pathname.new(PDK::Util.module_root)).to_s
+                end
+              end
+
               skipped << target if target_list.flatten.empty?
               target_list
             elsif File.file?(target)
@@ -128,7 +135,7 @@ module PDK
         exit_codes = []
 
         targets.each do |invokation_targets|
-          cmd_argv = parse_options(options, invokation_targets).unshift(cmd_path)
+          cmd_argv = parse_options(options, invokation_targets).unshift(cmd_path).compact
           cmd_argv.unshift(File.join(PDK::Util::RubyVersion.bin_path, 'ruby.exe'), '-W0') if Gem.win_platform?
 
           command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
@@ -147,8 +154,9 @@ module PDK
           if options[:split_exec]
             options[:split_exec].register do
               result = command.execute!
+
               begin
-                parse_output(report, result, invokation_targets)
+                parse_output(report, result, invokation_targets.compact)
               rescue PDK::Validate::ParseOutputError => e
                 $stderr.puts e.message
               end
@@ -159,7 +167,7 @@ module PDK
             exit_codes << result[:exit_code]
 
             begin
-              parse_output(report, result, invokation_targets)
+              parse_output(report, result, invokation_targets.compact)
             rescue PDK::Validate::ParseOutputError => e
               $stderr.puts e.message
             end
