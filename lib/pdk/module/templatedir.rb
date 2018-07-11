@@ -225,9 +225,10 @@ module PDK
           end
         end
         template_paths = Hash[temp_paths.zip dirlocs]
-        template_paths.delete('.')
-        template_paths.delete('spec')
-        template_paths.delete('spec/.')
+        delete_paths = ['.', 'spec', 'spec/.', 'hieradata', 'hieradata/.', 'manifests', 'manifests/.']
+        delete_paths.each do |path|
+          template_paths.delete(path)
+        end
         template_paths
       end
 
