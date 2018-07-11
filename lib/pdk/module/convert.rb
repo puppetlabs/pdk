@@ -94,6 +94,8 @@ module PDK
             end
           end
         end
+      rescue ArgumentError => e
+        raise PDK::CLI::ExitWithError, e
       end
 
       def update_manager

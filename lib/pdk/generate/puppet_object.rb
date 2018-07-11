@@ -224,6 +224,8 @@ module PDK
             end
           end
         end
+      rescue ArgumentError => e
+        raise PDK::CLI::ExitWithError, e
       end
 
       # Provides the possible template directory locations in the order in

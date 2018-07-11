@@ -74,7 +74,7 @@ describe PDK::Module::Convert do
     end
   end
 
-  describe '.new' do
+  describe '.new', after_hook: true do
     let(:instance) { described_class.new(options) }
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
@@ -97,9 +97,22 @@ describe PDK::Module::Convert do
       allow(update_manager).to receive(:changed?).with('Gemfile').and_return(false)
     end
 
-    after(:each) do
+    after(:each, after_hook: true) do
       instance.run
       FileUtils.rm_f('convert_report.txt')
+    end
+
+    context 'when an error is raised from TemplateDir', after_hook: false do
+      before(:each) do
+        allow(PDK::Module::TemplateDir).to receive(:new)
+          .with(any_args).and_raise(ArgumentError, 'The specified template is not a directory')
+      end
+
+      it 'reraises the error as a CLI error' do
+        expect {
+          instance.run
+        }.to raise_error(PDK::CLI::ExitWithError, 'The specified template is not a directory')
+      end
     end
 
     context 'when there are no changes to apply' do
