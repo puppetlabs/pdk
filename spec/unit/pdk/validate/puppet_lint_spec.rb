@@ -79,12 +79,12 @@ describe PDK::Validate::PuppetLint do
     end
 
     context 'when puppet-lint generates bad JSON' do
-      let(:lint_output) { '' }
+      let(:lint_output) { 'this is not JSON' }
 
       it 'adds no events to the report' do
-        expect(report).not_to receive(:add_event)
-
-        parse_output
+        expect {
+          parse_output
+        }.to raise_error(PDK::Validate::ParseOutputError, 'this is not JSON')
       end
     end
 

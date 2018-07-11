@@ -105,15 +105,9 @@ describe PDK::Validate::MetadataJSONLint do
       let(:metadata_json_lint_output) { 'some unhandled error' }
 
       it 'adds an error event for the target to the report' do
-        expect(report).to receive(:add_event).with(
-          file:     targets.first,
-          source:   described_class.name,
-          state:    :error,
-          severity: :error,
-          message:  metadata_json_lint_output,
-        )
-
-        parse_output
+        expect {
+          parse_output
+        }.to raise_error(PDK::Validate::ParseOutputError, 'some unhandled error')
       end
     end
 

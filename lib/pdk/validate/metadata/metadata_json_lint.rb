@@ -49,14 +49,7 @@ module PDK
           begin
             json_data = JSON.parse(result[:stdout])
           rescue JSON::ParserError
-            report.add_event(
-              file:     targets.first,
-              source:   name,
-              state:    :error,
-              severity: :error,
-              message:  result[:stdout],
-            )
-            return
+            raise PDK::Validate::ParseOutputError, result[:stdout]
           end
         end
 

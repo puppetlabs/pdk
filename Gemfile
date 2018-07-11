@@ -28,6 +28,7 @@ end
 group :test do
   gem 'coveralls'
   gem 'license_finder', '~> 3.0.4'
+  gem 'parser', '~> 2.5.1.2'
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
   gem 'rspec-xsd'
