@@ -26,7 +26,7 @@ describe 'Test puppet & ruby version selection' do
         puppet_versions.map { |r| Regexp.escape(r) }.join('|')
       end
 
-      describe command('pdk bundle update') do
+      describe command('pdk bundle update --local') do
         its(:exit_status) { is_expected.to eq(0) }
       end
 

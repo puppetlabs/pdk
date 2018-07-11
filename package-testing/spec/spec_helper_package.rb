@@ -27,4 +27,15 @@ RSpec.configure do |c|
     RSpec.configuration.logger.log_level = :verbose
   end
   # rubocop:enable RSpec/BeforeAfterAll
+
+  c.after(:each) do
+    cmd = if windows_node?
+            command('rm -Recurse -Force $env:LOCALAPPDATA/PDK/Cache/ruby')
+          else
+            command('rm -rf ~/.pdk/cache/ruby')
+          end
+
+    # clear out any cached gems
+    cmd.run
+  end
 end
