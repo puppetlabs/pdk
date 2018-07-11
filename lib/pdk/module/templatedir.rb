@@ -185,18 +185,23 @@ module PDK
       #
       # @api private
       def validate_module_template!
+        # rubocop:disable Style/GuardClause
         unless File.directory?(@path)
-          raise ArgumentError, _("The specified template '%{path}' is not a directory.") % { path: @path }
+          if PDK::Util.package_install? && File.fnmatch?(File.join(PDK::Util.package_cachedir, '*'), @path)
+            raise ArgumentError, _('The built-in template has substantially changed. Please run "pdk convert" on your module to continue.')
+          else
+            raise ArgumentError, _("The specified template '%{path}' is not a directory.") % { path: @path }
+          end
         end
 
         unless File.directory?(@moduleroot_dir)
           raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot/' directory.") % { path: @path }
         end
 
-        unless File.directory?(@moduleroot_init) # rubocop:disable Style/GuardClause
+        unless File.directory?(@moduleroot_init)
           # rubocop:disable Metrics/LineLength
           raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot_init/' directory, which indicates you are using an older style of template. Before continuing please use the --template-url flag when running the pdk new commands to pass a new style template.") % { path: @path }
-          # rubocop:enable Metrics/LineLength
+          # rubocop:enable Metrics/LineLength Style/GuardClause
         end
       end
 
