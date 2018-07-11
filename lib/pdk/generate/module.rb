@@ -54,18 +54,22 @@ module PDK
 
         template_url = opts.fetch(:'template-url', PDK::Util.default_template_url)
 
-        PDK::Module::TemplateDir.new(template_url, metadata.data, true) do |templates|
-          templates.render do |file_path, file_content|
-            file = Pathname.new(temp_target_dir) + file_path
-            file.dirname.mkpath
-            file.write(file_content)
+        begin
+          PDK::Module::TemplateDir.new(template_url, metadata.data, true) do |templates|
+            templates.render do |file_path, file_content|
+              file = Pathname.new(temp_target_dir) + file_path
+              file.dirname.mkpath
+              file.write(file_content)
+            end
+
+            # Add information about the template used to generate the module to the
+            # metadata (for a future update command).
+            metadata.update!(templates.metadata)
+
+            metadata.write!(File.join(temp_target_dir, 'metadata.json'))
           end
-
-          # Add information about the template used to generate the module to the
-          # metadata (for a future update command).
-          metadata.update!(templates.metadata)
-
-          metadata.write!(File.join(temp_target_dir, 'metadata.json'))
+        rescue ArgumentError => e
+          raise PDK::CLI::ExitWithError, e
         end
 
         if template_url == PDK::Util.puppetlabs_template_url
