@@ -20,7 +20,7 @@ describe PDK::Generate::Profile do
   end
 
   context 'when the profile name is in the profile namespace' do
-    let(:given_class_name) { "profile::test_profile" }
+    let(:given_class_name) { 'profile::test_profile' }
 
     it_behaves_like 'it generates profile template data'
 

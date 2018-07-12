@@ -20,7 +20,7 @@ describe PDK::Generate::Role do
   end
 
   context 'when the role name is in the role namespace' do
-    let(:given_class_name) { "role::test_role" }
+    let(:given_class_name) { 'role::test_role' }
 
     it_behaves_like 'it generates role template data'
 
