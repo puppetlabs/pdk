@@ -157,6 +157,24 @@ class foo {
     end
   end
 
+  context 'with lots of files' do
+    include_context 'in a new module', 'file_dump'
+
+    before(:all) do
+      FileUtils.mkdir_p(File.join('manifests', 'dump'))
+      (1..5000).each do |num|
+        File.open(File.join('manifests', 'dump', "file#{num}.pp"), 'w') do |f|
+          f.puts "# file#{num}\nclass file_dump::dump::file#{num} { }"
+        end
+      end
+    end
+
+    describe command('pdk validate puppet') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stdout) { is_expected.to match(empty_string) }
+    end
+  end
+
   context 'with a parsable file and some style warnings' do
     include_context 'in a new module', 'foo'
 

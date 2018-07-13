@@ -1,6 +1,7 @@
 require 'spec_helper_acceptance'
 
 describe 'pdk validate ruby', module_command: true do
+  let(:empty_string) { %r{\A\Z} }
   let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
 
   include_context 'with a fake TTY'
@@ -100,6 +101,24 @@ describe 'pdk validate ruby', module_command: true do
     describe command('pdk validate ruby') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stdout) { is_expected.to match(%r{\A\Z}) }
+    end
+  end
+
+  context 'with lots of files' do
+    include_context 'in a new module', 'file_dump'
+
+    before(:all) do
+      FileUtils.mkdir_p(File.join('spec', 'unit'))
+      (1..5000).each do |num|
+        File.open(File.join('spec', 'unit', "test#{num}.rb"), 'w') do |f|
+          f.puts "puts({ 'a' => 'b' }.inspect)"
+        end
+      end
+    end
+
+    describe command('pdk validate ruby') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stdout) { is_expected.to match(empty_string) }
     end
   end
 end
