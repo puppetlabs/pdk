@@ -104,8 +104,8 @@ module PDK
       #
       # @api public
       def render
-        PDK::Module::TemplateDir.files_in_template(@dirs).each do |template_file, template_loc|
-          template_file = template_file.to_s
+        PDK::Module::TemplateDir.files_in_template(@dirs).each do |template_path|
+          template_dir, template_file = File.split(template_path)
           PDK.logger.debug(_("Rendering '%{template}'...") % { template: template_file })
           dest_path = template_file.sub(%r{\.erb\Z}, '')
           config = config_for(dest_path)
@@ -117,7 +117,7 @@ module PDK
             dest_status = :delete
           else
             begin
-              dest_content = PDK::TemplateFile.new(File.join(template_loc, template_file), configs: config).render
+              dest_content = PDK::TemplateFile.new(File.join(template_dir, template_file), configs: config).render
             rescue => e
               error_msg = _(
                 "Failed to render template '%{template}'\n" \
@@ -207,28 +207,17 @@ module PDK
 
       # Get a list of template files in the template directory.
       #
-      # @return [Hash{String=>String}] A hash of key file names and
-      # value locations.
+      # @return [String] An Array of File paths
       #
       # @api public
       def self.files_in_template(dirs)
-        temp_paths = []
-        dirlocs = []
-        dirs.each do |dir|
+        temp_paths_per_dir = dirs.map do |dir|
           raise ArgumentError, _("The directory '%{dir}' doesn't exist") % { dir: dir } unless Dir.exist?(dir)
-          temp_paths += Dir.glob(File.join(dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
+          Dir.glob(File.join(dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
             File.file?(template_path) && !File.symlink?(template_path)
-            dirlocs << dir
-          end
-          temp_paths.map do |template_path|
-            template_path.sub!(%r{\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
           end
         end
-        template_paths = Hash[temp_paths.zip dirlocs]
-        template_paths.delete('.')
-        template_paths.delete('spec')
-        template_paths.delete('spec/.')
-        template_paths
+        temp_paths_per_dir.flatten
       end
 
       # Generate a hash of data to be used when rendering the specified
