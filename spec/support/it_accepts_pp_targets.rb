@@ -14,15 +14,17 @@ RSpec.shared_examples_for 'it accepts .pp targets' do
       let(:targets) { [] }
 
       context 'and the module contains .pp files' do
-        let(:globbed_files) do
+        let(:files) do
           [
-            File.join(module_root, 'manifests', 'init.pp'),
-            File.join(module_root, 'manifests', 'params.pp'),
+            File.join('manifests', 'init.pp'),
+            File.join('manifests', 'params.pp'),
           ]
         end
 
+        let(:globbed_files) { files.map { |file| File.join(module_root, file) } }
+
         it 'returns the paths to all the .pp files in the module' do
-          expect(parsed_targets.first).to eq(globbed_files)
+          expect(parsed_targets.first).to eq(files)
         end
       end
 
