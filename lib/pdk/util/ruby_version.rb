@@ -6,7 +6,7 @@ module PDK
       class << self
         extend Forwardable
 
-        def_delegators :instance, :gem_path, :gem_home, :available_puppet_versions, :bin_path
+        def_delegators :instance, :gem_path, :gem_paths_raw, :gem_home, :available_puppet_versions, :bin_path
 
         attr_reader :instance
 
@@ -72,7 +72,7 @@ module PDK
         end
       end
 
-      def gem_path
+      def gem_paths_raw
         if PDK::Util.package_install?
           # Subprocesses use their own set of gems which are managed by pdk or
           # installed with the package. We also include the separate gem path
@@ -81,14 +81,18 @@ module PDK
             File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', ruby_version, 'lib', 'ruby', 'gems', versions[ruby_version]),
             File.join(PDK::Util.package_cachedir, 'ruby', versions[ruby_version]),
             File.join(PDK::Util.pdk_package_basedir, 'private', 'puppet', 'ruby', versions[ruby_version]),
-          ].join(File::PATH_SEPARATOR)
+          ]
         else
           # This allows the subprocess to find the 'bundler' gem, which isn't
           # in GEM_HOME for gem installs.
           # TODO: There must be a better way to do this than shelling out to
           # gem... Perhaps can be replaced with "Gem.path"?
-          File.absolute_path(File.join(`gem which bundler`, '..', '..', '..', '..'))
+          [File.absolute_path(File.join(`gem which bundler`, '..', '..', '..', '..'))]
         end
+      end
+
+      def gem_path
+        gem_paths_raw.join(File::PATH_SEPARATOR)
       end
 
       def gem_home

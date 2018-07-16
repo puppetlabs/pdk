@@ -117,6 +117,17 @@ describe PDK::CLI::Exec::Command do
       end
 
       it { expect { command.execute! }.not_to raise_error }
+
+      it 'includes gem bin paths in PATH' do
+        command.execute!
+
+        expect(environment).to include('PATH')
+
+        path_array = environment['PATH'].split(File::PATH_SEPARATOR)
+
+        expect(path_array).to include(File.join(PDK::Util::RubyVersion.gem_home, 'bin'))
+        expect(path_array).to include(*PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path| File.join(gem_path, 'bin') })
+      end
     end
   end
 end

@@ -141,7 +141,7 @@ module PDK
             @process.environment['PATH'] = [
               PDK::Util::RubyVersion.bin_path,
               File.join(@process.environment['GEM_HOME'], 'bin'),
-              File.join(@process.environment['GEM_PATH'], 'bin'),
+              PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path| File.join(gem_path, 'bin') },
               package_binpath,
               ENV['PATH'],
               PDK::Util.package_install? ? PDK::Util::Git.git_paths : nil,
