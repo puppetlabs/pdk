@@ -315,9 +315,12 @@ describe PDK::Module::Build do
     let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
     let(:instance) { described_class.new(module_dir: module_dir) }
 
+    before(:each) do
+      allow(File).to receive(:realdirpath) { |path| path }
+    end
+
     context 'when no ignore file is present in the module' do
       before(:each) do
-        allow(Find).to receive(:find).with(module_dir).and_return([File.join(module_dir, 'pkg')])
         allow(instance).to receive(:ignore_file).and_return(nil)
       end
 
@@ -335,7 +338,6 @@ describe PDK::Module::Build do
 
         allow(instance).to receive(:ignore_file).and_return(ignore_file_path)
         allow(File).to receive(:open).with(ignore_file_path, 'rb:UTF-8').and_return(ignore_file_content)
-        allow(Find).to receive(:find).with(module_dir).and_return([File.join(module_dir, 'pkg')])
       end
 
       it 'returns a PathSpec object populated by the ignore file' do
