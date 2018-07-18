@@ -199,22 +199,24 @@ module PDK
       #
       # @return [PathSpec] The populated ignore path matcher.
       def ignored_files
-        @ignored_files ||= if ignore_file.nil?
-                             PathSpec.new
-                           else
-                             fd = File.open(ignore_file, 'rb:UTF-8')
-                             data = fd.read
-                             fd.close
+        @ignored_files ||=
+          begin
+            ignored = if ignore_file.nil?
+                        PathSpec.new
+                      else
+                        fd = File.open(ignore_file, 'rb:UTF-8')
+                        data = fd.read
+                        fd.close
 
-                             PathSpec.new(data)
-                           end
+                        PathSpec.new(data)
+                      end
 
-        # Also ignore the target directory if it is in the module dir and not already ignored
-        if Find.find(@module_dir).include?(target_dir) && !@ignored_files.match(File.basename(target_dir) + '/')
-          @ignored_files = @ignored_files.add("\/#{File.basename(target_dir)}\/")
-        end
+            if File.realdirpath(target_dir).start_with?(File.realdirpath(module_dir))
+              ignored = ignored.add("\/#{File.basename(target_dir)}\/")
+            end
 
-        @ignored_files
+            ignored
+          end
       end
     end
   end
