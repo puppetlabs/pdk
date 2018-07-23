@@ -85,6 +85,16 @@ namespace :acceptance do
     t.pattern = 'spec/package/**/*_spec.rb'
   end
   task package: [:hostgen]
+
+  RSpec::Core::RakeTask.new(:testenv) do |t|
+    t.rspec_opts = ['--format progress']
+    t.pattern = 'spec/package/pdk_help_spec.rb'
+  end
+  task testenv: [:hostgen, :no_destroy]
+
+  task :no_destroy do
+    ENV['BEAKER_destroy'] = 'no'
+  end
 end
 
 task acceptance: ['acceptance:package']
