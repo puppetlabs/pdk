@@ -13,6 +13,12 @@ describe 'Generate a module for unit testing' do
 
       its(:exit_status) { is_expected.to eq(0) }
     end
+
+    describe command('pdk new defined_type test_define') do
+      let(:cwd) { module_name }
+
+      its(:exit_status) { is_expected.to eq(0) }
+    end
   end
 
   context 'when unit testing' do
@@ -20,7 +26,7 @@ describe 'Generate a module for unit testing' do
       let(:cwd) { module_name }
 
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{evaluated 4 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{evaluated 8 tests.*0 failures}im) }
     end
   end
 
@@ -29,7 +35,7 @@ describe 'Generate a module for unit testing' do
       let(:cwd) { module_name }
 
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{evaluated 4 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{evaluated 8 tests.*0 failures}im) }
     end
   end
 end
