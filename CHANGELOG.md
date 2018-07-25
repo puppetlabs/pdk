@@ -4,6 +4,43 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.6.1](https://github.com/puppetlabs/pdk/tree/v1.6.1) (2018-07-25)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.6.0...v1.6.1)
+
+**Implemented enhancements:**
+
+- PDK `test unit` should cache downloaded modules [\#339](https://github.com/puppetlabs/pdk/issues/339)
+
+**Fixed bugs:**
+
+- acceptance tests message bundler: command not found: rspec [\#535](https://github.com/puppetlabs/pdk/issues/535)
+- PDK 1.6.0: parallel\_spec causes Puppet coverage reports to change badly [\#531](https://github.com/puppetlabs/pdk/issues/531)
+- Support for deep directory structure in templates [\#445](https://github.com/puppetlabs/pdk/issues/445)
+- \(PDK-1046\) Improve handling of unexpected errors from puppet parser. [\#541](https://github.com/puppetlabs/pdk/pull/541) ([bmjen](https://github.com/bmjen))
+- Correct template path filter logic to only include regular files [\#524](https://github.com/puppetlabs/pdk/pull/524) ([nabertrand](https://github.com/nabertrand))
+
+**Closed issues:**
+
+- r10k puppetfile install return r10k/cli \(LoadError\) [\#534](https://github.com/puppetlabs/pdk/issues/534)
+- PDK 1.6.0: c.hiera\_config double quotes creates rubocop warning [\#530](https://github.com/puppetlabs/pdk/issues/530)
+- PDK should support integration testing [\#481](https://github.com/puppetlabs/pdk/issues/481)
+
+**Merged pull requests:**
+
+- \(PDK-1088\) Remove unnecessary file enumeration loop during PDK build [\#553](https://github.com/puppetlabs/pdk/pull/553) ([scotje](https://github.com/scotje))
+- \(PDK-1076\) Change version to 1.6.1.pre [\#552](https://github.com/puppetlabs/pdk/pull/552) ([rodjek](https://github.com/rodjek))
+- \(PDK-1073\) Fix gem bin paths for CLI::Exec managed subprocesses [\#551](https://github.com/puppetlabs/pdk/pull/551) ([scotje](https://github.com/scotje))
+- Set up issues templates for bug reports and feature requests [\#550](https://github.com/puppetlabs/pdk/pull/550) ([scotje](https://github.com/scotje))
+- \(PDK-1045\) Send validation targets as relative file paths [\#549](https://github.com/puppetlabs/pdk/pull/549) ([bmjen](https://github.com/bmjen))
+- \(PDK-1067\) Ensure rspec-core binstubs are created for `pdk test unit` [\#546](https://github.com/puppetlabs/pdk/pull/546) ([scotje](https://github.com/scotje))
+- \(PDK-1041\) Improve handling of errors from PDK::Module::TemplateDir [\#545](https://github.com/puppetlabs/pdk/pull/545) ([rodjek](https://github.com/rodjek))
+- \(PDK-1053\) Print validator output on parse\_output failure [\#543](https://github.com/puppetlabs/pdk/pull/543) ([rodjek](https://github.com/rodjek))
+- \(PDK-1051\) Expose rspec-puppet coverage results to PDK [\#539](https://github.com/puppetlabs/pdk/pull/539) ([rodjek](https://github.com/rodjek))
+- \(PDK-1048\) Improve docs for `pdk test unit --verbose` [\#537](https://github.com/puppetlabs/pdk/pull/537) ([rodjek](https://github.com/rodjek))
+- \(PDK-1061\) Ensure rake binstub when building module [\#536](https://github.com/puppetlabs/pdk/pull/536) ([rodjek](https://github.com/rodjek))
+- \(PDK-925\) Exclude files in spec/fixtures from globbed validation targets [\#532](https://github.com/puppetlabs/pdk/pull/532) ([rodjek](https://github.com/rodjek))
+- \(maint\) Bump version for next dev cycle [\#529](https://github.com/puppetlabs/pdk/pull/529) ([bmjen](https://github.com/bmjen))
+
 ## [v1.6.0](https://github.com/puppetlabs/pdk/tree/v1.6.0) (2018-06-20)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.5.0...v1.6.0)
 
@@ -33,6 +70,8 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- \(maint\) Handle tagged template-refs [\#527](https://github.com/puppetlabs/pdk/pull/527) ([rodjek](https://github.com/rodjek))
+- Release 1.6.0 [\#526](https://github.com/puppetlabs/pdk/pull/526) ([bmjen](https://github.com/bmjen))
 - \(maint\) Switch package-testing to install from build\_data\_url. [\#522](https://github.com/puppetlabs/pdk/pull/522) ([bmjen](https://github.com/bmjen))
 - CI cleanups [\#507](https://github.com/puppetlabs/pdk/pull/507) ([DavidS](https://github.com/DavidS))
 - Ensure that the report.txt ends with a newline [\#501](https://github.com/puppetlabs/pdk/pull/501) ([DavidS](https://github.com/DavidS))
