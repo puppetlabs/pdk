@@ -221,4 +221,32 @@ describe 'Running `pdk validate` in a module' do
       }.to exit_zero
     end
   end
+
+  context 'with --puppet-dev' do
+    it 'activates resolved puppet version' do
+      expect {
+        PDK::CLI.run(['validate', '--puppet-dev'])
+      }.to exit_zero
+    end
+  end
+
+  context 'with both --puppet-version and --puppet-dev' do
+    it 'exits with an error' do
+      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-dev.*and.*--puppet-version}i))
+
+      expect {
+        PDK::CLI.run(%w[validate --puppet-version 4.10.10 --puppet-dev])
+      }.to exit_nonzero
+    end
+  end
+
+  context 'with both --pe-version and --puppet-dev' do
+    it 'exits with an error' do
+      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-dev.*and.*--pe-version}i))
+
+      expect {
+        PDK::CLI.run(%w[validate --pe-version 2018.1 --puppet-dev])
+      }.to exit_nonzero
+    end
+  end
 end

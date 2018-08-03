@@ -14,6 +14,7 @@ module PDK::CLI
     )
 
     PDK::CLI.puppet_version_options(self)
+    PDK::CLI.puppet_dev_option(self)
     flag nil, :list, _('List all available validators.')
     flag :a, 'auto-correct', _('Automatically correct problems where possible.')
     flag nil, :parallel, _('Run validations in parallel.')

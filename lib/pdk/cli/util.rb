@@ -132,6 +132,21 @@ module PDK
         pe_ver_specs << '--pe-version option' if opts[:'pe-version']
         pe_ver_specs << 'PDK_PE_VERSION environment variable' if ENV['PDK_PE_VERSION'] && !ENV['PDK_PE_VERSION'].empty?
 
+        puppet_dev_specs = []
+        puppet_dev_specs << '--puppet-dev flag' if opts[:'puppet-dev']
+        puppet_dev_specs << 'PDK_PUPPET_DEV environment variable' if ENV['PDK_PUPPET_DEV'] && !ENV['PDK_PUPPET_DEV'].empty?
+
+        puppet_dev_specs.each do |pup_dev_spec|
+          [puppet_ver_specs, pe_ver_specs].each do |offending|
+            next if offending.empty?
+
+            raise PDK::CLI::ExitWithError, _('You cannot specify a %{first} and %{second} at the same time') % {
+              first: pup_dev_spec,
+              second: offending.first,
+            }
+          end
+        end
+
         puppet_ver_specs.each do |pup_ver_spec|
           next if pe_ver_specs.empty?
 
@@ -143,7 +158,15 @@ module PDK
           }
         end
 
-        if puppet_ver_specs.size == 2
+        if puppet_dev_specs.size == 2
+          warning_str = 'Puppet dev flag from command line: "--puppet-dev" '
+          warning_str += 'overrides value from environment: "PDK_PUPPET_DEV=true". You should not specify both.'
+
+          PDK.logger.warn(_(warning_str) % {
+            pup_ver_opt: opts[:'puppet-dev'],
+            pup_ver_env: ENV['PDK_PUPPET_DEV'],
+          })
+        elsif puppet_ver_specs.size == 2
           warning_str = 'Puppet version option from command line: "--puppet-version=%{pup_ver_opt}" '
           warning_str += 'overrides value from environment: "PDK_PUPPET_VERSION=%{pup_ver_env}". You should not specify both.'
 
