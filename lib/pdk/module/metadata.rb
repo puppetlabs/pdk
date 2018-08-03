@@ -5,6 +5,63 @@ module PDK
     class Metadata
       attr_accessor :data
 
+      OPERATING_SYSTEMS = {
+        'RedHat based Linux' => [
+          {
+            'operatingsystem'        => 'CentOS',
+            'operatingsystemrelease' => ['7'],
+          },
+          {
+            'operatingsystem'        => 'OracleLinux',
+            'operatingsystemrelease' => ['7'],
+          },
+          {
+            'operatingsystem'        => 'RedHat',
+            'operatingsystemrelease' => ['7'],
+          },
+          {
+            'operatingsystem'        => 'Scientific',
+            'operatingsystemrelease' => ['7'],
+          },
+        ],
+        'Debian based Linux' => [
+          {
+            'operatingsystem'        => 'Debian',
+            'operatingsystemrelease' => ['8'],
+          },
+          {
+            'operatingsystem'        => 'Ubuntu',
+            'operatingsystemrelease' => ['16.04'],
+          },
+        ],
+        'Fedora' => {
+          'operatingsystem'        => 'Fedora',
+          'operatingsystemrelease' => ['25'],
+        },
+        'OSX' => {
+          'operatingsystem'        => 'Darwin',
+          'operatingsystemrelease' => ['16'],
+        },
+        'SLES' => {
+          'operatingsystem'        => 'SLES',
+          'operatingsystemrelease' => ['12'],
+        },
+        'Solaris' => {
+          'operatingsystem'        => 'Solaris',
+          'operatingsystemrelease' => ['11'],
+        },
+        'Windows' => {
+          'operatingsystem'        => 'windows',
+          'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+        },
+      }.freeze
+
+      DEFAULT_OPERATING_SYSTEMS = [
+        'RedHat based Linux',
+        'Debian based Linux',
+        'Windows',
+      ].freeze
+
       DEFAULTS = {
         'name'          => nil,
         'version'       => '0.1.0',
@@ -16,24 +73,9 @@ module PDK
         'issues_url'    => nil,
         'dependencies'  => [],
         'data_provider' => nil,
-        'operatingsystem_support' => [
-          {
-            'operatingsystem' => 'Debian',
-            'operatingsystemrelease' => ['8'],
-          },
-          {
-            'operatingsystem' => 'RedHat',
-            'operatingsystemrelease' => ['7.0'],
-          },
-          {
-            'operatingsystem' => 'Ubuntu',
-            'operatingsystemrelease' => ['16.04'],
-          },
-          {
-            'operatingsystem' => 'windows',
-            'operatingsystemrelease' => ['2012 R2'],
-          },
-        ],
+        'operatingsystem_support' => DEFAULT_OPERATING_SYSTEMS.map { |os_name|
+          OPERATING_SYSTEMS[os_name]
+        }.flatten,
         'requirements' => [
           { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
         ],
