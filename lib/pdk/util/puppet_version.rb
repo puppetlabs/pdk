@@ -1,4 +1,5 @@
 require 'pdk/util'
+require 'pdk/util/git'
 
 module PDK
   module Util
@@ -6,7 +7,7 @@ module PDK
       class << self
         extend Forwardable
 
-        def_delegators :instance, :find_gem_for, :from_pe_version, :from_module_metadata, :latest_available
+        def_delegators :instance, :puppet_dev_env, :puppet_dev_path, :fetch_puppet_dev, :find_gem_for, :from_pe_version, :from_module_metadata, :latest_available
 
         attr_writer :instance
 
@@ -16,6 +17,19 @@ module PDK
       end
 
       PE_VERSIONS_URL = 'https://forgeapi.puppet.com/private/versions/pe'.freeze
+      DEFAULT_PUPPET_DEV_URL = 'https://github.com/puppetlabs/puppet'.freeze
+      DEFAULT_PUPPET_DEV_BRANCH = 'master'.freeze
+
+      def puppet_dev_env
+        {
+          gem_version: 'file://%{path}' % { path: puppet_dev_path },
+          ruby_version: PDK::Util::RubyVersion.default_ruby_version,
+        }
+      end
+
+      def puppet_dev_path
+        '%{cache}/src/puppet' % { cache: PDK::Util.cachedir }
+      end
 
       def latest_available
         latest = find_gem(Gem::Requirement.create('>= 0'))
@@ -25,6 +39,25 @@ module PDK
         end
 
         latest
+      end
+
+      def fetch_puppet_dev
+        unless PDK::Util::Git.remote_repo? puppet_dev_path
+          FileUtils.mkdir_p puppet_dev_path
+          clone_result = PDK::Util::Git.git('clone', DEFAULT_PUPPET_DEV_URL, puppet_dev_path)
+          unless clone_result[:exit_code].zero?
+            PDK.logger.error clone_result[:stdout]
+            PDK.logger.error clone_result[:stderr]
+            raise PDK::CLI::FatalError, _("Unable to clone git repository at '%{repo}'.") % { repo: DEFAULT_PUPPET_DEV_URL }
+          end
+        end
+
+        fetch_result = PDK::Util::Git.git('fetch', '--quiet', puppet_dev_path)
+        return if fetch_result[:exit_code].zero?
+
+        PDK.logger.error fetch_result[:stdout]
+        PDK.logger.error fetch_result[:stderr]
+        raise PDK::CLI::FatalError, _("Unable to fetch updates for git repository at '%{cachedir}'.") % { repo: puppet_dev_path }
       end
 
       def find_gem_for(version_str)

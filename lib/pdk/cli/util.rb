@@ -83,12 +83,16 @@ module PDK
       module_function :module_version_check
 
       def puppet_from_opts_or_env(opts)
+        use_puppet_dev = (opts || {})[:'puppet-dev'] || ENV['PDK_PUPPET_DEV']
         desired_puppet_version = (opts || {})[:'puppet-version'] || ENV['PDK_PUPPET_VERSION']
         desired_pe_version = (opts || {})[:'pe-version'] || ENV['PDK_PE_VERSION']
 
         begin
           puppet_env =
-            if desired_puppet_version
+            if use_puppet_dev
+              PDK::Util::PuppetVersion.fetch_puppet_dev
+              PDK::Util::PuppetVersion.puppet_dev_env
+            elsif desired_puppet_version
               PDK::Util::PuppetVersion.find_gem_for(desired_puppet_version)
             elsif desired_pe_version
               PDK::Util::PuppetVersion.from_pe_version(desired_pe_version)
