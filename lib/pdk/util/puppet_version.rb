@@ -28,7 +28,7 @@ module PDK
       end
 
       def puppet_dev_path
-        '%{cache}/src/puppet' % { cache: PDK::Util.cachedir }
+        File.join(PDK::Util.cachedir, 'src', 'puppet')
       end
 
       def latest_available
@@ -45,11 +45,11 @@ module PDK
         unless PDK::Util::Git.remote_repo? puppet_dev_path
           FileUtils.mkdir_p puppet_dev_path
           clone_result = PDK::Util::Git.git('clone', DEFAULT_PUPPET_DEV_URL, puppet_dev_path)
-          unless clone_result[:exit_code].zero?
-            PDK.logger.error clone_result[:stdout]
-            PDK.logger.error clone_result[:stderr]
-            raise PDK::CLI::FatalError, _("Unable to clone git repository at '%{repo}'.") % { repo: DEFAULT_PUPPET_DEV_URL }
-          end
+          return if clone_result[:exit_code].zero?
+
+          PDK.logger.error clone_result[:stdout]
+          PDK.logger.error clone_result[:stderr]
+          raise PDK::CLI::FatalError, _("Unable to clone git repository at '%{repo}'.") % { repo: DEFAULT_PUPPET_DEV_URL }
         end
 
         fetch_result = PDK::Util::Git.git('fetch', '--quiet', puppet_dev_path)
