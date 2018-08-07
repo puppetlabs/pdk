@@ -87,8 +87,8 @@ namespace :acceptance do
   task package: [:hostgen]
 
   RSpec::Core::RakeTask.new(:testenv) do |t|
-    t.rspec_opts = ['--format progress']
-    t.pattern = 'spec/package/pdk_help_spec.rb'
+    t.rspec_opts = ['--format progress', "--out #{File::NULL}"]
+    t.pattern = 'lib/testenv.rb'
   end
   task testenv: [:hostgen, :no_destroy]
 
