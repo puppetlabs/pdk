@@ -113,13 +113,7 @@ module PDK
       def self.prepare_metadata(opts = {})
         opts[:username] = (opts[:username] || PDK.answers['forge_username'] || username_from_login).downcase
 
-        defaults = {
-          'version'      => '0.1.0',
-          'dependencies' => [],
-          'requirements' => [
-            { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 6.0.0' },
-          ],
-        }
+        defaults = PDK::Module::Metadata::DEFAULTS.dup
 
         defaults['name'] = "#{opts[:username]}-#{opts[:module_name]}" unless opts[:module_name].nil?
         defaults['author'] = PDK.answers['author'] unless PDK.answers['author'].nil?
@@ -199,57 +193,11 @@ module PDK
             question: _('What operating systems does this module support?'),
             help:     _('Use the up and down keys to move between the choices, space to select and enter to continue.'),
             required: true,
-            choices:  {
-              'RedHat based Linux' => [
-                {
-                  'operatingsystem'        => 'CentOS',
-                  'operatingsystemrelease' => ['7'],
-                },
-                {
-                  'operatingsystem'        => 'OracleLinux',
-                  'operatingsystemrelease' => ['7'],
-                },
-                {
-                  'operatingsystem'        => 'RedHat',
-                  'operatingsystemrelease' => ['7'],
-                },
-                {
-                  'operatingsystem'        => 'Scientific',
-                  'operatingsystemrelease' => ['7'],
-                },
-              ],
-              'Debian based Linux' => [
-                {
-                  'operatingsystem'        => 'Debian',
-                  'operatingsystemrelease' => ['8'],
-                },
-                {
-                  'operatingsystem'        => 'Ubuntu',
-                  'operatingsystemrelease' => ['16.04'],
-                },
-              ],
-              'Fedora' => {
-                'operatingsystem'        => 'Fedora',
-                'operatingsystemrelease' => ['25'],
-              },
-              'OSX' => {
-                'operatingsystem'        => 'Darwin',
-                'operatingsystemrelease' => ['16'],
-              },
-              'SLES' => {
-                'operatingsystem'        => 'SLES',
-                'operatingsystemrelease' => ['12'],
-              },
-              'Solaris' => {
-                'operatingsystem'        => 'Solaris',
-                'operatingsystemrelease' => ['11'],
-              },
-              'Windows' => {
-                'operatingsystem'        => 'windows',
-                'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
-              },
-            },
-            default: [1, 2, 7],
+            choices:  PDK::Module::Metadata::OPERATING_SYSTEMS,
+            default:  PDK::Module::Metadata::DEFAULT_OPERATING_SYSTEMS.map do |os_name|
+              # tty-prompt uses a 1-index
+              PDK::Module::Metadata::OPERATING_SYSTEMS.keys.index(os_name) + 1
+            end,
           },
           {
             name:       'summary',
