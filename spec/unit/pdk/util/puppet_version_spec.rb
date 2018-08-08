@@ -95,6 +95,104 @@ describe PDK::Util::PuppetVersion do
     end
   end
 
+  describe '.fetch_puppet_dev' do
+    context 'if puppet source is not cloned yet' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:remote_repo?).with(anything).and_return(false)
+      end
+
+      context 'and fails to connect to github' do
+        let(:clone_results) do
+          {
+            stdout: 'foo',
+            stderr: 'bar',
+            exit_code: 1,
+          }
+        end
+
+        before(:each) do
+          allow(PDK::Util).to receive(:cachedir).and_return(File.join('path', 'to'))
+          allow(PDK::Util::Git).to receive(:git).with('clone', anything, anything).and_return(clone_results)
+        end
+
+        it 'raises an error' do
+          expect(logger).to receive(:error).with(a_string_matching(%r{foo}))
+          expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
+          expect {
+            described_class.fetch_puppet_dev
+          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to clone git repository}i))
+        end
+      end
+
+      context 'and successfully connects to github' do
+        let(:clone_results) do
+          {
+            stdout: 'foo',
+            stderr: 'bar',
+            exit_code: 0,
+          }
+        end
+
+        before(:each) do
+          allow(PDK::Util).to receive(:cachedir).and_return(File.join('path', 'to'))
+          allow(PDK::Util::Git).to receive(:git).with('clone', anything, anything).and_return(clone_results)
+        end
+
+        it 'exits cleanly' do
+          expect(described_class.fetch_puppet_dev).to eq(nil)
+        end
+      end
+    end
+
+    context 'if puppet source is already cloned' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:remote_repo?).with(anything).and_return(true)
+      end
+
+      context 'and fails to connect to github' do
+        let(:fetch_results) do
+          {
+            stdout: 'foo',
+            stderr: 'bar',
+            exit_code: 1,
+          }
+        end
+
+        before(:each) do
+          allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
+          allow(PDK::Util::Git).to receive(:git).with('fetch', anything, anything).and_return(fetch_results)
+        end
+
+        it 'raises an error' do
+          expect(logger).to receive(:error).with(a_string_matching(%r{foo}))
+          expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
+          expect {
+            described_class.fetch_puppet_dev
+          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to fetch updates for git repository}i))
+        end
+      end
+
+      context 'and successfully connects to github' do
+        let(:clone_results) do
+          {
+            stdout: 'foo',
+            stderr: 'bar',
+            exit_code: 0,
+          }
+        end
+
+        before(:each) do
+          allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
+          allow(PDK::Util::Git).to receive(:git).with('fetch', anything, anything).and_return(clone_results)
+        end
+
+        it 'exits cleanly' do
+          expect(described_class.fetch_puppet_dev).to eq(nil)
+        end
+      end
+    end
+  end
+
   describe '.find_gem_for' do
     context 'when running from a package install' do
       include_context 'is a package install'

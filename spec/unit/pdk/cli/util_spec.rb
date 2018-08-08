@@ -178,6 +178,51 @@ describe PDK::CLI::Util do
       { ruby_version: ruby_version, gem_version: Gem::Version.new(puppet_version) }
     end
 
+    context 'when puppet-dev has been set' do
+      let(:options) { { :'puppet-dev' => true } }
+      let(:ruby_version) { '2.4.4' }
+      let(:puppet_version) { 'path/to/puppet' }
+
+      let(:version_result) do
+        {
+          gem_version:  puppet_version,
+          ruby_version: ruby_version,
+        }
+      end
+
+      before(:each) do
+        allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_path).and_return(puppet_version)
+        allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_env).and_return(version_result)
+      end
+
+      it_behaves_like 'it returns a puppet environment'
+    end
+
+    context 'when PDK_PUPPET_DEV has been set' do
+      let(:options) { {} }
+      let(:ruby_version) { '2.4.4' }
+      let(:puppet_version) { 'path/to/puppet' }
+
+      let(:version_result) do
+        {
+          gem_version:  puppet_version,
+          ruby_version: ruby_version,
+        }
+      end
+
+      before(:each) do
+        allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_path).and_return(puppet_version)
+        allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_env).and_return(version_result)
+        ENV['PDK_PUPPET_DEV'] = 'true'
+      end
+
+      after(:each) do
+        ENV.delete('PDK_PUPPET_DEV')
+      end
+
+      it_behaves_like 'it returns a puppet environment'
+    end
+
     context 'when puppet-version has been set' do
       let(:options) { { :'puppet-version' => '4.10.10' } }
       let(:ruby_version) { '2.1.9' }
@@ -304,6 +349,76 @@ describe PDK::CLI::Util do
     let(:env_puppet_version) { '5.1' }
     let(:cli_pe_version) { '2016.2' }
     let(:env_pe_version) { '2017.3' }
+
+    context 'when --puppet-dev is set' do
+      let(:options) { { :'puppet-dev' => true } }
+
+      it 'is silent' do
+        expect(logger).not_to receive(:warn)
+
+        expect { validate_puppet_version_opts }.not_to raise_error
+      end
+
+      context 'when PDK_PUPPET_DEV is also set' do
+        before(:each) do
+          ENV['PDK_PUPPET_DEV'] = 'true'
+        end
+
+        after(:each) do
+          ENV.delete('PDK_PUPPET_DEV')
+        end
+
+        it 'warns about option precedence' do
+          expect(logger).to receive(:warn).with(%r{dev flag.*overrides.*environment}i)
+
+          validate_puppet_version_opts
+        end
+      end
+
+      context 'when --puppet-version is also set' do
+        let(:options) { { :'puppet-version' => cli_puppet_version, :'puppet-dev' => true } }
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*option}i)
+        end
+      end
+
+      context 'when PDK_PUPPET_VERSION is also set' do
+        before(:each) do
+          ENV['PDK_PUPPET_VERSION'] = env_puppet_version
+        end
+
+        after(:each) do
+          ENV.delete('PDK_PUPPET_VERSION')
+        end
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*environment}i)
+        end
+      end
+
+      context 'when --pe-version is also set' do
+        let(:options) { { :'pe-version' => cli_pe_version, :'puppet-dev' => true } }
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*option}i)
+        end
+      end
+
+      context 'when PDK_PE_VERSION is also set' do
+        before(:each) do
+          ENV['PDK_PE_VERSION'] = env_pe_version
+        end
+
+        after(:each) do
+          ENV.delete('PDK_PE_VERSION')
+        end
+
+        it 'exits with error' do
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*environment}i)
+        end
+      end
+    end
 
     context 'when --puppet-version is set' do
       let(:options) { { :'puppet-version' => cli_puppet_version } }

@@ -150,6 +150,38 @@ describe '`pdk test unit`' do
     end
   end
 
+  context 'with --puppet-dev' do
+    let(:puppet_env) do
+      {
+        ruby_version: '2.4.3',
+        gemset: { puppet: 'file://path/to/puppet' },
+      }
+    end
+
+    before(:each) do
+      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including(:'puppet-dev' => true)).and_return(puppet_env)
+      allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev).and_return(nil)
+      allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
+      allow(PDK::CLI::Util).to receive(:module_version_check)
+    end
+
+    it 'activates puppet github source' do
+      expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
+
+      expect {
+        test_unit_cmd.run_this(['--puppet-dev'])
+      }.to exit_zero
+    end
+
+    it 'activates resolved ruby version' do
+      expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
+
+      expect {
+        test_unit_cmd.run_this(['--puppet-dev'])
+      }.to exit_zero
+    end
+  end
+
   context 'when --puppet-version and --pe-version are specified' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
