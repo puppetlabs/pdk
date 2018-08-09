@@ -52,12 +52,12 @@ module PDK
           raise PDK::CLI::FatalError, _("Unable to clone git repository at '%{repo}'.") % { repo: DEFAULT_PUPPET_DEV_URL }
         end
 
-        fetch_result = PDK::Util::Git.git('fetch', '--quiet', puppet_dev_path)
+        fetch_result = PDK::Util::Git.git('--git-dir', File.join(puppet_dev_path, '.git'), 'pull', '--ff-only')
         return if fetch_result[:exit_code].zero?
 
         PDK.logger.error fetch_result[:stdout]
         PDK.logger.error fetch_result[:stderr]
-        raise PDK::CLI::FatalError, _("Unable to fetch updates for git repository at '%{cachedir}'.") % { repo: puppet_dev_path }
+        raise PDK::CLI::FatalError, _("Unable to pull updates for git repository at '%{cachedir}'.") % { repo: puppet_dev_path }
       end
 
       def find_gem_for(version_str)

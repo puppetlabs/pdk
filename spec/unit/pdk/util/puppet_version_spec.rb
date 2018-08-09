@@ -150,7 +150,7 @@ describe PDK::Util::PuppetVersion do
       end
 
       context 'and fails to connect to github' do
-        let(:fetch_results) do
+        let(:pull_results) do
           {
             stdout: 'foo',
             stderr: 'bar',
@@ -160,7 +160,7 @@ describe PDK::Util::PuppetVersion do
 
         before(:each) do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
-          allow(PDK::Util::Git).to receive(:git).with('fetch', anything, anything).and_return(fetch_results)
+          allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'pull', '--ff-only').and_return(pull_results)
         end
 
         it 'raises an error' do
@@ -168,12 +168,12 @@ describe PDK::Util::PuppetVersion do
           expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
           expect {
             described_class.fetch_puppet_dev
-          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to fetch updates for git repository}i))
+          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to pull updates for git repository}i))
         end
       end
 
       context 'and successfully connects to github' do
-        let(:clone_results) do
+        let(:pull_results) do
           {
             stdout: 'foo',
             stderr: 'bar',
@@ -183,7 +183,7 @@ describe PDK::Util::PuppetVersion do
 
         before(:each) do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
-          allow(PDK::Util::Git).to receive(:git).with('fetch', anything, anything).and_return(clone_results)
+          allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'pull', '--ff-only').and_return(pull_results)
         end
 
         it 'exits cleanly' do
