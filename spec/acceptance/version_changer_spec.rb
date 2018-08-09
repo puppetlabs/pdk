@@ -25,5 +25,10 @@ describe 'puppet version selection' do
         its(:content) { is_expected.to match(%r{^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)}im) }
       end
     end
+
+    describe command('pdk validate --puppet-dev') do
+      its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
+      its(:exit_status) { is_expected.to eq(0) }
+    end
   end
 end
