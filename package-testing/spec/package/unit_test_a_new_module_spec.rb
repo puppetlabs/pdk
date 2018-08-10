@@ -26,7 +26,7 @@ describe 'Generate a module for unit testing' do
       let(:cwd) { module_name }
 
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{evaluated 8 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{evaluated 18 tests.*0 failures}im) }
     end
   end
 
@@ -35,7 +35,7 @@ describe 'Generate a module for unit testing' do
       let(:cwd) { module_name }
 
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{evaluated 8 tests.*0 failures}im) }
+      its(:stderr) { is_expected.to match(%r{evaluated 18 tests.*0 failures}im) }
     end
   end
 end
