@@ -55,6 +55,12 @@ module PDK::CLI
     dsl.option nil, 'pe-version', _('Puppet Enterprise version to run tests or validations against.'), argument: :required
   end
 
+  def self.puppet_dev_option(dsl)
+    dsl.option nil,
+               'puppet-dev',
+               _('When specified, PDK will validate or test against the current Puppet source from github.com. To use this option, you must have network access to https://github.com.')
+  end
+
   @base_cmd = Cri::Command.define do
     name 'pdk'
     usage _('pdk command [options]')

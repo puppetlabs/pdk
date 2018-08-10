@@ -14,6 +14,7 @@ module PDK::CLI
     )
 
     PDK::CLI.puppet_version_options(self)
+    PDK::CLI.puppet_dev_option(self)
     flag nil, :list, _('List all available validators.')
     flag :a, 'auto-correct', _('Automatically correct problems where possible.')
     flag nil, :parallel, _('Run validations in parallel.')
@@ -87,6 +88,7 @@ module PDK::CLI
 
       # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
       puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
+      PDK::Util::PuppetVersion.fetch_puppet_dev if opts.key?(:'puppet-dev')
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
       PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
