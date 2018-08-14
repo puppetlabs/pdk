@@ -4,6 +4,23 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.7.0](https://github.com/puppetlabs/pdk/tree/v1.7.0) (2018-08-14)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.6.1...v1.7.0)
+
+**Implemented enhancements:**
+
+- \(PDK-1096, PDK-1097, PDK-1098\) Add puppet-dev flag to validate and test unit [\#559](https://github.com/puppetlabs/pdk/pull/559) ([bmjen](https://github.com/bmjen))
+
+**Fixed bugs:**
+
+- \(PDK-585\) Unify metadata defaults with/without interview [\#558](https://github.com/puppetlabs/pdk/pull/558) ([rodjek](https://github.com/rodjek))
+
+**Merged pull requests:**
+
+- \(maint\) Fix package tests [\#562](https://github.com/puppetlabs/pdk/pull/562) ([bmjen](https://github.com/bmjen))
+- \(PDK-1083\) Bump PDK version to 1.7.0.pre [\#556](https://github.com/puppetlabs/pdk/pull/556) ([rodjek](https://github.com/rodjek))
+- \(PDK-1077\) Expand the package acceptance test suite [\#554](https://github.com/puppetlabs/pdk/pull/554) ([rodjek](https://github.com/rodjek))
+
 ## [v1.6.1](https://github.com/puppetlabs/pdk/tree/v1.6.1) (2018-07-25)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.6.0...v1.6.1)
 
@@ -27,6 +44,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- \(PDK-1078\) Prepare 1.6.1 release [\#555](https://github.com/puppetlabs/pdk/pull/555) ([rodjek](https://github.com/rodjek))
 - \(PDK-1088\) Remove unnecessary file enumeration loop during PDK build [\#553](https://github.com/puppetlabs/pdk/pull/553) ([scotje](https://github.com/scotje))
 - \(PDK-1076\) Change version to 1.6.1.pre [\#552](https://github.com/puppetlabs/pdk/pull/552) ([rodjek](https://github.com/rodjek))
 - \(PDK-1073\) Fix gem bin paths for CLI::Exec managed subprocesses [\#551](https://github.com/puppetlabs/pdk/pull/551) ([scotje](https://github.com/scotje))
@@ -41,7 +59,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-925\) Exclude files in spec/fixtures from globbed validation targets [\#532](https://github.com/puppetlabs/pdk/pull/532) ([rodjek](https://github.com/rodjek))
 - \(maint\) Bump version for next dev cycle [\#529](https://github.com/puppetlabs/pdk/pull/529) ([bmjen](https://github.com/bmjen))
 
-## [v1.6.0](https://github.com/puppetlabs/pdk/tree/v1.6.0) (2018-06-20)
+## [v1.6.0](https://github.com/puppetlabs/pdk/tree/v1.6.0) (2018-06-21)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.5.0...v1.6.0)
 
 **Implemented enhancements:**
