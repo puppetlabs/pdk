@@ -8,8 +8,6 @@ AllCops:
     - bin/**/*
     - vendor/**/*
     - vendor/**/.*
-    # Puppet util code follows Puppet's style, not pdk's
-    - lib/puppet/**/*
     # package testing gems
     - package-testing/vendor/**/*
     - package-testing/vendor/**/.*

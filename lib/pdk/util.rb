@@ -58,7 +58,7 @@ module PDK
         unless File.exist?(path)
           raise PDK::CLI::FatalError, _("Cannot resolve a full path to '%{path}', as it does not currently exist.") % { path: path }
         end
-        Puppet::Util::Windows::File.get_long_pathname(path)
+        PDK::Util::Windows::File.get_long_pathname(path)
       else
         File.expand_path(path)
       end
