@@ -14,7 +14,7 @@ if ENV['COVERAGE'] == 'yes'
     add_filter '/spec'
 
     # do not track vendored files
-    add_filter '/lib/puppet'
+    add_filter '/lib/pdk/util/windows'
     add_filter '/vendor'
     add_filter '/.vendor'
 

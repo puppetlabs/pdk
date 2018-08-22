@@ -126,7 +126,7 @@ describe PDK::Util do
         end
 
         it 'calls Puppet::Util::Windows::File.get_long_pathname to resolve the absolute path' do
-          expect(Puppet::Util::Windows::File).to receive(:get_long_pathname).with(path)
+          expect(PDK::Util::Windows::File).to receive(:get_long_pathname).with(path)
 
           described_class.canonical_path(path)
         end

@@ -1,6 +1,6 @@
-require 'puppet/util/windows'
+require 'pdk/util/windows'
 
-module Puppet::Util::Windows::String
+module PDK::Util::Windows::String
   def wide_string(str)
     # if given a nil string, assume caller wants to pass a nil pointer to win32
     return nil if str.nil?
