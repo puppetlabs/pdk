@@ -30,7 +30,7 @@ module PDK
         'Debian based Linux' => [
           {
             'operatingsystem'        => 'Debian',
-            'operatingsystemrelease' => ['8'],
+            'operatingsystemrelease' => ['8', '9'],
           },
           {
             'operatingsystem'        => 'Ubuntu',
