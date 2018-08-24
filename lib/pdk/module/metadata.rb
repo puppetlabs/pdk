@@ -57,6 +57,9 @@ module PDK
           'operatingsystem'        => 'windows',
           'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
         },
+        'Arch Linux' => {
+          'operatingsystem'        => 'Archlinux'
+        }
       }.freeze
 
       DEFAULT_OPERATING_SYSTEMS = [
