@@ -39,7 +39,7 @@ module PDK
         ],
         'Fedora' => {
           'operatingsystem'        => 'Fedora',
-          'operatingsystemrelease' => ['25'],
+          'operatingsystemrelease' => ['27', '28'],
         },
         'OSX' => {
           'operatingsystem'        => 'Darwin',
