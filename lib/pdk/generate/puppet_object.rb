@@ -33,15 +33,14 @@ module PDK
         @options = options
         @object_name = object_name
 
-        if [:class, :defined_type].include?(object_type) # rubocop:disable Style/GuardClause
-          object_name_parts = object_name.split('::')
+        return unless [:class, :defined_type, :task].include?(object_type)
 
-          @object_name = if object_name_parts.first == module_name
-                           object_name
-                         else
-                           [module_name, object_name].join('::')
-                         end
-        end
+        object_name_parts = object_name.split('::')
+        @object_name = if object_name_parts.first == module_name
+                         object_name
+                       else
+                         [module_name, object_name].join('::')
+                       end
       end
 
       # @abstract Subclass and implement {#template_data} to provide data to

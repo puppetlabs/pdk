@@ -22,7 +22,6 @@ module PDK
         def self.valid_module_name?(string)
           !(string =~ %r{\A[a-z][a-z0-9_]*\Z}).nil?
         end
-        singleton_class.send(:alias_method, :valid_task_name?, :valid_module_name?)
 
         # https://puppet.com/docs/puppet/5.3/custom_types.html#creating-a-type only says the name has to be a ruby symbol.
         # Let's assume that only strings similar to module names can actually be resolved by the puppet language.
@@ -38,6 +37,7 @@ module PDK
 
         singleton_class.send(:alias_method, :valid_class_name?, :valid_namespace?)
         singleton_class.send(:alias_method, :valid_defined_type_name?, :valid_namespace?)
+        singleton_class.send(:alias_method, :valid_task_name?, :valid_namespace?)
 
         # Validate that a class/defined type parameter matches the regular
         # expression in the documentation: https://docs.puppet.com/puppet/4.10/lang_reserved.html#parameters

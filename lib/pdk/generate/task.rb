@@ -24,7 +24,7 @@ module PDK
       #
       # @return [String] the path to the task file.
       def target_object_path
-        @target_object_path ||= File.join(module_dir, 'tasks', "#{task_name}.sh")
+        "#{target_object_path_no_ext}.sh"
       end
 
       # Calculates the path to the file where the tests for the new task will
@@ -54,10 +54,10 @@ module PDK
         error = _("A task named '%{name}' already exists in this module; defined in %{file}")
         allowed_extensions = %w[.md .conf]
 
-        Dir.glob(File.join(module_dir, 'tasks', "#{task_name}.*")).each do |file|
+        Dir.glob("#{target_object_path_no_ext}.*").each do |file|
           next if allowed_extensions.include?(File.extname(file))
 
-          raise PDK::CLI::ExitWithError, error % { name: task_name, file: file }
+          raise PDK::CLI::ExitWithError, error % { name: object_name, file: file }
         end
       end
 
@@ -65,21 +65,23 @@ module PDK
       #
       # @api private
       def write_task_metadata
-        write_file(File.join(module_dir, 'tasks', "#{task_name}.json")) do
+        write_file("#{target_object_path_no_ext}.json") do
           task_metadata = template_data.dup
           task_metadata.delete(:name)
           JSON.pretty_generate(task_metadata)
         end
       end
 
-      # Calculates the file name of the task files ('init' if the task has the
-      # same name as the module, otherwise use the specified task name).
+      # Calculates the path to the file where the new task will be written.
       #
-      # @return [String] the base name of the file(s) for the task.
-      #
-      # @api private
-      def task_name
-        (object_name == module_name) ? 'init' : object_name
+      # @return [String] the path to the task file.
+      def target_object_path_no_ext
+        @target_object_path_no_ext ||= begin
+          name_parts = object_name.split('::')[1..-1]
+          name_parts << 'init' if name_parts.empty?
+
+          File.join(module_dir, 'tasks', *name_parts)
+        end
       end
     end
   end

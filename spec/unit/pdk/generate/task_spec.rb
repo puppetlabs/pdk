@@ -29,7 +29,19 @@ describe PDK::Generate::Task do
     context 'when the task name is different to the module name' do
       let(:given_name) { 'test_task' }
 
-      it { is_expected.to eq(File.join(module_dir, 'tasks', "#{given_name}.sh")) }
+      it { is_expected.to eq(File.join(module_dir, 'tasks', 'test_task.sh')) }
+    end
+
+    context 'when the task name is deeply nested in the module namespace' do
+      let(:given_name) { "#{module_name}::something::test_task" }
+
+      it { is_expected.to eq(File.join(module_dir, 'tasks', 'something', 'test_task.sh')) }
+    end
+
+    context 'when the task name is deeply nested outside the module namespace' do
+      let(:given_name) { 'something::test_task' }
+
+      it { is_expected.to eq(File.join(module_dir, 'tasks', 'something', 'test_task.sh')) }
     end
   end
 
@@ -46,7 +58,7 @@ describe PDK::Generate::Task do
     let(:task_files) { [] }
 
     before(:each) do
-      allow(Dir).to receive(:glob).with(File.join(module_dir, 'tasks', "#{given_name}.*")).and_return(task_files)
+      allow(Dir).to receive(:glob).with("#{generator.target_object_path_no_ext}.*").and_return(task_files)
     end
 
     context 'when no files exist for the task' do
@@ -56,7 +68,7 @@ describe PDK::Generate::Task do
     end
 
     context 'when a .md file for the task already exists' do
-      let(:task_files) { [File.join(module_dir, 'tasks', "#{given_name}.md")] }
+      let(:task_files) { ["#{generator.target_object_path_no_ext}.md"] }
 
       it 'does not raise an error' do
         expect { generator.check_if_task_already_exists }.not_to raise_error
@@ -64,7 +76,7 @@ describe PDK::Generate::Task do
     end
 
     context 'when a .conf file for the task already exists' do
-      let(:task_files) { [File.join(module_dir, 'tasks', "#{given_name}.conf")] }
+      let(:task_files) { ["#{generator.target_object_path_no_ext}.conf"] }
 
       it 'does not raise an error' do
         expect { generator.check_if_task_already_exists }.not_to raise_error
@@ -72,12 +84,12 @@ describe PDK::Generate::Task do
     end
 
     context 'when a file with any other extension exists' do
-      let(:task_files) { [File.join(module_dir, 'tasks', "#{given_name}.ps1")] }
+      let(:task_files) { ["#{generator.target_object_path_no_ext}.ps1"] }
 
       it 'raises ExitWithError' do
         expect {
           generator.check_if_task_already_exists
-        }.to raise_error(PDK::CLI::ExitWithError, %r{a task named '#{given_name}' already exists}i)
+        }.to raise_error(PDK::CLI::ExitWithError, %r{a task named '#{module_name}::#{given_name}' already exists}i)
       end
     end
   end
@@ -87,7 +99,7 @@ describe PDK::Generate::Task do
     let(:given_name) { 'test_task' }
 
     before(:each) do
-      metadata_file = File.join(module_dir, 'tasks', "#{given_name}.json")
+      metadata_file = "#{generator.target_object_path_no_ext}.json"
       allow(File).to receive(:open).with(metadata_file, 'w').and_yield(mock_file)
       generator.write_task_metadata
       mock_file.rewind
