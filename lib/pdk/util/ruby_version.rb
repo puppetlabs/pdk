@@ -45,7 +45,14 @@ module PDK
         end
 
         def default_ruby_version
+          # For now, the packaged versions will be using default of 2.4.4.
+          return '2.4.4' if PDK::Util.package_install?
+
           # TODO: may not be a safe assumption that highest available version should be default
+          latest_ruby_version
+        end
+
+        def latest_ruby_version
           versions.keys.sort { |a, b| Gem::Version.new(b) <=> Gem::Version.new(a) }.first
         end
 
