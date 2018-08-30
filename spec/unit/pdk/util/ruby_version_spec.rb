@@ -15,7 +15,7 @@ describe PDK::Util::RubyVersion do
 
     let(:packaged_rubies) do
       {
-        '2.4.3' => '2.4.0',
+        '2.4.4' => '2.4.0',
         '2.1.9' => '2.1.0',
       }
     end
@@ -42,7 +42,7 @@ describe PDK::Util::RubyVersion do
     context 'when running from a package install' do
       include_context 'is a package install'
 
-      ['2.1.9', '2.4.3'].each do |ruby_version|
+      ['2.1.9', '2.4.4'].each do |ruby_version|
         context "when the active ruby version is #{ruby_version}" do
           let(:instance) { described_class.new(ruby_version) }
 
@@ -67,6 +67,11 @@ describe PDK::Util::RubyVersion do
 
     context 'when running from a package install' do
       include_context 'is a package install'
+
+      before(:each) do
+        allow(described_class).to receive(:versions).and_return(packaged_rubies)
+        allow(described_class).to receive(:default_ruby_version).and_return('2.4.4')
+      end
 
       it 'includes the path to the packaged ruby cachedir' do
         is_expected.to include(File.join(package_cachedir, 'ruby', described_class.versions[described_class.active_ruby_version]))
@@ -109,13 +114,13 @@ describe PDK::Util::RubyVersion do
 
       before(:each) do
         basedir = File.join('/', 'basedir')
-        ruby_dirs = ['2.1.9', '2.4.3'].map { |r| File.join(basedir, 'private', 'ruby', r) }
+        ruby_dirs = ['2.1.9', '2.4.4'].map { |r| File.join(basedir, 'private', 'ruby', r) }
         allow(PDK::Util).to receive(:pdk_package_basedir).and_return(basedir)
         allow(Dir).to receive(:[]).with(File.join(basedir, 'private', 'ruby', '*')).and_return(ruby_dirs)
       end
 
       it 'returns the Ruby versions included in the package' do
-        is_expected.to eq('2.1.9' => '2.1.0', '2.4.3' => '2.4.0')
+        is_expected.to eq('2.1.9' => '2.1.0', '2.4.4' => '2.4.0')
       end
     end
 

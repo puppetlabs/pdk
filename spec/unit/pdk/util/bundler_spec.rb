@@ -447,6 +447,7 @@ RSpec.describe PDK::Util::Bundler do
         before(:each) do
           # package_cachedir comes from 'packaged install' context
           allow(File).to receive(:exist?).with("#{package_cachedir}/Gemfile.lock").and_return(true)
+          allow(PDK::Util::RubyVersion).to receive(:active_ruby_version).and_return('2.4.4')
           PDK::Util::RubyVersion.versions.keys.each do |ruby_version|
             lockfile = File.join(package_cachedir, "Gemfile-#{ruby_version}.lock")
             allow(File).to receive(:exist?).with(lockfile).and_return(true)

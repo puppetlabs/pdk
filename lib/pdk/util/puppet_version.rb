@@ -23,7 +23,7 @@ module PDK
       def puppet_dev_env
         {
           gem_version: 'file://%{path}' % { path: puppet_dev_path },
-          ruby_version: PDK::Util::RubyVersion.default_ruby_version,
+          ruby_version: PDK::Util::RubyVersion.latest_ruby_version,
         }
       end
 
