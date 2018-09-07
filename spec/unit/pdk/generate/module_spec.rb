@@ -283,6 +283,13 @@ describe PDK::Generate::Module do
     let(:default_metadata) { {} }
     let(:options) { { module_name: module_name } }
 
+    let(:default_os_support) do
+      PDK::Module::Metadata::OPERATING_SYSTEMS.collect { |os_family, os_support|
+        next unless PDK::Module::Metadata::DEFAULT_OPERATING_SYSTEMS.include?(os_family)
+        os_support
+      }.flatten.compact
+    end
+
     before(:each) do
       prompt = TTY::TestPrompt.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
@@ -376,36 +383,7 @@ describe PDK::Generate::Module do
             'source'                  => 'github.com/whopper/bar',
             'project_page'            => 'forge.puppet.com/whopper/bar',
             'issues_url'              => 'tickets.foo.com/whopper/bar',
-            'operatingsystem_support' => [
-              {
-                'operatingsystem'        => 'CentOS',
-                'operatingsystemrelease' => ['7'],
-              },
-              {
-                'operatingsystem'        => 'OracleLinux',
-                'operatingsystemrelease' => ['7'],
-              },
-              {
-                'operatingsystem'        => 'RedHat',
-                'operatingsystemrelease' => ['7'],
-              },
-              {
-                'operatingsystem'        => 'Scientific',
-                'operatingsystemrelease' => ['7'],
-              },
-              {
-                'operatingsystem'        => 'Debian',
-                'operatingsystemrelease' => ['8'],
-              },
-              {
-                'operatingsystem'        => 'Ubuntu',
-                'operatingsystemrelease' => ['16.04'],
-              },
-              {
-                'operatingsystem'        => 'windows',
-                'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
-              },
-            ],
+            'operatingsystem_support' => eq(default_os_support),
           )
         end
 
@@ -628,38 +606,11 @@ describe PDK::Generate::Module do
         ]
       end
 
-      it 'includes the modified operatingsystem_support value in the metadata' do
+      it 'modifies operatingsystem_support value in the metadata' do
         allow($stdout).to receive(:puts).and_call_original
         expect { interview_metadata }.not_to raise_error
 
-        expect(interview_metadata).to include(
-          'name'         => 'foo-bar',
-          'version'      => '0.1.0',
-          'author'       => 'William Hopper',
-          'license'      => 'Apache-2.0',
-          'summary'      => '',
-          'source'       => '',
-          'project_page' => nil,
-          'issues_url'   => nil,
-          'operatingsystem_support' => [
-            {
-              'operatingsystem'        => 'Debian',
-              'operatingsystemrelease' => ['8'],
-            },
-            {
-              'operatingsystem'        => 'Ubuntu',
-              'operatingsystemrelease' => ['16.04'],
-            },
-            {
-              'operatingsystem'        => 'windows',
-              'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
-            },
-            {
-              'operatingsystem'        => 'Solaris',
-              'operatingsystemrelease' => ['11'],
-            },
-          ],
-        )
+        expect(interview_metadata['operatingsystem_support']).not_to eq(default_os_support)
       end
     end
   end
