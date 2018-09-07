@@ -6,8 +6,12 @@ module PDK
     class Metadata
       attr_accessor :data
 
+<<<<<<< HEAD
       include PDK::Util::Filesystem
 
+=======
+      # rubocop:disable Style/WordArray
+>>>>>>> (FIXUP) Resolve rubocop issues
       OPERATING_SYSTEMS = {
         'RedHat based Linux' => [
           {
@@ -58,9 +62,10 @@ module PDK
           'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
         },
         'Arch Linux' => {
-          'operatingsystem'        => 'Archlinux'
-        }
+          'operatingsystem'        => 'Archlinux',
+        },
       }.freeze
+      # rubocop:enable Style/WordArray
 
       DEFAULT_OPERATING_SYSTEMS = [
         'RedHat based Linux',
