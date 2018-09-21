@@ -8,7 +8,8 @@ module PDK::CLI
     description _(
       "Run metadata, Puppet, or Ruby validation.\n\n" \
       '[validators] is an optional comma-separated list of validators to use. ' \
-      "If not specified, all validators are used.\n\n" \
+      'If not specified, all validators are used. ' \
+      "Note that when using PowerShell, the list of validators must be enclosed in single quotes.\n\n" \
       '[targets] is an optional space-separated list of files or directories to be validated. ' \
       'If not specified, validators are run against all applicable files in the module.',
     )
