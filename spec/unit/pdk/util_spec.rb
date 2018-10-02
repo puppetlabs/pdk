@@ -535,5 +535,13 @@ describe PDK::Util do
 
       it { is_expected.to be nil }
     end
+
+    context 'if there is a problem reading the metadata.json file' do
+      before(:each) do
+        allow(described_class).to receive(:module_metadata).and_raise(ArgumentError, 'some error')
+      end
+
+      it { is_expected.to be_nil }
+    end
   end
 end

@@ -261,6 +261,9 @@ module PDK
       else
         nil
       end
+    rescue ArgumentError => e
+      PDK.logger.error(e)
+      nil
     end
     module_function :module_pdk_version
   end
