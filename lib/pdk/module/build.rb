@@ -8,6 +8,16 @@ require 'pdk/tests/unit'
 module PDK
   module Module
     class Build
+      DEFAULT_IGNORED = [
+        '/pkg/',
+        '.*',
+        '~*',
+        '/coverage',
+        '/checksums.json',
+        '/REVISION',
+        '/spec/fixtures/modules/',
+      ].freeze
+
       def self.invoke(options = {})
         new(options).build
       end
@@ -37,7 +47,6 @@ module PDK
       #
       # @return [String] The path to the built package file.
       def build
-        cleanup_module
         create_build_dir
 
         stage_module_in_build_dir
@@ -81,17 +90,6 @@ module PDK
       # @return nil.
       def cleanup_build_dir
         FileUtils.rm_rf(build_dir, secure: true)
-      end
-
-      # Clean up any files created during use of the PDK that shouldn't be part
-      # of the built module (e.g. test fixtures).
-      #
-      # @return nil
-      def cleanup_module
-        PDK::Util::Bundler.ensure_bundle!
-        PDK::Util::Bundler.ensure_binstubs!('rake')
-
-        PDK::Test::Unit.tear_down
       end
 
       # Combine the module name and version into a Forge-compatible dash
@@ -214,6 +212,8 @@ module PDK
             if File.realdirpath(target_dir).start_with?(File.realdirpath(module_dir))
               ignored = ignored.add("\/#{File.basename(target_dir)}\/")
             end
+
+            DEFAULT_IGNORED.each { |r| ignored.add(r) }
 
             ignored
           end
