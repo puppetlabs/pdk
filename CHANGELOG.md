@@ -4,7 +4,27 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
-## [v1.7.0](https://github.com/puppetlabs/pdk/tree/v1.7.0) (2018-08-14)
+## [v1.7.1](https://github.com/puppetlabs/pdk/tree/v1.7.1) (2018-10-05)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.7.0...v1.7.1)
+
+**Implemented enhancements:**
+
+- \(PDK-1100\) Exclude known artifacts from build instead of cleaning [\#575](https://github.com/puppetlabs/pdk/pull/575) ([rodjek](https://github.com/rodjek))
+- \(PDK-1056\) Adds support for Ruby 2.5.1 in packaged PDK version [\#568](https://github.com/puppetlabs/pdk/pull/568) ([bmjen](https://github.com/bmjen))
+- \(PDK-1099\) Merge Puppet::Util::Windows into PDK namespace [\#565](https://github.com/puppetlabs/pdk/pull/565) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- \(PDK-1181\) Display error when metadata.json missing or unreadable [\#574](https://github.com/puppetlabs/pdk/pull/574) ([rodjek](https://github.com/rodjek))
+- \(PDK-1173\) Update pdk validate help output for powershell [\#573](https://github.com/puppetlabs/pdk/pull/573) ([rodjek](https://github.com/rodjek))
+
+**Merged pull requests:**
+
+- \(maint\) Update PDK metadata defaults to include Puppet 6 [\#572](https://github.com/puppetlabs/pdk/pull/572) ([bmjen](https://github.com/bmjen))
+- \(maint\) Update package tests for ruby 2.5.1 as the new default [\#571](https://github.com/puppetlabs/pdk/pull/571) ([bmjen](https://github.com/bmjen))
+- Bump version to 1.8.0.pre [\#564](https://github.com/puppetlabs/pdk/pull/564) ([bmjen](https://github.com/bmjen))
+
+## [v1.7.0](https://github.com/puppetlabs/pdk/tree/v1.7.0) (2018-08-15)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.6.1...v1.7.0)
 
 **Implemented enhancements:**
@@ -17,6 +37,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- Release 1.7.0 [\#563](https://github.com/puppetlabs/pdk/pull/563) ([bmjen](https://github.com/bmjen))
 - \(maint\) Fix package tests [\#562](https://github.com/puppetlabs/pdk/pull/562) ([bmjen](https://github.com/bmjen))
 - \(PDK-1083\) Bump PDK version to 1.7.0.pre [\#556](https://github.com/puppetlabs/pdk/pull/556) ([rodjek](https://github.com/rodjek))
 - \(PDK-1077\) Expand the package acceptance test suite [\#554](https://github.com/puppetlabs/pdk/pull/554) ([rodjek](https://github.com/rodjek))
