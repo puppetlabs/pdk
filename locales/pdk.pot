@@ -6,11 +6,11 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.6.1-11-g2632a3b30\n"
+"Project-Id-Version: puppet development kit v1.7.0-16-g810d1d3be\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2018-08-14 16:41-0700\n"
-"PO-Revision-Date: 2018-08-14 16:41-0700\n"
+"POT-Creation-Date: 2018-10-05 11:07-0700\n"
+"PO-Revision-Date: 2018-10-05 11:07-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -531,40 +531,40 @@ msgstr ""
 msgid ""
 "Run metadata, Puppet, or Ruby validation.\n"
 "\n"
-"[validators] is an optional comma-separated list of validators to use. If not specified, all validators are used.\n"
+"[validators] is an optional comma-separated list of validators to use. If not specified, all validators are used. Note that when using PowerShell, the list of validators must be enclosed in single quotes.\n"
 "\n"
 "[targets] is an optional space-separated list of files or directories to be validated. If not specified, validators are run against all applicable files in the module."
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:18
+#: ../lib/pdk/cli/validate.rb:19
 msgid "List all available validators."
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:19
+#: ../lib/pdk/cli/validate.rb:20
 msgid "Automatically correct problems where possible."
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:20
+#: ../lib/pdk/cli/validate.rb:21
 msgid "Run validations in parallel."
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:33
+#: ../lib/pdk/cli/validate.rb:34
 msgid "Available validators: %{validator_names}"
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:40
+#: ../lib/pdk/cli/validate.rb:41
 msgid "Code validation can only be run from inside a valid module directory"
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:56
+#: ../lib/pdk/cli/validate.rb:57
 msgid "Unknown validator '%{v}'. Available validators: %{validators}."
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:66 ../lib/pdk/cli/validate.rb:70
+#: ../lib/pdk/cli/validate.rb:67 ../lib/pdk/cli/validate.rb:71
 msgid "Running all available validators..."
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:97
+#: ../lib/pdk/cli/validate.rb:98
 msgid "Validating module using %{num_of_threads} threads"
 msgstr ""
 
@@ -798,7 +798,7 @@ msgstr ""
 msgid "A task named '%{name}' already exists in this module; defined in %{file}"
 msgstr ""
 
-#: ../lib/pdk/module/build.rb:160
+#: ../lib/pdk/module/build.rb:158
 msgid "Symlinks in modules are not supported and will not be included in the package. Please investigate symlink %{from} -> %{to}."
 msgstr ""
 
@@ -1198,6 +1198,14 @@ msgstr ""
 msgid "Unable to download %{url}. Check internet connectivity and try again. %{error}"
 msgstr ""
 
+#: ../lib/pdk/util/windows/api_types.rb:31
+msgid "Unable to convert value %{string} to encoding %{encoding} due to %{error}"
+msgstr ""
+
+#: ../lib/pdk/util/windows/file.rb:15
+msgid "Failed to call GetLongPathName"
+msgstr ""
+
 #: ../lib/pdk/validate/base_validator.rb:83
 msgid "Invoking %{cmd}"
 msgstr ""
@@ -1256,24 +1264,4 @@ msgstr ""
 
 #: ../lib/pdk/validate/ruby/rubocop.rb:24
 msgid "Checking Ruby code style (%{pattern})."
-msgstr ""
-
-#: ../lib/puppet/util/windows/api_types.rb:72
-msgid "Unable to read wide strings with %{null_terminator} terminal nulls"
-msgstr ""
-
-#: ../lib/puppet/util/windows/api_types.rb:203
-msgid "Bad GUID format."
-msgstr ""
-
-#: ../lib/puppet/util/windows/file.rb:158
-msgid "Failed to set file attributes"
-msgstr ""
-
-#: ../lib/puppet/util/windows/file.rb:193
-msgid "out_buffer is required"
-msgstr ""
-
-#: ../lib/puppet/util/windows/file.rb:274
-msgid "Failed to call GetLongPathName"
 msgstr ""
