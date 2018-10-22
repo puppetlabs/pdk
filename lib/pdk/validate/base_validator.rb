@@ -1,5 +1,6 @@
 require 'pdk'
 require 'pdk/cli/exec'
+require 'pdk/module'
 
 module PDK
   module Validate
@@ -36,7 +37,6 @@ module PDK
                     options[:targets]
                   end
 
-        fixtures_pattern = File.join('**', 'spec', 'fixtures', '**', '*')
         targets.map! { |r| r.gsub(File::ALT_SEPARATOR, File::SEPARATOR) } if File::ALT_SEPARATOR
         skipped = []
         invalid = []
@@ -45,13 +45,14 @@ module PDK
             if File.directory?(target)
               target_root = PDK::Util.module_root
               pattern_glob = Array(pattern).map { |p| Dir.glob(File.join(target_root, p)) }
-              pattern_glob = pattern_glob.flatten.reject { |file| File.fnmatch(fixtures_pattern, file) }
 
-              target_list = pattern_glob.map do |file|
+              target_list = pattern_glob.flatten.map do |file|
                 if File.fnmatch(File.join(File.expand_path(target), '*'), file)
                   Pathname.new(file).relative_path_from(Pathname.new(PDK::Util.module_root)).to_s
                 end
               end
+
+              target_list = target_list.reject { |file| PDK::Module.default_ignored_pathspec.match(file) }
 
               skipped << target if target_list.flatten.empty?
               target_list
