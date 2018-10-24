@@ -69,8 +69,11 @@ module PDK
         setup
 
         tests = options.fetch(:tests)
+
+        environment = { 'CI_SPEC_OPTIONS' => '--format j' }
+        environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]
         spinner_msg = options.key?(:parallel) ? _('Running unit tests in parallel.') : _('Running unit tests.')
-        result = rake(cmd(tests, options), spinner_msg, 'CI_SPEC_OPTIONS' => '--format j')
+        result = rake(cmd(tests, options), spinner_msg, environment)
 
         json_result = if options.key?(:parallel)
                         PDK::Util.find_all_json_in(result[:stdout])
