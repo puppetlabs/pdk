@@ -92,9 +92,12 @@ module PDK
         else
           # This allows the subprocess to find the 'bundler' gem, which isn't
           # in GEM_HOME for gem installs.
-          # TODO: There must be a better way to do this than shelling out to
-          # gem... Perhaps can be replaced with "Gem.path"?
-          [File.absolute_path(File.join(`gem which bundler`, '..', '..', '..', '..'))]
+          # There seems to be a bug with how bundler and rubygems interact which makes
+          # calculating the gem path that bundler is installed into non-trivial. suggestions welcome!
+          bundler_spec = Gem::Specification.find_by_name('bundler')
+          bundler_root = common_directory_path([bundler_spec.full_gem_path, bundle_bin_path].compact)
+
+          [File.absolute_path(File.join(bundler_root, '..', '..'))]
         end
       end
 
@@ -141,6 +144,16 @@ module PDK
 
       def versions
         self.class.versions
+      end
+
+      def bundle_bin_path
+        ENV['BUNDLE_BIN_PATH']
+      end
+
+      # Find the first common ancestor path given an array of path strings.
+      def common_directory_path(dirs, separator = File::SEPARATOR)
+        dir1, dir2 = dirs.minmax.map { |dir| dir.split(separator) }
+        dir1.zip(dir2).take_while { |dn1, dn2| dn1 == dn2 }.map(&:first).join(separator)
       end
     end
   end

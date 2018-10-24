@@ -4,6 +4,7 @@ require 'tmpdir'
 require 'rspec/xsd'
 require 'open3'
 require 'pdk/generate/module'
+require 'pdk/util/ruby_version'
 
 # automatically load any shared examples or contexts
 Dir['./spec/acceptance/support/**/*.rb'].sort.each { |f| require f }
@@ -44,7 +45,8 @@ tempdir = nil
 
 # bundler won't install bundler into the --path, so in order to access ::Bundler.with_clean_env
 # from within pdk during spec tests, we have to manually re-add the global gem path :(
-ENV['GEM_PATH'] = [ENV['GEM_PATH'], File.absolute_path(File.join(`bundle show bundler`, '..', '..')).to_s].compact.join(File::PATH_SEPARATOR)
+pdk_ruby_version = PDK::Util::RubyVersion.new
+ENV['GEM_PATH'] = [(ENV['GEM_PATH'].empty? ? nil : ENV['GEM_PATH']), pdk_ruby_version.gem_path].compact.join(File::PATH_SEPARATOR)
 
 # Save bundle environment from being purged by specinfra. This needs to be repeated for every example, as specinfra does not correctly reset the environment after a `describe command()` block
 # presumably https://github.com/mizzy/specinfra/blob/79b62b37909545b67b7492574a97c300fb1dc91e/lib/specinfra/backend/exec.rb#L143-L165

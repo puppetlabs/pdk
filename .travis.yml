@@ -5,7 +5,8 @@ script:
   - cat Gemfile.lock
   - bundle list
   - bundle exec rake $CHECK
-before_install: gem install bundler
+before_install:
+  - gem install bundler
 cache: bundler
 matrix:
   include:

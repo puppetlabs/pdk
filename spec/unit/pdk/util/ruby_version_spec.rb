@@ -31,8 +31,10 @@ describe PDK::Util::RubyVersion do
   shared_context 'is not a package install' do
     before(:each) do
       allow(PDK::Util).to receive(:package_install?).and_return(false)
-      bundler_path = File.join('/', 'usr', 'lib', 'ruby', 'gems', '2.1.0', 'gems', 'bundler-1.16.1', 'lib', 'bundler.rb')
-      allow(instance).to receive(:`).with('gem which bundler').and_return(bundler_path)
+      bundler_path = File.join('/', 'usr', 'lib', 'ruby', 'gems', '2.1.0', 'gems', 'bundler-1.16.1')
+      bundler_gemspec_double = instance_double(Gem::Specification, full_gem_path: bundler_path)
+      allow(Gem::Specification).to receive(:find_by_name).with('bundler').and_return(bundler_gemspec_double)
+      allow(instance).to receive(:bundle_bin_path).and_return(File.join(bundler_path, 'exe', 'bundle'))
     end
   end
 

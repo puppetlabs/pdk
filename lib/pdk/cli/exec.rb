@@ -131,6 +131,7 @@ module PDK
           end
 
           @process.environment['BUNDLE_IGNORE_CONFIG'] = '1'
+          @process.environment['BUNDLE_BIN_PATH'] = ENV['BUNDLE_BIN_PATH']
 
           if context == :module
             @process.environment['GEM_HOME'] = PDK::Util::RubyVersion.gem_home
