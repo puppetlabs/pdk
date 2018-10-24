@@ -3,21 +3,12 @@ require 'minitar'
 require 'zlib'
 require 'pathspec'
 require 'find'
+require 'pdk/module'
 require 'pdk/tests/unit'
 
 module PDK
   module Module
     class Build
-      DEFAULT_IGNORED = [
-        '/pkg/',
-        '.*',
-        '~*',
-        '/coverage',
-        '/checksums.json',
-        '/REVISION',
-        '/spec/fixtures/modules/',
-      ].freeze
-
       def self.invoke(options = {})
         new(options).build
       end
@@ -213,7 +204,7 @@ module PDK
               ignored = ignored.add("\/#{File.basename(target_dir)}\/")
             end
 
-            DEFAULT_IGNORED.each { |r| ignored.add(r) }
+            PDK::Module::DEFAULT_IGNORED.each { |r| ignored.add(r) }
 
             ignored
           end

@@ -98,15 +98,17 @@ describe PDK::Validate::BaseValidator do
       end
     end
 
-    context 'when the globbed files include spec/fixtures files' do
+    context 'when the globbed files include files matching the default ignore list' do
       let(:targets) { [] }
       let(:glob_pattern) { File.join(module_root, described_class.pattern) }
       let(:files) { [File.join('manifests', 'init.pp')] }
-      let(:fixture_file) { File.join(module_root, 'spec', 'fixtures', 'test', 'manifests', 'init.pp') }
+      let(:fixture_file) { File.join(module_root, 'spec', 'fixtures', 'modules', 'test', 'manifests', 'init.pp') }
+      let(:pkg_file) { File.join(module_root, 'pkg', 'my-module-0.0.1', 'manifests', 'init.pp') }
       let(:globbed_files) do
         [
           File.join(module_root, 'manifests', 'init.pp'),
           fixture_file,
+          pkg_file,
         ]
       end
 
@@ -116,8 +118,12 @@ describe PDK::Validate::BaseValidator do
         allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
       end
 
-      it 'does not return the files under spec/fixtures' do
-        expect(target_files[0]).not_to include(fixture_file)
+      it 'does not return the files under spec/fixtures/' do
+        expect(target_files[0]).not_to include(a_string_including('spec/fixtures'))
+      end
+
+      it 'does not return the files under pkg/' do
+        expect(target_files[0]).not_to include(a_string_including('pkg/'))
       end
     end
 
