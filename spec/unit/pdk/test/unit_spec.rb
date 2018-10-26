@@ -121,7 +121,6 @@ describe PDK::Test::Unit do
   end
 
   describe '.merge_json_results' do
-    let(:duration) { 55 }
     let(:results) do
       [{ 'messages' => ['message 1', 'message 2'],
          'examples' => %w[example example example],
@@ -144,19 +143,13 @@ describe PDK::Test::Unit do
     end
 
     it 'successfully combines information' do
-      json_result = described_class.merge_json_results(results, duration)
+      json_result = described_class.merge_json_results(results)
 
       expect(json_result['messages'].count).to eq(3)
       expect(json_result['examples'].count).to eq(6)
       expect(json_result['summary']['example_count']).to eq(70)
       expect(json_result['summary']['failure_count']).to eq(11)
       expect(json_result['summary']['pending_count']).to eq(18)
-    end
-
-    it 'assigns given duration to the result' do
-      json_result = described_class.merge_json_results(results, duration)
-
-      expect(json_result['summary']['duration']).to eq(duration)
     end
   end
 
@@ -192,6 +185,7 @@ describe PDK::Test::Unit do
 
   describe '.parse_output' do
     let(:report) { PDK::Report.new }
+    let(:duration) { 4.123 }
 
     before(:each) do
       allow(report).to receive(:add_event).with(%r{message \d})
@@ -202,7 +196,7 @@ describe PDK::Test::Unit do
 
       it 'prints the messages to stderr' do
         expect($stderr).to receive(:puts).twice
-        described_class.parse_output(report, json)
+        described_class.parse_output(report, json, duration)
       end
     end
 
@@ -210,16 +204,23 @@ describe PDK::Test::Unit do
       let(:json) do
         { 'summary' => {
           'example_count' => 30,
-          'duration' => 32,
+          'duration'      => 32,
           'failure_count' => 2,
           'pending_count' => 6,
         } }
       end
 
-      it 'prints the summary to stderr' do
-        expect($stderr).to receive(:puts).once.with(%r{Evaluated 30 tests in 32 seconds})
+      after(:each) do
+        described_class.parse_output(report, json, duration)
+      end
 
-        described_class.parse_output(report, json)
+      it 'prints the wall time of the rspec run instead of the rspec evaluation duration' do
+        expect($stderr).to receive(:puts).once.with(%r{#{Regexp.escape(duration.to_s)} seconds})
+        expect($stderr).not_to receive(:puts).with(%r{#{Regexp.escape(json['duration'].to_s)} seconds})
+      end
+
+      it 'prints the summary to stderr' do
+        expect($stderr).to receive(:puts).once.with(%r{Evaluated 30 tests in 4\.123 seconds})
       end
     end
   end

@@ -85,16 +85,16 @@ module PDK
 
         raise PDK::CLI::FatalError, _('Unit test output did not contain a valid JSON result: %{output}') % { output: result[:stdout] } if json_result.nil? || json_result.empty?
 
-        json_result = merge_json_results(json_result, result[:duration]) if options.key?(:parallel)
+        json_result = merge_json_results(json_result) if options.key?(:parallel)
 
-        parse_output(report, json_result)
+        parse_output(report, json_result, result[:duration])
 
         result[:exit_code]
       ensure
         tear_down if options[:'clean-fixtures']
       end
 
-      def self.parse_output(report, json_data)
+      def self.parse_output(report, json_data, duration)
         # Output messages to stderr.
         json_data['messages'] && json_data['messages'].each { |msg| $stderr.puts msg }
 
@@ -137,13 +137,13 @@ module PDK
         # TODO: standardize summary output
         $stderr.puts '  ' << _('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.') % {
           total: json_data['summary']['example_count'],
-          duration: json_data['summary']['duration'],
+          duration: duration,
           failures: json_data['summary']['failure_count'],
           pending: json_data['summary']['pending_count'],
         }
       end
 
-      def self.merge_json_results(json_data, duration)
+      def self.merge_json_results(json_data)
         merged_json_result = {}
 
         # Merge messages
@@ -164,7 +164,6 @@ module PDK
 
         # Merge summaries
         summary_hash = {
-          'duration'      => duration,
           'example_count' => 0,
           'failure_count' => 0,
           'pending_count' => 0,
