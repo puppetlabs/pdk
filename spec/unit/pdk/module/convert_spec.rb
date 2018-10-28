@@ -396,11 +396,8 @@ describe PDK::Module::Convert do
           end
 
           it 'creates a requirements array with a puppet requirement' do
-            expect(updated_metadata).to include(
-              'requirements' => [
-                { 'name' => 'puppet', 'version_requirement' => '>= 4.7.0 < 7.0.0' },
-              ],
-            )
+            expect(updated_metadata).to include('requirements')
+            expect(updated_metadata['requirements'].find { |req| req['name'] == 'puppet' }).to be
           end
 
           it 'creates an empty dependencies array' do
