@@ -64,52 +64,68 @@ describe PDK::Module::UpdateManager do
       update_manager.remove_file(dummy_file)
     end
 
-    it 'creates a pending change' do
-      expect(update_manager.changes?).to be_truthy
-    end
-
-    it 'creates a file removed change' do
-      expect(update_manager.changes).to include(removed: [dummy_file])
-    end
-
-    it 'knows that the file will be changed' do
-      expect(update_manager.changed?(dummy_file)).to be_truthy
-    end
-
-    context 'when syncing the changes' do
-      context 'and the file exists' do
-        before(:each) do
-          allow(File).to receive(:file?).with(dummy_file).and_return(true)
-        end
-
-        it 'removes the file' do
-          expect(FileUtils).to receive(:rm).with(dummy_file)
-
-          update_manager.sync_changes!
-        end
-
-        context 'but it fails to remove the file' do
-          before(:each) do
-            allow(FileUtils).to receive(:rm).with(dummy_file).and_raise(StandardError, 'an unknown error')
-          end
-
-          it 'exits with an error' do
-            expect {
-              update_manager.sync_changes!
-            }.to raise_error(PDK::CLI::ExitWithError, %r{Unable to remove '#{Regexp.escape(dummy_file)}': an unknown error})
-          end
-        end
+    context 'when the file does not exist on disk' do
+      before(:each) do
+        allow(File).to receive(:exist?).with(dummy_file).and_return(false)
       end
 
-      context 'and the file does not exist' do
-        before(:each) do
-          allow(File).to receive(:file?).with(dummy_file).and_return(false)
+      it 'does not create a pending change' do
+        expect(update_manager.changes?).to be_falsey
+      end
+    end
+
+    context 'when the file exists on disk' do
+      before(:each) do
+        allow(File).to receive(:exist?).with(dummy_file).and_return(true)
+      end
+
+      it 'creates a pending change' do
+        expect(update_manager.changes?).to be_truthy
+      end
+
+      it 'creates a file removed change' do
+        expect(update_manager.changes).to include(removed: [dummy_file])
+      end
+
+      it 'knows that the file will be changed' do
+        expect(update_manager.changed?(dummy_file)).to be_truthy
+      end
+
+      context 'when syncing the changes' do
+        context 'and the file exists' do
+          before(:each) do
+            allow(File).to receive(:file?).with(dummy_file).and_return(true)
+          end
+
+          it 'removes the file' do
+            expect(FileUtils).to receive(:rm).with(dummy_file)
+
+            update_manager.sync_changes!
+          end
+
+          context 'but it fails to remove the file' do
+            before(:each) do
+              allow(FileUtils).to receive(:rm).with(dummy_file).and_raise(StandardError, 'an unknown error')
+            end
+
+            it 'exits with an error' do
+              expect {
+                update_manager.sync_changes!
+              }.to raise_error(PDK::CLI::ExitWithError, %r{Unable to remove '#{Regexp.escape(dummy_file)}': an unknown error})
+            end
+          end
         end
 
-        it 'does not attempt to remove the file' do
-          expect(FileUtils).not_to receive(:rm).with(dummy_file)
+        context 'and the file does not exist' do
+          before(:each) do
+            allow(File).to receive(:file?).with(dummy_file).and_return(false)
+          end
 
-          update_manager.sync_changes!
+          it 'does not attempt to remove the file' do
+            expect(FileUtils).not_to receive(:rm).with(dummy_file)
+
+            update_manager.sync_changes!
+          end
         end
       end
     end
