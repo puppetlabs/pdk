@@ -379,7 +379,9 @@ describe PDK::Module::Convert do
 
           let(:existing_metadata) do
             {
-              'name' => 'testuser-testmodule',
+              'name'         => 'testuser-testmodule',
+              'dependencies' => [],
+              'license'      => nil,
             }.to_json
           end
 

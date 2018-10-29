@@ -111,7 +111,10 @@ module PDK
           if File.readable?(metadata_path)
             begin
               metadata = PDK::Module::Metadata.from_file(metadata_path)
-              new_values = PDK::Module::Metadata::DEFAULTS.reject { |key, _| metadata.data.key?(key) }
+              new_values = PDK::Module::Metadata::DEFAULTS.select do |key, _|
+                !metadata.data.key?(key) || metadata.data[key].nil? ||
+                  (metadata.data[key].respond_to?(:empty?) && metadata.data[key].empty?)
+              end
               metadata.update!(new_values)
             rescue ArgumentError
               metadata = PDK::Generate::Module.prepare_metadata(options) unless options[:noop] # rubocop:disable Metrics/BlockNesting
