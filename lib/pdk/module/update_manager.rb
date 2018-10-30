@@ -48,7 +48,7 @@ module PDK
 
         {
           added:    @added_files,
-          removed:  @removed_files,
+          removed:  @removed_files.select { |f| File.exist?(f) },
           modified: @diff_cache.reject { |_, value| value.nil? },
         }
       end
