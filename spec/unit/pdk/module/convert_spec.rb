@@ -379,9 +379,10 @@ describe PDK::Module::Convert do
 
           let(:existing_metadata) do
             {
-              'name'         => 'testuser-testmodule',
-              'dependencies' => [],
-              'license'      => nil,
+              'name'                    => 'testuser-testmodule',
+              'requirements'            => [],
+              'operatingsystem_support' => [],
+              'license'                 => nil,
             }.to_json
           end
 
@@ -397,13 +398,17 @@ describe PDK::Module::Convert do
             expect(updated_metadata).to include('template-url' => 'http://my.test/template.git', 'template-ref' => 'v1.2.3')
           end
 
-          it 'creates a requirements array with a puppet requirement' do
+          it 'updates an empty requirements array with a puppet requirement' do
             expect(updated_metadata).to include('requirements')
             expect(updated_metadata['requirements'].find { |req| req['name'] == 'puppet' }).to be
           end
 
           it 'creates an empty dependencies array' do
             expect(updated_metadata).to include('dependencies' => [])
+          end
+
+          it 'does not modify an empty operatingsystem_support array' do
+            expect(updated_metadata).to include('operatingsystem_support' => [])
           end
 
           context 'but contains invalid JSON' do

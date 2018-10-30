@@ -118,7 +118,7 @@ module PDK
             metadata = PDK::Module::Metadata.from_file(metadata_path)
             new_values = PDK::Module::Metadata::DEFAULTS.select do |key, _|
               !metadata.data.key?(key) || metadata.data[key].nil? ||
-                (metadata.data[key].respond_to?(:empty?) && metadata.data[key].empty?)
+                (key == 'requirements' && metadata.data[key].empty?)
             end
             metadata.update!(new_values)
           rescue ArgumentError
