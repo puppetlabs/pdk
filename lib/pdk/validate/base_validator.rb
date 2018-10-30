@@ -141,6 +141,7 @@ module PDK
 
           command = PDK::CLI::Exec::Command.new(*cmd_argv).tap do |c|
             c.context = :module
+            c.environment = { 'PUPPET_GEM_VERSION' => options[:puppet] } if options[:puppet]
             unless options[:split_exec]
               exec_group = options[:exec_group]
               if exec_group

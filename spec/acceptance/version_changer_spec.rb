@@ -53,14 +53,19 @@ end
         end
       end
 
-      describe command('pdk validate --puppet-dev') do
-        its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
+      describe command('pdk validate') do
+        its(:stderr) { is_expected.not_to match(%r{Using Puppet file://}i) }
         its(:exit_status) { is_expected.to eq(0) }
       end
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
         its(:stderr) { is_expected.not_to match(%r{Using Puppet file://}i) }
+      end
+
+      describe command('pdk validate --puppet-dev') do
+        its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
+        its(:exit_status) { is_expected.to eq(0) }
       end
 
       describe command('pdk test unit --puppet-dev') do
