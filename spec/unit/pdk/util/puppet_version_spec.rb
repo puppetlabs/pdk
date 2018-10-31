@@ -150,7 +150,7 @@ describe PDK::Util::PuppetVersion do
       end
 
       context 'and fails to connect to github' do
-        let(:pull_results) do
+        let(:fetch_results) do
           {
             stdout: 'foo',
             stderr: 'bar',
@@ -160,7 +160,7 @@ describe PDK::Util::PuppetVersion do
 
         before(:each) do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
-          allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'pull', '--ff-only').and_return(pull_results)
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(fetch_results)
         end
 
         it 'raises an error' do
@@ -168,12 +168,12 @@ describe PDK::Util::PuppetVersion do
           expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
           expect {
             described_class.fetch_puppet_dev
-          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to pull updates for git repository}i))
+          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to fetch from git remote at}i))
         end
       end
 
       context 'and successfully connects to github' do
-        let(:pull_results) do
+        let(:fetch_results) do
           {
             stdout: 'foo',
             stderr: 'bar',
@@ -183,7 +183,52 @@ describe PDK::Util::PuppetVersion do
 
         before(:each) do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
-          allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'pull', '--ff-only').and_return(pull_results)
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(fetch_results)
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/master').and_return(exit_code: 0)
+        end
+
+        it 'exits cleanly' do
+          expect(described_class.fetch_puppet_dev).to eq(nil)
+        end
+      end
+
+      context 'and fails update repo' do
+        let(:reset_results) do
+          {
+            stdout: 'foo',
+            stderr: 'bar',
+            exit_code: 1,
+          }
+        end
+
+        before(:each) do
+          allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(exit_code: 0)
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/master').and_return(reset_results)
+        end
+
+        it 'raises an error' do
+          expect(logger).to receive(:error).with(a_string_matching(%r{foo}))
+          expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
+          expect {
+            described_class.fetch_puppet_dev
+          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to update git repository}i))
+        end
+      end
+
+      context 'and successfully updates repo' do
+        let(:reset_results) do
+          {
+            stdout: 'foo',
+            stderr: 'bar',
+            exit_code: 0,
+          }
+        end
+
+        before(:each) do
+          allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(exit_code: 0)
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/master').and_return(reset_results)
         end
 
         it 'exits cleanly' do
