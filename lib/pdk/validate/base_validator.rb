@@ -52,7 +52,8 @@ module PDK
                 end
               end
 
-              target_list = target_list.reject { |file| PDK::Module.default_ignored_pathspec.match(file) }
+              ignore_list = ignore_pathspec
+              target_list = target_list.reject { |file| ignore_list.match(file) }
 
               skipped << target if target_list.flatten.empty?
               target_list
@@ -74,6 +75,18 @@ module PDK
           end
         }.compact.flatten
         [matched, skipped, invalid]
+      end
+
+      def self.ignore_pathspec
+        ignore_pathspec = PDK::Module.default_ignored_pathspec.dup
+
+        if respond_to?(:pattern_ignore)
+          Array(pattern_ignore).each do |pattern|
+            ignore_pathspec.add(pattern)
+          end
+        end
+
+        ignore_pathspec
       end
 
       def self.parse_options(_options, targets)
