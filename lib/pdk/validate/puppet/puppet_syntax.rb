@@ -37,6 +37,10 @@ module PDK
         '**/**.pp'
       end
 
+      def self.pattern_ignore
+        '/plans/**/*.pp'
+      end
+
       def self.spinner_text(_targets = nil)
         _('Checking Puppet manifest syntax (%{pattern}).') % { pattern: pattern }
       end
