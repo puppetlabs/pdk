@@ -108,18 +108,21 @@ module PDK
 
       def update_metadata(metadata_path, template_metadata)
         if File.file?(metadata_path)
-          if File.readable?(metadata_path)
-            begin
-              metadata = PDK::Module::Metadata.from_file(metadata_path)
-              new_values = PDK::Module::Metadata::DEFAULTS.reject { |key, _| metadata.data.key?(key) }
-              metadata.update!(new_values)
-            rescue ArgumentError
-              metadata = PDK::Generate::Module.prepare_metadata(options) unless options[:noop] # rubocop:disable Metrics/BlockNesting
-            end
-          else
+          unless File.readable?(metadata_path)
             raise PDK::CLI::ExitWithError, _('Unable to update module metadata; %{path} exists but it is not readable.') % {
               path: metadata_path,
             }
+          end
+
+          begin
+            metadata = PDK::Module::Metadata.from_file(metadata_path)
+            new_values = PDK::Module::Metadata::DEFAULTS.select do |key, _|
+              !metadata.data.key?(key) || metadata.data[key].nil? ||
+                (key == 'requirements' && metadata.data[key].empty?)
+            end
+            metadata.update!(new_values)
+          rescue ArgumentError
+            metadata = PDK::Generate::Module.prepare_metadata(options) unless options[:noop]
           end
         elsif File.exist?(metadata_path)
           raise PDK::CLI::ExitWithError, _('Unable to update module metadata; %{path} exists but it is not a file.') % {
