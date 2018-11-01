@@ -18,6 +18,33 @@ describe PDK::Validate::PuppetSyntax do
 
   it_behaves_like 'it accepts .pp targets'
 
+  describe '.parse_targets' do
+    context 'when the module contains task .pp files' do
+      subject(:parsed_targets) { described_class.parse_targets(targets: targets) }
+
+      before(:each) do
+        allow(Dir).to receive(:glob).with(any_args).and_call_original
+        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
+        allow(File).to receive(:expand_path).with(any_args).and_call_original
+        allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
+      end
+
+      let(:targets) { [] }
+      let(:glob_pattern) { File.join(module_root, described_class.pattern) }
+      let(:globbed_files) do
+        [
+          File.join(module_root, 'manifests', 'init.pp'),
+          File.join(module_root, 'plans', 'foo.pp'),
+          File.join(module_root, 'plans', 'nested', 'thing.pp'),
+        ]
+      end
+
+      it 'does not include the task .pp files in the return value' do
+        expect(parsed_targets.first).to eq([File.join('manifests', 'init.pp')])
+      end
+    end
+  end
+
   describe '.parse_options' do
     subject(:command_args) { described_class.parse_options(options, targets) }
 
