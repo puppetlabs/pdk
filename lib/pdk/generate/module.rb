@@ -84,6 +84,8 @@ module PDK
 
         begin
           if FileUtils.mv(temp_target_dir, target_dir)
+            Dir.chdir(target_dir) { PDK::Util::Bundler.ensure_bundle! }
+
             PDK.logger.info(_('Module \'%{name}\' generated at path \'%{path}\', from template \'%{template_url}\'.') % { name: opts[:module_name], path: target_dir, template_url: template_url })
             PDK.logger.info(_('In your module directory, add classes with the \'pdk new class\' command.'))
           end

@@ -58,6 +58,11 @@ describe PDK::Generate::Module do
       }
     end
 
+    before(:each) do
+      allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
+      allow(Dir).to receive(:chdir).with(target_dir).and_yield
+    end
+
     context 'when the target module directory already exists' do
       before(:each) do
         allow(File).to receive(:exist?).with(target_dir).and_return(true)
@@ -145,6 +150,12 @@ describe PDK::Generate::Module do
 
       it 'moves the temporary directory to the target directory when done' do
         expect(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
+        described_class.invoke(invoke_opts)
+      end
+
+      it 'prepares the bundler environment so that it is ready immediately' do
+        allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(true)
+        expect(PDK::Util::Bundler).to receive(:ensure_bundle!)
         described_class.invoke(invoke_opts)
       end
 
