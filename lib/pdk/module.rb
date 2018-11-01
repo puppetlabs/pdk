@@ -10,6 +10,7 @@ module PDK
       '/checksums.json',
       '/REVISION',
       '/spec/fixtures/modules/',
+      '/vendor/',
     ].freeze
 
     def default_ignored_pathspec
