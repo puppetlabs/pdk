@@ -26,9 +26,52 @@ describe 'puppet version selection' do
       end
     end
 
-    describe command('pdk validate --puppet-dev') do
-      its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
-      its(:exit_status) { is_expected.to eq(0) }
+    describe 'puppet-dev uses the correct puppet env' do
+      before(:all) do
+        File.open(File.join('manifests', 'init.pp'), 'w') do |f|
+          f.puts <<-PPFILE
+# version_select
+class version_select {
+}
+          PPFILE
+        end
+
+        FileUtils.mkdir_p(File.join('spec', 'classes'))
+        File.open(File.join('spec', 'classes', 'version_select_spec.rb'), 'w') do |f|
+          f.puts <<-TESTFILE
+require 'spec_helper'
+
+describe 'version_select' do
+  context 'test env' do
+    it('has path') {
+      path = Gem::Specification.find_by_name('puppet').source.options.key?('path')
+      expect(path).to be true
+    }
+  end
+end
+          TESTFILE
+        end
+      end
+
+      describe command('pdk validate') do
+        its(:stderr) { is_expected.not_to match(%r{Using Puppet file://}i) }
+        its(:exit_status) { is_expected.to eq(0) }
+      end
+
+      describe command('pdk test unit') do
+        its(:exit_status) { is_expected.not_to eq(0) }
+        its(:stderr) { is_expected.not_to match(%r{Using Puppet file://}i) }
+      end
+
+      describe command('pdk validate --puppet-dev') do
+        its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
+        its(:exit_status) { is_expected.to eq(0) }
+      end
+
+      describe command('pdk test unit --puppet-dev') do
+        its(:exit_status) { is_expected.to eq(0) }
+        its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
+      end
     end
   end
 end

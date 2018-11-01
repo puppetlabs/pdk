@@ -6,8 +6,11 @@ describe '`pdk test unit`' do
 
   it { is_expected.not_to be_nil }
 
+  let(:ruby_version) { '2.4.3' }
+  let(:puppet_version) { '5.4.0' }
+
   before(:each) do
-    allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: '2.4.3', gemset: { puppet: '5.4.0' })
+    allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: ruby_version, gemset: { puppet: puppet_version })
     allow(PDK::Util::RubyVersion).to receive(:use)
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(hash_including(:puppet))
   end
@@ -91,7 +94,7 @@ describe '`pdk test unit`' do
 
       context 'when passed --clean-fixtures' do
         it 'invokes the command with :clean-fixtures => true' do
-          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, :tests => anything, :'clean-fixtures' => true).once.and_return(0)
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, :puppet => puppet_version, :tests => anything, :'clean-fixtures' => true).once.and_return(0)
           expect {
             test_unit_cmd.run_this(['--clean-fixtures'])
           }.to exit_zero
@@ -100,7 +103,7 @@ describe '`pdk test unit`' do
 
       context 'when not passed --clean-fixtures' do
         it 'invokes the command without :clean-fixtures' do
-          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, tests: anything).once.and_return(0)
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, puppet: puppet_version, tests: anything).once.and_return(0)
           expect {
             test_unit_cmd.run_this([])
           }.to exit_zero
@@ -153,7 +156,7 @@ describe '`pdk test unit`' do
   context 'with --puppet-dev' do
     let(:puppet_env) do
       {
-        ruby_version: '2.4.3',
+        ruby_version: ruby_version,
         gemset: { puppet: 'file://path/to/puppet' },
       }
     end
@@ -196,7 +199,7 @@ describe '`pdk test unit`' do
     let(:puppet_version) { '5.3' }
     let(:puppet_env) do
       {
-        ruby_version: '2.4.3',
+        ruby_version: ruby_version,
         gemset: { puppet: '5.3.5' },
       }
     end
