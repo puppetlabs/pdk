@@ -2,6 +2,7 @@ require 'pdk/util'
 require 'net/https'
 require 'openssl'
 require 'fileutils'
+require 'pdk/util/filesystem'
 
 module PDK
   module Util
@@ -22,6 +23,8 @@ module PDK
       attr_reader :file_name
       attr_reader :url
 
+      include PDK::Util::Filesystem
+
       def initialize(file_name, url)
         @file_name = file_name
         @url = url
@@ -36,9 +39,7 @@ module PDK
         # TODO: should only write if it's valid JSON
         # TODO: need a way to invalidate if out of date
         FileUtils.mkdir_p(File.dirname(gem_vendored_path))
-        File.open(gem_vendored_path, 'w') do |fd|
-          fd.write(content)
-        end
+        write_file(gem_vendored_path, content)
         content
       end
 

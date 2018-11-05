@@ -5,6 +5,7 @@ require 'pdk/logger'
 require 'pdk/module/metadata'
 require 'pdk/module/templatedir'
 require 'pdk/template_file'
+require 'pdk/util/filesystem'
 
 module PDK
   module Generate
@@ -180,7 +181,7 @@ module PDK
           }
         end
 
-        File.open(dest_path, 'w') { |f| f.write file_content }
+        PDK::Util::Filesystem.write_file(dest_path, file_content)
       rescue SystemCallError => e
         raise PDK::CLI::FatalError, _("Unable to write to file '%{path}': %{message}") % {
           path:    dest_path,

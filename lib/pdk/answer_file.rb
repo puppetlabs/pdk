@@ -1,4 +1,5 @@
 require 'json'
+require 'pdk/util/filesystem'
 
 module PDK
   # Singleton accessor to the current answer file being used by the PDK.
@@ -20,6 +21,8 @@ module PDK
   class AnswerFile
     attr_reader :answers
     attr_reader :answer_file_path
+
+    include PDK::Util::Filesystem
 
     # Initialises the AnswerFile object, which stores the responses to certain
     # interactive questions.
@@ -107,9 +110,7 @@ module PDK
     def save_to_disk
       FileUtils.mkdir_p(File.dirname(answer_file_path))
 
-      File.open(answer_file_path, 'w') do |answer_file|
-        answer_file.puts JSON.pretty_generate(answers)
-      end
+      write_file(answer_file_path, JSON.pretty_generate(answers))
     rescue SystemCallError, IOError => e
       raise PDK::CLI::FatalError, _("Unable to write '%{file}': %{msg}") % {
         file: answer_file_path,

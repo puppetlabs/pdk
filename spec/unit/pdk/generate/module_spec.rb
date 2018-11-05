@@ -31,10 +31,11 @@ shared_context 'mock template dir' do
   before(:each) do
     allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(test_template_dir)
 
-    dir_double = instance_double(Pathname, mkpath: true)
-    allow(dir_double).to receive(:+).with(anything).and_return(test_template_file)
-    allow(test_template_file).to receive(:dirname).and_return(dir_double)
+    dir_double = instance_double(Pathname, mkpath: true, to_path: '/a/path')
+    allow(dir_double).to receive(:+).with(anything).and_return(dir_double)
+    allow(dir_double).to receive(:dirname).and_return(dir_double)
     allow(Pathname).to receive(:new).with(temp_target_dir).and_return(dir_double)
+    allow(File).to receive(:open).with(dir_double, 'wb').and_yield(test_template_file)
   end
 end
 
@@ -42,13 +43,16 @@ shared_context 'mock metadata.json' do
   let(:metadata_json) { StringIO.new }
 
   before(:each) do
-    allow(File).to receive(:open).with(any_args).and_call_original
-    allow(File).to receive(:open).with(a_string_matching(%r{metadata\.json\Z}), 'w').and_yield(metadata_json)
+    allow(File).to receive(:open).with(a_string_matching(%r{metadata\.json\Z}), 'wb').and_yield(metadata_json)
   end
 end
 
 describe PDK::Generate::Module do
   describe '.invoke' do
+    before(:each) do
+      allow(File).to receive(:open).with(any_args).and_call_original
+    end
+
     let(:target_dir) { File.expand_path('/path/to/target/module') }
     let(:invoke_opts) do
       {
@@ -59,11 +63,8 @@ describe PDK::Generate::Module do
     end
 
     context 'when the target module directory already exists' do
-      before(:each) do
-        allow(File).to receive(:exist?).with(target_dir).and_return(true)
-      end
-
       it 'raises a FatalError' do
+        allow(File).to receive(:exist?).with(target_dir).and_return(true)
         expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
         expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
 

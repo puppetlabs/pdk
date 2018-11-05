@@ -3,6 +3,7 @@ require 'diff/lcs/hunk'
 require 'English'
 require 'fileutils'
 require 'set'
+require 'pdk/util/filesystem'
 
 module PDK
   module Module
@@ -148,7 +149,7 @@ module PDK
       def write_file(path, content)
         FileUtils.mkdir_p(File.dirname(path))
         PDK.logger.debug(_("writing '%{path}'") % { path: path })
-        File.open(path, 'w') { |f| f.puts content }
+        PDK::Util::Filesystem.write_file(path, content)
       rescue Errno::EACCES
         raise PDK::CLI::ExitWithError, _("You do not have permission to write to '%{path}'") % { path: path }
       end

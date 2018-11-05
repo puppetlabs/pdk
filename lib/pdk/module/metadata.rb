@@ -1,9 +1,12 @@
 require 'json'
+require 'pdk/util/filesystem'
 
 module PDK
   module Module
     class Metadata
       attr_accessor :data
+
+      include PDK::Util::Filesystem
 
       OPERATING_SYSTEMS = {
         'RedHat based Linux' => [
@@ -120,9 +123,7 @@ module PDK
       end
 
       def write!(path)
-        File.open(path, 'w') do |file|
-          file.puts to_json
-        end
+        write_file(path, to_json)
       end
 
       def forge_ready?
