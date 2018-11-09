@@ -274,13 +274,10 @@ RSpec.describe PDK::Util::Bundler do
     include_context 'not packaged install'
 
     let(:instance) { described_class.new }
-    let(:bundle_cachedir) { '/bundle_cache' }
 
     before(:each) do
       # Doesn't matter where this is since all the execs get mocked.
       allow(PDK::Util).to receive(:module_root).and_return('/')
-
-      allow(PDK::Util).to receive(:cachedir).and_return(bundle_cachedir)
     end
 
     describe '#gemfile' do
@@ -355,20 +352,20 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       it 'invokes `bundle check`' do
-        expect_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run', "--path=#{bundle_cachedir}"], exit_code: 0)
+        expect_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 0)
 
         instance.installed?
       end
 
       it 'returns true if `bundle check` exits zero' do
-        allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run', "--path=#{bundle_cachedir}"], exit_code: 0)
+        allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 0)
 
         expect(instance.installed?).to be true
       end
 
       context 'when `bundle check` exits non-zero' do
         before(:each) do
-          allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run', "--path=#{bundle_cachedir}"], exit_code: 1, stderr: 'this is an error message')
+          allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 1, stderr: 'this is an error message')
         end
 
         it 'returns false' do
@@ -396,7 +393,7 @@ RSpec.describe PDK::Util::Bundler do
         let(:overrides) { { puppet: '1.2.3' } }
 
         it 'updates env before invoking `bundle check`' do
-          cmd_double = allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run', "--path=#{bundle_cachedir}"], exit_code: 0)
+          cmd_double = allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 0)
 
           expect(cmd_double).to receive(:update_environment).with(hash_including('PUPPET_GEM_VERSION' => '1.2.3'))
 
@@ -559,7 +556,7 @@ RSpec.describe PDK::Util::Bundler do
 
     describe '#install!' do
       let(:gemfile) { '/Gemfile' }
-      let(:expected_bundle_install) { [bundle_regex, 'install', "--gemfile=#{gemfile}", '-j4', "--path=#{bundle_cachedir}"] }
+      let(:expected_bundle_install) { [bundle_regex, 'install', "--gemfile=#{gemfile}", '-j4'] }
 
       before(:each) do
         allow(instance).to receive(:gemfile).and_return(gemfile)
@@ -615,7 +612,7 @@ RSpec.describe PDK::Util::Bundler do
       end
 
       context 'on Windows running older Ruby' do
-        let(:expected_bundle_install) { [bundle_regex, 'install', "--gemfile=#{gemfile}", "--path=#{bundle_cachedir}"] }
+        let(:expected_bundle_install) { [bundle_regex, 'install', "--gemfile=#{gemfile}"] }
 
         before(:each) do
           allow(Gem).to receive(:win_platform?).and_return(true)
