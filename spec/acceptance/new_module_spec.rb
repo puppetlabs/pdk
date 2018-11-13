@@ -42,5 +42,10 @@ describe 'Creating a new module' do
       it { is_expected.to be_file }
       it { is_expected.to contain(%r{## Release 0.1.0}i) }
     end
+
+    eol_check = '(Get-Content .\foo\spec\spec_helper.rb -Delimiter [String].Empty) -Match "`r`n"'
+    describe command(eol_check), if: Gem.win_platform? do
+      its(:stdout) { is_expected.to match(%r{\AFalse$}) }
+    end
   end
 end

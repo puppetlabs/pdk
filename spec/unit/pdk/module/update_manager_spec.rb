@@ -36,7 +36,7 @@ describe PDK::Module::UpdateManager do
 
       before(:each) do
         allow(File).to receive(:open).with(any_args).and_call_original
-        allow(File).to receive(:open).with(dummy_file, 'w').and_yield(dummy_file_io)
+        allow(File).to receive(:open).with(dummy_file, 'wb').and_yield(dummy_file_io)
         update_manager.sync_changes!
         dummy_file_io.rewind
       end
@@ -47,7 +47,7 @@ describe PDK::Module::UpdateManager do
 
       context 'but if the file can not be written to' do
         before(:each) do
-          allow(File).to receive(:open).with(dummy_file, 'w').and_raise(Errno::EACCES)
+          allow(File).to receive(:open).with(dummy_file, 'wb').and_raise(Errno::EACCES)
         end
 
         it 'exits with an error' do
@@ -208,7 +208,7 @@ describe PDK::Module::UpdateManager do
 
         before(:each) do
           allow(File).to receive(:open).with(any_args).and_call_original
-          allow(File).to receive(:open).with(dummy_file, 'w').and_yield(dummy_file_io)
+          allow(File).to receive(:open).with(dummy_file, 'wb').and_yield(dummy_file_io)
           update_manager.sync_changes!
           dummy_file_io.rewind
         end
@@ -219,7 +219,7 @@ describe PDK::Module::UpdateManager do
 
         context 'but if the file can not be written to' do
           before(:each) do
-            allow(File).to receive(:open).with(dummy_file, 'w').and_raise(Errno::EACCES)
+            allow(File).to receive(:open).with(dummy_file, 'wb').and_raise(Errno::EACCES)
           end
 
           it 'exits with an error' do
@@ -250,7 +250,7 @@ describe PDK::Module::UpdateManager do
 
       context 'when syncing the changes' do
         it 'does not modify the file' do
-          expect(File).not_to receive(:open).with(dummy_file, 'w')
+          expect(File).not_to receive(:open).with(dummy_file, 'wb')
           update_manager.sync_changes!
         end
       end

@@ -74,6 +74,9 @@ RSpec/ExampleLength:
 RSpec/MessageSpies:
   EnforcedStyle: receive
 
+RSpec/ScatteredSetup:
+  Enabled: False
+
 # Style Cops
 Style/AsciiComments:
   Description: Names, non-english speaking communities.

@@ -69,7 +69,7 @@ describe PDK::Util::VendoredFile do
             allow(mock_response).to receive(:body).and_return(gem_vendored_content)
             allow(FileUtils).to receive(:mkdir_p).with(File.dirname(gem_vendored_path))
             allow(File).to receive(:open).with(any_args).and_call_original
-            allow(File).to receive(:open).with(gem_vendored_path, 'w').and_yield(cached_file)
+            allow(File).to receive(:open).with(gem_vendored_path, 'wb').and_yield(cached_file)
           end
 
           let(:cached_file) { StringIO.new }

@@ -164,7 +164,7 @@ describe PDK::AnswerFile do
       let(:fake_file) { StringIO.new }
 
       before(:each) do
-        allow(File).to receive(:open).with(default_path, 'w').and_yield(fake_file)
+        allow(File).to receive(:open).with(default_path, 'wb').and_yield(fake_file)
       end
 
       it 'writes the answer set to disk' do
@@ -185,7 +185,7 @@ describe PDK::AnswerFile do
     context 'when an IOError is raised' do
       before(:each) do
         allow(File).to receive(:open).with(any_args).and_call_original
-        allow(File).to receive(:open).with(default_path, 'w').and_raise(IOError, 'some error message')
+        allow(File).to receive(:open).with(default_path, 'wb').and_raise(IOError, 'some error message')
       end
 
       it 'raises a FatalError' do
@@ -197,7 +197,7 @@ describe PDK::AnswerFile do
     context 'when a SystemCallError is raised' do
       before(:each) do
         allow(File).to receive(:open).with(any_args).and_call_original
-        allow(File).to receive(:open).with(default_path, 'w').and_raise(SystemCallError, 'some other error')
+        allow(File).to receive(:open).with(default_path, 'wb').and_raise(SystemCallError, 'some other error')
       end
 
       it 'raises a FatalError' do

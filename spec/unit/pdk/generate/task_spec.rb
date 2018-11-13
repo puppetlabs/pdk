@@ -88,7 +88,7 @@ describe PDK::Generate::Task do
 
     before(:each) do
       metadata_file = File.join(module_dir, 'tasks', "#{given_name}.json")
-      allow(File).to receive(:open).with(metadata_file, 'w').and_yield(mock_file)
+      allow(File).to receive(:open).with(metadata_file, 'wb').and_yield(mock_file)
       generator.write_task_metadata
       mock_file.rewind
     end
