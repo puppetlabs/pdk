@@ -97,7 +97,6 @@ module PDK
           PDK.logger.debug(_('Checking for missing Gemfile dependencies.'))
 
           argv = ['check', "--gemfile=#{gemfile}", '--dry-run']
-          argv << "--path=#{bundle_cachedir}" unless PDK::Util.package_install?
 
           cmd = bundle_command(*argv).tap do |c|
             c.update_environment(gemfile_env(gem_overrides)) unless gem_overrides.empty?
@@ -192,7 +191,6 @@ module PDK
         def install!(gem_overrides = {})
           argv = ['install', "--gemfile=#{gemfile}"]
           argv << '-j4' unless Gem.win_platform? && Gem::Version.new(PDK::Util::RubyVersion.active_ruby_version) < Gem::Version.new('2.3.5')
-          argv << "--path=#{bundle_cachedir}" unless PDK::Util.package_install?
 
           cmd = bundle_command(*argv).tap do |c|
             c.add_spinner(_('Installing missing Gemfile dependencies.'))
@@ -248,10 +246,6 @@ module PDK
           PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
             c.context = :module
           end
-        end
-
-        def bundle_cachedir
-          @bundle_cachedir ||= PDK::Util.package_install? ? PDK::Util.package_cachedir : File.join(PDK::Util.cachedir)
         end
       end
     end
