@@ -42,15 +42,8 @@ describe PDK::Validate::Rubocop do
     context 'when given no targets' do
       let(:targets) { [] }
 
-      let(:files) { [File.join('spec', 'spec_helper.rb')] }
-      let(:globbed_files) { files.map { |file| File.join(module_root, file) } }
-
-      before(:each) do
-        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
-      end
-
       it 'returns the module root' do
-        expect(target_files.first).to eq(files)
+        expect(target_files.first).to be_empty
       end
     end
 

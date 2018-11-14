@@ -8,6 +8,8 @@ require 'pdk/validate/ruby_validator'
 module PDK
   module Validate
     class Rubocop < BaseValidator
+      ALLOW_EMPTY_TARGETS = true
+
       def self.name
         'rubocop'
       end
