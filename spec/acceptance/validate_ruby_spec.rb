@@ -34,7 +34,7 @@ describe 'pdk validate ruby', module_command: true do
     end
 
     context 'when validating specific directories' do
-      another_violation_rb = File.join('lib', 'puppet', 'another_violation.rb')
+      another_violation_rb = File.join('spec', 'fixtures', 'test', 'another_violation.rb')
 
       before(:all) do
         FileUtils.mkdir_p(File.dirname(another_violation_rb))
@@ -43,7 +43,7 @@ describe 'pdk validate ruby', module_command: true do
         end
       end
 
-      describe command('pdk validate ruby lib') do
+      describe command('pdk validate ruby spec/fixtures') do
         its(:exit_status) { is_expected.not_to eq(0) }
         its(:stdout) { is_expected.to match(%r{#{Regexp.escape(another_violation_rb)}}) }
         its(:stdout) { is_expected.not_to match(%r{#{Regexp.escape(spec_violation_rb)}}) }
@@ -58,8 +58,8 @@ describe 'pdk validate ruby', module_command: true do
 
       its(:stdout) do
         is_expected.to have_junit_testsuite('rubocop').with_attributes(
-          'failures' => a_value > 1,
-          'tests'    => a_value >= 3,
+          'failures' => a_value >= 1,
+          'tests'    => a_value >= 2,
         )
       end
 
@@ -71,10 +71,9 @@ describe 'pdk validate ruby', module_command: true do
       end
 
       its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('rubocop').with_attributes(
-          'classname' => a_string_matching(%r{UselessAssignment}),
-          'name'      => a_string_starting_with(File.join('spec', 'violation.rb')),
-        ).that_failed
+        is_expected.not_to have_junit_testcase.in_testsuite('rubocop').with_attributes(
+          'name' => a_string_starting_with(File.join('spec', 'fixtures')),
+        )
       end
     end
   end

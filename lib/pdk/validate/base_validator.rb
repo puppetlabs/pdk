@@ -13,6 +13,14 @@ module PDK
       #                 separately.
       INVOKE_STYLE = :once
 
+      # Controls how the validator behaves if not passed any targets.
+      #
+      #   true  - PDK will not pass the globbed targets to the validator command
+      #           and it will instead rely on the underlying tool to find its
+      #           own default targets.
+      #   false - PDK will pass the globbed targets to the validator command.
+      ALLOW_EMPTY_TARGETS = false
+
       def self.cmd_path
         File.join(PDK::Util.module_root, 'bin', cmd)
       end
@@ -31,11 +39,8 @@ module PDK
       def self.parse_targets(options)
         # If no targets are specified, then we will run validations from the
         # base module directory.
-        targets = if options[:targets].nil? || options[:targets].empty?
-                    [PDK::Util.module_root]
-                  else
-                    options[:targets]
-                  end
+
+        targets = options.fetch(:targets, []).empty? ? [PDK::Util.module_root] : options[:targets]
 
         targets.map! { |r| r.gsub(File::ALT_SEPARATOR, File::SEPARATOR) } if File::ALT_SEPARATOR
         skipped = []
@@ -123,6 +128,10 @@ module PDK
         end
       end
 
+      def self.allow_empty_targets?
+        self::ALLOW_EMPTY_TARGETS == true
+      end
+
       def self.invoke(report, options = {})
         targets, skipped, invalid = parse_targets(options)
 
@@ -144,6 +153,10 @@ module PDK
         else
           targets = targets.each_slice(1000).to_a
           options[:split_exec] = PDK::CLI::ExecGroup.new(spinner_text(targets), parallel: false)
+        end
+
+        if options.fetch(:targets, []).empty? && allow_empty_targets?
+          targets = [[]]
         end
 
         exit_codes = []
