@@ -10,6 +10,7 @@ module PDK::CLI
 
     option nil, 'license', _('Specifies the license this module is written under. ' \
       "This should be a identifier from https://spdx.org/licenses/. Common values are 'Apache-2.0', 'MIT', or 'proprietary'."), argument: :required
+    option nil, 'skip-bundle-install', _('Do not automatically run `bundle install` after creating the module.'), hidden: true
 
     run do |opts, args, _cmd|
       require 'pdk/generate/module'
