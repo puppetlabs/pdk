@@ -14,10 +14,6 @@ describe 'C100321 - Generate a module and validate it (i.e. ensure bundle instal
         is_expected.to include('template-url' => a_string_matching(%r{\Afile://.+pdk-templates\.git\Z}))
       end
     end
-
-    describe file(File.join(module_name, 'Gemfile.lock')) do
-      it { is_expected.not_to exist }
-    end
   end
 
   context 'when validating the module' do

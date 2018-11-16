@@ -7,10 +7,6 @@ describe 'C100545 - Generate a module, add a gem to it, and validate it' do
     its(:exit_status) { is_expected.to eq(0) }
   end
 
-  describe file(File.join(module_name, 'Gemfile.lock')) do
-    it { is_expected.not_to exist }
-  end
-
   context 'when a new gem dependency has been added to the Gemfile' do
     before(:all) do
       shell("echo \"gem \'nothing\'\" >> #{File.join(module_name, 'Gemfile')}")
