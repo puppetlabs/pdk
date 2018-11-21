@@ -32,10 +32,6 @@ describe 'Basic usage in an air-gapped environment' do
           is_expected.to include('template-url' => a_string_matching(%r{\Afile://.+pdk-templates\.git\Z}))
         end
       end
-
-      describe file(File.join(module_name, 'Gemfile.lock')) do
-        it { is_expected.not_to exist }
-      end
     end
 
     context 'when validating the module' do
@@ -49,12 +45,12 @@ describe 'Basic usage in an air-gapped environment' do
         it { is_expected.to be_file }
 
         describe 'the content of the file' do
-          subject { super().content }
+          subject { super().content.gsub(%r{^DEPENDENCIES.+?\n\n}m, '') }
 
           it 'is identical to the vendored lockfile' do
             # TODO: Need to find a better way to get 'latest_ruby' programmatically so we can use the correct vendored gemfile.
             vendored_lockfile = File.join(install_dir, 'share', 'cache', 'Gemfile-2.5.1.lock')
-            is_expected.to eq(file(vendored_lockfile).content)
+            is_expected.to eq(file(vendored_lockfile).content.gsub(%r{^DEPENDENCIES.+?\n\n}m, ''))
           end
         end
       end
