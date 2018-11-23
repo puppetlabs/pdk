@@ -3,6 +3,7 @@ require 'spec_helper_acceptance'
 describe 'Running tasks validation' do
   let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
   let(:task_style_spinner) { %r{checking task metadata style}i }
+  let(:task_name_spinner) { %r{checking task name}i }
 
   include_context 'with a fake TTY'
 
@@ -23,11 +24,13 @@ describe 'Running tasks validation' do
 
     describe command('pdk validate tasks') do
       its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(task_name_spinner) }
       its(:stderr) { is_expected.to match(task_style_spinner) }
     end
 
     describe command('pdk validate tasks --format junit') do
       its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(task_name_spinner) }
       its(:stderr) { is_expected.to match(task_style_spinner) }
       its(:stdout) { is_expected.to pass_validation(junit_xsd) }
 
@@ -35,7 +38,30 @@ describe 'Running tasks validation' do
     end
   end
 
-  context 'with invalid task' do
+  context 'with an invalid task name' do
+    include_context 'in a new module', 'foo'
+
+    before(:all) do
+      File.open(File.join('tasks', 'Invalid.json'), 'w') do |f|
+        f.puts <<-EOS
+{
+  "puppet_task_version": 1,
+  "supports_noop": "false",
+  "description": "A short description of this task"
+}
+        EOS
+      end
+    end
+
+    describe command('pdk validate tasks') do
+      its(:exit_status) { is_expected.not_to eq(0) }
+      its(:stderr) { is_expected.to match(task_name_spinner) }
+      its(:stderr) { is_expected.not_to match(task_style_spinner) }
+      its(:stdout) { is_expected.to match(%r{invalid task name}i) }
+    end
+  end
+
+  context 'with invalid task metadata' do
     include_context 'in a new module', 'foo'
 
     before(:all) do
@@ -52,12 +78,14 @@ describe 'Running tasks validation' do
 
     describe command('pdk validate tasks') do
       its(:exit_status) { is_expected.not_to eq(0) }
+      its(:stderr) { is_expected.to match(task_name_spinner) }
       its(:stderr) { is_expected.to match(task_style_spinner) }
       its(:stdout) { is_expected.to match(%r{The property '#/supports_noop' of type string did not match the following type: boolean}i) }
     end
 
     describe command('pdk validate tasks --format junit') do
       its(:exit_status) { is_expected.not_to eq(0) }
+      its(:stderr) { is_expected.to match(task_name_spinner) }
       its(:stderr) { is_expected.to match(task_style_spinner) }
       its(:stdout) { is_expected.to pass_validation(junit_xsd) }
 
