@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PDK::Validate::TaskMetadataLint do
+describe PDK::Validate::Tasks::MetadataLint do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }
   let(:schema) do
     {
