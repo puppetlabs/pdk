@@ -6,7 +6,7 @@ module PDK::CLI
     usage _('validate [validators] [options] [targets]')
     summary _('Run static analysis tests.')
     description _(
-      "Run metadata, Puppet, or Ruby validation.\n\n" \
+      "Run metadata, Puppet, Ruby, or Tasks validation.\n\n" \
       '[validators] is an optional comma-separated list of validators to use. ' \
       'If not specified, all validators are used. ' \
       "Note that when using PowerShell, the list of validators must be enclosed in single quotes.\n\n" \
