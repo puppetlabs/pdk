@@ -39,7 +39,9 @@ module PDK::CLI
   end
 
   def self.template_url_option(dsl)
-    dsl.option nil, 'template-url', _('Specifies the URL to the template to use when creating new modules or classes.'), argument: :required, default: PDK::Util.default_template_url
+    desc = _('Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})') % { default_url: PDK::Util.default_template_url }
+
+    dsl.option nil, 'template-url', desc, argument: :required
   end
 
   def self.skip_interview_option(dsl)

@@ -343,6 +343,22 @@ describe PDK::Module::Convert do
     end
   end
 
+  describe '#template_url' do
+    subject { described_class.new(options).template_url }
+
+    let(:options) { {} }
+
+    context 'when a template-url is provided in the options' do
+      let(:options) { { :'template-url' => 'https://my/custom/template' } }
+
+      it { is_expected.to eq('https://my/custom/template') }
+    end
+
+    context 'when no template-url is provided in the options' do
+      it { is_expected.to eq(PDK::Util.default_template_url) }
+    end
+  end
+
   describe '#update_metadata' do
     subject(:updated_metadata) do
       JSON.parse(described_class.new.update_metadata(metadata_path, template_metadata).to_json)

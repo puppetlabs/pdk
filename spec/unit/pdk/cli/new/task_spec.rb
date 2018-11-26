@@ -78,8 +78,7 @@ describe 'PDK::CLI new task' do
       context 'and provided a description for the task' do
         let(:generator_opts) do
           {
-            :description    => 'test_task description',
-            :'template-url' => anything,
+            description: 'test_task description',
           }
         end
 
