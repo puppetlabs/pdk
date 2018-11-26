@@ -257,10 +257,10 @@ module PDK
     def module_pdk_version
       metadata = module_metadata
 
-      if !metadata.nil? && metadata.include?('pdk-version')
-        metadata['pdk-version'].split.first
-      else
+      if metadata.nil? || metadata.fetch('pdk-version', nil).nil?
         nil
+      else
+        metadata['pdk-version'].split.first
       end
     rescue ArgumentError => e
       PDK.logger.error(e)

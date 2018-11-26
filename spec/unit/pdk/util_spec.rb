@@ -520,19 +520,31 @@ describe PDK::Util do
   describe 'module_pdk_version' do
     subject(:result) { described_class.module_pdk_version }
 
+    let(:module_metadata) { {} }
+
+    before(:each) do
+      allow(described_class).to receive(:module_metadata).and_return(module_metadata)
+    end
+
+    context 'is nil' do
+      let(:module_metadata) { { 'pdk-version' => nil } }
+
+      it { is_expected.to be_nil }
+    end
+
+    context 'is an empty string' do
+      let(:module_metadata) { { 'pdk-version' => '' } }
+
+      it { is_expected.to be_nil }
+    end
+
     context 'is in metadata' do
-      before(:each) do
-        allow(described_class).to receive(:module_metadata).and_return(mock_metadata.data)
-      end
+      let(:module_metadata) { mock_metadata.data }
 
       it { is_expected.to match(pdk_version) }
     end
 
     context 'is not in metadata' do
-      before(:each) do
-        allow(described_class).to receive(:module_metadata).and_return({})
-      end
-
       it { is_expected.to be nil }
     end
 
