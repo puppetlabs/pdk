@@ -4,6 +4,42 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.8.0](https://github.com/puppetlabs/pdk/tree/v1.8.0) (2018-11-27)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.7.1...v1.8.0)
+
+**Implemented enhancements:**
+
+- \(PDK-1090\) Add task name validator for existing tasks [\#598](https://github.com/puppetlabs/pdk/pull/598) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- \(PDK-1180\) Cleanly handle a null pdk-version in metadata.json [\#599](https://github.com/puppetlabs/pdk/pull/599) ([rodjek](https://github.com/rodjek))
+- \(PDK-1104\) Don't always override custom template url with default [\#597](https://github.com/puppetlabs/pdk/pull/597) ([rodjek](https://github.com/rodjek))
+- \(PDK-654\) Allow rubocop to determine its own targets by default [\#594](https://github.com/puppetlabs/pdk/pull/594) ([rodjek](https://github.com/rodjek))
+- \(PDK-1187\) Don't override bundler path on gem installs [\#592](https://github.com/puppetlabs/pdk/pull/592) ([rodjek](https://github.com/rodjek))
+- \(PDK-547\) Ensure all PDK created files use LF line endings [\#590](https://github.com/puppetlabs/pdk/pull/590) ([rodjek](https://github.com/rodjek))
+- \(PDK-1172\) Call PDK::Util::Bundler.ensure\_bundle! after module creation [\#589](https://github.com/puppetlabs/pdk/pull/589) ([rodjek](https://github.com/rodjek))
+- \(PDK-1192\) Add module\_root/vendor/ to default ignored paths [\#588](https://github.com/puppetlabs/pdk/pull/588) ([rodjek](https://github.com/rodjek))
+- \(PDK-1194\) Exclude plans/\*\*/\*.pp from PDK::Validate::PuppetSyntax [\#586](https://github.com/puppetlabs/pdk/pull/586) ([rodjek](https://github.com/rodjek))
+- \(PDK-972\) Don't register a pending change when deleting non-existent files [\#585](https://github.com/puppetlabs/pdk/pull/585) ([rodjek](https://github.com/rodjek))
+- \(PDK-1093\) Replace null values and empty data structures in metadata when converting [\#584](https://github.com/puppetlabs/pdk/pull/584) ([rodjek](https://github.com/rodjek))
+- \(PDK-400\) Output the rspec run wall time in test unit summary [\#583](https://github.com/puppetlabs/pdk/pull/583) ([rodjek](https://github.com/rodjek))
+- \(PDK-1200\) Fix bundle env handling with puppet-dev [\#579](https://github.com/puppetlabs/pdk/pull/579) ([bmjen](https://github.com/bmjen))
+- \(PDK-925\) Exclude files that wouldn't be packaged from being validated [\#578](https://github.com/puppetlabs/pdk/pull/578) ([rodjek](https://github.com/rodjek))
+
+**Closed issues:**
+
+- Pdk validate should not assume that all puppet: URL require 'modules/'. [\#591](https://github.com/puppetlabs/pdk/issues/591)
+- Create configuration to Overide default parameters [\#542](https://github.com/puppetlabs/pdk/issues/542)
+
+**Merged pull requests:**
+
+- \(maint\) Update package tests to add task name validation [\#600](https://github.com/puppetlabs/pdk/pull/600) ([bmjen](https://github.com/bmjen))
+- \(maint\) Fix package tests [\#596](https://github.com/puppetlabs/pdk/pull/596) ([rodjek](https://github.com/rodjek))
+- \(maint\) Add --skip-bundle-install to `pdk new module` [\#595](https://github.com/puppetlabs/pdk/pull/595) ([rodjek](https://github.com/rodjek))
+- \(PDK-1208\) Raise lower bound of 'puppet' requirement for new modules [\#581](https://github.com/puppetlabs/pdk/pull/581) ([scotje](https://github.com/scotje))
+- \(maint\) Bump version for dev [\#577](https://github.com/puppetlabs/pdk/pull/577) ([bmjen](https://github.com/bmjen))
+
 ## [v1.7.1](https://github.com/puppetlabs/pdk/tree/v1.7.1) (2018-10-05)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.7.0...v1.7.1)
 
@@ -20,6 +56,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- Release Prep for 1.7.1 [\#576](https://github.com/puppetlabs/pdk/pull/576) ([bmjen](https://github.com/bmjen))
 - \(maint\) Update PDK metadata defaults to include Puppet 6 [\#572](https://github.com/puppetlabs/pdk/pull/572) ([bmjen](https://github.com/bmjen))
 - \(maint\) Update package tests for ruby 2.5.1 as the new default [\#571](https://github.com/puppetlabs/pdk/pull/571) ([bmjen](https://github.com/bmjen))
 - Bump version to 1.8.0.pre [\#564](https://github.com/puppetlabs/pdk/pull/564) ([bmjen](https://github.com/bmjen))
