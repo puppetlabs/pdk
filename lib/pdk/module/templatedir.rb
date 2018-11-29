@@ -294,11 +294,13 @@ module PDK
         clone_result = PDK::Util::Git.git('clone', origin_repo, temp_dir)
 
         if clone_result[:exit_code].zero?
-          reset_result = PDK::Util::Git.git('-C', temp_dir, 'reset', '--hard', git_ref)
-          unless reset_result[:exit_code].zero?
-            PDK.logger.error reset_result[:stdout]
-            PDK.logger.error reset_result[:stderr]
-            raise PDK::CLI::FatalError, _("Unable to set HEAD of git repository at '%{repo}' to ref:'%{ref}'.") % { repo: temp_dir, ref: git_ref }
+          Dir.chdir(temp_dir) do
+            reset_result = PDK::Util::Git.git('reset', '--hard', git_ref)
+            unless reset_result[:exit_code].zero?
+              PDK.logger.error reset_result[:stdout]
+              PDK.logger.error reset_result[:stderr]
+              raise PDK::CLI::FatalError, _("Unable to set HEAD of git repository at '%{repo}' to ref:'%{ref}'.") % { repo: temp_dir, ref: git_ref }
+            end
           end
         else
           PDK.logger.error clone_result[:stdout]
