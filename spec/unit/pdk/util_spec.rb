@@ -405,6 +405,38 @@ describe PDK::Util do
         allow(PDK).to receive(:answers).and_return('template-url' => 'custom_template_url')
       end
 
+      context 'and the template is a directory' do
+        before(:each) do
+          allow(File).to receive(:directory?).with('custom_template_url').and_return(true)
+          allow(described_class).to receive(:package_install?).and_return(false)
+        end
+
+        let(:moduleroot_dir) { File.join('custom_template_url', 'moduleroot') }
+        let(:moduleroot_init) { File.join('custom_template_url', 'moduleroot_init') }
+
+        context 'that contains a valid PDK template' do
+          before(:each) do
+            allow(File).to receive(:directory?).with(moduleroot_dir).and_return(true)
+            allow(File).to receive(:directory?).with(moduleroot_init).and_return(true)
+          end
+
+          it 'returns the custom url' do
+            is_expected.to eq('custom_template_url')
+          end
+        end
+
+        context 'that does not contain a valid PDK template' do
+          before(:each) do
+            allow(File).to receive(:directory?).with(moduleroot_dir).and_return(false)
+          end
+
+          it 'returns the puppetlabs template url' do
+            expect(PDK.answers).to receive(:update!).with('template-url' => nil)
+            is_expected.to eq('puppetlabs_template_url')
+          end
+        end
+      end
+
       context 'and the template is a valid repo' do
         before(:each) do
           allow(PDK::Util::Git).to receive(:repo?).with('custom_template_url').and_return(true)
