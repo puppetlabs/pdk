@@ -206,13 +206,25 @@ module PDK
       return puppetlabs_template_url if answer_file_url == 'https://github.com/puppetlabs/pdk-module-template'
       return puppetlabs_template_url if answer_file_url == puppetlabs_template_url
 
-      unless PDK::Util::Git.repo?(answer_file_url)
-        PDK.logger.warn(_("Unable to access the previously used template '%{template}', using the default template instead.") % { template: answer_file_url })
-        PDK.answers.update!('template-url' => nil)
-        return puppetlabs_template_url
+      if File.directory?(answer_file_url)
+        # Instantiating a new TemplateDir object pointing to the directory
+        # will cause the directory contents to be validated, raising
+        # ArgumentError if it does not appear to be a valid template.
+        PDK::Module::TemplateDir.new(answer_file_url) {}
+        return answer_file_url
       end
 
+      raise ArgumentError unless PDK::Util::Git.repo?(answer_file_url)
+
       answer_file_url
+    rescue ArgumentError
+      PDK.logger.warn(
+        _("Unable to access the previously used template '%{template}', using the default template instead.") % {
+          template: answer_file_url,
+        },
+      )
+      PDK.answers.update!('template-url' => nil)
+      return puppetlabs_template_url
     end
     module_function :default_template_url
 
