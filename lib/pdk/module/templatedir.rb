@@ -117,7 +117,7 @@ module PDK
             dest_status = :delete
           else
             begin
-              dest_content = PDK::TemplateFile.new(File.join(template_loc, template_file), configs: config).render
+              dest_content = PDK::TemplateFile.new(File.join(template_loc, template_file), configs: config, template_dir: self).render
             rescue => e
               error_msg = _(
                 "Failed to render template '%{template}'\n" \

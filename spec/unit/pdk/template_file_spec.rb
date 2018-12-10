@@ -5,6 +5,32 @@ describe PDK::TemplateFile do
 
   let(:data) { { configs: { 'test' => 'value' }, some: 'value' } }
 
+  context '#config_for' do
+    subject { template_file.config_for(filename) }
+
+    let(:filename) { 'testfile' }
+    let(:template_path) { '/path/to/some/file' }
+
+    context 'when :template_dir not passed in the data hash' do
+      it { is_expected.to be_nil }
+    end
+
+    context 'when :template_dir has been passed in the data hash' do
+      let(:data) do
+        {
+          configs: { 'test' => 'value' },
+          template_dir: instance_double(PDK::Module::TemplateDir),
+        }
+      end
+
+      before(:each) do
+        allow(data[:template_dir]).to receive(:config_for).with(filename).and_return(a: 'value')
+      end
+
+      it { is_expected.to eq(a: 'value') }
+    end
+  end
+
   context 'when asked to render a file' do
     let(:template_path) { '/path/to/some/file' }
 
