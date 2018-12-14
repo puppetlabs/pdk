@@ -63,6 +63,7 @@ RSpec.shared_context :validators do
   let(:validators) do
     [
       PDK::Validate::MetadataValidator,
+      PDK::Validate::YAMLValidator,
       PDK::Validate::PuppetValidator,
       PDK::Validate::RubyValidator,
       PDK::Validate::TasksValidator,

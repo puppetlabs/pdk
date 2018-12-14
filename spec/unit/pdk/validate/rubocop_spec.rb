@@ -57,7 +57,7 @@ describe PDK::Validate::Rubocop do
       end
 
       before(:each) do
-        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_target2)
+        allow(Dir).to receive(:glob).with(glob_pattern, anything).and_return(globbed_target2)
         allow(File).to receive(:directory?).with('target1.rb').and_return(false)
         allow(File).to receive(:directory?).with('target2/').and_return(true)
         allow(File).to receive(:file?).with('target1.rb').and_return(true)

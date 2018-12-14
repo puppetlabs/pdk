@@ -34,7 +34,7 @@ describe PDK::Validate::Tasks::Name do
 
     before(:each) do
       globbed_targets = targets.map { |r| File.join(module_root, r) }
-      allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_targets)
+      allow(Dir).to receive(:glob).with(glob_pattern, anything).and_return(globbed_targets)
       allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
     end
 
