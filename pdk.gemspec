@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.1.9'
 
-  spec.add_runtime_dependency 'bundler', '~> 1.15'
+  spec.add_runtime_dependency 'bundler', '>= 1.15.0', '< 3.0.0'
   spec.add_runtime_dependency 'cri', '~> 2.10.1'
   spec.add_runtime_dependency 'childprocess', '~> 0.7.1'
   spec.add_runtime_dependency 'gettext-setup', '~> 0.24'
@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'diff-lcs', '1.3'
   spec.add_runtime_dependency 'minitar', '~> 0.6.1'
   spec.add_runtime_dependency 'pathspec', '~> 0.2.1'
+  spec.add_runtime_dependency 'ffi', '~> 1.9.0'
 
   # Used in the pdk-templates
   spec.add_runtime_dependency 'deep_merge', '~> 1.1'

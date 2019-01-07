@@ -5,7 +5,12 @@ script:
   - cat Gemfile.lock
   - bundle list
   - bundle exec rake $CHECK
-before_install: gem install bundler
+before_install:
+  - if [ $BUNDLER_VERSION ]; then
+      gem install -v $BUNDLER_VERSION bundler --no-document;
+    else
+      gem install bundler --no-document;
+    fi
 cache: bundler
 matrix:
   include:
@@ -23,7 +28,7 @@ matrix:
     - rvm: 2.3
       env: CHECK=spec
     - rvm: 2.1.9
-      env: CHECK=spec
+      env: CHECK=spec BUNDLER_VERSION=1.17.3
 branches:
   only:
     - master

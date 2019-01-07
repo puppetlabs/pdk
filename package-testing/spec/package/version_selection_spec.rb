@@ -3,9 +3,9 @@ require 'spec_helper_package'
 describe 'Test puppet & ruby version selection' do
   module_name = 'version_selection'
   test_cases = [
-    { envvar: 'PDK_PUPPET_VERSION', version: '5.5.0', expected_puppet: '5.5', expected_ruby: '2.4.4' },
+    { envvar: 'PDK_PUPPET_VERSION', version: '5.5.0', expected_puppet: '5.5', expected_ruby: '2.4' },
     { envvar: 'PDK_PUPPET_VERSION', version: '4.10.10', expected_puppet: '4.10', expected_ruby: '2.1.9' },
-    { envvar: 'PDK_PE_VERSION', version: '2017.3', expected_puppet: '5.3', expected_ruby: '2.4.4' },
+    { envvar: 'PDK_PE_VERSION', version: '2017.3', expected_puppet: '5.3', expected_ruby: '2.4' },
     { envvar: 'PDK_PE_VERSION', version: '2017.2', expected_puppet: '4.10', expected_ruby: '2.1.9' },
   ]
 
@@ -38,8 +38,8 @@ describe 'Test puppet & ruby version selection' do
 
       describe command('pdk bundle exec ruby --version') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{using ruby #{Regexp.escape(test_case[:expected_ruby])}}im) }
-        its(:stderr) { is_expected.to match(%r{^ruby #{Regexp.escape(test_case[:expected_ruby])}p}im) }
+        its(:stderr) { is_expected.to match(%r{using ruby #{Regexp.escape(test_case[:expected_ruby])}[\.0-9]*}im) }
+        its(:stderr) { is_expected.to match(%r{^ruby #{Regexp.escape(test_case[:expected_ruby])}[\.0-9]*p}im) }
       end
     end
   end
