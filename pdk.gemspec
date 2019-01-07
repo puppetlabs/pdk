@@ -33,6 +33,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'diff-lcs', '1.3'
   spec.add_runtime_dependency 'minitar', '~> 0.6.1'
   spec.add_runtime_dependency 'pathspec', '~> 0.2.1'
+  spec.add_runtime_dependency 'ffi', '~> 1.9.0'
 
   # Used in the pdk-templates
   spec.add_runtime_dependency 'deep_merge', '~> 1.1'
