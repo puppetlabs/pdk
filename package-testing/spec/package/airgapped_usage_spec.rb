@@ -3,14 +3,6 @@ require 'spec_helper_package'
 describe 'Basic usage in an air-gapped environment' do
   module_name = 'airgapped_module'
 
-  def hosts_file
-    if windows_node?
-      '/cygdrive/c/Windows/System32/Drivers/etc/hosts'
-    else
-      '/etc/hosts'
-    end
-  end
-
   context 'with rubygems.org access disabled' do
     before(:all) do
       shell("cp #{hosts_file} #{hosts_file}.bak")
@@ -48,8 +40,8 @@ describe 'Basic usage in an air-gapped environment' do
           subject { super().content.gsub(%r{^DEPENDENCIES.+?\n\n}m, '') }
 
           it 'is identical to the vendored lockfile' do
-            # TODO: Need to find a better way to get 'latest_ruby' programmatically so we can use the correct vendored gemfile.
-            vendored_lockfile = File.join(install_dir, 'share', 'cache', 'Gemfile-2.5.1.lock')
+            vendored_lockfile = File.join(install_dir, 'share', 'cache', "Gemfile-#{latest_ruby}.lock")
+
             is_expected.to eq(file(vendored_lockfile).content.gsub(%r{^DEPENDENCIES.+?\n\n}m, ''))
           end
         end

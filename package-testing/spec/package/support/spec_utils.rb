@@ -26,4 +26,21 @@ module SpecUtils
     path = File.join(install_dir, 'private', 'git')
     windows_node? ? "& '#{File.join(path, 'cmd', 'git.exe')}'" : File.join(path, 'bin', 'git')
   end
+
+  def hosts_file
+    if windows_node?
+      '/cygdrive/c/Windows/System32/Drivers/etc/hosts'
+    else
+      '/etc/hosts'
+    end
+  end
+
+  def ruby_cache_dir
+    File.join(install_dir(true), 'private', 'ruby')
+  end
+
+  def latest_ruby
+    installed_rubies = shell("cd #{ruby_cache_dir}; ls -dr *").stdout.split
+    installed_rubies[0]
+  end
 end
