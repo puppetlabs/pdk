@@ -24,7 +24,7 @@ describe PDK::Validate::PuppetSyntax do
 
       before(:each) do
         allow(Dir).to receive(:glob).with(any_args).and_call_original
-        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
+        allow(Dir).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
         allow(File).to receive(:expand_path).with(any_args).and_call_original
         allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
       end

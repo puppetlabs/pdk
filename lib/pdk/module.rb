@@ -4,7 +4,6 @@ module PDK
   module Module
     DEFAULT_IGNORED = [
       '/pkg/',
-      '.*',
       '~*',
       '/coverage',
       '/checksums.json',
@@ -13,8 +12,10 @@ module PDK
       '/vendor/',
     ].freeze
 
-    def default_ignored_pathspec
-      @default_ignored_pathspec ||= PathSpec.new(DEFAULT_IGNORED)
+    def default_ignored_pathspec(ignore_dotfiles = true)
+      PathSpec.new(DEFAULT_IGNORED).tap do |ps|
+        ps.add('.*') if ignore_dotfiles
+      end
     end
     module_function :default_ignored_pathspec
   end

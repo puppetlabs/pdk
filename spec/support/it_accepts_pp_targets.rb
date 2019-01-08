@@ -6,7 +6,7 @@ RSpec.shared_examples_for 'it accepts .pp targets' do
     let(:glob_pattern) { File.join(module_root, described_class.pattern) }
 
     before(:each) do
-      allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
+      allow(Dir).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
       allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
     end
 

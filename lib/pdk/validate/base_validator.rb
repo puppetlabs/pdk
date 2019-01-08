@@ -21,6 +21,8 @@ module PDK
       #   false - PDK will pass the globbed targets to the validator command.
       ALLOW_EMPTY_TARGETS = false
 
+      IGNORE_DOTFILES = true
+
       def self.cmd_path
         File.join(PDK::Util.module_root, 'bin', cmd)
       end
@@ -49,10 +51,10 @@ module PDK
           if respond_to?(:pattern)
             if File.directory?(target)
               target_root = PDK::Util.module_root
-              pattern_glob = Array(pattern).map { |p| Dir.glob(File.join(target_root, p)) }
+              pattern_glob = Array(pattern).map { |p| Dir.glob(File.join(target_root, p), File::FNM_DOTMATCH) }
 
               target_list = pattern_glob.flatten.map do |file|
-                if File.fnmatch(File.join(File.expand_path(target), '*'), file)
+                if File.fnmatch(File.join(File.expand_path(target), '*'), file, File::FNM_DOTMATCH)
                   Pathname.new(file).relative_path_from(Pathname.new(PDK::Util.module_root)).to_s
                 end
               end
@@ -65,7 +67,7 @@ module PDK
             elsif File.file?(target)
               if Array(pattern).include? target
                 target
-              elsif Array(pattern).any? { |p| File.fnmatch(File.expand_path(p), File.expand_path(target)) }
+              elsif Array(pattern).any? { |p| File.fnmatch(File.expand_path(p), File.expand_path(target), File::FNM_DOTMATCH) }
                 target
               else
                 skipped << target
@@ -83,7 +85,7 @@ module PDK
       end
 
       def self.ignore_pathspec
-        ignore_pathspec = PDK::Module.default_ignored_pathspec.dup
+        ignore_pathspec = PDK::Module.default_ignored_pathspec(ignore_dotfiles?)
 
         if respond_to?(:pattern_ignore)
           Array(pattern_ignore).each do |pattern|
@@ -92,6 +94,10 @@ module PDK
         end
 
         ignore_pathspec
+      end
+
+      def self.ignore_dotfiles?
+        self::IGNORE_DOTFILES
       end
 
       def self.parse_options(_options, targets)

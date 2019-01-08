@@ -89,7 +89,7 @@ describe PDK::Validate::BaseValidator do
 
       before(:each) do
         allow(File).to receive(:directory?).and_return(true)
-        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
+        allow(Dir).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
         allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
       end
 
@@ -114,7 +114,7 @@ describe PDK::Validate::BaseValidator do
 
       before(:each) do
         allow(File).to receive(:directory?).and_return(true)
-        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_files)
+        allow(Dir).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
         allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
       end
 
@@ -134,7 +134,7 @@ describe PDK::Validate::BaseValidator do
       let(:globbed_target2) { targets2.map { |target| File.join(module_root, target) } }
 
       before(:each) do
-        allow(Dir).to receive(:glob).with(glob_pattern).and_return(globbed_target2)
+        allow(Dir).to receive(:glob).with(glob_pattern, anything).and_return(globbed_target2)
         allow(File).to receive(:directory?).with('target1.pp').and_return(false)
         allow(File).to receive(:directory?).with('target2/').and_return(true)
         allow(File).to receive(:file?).with('target1.pp').and_return(true)
@@ -163,7 +163,7 @@ describe PDK::Validate::BaseValidator do
       end
 
       before(:each) do
-        allow(Dir).to receive(:glob).with(File.join(module_root, described_class.pattern)).and_return(globbed_target2)
+        allow(Dir).to receive(:glob).with(File.join(module_root, described_class.pattern), anything).and_return(globbed_target2)
         allow(File).to receive(:directory?).with('target3/').and_return(true)
       end
 

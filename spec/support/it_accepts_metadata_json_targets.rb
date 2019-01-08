@@ -10,7 +10,7 @@ RSpec.shared_examples_for 'it accepts metadata.json targets' do
 
     before(:each) do
       glob_pattern.each do |pattern|
-        allow(Dir).to receive(:glob).with(pattern).and_return(globbed_files)
+        allow(Dir).to receive(:glob).with(pattern, anything).and_return(globbed_files)
       end
     end
 
@@ -19,7 +19,7 @@ RSpec.shared_examples_for 'it accepts metadata.json targets' do
 
       context 'and the module contains a metadata.json file' do
         before(:each) do
-          allow(Dir).to receive(:glob).with(module_metadata_json).and_return([module_metadata_json])
+          allow(Dir).to receive(:glob).with(module_metadata_json, anything).and_return([module_metadata_json])
           allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
         end
 
