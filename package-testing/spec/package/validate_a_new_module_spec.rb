@@ -30,8 +30,8 @@ describe 'C100321 - Generate a module and validate it (i.e. ensure bundle instal
         subject { super().content.gsub(%r{^DEPENDENCIES.+?\n\n}m, '') }
 
         it 'is identical to the vendored lockfile' do
-          # TODO: Need to find a better way to get 'latest_ruby' programmatically so we can use the correct vendored gemfile.
-          vendored_lockfile = File.join(install_dir, 'share', 'cache', 'Gemfile-2.5.1.lock')
+          vendored_lockfile = File.join(install_dir, 'share', 'cache', "Gemfile-#{latest_ruby}.lock")
+
           is_expected.to eq(file(vendored_lockfile).content.gsub(%r{^DEPENDENCIES.+?\n\n}m, ''))
         end
       end
