@@ -6,4 +6,10 @@ describe PDK do
 
     it { is_expected.to be_an_instance_of(PDK::Logger) }
   end
+
+  describe 'slack test' do
+    it 'should fail' do
+      expect(true).to be_false
+    end
+  end
 end
