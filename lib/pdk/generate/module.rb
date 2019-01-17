@@ -75,7 +75,7 @@ module PDK
         end
 
         # Only update the answers files after metadata has been written.
-        if template_uri == PDK::Util::TemplateURI.default_template_uri
+        if template_uri.metadata_format == PDK::Util::TemplateURI.default_template_uri.metadata_format
           # If the user specifies our default template url via the command
           # line, remove the saved template-url answer so that the template_uri
           # resolution can find new default URLs in the future.
@@ -90,7 +90,7 @@ module PDK
           if FileUtils.mv(temp_target_dir, target_dir)
             Dir.chdir(target_dir) { PDK::Util::Bundler.ensure_bundle! } unless opts[:'skip-bundle-install']
 
-            PDK.logger.info _('Module \'%{name}\' generated at path \'%{path}\', from template \'%{url}\'.') % { name: opts[:module_name], path: target_dir, url: PDK::Util.template_url(template_uri) }
+            PDK.logger.info _('Module \'%{name}\' generated at path \'%{path}\', from template \'%{url}\'.') % { name: opts[:module_name], path: target_dir, url: template_uri.shell_path }
             PDK.logger.info(_('In your module directory, add classes with the \'pdk new class\' command.'))
           end
         rescue Errno::EACCES => e

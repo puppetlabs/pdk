@@ -198,14 +198,12 @@ describe PDK::Generate::Module do
         end
 
         it 'saves the template-url and template-ref to the answer file if it is not the default template' do
-          expect(PDK::Util).to receive(:template_uri).and_return(Addressable::URI.parse('cli-template'))
           expect(PDK.answers).to receive(:update!).with('template-url' => Addressable::URI.parse('cli-template'))
 
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
 
         it 'clears the saved template-url answer if it is the default template' do
-          expect(PDK::Util).to receive(:template_uri).and_return(Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'))
           expect(PDK.answers).to receive(:update!).with('template-url' => nil).and_call_original
 
           described_class.invoke(invoke_opts.merge(:'template-url' => 'https://github.com/puppetlabs/pdk-templates'))
@@ -246,8 +244,12 @@ describe PDK::Generate::Module do
           end
 
           context 'and pdk is not installed from packages' do
+            before(:each) do
+              allow(PDK::Util).to receive(:package_install?).and_return(false)
+            end
+
             it 'uses the default template to generate the module' do
-              expect(PDK::Module::TemplateDir).to receive(:new).with(PDK::Util.default_template_uri, anything, anything).and_yield(test_template_dir)
+              expect(PDK::Module::TemplateDir).to receive(:new).with(any_args).and_yield(test_template_dir)
               expect(PDK.answers).not_to receive(:update!).with(:'template-url' => anything)
 
               described_class.invoke(invoke_opts)

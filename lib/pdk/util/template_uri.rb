@@ -37,6 +37,10 @@ module PDK
                end
       end
 
+      def ==(other)
+        @uri == other.uri
+      end
+
       # This is the URI represented in a format suitable for writing to
       # metadata.
       #
@@ -82,8 +86,6 @@ module PDK
         end
       end
 
-      private
-
       # `C:...` urls are not URI-safe. They should be of the form `/C:...` to
       # be URI-safe. scp-like urls like `user@host:/path` are not URI-safe
       # either but are not handled here. Should they be?
@@ -100,33 +102,6 @@ module PDK
       # @returns String
       def self.human_readable(string)
         (Gem.win_platform? && string =~ %r{^\/[a-zA-Z][\|:]}) ? string[1..-1] : string
-      end
-
-      # @returns Addressable::URI
-      def first_valid_uri(templates_array)
-        # 1. Get the four sources of URIs
-        # 2. Pick the first non-nil URI
-        # 3. Error if the URI is not a valid git repo (missing directory or http 404)
-        # 4. Leave updating answers/metadata to other code
-        found_template = templates_array.find { |t| valid_template?(t) }
-
-        raise PDK::CLI::FatalError, _('Unable to find a valid module template to use.') if found_template.nil?
-        found_template[:uri]
-      end
-
-      def valid_template?(template)
-        return false if template.nil?
-        return false if template[:uri].nil?
-
-        if template[:path] && File.directory?(template[:path])
-          PDK::Module::TemplateDir.new(template[:uri]) {}
-          return true
-        end
-        return true if PDK::Util::Git.repo?(template[:uri])
-
-        false
-      rescue ArgumentError
-        return false
       end
 
       # @return [Array<Hash{Symbol => Object}>] an array of hashes. Each hash
@@ -211,6 +186,34 @@ module PDK
         end
       end
 
+      private
+
+      # @returns Addressable::URI
+      def first_valid_uri(templates_array)
+        # 1. Get the four sources of URIs
+        # 2. Pick the first non-nil URI
+        # 3. Error if the URI is not a valid git repo (missing directory or http 404)
+        # 4. Leave updating answers/metadata to other code
+        found_template = templates_array.find { |t| valid_template?(t) }
+
+        raise PDK::CLI::FatalError, _('Unable to find a valid module template to use.') if found_template.nil?
+        found_template[:uri]
+      end
+
+      def valid_template?(template)
+        return false if template.nil?
+        return false if template[:uri].nil?
+
+        if template[:path] && File.directory?(template[:path])
+          PDK::Module::TemplateDir.new(template[:uri]) {}
+          return true
+        end
+        return true if PDK::Util::Git.repo?(template[:uri].to_s)
+
+        false
+      rescue ArgumentError
+        return false
+      end
     end
   end
 end

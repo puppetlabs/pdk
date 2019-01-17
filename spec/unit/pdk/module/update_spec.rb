@@ -99,7 +99,7 @@ describe PDK::Module::Update do
 
     context 'when using the default template' do
       let(:options) { { noop: true } }
-      let(:template_url) { PDK::Util.default_template_uri }
+      let(:template_url) { PDK::Util::TemplateURI.default_template_uri }
 
       it 'refers to the template as the default template' do
         expect(logger).to receive(:info).with(a_string_matching(%r{using the default template}i))
@@ -241,7 +241,7 @@ describe PDK::Module::Update do
 
     context 'when the default_template_ref specifies a tag' do
       before(:each) do
-        allow(PDK::Util).to receive(:default_template_ref).and_return(PDK::TEMPLATE_REF)
+        allow(PDK::Util).to receive(:development_mode?).and_return(false)
       end
 
       it 'returns the tag name' do

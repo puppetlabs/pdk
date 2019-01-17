@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe PDK::Util::TemplateURI do
-  before :all do
+  before(:each) do
     PDK.answers.update!('template-url' => nil)
   end
 
@@ -79,8 +79,10 @@ describe PDK::Util::TemplateURI do
 
           context 'and the answer file template is invalid' do
             before(:each) do
+              # rubocop:disable RSpec/SubjectStub
               allow(template_uri).to receive(:valid_template?).with(anything).and_call_original
               allow(template_uri).to receive(:valid_template?).with(uri: anything, type: anything, allow_fallback: true).and_return(false)
+              # rubocop:enable RSpec/SubjectStub
             end
 
             it 'returns the default template' do
@@ -301,5 +303,4 @@ describe PDK::Util::TemplateURI do
       end
     end
   end
-
 end

@@ -8,10 +8,9 @@ describe PDK::Module::TemplateDir do
     end
   end
 
-  let(:root_dir) { Gem.win_platform? ? 'C:/' : '/' }
-  let(:path_or_url) { File.join(root_dir, 'path', 'to', 'templates') }
-  let(:uri) { Gem.win_platform? ? Addressable::URI.parse('/' + path_or_url) : Addressable::URI.parse(path_or_url) }
-  let(:tmp_path) { File.join(root_dir, 'tmp', 'path') }
+  let(:path_or_url) { File.join('/', 'path', 'to', 'templates') }
+  let(:uri) { PDK::Util::TemplateURI.new(path_or_url) }
+  let(:tmp_path) { File.join('/', 'tmp', 'path') }
 
   let(:module_metadata) do
     {
@@ -185,13 +184,14 @@ describe PDK::Module::TemplateDir do
 
   describe '.config_for(dest_path)' do
     before(:each) do
+      allow(Gem).to receive(:win_platform?).and_return(false)
       allow(File).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(false)
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
-      allow(File).to receive(:readable?).with(File.join(path_or_url, 'config_defaults.yml')).and_return true
+      allow(File).to receive(:readable?).with(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(YAML).to receive(:safe_load).with(config_defaults, [], [], true).and_return config_hash
     end
 
@@ -221,10 +221,10 @@ describe PDK::Module::TemplateDir do
       end
 
       before(:each) do
-        allow(File).to receive(:file?).with('/path/to/module/.sync.yml').and_return true
-        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return true
-        allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return yaml_text
-        allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_return yaml_hash
+        allow(File).to receive(:file?).with('/path/to/module/.sync.yml').and_return(true)
+        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return(true)
+        allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return(yaml_text)
+        allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_return(yaml_hash)
         allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
       end
 
@@ -326,7 +326,7 @@ describe PDK::Module::TemplateDir do
       allow(File).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
       allow(PDK::Util).to receive(:default_template_url).and_return(path_or_url)
-      allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
+      allow(PDK::Util::TemplateURI).to receive(:default_template_ref).and_return('default-ref')
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
@@ -339,6 +339,7 @@ describe PDK::Module::TemplateDir do
                                                                                                         "default-sha\trefs/remotes/origin/default-ref")
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
       allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
+      allow(PDK::Util).to receive(:development_mode?).and_return(false)
     end
 
     context 'pdk data' do
@@ -353,7 +354,7 @@ describe PDK::Module::TemplateDir do
       allow(File).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
       allow(PDK::Util).to receive(:default_template_url).and_return('default-url')
-      allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
+      allow(PDK::Util::TemplateURI).to receive(:default_template_ref).and_return('default-ref')
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
@@ -366,6 +367,7 @@ describe PDK::Module::TemplateDir do
                                                                                                         "default-sha\trefs/remotes/origin/default-ref")
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
       allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
+      allow(PDK::Util).to receive(:development_mode?).and_return(false)
     end
 
     context 'pdk data' do

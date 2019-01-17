@@ -210,7 +210,7 @@ module PDK
             next
           end
 
-          PDK::Module::TemplateDir.new(template[:uri]) do |template_dir|
+          PDK::Module::TemplateDir.new(PDK::Util::TemplateURI.new(template[:uri])) do |template_dir|
             template_paths = template_dir.object_template_for(object_type)
 
             if template_paths
@@ -250,7 +250,7 @@ module PDK
       #
       # @api private
       def templates
-        @templates ||= PDK::Util.templates(@options)
+        @templates ||= PDK::Util::TemplateURI.templates(@options)
       end
 
       # Retrieves the name of the module (without the forge username) from the
