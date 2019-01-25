@@ -4,7 +4,34 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
-## [v1.8.0](https://github.com/puppetlabs/pdk/tree/v1.8.0) (2018-11-27)
+## [v1.9.0](https://github.com/puppetlabs/pdk/tree/v1.9.0) (2019-01-25)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.8.0...v1.9.0)
+
+**Implemented enhancements:**
+
+- \(PDK-735\) Implement a YAML validator [\#612](https://github.com/puppetlabs/pdk/pull/612) ([rodjek](https://github.com/rodjek))
+
+**Fixed bugs:**
+
+- \(PDK-914\) Adjust default\_template\_url validation to accept local dirs [\#606](https://github.com/puppetlabs/pdk/pull/606) ([rodjek](https://github.com/rodjek))
+- \(PDK-1204\) pdk bundle execs in the context of the pwd [\#603](https://github.com/puppetlabs/pdk/pull/603) ([rodjek](https://github.com/rodjek))
+
+**Closed issues:**
+
+- After today upgrade rubygems-update the check for ruby 2.1.9 is completely broken [\#609](https://github.com/puppetlabs/pdk/issues/609)
+- 'unknown type yumrepo' during 'pdk test unit' [\#607](https://github.com/puppetlabs/pdk/issues/607)
+
+**Merged pull requests:**
+
+- \(MAINT\) Configure Slack notifications for Travis [\#614](https://github.com/puppetlabs/pdk/pull/614) ([scotje](https://github.com/scotje))
+- \(maint\) Fix package tests to remove hardcoding [\#613](https://github.com/puppetlabs/pdk/pull/613) ([bmjen](https://github.com/bmjen))
+- \(MAINT\) Fix package acceptance tests to pass with any Ruby 2.4.x [\#611](https://github.com/puppetlabs/pdk/pull/611) ([scotje](https://github.com/scotje))
+- \(MAINT\) Bump default packaged ruby version to 2.4.5 [\#608](https://github.com/puppetlabs/pdk/pull/608) ([scotje](https://github.com/scotje))
+- \(PDK-1202\) Pass TemplateDir object through to TemplateFile [\#605](https://github.com/puppetlabs/pdk/pull/605) ([rodjek](https://github.com/rodjek))
+- \(PDK-1231\) Update version for new dev cycle. [\#604](https://github.com/puppetlabs/pdk/pull/604) ([bmjen](https://github.com/bmjen))
+- \(PDK-1001\) Chdir before execing git rather than "git -C" [\#602](https://github.com/puppetlabs/pdk/pull/602) ([rodjek](https://github.com/rodjek))
+
+## [v1.8.0](https://github.com/puppetlabs/pdk/tree/v1.8.0) (2018-11-28)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.7.1...v1.8.0)
 
 **Implemented enhancements:**
@@ -34,6 +61,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- Release 1.8.0 [\#601](https://github.com/puppetlabs/pdk/pull/601) ([bmjen](https://github.com/bmjen))
 - \(maint\) Update package tests to add task name validation [\#600](https://github.com/puppetlabs/pdk/pull/600) ([bmjen](https://github.com/bmjen))
 - \(maint\) Fix package tests [\#596](https://github.com/puppetlabs/pdk/pull/596) ([rodjek](https://github.com/rodjek))
 - \(maint\) Add --skip-bundle-install to `pdk new module` [\#595](https://github.com/puppetlabs/pdk/pull/595) ([rodjek](https://github.com/rodjek))

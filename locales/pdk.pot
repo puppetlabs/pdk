@@ -1,16 +1,16 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2018 Puppet, Inc.
+# Copyright (C) 2019 Puppet, Inc.
 # This file is distributed under the same license as the puppet development kit package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.7.1-49-g6159e02fac\n"
+"Project-Id-Version: puppet development kit v1.8.0-22-g7b2950bc5f\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2018-11-27 17:00-0700\n"
-"PO-Revision-Date: 2018-11-27 17:00-0700\n"
+"POT-Creation-Date: 2019-01-25 16:10-0700\n"
+"PO-Revision-Date: 2019-01-25 16:10-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -533,7 +533,7 @@ msgstr ""
 
 #: ../lib/pdk/cli/validate.rb:8
 msgid ""
-"Run metadata, Puppet, Ruby, or Tasks validation.\n"
+"Run metadata, YAML, Puppet, Ruby, or Tasks validation.\n"
 "\n"
 "[validators] is an optional comma-separated list of validators to use. If not specified, all validators are used. Note that when using PowerShell, the list of validators must be enclosed in single quotes.\n"
 "\n"
@@ -933,14 +933,14 @@ msgid "The directory '%{dir}' doesn't exist"
 msgstr ""
 
 #: ../lib/pdk/module/templatedir.rb:273
-msgid "'%{file}' is not a valid YAML file: %{message}"
+msgid "'%{file}' is not a valid YAML file: %{problem} %{context} at line %{line} column %{column}"
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:301
+#: ../lib/pdk/module/templatedir.rb:308
 msgid "Unable to set HEAD of git repository at '%{repo}' to ref:'%{ref}'."
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:306
+#: ../lib/pdk/module/templatedir.rb:314
 msgid "Unable to clone git repository at '%{repo}' into '%{dest}'."
 msgstr ""
 
@@ -1024,7 +1024,7 @@ msgstr ""
 msgid "Trace must be an Array of stack trace lines."
 msgstr ""
 
-#: ../lib/pdk/template_file.rb:62
+#: ../lib/pdk/template_file.rb:68
 msgid "'%{template}' is not a readable file"
 msgstr ""
 
@@ -1084,7 +1084,7 @@ msgstr ""
 msgid "Package basedir requested for non-package install."
 msgstr ""
 
-#: ../lib/pdk/util.rb:210
+#: ../lib/pdk/util.rb:222
 msgid "Unable to access the previously used template '%{template}', using the default template instead."
 msgstr ""
 
@@ -1214,23 +1214,23 @@ msgstr ""
 msgid "Failed to call GetLongPathName"
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:102
+#: ../lib/pdk/validate/base_validator.rb:108
 msgid "Invoking %{cmd}"
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:107
+#: ../lib/pdk/validate/base_validator.rb:113
 msgid "%{validator}: Skipped '%{target}'. Target does not contain any files to validate (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:111
+#: ../lib/pdk/validate/base_validator.rb:117
 msgid "Target does not contain any files to validate (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:120
+#: ../lib/pdk/validate/base_validator.rb:126
 msgid "%{validator}: Skipped '%{target}'. Target file not found."
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:124
+#: ../lib/pdk/validate/base_validator.rb:130
 msgid "File does not exist."
 msgstr ""
 
@@ -1246,7 +1246,7 @@ msgstr ""
 msgid "Checking metadata syntax (%{targets})."
 msgstr ""
 
-#: ../lib/pdk/validate/metadata/metadata_syntax.rb:69 ../lib/pdk/validate/tasks/metadata_lint.rb:77
+#: ../lib/pdk/validate/metadata/metadata_syntax.rb:69 ../lib/pdk/validate/tasks/metadata_lint.rb:77 ../lib/pdk/validate/yaml/syntax.rb:71
 msgid "Could not be read."
 msgstr ""
 
@@ -1280,4 +1280,12 @@ msgstr ""
 
 #: ../lib/pdk/validate/tasks/name.rb:23
 msgid "Checking task names (%{targets})."
+msgstr ""
+
+#: ../lib/pdk/validate/yaml/syntax.rb:27
+msgid "Checking YAML syntax (%{targets})."
+msgstr ""
+
+#: ../lib/pdk/validate/yaml/syntax.rb:94
+msgid "%{problem} %{context}"
 msgstr ""
