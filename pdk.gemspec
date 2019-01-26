@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'pathspec', '~> 0.2.1'
   spec.add_runtime_dependency 'ffi', '~> 1.9.0'
   spec.add_runtime_dependency 'hitimes', '~> 1.2.6'
+  spec.add_runtime_dependency 'net-ssh', '~> 4.2.0'
 
   # Used in the pdk-templates
   spec.add_runtime_dependency 'deep_merge', '~> 1.1'
