@@ -25,7 +25,7 @@ describe 'Updating an existing module' do
           create_remote_file(get_working_node, File.join(module_dir, 'metadata.json'), metadata.to_json)
 
           sync_yaml = YAML.safe_load(open("https://raw.githubusercontent.com/#{mod}/master/.sync.yml").read)
-          sync_yaml['Gemfile']['required'][':system_tests'] << { 'gem' => 'nokogiri', 'version' => '1.8.2' }
+          sync_yaml['Gemfile']['required'][':system_tests'] << { 'gem' => 'nokogiri', 'version' => '1.8.5' }
           create_remote_file(get_working_node, File.join(module_dir, '.sync.yml'), sync_yaml.to_yaml)
         end
         let(:cwd) { repo_dir }
