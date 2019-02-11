@@ -9,6 +9,7 @@ module PDK
     class YAML
       class Syntax < BaseValidator
         IGNORE_DOTFILES = false
+        YAML_WHITELISTED_CLASSES = [Symbol].freeze
 
         def self.name
           'yaml-syntax'
@@ -75,7 +76,7 @@ module PDK
             end
 
             begin
-              ::YAML.safe_load(File.read(target), [], [], true)
+              ::YAML.safe_load(File.read(target), YAML_WHITELISTED_CLASSES, [], true)
 
               report.add_event(
                 file:     target,
@@ -94,6 +95,17 @@ module PDK
                 message:  _('%{problem} %{context}') % {
                   problem: e.problem,
                   context: e.context,
+                },
+              )
+              return_val = 1
+            rescue Psych::DisallowedClass => e
+              report.add_event(
+                file:     target,
+                source:   name,
+                state:    :failure,
+                severity: 'error',
+                message:  _('Unsupported class: %{message}') % {
+                  message: e.message,
                 },
               )
               return_val = 1

@@ -79,6 +79,24 @@ describe PDK::Validate::YAML::Syntax do
       end
     end
 
+    context 'when a target is provided that contains valid YAML with a symbol value' do
+      let(:targets) do
+        [
+          { name: '.sync.yml', content: "---\n  foo: :bar" },
+        ]
+      end
+
+      it 'adds a passing event to the report' do
+        expect(report).to receive(:add_event).with(
+          file:     targets.first[:name],
+          source:   'yaml-syntax',
+          state:    :passed,
+          severity: 'ok',
+        )
+        expect(return_value).to eq(0)
+      end
+    end
+
     context 'when a target is provided that contains invalid YAML' do
       let(:targets) do
         [
@@ -95,6 +113,25 @@ describe PDK::Validate::YAML::Syntax do
           message:  a_string_matching(%r{\Afound character that cannot start}),
           line:     2,
           column:   1,
+        )
+        expect(return_value).to eq(1)
+      end
+    end
+
+    context 'when a target is provided that contains an unsupported class' do
+      let(:targets) do
+        [
+          { name: 'file.yml', content: "--- !ruby/object:File {}\n" },
+        ]
+      end
+
+      it 'adds a failure event to the report' do
+        expect(report).to receive(:add_event).with(
+          file:     targets.first[:name],
+          source:   'yaml-syntax',
+          state:    :failure,
+          severity: 'error',
+          message:  a_string_matching(%r{unspecified class: file}i),
         )
         expect(return_value).to eq(1)
       end
