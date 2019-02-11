@@ -30,6 +30,165 @@ describe PDK::Module::TemplateDir do
     EOS
   end
 
+  describe '.new' do
+    context 'when not passed a block' do
+      it 'raises an ArgumentError' do
+        expect {
+          described_class.new(uri, module_metadata)
+        }.to raise_error(ArgumentError, %r{must be initialized with a block}i)
+      end
+    end
+
+    context 'when not initialized with a PDK::Util::TemplateURI' do
+      it 'raises an ArgumentError' do
+        expect {
+          described_class.new(path_or_url, module_metadata) {}
+        }.to raise_error(ArgumentError, %r{must be initialized with a PDK::Util::TemplateURI}i)
+      end
+    end
+  end
+
+  describe '#validate_module_template!' do
+    let(:moduleroot) { File.join(path_or_url, 'moduleroot') }
+    let(:moduleroot_init) { File.join(path_or_url, 'moduleroot_init') }
+
+    before(:each) do
+      allow(File).to receive(:directory?).with(anything).and_return(true)
+    end
+
+    context 'when the template path is a directory' do
+      before(:each) do
+        allow(File).to receive(:directory?).with(path_or_url).and_return(true)
+      end
+
+      context 'and the template contains a moduleroot directory' do
+        before(:each) do
+          allow(File).to receive(:directory?).with(moduleroot).and_return(true)
+        end
+
+        context 'and a moduleroot_init directory' do
+          before(:each) do
+            allow(File).to receive(:directory?).with(moduleroot_init).and_return(true)
+          end
+
+          it 'does not raise an error' do
+            expect { described_class.new(uri, module_metadata) {} }.not_to raise_error
+          end
+        end
+
+        context 'but not a moduleroot_init directory' do
+          before(:each) do
+            allow(File).to receive(:directory?).with(moduleroot_init).and_return(false)
+          end
+
+          it 'raises an ArgumentError' do
+            expect {
+              described_class.new(uri, module_metadata) {}
+            }.to raise_error(ArgumentError, %r{does not contain a 'moduleroot_init/'})
+          end
+        end
+      end
+
+      context 'and the template does not contain a moduleroot directory' do
+        before(:each) do
+          allow(File).to receive(:directory?).with(moduleroot).and_return(false)
+        end
+
+        it 'raises an ArgumentError' do
+          expect {
+            described_class.new(uri, module_metadata) {}
+          }.to raise_error(ArgumentError, %r{does not contain a 'moduleroot/'})
+        end
+      end
+    end
+
+    context 'when the template path is not a directory' do
+      before(:each) do
+        allow(File).to receive(:directory?).with(path_or_url).and_return(false)
+        allow(PDK::Util).to receive(:package_install?).and_return(false)
+      end
+
+      context 'and it specifies an deprecated built-in template' do
+        before(:each) do
+          allow(PDK::Util).to receive(:package_install?).and_return(true)
+          allow(File).to receive(:fnmatch?).with(anything, path_or_url).and_return(true)
+          allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('/', 'path', 'to', 'package', 'cachedir'))
+          allow(described_class).to receive(:clone_template_repo).and_return(path_or_url)
+          allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
+          allow(FileUtils).to receive(:remove_dir)
+        end
+
+        it 'raises an ArgumentError' do
+          expect {
+            described_class.new(uri, module_metadata) {}
+          }.to raise_error(ArgumentError, %r{built-in template has substantially changed})
+        end
+      end
+
+      it 'raises an ArgumentError' do
+        expect {
+          described_class.new(uri, module_metadata) {}
+        }.to raise_error(ArgumentError, %r{is not a directory})
+      end
+    end
+  end
+
+  describe '.checkout_template_ref' do
+    let(:path) { File.join('/', 'path', 'to', 'workdir') }
+    let(:ref) { '12345678' }
+    let(:full_ref) { '123456789abcdef' }
+
+    context 'when the template workdir is clean' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:work_dir_clean?).with(path).and_return(true)
+        allow(Dir).to receive(:chdir).with(path).and_yield
+        allow(PDK::Util::Git).to receive(:ls_remote).with(path, ref).and_return(full_ref)
+      end
+
+      context 'and the git reset succeeds' do
+        before(:each) do
+          allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', full_ref).and_return(exit_code: 0)
+        end
+
+        it 'does not raise an error' do
+          expect {
+            described_class.checkout_template_ref(path, ref)
+          }.not_to raise_error
+        end
+      end
+
+      context 'and the git reset fails' do
+        let(:result) { { exit_code: 1, stderr: 'stderr', stdout: 'stdout' } }
+
+        before(:each) do
+          allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', full_ref).and_return(result)
+        end
+
+        it 'raises a FatalError' do
+          expect(logger).to receive(:error).with(result[:stdout])
+          expect(logger).to receive(:error).with(result[:stderr])
+          expect {
+            described_class.checkout_template_ref(path, ref)
+          }.to raise_error(PDK::CLI::FatalError, %r{unable to set head of git repository}i)
+        end
+      end
+    end
+
+    context 'when the template workdir is not clean' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:work_dir_clean?).with(path).and_return(false)
+      end
+
+      after(:each) do
+        described_class.checkout_template_ref(path, ref)
+      end
+
+      it 'warns the user' do
+        expect(logger).to receive(:warn).with(a_string_matching(%r{uncommitted changes found}i))
+      end
+    end
+  end
+
   context 'with a valid template path' do
     it 'returns config hash with module metadata' do
       allow(File).to receive(:directory?).with(anything).and_return(true)

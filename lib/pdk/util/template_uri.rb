@@ -208,7 +208,12 @@ module PDK
           PDK::Module::TemplateDir.new(template[:uri]) {}
           return true
         end
-        return true if PDK::Util::Git.repo?(template[:uri].to_s)
+        repo = if template[:uri].fragment
+                 template[:uri].to_s.chomp("##{template[:uri].fragment}")
+               else
+                 template[:uri].to_s
+               end
+        return true if PDK::Util::Git.repo?(repo)
 
         false
       rescue ArgumentError

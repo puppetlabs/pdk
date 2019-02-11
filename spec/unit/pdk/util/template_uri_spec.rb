@@ -11,19 +11,33 @@ describe PDK::Util::TemplateURI do
 
   describe '.new' do
     context 'with a string' do
-      let(:opts_or_uri) { 'https://github.com/my/pdk-templates.git#custom' }
+      context 'that contains a valid URI' do
+        let(:opts_or_uri) { 'https://github.com/my/pdk-templates.git#custom' }
 
-      it 'can return a string for storing' do
-        expect(template_uri.to_s).to eq('https://github.com/my/pdk-templates.git#custom')
+        it 'can return a string for storing' do
+          expect(template_uri.to_s).to eq('https://github.com/my/pdk-templates.git#custom')
+        end
+      end
+
+      context 'that contains an invalid URI' do
+        let(:opts_or_uri) { 'https://' }
+
+        it 'raises a FatalError' do
+          expect {
+            template_uri
+          }.to raise_error(PDK::CLI::FatalError, %r{initialization with a non-uri string}i)
+        end
       end
     end
-    context 'with an addressable::uri' do
+
+    context 'with an Addressable::URI' do
       let(:opts_or_uri) { Addressable::URI.parse('https://github.com/my/pdk-templates.git#custom') }
 
       it 'can return a string for storing' do
         expect(template_uri.to_s).to eq('https://github.com/my/pdk-templates.git#custom')
       end
     end
+
     context 'with options' do
       let(:opts_or_uri) do
         {
@@ -37,6 +51,7 @@ describe PDK::Util::TemplateURI do
         expect(template_uri.to_s).to eq('https://github.com/my/pdk-templates.git#custom')
       end
     end
+
     context 'combinations of answers, options, and defaults' do
       before :each do
         allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
@@ -79,14 +94,13 @@ describe PDK::Util::TemplateURI do
 
           context 'and the answer file template is invalid' do
             before(:each) do
-              # rubocop:disable RSpec/SubjectStub
-              allow(template_uri).to receive(:valid_template?).with(anything).and_call_original
-              allow(template_uri).to receive(:valid_template?).with(uri: anything, type: anything, allow_fallback: true).and_return(false)
-              # rubocop:enable RSpec/SubjectStub
+              # rubocop:disable RSpec/AnyInstance
+              allow_any_instance_of(described_class).to receive(:valid_template?).with(anything).and_call_original
+              allow_any_instance_of(described_class).to receive(:valid_template?).with(uri: anything, type: anything, allow_fallback: true).and_return(false)
+              # rubocop:enable RSpec/AnyInstance
             end
 
             it 'returns the default template' do
-              pending
               expect(template_uri.to_s).to eq(described_class.default_template_uri.to_s)
             end
           end
@@ -300,6 +314,76 @@ describe PDK::Util::TemplateURI do
         it 'returns master' do
           is_expected.to eq('master')
         end
+      end
+    end
+  end
+
+  describe '.templates' do
+    subject { described_class.templates(options) }
+
+    let(:options) { {} }
+
+    context 'when provided a ref but not a url' do
+      let(:options) { { :'template-ref' => '123' } }
+
+      it 'raises a FatalError' do
+        expect {
+          described_class.templates(options)
+        }.to raise_error(PDK::CLI::FatalError, %r{--template-ref requires --template-url})
+      end
+    end
+
+    context 'when provided a url that contains a hash' do
+      let(:options) { { :'template-url' => 'https://github.com/puppetlabs/pdk-templates#master' } }
+
+      it 'raises a FatalError' do
+        expect {
+          described_class.templates(options)
+        }.to raise_error(PDK::CLI::FatalError, %r{may not be used to specify paths containing #}i)
+      end
+    end
+
+    context 'when the answers file has saved template-url value' do
+      before(:each) do
+        PDK.answers.update!('template-url' => answers_template_url)
+      end
+
+      after(:each) do
+        PDK.answers.update!('template-url' => nil)
+      end
+
+      context 'that is the deprecated pdk-module-template' do
+        let(:answers_template_url) { 'https://github.com/puppetlabs/pdk-module-template' }
+
+        it 'converts it to the new default template URL' do
+          is_expected.to include(
+            type:           'PDK answers',
+            uri:            Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'),
+            allow_fallback: true,
+          )
+        end
+      end
+
+      context 'that contains any other URL' do
+        let(:answers_template_url) { 'https://github.com/my/pdk-template' }
+
+        it 'uses the template as specified' do
+          is_expected.to include(
+            type:           'PDK answers',
+            uri:            Addressable::URI.parse(answers_template_url),
+            allow_fallback: true,
+          )
+        end
+      end
+    end
+
+    context 'when the answers file has no saved template-url value' do
+      before(:each) do
+        PDK.answers.update!('template-url' => nil)
+      end
+
+      xit 'does not include a PDK answers template option' do
+        is_expected.not_to include(type: 'PDK answers', uri: anything, allow_fallback: true)
       end
     end
   end

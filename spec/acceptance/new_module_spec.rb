@@ -47,4 +47,24 @@ describe 'pdk new module' do
       end
     end
   end
+
+  context 'when --template-url and --template-ref are used' do
+    after(:all) do
+      FileUtils.rm_rf('foo_ref')
+    end
+
+    describe command('pdk new module foo_ref --skip-interview --template-url https://github.com/puppetlabs/pdk-templates --template-ref 1.7.0') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{creating new module: foo_ref}i) }
+      its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
+      its(:stdout) { is_expected.to match(%r{\A\Z}) }
+    end
+
+    describe file('foo_ref/metadata.json') do
+      it { is_expected.to be_file }
+      its(:content_as_json) do
+        is_expected.to include('template-ref' => match(%r{1\.7\.0}))
+      end
+    end
+  end
 end
