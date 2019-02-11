@@ -100,6 +100,25 @@ describe PDK::Validate::YAML::Syntax do
       end
     end
 
+    context 'when a target is provided that contains an unsupported class' do
+      let(:targets) do
+        [
+          { name: 'file.yml', content: "--- !ruby/object:File {}\n" },
+        ]
+      end
+
+      it 'adds a failure event to the report' do
+        expect(report).to receive(:add_event).with(
+          file:     targets.first[:name],
+          source:   'yaml-syntax',
+          state:    :failure,
+          severity: 'error',
+          message:  a_string_matching(%r{unspecified class: file}i),
+        )
+        expect(return_value).to eq(1)
+      end
+    end
+
     context 'when targets are provided that contain valid and invalid YAML' do
       let(:targets) do
         [

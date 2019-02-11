@@ -97,6 +97,17 @@ module PDK
                 },
               )
               return_val = 1
+            rescue Psych::DisallowedClass => e
+              report.add_event(
+                file:     target,
+                source:   name,
+                state:    :failure,
+                severity: 'error',
+                message:  _('Unsupported class: %{message}') % {
+                  message: e.message,
+                },
+              )
+              return_val = 1
             end
           end
 
