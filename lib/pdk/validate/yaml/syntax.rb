@@ -62,6 +62,8 @@ module PDK
           create_spinner(targets, options)
 
           targets.each do |target|
+            next unless File.file?(target)
+
             unless File.readable?(target)
               report.add_event(
                 file:     target,

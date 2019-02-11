@@ -61,6 +61,18 @@ describe PDK::Validate::YAML::Syntax do
       end
     end
 
+    context 'when a target is provided that is not a file' do
+      let(:targets) do
+        [
+          { name: 'a_directory.yml', file: false },
+        ]
+      end
+
+      it 'skips the target' do
+        expect(report).not_to receive(:add_event)
+      end
+    end
+
     context 'when a target is provided that contains valid YAML' do
       let(:targets) do
         [
