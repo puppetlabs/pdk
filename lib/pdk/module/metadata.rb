@@ -163,7 +163,8 @@ module PDK
       # Do basic validation and parsing of the name parameter.
       def process_name(data)
         validate_name(data['name'])
-        author, _modname = data['name'].split(%r{[-/]}, 2)
+        author, modname = data['name'].split(%r{[-/]}, 2)
+        data['name'] = [author, modname].join('-')
 
         data['author'] ||= author if @data['author'] == DEFAULTS['author']
       end

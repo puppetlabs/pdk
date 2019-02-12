@@ -65,6 +65,12 @@ describe PDK::Module::Metadata do
     it 'errors when the provided name starts with a non-letter character' do
       expect { metadata.update!('name' => 'foo-1bar') }.to raise_error(ArgumentError, %r{Invalid 'name' field in metadata.json: module name must begin with a letter}i)
     end
+
+    it 'converts user/module style names to user-module' do
+      metadata.update!('name' => 'user/module')
+
+      expect(metadata.data['name']).to eq('user-module')
+    end
   end
 
   describe '#forge_ready?' do
