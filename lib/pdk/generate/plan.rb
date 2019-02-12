@@ -24,7 +24,7 @@ module PDK
       #
       # @return [String] the path to the plan file.
       def target_object_path
-        @target_object_path ||= File.join(module_dir, 'plans', "#{plan_name}.sh")
+        @target_object_path ||= File.join(module_dir, 'plans', "#{plan_name}.pp")
       end
 
       # Calculates the path to the file where the tests for the new plan will
@@ -40,7 +40,7 @@ module PDK
 
         super
 
-        write_plan_metadata
+        #write_plan_metadata
       end
 
       # Checks that the plan has not already been defined with a different
