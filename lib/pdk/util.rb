@@ -12,6 +12,7 @@ module PDK
       manifests
       lib
       tasks
+      plans
       facts.d
       functions
       types

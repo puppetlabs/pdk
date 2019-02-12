@@ -23,6 +23,7 @@ module PDK
           !(string =~ %r{\A[a-z][a-z0-9_]*\Z}).nil?
         end
         singleton_class.send(:alias_method, :valid_task_name?, :valid_module_name?)
+        singleton_class.send(:alias_method, :valid_plan_name?, :valid_module_name?)
 
         # https://puppet.com/docs/puppet/5.3/custom_types.html#creating-a-type only says the name has to be a ruby symbol.
         # Let's assume that only strings similar to module names can actually be resolved by the puppet language.

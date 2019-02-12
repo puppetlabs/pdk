@@ -3,6 +3,7 @@ require 'pdk/generate/module'
 require 'pdk/generate/provider'
 require 'pdk/generate/puppet_class'
 require 'pdk/generate/task'
+require 'pdk/generate/plan'
 require 'pdk/module/metadata'
 require 'pdk/module/templatedir'
 

@@ -137,6 +137,7 @@ module PDK
           File.join(target_dir, 'manifests'),
           File.join(target_dir, 'templates'),
           File.join(target_dir, 'tasks'),
+          File.join(target_dir, 'plans'),
         ].each do |dir|
           begin
             FileUtils.mkdir_p(dir)
