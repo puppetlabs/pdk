@@ -382,7 +382,7 @@ describe PDK::Util::TemplateURI do
         PDK.answers.update!('template-url' => nil)
       end
 
-      xit 'does not include a PDK answers template option' do
+      it 'does not include a PDK answers template option' do
         is_expected.not_to include(type: 'PDK answers', uri: anything, allow_fallback: true)
       end
     end

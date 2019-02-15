@@ -172,7 +172,7 @@ module PDK
         ary = []
         ary << { type: _('--template-url'), uri: explicit_uri, allow_fallback: false }
         ary << { type: _('metadata.json'), uri: metadata_uri, allow_fallback: true } if metadata_uri
-        ary << { type: _('PDK answers'), uri: answers_uri, allow_fallback: true } unless metadata_uri
+        ary << { type: _('PDK answers'), uri: answers_uri, allow_fallback: true } if answers_uri
         ary << { type: _('default'), uri: default_uri, allow_fallback: false }
         ary
       end
