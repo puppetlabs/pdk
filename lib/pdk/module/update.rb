@@ -6,6 +6,8 @@ module PDK
       GIT_DESCRIBE_PATTERN = %r{\A(?<base>.+?)-(?<additional_commits>\d+)-g(?<sha>.+)\Z}
 
       def run
+        template_uri.git_ref = new_template_version
+
         stage_changes!
 
         if current_version == new_version
@@ -50,11 +52,8 @@ module PDK
         raise PDK::CLI::ExitWithError, e.message
       end
 
-      # TODO: update should be able to use exsting url. uri fragments should be
-      # tracked if existing, but the template-ref in the metadata is not for
-      # tracking simply for referencing the last update target.
-      def metadata_template_uri
-        @metadata_template_uri ||= PDK::Util::TemplateURI.new(module_metadata.data['template-url'])
+      def template_uri
+        @template_uri ||= PDK::Util::TemplateURI.new(module_metadata.data['template-url'])
       end
 
       def current_version
@@ -68,8 +67,6 @@ module PDK
       private
 
       def current_template_version
-        # TODO: Should the current/new versions be queried here or should that
-        # come from the util class?
         @current_template_version ||= module_metadata.data['template-ref']
       end
 
@@ -86,7 +83,7 @@ module PDK
       end
 
       def new_template_version
-        metadata_template_uri.git_ref
+        options.fetch(:'template-ref', PDK::Util::TemplateURI.default_template_ref)
       end
 
       def fetch_remote_version(template_ref)
@@ -94,11 +91,11 @@ module PDK
         return template_ref if template_ref == PDK::TEMPLATE_REF
 
         sha_length = GIT_DESCRIBE_PATTERN.match(current_template_version)[:sha].length - 1
-        "#{template_ref}@#{PDK::Util::Git.ls_remote(metadata_template_uri.git_remote, template_ref)[0..sha_length]}"
+        "#{template_ref}@#{PDK::Util::Git.ls_remote(template_uri.git_remote, template_ref)[0..sha_length]}"
       end
 
       def update_message
-        format_string = if metadata_template_uri == PDK::Util::TemplateURI.default_template_uri
+        format_string = if template_uri.git_remote == PDK::Util::TemplateURI.default_template_uri.git_remote
                           _('Updating %{module_name} using the default template, from %{current_version} to %{new_version}')
                         else
                           _('Updating %{module_name} using the template at %{template_url}, from %{current_version} to %{new_version}')
@@ -106,7 +103,7 @@ module PDK
 
         format_string % {
           module_name:     module_metadata.data['name'],
-          template_url:    metadata_template_uri.git_remote,
+          template_url:    template_uri.git_remote,
           current_version: current_version,
           new_version:     new_version,
         }

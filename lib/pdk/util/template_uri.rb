@@ -77,6 +77,10 @@ module PDK
         end
       end
 
+      def git_ref=(ref)
+        @uri.fragment = ref
+      end
+
       # @returns PDK::Util::TemplateURI
       def self.default_template_uri
         if PDK::Util.package_install?

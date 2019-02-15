@@ -202,8 +202,8 @@ describe PDK::Module::Update do
     end
   end
 
-  describe '#metadata_template_uri' do
-    subject { described_class.new(options).metadata_template_uri.to_s }
+  describe '#template_uri' do
+    subject { described_class.new(options).template_uri.to_s }
 
     include_context 'with mock metadata'
 
