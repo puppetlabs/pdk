@@ -219,6 +219,12 @@ module PDK
                end
         return true if PDK::Util::Git.repo?(repo)
 
+        unless template[:allow_fallback]
+          raise PDK::CLI::FatalError, _('Unable to find a valid template at %{uri}') % {
+            uri: template[:uri].to_s,
+          }
+        end
+
         false
       rescue ArgumentError
         return false
