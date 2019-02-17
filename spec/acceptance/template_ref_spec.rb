@@ -4,7 +4,7 @@ require 'pdk/version'
 describe 'Specifying a template-ref' do
   after(:all) do
     FileUtils.rm_rf('foo')
-    FileUtils.rm('foo_answers.json')
+    FileUtils.rm_f('foo_answers.json')
   end
 
   context 'when creating a new module' do
@@ -13,7 +13,7 @@ describe 'Specifying a template-ref' do
       '--skip-interview',
       '--template-url', 'https://github.com/puppetlabs/pdk-templates',
       '--template-ref', '1.7.0',
-      '--answer-file', File.join(Dir.pwd, "foo_answers.json"),
+      '--answer-file', File.join(Dir.pwd, 'foo_answers.json')
     ]
 
     describe command(create_cmd.join(' ')) do
