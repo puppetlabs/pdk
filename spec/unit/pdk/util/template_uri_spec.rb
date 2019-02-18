@@ -74,6 +74,7 @@ describe PDK::Util::TemplateURI do
       end
 
       let(:opts_or_uri) { {} }
+      let(:default_uri) { "#{described_class.default_template_uri}##{described_class.default_template_ref}" }
 
       context 'when passed no options' do
         context 'and there are no metadata or answers' do
@@ -81,7 +82,7 @@ describe PDK::Util::TemplateURI do
             PDK.answers.update!('template-url' => nil)
           end
           it 'returns the default template' do
-            expect(template_uri.to_s).to eq(described_class.default_template_uri.to_s)
+            expect(template_uri.to_s).to eq(default_uri)
           end
         end
         context 'and there are only answers' do
@@ -101,7 +102,7 @@ describe PDK::Util::TemplateURI do
             end
 
             it 'returns the default template' do
-              expect(template_uri.to_s).to eq(described_class.default_template_uri.to_s)
+              expect(template_uri.to_s).to eq(default_uri)
             end
           end
         end
@@ -127,7 +128,7 @@ describe PDK::Util::TemplateURI do
           let(:opts_or_uri) { { :'template-url' => 'cli-templates' } }
 
           it 'returns the specified template' do
-            expect(template_uri.to_s).to eq('cli-templates')
+            expect(template_uri.to_s).to eq("cli-templates##{described_class.default_template_ref}")
           end
         end
         context 'and passed windows template-url' do
@@ -135,7 +136,7 @@ describe PDK::Util::TemplateURI do
 
           it 'returns the specified template' do
             allow(Gem).to receive(:win_platform?).and_return(true)
-            expect(template_uri.to_s).to eq('C:\cli-templates')
+            expect(template_uri.to_s).to eq("C:\\cli-templates##{described_class.default_template_ref}")
           end
         end
         context 'and passed template-ref' do

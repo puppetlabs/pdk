@@ -143,13 +143,14 @@ describe PDK::Generate::PuppetObject do
       allow(cli_templatedir).to receive(:object_config).and_return(configs_hash)
       allow(metadata_templatedir).to receive(:object_config).and_return(configs_hash)
       allow(PDK::Module::TemplateDir).to receive(:new).with(any_args).and_yield(default_templatedir)
+      allow(PDK::Util).to receive(:development_mode?).and_return(true)
     end
 
     context 'when a template-url is provided on the CLI' do
       let(:options) { { :'template-url' => '/some/path' } }
 
       before(:each) do
-        allow(PDK::Module::TemplateDir).to receive(:new).with(Addressable::URI.parse('/some/path')).and_yield(cli_templatedir)
+        allow(PDK::Module::TemplateDir).to receive(:new).with(Addressable::URI.parse('/some/path#master')).and_yield(cli_templatedir)
       end
 
       context 'and a template for the object type exists' do

@@ -361,15 +361,16 @@ describe PDK::Module::Convert do
         allow(PDK::Util::Git).to receive(:repo?).with(options[:'template-url']).and_return(true)
       end
 
-      it { is_expected.to eq(PDK::Util::TemplateURI.new('https://my/custom/template')) }
+      it { is_expected.to eq(PDK::Util::TemplateURI.new("https://my/custom/template##{PDK::Util::TemplateURI.default_template_ref}")) }
     end
 
     context 'when no template-url is provided in the options' do
       before(:each) do
         allow(PDK::Util::Git).to receive(:repo?).with(PDK::Util::TemplateURI.default_template_uri.metadata_format).and_return(true)
       end
+      let(:default_uri) { "#{PDK::Util::TemplateURI.default_template_uri}##{PDK::Util::TemplateURI.default_template_ref}" }
 
-      it { is_expected.to eq(PDK::Util::TemplateURI.default_template_uri) }
+      it { is_expected.to eq(PDK::Util::TemplateURI.new(default_uri)) }
     end
   end
 

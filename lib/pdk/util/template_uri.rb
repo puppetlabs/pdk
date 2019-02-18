@@ -154,7 +154,7 @@ module PDK
             end
           end
           explicit_uri = Addressable::URI.parse(uri_safe(explicit_url))
-          explicit_uri.fragment = explicit_ref
+          explicit_uri.fragment = explicit_ref || default_template_ref
         else
           explicit_uri = nil
         end
@@ -172,6 +172,7 @@ module PDK
                         nil
                       end
         default_uri = Addressable::URI.parse(default_template_uri)
+        default_uri.fragment = default_template_ref
 
         ary = []
         ary << { type: _('--template-url'), uri: explicit_uri, allow_fallback: false }

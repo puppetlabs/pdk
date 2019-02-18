@@ -75,7 +75,7 @@ module PDK
         end
 
         # Only update the answers files after metadata has been written.
-        if template_uri.metadata_format == PDK::Util::TemplateURI.default_template_uri.metadata_format
+        if template_uri.git_remote == PDK::Util::TemplateURI.default_template_uri.git_remote
           # If the user specifies our default template url via the command
           # line, remove the saved template-url answer so that the template_uri
           # resolution can find new default URLs in the future.
