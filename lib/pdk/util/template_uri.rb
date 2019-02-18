@@ -209,16 +209,18 @@ module PDK
         return false if template.nil?
         return false if template[:uri].nil?
 
-        if template[:path] && File.directory?(template[:path])
-          PDK::Module::TemplateDir.new(template[:uri]) {}
-          return true
-        end
         repo = if template[:uri].fragment
                  template[:uri].to_s.chomp("##{template[:uri].fragment}")
                else
                  template[:uri].to_s
                end
         return true if PDK::Util::Git.repo?(repo)
+
+        path = self.class.human_readable(template[:uri].path)
+        if File.directory?(path)
+          PDK::Module::TemplateDir.new(path) {}
+          return true
+        end
 
         unless template[:allow_fallback]
           raise PDK::CLI::FatalError, _('Unable to find a valid template at %{uri}') % {
