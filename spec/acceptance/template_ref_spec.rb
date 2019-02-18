@@ -1,10 +1,10 @@
 require 'spec_helper_acceptance'
-require 'pdk/version'
 
 describe 'Specifying a template-ref' do
   after(:all) do
+    Dir.chdir('..')
     FileUtils.rm_rf('foo')
-    FileUtils.rm_f('foo_answers.json')
+    FileUtils.rm('foo_answers.json')
   end
 
   context 'when creating a new module' do
@@ -13,7 +13,7 @@ describe 'Specifying a template-ref' do
       '--skip-interview',
       '--template-url', 'https://github.com/puppetlabs/pdk-templates',
       '--template-ref', '1.7.0',
-      '--answer-file', File.join(Dir.pwd, 'foo_answers.json')
+      '--answer-file', 'foo_answers.json'
     ]
 
     describe command(create_cmd.join(' ')) do
@@ -32,7 +32,6 @@ describe 'Specifying a template-ref' do
 
     context 'and then updating the module to a specific ref' do
       before(:all) { Dir.chdir('foo') }
-      after(:all) { Dir.chdir('..') }
 
       describe command('pdk update --template-ref 1.8.0 --force') do
         its(:exit_status) { is_expected.to eq(0) }
