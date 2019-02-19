@@ -33,7 +33,7 @@ module PDK
                elsif opts_or_uri.is_a?(Addressable::URI)
                  opts_or_uri.dup
                else
-                 first_valid_uri(self.class.templates(opts_or_uri))
+                 self.class.first_valid_uri(self.class.templates(opts_or_uri))
                end
       end
 
@@ -55,10 +55,14 @@ module PDK
       #
       # @returns String
       def git_remote
-        if @uri.is_a?(Addressable::URI) && @uri.fragment
-          self.class.human_readable(@uri.to_s.chomp('#' + @uri.fragment))
+        self.class.git_remote(@uri)
+      end
+
+      def self.git_remote(uri)
+        if uri.is_a?(Addressable::URI) && uri.fragment
+          human_readable(uri.to_s.chomp('#' + uri.fragment))
         else
-          self.class.human_readable(@uri.to_s)
+          human_readable(uri.to_s)
         end
       end
 
@@ -191,10 +195,8 @@ module PDK
         end
       end
 
-      private
-
       # @returns Addressable::URI
-      def first_valid_uri(templates_array)
+      def self.first_valid_uri(templates_array)
         # 1. Get the four sources of URIs
         # 2. Pick the first non-nil URI
         # 3. Error if the URI is not a valid git repo (missing directory or http 404)
@@ -205,21 +207,20 @@ module PDK
         found_template[:uri]
       end
 
-      def valid_template?(template)
-        return false if template.nil?
-        return false if template[:uri].nil?
+      def self.valid_template?(template)
+        return false if template.nil? || !template.is_a?(Hash)
+        return false if template[:uri].nil? || !template[:uri].is_a?(Addressable::URI)
 
-        repo = if template[:uri].fragment
-                 template[:uri].to_s.chomp("##{template[:uri].fragment}")
-               else
-                 template[:uri].to_s
-               end
-        return true if PDK::Util::Git.repo?(repo)
+        return true if PDK::Util::Git.repo?(git_remote(template[:uri]))
 
-        path = self.class.human_readable(template[:uri].path)
+        path = human_readable(template[:uri].path)
         if File.directory?(path)
-          PDK::Module::TemplateDir.new(path) {}
-          return true
+          begin
+            PDK::Module::TemplateDir.new(path) {}
+            return true
+          rescue ArgumentError
+            nil
+          end
         end
 
         unless template[:allow_fallback]
@@ -229,8 +230,6 @@ module PDK
         end
 
         false
-      rescue ArgumentError
-        return false
       end
     end
   end

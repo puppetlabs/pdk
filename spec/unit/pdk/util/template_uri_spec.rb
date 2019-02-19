@@ -95,10 +95,8 @@ describe PDK::Util::TemplateURI do
 
           context 'and the answer file template is invalid' do
             before(:each) do
-              # rubocop:disable RSpec/AnyInstance
-              allow_any_instance_of(described_class).to receive(:valid_template?).with(anything).and_call_original
-              allow_any_instance_of(described_class).to receive(:valid_template?).with(uri: anything, type: anything, allow_fallback: true).and_return(false)
-              # rubocop:enable RSpec/AnyInstance
+              allow(described_class).to receive(:valid_template?).with(anything).and_call_original
+              allow(described_class).to receive(:valid_template?).with(uri: anything, type: anything, allow_fallback: true).and_return(false)
             end
 
             it 'returns the default template' do
@@ -385,6 +383,86 @@ describe PDK::Util::TemplateURI do
 
       it 'does not include a PDK answers template option' do
         is_expected.not_to include(type: 'PDK answers', uri: anything, allow_fallback: true)
+      end
+    end
+  end
+
+  describe '.valid_template?' do
+    subject(:return_val) { described_class.valid_template?(template) }
+
+    context 'when passed nil' do
+      let(:template) { nil }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when passed a param that is not a Hash' do
+      let(:template) { 'https://github.com/my/template' }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when passed a param that is a Hash' do
+      let(:template) { { allow_fallback: true } }
+
+      context 'with a nil :uri' do
+        let(:template) { super().merge(uri: nil) }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and the :uri value is not an Addressable::URI' do
+        let(:template) { super().merge(uri: 'https://github.com/my/template') }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and the :uri value is an Addressable::URI' do
+        let(:template) { super().merge(uri: Addressable::URI.parse('/path/to/a/template')) }
+
+        context 'that points to a git repository' do
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:repo?).with('/path/to/a/template').and_return(true)
+          end
+
+          it { is_expected.to be_truthy }
+        end
+
+        context 'that does not point to a git repository' do
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:repo?).with('/path/to/a/template').and_return(false)
+          end
+
+          context 'but does point to a directory' do
+            before(:each) do
+              allow(File).to receive(:directory?).with('/path/to/a/template').and_return(true)
+            end
+
+            context 'that contains a valid template' do
+              before(:each) do
+                allow(PDK::Module::TemplateDir).to receive(:new).with('/path/to/a/template').and_yield
+              end
+
+              it { is_expected.to be_truthy }
+            end
+
+            context 'that does not contain a valid template' do
+              before(:each) do
+                allow(PDK::Module::TemplateDir).to receive(:new).with('/path/to/a/template').and_raise(ArgumentError)
+              end
+
+              it { is_expected.to be_falsey }
+            end
+          end
+
+          context 'and the param Hash sets :allow_fallback => false' do
+            let(:template) { super().merge(allow_fallback: false) }
+
+            it 'raises a FatalError' do
+              expect { return_val }.to raise_error(PDK::CLI::FatalError, %r{unable to find a valid template}i)
+            end
+          end
+        end
       end
     end
   end
