@@ -342,6 +342,66 @@ describe PDK::Util::TemplateURI do
       end
     end
 
+    context 'when provided a template-url' do
+      subject(:cli_template_uri) { described_class.templates(:'template-url' => template_url).first[:uri] }
+
+      context 'that is a ssh:// URL without a port' do
+        let(:template_url) { 'ssh://git@github.com/1234/repo.git' }
+
+        it 'parses into an Addressable::URI without port set' do
+          expect(cli_template_uri).to have_attributes(
+            scheme: 'ssh',
+            user:   'git',
+            host:   'github.com',
+            port:   nil,
+            path:   '/1234/repo.git',
+          )
+        end
+      end
+
+      context 'that is a ssh:// URL with a port' do
+        let(:template_url) { 'ssh://git@github.com:1234/user/repo.git' }
+
+        it 'parses into an Addressable::URI with port set' do
+          expect(cli_template_uri).to have_attributes(
+            scheme: 'ssh',
+            user:   'git',
+            host:   'github.com',
+            port:   1234,
+            path:   '/user/repo.git',
+          )
+        end
+      end
+
+      context 'that is a SCP style URL with a non-numeric relative path' do
+        let(:template_url) { 'git@github.com:user/repo.git' }
+
+        it 'parses into an Addressable::URI without port set' do
+          expect(cli_template_uri).to have_attributes(
+            scheme: 'ssh',
+            user:   'git',
+            host:   'github.com',
+            port:   nil,
+            path:   '/user/repo.git',
+          )
+        end
+      end
+
+      context 'that is a SCP style URL with a numeric relative path' do
+        let(:template_url) { 'git@github.com:1234/repo.git' }
+
+        it 'parses the numeric part as part of the path' do
+          expect(cli_template_uri).to have_attributes(
+            scheme: 'ssh',
+            user:   'git',
+            host:   'github.com',
+            port:   nil,
+            path:   '/1234/repo.git',
+          )
+        end
+      end
+    end
+
     context 'when the answers file has saved template-url value' do
       before(:each) do
         PDK.answers.update!('template-url' => answers_template_url)

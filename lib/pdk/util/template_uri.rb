@@ -3,6 +3,8 @@ require 'pdk/util'
 module PDK
   module Util
     class TemplateURI
+      SCP_PATTERN = %r{\A(?!\w+://)(?:(?<user>.+?)@)?(?<host>[^:/]+):(?<path>.+)\z}
+
       # XXX Previously
       # - template_uri used to get the string form of the uri when generating the module and written to pdk answers and metadata
       # - template_path or deuri_path used for humans to see and commands to run
@@ -141,23 +143,15 @@ module PDK
           # numbers, but can be made unambiguous by making the form to
           # ssh://git@github.com/1234/repo.git or
           # ssh://git@github.com:1234/user/repo.git
-          scp_url_m = explicit_url.match(%r{\A(.*@[^/:]+):(.+)\z})
-          if Pathname.new(explicit_url).relative? && scp_url_m
-            # "^git@..." is also malformed as it is missing a scheme
-            # "ssh://git@..." is correct.
-            check_url = Addressable::URI.parse(scp_url_m[1])
-            scheme = 'ssh://' unless check_url.scheme
-
-            numbers_m = scp_url_m[2].split('/')[0].match(%r{\A[0-9]+\z})
-            if numbers_m && numbers_m[0].to_i < 65_536
-              # consider it an explicit-port URI, even though it's ambiguous.
-              explicit_url = Addressable::URI.parse(scheme + scp_url_m[1] + ':' + scp_url_m[2])
-            else
-              explicit_url = Addressable::URI.parse(scheme + scp_url_m[1] + '/' + scp_url_m[2])
-              PDK.logger.warn(_('--template-url appears to be an SCP-style url; it will be converted to an RFC-compliant URI: %{uri}') % { uri: explicit_url })
-            end
+          scp_url = explicit_url.match(SCP_PATTERN)
+          if Pathname.new(uri_safe(explicit_url)).relative? && scp_url
+            explicit_uri = Addressable::URI.new(scheme: 'ssh', user: scp_url[:user], host: scp_url[:host], path: scp_url[:path])
+            PDK.logger.warn _('%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}') % {
+              scp_uri: explicit_url,
+              rfc_uri: explicit_uri.to_s,
+            }
           end
-          explicit_uri = Addressable::URI.parse(uri_safe(explicit_url))
+          explicit_uri ||= Addressable::URI.parse(uri_safe(explicit_url))
           explicit_uri.fragment = explicit_ref || default_template_ref
         else
           explicit_uri = nil
