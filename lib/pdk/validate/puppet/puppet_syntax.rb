@@ -1,6 +1,8 @@
 require 'pdk'
 require 'pdk/cli/exec'
 require 'pdk/validate/base_validator'
+require 'fileutils'
+require 'tmpdir'
 
 module PDK
   module Validate
@@ -46,7 +48,30 @@ module PDK
       end
 
       def self.parse_options(_options, targets)
-        ['parser', 'validate', '--config', null_file].concat(targets)
+        # Due to PDK-1266 we need to run `puppet parser validate` with an empty
+        # modulepath. On *nix, Ruby treats `/dev/null` as an empty directory
+        # however it doesn't do so with `NUL` on Windows. The workaround for
+        # this to ensure consistent behaviour is to create an empty temporary
+        # directory and use that as the modulepath.
+        ['parser', 'validate', '--config', null_file, '--modulepath', validate_tmpdir].concat(targets)
+      end
+
+      def self.invoke(report, options)
+        super
+      ensure
+        remove_validate_tmpdir
+      end
+
+      def self.validate_tmpdir
+        @validate_tmpdir ||= Dir.mktmpdir('puppet-parser-validate')
+      end
+
+      def self.remove_validate_tmpdir
+        return unless @validate_tmpdir
+        return unless File.directory?(@validate_tmpdir)
+
+        FileUtils.remove_entry_secure(@validate_tmpdir)
+        @validate_tmpdir = nil
       end
 
       def self.null_file
