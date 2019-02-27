@@ -143,8 +143,8 @@ module PDK
               File.join(@process.environment['GEM_HOME'], 'bin'),
               PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path| File.join(gem_path, 'bin') },
               package_binpath,
-              ENV['PATH'],
               PDK::Util.package_install? ? PDK::Util::Git.git_paths : nil,
+              ENV['PATH'],
             ].compact.flatten.join(File::PATH_SEPARATOR)
 
             mod_root = PDK::Util.module_root
