@@ -21,29 +21,27 @@ describe 'Running metadata validation' do
       end
     end
 
-    describe command('pdk validate metadata') do
+    describe command('pdk validate metadata --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stdout) { is_expected.to match(%r{^warning:.*metadata\.json:.+open ended dependency}) }
       its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
-    end
 
-    describe command('pdk validate metadata --format junit') do
-      its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
-      it_behaves_like :it_generates_valid_junit_xml
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
 
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
-          'failures' => eq(1),
-          'tests'    => eq(1),
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
+            'failures' => eq(1),
+            'tests'    => eq(1),
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
-          'classname' => 'metadata-json-lint.dependencies',
-          'name'      => 'metadata.json',
-        ).that_failed
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
+            'classname' => 'metadata-json-lint.dependencies',
+            'name'      => 'metadata.json',
+          ).that_failed
+        end
       end
     end
   end

@@ -22,19 +22,15 @@ describe 'Running tasks validation' do
       end
     end
 
-    describe command('pdk validate tasks') do
+    describe command('pdk validate tasks --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(task_name_spinner) }
       its(:stderr) { is_expected.to match(task_style_spinner) }
-    end
 
-    describe command('pdk validate tasks --format junit') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(task_name_spinner) }
-      its(:stderr) { is_expected.to match(task_style_spinner) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
-
-      its(:stdout) { is_expected.to have_junit_testsuite('task-metadata-lint') }
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
+        its(:content) { is_expected.to have_junit_testsuite('task-metadata-lint') }
+      end
     end
   end
 
@@ -76,27 +72,23 @@ describe 'Running tasks validation' do
       end
     end
 
-    describe command('pdk validate tasks') do
+    describe command('pdk validate tasks --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stderr) { is_expected.to match(task_name_spinner) }
       its(:stderr) { is_expected.to match(task_style_spinner) }
       its(:stdout) { is_expected.to match(%r{The property '#/supports_noop' of type string did not match the following type: boolean}i) }
-    end
 
-    describe command('pdk validate tasks --format junit') do
-      its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stderr) { is_expected.to match(task_name_spinner) }
-      its(:stderr) { is_expected.to match(task_style_spinner) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
-
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('task-metadata-lint').with_attributes(
-          'classname' => 'task-metadata-lint',
-          'name'      => a_string_matching(%r{invalid.json}),
-        ).that_failed(
-          'type'    => a_string_matching(%r{error}i),
-          'message' => a_string_matching(%r{The property '#/supports_noop' of type string did not match the following type: boolean}i),
-        )
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('task-metadata-lint').with_attributes(
+            'classname' => 'task-metadata-lint',
+            'name'      => a_string_matching(%r{invalid.json}),
+          ).that_failed(
+            'type'    => a_string_matching(%r{error}i),
+            'message' => a_string_matching(%r{The property '#/supports_noop' of type string did not match the following type: boolean}i),
+          )
+        end
       end
     end
   end

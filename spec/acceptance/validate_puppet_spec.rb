@@ -15,21 +15,17 @@ describe 'pdk validate puppet', module_command: true do
   context 'with no .pp files' do
     include_context 'in a new module', 'validate_puppet_module'
 
-    describe command('pdk validate puppet') do
+    describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.not_to match(syntax_spinner_text) }
       its(:stderr) { is_expected.not_to match(lint_spinner_text) }
       its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
-    end
 
-    describe command('pdk validate puppet --format junit') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.not_to match(syntax_spinner_text) }
-      its(:stderr) { is_expected.not_to match(lint_spinner_text) }
-
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
-      its(:stdout) { is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').that_was_skipped }
-      its(:stdout) { is_expected.to have_junit_testcase.in_testsuite('puppet-lint').that_was_skipped }
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
+        its(:content) { is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').that_was_skipped }
+        its(:content) { is_expected.to have_junit_testcase.in_testsuite('puppet-lint').that_was_skipped }
+      end
     end
   end
 
@@ -46,21 +42,17 @@ class foo {
       end
     end
 
-    describe command('pdk validate puppet') do
+    describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.to match(lint_spinner_text) }
       its(:stdout) { is_expected.to match(empty_string) }
-    end
 
-    describe command('pdk validate puppet --format junit') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(syntax_spinner_text) }
-      its(:stderr) { is_expected.to match(lint_spinner_text) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
-
-      its(:stdout) { is_expected.to have_junit_testsuite('puppet-syntax') }
-      its(:stdout) { is_expected.to have_junit_testsuite('puppet-lint') }
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
+        its(:content) { is_expected.to have_junit_testsuite('puppet-syntax') }
+        its(:content) { is_expected.to have_junit_testsuite('puppet-lint') }
+      end
     end
   end
 
@@ -80,63 +72,60 @@ class foo {
       end
     end
 
-    describe command('pdk validate puppet') do
+    describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.to match(lint_spinner_text) }
 
       its(:stdout) { is_expected.to match(%r{Warning:.*Unrecognized escape sequence \'\\\[\'}i) }
       its(:stdout) { is_expected.to match(%r{Warning:.*Unrecognized escape sequence \'\\\]\'}i) }
-    end
 
-    describe command('pdk validate puppet --format junit') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(syntax_spinner_text) }
-      its(:stderr) { is_expected.to match(lint_spinner_text) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
 
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
-          'failures' => eq(2),
-          'tests'    => eq(2),
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+            'failures' => eq(2),
+            'tests'    => eq(2),
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
-          'classname' => 'puppet-syntax',
-          'name'      => a_string_starting_with(init_pp),
-        ).that_failed(
-          'type'    => a_string_matching(%r{warning}i),
-          'message' => a_string_matching(%r{unrecognized escape sequence \'\\\[\'}i),
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+            'classname' => 'puppet-syntax',
+            'name'      => a_string_starting_with(init_pp),
+          ).that_failed(
+            'type'    => a_string_matching(%r{warning}i),
+            'message' => a_string_matching(%r{unrecognized escape sequence \'\\\[\'}i),
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
-          'classname' => 'puppet-syntax',
-          'name'      => a_string_starting_with(init_pp),
-        ).that_failed(
-          'type'    => a_string_matching(%r{warning}i),
-          'message' => a_string_matching(%r{unrecognized escape sequence \'\\\]\'}i),
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+            'classname' => 'puppet-syntax',
+            'name'      => a_string_starting_with(init_pp),
+          ).that_failed(
+            'type'    => a_string_matching(%r{warning}i),
+            'message' => a_string_matching(%r{unrecognized escape sequence \'\\\]\'}i),
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
-          'failures' => a_value > 0,
-          'tests'    => a_value > 0,
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+            'failures' => a_value > 0,
+            'tests'    => a_value > 0,
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
-          'classname' => a_string_starting_with('puppet-lint'),
-          'name'      => a_string_starting_with(init_pp),
-        ).that_failed(
-          'type'    => a_string_matching(%r{warning}i),
-          'message' => a_string_matching(%r{double quoted string containing no variables}i),
-        )
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
+            'classname' => a_string_starting_with('puppet-lint'),
+            'name'      => a_string_starting_with(init_pp),
+          ).that_failed(
+            'type'    => a_string_matching(%r{warning}i),
+            'message' => a_string_matching(%r{double quoted string containing no variables}i),
+          )
+        end
       end
     end
   end
@@ -184,45 +173,42 @@ class foo {
       end
     end
 
-    describe command('pdk validate puppet') do
+    describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.+class not documented}i) }
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.to match(lint_spinner_text) }
-    end
 
-    describe command('pdk validate puppet --format junit') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(syntax_spinner_text) }
-      its(:stderr) { is_expected.to match(lint_spinner_text) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
 
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
-          'failures' => eq(0),
-          'tests'    => eq(1),
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+            'failures' => eq(0),
+            'tests'    => eq(1),
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
-          'classname' => 'puppet-syntax',
-          'name'      => init_pp,
-        ).that_passed
-      end
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+            'classname' => 'puppet-syntax',
+            'name'      => init_pp,
+          ).that_passed
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
-          'failures' => eq(1),
-          'tests'    => eq(1),
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+            'failures' => eq(1),
+            'tests'    => eq(1),
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
-          'classname' => 'puppet-lint.documentation',
-          'name'      => a_string_starting_with(init_pp),
-        ).that_failed
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
+            'classname' => 'puppet-lint.documentation',
+            'name'      => a_string_starting_with(init_pp),
+          ).that_failed
+        end
       end
     end
   end
@@ -243,7 +229,7 @@ class foo {
       end
     end
 
-    describe command('pdk validate puppet') do
+    describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.not_to match(lint_spinner_text) }
@@ -251,39 +237,36 @@ class foo {
       its(:stdout) { is_expected.to match(%r{Error:.*This Name has no effect}i) }
       its(:stdout) { is_expected.to match(%r{Error:.*This Type-Name has no effect}i) }
       its(:stdout) { is_expected.to match(%r{Error:.*Language validation logged 2 errors. Giving up}i) }
-    end
 
-    describe command('pdk validate puppet --format junit') do
-      its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stderr) { is_expected.to match(syntax_spinner_text) }
-      its(:stderr) { is_expected.not_to match(lint_spinner_text) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
 
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
-          'failures' => eq(3),
-          'tests'    => eq(3),
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+            'failures' => eq(3),
+            'tests'    => eq(3),
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
-          'classname' => 'puppet-syntax',
-          'name'      => a_string_starting_with(init_pp),
-        ).that_failed(
-          'type'    => 'Error',
-          'message' => a_string_matching(%r{This Name has no effect}i),
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+            'classname' => 'puppet-syntax',
+            'name'      => a_string_starting_with(init_pp),
+          ).that_failed(
+            'type'    => 'Error',
+            'message' => a_string_matching(%r{This Name has no effect}i),
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
-          'classname' => 'puppet-syntax',
-          'name'      => a_string_starting_with(init_pp),
-        ).that_failed(
-          'type'    => 'Error',
-          'message' => a_string_matching(%r{This Type-Name has no effect}i),
-        )
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+            'classname' => 'puppet-syntax',
+            'name'      => a_string_starting_with(init_pp),
+          ).that_failed(
+            'type'    => 'Error',
+            'message' => a_string_matching(%r{This Type-Name has no effect}i),
+          )
+        end
       end
     end
   end
@@ -298,30 +281,28 @@ class foo {
       end
     end
 
-    describe command('pdk validate puppet') do
+    describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stdout) { is_expected.to match(%r{#{Regexp.escape(example_pp)}.+autoload module layout}i) }
       its(:stderr) { is_expected.to match(syntax_spinner_text) }
       its(:stderr) { is_expected.to match(lint_spinner_text) }
-    end
 
-    describe command('pdk validate puppet --format junit') do
-      its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stderr) { is_expected.to match(lint_spinner_text) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
 
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
-          'failures' => eq(1),
-          'tests'    => eq(1),
-        )
-      end
+        its(:content) do
+          is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+            'failures' => eq(1),
+            'tests'    => eq(1),
+          )
+        end
 
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
-          'classname' => 'puppet-lint.autoloader_layout',
-          'name'      => a_string_starting_with(example_pp),
-        ).that_failed
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
+            'classname' => 'puppet-lint.autoloader_layout',
+            'name'      => a_string_starting_with(example_pp),
+          ).that_failed
+        end
       end
     end
 
@@ -335,45 +316,42 @@ class foo {
         end
       end
 
-      describe command("pdk validate puppet #{clean_pp}") do
+      describe command("pdk validate puppet --format text:stdout --format junit:report.xml #{clean_pp}") do
         its(:exit_status) { is_expected.to eq(0) }
         its(:stdout) { is_expected.to match(empty_string) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
-      end
 
-      describe command("pdk validate puppet --format junit #{clean_pp}") do
-        its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(syntax_spinner_text) }
-        its(:stderr) { is_expected.to match(lint_spinner_text) }
-        its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+        describe file('report.xml') do
+          its(:content) { is_expected.to pass_validation(junit_xsd) }
 
-        its(:stdout) do
-          is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
-            'failures' => eq(0),
-            'tests'    => eq(1),
-          )
-        end
+          its(:content) do
+            is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+              'failures' => eq(0),
+              'tests'    => eq(1),
+            )
+          end
 
-        its(:stdout) do
-          is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
-            'classname' => 'puppet-syntax',
-            'name'      => a_string_starting_with(clean_pp),
-          ).that_passed
-        end
+          its(:content) do
+            is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+              'classname' => 'puppet-syntax',
+              'name'      => a_string_starting_with(clean_pp),
+            ).that_passed
+          end
 
-        its(:stdout) do
-          is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
-            'failures' => eq(0),
-            'tests'    => eq(1),
-          )
-        end
+          its(:content) do
+            is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+              'failures' => eq(0),
+              'tests'    => eq(1),
+            )
+          end
 
-        its(:stdout) do
-          is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
-            'classname' => 'puppet-lint',
-            'name'      => a_string_starting_with(clean_pp),
-          ).that_passed
+          its(:content) do
+            is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
+              'classname' => 'puppet-lint',
+              'name'      => a_string_starting_with(clean_pp),
+            ).that_passed
+          end
         end
       end
     end
@@ -389,39 +367,36 @@ class foo {
         end
       end
 
-      describe command("pdk validate puppet #{another_problem_dir}") do
+      describe command("pdk validate puppet --format text:stdout --format junit:report.xml #{another_problem_dir}") do
         its(:exit_status) { is_expected.not_to eq(0) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
         its(:stdout) { is_expected.to match(%r{#{Regexp.escape(another_problem_pp)}}) }
         its(:stdout) { is_expected.not_to match(%r{#{Regexp.escape(example_pp)}}) }
-      end
 
-      describe command("pdk validate puppet --format junit #{another_problem_dir}") do
-        its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stderr) { is_expected.to match(syntax_spinner_text) }
-        its(:stderr) { is_expected.to match(lint_spinner_text) }
-        its(:stdout) { is_expected.to pass_validation(junit_xsd) }
+        describe file('report.xml') do
+          its(:content) { is_expected.to pass_validation(junit_xsd) }
 
-        its(:stdout) do
-          is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
-            'failures' => eq(2),
-            'tests'    => eq(2),
-          )
-        end
+          its(:content) do
+            is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+              'failures' => eq(2),
+              'tests'    => eq(2),
+            )
+          end
 
-        its(:stdout) do
-          is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
-            'classname' => a_string_starting_with('puppet-lint'),
-            'name'      => a_string_starting_with(another_problem_pp),
-          ).that_failed
-        end
+          its(:content) do
+            is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
+              'classname' => a_string_starting_with('puppet-lint'),
+              'name'      => a_string_starting_with(another_problem_pp),
+            ).that_failed
+          end
 
-        its(:stdout) do
-          is_expected.not_to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
-            'classname' => a_string_starting_with('puppet-lint'),
-            'name'      => a_string_starting_with(example_pp),
-          )
+          its(:content) do
+            is_expected.not_to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
+              'classname' => a_string_starting_with('puppet-lint'),
+              'name'      => a_string_starting_with(example_pp),
+            )
+          end
         end
       end
     end
@@ -434,11 +409,6 @@ class foo {
       File.open(example_pp, 'w') do |f|
         f.puts 'notify { "test": }'
       end
-    end
-
-    describe command('pdk validate puppet') do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(example_pp)}.*double quoted string}) }
     end
 
     describe command('pdk validate puppet --auto-correct') do

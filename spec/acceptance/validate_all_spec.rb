@@ -46,13 +46,44 @@ class validate_all {
       end
     end
 
-    describe command('pdk validate') do
+    describe command('pdk validate --format text:stdout --format junit:report.xml') do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stderr) { is_expected.to match(%r{Running all available validators}i) }
       its(:stderr) { is_expected.to match(%r{Checking metadata syntax}i) }
       its(:stderr) { is_expected.to match(%r{Checking module metadata style}i) }
       its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
       its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
+
+      describe file('report.xml') do
+        its(:content) { is_expected.to pass_validation(junit_xsd) }
+
+        its(:content) do
+          is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+            'failures' => eq(3),
+            'tests'    => eq(3),
+          )
+        end
+
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+            'classname' => 'puppet-syntax',
+            'name'      => a_string_starting_with(init_pp),
+          ).that_failed(
+            'type'    => 'Error',
+            'message' => a_string_matching(%r{This Name has no effect}i),
+          )
+        end
+
+        its(:content) do
+          is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+            'classname' => 'puppet-syntax',
+            'name'      => a_string_starting_with(init_pp),
+          ).that_failed(
+            'type'    => 'Error',
+            'message' => a_string_matching(%r{This Type-Name has no effect}i),
+          )
+        end
+      end
     end
 
     describe command('pdk validate --parallel') do
@@ -66,44 +97,6 @@ class validate_all {
       its(:stdout) { is_expected.to match(%r{Error:.*This Type-Name has no effect}i) }
       its(:stdout) { is_expected.to match(%r{Error:.*Language validation logged 2 errors. Giving up}i) }
       its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
-    end
-
-    describe command('pdk validate --format junit') do
-      its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stderr) { is_expected.to match(%r{Running all available validators}i) }
-      its(:stderr) { is_expected.to match(%r{Checking metadata syntax}i) }
-      its(:stderr) { is_expected.to match(%r{Checking module metadata style}i) }
-      its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
-      its(:stderr) { is_expected.not_to match(%r{Checking Puppet manifest style}i) }
-      its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
-      its(:stdout) { is_expected.to pass_validation(junit_xsd) }
-
-      its(:stdout) do
-        is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
-          'failures' => eq(3),
-          'tests'    => eq(3),
-        )
-      end
-
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
-          'classname' => 'puppet-syntax',
-          'name'      => a_string_starting_with(init_pp),
-        ).that_failed(
-          'type'    => 'Error',
-          'message' => a_string_matching(%r{This Name has no effect}i),
-        )
-      end
-
-      its(:stdout) do
-        is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
-          'classname' => 'puppet-syntax',
-          'name'      => a_string_starting_with(init_pp),
-        ).that_failed(
-          'type'    => 'Error',
-          'message' => a_string_matching(%r{This Type-Name has no effect}i),
-        )
-      end
     end
   end
 
