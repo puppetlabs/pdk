@@ -4,7 +4,23 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
-## [v1.9.0](https://github.com/puppetlabs/pdk/tree/v1.9.0) (2019-01-25)
+## [v1.9.1](https://github.com/puppetlabs/pdk/tree/v1.9.1) (2019-03-01)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.9.0...v1.9.1)
+
+**Fixed bugs:**
+
+- \(IMAGES-1037\) Make sure our paths are used [\#630](https://github.com/puppetlabs/pdk/pull/630) ([mihaibuzgau](https://github.com/mihaibuzgau))
+- \(PDK-1266\) Clear modulepath value when validating manifest syntax [\#629](https://github.com/puppetlabs/pdk/pull/629) ([rodjek](https://github.com/rodjek))
+- \(PDK-1272\) Convert user/module module names to user-module [\#626](https://github.com/puppetlabs/pdk/pull/626) ([rodjek](https://github.com/rodjek))
+- \(PDK-1276\) Skip non-file YAML validator targets [\#625](https://github.com/puppetlabs/pdk/pull/625) ([rodjek](https://github.com/rodjek))
+- \(PDK-1273\) Whitelist Ruby symbols in YAML validator [\#624](https://github.com/puppetlabs/pdk/pull/624) ([rodjek](https://github.com/rodjek))
+
+**Merged pull requests:**
+
+- \(maint\) Pin parallel gem to 1.13.0 [\#631](https://github.com/puppetlabs/pdk/pull/631) ([rodjek](https://github.com/rodjek))
+- \(PDK-1260\) Bump to 1.10.0.pre for new dev work [\#621](https://github.com/puppetlabs/pdk/pull/621) ([bmjen](https://github.com/bmjen))
+
+## [v1.9.0](https://github.com/puppetlabs/pdk/tree/v1.9.0) (2019-01-29)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.8.0...v1.9.0)
 
 **Implemented enhancements:**
@@ -23,6 +39,10 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- \(maint\) Fix pin for nokogiri in package tests [\#620](https://github.com/puppetlabs/pdk/pull/620) ([bmjen](https://github.com/bmjen))
+- \(PDK-1240\) Update nokogiri to minimum of 1.8.5 [\#619](https://github.com/puppetlabs/pdk/pull/619) ([bmjen](https://github.com/bmjen))
+- \(maint\) Update hitimes pin to 1.3.0 for r2.1 compat [\#617](https://github.com/puppetlabs/pdk/pull/617) ([bmjen](https://github.com/bmjen))
+- Release 1.9.0 [\#616](https://github.com/puppetlabs/pdk/pull/616) ([bmjen](https://github.com/bmjen))
 - \(MAINT\) Configure Slack notifications for Travis [\#614](https://github.com/puppetlabs/pdk/pull/614) ([scotje](https://github.com/scotje))
 - \(maint\) Fix package tests to remove hardcoding [\#613](https://github.com/puppetlabs/pdk/pull/613) ([bmjen](https://github.com/bmjen))
 - \(MAINT\) Fix package acceptance tests to pass with any Ruby 2.4.x [\#611](https://github.com/puppetlabs/pdk/pull/611) ([scotje](https://github.com/scotje))
