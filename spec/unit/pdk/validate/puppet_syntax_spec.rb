@@ -2,10 +2,13 @@ require 'spec_helper'
 
 describe PDK::Validate::PuppetSyntax do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }
+  let(:tmpdir) { File.join('/', 'tmp', 'puppet-parser-validate') }
 
   before(:each) do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
     allow(File).to receive(:directory?).with(module_root).and_return(true)
+    allow(Dir).to receive(:mktmpdir).with('puppet-parser-validate').and_return(tmpdir)
+    allow(FileUtils).to receive(:remove_entry_secure).with(tmpdir)
   end
 
   it 'defines the base validator attributes' do
@@ -17,6 +20,75 @@ describe PDK::Validate::PuppetSyntax do
   end
 
   it_behaves_like 'it accepts .pp targets'
+
+  describe '.invoke' do
+    context 'when the validator runs correctly' do
+      before(:each) do
+        allow(described_class).to receive(:parse_targets).with(anything).and_return([[], [], []])
+      end
+
+      it 'cleans up the temp dir after invoking' do
+        expect(described_class).to receive(:remove_validate_tmpdir)
+        described_class.invoke(PDK::Report.new, {})
+      end
+    end
+
+    context 'when the validator raises an exception' do
+      before(:each) do
+        allow(described_class).to receive(:parse_targets).with(anything).and_raise(PDK::CLI::FatalError)
+      end
+
+      it 'cleans up the temp dir after invoking' do
+        expect(described_class).to receive(:remove_validate_tmpdir)
+        expect {
+          described_class.invoke(PDK::Report.new, {})
+        }.to raise_error(PDK::CLI::FatalError)
+      end
+    end
+  end
+
+  describe '.remove_validate_tmpdir' do
+    after(:each) do
+      described_class.remove_validate_tmpdir
+    end
+
+    context 'when no temp dir has been created' do
+      before(:each) do
+        described_class.instance_variable_set('@validate_tmpdir', nil)
+      end
+
+      it 'does not attempt to remove the directory' do
+        expect(FileUtils).not_to receive(:remove_entry_secure)
+      end
+    end
+
+    context 'when a temp dir has been created' do
+      before(:each) do
+        described_class.validate_tmpdir
+        allow(File).to receive(:directory?).and_call_original
+      end
+
+      context 'and the path is a directory' do
+        before(:each) do
+          allow(File).to receive(:directory?).with(tmpdir).and_return(true)
+        end
+
+        it 'removes the directory' do
+          expect(FileUtils).to receive(:remove_entry_secure).with(tmpdir)
+        end
+      end
+
+      context 'but the path is not a directory' do
+        before(:each) do
+          allow(File).to receive(:directory?).with(tmpdir).and_return(false)
+        end
+
+        it 'does not attempt to remove the directory' do
+          expect(FileUtils).not_to receive(:remove_entry_secure)
+        end
+      end
+    end
+  end
 
   describe '.parse_targets' do
     context 'when the module contains task .pp files' do
@@ -67,7 +139,7 @@ describe PDK::Validate::PuppetSyntax do
       let(:options) { { auto_correct: true } }
 
       it 'has no effect' do
-        expect(command_args).to eq(%w[parser validate --config /dev/null].concat(targets))
+        expect(command_args).to eq(%w[parser validate --config /dev/null --modulepath].push(tmpdir).concat(targets))
       end
     end
   end
