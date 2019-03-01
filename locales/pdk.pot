@@ -6,11 +6,11 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.8.0-22-g7b2950bc5f\n"
+"Project-Id-Version: puppet development kit v1.9.0-15-g264d3c07ab\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2019-01-25 16:10-0700\n"
-"PO-Revision-Date: 2019-01-25 16:10-0700\n"
+"POT-Creation-Date: 2019-03-01 11:43-0700\n"
+"PO-Revision-Date: 2019-03-01 11:43-0700\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -695,11 +695,11 @@ msgid "If there is a public issue tracker for this module, enter its URL here."
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:258
-msgid "create"
+msgid "update"
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:258
-msgid "update"
+msgid "create"
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:259
@@ -878,23 +878,23 @@ msgstr ""
 msgid "The \"puppet\" requirement in module metadata does not specify a \"version_requirement\"."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:180
+#: ../lib/pdk/module/metadata.rb:181
 msgid "Field must be a dash-separated user name and module name."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:182
+#: ../lib/pdk/module/metadata.rb:183
 msgid "Module name must contain only alphanumeric or underscore characters."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:184
+#: ../lib/pdk/module/metadata.rb:185
 msgid "Module name must begin with a letter."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:186
+#: ../lib/pdk/module/metadata.rb:187
 msgid "Namespace must contain only alphanumeric characters."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:189
+#: ../lib/pdk/module/metadata.rb:190
 msgid "Invalid 'name' field in metadata.json: %{err}"
 msgstr ""
 
@@ -1246,7 +1246,7 @@ msgstr ""
 msgid "Checking metadata syntax (%{targets})."
 msgstr ""
 
-#: ../lib/pdk/validate/metadata/metadata_syntax.rb:69 ../lib/pdk/validate/tasks/metadata_lint.rb:77 ../lib/pdk/validate/yaml/syntax.rb:71
+#: ../lib/pdk/validate/metadata/metadata_syntax.rb:69 ../lib/pdk/validate/tasks/metadata_lint.rb:77 ../lib/pdk/validate/yaml/syntax.rb:74
 msgid "Could not be read."
 msgstr ""
 
@@ -1254,7 +1254,7 @@ msgstr ""
 msgid "Checking Puppet manifest style (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/puppet/puppet_syntax.rb:45
+#: ../lib/pdk/validate/puppet/puppet_syntax.rb:47
 msgid "Checking Puppet manifest syntax (%{pattern})."
 msgstr ""
 
@@ -1282,10 +1282,14 @@ msgstr ""
 msgid "Checking task names (%{targets})."
 msgstr ""
 
-#: ../lib/pdk/validate/yaml/syntax.rb:27
+#: ../lib/pdk/validate/yaml/syntax.rb:28
 msgid "Checking YAML syntax (%{targets})."
 msgstr ""
 
-#: ../lib/pdk/validate/yaml/syntax.rb:94
+#: ../lib/pdk/validate/yaml/syntax.rb:97
 msgid "%{problem} %{context}"
+msgstr ""
+
+#: ../lib/pdk/validate/yaml/syntax.rb:109
+msgid "Unsupported class: %{message}"
 msgstr ""
