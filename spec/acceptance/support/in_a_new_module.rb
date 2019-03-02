@@ -21,6 +21,6 @@ shared_context 'in a new module' do |name, options = {}|
   after(:all) do
     Dir.chdir('..')
     FileUtils.rm_rf(name)
-    FileUtils.rm("#{name}_answers.json")
+    FileUtils.rm_f("#{name}_answers.json")
   end
 end
