@@ -1,7 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'pdk validate ruby', module_command: true do
-  let(:empty_string) { %r{\A\Z} }
   let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
 
   include_context 'with a fake TTY'
@@ -33,7 +32,7 @@ describe 'pdk validate ruby', module_command: true do
       context 'when validating specific files' do
         describe command("pdk validate ruby #{File.join('spec', 'spec_helper.rb')}") do
           its(:exit_status) { is_expected.to eq(0) }
-          its(:stdout) { is_expected.to match(%r{\A\Z}) }
+          its(:stdout) { is_expected.to have_no_output }
           its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
         end
       end
@@ -105,7 +104,7 @@ describe 'pdk validate ruby', module_command: true do
 
       describe command('pdk validate ruby') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
       end
     end
 
@@ -125,7 +124,7 @@ describe 'pdk validate ruby', module_command: true do
 
       describe command('pdk validate ruby') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(empty_string) }
+        its(:stdout) { is_expected.to have_no_output }
       end
     end
   end

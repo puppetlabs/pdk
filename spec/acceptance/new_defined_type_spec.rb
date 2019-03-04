@@ -6,7 +6,7 @@ describe 'pdk new defined_type', module_command: true do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{creating .* from template}i) }
       its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-      its(:stdout) { is_expected.to match(%r{\A\Z}) }
+      its(:stdout) { is_expected.to have_no_output }
 
       describe file('manifests') do
         it { is_expected.to be_directory }

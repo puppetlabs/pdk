@@ -6,15 +6,13 @@ require 'spec_helper_acceptance'
 template_repo = 'https://github.com/puppetlabs/pdk-templates'
 
 describe 'pdk update', module_command: true do
-  let(:no_output) { %r{\A\Z} }
-
   context 'when run inside of a module' do
     include_context 'in a new module', 'update', template: template_repo
 
     context 'that is already up to date' do
       describe command('pdk update') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(no_output) }
+        its(:stderr) { is_expected.to have_no_output }
         its(:stdout) { is_expected.to match(%r{No changes required.}i) }
 
         describe file('update_report.txt') do

@@ -5,7 +5,6 @@ describe 'pdk validate puppet', module_command: true do
   let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
   let(:syntax_spinner_text) { %r{checking puppet manifest syntax}i }
   let(:lint_spinner_text) { %r{checking puppet manifest style}i }
-  let(:empty_string) { %r{\A\Z} }
 
   include_context 'with a fake TTY'
 
@@ -49,7 +48,7 @@ class foo {
         its(:exit_status) { is_expected.to eq(0) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
-        its(:stdout) { is_expected.to match(empty_string) }
+        its(:stdout) { is_expected.to have_no_output }
 
         describe file('report.xml') do
           its(:content) { is_expected.to pass_validation(junit_xsd) }
@@ -169,7 +168,7 @@ class foo {
 
       describe command('pdk validate puppet') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(empty_string) }
+        its(:stdout) { is_expected.to have_no_output }
       end
     end
 
@@ -335,7 +334,7 @@ class foo {
 
         describe command("pdk validate puppet --format text:stdout --format junit:report.xml #{clean_pp}") do
           its(:exit_status) { is_expected.to eq(0) }
-          its(:stdout) { is_expected.to match(empty_string) }
+          its(:stdout) { is_expected.to have_no_output }
           its(:stderr) { is_expected.to match(syntax_spinner_text) }
           its(:stderr) { is_expected.to match(lint_spinner_text) }
 
@@ -441,7 +440,7 @@ class foo {
 
       describe command('pdk validate puppet') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(empty_string) }
+        its(:stdout) { is_expected.to have_no_output }
       end
     end
   end

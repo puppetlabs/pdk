@@ -21,7 +21,7 @@ class report { }
       # Tests writing reports to a file
       describe command('pdk validate puppet manifests/init.pp --format=text:report.txt') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
 
@@ -46,7 +46,7 @@ class report { }
       # Tests writing reports to stderr doesn't actually write a file named stderr
       describe command('pdk validate puppet manifests/init.pp --format=text:stderr') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
         its(:stderr) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented}) }

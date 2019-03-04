@@ -27,7 +27,7 @@ SYNC
       describe command('pdk new provider test_provider') do
         its(:stderr) { is_expected.to match(%r{creating .* from template}i) }
         its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
         its(:exit_status) { is_expected.to eq(0) }
 
         describe file(File.join('lib', 'puppet', 'type')) do
@@ -68,7 +68,7 @@ SYNC
         end
 
         describe command('pdk validate ruby') do
-          its(:stdout) { is_expected.to be_empty }
+          its(:stdout) { is_expected.to have_no_output }
           its(:stderr) { is_expected.to match(%r{using ruby \d+\.\d+\.\d+}i) }
           its(:stderr) { is_expected.to match(%r{using puppet \d+\.\d+\.\d+}i) }
           its(:exit_status) { is_expected.to eq(0) }
@@ -90,7 +90,7 @@ SYNC
 
       describe command('pdk new provider test_provider2') do
         its(:stderr) { is_expected.to match(%r{pdk \(ERROR\): .sync.yml not found}i) }
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
         its(:exit_status) { is_expected.not_to eq(0) }
       end
     end
@@ -113,7 +113,7 @@ SYNC
 
       describe command('pdk new provider test_provider2') do
         its(:stderr) { is_expected.to match(%r{pdk \(ERROR\): Gemfile.optional.:development configuration not found}i) }
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
         its(:exit_status) { is_expected.not_to eq(0) }
       end
     end

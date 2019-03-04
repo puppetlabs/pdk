@@ -11,9 +11,8 @@ describe 'pdk bundle' do
     end
 
     describe command('pdk bundle env') do
-      its(:exit_status) { is_expected.to eq 0 }
-      # use this weird regex to match for empty string to get proper diff output on failure
-      its(:stdout) { is_expected.to match(%r{\A\Z}) }
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stdout) { is_expected.to have_no_output }
       its(:stderr) { is_expected.to match(%r{## Environment}) }
     end
 
@@ -28,7 +27,7 @@ describe 'pdk bundle' do
 
       describe command('pdk bundle exec puppet-lint init.pp') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
         its(:stderr) { is_expected.to match(%r{double quoted string}im) }
       end
     end

@@ -11,8 +11,7 @@ describe 'pdk new module' do
       its(:exit_status) { is_expected.to eq 0 }
       its(:stderr) { is_expected.to match(%r{Creating new module: new_module}) }
       its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-      # use this weird regex to match for empty string to get proper diff output on failure
-      its(:stdout) { is_expected.to match(%r{\A\Z}) }
+      its(:stdout) { is_expected.to have_no_output }
 
       describe file('new_module') do
         it { is_expected.to be_directory }

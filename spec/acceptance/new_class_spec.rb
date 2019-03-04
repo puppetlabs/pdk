@@ -9,8 +9,7 @@ describe 'pdk new class', module_command: true do
         its(:exit_status) { is_expected.to eq 0 }
         its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
         its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        # use this weird regex to match for empty string to get proper diff output on failure
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
       end
 
       describe file('manifests') do
@@ -37,8 +36,7 @@ describe 'pdk new class', module_command: true do
         its(:exit_status) { is_expected.to eq 0 }
         its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
         its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        # use this weird regex to match for empty string to get proper diff output on failure
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
       end
 
       describe file('manifests') do
@@ -65,8 +63,7 @@ describe 'pdk new class', module_command: true do
         its(:exit_status) { is_expected.to eq 0 }
         its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
         its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        # use this weird regex to match for empty string to get proper diff output on failure
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
       end
 
       describe file('manifests') do
