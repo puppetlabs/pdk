@@ -87,4 +87,5 @@ RSpec.configure do |c|
   end
   c.add_setting :fixtures_path, default: File.join(File.dirname(__FILE__), 'fixtures')
   c.add_setting :template_dir
+  c.profile_examples = true
 end
