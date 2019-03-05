@@ -1,7 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'pdk validate metadata', module_command: true do
-  let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
   let(:metadata_syntax_spinner) { %r{checking metadata syntax}i }
   let(:module_style_spinner) { %r{checking module metadata style}i }
   let(:task_style_spinner) { %r{checking task metadata style}i }
@@ -38,7 +37,7 @@ describe 'pdk validate metadata', module_command: true do
         its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
 
         describe file('report.xml') do
-          its(:content) { is_expected.to pass_validation(junit_xsd) }
+          its(:content) { is_expected.to contain_valid_junit_xml }
 
           its(:content) do
             is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(

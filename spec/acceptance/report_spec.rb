@@ -1,8 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'Saves report to a file' do
-  let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
-
   context 'with a fresh module' do
     include_context 'in a new module', 'report_foo'
 

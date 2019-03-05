@@ -1,8 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'pdk validate', module_command: true do
-  let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
-
   include_context 'with a fake TTY'
 
   context 'when run inside of a module' do
@@ -50,7 +48,7 @@ class validate_all {
         its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
 
         describe file('report.xml') do
-          its(:content) { is_expected.to pass_validation(junit_xsd) }
+          its(:content) { is_expected.to contain_valid_junit_xml }
 
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(

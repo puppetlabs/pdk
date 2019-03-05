@@ -1,7 +1,6 @@
 require 'fileutils'
 require 'serverspec'
 require 'tmpdir'
-require 'rspec/xsd'
 require 'open3'
 require 'pdk/generate/module'
 
@@ -86,7 +85,6 @@ RSpec.configure do |c|
   c.expect_with(:rspec) do |e|
     e.include_chain_clauses_in_custom_matcher_descriptions = true
   end
-  c.include RSpec::XSD
   c.add_setting :fixtures_path, default: File.join(File.dirname(__FILE__), 'fixtures')
   c.add_setting :template_dir
 end

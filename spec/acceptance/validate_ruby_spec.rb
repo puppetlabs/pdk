@@ -1,8 +1,6 @@
 require 'spec_helper_acceptance'
 
 describe 'pdk validate ruby', module_command: true do
-  let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
-
   include_context 'with a fake TTY'
 
   context 'when run inside of a module' do
@@ -61,7 +59,7 @@ describe 'pdk validate ruby', module_command: true do
         describe command('pdk validate ruby --format junit') do
           its(:exit_status) { is_expected.not_to eq(0) }
           its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
-          it_behaves_like :it_generates_valid_junit_xml
+          its(:stdout) { is_expected.to contain_valid_junit_xml }
 
           its(:stdout) do
             is_expected.to have_junit_testsuite('rubocop').with_attributes(

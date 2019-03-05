@@ -2,7 +2,6 @@ require 'spec_helper_acceptance'
 require 'fileutils'
 
 describe 'pdk validate puppet', module_command: true do
-  let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
   let(:syntax_spinner_text) { %r{checking puppet manifest syntax}i }
   let(:lint_spinner_text) { %r{checking puppet manifest style}i }
 
@@ -22,7 +21,7 @@ describe 'pdk validate puppet', module_command: true do
         its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
 
         describe file('report.xml') do
-          its(:content) { is_expected.to pass_validation(junit_xsd) }
+          its(:content) { is_expected.to contain_valid_junit_xml }
           its(:content) { is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').that_was_skipped }
           its(:content) { is_expected.to have_junit_testcase.in_testsuite('puppet-lint').that_was_skipped }
         end
@@ -51,7 +50,7 @@ class foo {
         its(:stdout) { is_expected.to have_no_output }
 
         describe file('report.xml') do
-          its(:content) { is_expected.to pass_validation(junit_xsd) }
+          its(:content) { is_expected.to contain_valid_junit_xml }
           its(:content) { is_expected.to have_junit_testsuite('puppet-syntax') }
           its(:content) { is_expected.to have_junit_testsuite('puppet-lint') }
         end
@@ -85,7 +84,7 @@ class foo {
         its(:stdout) { is_expected.to match(%r{Warning:.*Unrecognized escape sequence \'\\\]\'}i) }
 
         describe file('report.xml') do
-          its(:content) { is_expected.to pass_validation(junit_xsd) }
+          its(:content) { is_expected.to contain_valid_junit_xml }
 
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
@@ -190,7 +189,7 @@ class foo {
         its(:stderr) { is_expected.to match(lint_spinner_text) }
 
         describe file('report.xml') do
-          its(:content) { is_expected.to pass_validation(junit_xsd) }
+          its(:content) { is_expected.to contain_valid_junit_xml }
 
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
@@ -249,7 +248,7 @@ class foo {
         its(:stdout) { is_expected.to match(%r{Error:.*Language validation logged 2 errors. Giving up}i) }
 
         describe file('report.xml') do
-          its(:content) { is_expected.to pass_validation(junit_xsd) }
+          its(:content) { is_expected.to contain_valid_junit_xml }
 
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
@@ -300,7 +299,7 @@ class foo {
         its(:stderr) { is_expected.to match(lint_spinner_text) }
 
         describe file('report.xml') do
-          its(:content) { is_expected.to pass_validation(junit_xsd) }
+          its(:content) { is_expected.to contain_valid_junit_xml }
 
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
@@ -339,7 +338,7 @@ class foo {
           its(:stderr) { is_expected.to match(lint_spinner_text) }
 
           describe file('report.xml') do
-            its(:content) { is_expected.to pass_validation(junit_xsd) }
+            its(:content) { is_expected.to contain_valid_junit_xml }
 
             its(:content) do
               is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
@@ -395,7 +394,7 @@ class foo {
           its(:stdout) { is_expected.not_to match(%r{#{Regexp.escape(example_pp)}}) }
 
           describe file('report.xml') do
-            its(:content) { is_expected.to pass_validation(junit_xsd) }
+            its(:content) { is_expected.to contain_valid_junit_xml }
 
             its(:content) do
               is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
