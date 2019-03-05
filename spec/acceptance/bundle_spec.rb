@@ -40,7 +40,6 @@ describe 'pdk bundle' do
         end
       end
 
-
       after(:all) do
         FileUtils.mv('Gemfile.old', 'Gemfile', force: true)
       end
