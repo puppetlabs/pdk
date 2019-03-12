@@ -10,9 +10,14 @@ describe PDK::Module::Metadata do
       }.to_json
     end
 
+    before(:each) do
+      allow(PDK::Util).to receive(:package_install?).and_return(true)
+    end
+
     it 'can populate itself from a metadata.json file on disk' do
       allow(File).to receive(:file?).with(metadata_json_path).and_return(true)
       allow(File).to receive(:readable?).with(metadata_json_path).and_return(true)
+      allow(PDK::Util).to receive(:package_install?).and_return(false)
       allow(File).to receive(:read).with(metadata_json_path).and_return(metadata_json_content)
 
       expect(described_class.from_file(metadata_json_path).data).to include('name' => 'foo-bar', 'version' => '0.1.0')

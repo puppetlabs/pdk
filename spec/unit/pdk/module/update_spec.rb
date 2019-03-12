@@ -100,7 +100,7 @@ describe PDK::Module::Update do
 
     context 'when using the default template' do
       let(:options) { { noop: true } }
-      let(:template_url) { PDK::Util::TemplateURI.default_template_uri }
+      let(:template_url) { PDK::Util::TemplateURI.default_template_uri.metadata_format }
 
       it 'refers to the template as the default template' do
         expect(logger).to receive(:info).with(a_string_matching(%r{using the default template}i))

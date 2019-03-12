@@ -390,6 +390,7 @@ describe PDK::Module::Convert do
 
     before(:each) do
       allow(File).to receive(:open).with(any_args).and_call_original
+      allow(PDK::Util).to receive(:package_install?).and_return(false)
     end
 
     context 'when the metadata file exists' do
