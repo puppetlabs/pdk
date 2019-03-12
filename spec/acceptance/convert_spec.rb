@@ -7,14 +7,12 @@ template_repo = 'https://github.com/puppetlabs/pdk-templates'
 pdk_convert_base = "pdk convert --template-url=#{template_repo}"
 
 describe 'pdk convert', module_command: true do
-  let(:no_output) { %r{\A\Z} }
-
   context 'with a fresh module' do
     include_context 'in a new module', 'clean_module', template: template_repo
 
     describe command("#{pdk_convert_base} --force") do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(no_output) }
+      its(:stderr) { is_expected.to have_no_output }
       its(:stdout) { is_expected.to match(%r{no changes required}i) }
     end
 
@@ -39,7 +37,7 @@ describe 'pdk convert', module_command: true do
 
     describe command("#{pdk_convert_base} --noop --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(no_output) }
+      its(:stderr) { is_expected.to have_no_output }
       its(:stdout) { is_expected.to match(%r{-+files to be added-+\nmetadata\.json}mi) }
     end
 
@@ -68,7 +66,7 @@ describe 'pdk convert', module_command: true do
 
     describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(no_output) }
+      its(:stderr) { is_expected.to have_no_output }
       its(:stdout) { is_expected.to match(%r{-+files to be added-+\nmetadata\.json}mi) }
     end
 
@@ -101,7 +99,7 @@ describe 'pdk convert', module_command: true do
 
     describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(no_output) }
+      its(:stderr) { is_expected.to have_no_output }
       its(:stdout) { is_expected.to match(%r{No changes required}i) }
     end
 
@@ -125,7 +123,7 @@ describe 'pdk convert', module_command: true do
 
     describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(no_output) }
+      its(:stderr) { is_expected.to have_no_output }
       its(:stdout) { is_expected.to match(%r{-+files to be removed-+\n\.travis.yml}mi) }
     end
 

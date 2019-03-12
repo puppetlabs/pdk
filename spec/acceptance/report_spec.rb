@@ -1,17 +1,15 @@
 require 'spec_helper_acceptance'
 
 describe 'Saves report to a file' do
-  let(:junit_xsd) { File.join(RSpec.configuration.fixtures_path, 'JUnit.xsd') }
-
   context 'with a fresh module' do
-    include_context 'in a new module', 'foo'
+    include_context 'in a new module', 'report_foo'
 
     init_pp = File.join('manifests', 'init.pp')
 
     before(:all) do
       File.open(init_pp, 'w') do |f|
         f.puts <<-EOS
-class foo { }
+class report { }
         EOS
       end
     end
@@ -21,7 +19,7 @@ class foo { }
       # Tests writing reports to a file
       describe command('pdk validate puppet manifests/init.pp --format=text:report.txt') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
 
@@ -46,7 +44,7 @@ class foo { }
       # Tests writing reports to stderr doesn't actually write a file named stderr
       describe command('pdk validate puppet manifests/init.pp --format=text:stderr') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\A\Z}) }
+        its(:stdout) { is_expected.to have_no_output }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
         its(:stderr) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented}) }
