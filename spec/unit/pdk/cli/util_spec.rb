@@ -342,6 +342,50 @@ describe PDK::CLI::Util do
     end
   end
 
+  describe '.validate_template_opts' do
+    subject(:validate_template_opts) { described_class.validate_template_opts(options) }
+
+    let(:options) { {} }
+
+    context 'with no options' do
+      it 'does not raise an error' do
+        expect { validate_template_opts }.not_to raise_error
+      end
+    end
+
+    context 'when template-ref has been specified but not template-url' do
+      let(:options) { { :'template-ref' => '1.9.1' } }
+
+      it 'raises an error' do
+        expect { validate_template_opts }.to raise_error(PDK::CLI::ExitWithError, %r{--template-ref requires --template-url})
+      end
+    end
+
+    context 'when template-ref and template-url have been specified' do
+      let(:options) { { :'template-url' => 'https://my/template', :'template-ref' => '1.9.1' } }
+
+      it 'does not raise an error' do
+        expect { validate_template_opts }.not_to raise_error
+      end
+    end
+
+    context 'when template-url has been specified but not template-url' do
+      let(:options) { { :'template-url' => 'https://my/template' } }
+
+      it 'does not raise an error' do
+        expect { validate_template_opts }.not_to raise_error
+      end
+
+      context 'and the template-url value contains a #' do
+        let(:options) { { :'template-url' => 'https://my/template#1.9.1' } }
+
+        it 'raises an error' do
+          expect { validate_template_opts }.to raise_error(PDK::CLI::ExitWithError, %r{may not be used to specify paths containing #})
+        end
+      end
+    end
+  end
+
   describe '.validate_puppet_version_opts' do
     subject(:validate_puppet_version_opts) { described_class.validate_puppet_version_opts(options) }
 

@@ -36,9 +36,9 @@ describe 'PDK::CLI convert' do
 
     context 'and the --template-ref option has been passed' do
       it 'invokes the converter with the user supplied template' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(:'template-url' => anything, :'template-ref' => '1.0.0')
+        expect(PDK::Module::Convert).to receive(:invoke).with(:'template-url' => 'https://my/template', :'template-ref' => '1.0.0')
 
-        PDK::CLI.run(['convert', '--template-url', anything, '--template-ref', '1.0.0'])
+        PDK::CLI.run(['convert', '--template-url', 'https://my/template', '--template-ref', '1.0.0'])
       end
     end
 

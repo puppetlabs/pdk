@@ -19,6 +19,8 @@ module PDK::CLI
       module_name = args[0]
       target_dir = args[1]
 
+      PDK::CLI::Util.validate_template_opts(opts)
+
       if opts[:'skip-interview'] && opts[:'full-interview']
         PDK.logger.info _('Ignoring --full-interview and continuing with --skip-interview.')
         opts[:'full-interview'] = false

@@ -137,13 +137,6 @@ describe PDK::Util::TemplateURI do
             expect(template_uri.to_s).to eq("C:\\cli-templates##{described_class.default_template_ref}")
           end
         end
-        context 'and passed template-ref' do
-          let(:opts_or_uri) { { :'template-ref' => 'cli-ref' } }
-
-          it 'errors because it requires url with ref' do
-            expect { template_uri }.to raise_error(PDK::CLI::FatalError, %r{--template-ref requires --template-url})
-          end
-        end
         context 'and passed template-url and template-ref' do
           let(:opts_or_uri) { { :'template-url' => 'cli-templates', :'template-ref' => 'cli-ref' } }
 
@@ -321,26 +314,6 @@ describe PDK::Util::TemplateURI do
     subject { described_class.templates(options) }
 
     let(:options) { {} }
-
-    context 'when provided a ref but not a url' do
-      let(:options) { { :'template-ref' => '123' } }
-
-      it 'raises a FatalError' do
-        expect {
-          described_class.templates(options)
-        }.to raise_error(PDK::CLI::FatalError, %r{--template-ref requires --template-url})
-      end
-    end
-
-    context 'when provided a url that contains a hash' do
-      let(:options) { { :'template-url' => 'https://github.com/puppetlabs/pdk-templates#master' } }
-
-      it 'raises a FatalError' do
-        expect {
-          described_class.templates(options)
-        }.to raise_error(PDK::CLI::FatalError, %r{may not be used to specify paths containing #}i)
-      end
-    end
 
     context 'when provided a template-url' do
       subject(:cli_template_uri) { described_class.templates(:'template-url' => template_url).first[:uri] }

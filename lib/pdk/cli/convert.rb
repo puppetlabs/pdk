@@ -22,6 +22,8 @@ module PDK::CLI
         log_level:           :info,
       )
 
+      PDK::CLI::Util.validate_template_opts(opts)
+
       if opts[:noop] && opts[:force]
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when converting a module')
       end

@@ -133,13 +133,6 @@ module PDK
         explicit_url = opts.fetch(:'template-url', nil)
         explicit_ref = opts.fetch(:'template-ref', nil)
 
-        if explicit_ref && explicit_url.nil?
-          raise PDK::CLI::FatalError, _('--template-ref requires --template-url to also be specified.')
-        end
-        if explicit_url && explicit_url.include?('#')
-          raise PDK::CLI::FatalError, _('--template-url may not be used to specify paths containing #\'s')
-        end
-
         # 1. Get the CLI, metadata (or answers if no metadata), and default URIs
         # 2. Construct the hash
         if explicit_url

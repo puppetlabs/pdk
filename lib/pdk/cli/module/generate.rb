@@ -20,6 +20,8 @@ module PDK::CLI
         exit 1
       end
 
+      PDK::CLI::Util.validate_template_opts(opts)
+
       PDK.logger.info(_('New modules are created using the ‘pdk new module’ command.'))
       prompt = TTY::Prompt.new(help_color: :cyan)
       redirect = PDK::CLI::Util::CommandRedirector.new(prompt)
