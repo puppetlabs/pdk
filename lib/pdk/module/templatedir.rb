@@ -55,7 +55,11 @@ module PDK
           @path = uri.shell_path
           # We don't do a checkout of local-path repos. There are lots of edge
           # cases or user un-expectations.
-          PDK.logger.warn _("Repository '%{repo}' has a work-tree; skipping git reset.") % { repo: @path }
+          if PDK::Util::Git.work_tree?(@path)
+            PDK.logger.warn _("Repository '%{repo}' has a work-tree; skipping git reset.") % {
+              repo: @path,
+            }
+          end
         end
         @cloned_from = uri.metadata_format
 

@@ -55,6 +55,15 @@ module PDK
         git('ls-remote', '--exit-code', maybe_repo)[:exit_code].zero?
       end
 
+      def self.work_tree?(path)
+        return false unless File.directory?(path)
+
+        Dir.chdir(path) do
+          rev_parse = git('rev-parse', '--is-inside-work-tree')
+          rev_parse[:exit_code].zero? && rev_parse[:stdout].strip == 'true'
+        end
+      end
+
       def self.work_dir_clean?(repo)
         raise PDK::CLI::ExitWithError, _('Unable to locate git work dir "%{workdir}') % { workdir: repo } unless File.directory?(repo)
         raise PDK::CLI::ExitWithError, _('Unable to locate git dir "%{gitdir}') % { gitdir: repo } unless File.directory?(File.join(repo, '.git'))

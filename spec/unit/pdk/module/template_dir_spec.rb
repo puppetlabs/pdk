@@ -30,6 +30,11 @@ describe PDK::Module::TemplateDir do
     EOS
   end
 
+  before(:each) do
+    allow(PDK::Util::Git).to receive(:work_tree?).with(path_or_url).and_return(false)
+    allow(PDK::Util::Git).to receive(:work_tree?).with(uri.shell_path).and_return(false)
+  end
+
   describe '.new' do
     context 'when not passed a block' do
       it 'raises an ArgumentError' do
