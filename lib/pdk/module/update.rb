@@ -64,6 +64,16 @@ module PDK
         @new_version ||= fetch_remote_version(new_template_version)
       end
 
+      def new_template_version
+        return options[:'template-ref'] if options[:'template-ref']
+
+        if template_uri.default? && template_uri.ref_is_tag? && PDK::Util.package_install?
+          PDK::Util::TemplateURI.default_template_ref
+        else
+          template_uri.git_ref
+        end
+      end
+
       private
 
       def current_template_version
@@ -82,10 +92,6 @@ module PDK
         end
       end
 
-      def new_template_version
-        options.fetch(:'template-ref', PDK::Util::TemplateURI.default_template_ref)
-      end
-
       def fetch_remote_version(template_ref)
         return template_ref unless current_template_version.is_a?(String)
         return template_ref if template_ref == PDK::TEMPLATE_REF
@@ -95,7 +101,7 @@ module PDK
       end
 
       def update_message
-        format_string = if template_uri.git_remote == PDK::Util::TemplateURI.default_template_uri.git_remote
+        format_string = if template_uri.default?
                           _('Updating %{module_name} using the default template, from %{current_version} to %{new_version}')
                         else
                           _('Updating %{module_name} using the template at %{template_url}, from %{current_version} to %{new_version}')

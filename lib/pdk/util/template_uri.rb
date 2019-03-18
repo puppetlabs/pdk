@@ -96,6 +96,14 @@ module PDK
         end
       end
 
+      def default?
+        git_remote == self.class.default_template_uri.git_remote
+      end
+
+      def ref_is_tag?
+        PDK::Util::Git.git('ls-remote', '--tags', '--exit-code', git_remote, git_ref)[:exit_code].zero?
+      end
+
       # `C:...` urls are not URI-safe. They should be of the form `/C:...` to
       # be URI-safe. scp-like urls like `user@host:/path` are not URI-safe
       # either but are not handled here. Should they be?
