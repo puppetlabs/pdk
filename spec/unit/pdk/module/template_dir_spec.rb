@@ -498,9 +498,9 @@ describe PDK::Module::TemplateDir do
       allow(FileUtils).to receive(:remove_dir).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
-      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'ls-remote', '--refs', 'origin', 'default-ref').and_return(exit_code: 0, stdout:
-                                                                                                        "default-sha\trefs/heads/default-ref\n" \
-                                                                                                        "default-sha\trefs/remotes/origin/default-ref")
+      allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:
+                                                                                                                       "default-sha\trefs/heads/default-ref\n" \
+                                                                                                                       "default-sha\trefs/remotes/origin/default-ref")
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
       allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
       allow(PDK::Util).to receive(:development_mode?).and_return(false)
@@ -526,7 +526,7 @@ describe PDK::Module::TemplateDir do
       allow(FileUtils).to receive(:remove_dir).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
-      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'ls-remote', '--refs', 'origin', 'default-ref').and_return(exit_code: 0, stdout:
+      allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:
                                                                                                         "default-sha\trefs/heads/default-ref\n" \
                                                                                                         "default-sha\trefs/remotes/origin/default-ref")
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')

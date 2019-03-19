@@ -72,12 +72,11 @@ module PDK
       end
 
       def self.ls_remote(repo, ref)
-        output = if File.directory?(repo)
-                   # Appveyor doesn't like windows-path repository targets
-                   git('--git-dir', File.join(repo, '.git'), 'ls-remote', '--refs', 'origin', ref)
-                 else
-                   git('ls-remote', '--refs', repo, ref)
-                 end
+        if File.directory?(repo)
+          repo = 'file://' + repo
+        end
+
+        output = git('ls-remote', '--refs', repo, ref)
 
         unless output[:exit_code].zero?
           PDK.logger.error output[:stdout]
