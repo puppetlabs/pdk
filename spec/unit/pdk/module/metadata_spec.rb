@@ -18,6 +18,14 @@ describe PDK::Module::Metadata do
       expect(described_class.from_file(metadata_json_path).data).to include('name' => 'foo-bar', 'version' => '0.1.0')
     end
 
+    it 'can populate itself from a metadata.json file on disk with a trailing newline' do
+      allow(File).to receive(:file?).with(metadata_json_path).and_return(true)
+      allow(File).to receive(:readable?).with(metadata_json_path).and_return(true)
+      allow(File).to receive(:read).with(metadata_json_path).and_return(metadata_json_content + "\n")
+
+      expect(described_class.from_file(metadata_json_path).data).to include('name' => 'foo-bar', 'version' => '0.1.0')
+    end
+
     it 'raises an ArgumentError if passed nil' do
       expect { described_class.from_file(nil) }.to raise_error(ArgumentError, %r{no path to file}i)
     end
@@ -214,6 +222,33 @@ describe PDK::Module::Metadata do
           metadata.validate_puppet_version_requirement!
         }.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
       end
+    end
+  end
+
+  describe '#write!' do
+    let(:metadata_json_path) { '/tmp/metadata.json' }
+
+    let(:metadata) do
+      described_class.new.update!(
+        'name' => 'foo-bar',
+        'version' => '0.1.0',
+      )
+    end
+
+    let(:mock_file) { instance_double(File) }
+
+    before(:each) do
+      allow(File).to receive(:open).and_call_original
+      allow(File).to receive(:open).with(metadata_json_path, anything).and_yield(mock_file)
+    end
+
+    it 'writes metadata to disk with a trailing newline' do
+      # This is slightly roundabout but results in a much clearer failure description.
+      expect(mock_file).to receive(:write) do |content|
+        expect(content[-1]).to eq("\n")
+      end
+
+      metadata.write!(metadata_json_path)
     end
   end
 end

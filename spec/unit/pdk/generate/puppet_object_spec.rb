@@ -76,7 +76,8 @@ describe PDK::Generate::PuppetObject do
     let(:dest_dir) { File.dirname(dest_path) }
     let(:template_path) { '/path/to/file/template' }
     let(:template_data) { { some: 'data', that: 'the', template: 'needs' } }
-    let(:template_file) { instance_double(PDK::TemplateFile, render: 'rendered file content') }
+    let(:template_content) { 'rendered file content' }
+    let(:template_file) { instance_double(PDK::TemplateFile, render: template_content) }
     let(:rendered_file) { StringIO.new }
 
     before(:each) do
@@ -95,7 +96,7 @@ describe PDK::Generate::PuppetObject do
       allow(FileUtils).to receive(:mkdir_p).with(dest_dir)
       templated_object.render_file(dest_path, template_path, template_data)
       rendered_file.rewind
-      expect(rendered_file.read).to eq('rendered file content')
+      expect(rendered_file.read).to eq(template_content + "\n")
     end
 
     context 'when it fails to create the parent directories' do

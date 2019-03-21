@@ -77,7 +77,7 @@ describe PDK::Util::VendoredFile do
           it 'caches the download to disk' do
             vendored_file_read
 
-            expect(cached_file.string).to eq(gem_vendored_content)
+            expect(cached_file.string).to eq(gem_vendored_content + "\n")
           end
 
           it 'returns the downloaded content' do
