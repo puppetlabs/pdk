@@ -369,7 +369,7 @@ describe PDK::CLI::Util do
       end
     end
 
-    context 'when template-url has been specified but not template-url' do
+    context 'when template-url has been specified but not template-ref' do
       let(:options) { { :'template-url' => 'https://my/template' } }
 
       it 'does not raise an error' do

@@ -174,7 +174,7 @@ module PDK
         default_uri.fragment = default_template_ref
 
         ary = []
-        ary << { type: _('--template-url'), uri: explicit_uri, allow_fallback: false }
+        ary << { type: _('--template-url'), uri: explicit_uri, allow_fallback: false } if explicit_url
         ary << { type: _('metadata.json'), uri: metadata_uri, allow_fallback: true } if metadata_uri
         ary << { type: _('PDK answers'), uri: answers_uri, allow_fallback: true } if answers_uri
         ary << { type: _('default'), uri: default_uri, allow_fallback: false }

@@ -1,3 +1,5 @@
+# rubocop:disable RSpec/AnyInstance
+
 require 'spec_helper'
 require 'yaml'
 
@@ -118,9 +120,10 @@ describe PDK::Module::TemplateDir do
           allow(PDK::Util).to receive(:package_install?).and_return(true)
           allow(File).to receive(:fnmatch?).with(anything, path_or_url).and_return(true)
           allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('/', 'path', 'to', 'package', 'cachedir'))
-          allow(described_class).to receive(:clone_template_repo).and_return(path_or_url)
+          allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path_or_url)
           allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
           allow(FileUtils).to receive(:remove_dir)
+          allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', anything).and_return(stdout: 'ref', exit_code: 0)
         end
 
         it 'raises an ArgumentError' do
@@ -138,10 +141,18 @@ describe PDK::Module::TemplateDir do
     end
   end
 
-  describe '.checkout_template_ref' do
+  describe '#checkout_template_ref' do
     let(:path) { File.join('/', 'path', 'to', 'workdir') }
     let(:ref) { '12345678' }
     let(:full_ref) { '123456789abcdef' }
+
+    before(:each) do
+      allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path)
+      allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
+      allow(FileUtils).to receive(:remove_dir).with(path)
+      allow_any_instance_of(described_class).to receive(:validate_module_template!)
+      allow(PDK::Util::Git).to receive(:describe).and_return('git-ref')
+    end
 
     context 'when the template workdir is clean' do
       before(:each) do
@@ -157,7 +168,7 @@ describe PDK::Module::TemplateDir do
 
         it 'does not raise an error' do
           expect {
-            described_class.checkout_template_ref(path, ref)
+            template_dir.checkout_template_ref(path, ref)
           }.not_to raise_error
         end
       end
@@ -173,7 +184,7 @@ describe PDK::Module::TemplateDir do
           expect(logger).to receive(:error).with(result[:stdout])
           expect(logger).to receive(:error).with(result[:stderr])
           expect {
-            described_class.checkout_template_ref(path, ref)
+            template_dir.checkout_template_ref(path, ref)
           }.to raise_error(PDK::CLI::FatalError, %r{unable to set head of git repository}i)
         end
       end
@@ -185,7 +196,7 @@ describe PDK::Module::TemplateDir do
       end
 
       after(:each) do
-        described_class.checkout_template_ref(path, ref)
+        template_dir.checkout_template_ref(path, ref)
       end
 
       it 'warns the user' do
@@ -496,7 +507,7 @@ describe PDK::Module::TemplateDir do
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
       allow(FileUtils).to receive(:remove_dir).with(tmp_path)
-      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', 'default-sha').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
       allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:
                                                                                                                        "default-sha\trefs/heads/default-ref\n" \
@@ -524,7 +535,7 @@ describe PDK::Module::TemplateDir do
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
       allow(FileUtils).to receive(:remove_dir).with(tmp_path)
-      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', 'default-sha').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
       allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:
                                                                                                         "default-sha\trefs/heads/default-ref\n" \

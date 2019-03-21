@@ -47,7 +47,7 @@ module PDK
 
         if PDK::Util::Git.repo?(uri.git_remote)
           # This is either a bare local repo or a remote. either way it needs cloning.
-          @path = self.class.clone_template_repo(uri)
+          @path = clone_template_repo(uri)
           temp_dir_clone = true
         else
           # if it is a local path & non-bare repo then we can use it directly.
@@ -92,16 +92,11 @@ module PDK
       #
       # @api public
       def metadata
-        result = {
-          'pdk-version' => PDK::Util::Version.version_string,
+        {
+          'pdk-version'  => PDK::Util::Version.version_string,
+          'template-url' => @cloned_from,
+          'template-ref' => cache_template_ref(@path),
         }
-
-        result['template-url'] = @cloned_from
-
-        ref_result = PDK::Util::Git.git('--git-dir', File.join(@path, '.git'), 'describe', '--all', '--long', '--always')
-        result['template-ref'] = ref_result[:stdout].strip if ref_result[:exit_code].zero?
-
-        result
       end
 
       # Loop through the files in the template, yielding each rendered file to
@@ -304,7 +299,7 @@ module PDK
       # @raise [PDK::CLI::FatalError] If reset HEAD of the cloned repo to desired ref.
       #
       # @api private
-      def self.clone_template_repo(uri)
+      def clone_template_repo(uri)
         # @todo When switching this over to using rugged, cache the cloned
         # template repo in `%AppData%` or `$XDG_CACHE_DIR` and update before
         # use.
@@ -326,10 +321,11 @@ module PDK
       end
 
       # @api private
-      def self.checkout_template_ref(path, ref)
+      def checkout_template_ref(path, ref)
         if PDK::Util::Git.work_dir_clean?(path)
           Dir.chdir(path) do
             full_ref = PDK::Util::Git.ls_remote(path, ref)
+            cache_template_ref(path, full_ref)
             reset_result = PDK::Util::Git.git('reset', '--hard', full_ref)
             return if reset_result[:exit_code].zero?
 
@@ -340,6 +336,10 @@ module PDK
         else
           PDK.logger.warn _("Uncommitted changes found when attempting to set HEAD of git repository at '%{repo}' to ref '%{ref}'; skipping git reset.") % { repo: path, ref: ref }
         end
+      end
+
+      def cache_template_ref(path, ref = nil)
+        @template_ref ||= PDK::Util::Git.describe(File.join(path, '.git'), ref)
       end
     end
   end

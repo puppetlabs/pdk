@@ -29,8 +29,7 @@ module PDK
 
         return nil unless File.directory?(source_git_dir)
 
-        ref_result = PDK::Util::Git.git('--git-dir', source_git_dir, 'describe', '--all', '--long')
-        return ref_result[:stdout].strip if ref_result[:exit_code].zero?
+        PDK::Util::Git.describe(source_git_dir)
       end
 
       def self.version_file
