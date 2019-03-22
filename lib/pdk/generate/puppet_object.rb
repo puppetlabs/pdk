@@ -29,7 +29,7 @@ module PDK
       # @param options [Hash{Symbol => Object}]
       #
       # @api public
-      def initialize(module_dir, object_name, options = {})
+      def initialize(module_dir, object_name, options)
         @module_dir = module_dir
         @options = options
         @object_name = object_name
@@ -205,12 +205,12 @@ module PDK
       # @api private
       def with_templates
         templates.each do |template|
-          if template[:url].nil?
-            PDK.logger.debug(_('No %{dir_type} template specified; trying next template directory.') % { dir_type: template[:type] })
+          if template[:uri].nil?
+            PDK.logger.debug(_('No %{dir_type} template found; trying next template directory.') % { dir_type: template[:type] })
             next
           end
 
-          PDK::Module::TemplateDir.new(template[:url]) do |template_dir|
+          PDK::Module::TemplateDir.new(PDK::Util::TemplateURI.new(template[:uri])) do |template_dir|
             template_paths = template_dir.object_template_for(object_type)
 
             if template_paths
@@ -250,11 +250,7 @@ module PDK
       #
       # @api private
       def templates
-        @templates ||= [
-          { type: 'CLI', url: @options[:'template-url'], allow_fallback: false },
-          { type: 'metadata', url: module_metadata.data['template-url'], allow_fallback: true },
-          { type: 'default', url: PDK::Util.default_template_url, allow_fallback: false },
-        ]
+        @templates ||= PDK::Util::TemplateURI.templates(@options)
       end
 
       # Retrieves the name of the module (without the forge username) from the

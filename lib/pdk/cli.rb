@@ -39,9 +39,13 @@ module PDK::CLI
   end
 
   def self.template_url_option(dsl)
-    desc = _('Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})') % { default_url: PDK::Util.default_template_url }
+    desc = _('Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})') % { default_url: PDK::Util::TemplateURI.default_template_uri }
 
     dsl.option nil, 'template-url', desc, argument: :required
+  end
+
+  def self.template_ref_option(dsl)
+    dsl.option nil, 'template-ref', _('Specifies the template git branch or tag to use when creating new modules or classes.'), argument: :required
   end
 
   def self.skip_interview_option(dsl)

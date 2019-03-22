@@ -5,6 +5,7 @@ module PDK::CLI
     summary _('Create a new module named [module_name] using given options')
 
     PDK::CLI.template_url_option(self)
+    PDK::CLI.template_ref_option(self)
     PDK::CLI.skip_interview_option(self)
     PDK::CLI.full_interview_option(self)
 
@@ -17,6 +18,8 @@ module PDK::CLI
 
       module_name = args[0]
       target_dir = args[1]
+
+      PDK::CLI::Util.validate_template_opts(opts)
 
       if opts[:'skip-interview'] && opts[:'full-interview']
         PDK.logger.info _('Ignoring --full-interview and continuing with --skip-interview.')

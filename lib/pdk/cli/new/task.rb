@@ -4,7 +4,6 @@ module PDK::CLI
     usage _('task [options] <name>')
     summary _('Create a new task named <name> using given options')
 
-    PDK::CLI.template_url_option(self)
     option nil, :description, _('A short description of the purpose of the task'), argument: :required
 
     run do |opts, args, _cmd|

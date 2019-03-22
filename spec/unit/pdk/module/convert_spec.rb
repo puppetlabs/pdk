@@ -91,6 +91,7 @@ describe PDK::Module::Convert do
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
       allow(instance).to receive(:update_metadata).with(any_args).and_return(metadata)
       allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(template_dir)
+      allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
       allow(template_dir).to receive(:module_metadata=)
       allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content], template_files[:status])
       allow(update_manager).to receive(:changes).and_return(changes)
@@ -343,19 +344,33 @@ describe PDK::Module::Convert do
     end
   end
 
-  describe '#template_url' do
-    subject { described_class.new(options).template_url }
+  describe '#template_uri' do
+    subject { described_class.new(options).template_uri }
 
     let(:options) { {} }
+
+    before(:each) do
+      allow(PDK::Util).to receive(:package_install?).and_return(false)
+      allow(PDK::Util::Git).to receive(:repo?).and_call_original
+    end
 
     context 'when a template-url is provided in the options' do
       let(:options) { { :'template-url' => 'https://my/custom/template' } }
 
-      it { is_expected.to eq('https://my/custom/template') }
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:repo?).with(options[:'template-url']).and_return(true)
+      end
+
+      it { is_expected.to eq(PDK::Util::TemplateURI.new("https://my/custom/template##{PDK::Util::TemplateURI.default_template_ref}")) }
     end
 
     context 'when no template-url is provided in the options' do
-      it { is_expected.to eq(PDK::Util.default_template_url) }
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:repo?).with(PDK::Util::TemplateURI.default_template_uri.metadata_format).and_return(true)
+      end
+      let(:default_uri) { "#{PDK::Util::TemplateURI.default_template_uri}##{PDK::Util::TemplateURI.default_template_ref}" }
+
+      it { is_expected.to eq(PDK::Util::TemplateURI.new(default_uri)) }
     end
   end
 

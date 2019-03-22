@@ -7,6 +7,7 @@ module PDK::CLI
     summary _('Convert an existing module to be compatible with the PDK.')
 
     PDK::CLI.template_url_option(self)
+    PDK::CLI.template_ref_option(self)
     PDK::CLI.skip_interview_option(self)
     PDK::CLI.full_interview_option(self)
     flag nil, :noop, _('Do not convert the module, just output what would be done.')
@@ -20,6 +21,8 @@ module PDK::CLI
         message:             _('`pdk convert` can only be run from inside a valid module directory.'),
         log_level:           :info,
       )
+
+      PDK::CLI::Util.validate_template_opts(opts)
 
       if opts[:noop] && opts[:force]
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when converting a module')

@@ -10,6 +10,8 @@ module PDK::CLI
     flag nil, :noop, _('Do not update the module, just output what would be done.')
     flag nil, :force, _('Update the module automatically, with no prompts.')
 
+    PDK::CLI.template_ref_option(self)
+
     run do |opts, _args, _cmd|
       require 'pdk/module/update'
 

@@ -7,6 +7,7 @@ describe PDK::Module::Update do
     instance_double(
       PDK::Module::Metadata,
       data: {
+        'name' => 'mock-module',
         'template-url' => template_url,
         'template-ref' => template_ref,
       },
@@ -56,6 +57,7 @@ describe PDK::Module::Update do
       allow(instance).to receive(:print_summary)
       allow(instance).to receive(:new_version).and_return('1.4.0')
       allow(instance).to receive(:print_result)
+      allow(instance.template_uri).to receive(:ref_is_tag?).and_return(true)
       allow(instance.update_manager).to receive(:sync_changes!)
       allow(instance.update_manager).to receive(:changes?).and_return(changes)
     end
@@ -98,7 +100,7 @@ describe PDK::Module::Update do
 
     context 'when using the default template' do
       let(:options) { { noop: true } }
-      let(:template_url) { PDK::Util.default_template_url }
+      let(:template_url) { PDK::Util::TemplateURI.default_template_uri }
 
       it 'refers to the template as the default template' do
         expect(logger).to receive(:info).with(a_string_matching(%r{using the default template}i))
@@ -201,8 +203,8 @@ describe PDK::Module::Update do
     end
   end
 
-  describe '#template_url' do
-    subject { described_class.new(options).template_url }
+  describe '#template_uri' do
+    subject { described_class.new(options).template_uri.to_s }
 
     include_context 'with mock metadata'
 
@@ -240,27 +242,103 @@ describe PDK::Module::Update do
 
     context 'when the default_template_ref specifies a tag' do
       before(:each) do
-        allow(PDK::Util).to receive(:default_template_ref).and_return('1.4.0')
+        allow(PDK::Util).to receive(:development_mode?).and_return(false)
       end
 
       it 'returns the tag name' do
-        is_expected.to eq('1.4.0')
+        is_expected.to eq(PDK::TEMPLATE_REF)
       end
     end
 
     context 'when the default_template_ref specifies a branch head' do
       before(:each) do
-        allow(PDK::Util).to receive(:default_template_ref).and_return('origin/master')
+        allow(PDK::Util).to receive(:default_template_ref).and_return('master')
         allow(PDK::Util::Git).to receive(:ls_remote)
-          .with(template_url, 'refs/heads/master')
+          .with(template_url, 'master')
           .and_return('3cdd84e8f0aae30bf40d15556482fc8752899312')
       end
 
       include_context 'with mock metadata'
-      let(:template_ref) { 'heads/master-0-g07678c8' }
+      let(:template_ref) { 'master-0-g07678c8' }
 
       it 'returns the branch name and the commit SHA' do
         is_expected.to eq('master@3cdd84e')
+      end
+    end
+  end
+
+  describe '#new_template_version' do
+    subject { described_class.new(options).new_template_version }
+
+    include_context 'with mock metadata'
+
+    let(:module_template_uri) { instance_double(PDK::Util::TemplateURI, default?: true, ref_is_tag?: false, git_ref: '0.0.1') }
+    let(:template_url) { 'https://github.com/puppetlabs/pdk-templates#0.0.1' }
+
+    before(:each) do
+      allow(PDK::Util::TemplateURI).to receive(:new).with(template_url).and_return(module_template_uri)
+    end
+
+    context 'when a template-ref is specified' do
+      let(:options) { { :'template-ref' => 'my-custom-branch' } }
+
+      it 'returns the specified template-ref value' do
+        is_expected.to eq('my-custom-branch')
+      end
+    end
+
+    context 'when template-ref is not specified' do
+      context 'and the module is using the default template' do
+        before(:each) do
+          allow(module_template_uri).to receive(:default?).and_return(true)
+        end
+
+        context 'and the ref of the template is a tag' do
+          before(:each) do
+            allow(module_template_uri).to receive(:ref_is_tag?).and_return(true)
+          end
+
+          context 'and PDK is running from a package install' do
+            before(:each) do
+              allow(PDK::Util).to receive(:package_install?).and_return(true)
+              allow(PDK::Util::Version).to receive(:git_ref).and_return('1234acb')
+            end
+
+            it 'returns the default ref' do
+              is_expected.to eq(PDK::Util::TemplateURI.default_template_ref)
+            end
+          end
+
+          context 'and PDK is not running from a package install' do
+            before(:each) do
+              allow(PDK::Util).to receive(:package_install?).and_return(false)
+            end
+
+            it 'returns the ref from the metadata' do
+              is_expected.to eq(template_url.split('#').last)
+            end
+          end
+        end
+
+        context 'but the ref of the template is not a tag' do
+          before(:each) do
+            allow(module_template_uri).to receive(:ref_is_tag?).and_return(false)
+          end
+
+          it 'returns the ref from the metadata' do
+            is_expected.to eq(template_url.split('#').last)
+          end
+        end
+      end
+
+      context 'but the module is not using the default template' do
+        before(:each) do
+          allow(module_template_uri).to receive(:default?).and_return(false)
+        end
+
+        it 'returns the ref stored in the template_url metadata' do
+          is_expected.to eq(template_url.split('#').last)
+        end
       end
     end
   end

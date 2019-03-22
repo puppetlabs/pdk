@@ -60,7 +60,7 @@ Specinfra.configuration.env = bundler_env.dup
 RSpec.configure do |c|
   c.before(:suite) do
     RSpec.configuration.template_dir = Dir.mktmpdir
-    output, status = Open3.capture2e('git', 'clone', '--bare', PDK::Util.default_template_url, RSpec.configuration.template_dir)
+    output, status = Open3.capture2e('git', 'clone', '--bare', PDK::Util::TemplateURI.default_template_uri, RSpec.configuration.template_dir)
     raise "Failed to cache module template: #{output}" unless status.success?
 
     tempdir = Dir.mktmpdir

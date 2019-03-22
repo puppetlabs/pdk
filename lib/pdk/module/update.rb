@@ -6,6 +6,8 @@ module PDK
       GIT_DESCRIBE_PATTERN = %r{\A(?<base>.+?)-(?<additional_commits>\d+)-g(?<sha>.+)\Z}
 
       def run
+        template_uri.git_ref = new_template_version
+
         stage_changes!
 
         if current_version == new_version
@@ -50,8 +52,8 @@ module PDK
         raise PDK::CLI::ExitWithError, e.message
       end
 
-      def template_url
-        @template_url ||= module_metadata.data['template-url']
+      def template_uri
+        @template_uri ||= PDK::Util::TemplateURI.new(module_metadata.data['template-url'])
       end
 
       def current_version
@@ -60,6 +62,16 @@ module PDK
 
       def new_version
         @new_version ||= fetch_remote_version(new_template_version)
+      end
+
+      def new_template_version
+        return options[:'template-ref'] if options[:'template-ref']
+
+        if template_uri.default? && template_uri.ref_is_tag? && PDK::Util.package_install?
+          PDK::Util::TemplateURI.default_template_ref
+        else
+          template_uri.git_ref
+        end
       end
 
       private
@@ -73,27 +85,23 @@ module PDK
 
         return data if data.nil?
 
-        if data[:base].start_with?('heads/')
-          "#{data[:base].gsub(%r{^heads/}, '')}@#{data[:sha]}"
+        if data[:base] =~ %r{^(?:heads|remotes)/}
+          "#{data[:base].gsub(%r{^(heads/|remotes/\w+?/)}, '')}@#{data[:sha]}"
         else
           data[:base]
         end
       end
 
-      def new_template_version
-        PDK::Util.default_template_ref
-      end
+      def fetch_remote_version(template_ref)
+        return template_ref unless current_template_version.is_a?(String)
+        return template_ref if template_ref == PDK::TEMPLATE_REF
 
-      def fetch_remote_version(version)
-        return version unless version.include?('/')
-
-        branch = version.partition('/').last
         sha_length = GIT_DESCRIBE_PATTERN.match(current_template_version)[:sha].length - 1
-        "#{branch}@#{PDK::Util::Git.ls_remote(template_url, "refs/heads/#{branch}")[0..sha_length]}"
+        "#{template_ref}@#{PDK::Util::Git.ls_remote(template_uri.git_remote, template_ref)[0..sha_length]}"
       end
 
       def update_message
-        format_string = if template_url == PDK::Util.puppetlabs_template_url
+        format_string = if template_uri.default?
                           _('Updating %{module_name} using the default template, from %{current_version} to %{new_version}')
                         else
                           _('Updating %{module_name} using the template at %{template_url}, from %{current_version} to %{new_version}')
@@ -101,7 +109,7 @@ module PDK
 
         format_string % {
           module_name:     module_metadata.data['name'],
-          template_url:    template_url,
+          template_url:    template_uri.git_remote,
           current_version: current_version,
           new_version:     new_version,
         }

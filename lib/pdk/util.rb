@@ -5,6 +5,7 @@ require 'pdk/util/version'
 require 'pdk/util/windows'
 require 'pdk/util/vendored_file'
 require 'pdk/util/filesystem'
+require 'pdk/util/template_uri'
 
 module PDK
   module Util
@@ -196,63 +197,6 @@ module PDK
       end
     end
     module_function :targets_relative_to_pwd
-
-    def default_template_url
-      answer_file_url = PDK.answers['template-url']
-
-      return puppetlabs_template_url if answer_file_url.nil?
-
-      # Ignore answer file template-url if the value is the old or new default.
-      return puppetlabs_template_url if answer_file_url == 'https://github.com/puppetlabs/pdk-module-template'
-      return puppetlabs_template_url if answer_file_url == puppetlabs_template_url
-
-      if File.directory?(answer_file_url)
-        # Instantiating a new TemplateDir object pointing to the directory
-        # will cause the directory contents to be validated, raising
-        # ArgumentError if it does not appear to be a valid template.
-        PDK::Module::TemplateDir.new(answer_file_url) {}
-        return answer_file_url
-      end
-
-      raise ArgumentError unless PDK::Util::Git.repo?(answer_file_url)
-
-      answer_file_url
-    rescue ArgumentError
-      PDK.logger.warn(
-        _("Unable to access the previously used template '%{template}', using the default template instead.") % {
-          template: answer_file_url,
-        },
-      )
-      PDK.answers.update!('template-url' => nil)
-      return puppetlabs_template_url
-    end
-    module_function :default_template_url
-
-    def puppetlabs_template_url
-      if package_install?
-        'file://' + File.join(package_cachedir, 'pdk-templates.git')
-      else
-        'https://github.com/puppetlabs/pdk-templates'
-      end
-    end
-    module_function :puppetlabs_template_url
-
-    def default_template_ref
-      # TODO: This should respect a --template-ref option if we add that
-      return 'origin/master' if default_template_url != puppetlabs_template_url
-
-      puppetlabs_template_ref
-    end
-    module_function :default_template_ref
-
-    def puppetlabs_template_ref
-      if PDK::Util.development_mode?
-        'origin/master'
-      else
-        PDK::TEMPLATE_REF
-      end
-    end
-    module_function :puppetlabs_template_ref
 
     # TO-DO: Refactor replacement of lib/pdk/module/build.rb:metadata to use this function instead
     def module_metadata

@@ -47,17 +47,6 @@ describe 'PDK::CLI new class' do
 
         PDK::CLI.run(%w[new class test_class])
       end
-
-      context 'and a custom template URL' do
-        it 'generates the class from the custom template' do
-          expect(PDK::Generate::PuppetClass).to receive(:new)
-            .with(anything, 'test_class', :'template-url' => 'https://custom/template')
-            .and_return(generator)
-          expect(generator).to receive(:run)
-
-          PDK::CLI.run(%w[new class test_class --template-url https://custom/template])
-        end
-      end
     end
   end
 end

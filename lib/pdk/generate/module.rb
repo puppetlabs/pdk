@@ -54,10 +54,10 @@ module PDK
 
         prepare_module_directory(temp_target_dir)
 
-        template_url = opts.fetch(:'template-url', PDK::Util.default_template_url)
+        template_uri = PDK::Util::TemplateURI.new(opts)
 
         begin
-          PDK::Module::TemplateDir.new(template_url, metadata.data, true) do |templates|
+          PDK::Module::TemplateDir.new(template_uri, metadata.data, true) do |templates|
             templates.render do |file_path, file_content|
               file = Pathname.new(temp_target_dir) + file_path
               file.dirname.mkpath
@@ -74,21 +74,23 @@ module PDK
           raise PDK::CLI::ExitWithError, e
         end
 
-        if template_url == PDK::Util.puppetlabs_template_url
-          # If the user specifies our template via the command line, remove the
-          # saved template-url answer.
+        # Only update the answers files after metadata has been written.
+        if template_uri.default?
+          # If the user specifies our default template url via the command
+          # line, remove the saved template-url answer so that the template_uri
+          # resolution can find new default URLs in the future.
           PDK.answers.update!('template-url' => nil) if opts.key?(:'template-url')
         else
-          # Save the template-url answer if the module was generated using
-          # a template other than ours.
-          PDK.answers.update!('template-url' => template_url)
+          # Save the template-url answers if the module was generated using a
+          # template/reference other than ours.
+          PDK.answers.update!('template-url' => template_uri.metadata_format)
         end
 
         begin
           if FileUtils.mv(temp_target_dir, target_dir)
             Dir.chdir(target_dir) { PDK::Util::Bundler.ensure_bundle! } unless opts[:'skip-bundle-install']
 
-            PDK.logger.info(_('Module \'%{name}\' generated at path \'%{path}\', from template \'%{template_url}\'.') % { name: opts[:module_name], path: target_dir, template_url: template_url })
+            PDK.logger.info _('Module \'%{name}\' generated at path \'%{path}\', from template \'%{url}\'.') % { name: opts[:module_name], path: target_dir, url: template_uri.git_remote }
             PDK.logger.info(_('In your module directory, add classes with the \'pdk new class\' command.'))
           end
         rescue Errno::EACCES => e

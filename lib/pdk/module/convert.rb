@@ -68,7 +68,7 @@ module PDK
       def stage_changes!
         metadata_path = 'metadata.json'
 
-        PDK::Module::TemplateDir.new(template_url, nil, false) do |templates|
+        PDK::Module::TemplateDir.new(template_uri, nil, false) do |templates|
           new_metadata = update_metadata(metadata_path, templates.metadata)
           templates.module_metadata = new_metadata.data unless new_metadata.nil?
 
@@ -102,8 +102,8 @@ module PDK
         @update_manager ||= PDK::Module::UpdateManager.new
       end
 
-      def template_url
-        @template_url ||= options.fetch(:'template-url', PDK::Util.default_template_url)
+      def template_uri
+        @template_uri ||= PDK::Util::TemplateURI.new(options)
       end
 
       def update_metadata(metadata_path, template_metadata)

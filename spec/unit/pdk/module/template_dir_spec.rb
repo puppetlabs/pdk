@@ -1,16 +1,18 @@
+# rubocop:disable RSpec/AnyInstance
+
 require 'spec_helper'
 require 'yaml'
 
 describe PDK::Module::TemplateDir do
   subject(:template_dir) do
-    described_class.new(path_or_url, module_metadata, true) do |foo|
+    described_class.new(uri, module_metadata, true) do |foo|
       # block does nothing
     end
   end
 
-  let(:root_dir) { Gem.win_platform? ? 'C:/' : '/' }
-  let(:path_or_url) { File.join(root_dir, 'path', 'to', 'templates') }
-  let(:tmp_path) { File.join(root_dir, 'tmp', 'path') }
+  let(:path_or_url) { File.join('/', 'path', 'to', 'templates') }
+  let(:uri) { PDK::Util::TemplateURI.new(path_or_url) }
+  let(:tmp_path) { File.join('/', 'tmp', 'path') }
 
   let(:module_metadata) do
     {
@@ -30,6 +32,179 @@ describe PDK::Module::TemplateDir do
     EOS
   end
 
+  before(:each) do
+    allow(PDK::Util::Git).to receive(:work_tree?).with(path_or_url).and_return(false)
+    allow(PDK::Util::Git).to receive(:work_tree?).with(uri.shell_path).and_return(false)
+  end
+
+  describe '.new' do
+    context 'when not passed a block' do
+      it 'raises an ArgumentError' do
+        expect {
+          described_class.new(uri, module_metadata)
+        }.to raise_error(ArgumentError, %r{must be initialized with a block}i)
+      end
+    end
+
+    context 'when not initialized with a PDK::Util::TemplateURI' do
+      it 'raises an ArgumentError' do
+        expect {
+          described_class.new(path_or_url, module_metadata) {}
+        }.to raise_error(ArgumentError, %r{must be initialized with a PDK::Util::TemplateURI}i)
+      end
+    end
+  end
+
+  describe '#validate_module_template!' do
+    let(:moduleroot) { File.join(path_or_url, 'moduleroot') }
+    let(:moduleroot_init) { File.join(path_or_url, 'moduleroot_init') }
+
+    before(:each) do
+      allow(File).to receive(:directory?).with(anything).and_return(true)
+    end
+
+    context 'when the template path is a directory' do
+      before(:each) do
+        allow(File).to receive(:directory?).with(path_or_url).and_return(true)
+      end
+
+      context 'and the template contains a moduleroot directory' do
+        before(:each) do
+          allow(File).to receive(:directory?).with(moduleroot).and_return(true)
+        end
+
+        context 'and a moduleroot_init directory' do
+          before(:each) do
+            allow(File).to receive(:directory?).with(moduleroot_init).and_return(true)
+          end
+
+          it 'does not raise an error' do
+            expect { described_class.new(uri, module_metadata) {} }.not_to raise_error
+          end
+        end
+
+        context 'but not a moduleroot_init directory' do
+          before(:each) do
+            allow(File).to receive(:directory?).with(moduleroot_init).and_return(false)
+          end
+
+          it 'raises an ArgumentError' do
+            expect {
+              described_class.new(uri, module_metadata) {}
+            }.to raise_error(ArgumentError, %r{does not contain a 'moduleroot_init/'})
+          end
+        end
+      end
+
+      context 'and the template does not contain a moduleroot directory' do
+        before(:each) do
+          allow(File).to receive(:directory?).with(moduleroot).and_return(false)
+        end
+
+        it 'raises an ArgumentError' do
+          expect {
+            described_class.new(uri, module_metadata) {}
+          }.to raise_error(ArgumentError, %r{does not contain a 'moduleroot/'})
+        end
+      end
+    end
+
+    context 'when the template path is not a directory' do
+      before(:each) do
+        allow(File).to receive(:directory?).with(path_or_url).and_return(false)
+        allow(PDK::Util).to receive(:package_install?).and_return(false)
+      end
+
+      context 'and it specifies an deprecated built-in template' do
+        before(:each) do
+          allow(PDK::Util).to receive(:package_install?).and_return(true)
+          allow(File).to receive(:fnmatch?).with(anything, path_or_url).and_return(true)
+          allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('/', 'path', 'to', 'package', 'cachedir'))
+          allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path_or_url)
+          allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
+          allow(FileUtils).to receive(:remove_dir)
+          allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', anything).and_return(stdout: 'ref', exit_code: 0)
+        end
+
+        it 'raises an ArgumentError' do
+          expect {
+            described_class.new(uri, module_metadata) {}
+          }.to raise_error(ArgumentError, %r{built-in template has substantially changed})
+        end
+      end
+
+      it 'raises an ArgumentError' do
+        expect {
+          described_class.new(uri, module_metadata) {}
+        }.to raise_error(ArgumentError, %r{is not a directory})
+      end
+    end
+  end
+
+  describe '#checkout_template_ref' do
+    let(:path) { File.join('/', 'path', 'to', 'workdir') }
+    let(:ref) { '12345678' }
+    let(:full_ref) { '123456789abcdef' }
+
+    before(:each) do
+      allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path)
+      allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
+      allow(FileUtils).to receive(:remove_dir).with(path)
+      allow_any_instance_of(described_class).to receive(:validate_module_template!)
+      allow(PDK::Util::Git).to receive(:describe).and_return('git-ref')
+    end
+
+    context 'when the template workdir is clean' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:work_dir_clean?).with(path).and_return(true)
+        allow(Dir).to receive(:chdir).with(path).and_yield
+        allow(PDK::Util::Git).to receive(:ls_remote).with(path, ref).and_return(full_ref)
+      end
+
+      context 'and the git reset succeeds' do
+        before(:each) do
+          allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', full_ref).and_return(exit_code: 0)
+        end
+
+        it 'does not raise an error' do
+          expect {
+            template_dir.checkout_template_ref(path, ref)
+          }.not_to raise_error
+        end
+      end
+
+      context 'and the git reset fails' do
+        let(:result) { { exit_code: 1, stderr: 'stderr', stdout: 'stdout' } }
+
+        before(:each) do
+          allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', full_ref).and_return(result)
+        end
+
+        it 'raises a FatalError' do
+          expect(logger).to receive(:error).with(result[:stdout])
+          expect(logger).to receive(:error).with(result[:stderr])
+          expect {
+            template_dir.checkout_template_ref(path, ref)
+          }.to raise_error(PDK::CLI::FatalError, %r{unable to set head of git repository}i)
+        end
+      end
+    end
+
+    context 'when the template workdir is not clean' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:work_dir_clean?).with(path).and_return(false)
+      end
+
+      after(:each) do
+        template_dir.checkout_template_ref(path, ref)
+      end
+
+      it 'warns the user' do
+        expect(logger).to receive(:warn).with(a_string_matching(%r{uncommitted changes found}i))
+      end
+    end
+  end
+
   context 'with a valid template path' do
     it 'returns config hash with module metadata' do
       allow(File).to receive(:directory?).with(anything).and_return(true)
@@ -40,7 +215,7 @@ describe PDK::Module::TemplateDir do
       allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
       allow(Dir).to receive(:rmdir).with(tmp_path).and_return(0)
 
-      allow(described_class).to receive(:new).with(path_or_url, module_metadata).and_yield(template_dir)
+      allow(described_class).to receive(:new).with(uri, module_metadata).and_yield(template_dir)
       expect(template_dir.object_config).to include('module_metadata' => module_metadata)
     end
   end
@@ -184,13 +359,14 @@ describe PDK::Module::TemplateDir do
 
   describe '.config_for(dest_path)' do
     before(:each) do
+      allow(Gem).to receive(:win_platform?).and_return(false)
       allow(File).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(false)
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
-      allow(File).to receive(:readable?).with(File.join(path_or_url, 'config_defaults.yml')).and_return true
+      allow(File).to receive(:readable?).with(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(YAML).to receive(:safe_load).with(config_defaults, [], [], true).and_return config_hash
     end
 
@@ -220,10 +396,10 @@ describe PDK::Module::TemplateDir do
       end
 
       before(:each) do
-        allow(File).to receive(:file?).with('/path/to/module/.sync.yml').and_return true
-        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return true
-        allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return yaml_text
-        allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_return yaml_hash
+        allow(File).to receive(:file?).with('/path/to/module/.sync.yml').and_return(true)
+        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return(true)
+        allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return(yaml_text)
+        allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_return(yaml_hash)
         allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
       end
 
@@ -325,15 +501,20 @@ describe PDK::Module::TemplateDir do
       allow(File).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
       allow(PDK::Util).to receive(:default_template_url).and_return(path_or_url)
-      allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
+      allow(PDK::Util::TemplateURI).to receive(:default_template_ref).and_return('default-ref')
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
-      allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-ref').and_return(exit_code: 0)
+      allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
       allow(FileUtils).to receive(:remove_dir).with(tmp_path)
-      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', 'default-sha').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
+      allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:
+                                                                                                                       "default-sha\trefs/heads/default-ref\n" \
+                                                                                                                       "default-sha\trefs/remotes/origin/default-ref")
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
       allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
+      allow(PDK::Util).to receive(:development_mode?).and_return(false)
     end
 
     context 'pdk data' do
@@ -348,15 +529,20 @@ describe PDK::Module::TemplateDir do
       allow(File).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
       allow(PDK::Util).to receive(:default_template_url).and_return('default-url')
-      allow(PDK::Util).to receive(:default_template_ref).and_return('default-ref')
+      allow(PDK::Util::TemplateURI).to receive(:default_template_ref).and_return('default-ref')
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
-      allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'origin/master').and_return(exit_code: 0)
+      allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
       allow(FileUtils).to receive(:remove_dir).with(tmp_path)
-      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', 'default-sha').and_return(exit_code: 0, stdout: '1234abcd')
+      allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
+      allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:
+                                                                                                        "default-sha\trefs/heads/default-ref\n" \
+                                                                                                        "default-sha\trefs/remotes/origin/default-ref")
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
       allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
+      allow(PDK::Util).to receive(:development_mode?).and_return(false)
     end
 
     context 'pdk data' do

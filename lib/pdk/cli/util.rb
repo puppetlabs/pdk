@@ -188,6 +188,16 @@ module PDK
         end
       end
       module_function :validate_puppet_version_opts
+
+      def validate_template_opts(opts)
+        if opts[:'template-ref'] && opts[:'template-url'].nil?
+          raise PDK::CLI::ExitWithError, _('--template-ref requires --template-url to also be specified.')
+        end
+
+        return unless opts[:'template-url'] && opts[:'template-url'].include?('#')
+        raise PDK::CLI::ExitWithError, _('--template-url may not be used to specify paths containing #\'s.')
+      end
+      module_function :validate_template_opts
     end
   end
 end
