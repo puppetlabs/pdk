@@ -153,12 +153,12 @@ module PDK
         end
       end
 
-      private
-
       def missing_fields
         fields = DEFAULTS.keys - %w[data_provider requirements dependencies]
         fields.select { |key| @data[key].nil? || @data[key].empty? }
       end
+
+      private
 
       # Do basic validation and parsing of the name parameter.
       def process_name(data)
