@@ -72,7 +72,7 @@ module PDK::CLI
       end
 
       # Subsequent arguments are targets.
-      targets.concat(args[1..-1]) if args.length > 1
+      targets.concat(args.to_a[1..-1]) if args.length > 1
 
       report = PDK::Report.new
       report_formats = if opts[:format]
