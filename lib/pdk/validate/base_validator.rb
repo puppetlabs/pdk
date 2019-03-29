@@ -54,8 +54,11 @@ module PDK
               pattern_glob = Array(pattern).map { |p| Dir.glob(File.join(target_root, p), File::FNM_DOTMATCH) }
 
               target_list = pattern_glob.flatten.map do |file|
-                if File.fnmatch(File.join(File.expand_path(target), '*'), file, File::FNM_DOTMATCH)
+                if File.fnmatch(File.join(File.expand_path(PDK::Util.canonical_path(target)), '*'), file, File::FNM_DOTMATCH)
                   Pathname.new(file).relative_path_from(Pathname.new(PDK::Util.module_root)).to_s
+                else
+                  PDK.logger.debug(_('%{validator}: Skipped \'%{target}\'. Target directory does not exist.') % { validator: name, target: target })
+                  nil
                 end
               end
 
