@@ -137,3 +137,7 @@ Style/SymbolArray:
   Description: Using percent style obscures symbolic intent of array's contents.
   Enabled: true
   EnforcedStyle: brackets
+
+# Enforce LF line endings, even when on Windows
+Layout/EndOfLine:
+  EnforcedStyle: lf
