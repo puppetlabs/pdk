@@ -61,6 +61,7 @@ build-iPhoneSimulator/
 /spec/reports/
 /tmp/
 /vendor/gems/
+Gemfile.local
 
 # ignore bundler generated binstubs, but keep setup/console scripts
 /bin/*
