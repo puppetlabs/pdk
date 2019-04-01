@@ -5,6 +5,7 @@ gemspec
 
 if RUBY_VERSION < '2.4.0'
   # avoid newer versions that do not support ruby 2.1 anymore
+  gem 'cri', '>= 2.10.1', '< 2.11.0'
   gem 'nokogiri', '1.7.2'
 else
   # rubocop:disable Bundler/DuplicatedGem
@@ -50,6 +51,6 @@ extra_gemfiles = [
 
 extra_gemfiles.each do |gemfile|
   if File.file?(gemfile) && File.readable?(gemfile)
-    eval(File.read(gemfile), binding)
+    eval(File.read(gemfile), binding) # rubocop:disable Security/Eval
   end
 end
