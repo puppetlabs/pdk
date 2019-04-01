@@ -11,7 +11,7 @@ describe 'C100321 - Generate a module and validate it (i.e. ensure bundle instal
     describe file(File.join(module_name, 'metadata.json')) do
       it { is_expected.to be_file }
       its(:content_as_json) do
-        is_expected.to include('template-url' => a_string_matching(%r{\Afile://.+pdk-templates\.git\Z}))
+        is_expected.to include('template-url' => a_string_matching(%r{\Afile://.+pdk-templates\.git#[\w\.-]+\Z}))
       end
     end
   end
