@@ -28,8 +28,12 @@ module PDK::CLI
       #
       unless module_metadata.forge_ready?
         if opts[:force]
-          PDK.logger.error _('This module is missing required fields in the metadata.json. Re-run the build command without --force to add this information.')
-          exit 1
+          PDK.logger.warn _(
+            'This module is missing the following fields in the metadata.json: %{fields}. ' \
+            'These missing fields may affect the visibility of the module on the Forge.',
+          ) % {
+            fields: module_metadata.missing_fields.join(', '),
+          }
         else
           module_metadata.interview_for_forge!
           module_metadata.write!('metadata.json')
