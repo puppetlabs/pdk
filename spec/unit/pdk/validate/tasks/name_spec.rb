@@ -3,11 +3,6 @@ require 'spec_helper'
 describe PDK::Validate::Tasks::Name do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }
 
-  before(:each) do
-    allow(PDK::Util).to receive(:module_root).and_return(module_root)
-    allow(File).to receive(:directory?).with(module_root).and_return(true)
-  end
-
   it 'defines the base validator attributes' do
     expect(described_class).to have_attributes(
       name: 'task-name',
@@ -32,14 +27,10 @@ describe PDK::Validate::Tasks::Name do
       return_value
     end
 
-    before(:each) do
-      globbed_targets = targets.map { |r| File.join(module_root, r) }
-      allow(Dir).to receive(:glob).with(glob_pattern, anything).and_return(globbed_targets)
-      allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
-    end
-
     context 'when there are no targets' do
-      let(:targets) { [] }
+      before(:each) do
+        allow(described_class).to receive(:parse_targets).with(anything).and_return([[], [], []])
+      end
 
       it 'returns 0' do
         expect(return_value).to eq(0)
@@ -48,6 +39,10 @@ describe PDK::Validate::Tasks::Name do
 
     context 'when a task name starts with a number' do
       let(:targets) { [File.join('tasks', '0_do_a_thing.sh')] }
+
+      before(:each) do
+        allow(described_class).to receive(:parse_targets).with(anything).and_return([targets, [], []])
+      end
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
@@ -67,6 +62,10 @@ describe PDK::Validate::Tasks::Name do
     context 'when a task name contains uppercase characters' do
       let(:targets) { [File.join('tasks', 'aTask.ps1')] }
 
+      before(:each) do
+        allow(described_class).to receive(:parse_targets).with(anything).and_return([targets, [], []])
+      end
+
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
           file:     targets.first,
@@ -84,6 +83,10 @@ describe PDK::Validate::Tasks::Name do
 
     context 'when the task name is valid' do
       let(:targets) { [File.join('tasks', 'a_task.rb')] }
+
+      before(:each) do
+        allow(described_class).to receive(:parse_targets).with(anything).and_return([targets, [], []])
+      end
 
       it 'adds a passing event to the report' do
         expect(report).to receive(:add_event).with(

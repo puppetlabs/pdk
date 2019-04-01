@@ -25,57 +25,15 @@ describe PDK::Validate::Rubocop do
     )
   end
 
-  describe '.parse_targets' do
-    subject(:target_files) { described_class.parse_targets(targets: targets) }
-
-    let(:module_root) { File.join('path', 'to', 'test', 'module') }
-    let(:pattern) { '**/**.rb' }
-    let(:glob_pattern) { File.join(module_root, described_class.pattern) }
-
-    before(:each) do
-      allow(described_class).to receive(:pattern).and_return(pattern)
-      allow(PDK::Util).to receive(:module_root).and_return(module_root)
-      allow(File).to receive(:directory?).with(module_root).and_return(true)
-      allow(File).to receive(:expand_path).with(module_root).and_return(module_root)
+  describe '.pattern' do
+    it 'only matches ruby files' do
+      expect(described_class.pattern).to eq('**/**.rb')
     end
+  end
 
-    context 'when given no targets' do
-      let(:targets) { [] }
-
-      it 'returns the module root' do
-        expect(target_files.first).to be_empty
-      end
-    end
-
-    context 'when given specific targets' do
-      let(:targets) { ['target1.rb', 'target2/'] }
-      let(:target2) { File.join('target2', 'target.rb') }
-      let(:globbed_target2) do
-        [
-          File.join(module_root, target2),
-        ]
-      end
-
-      before(:each) do
-        allow(Dir).to receive(:glob).with(glob_pattern, anything).and_return(globbed_target2)
-        allow(File).to receive(:directory?).with('target1.rb').and_return(false)
-        allow(File).to receive(:directory?).with('target2/').and_return(true)
-        allow(File).to receive(:file?).with('target1.rb').and_return(true)
-
-        targets.map do |t|
-          allow(File).to receive(:expand_path).with(t).and_return(File.join(module_root, t))
-        end
-
-        Array[pattern].flatten.map do |p|
-          allow(File).to receive(:expand_path).with(p).and_return(File.join(module_root, p))
-        end
-      end
-
-      it 'returns the targets' do
-        expect(target_files[0]).to eq([target2])
-        expect(target_files[1]).to eq(['target1.rb'])
-        expect(target_files[2]).to be_empty
-      end
+  describe '.pattern_ignore' do
+    it 'does not ignore any files' do
+      expect(described_class).not_to respond_to(:pattern_ignore)
     end
   end
 

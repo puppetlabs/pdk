@@ -13,6 +13,35 @@ module PDK
         File.open(path, 'wb') { |f| f.write(content) }
       end
       module_function :write_file
+
+      #:nocov:
+      # These methods just wrap core Ruby functionality and
+      # can be ignored for code coverage
+      def directory?(*args)
+        File.directory?(*args)
+      end
+      module_function :directory?
+
+      def file?(*args)
+        File.file?(*args)
+      end
+      module_function :file?
+
+      def expand_path(*args)
+        File.expand_path(*args)
+      end
+      module_function :expand_path
+
+      def glob(*args)
+        Dir.glob(*args)
+      end
+      module_function :glob
+
+      def fnmatch(*args)
+        File.fnmatch(*args)
+      end
+      module_function :fnmatch
+      #:nocov:
     end
   end
 end

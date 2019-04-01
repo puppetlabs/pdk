@@ -49,12 +49,11 @@ module PDK
         invalid = []
         matched = targets.map { |target|
           if respond_to?(:pattern)
-            if File.directory?(target)
+            if PDK::Util::Filesystem.directory?(target)
               target_root = PDK::Util.module_root
-              pattern_glob = Array(pattern).map { |p| Dir.glob(File.join(target_root, p), File::FNM_DOTMATCH) }
-
+              pattern_glob = Array(pattern).map { |p| PDK::Util::Filesystem.glob(File.join(target_root, p), File::FNM_DOTMATCH) }
               target_list = pattern_glob.flatten.map do |file|
-                if File.fnmatch(File.join(File.expand_path(PDK::Util.canonical_path(target)), '*'), file, File::FNM_DOTMATCH)
+                if PDK::Util::Filesystem.fnmatch(File.join(PDK::Util::Filesystem.expand_path(PDK::Util.canonical_path(target)), '*'), file, File::FNM_DOTMATCH)
                   Pathname.new(file).relative_path_from(Pathname.new(PDK::Util.module_root)).to_s
                 else
                   PDK.logger.debug(_('%{validator}: Skipped \'%{target}\'. Target directory does not exist.') % { validator: name, target: target })
@@ -67,10 +66,10 @@ module PDK
 
               skipped << target if target_list.flatten.empty?
               target_list
-            elsif File.file?(target)
+            elsif PDK::Util::Filesystem.file?(target)
               if Array(pattern).include? target
                 target
-              elsif Array(pattern).any? { |p| File.fnmatch(File.expand_path(p), File.expand_path(target), File::FNM_DOTMATCH) }
+              elsif Array(pattern).any? { |p| PDK::Util::Filesystem.fnmatch(PDK::Util::Filesystem.expand_path(p), PDK::Util::Filesystem.expand_path(target), File::FNM_DOTMATCH) }
                 target
               else
                 skipped << target
