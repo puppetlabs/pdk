@@ -4,6 +4,30 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.10.0](https://github.com/puppetlabs/pdk/tree/v1.10.0) (2019-04-02)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.9.1...v1.10.0)
+
+**Implemented enhancements:**
+
+- \(PDK-1086\) Change `pdk build --force` to warn if missing module metadata and continue [\#643](https://github.com/puppetlabs/pdk/pull/643) ([rodjek](https://github.com/rodjek))
+- \(PDK-1308\) Ensure PDK-written non-templated files have trailing newline [\#640](https://github.com/puppetlabs/pdk/pull/640) ([scotje](https://github.com/scotje))
+- \(PDK-718\) Add --template-ref argument for upstream template repo tags [\#434](https://github.com/puppetlabs/pdk/pull/434) ([hunner](https://github.com/hunner))
+
+**Closed issues:**
+
+- `pdk update` is not idempotent for deletion of CI config files [\#593](https://github.com/puppetlabs/pdk/issues/593)
+- Rspec tests for CRLF line endings fail [\#587](https://github.com/puppetlabs/pdk/issues/587)
+- class params feature in class object template not documented or useable [\#557](https://github.com/puppetlabs/pdk/issues/557)
+- Disabling puppet-lint checks in PDK [\#538](https://github.com/puppetlabs/pdk/issues/538)
+
+**Merged pull requests:**
+
+- \(maint\) Fix package specs for template-ref changes [\#647](https://github.com/puppetlabs/pdk/pull/647) ([rodjek](https://github.com/rodjek))
+- \(maint\) Enforce LF line endings in Rubocop [\#645](https://github.com/puppetlabs/pdk/pull/645) ([glennsarti](https://github.com/glennsarti))
+- \(FM-7579, PDK-1236\) bump the version of CRI used [\#638](https://github.com/puppetlabs/pdk/pull/638) ([tphoney](https://github.com/tphoney))
+- \(PDK-1294\) Update version post-release [\#637](https://github.com/puppetlabs/pdk/pull/637) ([bmjen](https://github.com/bmjen))
+- \(PDK-1298\) acceptance:local test suite optimisation [\#633](https://github.com/puppetlabs/pdk/pull/633) ([rodjek](https://github.com/rodjek))
+
 ## [v1.9.1](https://github.com/puppetlabs/pdk/tree/v1.9.1) (2019-03-01)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.9.0...v1.9.1)
 
@@ -17,6 +41,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- \(PDK-1289\) Release 1.9.1 [\#632](https://github.com/puppetlabs/pdk/pull/632) ([bmjen](https://github.com/bmjen))
 - \(maint\) Pin parallel gem to 1.13.0 [\#631](https://github.com/puppetlabs/pdk/pull/631) ([rodjek](https://github.com/rodjek))
 - \(PDK-1260\) Bump to 1.10.0.pre for new dev work [\#621](https://github.com/puppetlabs/pdk/pull/621) ([bmjen](https://github.com/bmjen))
 
