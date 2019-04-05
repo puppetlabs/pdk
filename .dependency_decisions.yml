@@ -68,3 +68,10 @@
     :why: MIT equivalent
     :versions: []
     :when: 2017-08-11 01:30:32.594531000 Z
+- - :license
+  - facter
+  - Apache 2.0
+  - :who: rodjek
+    :why: https://github.com/puppetlabs/facter/blob/d85f088d74f60859a23e6dbae3f83d918dff504a/LICENSE
+    :versions: []
+    :when: 2019-04-05 00:51:23.372598896 Z
