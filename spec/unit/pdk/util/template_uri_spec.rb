@@ -19,6 +19,18 @@ describe PDK::Util::TemplateURI do
         end
       end
 
+      context 'that contains the default template keyword' do
+        let(:opts_or_uri) { 'pdk-default#1.2.3' }
+
+        before(:each) do
+          allow(PDK::Util).to receive(:package_install?).and_return(false)
+        end
+
+        it 'converts the keyword to the default template URI' do
+          expect(template_uri.to_s).to eq('https://github.com/puppetlabs/pdk-templates#1.2.3')
+        end
+      end
+
       context 'that contains an invalid URI' do
         let(:opts_or_uri) { 'https://' }
 
@@ -35,6 +47,14 @@ describe PDK::Util::TemplateURI do
 
       it 'can return a string for storing' do
         expect(template_uri.to_s).to eq('https://github.com/my/pdk-templates.git#custom')
+      end
+    end
+
+    context 'with a PDK::Util::TemplateURI' do
+      let(:opts_or_uri) { described_class.new('https://example.com/my/template') }
+
+      it 'can return a string for storing' do
+        expect(template_uri.to_s).to eq(opts_or_uri.to_s)
       end
     end
 
@@ -496,6 +516,87 @@ describe PDK::Util::TemplateURI do
             end
           end
         end
+      end
+    end
+  end
+
+  describe '.packaged_template?' do
+    subject { described_class.packaged_template?(path) }
+
+    context 'when the path is windows default' do
+      let(:path) { 'file:///C:/Program Files/Puppet Labs/DevelopmentKit/share/cache/pdk-templates.git' }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when the path is posix default' do
+      let(:path) { 'file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git' }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when the path is the default template keyword' do
+      let(:path) { described_class::PACKAGED_TEMPLATE_KEYWORD }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when the path is not a default' do
+      let(:path) { File.join('a', 'custom', 'path') }
+
+      it { is_expected.to be_falsey }
+    end
+  end
+
+  describe '#metadata_format' do
+    subject { described_class.new(url).metadata_format }
+
+    context 'when running PDK from a package' do
+      before(:each) do
+        allow(PDK::Util).to receive(:package_install?).and_return(true)
+        allow(PDK::Util).to receive(:pdk_package_basedir).and_return('/opt/puppetlabs/pdk')
+      end
+
+      context 'and using the packaged windows template' do
+        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['windows']}#master" }
+
+        it { is_expected.to eq('pdk-default#master') }
+      end
+
+      context 'and using the packaged linux template' do
+        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['linux']}#something" }
+
+        it { is_expected.to eq('pdk-default#something') }
+      end
+
+      context 'and using the packaged osx template' do
+        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['macos']}#else" }
+
+        it { is_expected.to eq('pdk-default#else') }
+      end
+    end
+
+    context 'when not running PDK from a package' do
+      before(:each) do
+        allow(PDK::Util).to receive(:package_install?).and_return(false)
+      end
+
+      context 'and using the packaged windows template' do
+        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['windows']}#master" }
+
+        it { is_expected.to eq('https://github.com/puppetlabs/pdk-templates#master') }
+      end
+
+      context 'and using the packaged linux template' do
+        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['linux']}#something" }
+
+        it { is_expected.to eq('https://github.com/puppetlabs/pdk-templates#something') }
+      end
+
+      context 'and using the packaged osx template' do
+        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['macos']}#else" }
+
+        it { is_expected.to eq('https://github.com/puppetlabs/pdk-templates#else') }
       end
     end
   end

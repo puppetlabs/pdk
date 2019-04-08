@@ -9,6 +9,7 @@ module PDK
   module Module
     class TemplateDir
       attr_accessor :module_metadata
+      attr_reader :uri
 
       # Initialises the TemplateDir object with the path or URL to the template
       # and the block of code to run to be run while the template is available.
@@ -61,7 +62,7 @@ module PDK
             }
           end
         end
-        @cloned_from = uri.metadata_format
+        @uri = uri
 
         @init = init
         @moduleroot_dir = File.join(@path, 'moduleroot')
@@ -94,7 +95,7 @@ module PDK
       def metadata
         {
           'pdk-version'  => PDK::Util::Version.version_string,
-          'template-url' => @cloned_from,
+          'template-url' => uri.metadata_format,
           'template-ref' => cache_template_ref(@path),
         }
       end
