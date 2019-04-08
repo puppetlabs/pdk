@@ -438,6 +438,55 @@ describe PDK::Util::TemplateURI do
         is_expected.not_to include(type: 'PDK answers', uri: anything, allow_fallback: true)
       end
     end
+
+    context 'when the metadata contains a template-url' do
+      let(:mock_metadata) do
+        instance_double(
+          PDK::Module::Metadata,
+          data: {
+            'pdk-version'  => PDK::VERSION,
+            'template-url' => metadata_url,
+          },
+        )
+      end
+
+      before(:each) do
+        allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
+        allow(PDK::Util).to receive(:development_mode?).and_return(false)
+        allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
+        allow(File).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
+        allow(File).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+      end
+
+      context 'that is a pdk-default keyword' do
+        let(:metadata_url) { 'pdk-default#master' }
+
+        it 'converts the keyword to the defalut template' do
+          is_expected.to include(
+            type: 'metadata.json',
+            uri:  described_class.default_template_uri('master').uri,
+            allow_fallback: true,
+          )
+        end
+      end
+
+      context 'that is an SCP style URL' do
+        let(:metadata_url) { 'git@github.com:puppetlabs/pdk-templates.git' }
+
+        it 'converts the URL to and ssh:// URI' do
+          is_expected.to include(
+            type: 'metadata.json',
+            uri:  Addressable::URI.new(
+              scheme: 'ssh',
+              user:   'git',
+              host:   'github.com',
+              path:   '/puppetlabs/pdk-templates.git',
+            ),
+            allow_fallback: true,
+          )
+        end
+      end
+    end
   end
 
   describe '.valid_template?' do
