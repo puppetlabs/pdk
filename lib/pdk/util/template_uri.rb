@@ -126,11 +126,12 @@ module PDK
 
       # `C:...` urls are not URI-safe. They should be of the form `/C:...` to
       # be URI-safe. scp-like urls like `user@host:/path` are not URI-safe
-      # either but are not handled here. Should they be?
+      # either and so are subsequently converted to ssh:// URIs.
       #
       # @returns String
       def self.uri_safe(string)
-        (Gem.win_platform? && string =~ %r{^[a-zA-Z][\|:]}) ? "/#{string}" : string
+        url = (Gem.win_platform? && string =~ %r{^[a-zA-Z][\|:]}) ? "/#{string}" : string
+        parse_scp_url(url)
       end
 
       # If the passed value is a URI-safe windows path such as `/C:...` then it
@@ -140,6 +141,27 @@ module PDK
       # @returns String
       def self.human_readable(string)
         (Gem.win_platform? && string =~ %r{^\/[a-zA-Z][\|:]}) ? string[1..-1] : string
+      end
+
+      def self.parse_scp_url(url)
+        # Valid URIs to avoid catching:
+        # - absolute local paths
+        # - have :'s in paths when preceeded by a slash
+        # - have only digits following the : and preceeding a / or end-of-string that is 0-65535
+        # The last item is ambiguous in the case of scp/git paths vs. URI port
+        # numbers, but can be made unambiguous by making the form to
+        # ssh://git@github.com/1234/repo.git or
+        # ssh://git@github.com:1234/user/repo.git
+        scp_url = url.match(SCP_PATTERN)
+        return url unless Pathname.new(url).relative? && scp_url
+
+        uri = Addressable::URI.new(scheme: 'ssh', user: scp_url[:user], host: scp_url[:host], path: scp_url[:path])
+        PDK.logger.warn _('%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}') % {
+          scp_uri: url,
+          rfc_uri: uri.to_s,
+        }
+
+        uri.to_s
       end
 
       # @return [Array<Hash{Symbol => Object}>] an array of hashes. Each hash
@@ -156,23 +178,7 @@ module PDK
         # 1. Get the CLI, metadata (or answers if no metadata), and default URIs
         # 2. Construct the hash
         if explicit_url
-          # Valid URIs to avoid catching:
-          # - absolute local paths
-          # - have :'s in paths when preceeded by a slash
-          # - have only digits following the : and preceeding a / or end-of-string that is 0-65535
-          # The last item is ambiguous in the case of scp/git paths vs. URI port
-          # numbers, but can be made unambiguous by making the form to
-          # ssh://git@github.com/1234/repo.git or
-          # ssh://git@github.com:1234/user/repo.git
-          scp_url = explicit_url.match(SCP_PATTERN)
-          if Pathname.new(uri_safe(explicit_url)).relative? && scp_url
-            explicit_uri = Addressable::URI.new(scheme: 'ssh', user: scp_url[:user], host: scp_url[:host], path: scp_url[:path])
-            PDK.logger.warn _('%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}') % {
-              scp_uri: explicit_url,
-              rfc_uri: explicit_uri.to_s,
-            }
-          end
-          explicit_uri ||= Addressable::URI.parse(uri_safe(explicit_url))
+          explicit_uri = Addressable::URI.parse(uri_safe(explicit_url))
           explicit_uri.fragment = explicit_ref || default_template_ref
         else
           explicit_uri = nil
@@ -189,7 +195,7 @@ module PDK
         answers_uri = if [PACKAGED_TEMPLATE_KEYWORD, DEPRECATED_TEMPLATE_URL].include?(PDK.answers['template-url'])
                         Addressable::URI.parse(default_template_uri)
                       elsif PDK.answers['template-url']
-                        Addressable::URI.parse(uri_safe(PDK.answers['template-url']))
+                        new(uri_safe(PDK.answers['template-url'])).uri
                       else
                         nil
                       end
