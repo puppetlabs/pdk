@@ -1,6 +1,7 @@
 module PDK
   module Util
     module Windows
+      WIN32_FALSE = 0
       module File; end
 
       if Gem.win_platform?
