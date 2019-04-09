@@ -37,6 +37,11 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'hitimes', '1.3.0'
   spec.add_runtime_dependency 'net-ssh', '~> 4.2.0'
 
+  # Analytics dependencies
+  spec.add_runtime_dependency 'httpclient', '~> 2.8.3'
+  spec.add_runtime_dependency 'concurrent-ruby', '~> 1.1.5'
+  spec.add_runtime_dependency 'facter', '~> 2.5.1'
+
   # Used in the pdk-templates
   spec.add_runtime_dependency 'deep_merge', '~> 1.1'
 end

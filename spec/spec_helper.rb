@@ -53,6 +53,7 @@ RSpec.configure do |c|
   # This should catch any tests where we are not mocking out the actual calls to Rubygems.org
   c.before(:each) do
     allow(Gem::SpecFetcher).to receive(:fetcher).and_raise('Unmocked call to Gem::SpecFetcher.fetcher!')
+    ENV['PDK_DISABLE_ANALYTICS'] = 'true'
   end
 
   c.add_setting :root
