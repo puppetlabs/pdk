@@ -2,13 +2,6 @@ require 'ffi'
 require 'pdk/util/windows/string'
 
 module PDK::Util::Windows::APITypes
-  module ::FFI
-    WIN32_FALSE = 0
-
-    # standard Win32 error codes
-    ERROR_SUCCESS = 0
-  end
-
   class ::FFI::Pointer
     def self.from_string_to_wide_string(str, &_block)
       str = PDK::Util::Windows::String.wide_string(str)
