@@ -14,6 +14,14 @@ module PDK
       end
       module_function :write_file
 
+      def read_file(file, nil_on_error: false)
+        File.read(file)
+      rescue => e
+        raise e unless nil_on_error
+        nil
+      end
+      module_function :read_file
+
       #:nocov:
       # These methods just wrap core Ruby functionality and
       # can be ignored for code coverage

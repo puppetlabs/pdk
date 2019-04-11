@@ -106,6 +106,14 @@ module PDK
     end
     module_function :cachedir
 
+    def configdir
+      if Gem.win_platform?
+        File.join(ENV['LOCALAPPDATA'], 'PDK')
+      else
+        File.join(ENV.fetch('XDG_CONFIG_HOME', File.join(Dir.home, '.config')), 'pdk')
+      end
+    end
+
     # Returns path to the root of the module being worked on.
     #
     # @return [String, nil] Fully qualified base path to module, or nil if
