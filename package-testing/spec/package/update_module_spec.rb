@@ -3,7 +3,7 @@ require 'open-uri'
 require 'json'
 
 modules = [
-  'puppetlabs/puppetlabs-motd',
+  # 'puppetlabs/puppetlabs-motd', # TODO: need to resolve puppet_litmus dependencies to re-enable motd
   'puppetlabs/puppetlabs-concat',
   'puppetlabs/puppetlabs-inifile',
 ]
@@ -12,7 +12,7 @@ describe 'Updating an existing module' do
   modules.each do |mod|
     context "when updating #{mod}" do
       metadata = JSON.parse(open("https://raw.githubusercontent.com/#{mod}/master/metadata.json").read)
-      metadata['template-url'] = "file://#{File.join(install_dir, 'share', 'cache', 'pdk-templates.git')}"
+      metadata['template-url'] = 'pdk-default#master'
       repo_dir = File.join(home_dir, metadata['name'])
 
       describe command("#{git_bin} clone https://github.com/#{mod} #{repo_dir}") do
