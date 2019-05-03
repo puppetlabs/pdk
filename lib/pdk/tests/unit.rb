@@ -22,7 +22,7 @@ module PDK
 
         command = PDK::CLI::Exec::Command.new(*argv).tap do |c|
           c.context = :module
-          c.add_spinner(spinner_text)
+          c.add_spinner(spinner_text) if spinner_text
           c.environment = environment
         end
 
@@ -183,15 +183,13 @@ module PDK
       end
 
       # @return array of { :id, :full_description }
-      def self.list
+      def self.list(options = {})
         PDK::Util::Bundler.ensure_binstubs!('rake')
 
-        command_argv = [File.join(PDK::Util.module_root, 'bin', 'rake'), 'spec_list_json']
-        command_argv.unshift(File.join(PDK::Util::RubyVersion.bin_path, 'ruby.exe')) if Gem.win_platform?
+        environment = {}
+        environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]
 
-        list_command = PDK::CLI::Exec::Command.new(*command_argv)
-        list_command.context = :module
-        output = list_command.execute!
+        output = rake('spec_list_json', _('Finding unit tests.'), environment)
 
         rspec_json = PDK::Util.find_first_json_in(output[:stdout])
         raise PDK::CLI::FatalError, _('Failed to find valid JSON in output from rspec: %{output}' % { output: output[:stdout] }) unless rspec_json

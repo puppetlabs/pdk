@@ -10,7 +10,6 @@ describe '`pdk test unit`' do
   let(:puppet_version) { '5.4.0' }
 
   before(:each) do
-    allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: ruby_version, gemset: { puppet: puppet_version })
     allow(PDK::Util::RubyVersion).to receive(:use)
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(hash_including(:puppet))
   end
@@ -23,6 +22,8 @@ describe '`pdk test unit`' do
 
   context 'when executing' do
     before(:each) do
+      expect(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: ruby_version, gemset: { puppet: puppet_version })
+      expect(PDK::Util::RubyVersion).to receive(:use).with(ruby_version)
       expect(PDK::CLI::Util).to receive(:ensure_in_module!).with(any_args).once
       expect(PDK::Util).to receive(:module_pdk_version).and_return(PDK::VERSION)
     end
@@ -32,7 +33,7 @@ describe '`pdk test unit`' do
 
       context 'when no tests are found' do
         before(:each) do
-          expect(PDK::Test::Unit).to receive(:list).with(no_args).once.and_return([])
+          expect(PDK::Test::Unit).to receive(:list).and_return([])
         end
 
         it { expect { test_unit_cmd.run_this(args) }.to output(%r{No unit test files with examples were found}m).to_stdout }
@@ -40,16 +41,22 @@ describe '`pdk test unit`' do
 
       context 'when some tests are found' do
         let(:test_list) do
-          [{ file_path: '/path/to/first_test',
-             id: 'first_id',
-             full_description: 'first_description' },
-           { file_path: '/path/to/second_test',
-             id: 'second_id',
-             full_description: 'second_description' }]
+          [
+            {
+              file_path: '/path/to/first_test',
+              id: 'first_id',
+              full_description: 'first_description',
+            },
+            {
+              file_path: '/path/to/second_test',
+              id: 'second_id',
+              full_description: 'second_description',
+            },
+          ]
         end
 
         before(:each) do
-          expect(PDK::Test::Unit).to receive(:list).with(no_args).once.and_return(test_list)
+          expect(PDK::Test::Unit).to receive(:list).and_return(test_list)
         end
 
         it { expect { test_unit_cmd.run_this(args) }.to output(%r{Unit Test Files:\n/path/to/first_test\n/path/to/second_test}m).to_stdout }
@@ -61,7 +68,7 @@ describe '`pdk test unit`' do
 
       context 'when no tests are found' do
         before(:each) do
-          expect(PDK::Test::Unit).to receive(:list).with(no_args).once.and_return([])
+          expect(PDK::Test::Unit).to receive(:list).and_return([])
         end
 
         it { expect { test_unit_cmd.run_this(args) }.to output(%r{No unit test files with examples were found}m).to_stdout }
@@ -78,7 +85,7 @@ describe '`pdk test unit`' do
         end
 
         before(:each) do
-          expect(PDK::Test::Unit).to receive(:list).with(no_args).once.and_return(test_list)
+          expect(PDK::Test::Unit).to receive(:list).and_return(test_list)
         end
 
         it { expect { test_unit_cmd.run_this(args) }.to output(%r{Test Files:\n/path/to/first_test\n\tfirst_id\tfirst_description\n/path/to/second_test\n\tsecond_id\tsecond_description}m).to_stdout }
