@@ -6,29 +6,26 @@ module PDK
     class Metadata
       attr_accessor :data
 
-<<<<<<< HEAD
       include PDK::Util::Filesystem
 
-=======
       # rubocop:disable Style/WordArray
->>>>>>> (FIXUP) Resolve rubocop issues
       OPERATING_SYSTEMS = {
         'RedHat based Linux' => [
           {
             'operatingsystem'        => 'CentOS',
-            'operatingsystemrelease' => ['7'],
+            'operatingsystemrelease' => ['6', '7'],
           },
           {
             'operatingsystem'        => 'OracleLinux',
-            'operatingsystemrelease' => ['7'],
+            'operatingsystemrelease' => ['6', '7'],
           },
           {
             'operatingsystem'        => 'RedHat',
-            'operatingsystemrelease' => ['7'],
+            'operatingsystemrelease' => ['6', '7', '8'],
           },
           {
             'operatingsystem'        => 'Scientific',
-            'operatingsystemrelease' => ['7'],
+            'operatingsystemrelease' => ['6', '7'],
           },
         ],
         'Debian based Linux' => [
@@ -43,7 +40,7 @@ module PDK
         ],
         'Fedora' => {
           'operatingsystem'        => 'Fedora',
-          'operatingsystemrelease' => ['27', '28'],
+          'operatingsystemrelease' => ['28', '29', '30'],
         },
         'OSX' => {
           'operatingsystem'        => 'Darwin',
@@ -51,7 +48,7 @@ module PDK
         },
         'SLES' => {
           'operatingsystem'        => 'SLES',
-          'operatingsystemrelease' => ['12'],
+          'operatingsystemrelease' => ['11', '12', '15'],
         },
         'Solaris' => {
           'operatingsystem'        => 'Solaris',

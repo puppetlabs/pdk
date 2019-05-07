@@ -16,7 +16,7 @@ describe 'pdk new module' do
       describe file('new_module') do
         it { is_expected.to be_directory }
       end
-
+      # rubocop:disable Style/WordArray
       describe file(File.join('new_module', 'metadata.json')) do
         it { is_expected.to be_file }
         its(:content_as_json) do
@@ -25,7 +25,7 @@ describe 'pdk new module' do
             'template-ref' => match(%r{(master-)|(^(tags/)?(\d+)\.(\d+)\.(\d+))}),
             'operatingsystem_support' => include(
               'operatingsystem' => 'Debian',
-              'operatingsystemrelease' => ['8'],
+              'operatingsystemrelease' => ['8', '9'],
             ),
           )
         end
