@@ -179,6 +179,13 @@ module PDK
             duration: @duration,
           }
 
+          PDK.logger.debug _('STDOUT: %{output}') % {
+            output: process_data[:stdout].empty? ? 'N/A' : "\n#{process_data[:stdout]}",
+          }
+          PDK.logger.debug _('STDERR: %{output}') % {
+            output: process_data[:stderr].empty? ? 'N/A' : "\n#{process_data[:stderr]}",
+          }
+
           return process_data
         ensure
           @stdout.close
