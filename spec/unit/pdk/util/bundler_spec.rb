@@ -278,6 +278,8 @@ RSpec.describe PDK::Util::Bundler do
     before(:each) do
       # Doesn't matter where this is since all the execs get mocked.
       allow(PDK::Util).to receive(:module_root).and_return('/')
+
+      allow(logger).to receive(:debug?).and_return(false)
     end
 
     describe '#gemfile' do
@@ -370,12 +372,6 @@ RSpec.describe PDK::Util::Bundler do
 
         it 'returns false' do
           expect(instance.installed?).to be false
-        end
-
-        it 'logs a debug message with output' do
-          expect(logger).to receive(:debug).with(%r{error message}i)
-
-          instance.installed?
         end
       end
 
