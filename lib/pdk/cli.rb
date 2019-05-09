@@ -15,6 +15,7 @@ require 'pdk/util/puppet_version'
 
 module PDK::CLI
   def self.run(args)
+    PDK::Config.analytics_config_interview! unless PDK::Config.analytics_config_exist?
     @base_cmd.run(args)
   rescue PDK::CLI::ExitWithError => e
     PDK.logger.send(e.log_level, e.message)
