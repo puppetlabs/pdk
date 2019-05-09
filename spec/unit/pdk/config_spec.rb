@@ -6,20 +6,22 @@ describe PDK::Config do
 
   let(:answer_file_content) { '{}' }
   let(:user_config_content) { '{}' }
-  let(:bolt_analytics_content) { '' }
-  let(:analytics_config_content) { '' }
+  let(:analytics_config_content) { nil }
+  let(:bolt_analytics_content) { nil }
 
   def mock_file(path, content)
+    allow(PDK::Util::Filesystem).to receive(:file?).with(File.expand_path(path)).and_return(true)
     allow(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(path), anything)
-    allow(PDK::Util::Filesystem).to receive(:read_file).with(File.expand_path(path), anything).and_return(content)
+    allow(PDK::Util::Filesystem).to receive(:read_file).with(File.expand_path(path)).and_return(content)
   end
 
   before(:each) do
+    allow(PDK::Util::Filesystem).to receive(:file?).with(anything).and_return(false)
     allow(PDK::Util).to receive(:configdir).and_return(File.join('path', 'to', 'configdir'))
     mock_file(PDK.answers.answer_file_path, answer_file_content)
     mock_file(described_class.analytics_config_path, analytics_config_content)
     mock_file(described_class.user_config_path, user_config_content)
-    mock_file('~/.puppetlabs/bolt/analytics.yaml', bolt_analytics_content)
+    mock_file('~/.puppetlabs/bolt/analytics.yaml', bolt_analytics_content) if bolt_analytics_content
   end
 
   describe 'user.analytics.disabled' do
@@ -39,29 +41,29 @@ describe PDK::Config do
 
     context 'default value' do
       context 'when there is no pre-existing bolt configuration' do
-        it 'returns false' do
-          expect(config.user['analytics']['disabled']).to be_falsey
+        it 'returns true' do
+          expect(config.user['analytics']['disabled']).to be_truthy
         end
       end
 
       context 'when there is a pre-existing bolt configuration' do
-        let(:bolt_analytics_content) { "---\ndisabled: true\n" }
+        let(:bolt_analytics_content) { "---\ndisabled: false\n" }
 
         it 'returns the value from the bolt configuration' do
-          expect(config.user['analytics']['disabled']).to be_truthy
+          expect(config.user['analytics']['disabled']).to be_falsey
         end
       end
     end
   end
 
-  describe 'user.analytics.uuid' do
+  describe 'user.analytics.user-id' do
     context 'set' do
       it 'can be set to a string that looks like a V4 UUID' do
-        expect { config.user['analytics']['uuid'] = SecureRandom.uuid }.not_to raise_error
+        expect { config.user['analytics']['user-id'] = SecureRandom.uuid }.not_to raise_error
       end
 
       it 'can not be set to other values' do
-        expect { config.user['analytics']['uuid'] = 'totally a UUID' }.to raise_error(%r{must be a version 4 UUID})
+        expect { config.user['analytics']['user-id'] = 'totally a UUID' }.to raise_error(%r{must be a version 4 UUID})
       end
     end
 

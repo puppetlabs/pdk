@@ -31,9 +31,12 @@ end
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'pdk'
 require 'pdk/cli'
+require 'tempfile'
 
 # automatically load any shared examples or contexts
 Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
+
+analytics_config = nil
 
 RSpec.shared_context :stubbed_logger do
   let(:logger) { instance_double('PDK::Logger').as_null_object }
@@ -49,6 +52,17 @@ RSpec.configure do |c|
   end
 
   c.include_context :stubbed_logger
+
+  c.before(:suite) do
+    analytics_config = Tempfile.new('analytics.yml')
+    analytics_config.write(YAML.dump(disabled: true))
+    analytics_config.close
+    ENV['PDK_ANALYTICS_CONFIG'] = analytics_config.path
+  end
+
+  c.after(:suite) do
+    analytics_config.unlink
+  end
 
   # This should catch any tests where we are not mocking out the actual calls to Rubygems.org
   c.before(:each) do

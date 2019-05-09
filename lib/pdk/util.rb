@@ -113,6 +113,7 @@ module PDK
         File.join(ENV.fetch('XDG_CONFIG_HOME', File.join(Dir.home, '.config')), 'pdk')
       end
     end
+    module_function :configdir
 
     # Returns path to the root of the module being worked on.
     #

@@ -18,15 +18,15 @@ module PDK
         mount :analytics, PDK::Config::YAML.new(file: PDK::Config.analytics_config_path) do
           value :disabled do
             validate PDK::Config::Validator.boolean
-            default_to { PDK::Config.bolt_analytics_config.fetch('disabled', false) }
+            default_to { PDK::Config.bolt_analytics_config.fetch('disabled', true) }
           end
 
-          value :uuid do
+          value 'user-id' do
             validate PDK::Config::Validator.uuid
             default_to do
               require 'securerandom'
 
-              PDK::Config.bolt_analytics_config.fetch('uuid', SecureRandom.uuid)
+              PDK::Config.bolt_analytics_config.fetch('user-id', SecureRandom.uuid)
             end
           end
         end
