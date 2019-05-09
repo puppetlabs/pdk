@@ -104,10 +104,6 @@ module PDK
 
           result = cmd.execute!
 
-          unless result[:exit_code].zero?
-            PDK.logger.debug(result.values_at(:stdout, :stderr).join("\n"))
-          end
-
           result[:exit_code].zero?
         end
 
@@ -140,7 +136,7 @@ module PDK
             result = cmd.execute!
 
             unless result[:exit_code].zero?
-              PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n"))
+              PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n")) unless PDK.logger.debug?
               raise PDK::CLI::FatalError, _('Unable to resolve default Gemfile dependencies.')
             end
 
@@ -181,7 +177,7 @@ module PDK
           result = cmd.execute!
 
           unless result[:exit_code].zero?
-            PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n"))
+            PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n")) unless PDK.logger.debug?
             raise PDK::CLI::FatalError, _('Unable to resolve Gemfile dependencies.')
           end
 
@@ -200,7 +196,7 @@ module PDK
           result = cmd.execute!
 
           unless result[:exit_code].zero?
-            PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n"))
+            PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n")) unless PDK.logger.debug?
             raise PDK::CLI::FatalError, _('Unable to install missing Gemfile dependencies.')
           end
 
@@ -215,7 +211,7 @@ module PDK
           result = cmd.execute!
 
           unless result[:exit_code].zero?
-            PDK.logger.fatal(_("Failed to generate binstubs for '%{gems}':\n%{output}") % { gems: gems.join(' '), output: result.values_at(:stdout, :stderr).join("\n") })
+            PDK.logger.fatal(_("Failed to generate binstubs for '%{gems}':\n%{output}") % { gems: gems.join(' '), output: result.values_at(:stdout, :stderr).join("\n") }) unless PDK.logger.debug?
             raise PDK::CLI::FatalError, _('Unable to install requested binstubs.')
           end
 
