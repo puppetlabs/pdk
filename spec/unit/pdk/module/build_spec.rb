@@ -184,10 +184,6 @@ describe PDK::Module::Build do
       allow(instance).to receive(:release_name).and_return(release_name)
     end
 
-    after(:each) do
-      instance.stage_path(path_to_stage)
-    end
-
     context 'when the path is a directory' do
       before(:each) do
         allow(File).to receive(:directory?).with(path_to_stage).and_return(true)
@@ -196,6 +192,7 @@ describe PDK::Module::Build do
 
       it 'creates the directory in the build directory' do
         expect(FileUtils).to receive(:mkdir_p).with(path_in_build_dir, mode: 0o100755)
+        instance.stage_path(path_to_stage)
       end
     end
 
@@ -209,6 +206,7 @@ describe PDK::Module::Build do
         expect(instance).to receive(:warn_symlink).with(path_to_stage)
         expect(FileUtils).not_to receive(:mkdir_p).with(any_args)
         expect(FileUtils).not_to receive(:cp).with(any_args)
+        instance.stage_path(path_to_stage)
       end
     end
 
@@ -220,6 +218,53 @@ describe PDK::Module::Build do
 
       it 'copies the file into the build directory, preserving the permissions' do
         expect(FileUtils).to receive(:cp).with(path_to_stage, path_in_build_dir, preserve: true)
+        instance.stage_path(path_to_stage)
+      end
+
+      context 'when the path is too long' do
+        let(:path_to_stage) { File.join(*['thing'] * 30) }
+
+        it 'exits with an error' do
+          expect {
+            instance.stage_path(path_to_stage)
+          }.to raise_error(PDK::CLI::ExitWithError)
+        end
+      end
+    end
+  end
+
+  describe '#path_too_long?' do
+    subject(:instance) { described_class.new }
+
+    good_paths = [
+      File.join('a' * 155, 'b' * 100),
+      File.join('a' * 151, *['qwer'] * 19, 'bla'),
+      File.join('/', 'a' * 49, 'b' * 50),
+      File.join('a' * 49, "#{'b' * 50}x"),
+      File.join("#{'a' * 49}x", 'b' * 50),
+    ]
+
+    bad_paths = {
+      File.join('a' * 152, 'b' * 11, 'c' * 93) => %r{longer than 256}i,
+      File.join('a' * 152, 'b' * 10, 'c' * 92) => %r{could not be split}i,
+      File.join('a' * 162, 'b' * 10)           => %r{could not be split}i,
+      File.join('a' * 10, 'b' * 110)           => %r{could not be split}i,
+      'a' * 114                                => %r{could not be split}i,
+    }
+
+    good_paths.each do |path|
+      context "when checking '#{path}'" do
+        it 'does not raise an error' do
+          expect { instance.validate_ustar_path!(path) }.not_to raise_error
+        end
+      end
+    end
+
+    bad_paths.each do |path, err|
+      context "when checking '#{path}'" do
+        it 'raises an ArgumentError' do
+          expect { instance.validate_ustar_path!(path) }.to raise_error(ArgumentError, err)
+        end
       end
     end
   end
