@@ -274,6 +274,31 @@ describe PDK::Util do
     end
   end
 
+  describe '.configdir' do
+    subject { described_class.configdir }
+
+    context 'when running on Windows' do
+      before(:each) do
+        allow(Gem).to receive(:win_platform?).and_return(true)
+        allow(ENV).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
+      end
+
+      it 'returns a path in the %LOCALAPPDATA% folder' do
+        is_expected.to eq(File.join('C:/Users/test', 'PDK'))
+      end
+    end
+
+    context 'when running on a POSIX host' do
+      before(:each) do
+        allow(Gem).to receive(:win_platform?).and_return(false)
+        allow(Dir).to receive(:home).and_return('/home/test')
+      end
+
+      it 'returns a path inside the users .config directory' do
+        is_expected.to eq(File.join('/home/test', '.config', 'pdk'))
+      end
+    end
+  end
   describe '.module_root' do
     subject { described_class.module_root }
 

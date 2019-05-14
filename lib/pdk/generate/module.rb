@@ -199,6 +199,7 @@ module PDK
             question: _('What operating systems does this module support?'),
             help:     _('Use the up and down keys to move between the choices, space to select and enter to continue.'),
             required: true,
+            type:     :multi_select,
             choices:  PDK::Module::Metadata::OPERATING_SYSTEMS,
             default:  PDK::Module::Metadata::DEFAULT_OPERATING_SYSTEMS.map do |os_name|
               # tty-prompt uses a 1-index

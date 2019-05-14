@@ -3,6 +3,7 @@ require 'serverspec'
 require 'tmpdir'
 require 'open3'
 require 'pdk/generate/module'
+require 'tempfile'
 
 # automatically load any shared examples or contexts
 Dir['./spec/acceptance/support/**/*.rb'].sort.each { |f| require f }
@@ -40,6 +41,7 @@ module Specinfra
 end
 
 tempdir = nil
+analytics_config = nil
 
 # bundler won't install bundler into the --path, so in order to access ::Bundler.with_clean_env
 # from within pdk during spec tests, we have to manually re-add the global gem path :(
@@ -66,6 +68,11 @@ RSpec.configure do |c|
     tempdir = Dir.mktmpdir
     Dir.chdir(tempdir)
     puts "Working in #{tempdir}"
+
+    analytics_config = Tempfile.new('analytics.yml')
+    analytics_config.write(YAML.dump(disabled: true))
+    analytics_config.close
+    ENV['PDK_ANALYTICS_CONFIG'] = analytics_config.path
   end
 
   c.after(:suite) do
@@ -73,6 +80,7 @@ RSpec.configure do |c|
     FileUtils.rm_rf(tempdir)
     FileUtils.rm_rf(RSpec.configuration.template_dir)
     puts "Cleaned #{tempdir}"
+    analytics_config.unlink
   end
 
   c.after(:each) do

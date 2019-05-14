@@ -30,7 +30,13 @@ module PDK
             @prompt.print pastel.bold(_('[Q %{current_number}/%{questions_total}]') % { current_number: i, questions_total: num_questions }) + ' '
             @prompt.puts pastel.bold(question[:question])
             @prompt.puts question[:help] if question.key?(:help)
-            if question.key?(:choices)
+
+            case question[:type]
+            when :yes
+              yes?(_('-->')) do |q|
+                q.default(question[:default]) if question.key?(:default)
+              end
+            when :multi_select
               multi_select(_('-->'), per_page: question[:choices].count) do |q|
                 q.enum ')'
                 q.default(*question[:default]) if question.key?(:default)
