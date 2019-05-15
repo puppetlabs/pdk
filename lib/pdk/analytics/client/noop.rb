@@ -4,8 +4,8 @@ module PDK
       class Noop
         attr_reader :logger
 
-        def initialize(logger)
-          @logger = logger
+        def initialize(opts)
+          @logger = opts[:logger]
         end
 
         def screen_view(screen, **_kwargs)

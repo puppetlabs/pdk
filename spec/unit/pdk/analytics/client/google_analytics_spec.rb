@@ -4,28 +4,39 @@ require 'concurrent/configuration'
 require 'concurrent/future'
 
 describe PDK::Analytics::Client::GoogleAnalytics do
-  subject(:client) { described_class.new(logger, uuid) }
+  subject(:client) { described_class.new(options) }
+
+  let(:options) do
+    {
+      logger:      logger,
+      app_name:    'pdk',
+      app_id:      'UA-xxxx-1',
+      app_version: PDK::VERSION,
+      user_id:     uuid,
+    }
+  end
 
   let(:uuid) { SecureRandom.uuid }
   let(:base_params) do
     {
       v:   described_class::PROTOCOL_VERSION,
-      an:  'pdk',
-      av:  PDK::VERSION,
-      cid: uuid,
-      tid: 'UA-xxxx-1',
+      an:  options[:app_name],
+      av:  options[:app_version],
+      cid: options[:user_id],
+      tid: options[:app_id],
       ul:  Locale.current.to_rfc,
       aip: true,
-      cd1: 'CentOS 7',
+      cd1: os_name,
     }
   end
   let(:mock_httpclient) { instance_double(HTTPClient) }
   let(:ga_url) { described_class::TRACKING_URL }
   let(:executor) { Concurrent.new_io_executor }
   let(:logger) { instance_double(Logger, debug: true) }
+  let(:os_name) { 'CentOS 7' }
 
   before(:each) do
-    allow(PDK::Analytics::Util).to receive(:fetch_os_async).and_return(instance_double(Concurrent::Future, value: 'CentOS 7'))
+    allow(PDK::Analytics::Util).to receive(:fetch_os_async).and_return(instance_double(Concurrent::Future, value: os_name))
     allow(HTTPClient).to receive(:new).and_return(mock_httpclient)
     allow(Concurrent).to receive(:global_io_executor).and_return(executor)
   end
