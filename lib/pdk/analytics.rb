@@ -5,16 +5,24 @@ require 'pdk/analytics/client/noop'
 
 module PDK
   module Analytics
-    def self.build_client(logger: ::Logger.new(STDERR), disabled:, uuid:)
-      if disabled
-        logger.debug 'Analytics opt-out is set, analytics will be disabled'
-        Client::Noop.new(logger)
+    CLIENTS = {
+      noop:             Client::Noop,
+      google_analytics: Client::GoogleAnalytics,
+    }.freeze
+
+    def self.build_client(opts = {})
+      opts[:logger] ||= ::Logger.new(STDERR)
+      opts[:client] ||= :noop
+
+      if opts[:disabled]
+        opts[:logger].debug 'Analytics opt-out is set, analytics will be disabled'
+        CLIENTS[:noop].new(opts)
       else
-        Client::GoogleAnalytics.new(logger, uuid)
+        CLIENTS[opts[:client]].new(opts)
       end
     rescue StandardError => e
-      logger.debug "Failed to initialize analytics client, analytics will be disabled: #{e}"
-      Client::Noop.new(logger)
+      opts[:logger].debug "Failed to initialize analytics client, analytics will be disabled: #{e}"
+      CLIENTS[:noop].new(opts)
     end
   end
 end

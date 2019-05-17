@@ -3,8 +3,6 @@ module PDK
     module Client
       class GoogleAnalytics
         PROTOCOL_VERSION  = 1
-        APPLICATION_NAME  = 'pdk'.freeze
-        TRACKING_ID       = 'UA-xxxx-1'.freeze
         TRACKING_URL      = 'https://google-analytics.com/collect'.freeze
         CUSTOM_DIMENSIONS = {
           operating_system: :cd1,
@@ -13,8 +11,11 @@ module PDK
 
         attr_reader :user_id
         attr_reader :logger
+        attr_reader :app_name
+        attr_reader :app_id
+        attr_reader :app_version
 
-        def initialize(logger, user_id)
+        def initialize(opts)
           # lazy-load expensive gem code
           require 'concurrent/configuration'
           require 'concurrent/future'
@@ -22,10 +23,13 @@ module PDK
           require 'locale'
 
           @http = HTTPClient.new
-          @user_id = user_id
+          @user_id = opts[:user_id]
           @executor = Concurrent.global_io_executor
           @os = PDK::Analytics::Util.fetch_os_async
-          @logger = logger
+          @logger = opts[:logger]
+          @app_name = opts[:app_name]
+          @app_id = opts[:app_id]
+          @app_version = opts[:app_version]
         end
 
         def screen_view(screen, **kwargs)
@@ -81,13 +85,13 @@ module PDK
           {
             v:   PROTOCOL_VERSION,
             # Client ID
-            cid: @user_id,
+            cid: user_id,
             # Tracking ID
-            tid: TRACKING_ID,
+            tid: app_id,
             # Application Name
-            an:  APPLICATION_NAME,
+            an:  app_name,
             # Application Version
-            av:  PDK::VERSION,
+            av:  app_version,
             # Anonymize IPs
             aip: true,
             # User locale

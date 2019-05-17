@@ -46,12 +46,22 @@ RSpec.shared_context :stubbed_logger do
   end
 end
 
+RSpec.shared_context :stubbed_analytics do
+  let(:analytics) { PDK::Analytics::Client::Noop.new(logger: logger) }
+
+  before(:each) do |example|
+    allow(PDK).to receive(:analytics).and_return(analytics) if example.metadata[:use_stubbed_analytics]
+  end
+end
+
 RSpec.configure do |c|
   c.define_derived_metadata do |metadata|
     metadata[:use_stubbed_logger] = true unless metadata.key?(:use_stubbed_logger)
+    metadata[:use_stubbed_analytics] = true unless metadata.key?(:use_stubbed_analytics)
   end
 
   c.include_context :stubbed_logger
+  c.include_context :stubbed_analytics
 
   c.before(:suite) do
     analytics_config = Tempfile.new('analytics.yml')

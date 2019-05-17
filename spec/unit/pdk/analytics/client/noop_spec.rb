@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe PDK::Analytics::Client::Noop do
-  subject(:client) { described_class.new(logger) }
+  subject(:client) { described_class.new(options) }
 
-  let(:logger) { instance_double(Logger, debug: true) }
+  let(:options) { { logger: instance_double(Logger, debug: true) } }
 
   describe '#screen_view' do
     it 'does not raise an error' do
