@@ -28,7 +28,7 @@ if ENV['COVERAGE'] == 'yes'
   end
 end
 
-$LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+$LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'pdk'
 require 'pdk/cli'
 require 'tempfile'
