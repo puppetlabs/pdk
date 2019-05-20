@@ -96,11 +96,7 @@ module PDK
 
       # @returns String
       def git_ref
-        if @uri.fragment
-          @uri.fragment
-        else
-          self.class.default_template_ref
-        end
+        @uri.fragment || self.class.default_template_ref
       end
 
       def git_ref=(ref)
