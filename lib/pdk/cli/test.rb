@@ -1,4 +1,3 @@
-
 module PDK::CLI
   @test_cmd = @base_cmd.define_command do
     name 'test'
