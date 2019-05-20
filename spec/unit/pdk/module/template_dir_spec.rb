@@ -234,6 +234,7 @@ describe PDK::Module::TemplateDir do
       before(:each) do
         allow(Dir).to receive(:exist?).with('/the/file/is/here').and_return true
       end
+
       it 'returns an empty list' do
         expect(described_class.files_in_template(dirs)).to eq({})
       end
@@ -245,6 +246,7 @@ describe PDK::Module::TemplateDir do
       before(:each) do
         allow(Dir).to receive(:exists?).with('/the/file/is/nothere').and_return false
       end
+
       it 'raises an error' do
         expect { described_class.files_in_template(dirs) }.to raise_error(ArgumentError, %r{The directory '/the/file/is/nothere' doesn't exist})
       end
@@ -258,6 +260,7 @@ describe PDK::Module::TemplateDir do
         allow(File).to receive(:file?).with('/here/moduleroot/filename').and_return true
         allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
       end
+
       it 'returns the file name' do
         expect(described_class.files_in_template(dirs)).to eq('filename' => '/here/moduleroot')
       end
@@ -272,6 +275,7 @@ describe PDK::Module::TemplateDir do
         allow(File).to receive(:file?).with('/here/moduleroot/filename2').and_return true
         allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename', '/here/moduleroot/filename2']
       end
+
       it 'returns both the file names' do
         expect(described_class.files_in_template(dirs)).to eq('filename' => '/here/moduleroot', 'filename2' => '/here/moduleroot')
       end
@@ -316,6 +320,7 @@ describe PDK::Module::TemplateDir do
         allow(template_file).to receive(:render).and_return template_file
         allow(described_class).to receive(:render) { { 'filename.erb' => 'file/is/here/' } }
       end
+
       it 'renders the template file and returns relevant values' do
         expect(described_class.render(template_files)).to eq('filename.erb' => 'file/is/here/')
       end
@@ -335,6 +340,7 @@ describe PDK::Module::TemplateDir do
         allow(template_file).to receive(:render).and_return template_file2
         allow(described_class).to receive(:render) { { 'filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/here/' } }
       end
+
       it 'renders the template file and returns relevant values' do
         expect(described_class.render(template_files)).to eq('filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/here/')
       end
@@ -354,6 +360,7 @@ describe PDK::Module::TemplateDir do
         allow(template_file2).to receive(:render).and_return template_file2
         allow(described_class).to receive(:render) { { 'filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/where/' } }
       end
+
       it 'renders the template file and returns relevant values' do
         expect(described_class.render(template_files)).to eq('filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/where/')
       end

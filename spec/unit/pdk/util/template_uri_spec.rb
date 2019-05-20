@@ -101,6 +101,7 @@ describe PDK::Util::TemplateURI do
           before :each do
             PDK.answers.update!('template-url' => nil)
           end
+
           it 'returns the default template' do
             expect(template_uri.to_s).to eq(default_uri)
           end
@@ -109,6 +110,7 @@ describe PDK::Util::TemplateURI do
           before :each do
             PDK.answers.update!('template-url' => 'answer-templates')
           end
+
           it 'returns the answers template' do
             expect(template_uri.to_s).to eq('answer-templates')
           end
@@ -128,6 +130,7 @@ describe PDK::Util::TemplateURI do
           before :each do
             PDK.answers.update!('template-url' => 'answer-templates')
           end
+
           it 'returns the metadata template' do
             allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
             allow(File).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)

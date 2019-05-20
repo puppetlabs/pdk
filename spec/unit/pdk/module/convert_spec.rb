@@ -368,6 +368,7 @@ describe PDK::Module::Convert do
       before(:each) do
         allow(PDK::Util::Git).to receive(:repo?).with(PDK::Util::TemplateURI.default_template_uri.metadata_format).and_return(true)
       end
+
       let(:default_uri) { "#{PDK::Util::TemplateURI.default_template_uri}##{PDK::Util::TemplateURI.default_template_ref}" }
 
       it { is_expected.to eq(PDK::Util::TemplateURI.new(default_uri)) }
