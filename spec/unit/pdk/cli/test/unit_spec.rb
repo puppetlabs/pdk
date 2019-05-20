@@ -4,10 +4,10 @@ require 'pdk/tests/unit'
 describe '`pdk test unit`' do
   subject(:test_unit_cmd) { PDK::CLI.instance_variable_get(:@test_unit_cmd) }
 
+  let(:puppet_version) { '5.4.0' }
+  let(:ruby_version) { '2.4.3' }
   it { is_expected.not_to be_nil }
 
-  let(:ruby_version) { '2.4.3' }
-  let(:puppet_version) { '5.4.0' }
 
   before(:each) do
     allow(PDK::Util::RubyVersion).to receive(:use)
