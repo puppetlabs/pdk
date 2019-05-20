@@ -30,12 +30,12 @@ group :test do
   gem 'coveralls'
   gem 'license_finder', '~> 3.0.4'
   gem 'parallel', '= 1.13.0'
-  gem 'parser', '~> 2.5.1.2'
+  gem 'parser', '~> 2.6'
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
   gem 'rspec-xsd'
-  gem 'rubocop', '= 0.49.1'
-  gem 'rubocop-rspec', '= 1.15.1'
+  gem 'rubocop', '~> 0.57.2'
+  gem 'rubocop-rspec', '~> 1.27.0'
   gem 'simplecov-console'
 end
 
