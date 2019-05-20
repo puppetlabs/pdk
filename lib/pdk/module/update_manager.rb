@@ -174,7 +174,7 @@ module PDK
 
         diffs = Diff::LCS.diff(old_lines, new_lines)
 
-        return nil if diffs.empty?
+        return if diffs.empty?
 
         file_mtime = File.stat(path).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
         now = Time.now.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')

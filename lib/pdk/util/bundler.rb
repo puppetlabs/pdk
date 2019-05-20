@@ -81,7 +81,7 @@ module PDK
         end
 
         def gemfile_lock
-          return nil if gemfile.nil?
+          return if gemfile.nil?
           @gemfile_lock ||= File.join(File.dirname(gemfile), 'Gemfile.lock')
         end
 

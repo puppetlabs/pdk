@@ -267,7 +267,7 @@ module PDK
       # @return [Integer] the provided value, converted into an Integer if
       #   necessary.
       def sanitise_line(value)
-        return nil if value.nil?
+        return if value.nil?
 
         valid_types = [String, Integer]
         if RUBY_VERSION.split('.')[0..1].join('.').to_f < 2.4
@@ -292,7 +292,7 @@ module PDK
       # @return [Integer] the provided value, converted into an Integer if
       #   necessary.
       def sanitise_column(value)
-        return nil if value.nil?
+        return if value.nil?
 
         valid_types = [String, Integer]
         if RUBY_VERSION.split('.')[0..1].join('.').to_f < 2.4
@@ -317,7 +317,7 @@ module PDK
       #
       # @return [Array] Array of stack trace lines with less relevant lines excluded
       def sanitise_trace(value)
-        return nil if value.nil?
+        return if value.nil?
 
         valid_types = [Array]
 
