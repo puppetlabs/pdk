@@ -45,7 +45,7 @@ describe PDK::Util::PuppetVersion do
   end
 
   let(:forge_version_map) do
-    JSON.parse(open(File.join(RSpec.configuration.root, 'fixtures', 'pe_versions.json')).read)
+    JSON.parse(File.open(File.join(RSpec.configuration.root, 'fixtures', 'pe_versions.json')).read)
   end
 
   let(:rubygems_versions) do
