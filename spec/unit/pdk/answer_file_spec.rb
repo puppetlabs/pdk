@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'stringio'
 
 shared_context 'a valid answer file' do
+  subject(:answer_file) { described_class.new }
   before(:each) do
     allow(PDK::Util).to receive(:package_install?).and_return(false)
     allow(File).to receive(:file?).with(default_path).and_return(true)
@@ -10,7 +11,6 @@ shared_context 'a valid answer file' do
     allow(File).to receive(:read).with(default_path).and_return('{"question": "answer"}')
   end
 
-  subject(:answer_file) { described_class.new }
 end
 
 describe PDK::AnswerFile do
