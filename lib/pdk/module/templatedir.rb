@@ -213,6 +213,7 @@ module PDK
           raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot_init/' directory, which indicates you are using an older style of template. Before continuing please use the --template-url flag when running the pdk new commands to pass a new style template.") % { path: @path }
           # rubocop:enable Metrics/LineLength Style/GuardClause
         end
+        # rubocop:enable Style/GuardClause
       end
 
       # Get a list of template files in the template directory.

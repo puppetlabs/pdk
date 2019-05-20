@@ -1,4 +1,3 @@
-# rubocop:disable RSpec/AnyInstance
 
 require 'spec_helper'
 require 'yaml'
@@ -117,6 +116,7 @@ describe PDK::Module::TemplateDir do
 
       context 'and it specifies an deprecated built-in template' do
         before(:each) do
+          # rubocop:disable RSpec/AnyInstance
           allow(PDK::Util).to receive(:package_install?).and_return(true)
           allow(File).to receive(:fnmatch?).with(anything, path_or_url).and_return(true)
           allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('/', 'path', 'to', 'package', 'cachedir'))
@@ -124,6 +124,7 @@ describe PDK::Module::TemplateDir do
           allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
           allow(FileUtils).to receive(:remove_dir)
           allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', anything).and_return(stdout: 'ref', exit_code: 0)
+          # rubocop:enable RSpec/AnyInstance
         end
 
         it 'raises an ArgumentError' do
@@ -147,11 +148,13 @@ describe PDK::Module::TemplateDir do
     let(:full_ref) { '123456789abcdef' }
 
     before(:each) do
+      # rubocop:disable RSpec/AnyInstance
       allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path)
       allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
       allow(FileUtils).to receive(:remove_dir).with(path)
       allow_any_instance_of(described_class).to receive(:validate_module_template!)
       allow(PDK::Util::Git).to receive(:describe).and_return('git-ref')
+      # rubocop:enable RSpec/AnyInstance
     end
 
     context 'when the template workdir is clean' do
