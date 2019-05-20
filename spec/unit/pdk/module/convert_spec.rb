@@ -433,7 +433,7 @@ describe PDK::Module::Convert do
 
           it 'updates an empty requirements array with a puppet requirement' do
             expect(updated_metadata).to include('requirements')
-            expect(updated_metadata['requirements'].find { |req| req['name'] == 'puppet' }).to be
+            expect(updated_metadata['requirements'].find { |req| req['name'] == 'puppet' }).not_to be_nil
           end
 
           it 'creates an empty dependencies array' do
