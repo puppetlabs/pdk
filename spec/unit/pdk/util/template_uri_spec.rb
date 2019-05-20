@@ -106,6 +106,7 @@ describe PDK::Util::TemplateURI do
             expect(template_uri.to_s).to eq(default_uri)
           end
         end
+
         context 'and there are only answers' do
           before :each do
             PDK.answers.update!('template-url' => 'answer-templates')
@@ -126,6 +127,7 @@ describe PDK::Util::TemplateURI do
             end
           end
         end
+
         context 'and there are metadata and answers' do
           before :each do
             PDK.answers.update!('template-url' => 'answer-templates')
@@ -139,6 +141,7 @@ describe PDK::Util::TemplateURI do
           end
         end
       end
+
       context 'when there are metadata and answers' do
         before :each do
           PDK.answers.update!('template-url' => 'answer-templates')
@@ -152,6 +155,7 @@ describe PDK::Util::TemplateURI do
             expect(template_uri.to_s).to eq("cli-templates##{described_class.default_template_ref}")
           end
         end
+
         context 'and passed windows template-url' do
           let(:opts_or_uri) { { :'template-url' => 'C:\cli-templates' } }
 
@@ -160,6 +164,7 @@ describe PDK::Util::TemplateURI do
             expect(template_uri.to_s).to eq("C:\\cli-templates##{described_class.default_template_ref}")
           end
         end
+
         context 'and passed template-url and template-ref' do
           let(:opts_or_uri) { { :'template-url' => 'cli-templates', :'template-ref' => 'cli-ref' } }
 
@@ -199,6 +204,7 @@ describe PDK::Util::TemplateURI do
           expect(template_uri.git_remote).to eq '/my/pdk-templates.git'
         end
       end
+
       context 'on windows' do
         let(:opts_or_uri) { '/C:/my/pdk-templates.git#custom' }
 
@@ -258,6 +264,7 @@ describe PDK::Util::TemplateURI do
           expect(template_uri.shell_path).to eq '/my/pdk-templates.git'
         end
       end
+
       context 'on windows' do
         let(:opts_or_uri) { '/C:/my/pdk-templates.git#custom' }
 
@@ -282,6 +289,7 @@ describe PDK::Util::TemplateURI do
         expect(default_uri.to_s).to eq('file:///path/to/pdk/pdk-templates.git')
       end
     end
+
     context 'when it is not a package install' do
       before(:each) do
         allow(PDK::Util).to receive(:package_install?).and_return(false)

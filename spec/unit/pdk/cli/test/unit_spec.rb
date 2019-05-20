@@ -116,6 +116,7 @@ describe '`pdk test unit`' do
           }.to exit_zero
         end
       end
+
       context 'when tests pass' do
         before(:each) do
           expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_including(:tests)).once.and_return(0)
