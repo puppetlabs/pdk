@@ -257,7 +257,7 @@ module PDK
       end
 
       def self.packaged_template?(path)
-        path == PACKAGED_TEMPLATE_KEYWORD || LEGACY_PACKAGED_TEMPLATE_PATHS.values.include?(path)
+        path == PACKAGED_TEMPLATE_KEYWORD || LEGACY_PACKAGED_TEMPLATE_PATHS.value?(path)
       end
     end
   end

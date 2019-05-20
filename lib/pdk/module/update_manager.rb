@@ -73,7 +73,7 @@ module PDK
       def changed?(path)
         changes[:added].any? { |add| add[:path] == path } ||
           changes[:removed].include?(path) ||
-          changes[:modified].keys.include?(path)
+          changes[:modified].key?(path)
       end
 
       # Apply any pending changes stored in the UpdateManager to the module.
