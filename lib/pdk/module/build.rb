@@ -120,8 +120,14 @@ module PDK
         elsif File.symlink?(path)
           warn_symlink(path)
         else
+          validate_ustar_path!(relative_path.to_path)
           FileUtils.cp(path, dest_path, preserve: true)
         end
+      rescue ArgumentError => e
+        raise PDK::CLI::ExitWithError, _(
+          '%{message} Please rename the file or exclude it from the package ' \
+          'by adding it to the .pdkignore file in your module.',
+        ) % { message: e.message }
       end
 
       # Check if the given path matches one of the patterns listed in the
@@ -150,6 +156,58 @@ module PDK
           from: symlink_path.relative_path_from(module_path),
           to:   symlink_path.realpath.relative_path_from(module_path),
         }
+      end
+
+      # Checks if the path length will fit into the POSIX.1-1998 (ustar) tar
+      # header format.
+      #
+      # POSIX.1-2001 (which allows paths of infinite length) was adopted by GNU
+      # tar in 2004 and is supported by minitar 0.7 and above. Unfortunately
+      # much of the Puppet ecosystem still uses minitar 0.6.1.
+      #
+      # POSIX.1-1998 tar format does not allow for paths greater than 256 bytes,
+      # or paths that can't be split into a prefix of 155 bytes (max) and
+      # a suffix of 100 bytes (max).
+      #
+      # This logic was pretty much copied from the private method
+      # {Archive::Tar::Minitar::Writer#split_name}.
+      #
+      # @param path [String] the relative path to be added to the tar file.
+      #
+      # @raise [ArgumentError] if the path is too long or could not be split.
+      #
+      # @return [nil]
+      def validate_ustar_path!(path)
+        if path.bytesize > 256
+          raise ArgumentError, _("The path '%{path}' is longer than 256 bytes.") % {
+            path: path,
+          }
+        end
+
+        if path.bytesize <= 100
+          prefix = ''
+        else
+          parts = path.split(File::SEPARATOR)
+          newpath = parts.pop
+          nxt = ''
+
+          loop do
+            nxt = parts.pop || ''
+            break if newpath.bytesize + 1 + nxt.bytesize >= 100
+            newpath = File.join(nxt, newpath)
+          end
+
+          prefix = File.join(*parts, nxt)
+          path = newpath
+        end
+
+        return unless path.bytesize > 100 || prefix.bytesize > 155
+
+        raise ArgumentError, _(
+          "'%{path}' could not be split at a directory separator into two " \
+          'parts, the first having a maximum length of 155 bytes and the ' \
+          'second having a maximum length of 100 bytes.',
+        ) % { path: path }
       end
 
       # Creates a gzip compressed tarball of the build directory.
