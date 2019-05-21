@@ -317,7 +317,7 @@ describe PDK::Module::TemplateDir do
         allow(described_class).to receive(:config_for).with('filename').and_return true
         allow(PDK::TemplateFile).to receive(:new).with('file/is/here/filename.erb', configs: true).and_return template_file
         allow(template_file).to receive(:render).and_return template_file
-        allow(described_class).to receive(:render).and_return({ 'filename.erb' => 'file/is/here/' })
+        allow(described_class).to receive(:render).and_return('filename.erb' => 'file/is/here/')
       end
 
       it 'renders the template file and returns relevant values' do
@@ -337,7 +337,7 @@ describe PDK::Module::TemplateDir do
         allow(described_class).to receive(:config_for).with('filename2').and_return true
         allow(PDK::TemplateFile).to receive(:new).with('file/is/here/filename2.erb', configs: true).and_return template_file
         allow(template_file).to receive(:render).and_return template_file2
-        allow(described_class).to receive(:render).and_return({ 'filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/here/' })
+        allow(described_class).to receive(:render).and_return('filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/here/')
       end
 
       it 'renders the template file and returns relevant values' do
@@ -357,7 +357,7 @@ describe PDK::Module::TemplateDir do
         allow(described_class).to receive(:config_for).with('filename2').and_return true
         allow(PDK::TemplateFile).to receive(:new).with('file/is/where/filename2.erb', configs: true).and_return template_file
         allow(template_file2).to receive(:render).and_return template_file2
-        allow(described_class).to receive(:render).and_return({ 'filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/where/' })
+        allow(described_class).to receive(:render).and_return('filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/where/')
       end
 
       it 'renders the template file and returns relevant values' do

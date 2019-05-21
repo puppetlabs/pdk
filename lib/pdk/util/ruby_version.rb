@@ -8,6 +8,8 @@ module PDK
 
         def_delegators :instance, :gem_path, :gem_paths_raw, :gem_home, :available_puppet_versions, :bin_path
 
+        # TODO: resolve this
+        # rubocop:disable Lint/DuplicateMethods
         attr_reader :instance
 
         def instance(version = nil)
@@ -21,6 +23,7 @@ module PDK
           end
           @instance[active_ruby_version]
         end
+        # rubocop:enable Lint/DuplicateMethods
 
         def active_ruby_version
           @active_ruby_version || default_ruby_version

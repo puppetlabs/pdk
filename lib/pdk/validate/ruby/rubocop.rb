@@ -63,7 +63,7 @@ module PDK
                   line:     offense['location']['line'],
                   column:   offense['location']['column'],
                   message:  offense['message'],
-                  severity: (offense['corrected']) ? 'corrected' : offense['severity'],
+                  severity: offense['corrected'] ? 'corrected' : offense['severity'],
                   test:     offense['cop_name'],
                   state:    :failure,
                 ),

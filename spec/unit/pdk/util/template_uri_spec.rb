@@ -4,10 +4,10 @@ describe PDK::Util::TemplateURI do
   subject(:template_uri) do
     described_class.new(opts_or_uri)
   end
+
   before(:each) do
     PDK.answers.update!('template-url' => nil)
   end
-
 
   describe '.new' do
     context 'with a string' do

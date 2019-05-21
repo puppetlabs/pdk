@@ -6,8 +6,8 @@ describe '`pdk test unit`' do
 
   let(:puppet_version) { '5.4.0' }
   let(:ruby_version) { '2.4.3' }
-  it { is_expected.not_to be_nil }
 
+  it { is_expected.not_to be_nil }
 
   before(:each) do
     allow(PDK::Util::RubyVersion).to receive(:use)
