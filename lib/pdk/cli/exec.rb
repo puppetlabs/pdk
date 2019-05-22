@@ -186,7 +186,7 @@ module PDK
             output: process_data[:stderr].empty? ? 'N/A' : "\n#{process_data[:stderr]}",
           }
 
-          return process_data
+          process_data
         ensure
           @stdout.close
           @stderr.close

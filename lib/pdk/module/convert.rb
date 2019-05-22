@@ -129,7 +129,7 @@ module PDK
             path: metadata_path,
           }
         else
-          return nil if options[:noop]
+          return if options[:noop]
 
           project_dir = File.basename(Dir.pwd)
           options[:module_name] = project_dir.split('-', 2).compact[-1]

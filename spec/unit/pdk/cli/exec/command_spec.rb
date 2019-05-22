@@ -37,6 +37,7 @@ describe PDK::CLI::Exec::Command do
         allow(logger).to receive(:debug?).and_return(true)
         command.add_spinner('message')
       end
+
       it { expect(command.instance_variable_get(:@spinner)).to be_nil }
     end
 
@@ -59,6 +60,7 @@ describe PDK::CLI::Exec::Command do
         allow($stderr).to receive(:isatty).and_return(true)
         command.register_spinner(spinner)
       end
+
       it { expect(command.instance_variable_get(:@spinner)).to eq spinner }
     end
 
@@ -67,6 +69,7 @@ describe PDK::CLI::Exec::Command do
         allow(logger).to receive(:debug?).and_return(true)
         command.register_spinner(spinner)
       end
+
       it { expect(command.instance_variable_get(:@spinner)).to be_nil }
     end
 

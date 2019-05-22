@@ -96,11 +96,7 @@ module PDK
 
       # @returns String
       def git_ref
-        if @uri.fragment
-          @uri.fragment
-        else
-          self.class.default_template_ref
-        end
+        @uri.fragment || self.class.default_template_ref
       end
 
       def git_ref=(ref)
@@ -257,7 +253,7 @@ module PDK
       end
 
       def self.packaged_template?(path)
-        path == PACKAGED_TEMPLATE_KEYWORD || LEGACY_PACKAGED_TEMPLATE_PATHS.values.include?(path)
+        path == PACKAGED_TEMPLATE_KEYWORD || LEGACY_PACKAGED_TEMPLATE_PATHS.value?(path)
       end
     end
   end

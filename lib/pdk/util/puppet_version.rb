@@ -138,7 +138,7 @@ module PDK
 
           unless metadata_file
             PDK.logger.warn _('Unable to determine Puppet version for module: no metadata.json present in module.')
-            return nil
+            return
           end
 
           metadata = PDK::Module::Metadata.from_file(metadata_file)

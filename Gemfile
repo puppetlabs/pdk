@@ -8,8 +8,7 @@ if RUBY_VERSION < '2.4.0'
   gem 'cri', '>= 2.10.1', '< 2.11.0'
   gem 'nokogiri', '1.7.2'
 else
-  # rubocop:disable Bundler/DuplicatedGem
-  gem 'nokogiri', '~> 1.8.5'
+  gem 'nokogiri', '~> 1.8.5' # rubocop:disable Bundler/DuplicatedGem
 end
 
 group :development do
@@ -34,8 +33,8 @@ group :test do
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
   gem 'rspec-xsd'
-  gem 'rubocop', '= 0.49.1'
-  gem 'rubocop-rspec', '= 1.15.1'
+  gem 'rubocop', '~> 0.57.2'
+  gem 'rubocop-rspec', '~> 1.27.0'
   gem 'simplecov-console'
 end
 

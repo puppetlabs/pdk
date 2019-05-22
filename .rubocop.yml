@@ -129,7 +129,11 @@ Style/TrailingCommaInArguments:
   Description: Prefer always trailing comma on multiline argument lists. This makes diffs, and re-ordering nicer.
   EnforcedStyleForMultiline: comma
 
-Style/TrailingCommaInLiteral:
+Style/TrailingCommaInArrayLiteral:
+  Description: Prefer always trailing comma on multiline literals. This makes diffs, and re-ordering nicer.
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
   Description: Prefer always trailing comma on multiline literals. This makes diffs, and re-ordering nicer.
   EnforcedStyleForMultiline: comma
 

@@ -45,7 +45,7 @@ module PDK
     end
 
     def config_for(path)
-      return nil unless respond_to?(:template_dir)
+      return unless respond_to?(:template_dir)
 
       template_dir.config_for(path)
     end

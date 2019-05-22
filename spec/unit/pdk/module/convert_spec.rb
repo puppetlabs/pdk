@@ -368,6 +368,7 @@ describe PDK::Module::Convert do
       before(:each) do
         allow(PDK::Util::Git).to receive(:repo?).with(PDK::Util::TemplateURI.default_template_uri.metadata_format).and_return(true)
       end
+
       let(:default_uri) { "#{PDK::Util::TemplateURI.default_template_uri}##{PDK::Util::TemplateURI.default_template_ref}" }
 
       it { is_expected.to eq(PDK::Util::TemplateURI.new(default_uri)) }
@@ -432,7 +433,7 @@ describe PDK::Module::Convert do
 
           it 'updates an empty requirements array with a puppet requirement' do
             expect(updated_metadata).to include('requirements')
-            expect(updated_metadata['requirements'].find { |req| req['name'] == 'puppet' }).to be
+            expect(updated_metadata['requirements'].find { |req| req['name'] == 'puppet' }).not_to be_nil
           end
 
           it 'creates an empty dependencies array' do

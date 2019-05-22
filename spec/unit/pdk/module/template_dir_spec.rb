@@ -1,5 +1,3 @@
-# rubocop:disable RSpec/AnyInstance
-
 require 'spec_helper'
 require 'yaml'
 
@@ -117,6 +115,7 @@ describe PDK::Module::TemplateDir do
 
       context 'and it specifies an deprecated built-in template' do
         before(:each) do
+          # rubocop:disable RSpec/AnyInstance
           allow(PDK::Util).to receive(:package_install?).and_return(true)
           allow(File).to receive(:fnmatch?).with(anything, path_or_url).and_return(true)
           allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('/', 'path', 'to', 'package', 'cachedir'))
@@ -124,6 +123,7 @@ describe PDK::Module::TemplateDir do
           allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
           allow(FileUtils).to receive(:remove_dir)
           allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', anything).and_return(stdout: 'ref', exit_code: 0)
+          # rubocop:enable RSpec/AnyInstance
         end
 
         it 'raises an ArgumentError' do
@@ -147,11 +147,13 @@ describe PDK::Module::TemplateDir do
     let(:full_ref) { '123456789abcdef' }
 
     before(:each) do
+      # rubocop:disable RSpec/AnyInstance
       allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path)
       allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
       allow(FileUtils).to receive(:remove_dir).with(path)
       allow_any_instance_of(described_class).to receive(:validate_module_template!)
       allow(PDK::Util::Git).to receive(:describe).and_return('git-ref')
+      # rubocop:enable RSpec/AnyInstance
     end
 
     context 'when the template workdir is clean' do
@@ -231,6 +233,7 @@ describe PDK::Module::TemplateDir do
       before(:each) do
         allow(Dir).to receive(:exist?).with('/the/file/is/here').and_return true
       end
+
       it 'returns an empty list' do
         expect(described_class.files_in_template(dirs)).to eq({})
       end
@@ -242,6 +245,7 @@ describe PDK::Module::TemplateDir do
       before(:each) do
         allow(Dir).to receive(:exists?).with('/the/file/is/nothere').and_return false
       end
+
       it 'raises an error' do
         expect { described_class.files_in_template(dirs) }.to raise_error(ArgumentError, %r{The directory '/the/file/is/nothere' doesn't exist})
       end
@@ -255,6 +259,7 @@ describe PDK::Module::TemplateDir do
         allow(File).to receive(:file?).with('/here/moduleroot/filename').and_return true
         allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
       end
+
       it 'returns the file name' do
         expect(described_class.files_in_template(dirs)).to eq('filename' => '/here/moduleroot')
       end
@@ -269,6 +274,7 @@ describe PDK::Module::TemplateDir do
         allow(File).to receive(:file?).with('/here/moduleroot/filename2').and_return true
         allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename', '/here/moduleroot/filename2']
       end
+
       it 'returns both the file names' do
         expect(described_class.files_in_template(dirs)).to eq('filename' => '/here/moduleroot', 'filename2' => '/here/moduleroot')
       end
@@ -311,8 +317,9 @@ describe PDK::Module::TemplateDir do
         allow(described_class).to receive(:config_for).with('filename').and_return true
         allow(PDK::TemplateFile).to receive(:new).with('file/is/here/filename.erb', configs: true).and_return template_file
         allow(template_file).to receive(:render).and_return template_file
-        allow(described_class).to receive(:render) { { 'filename.erb' => 'file/is/here/' } }
+        allow(described_class).to receive(:render).and_return('filename.erb' => 'file/is/here/')
       end
+
       it 'renders the template file and returns relevant values' do
         expect(described_class.render(template_files)).to eq('filename.erb' => 'file/is/here/')
       end
@@ -330,8 +337,9 @@ describe PDK::Module::TemplateDir do
         allow(described_class).to receive(:config_for).with('filename2').and_return true
         allow(PDK::TemplateFile).to receive(:new).with('file/is/here/filename2.erb', configs: true).and_return template_file
         allow(template_file).to receive(:render).and_return template_file2
-        allow(described_class).to receive(:render) { { 'filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/here/' } }
+        allow(described_class).to receive(:render).and_return('filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/here/')
       end
+
       it 'renders the template file and returns relevant values' do
         expect(described_class.render(template_files)).to eq('filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/here/')
       end
@@ -349,8 +357,9 @@ describe PDK::Module::TemplateDir do
         allow(described_class).to receive(:config_for).with('filename2').and_return true
         allow(PDK::TemplateFile).to receive(:new).with('file/is/where/filename2.erb', configs: true).and_return template_file
         allow(template_file2).to receive(:render).and_return template_file2
-        allow(described_class).to receive(:render) { { 'filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/where/' } }
+        allow(described_class).to receive(:render).and_return('filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/where/')
       end
+
       it 'renders the template file and returns relevant values' do
         expect(described_class.render(template_files)).to eq('filename.erb' => 'file/is/here/', 'filename2.erb' => 'file/is/where/')
       end

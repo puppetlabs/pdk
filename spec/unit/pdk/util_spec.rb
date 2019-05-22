@@ -299,6 +299,7 @@ describe PDK::Util do
       end
     end
   end
+
   describe '.module_root' do
     subject { described_class.module_root }
 

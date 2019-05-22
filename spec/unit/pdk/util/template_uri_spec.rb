@@ -1,12 +1,12 @@
 require 'spec_helper'
 
 describe PDK::Util::TemplateURI do
-  before(:each) do
-    PDK.answers.update!('template-url' => nil)
-  end
-
   subject(:template_uri) do
     described_class.new(opts_or_uri)
+  end
+
+  before(:each) do
+    PDK.answers.update!('template-url' => nil)
   end
 
   describe '.new' do
@@ -101,14 +101,17 @@ describe PDK::Util::TemplateURI do
           before :each do
             PDK.answers.update!('template-url' => nil)
           end
+
           it 'returns the default template' do
             expect(template_uri.to_s).to eq(default_uri)
           end
         end
+
         context 'and there are only answers' do
           before :each do
             PDK.answers.update!('template-url' => 'answer-templates')
           end
+
           it 'returns the answers template' do
             expect(template_uri.to_s).to eq('answer-templates')
           end
@@ -124,10 +127,12 @@ describe PDK::Util::TemplateURI do
             end
           end
         end
+
         context 'and there are metadata and answers' do
           before :each do
             PDK.answers.update!('template-url' => 'answer-templates')
           end
+
           it 'returns the metadata template' do
             allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
             allow(File).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
@@ -136,6 +141,7 @@ describe PDK::Util::TemplateURI do
           end
         end
       end
+
       context 'when there are metadata and answers' do
         before :each do
           PDK.answers.update!('template-url' => 'answer-templates')
@@ -149,6 +155,7 @@ describe PDK::Util::TemplateURI do
             expect(template_uri.to_s).to eq("cli-templates##{described_class.default_template_ref}")
           end
         end
+
         context 'and passed windows template-url' do
           let(:opts_or_uri) { { :'template-url' => 'C:\cli-templates' } }
 
@@ -157,6 +164,7 @@ describe PDK::Util::TemplateURI do
             expect(template_uri.to_s).to eq("C:\\cli-templates##{described_class.default_template_ref}")
           end
         end
+
         context 'and passed template-url and template-ref' do
           let(:opts_or_uri) { { :'template-url' => 'cli-templates', :'template-ref' => 'cli-ref' } }
 
@@ -196,6 +204,7 @@ describe PDK::Util::TemplateURI do
           expect(template_uri.git_remote).to eq '/my/pdk-templates.git'
         end
       end
+
       context 'on windows' do
         let(:opts_or_uri) { '/C:/my/pdk-templates.git#custom' }
 
@@ -255,6 +264,7 @@ describe PDK::Util::TemplateURI do
           expect(template_uri.shell_path).to eq '/my/pdk-templates.git'
         end
       end
+
       context 'on windows' do
         let(:opts_or_uri) { '/C:/my/pdk-templates.git#custom' }
 
@@ -279,6 +289,7 @@ describe PDK::Util::TemplateURI do
         expect(default_uri.to_s).to eq('file:///path/to/pdk/pdk-templates.git')
       end
     end
+
     context 'when it is not a package install' do
       before(:each) do
         allow(PDK::Util).to receive(:package_install?).and_return(false)
