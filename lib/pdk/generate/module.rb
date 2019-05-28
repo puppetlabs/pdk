@@ -124,7 +124,7 @@ module PDK
         defaults['name'] = "#{opts[:username]}-#{opts[:module_name]}" unless opts[:module_name].nil?
         defaults['author'] = PDK.answers['author'] unless PDK.answers['author'].nil?
         defaults['license'] = PDK.answers['license'] unless PDK.answers['license'].nil?
-        defaults['license'] = opts[:license] if opts.key? :license
+        defaults['license'] = opts[:license] if opts.key?(:license)
 
         metadata = PDK::Module::Metadata.new(defaults)
         module_interview(metadata, opts) unless opts[:'skip-interview']

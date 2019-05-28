@@ -33,6 +33,8 @@ module PDK::CLI
 
       PDK::CLI::Util.module_version_check
 
+      PDK::CLI::Util.analytics_screen_view('test_unit', opts)
+
       # Ensure that the bundled gems are up to date and correct Ruby is activated before running or listing tests.
       puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
       PDK::Util::PuppetVersion.fetch_puppet_dev if opts[:'puppet-dev']

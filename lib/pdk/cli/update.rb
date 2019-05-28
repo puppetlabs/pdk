@@ -26,6 +26,8 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when updating a module')
       end
 
+      PDK::CLI::Util.analytics_screen_view('update', opts)
+
       updater = PDK::Module::Update.new(opts)
 
       updater.run

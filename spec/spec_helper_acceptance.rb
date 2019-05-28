@@ -70,7 +70,7 @@ RSpec.configure do |c|
     puts "Working in #{tempdir}"
 
     analytics_config = Tempfile.new('analytics.yml')
-    analytics_config.write(YAML.dump(disabled: true))
+    analytics_config.write(YAML.dump('disabled' => true))
     analytics_config.close
     ENV['PDK_ANALYTICS_CONFIG'] = analytics_config.path
   end

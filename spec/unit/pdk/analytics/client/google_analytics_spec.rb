@@ -24,6 +24,7 @@ describe PDK::Analytics::Client::GoogleAnalytics do
       av:  options[:app_version],
       cid: options[:user_id],
       tid: options[:app_id],
+      aiid: options[:app_installer],
       ul:  Locale.current.to_rfc,
       aip: true,
       cd1: os_name,

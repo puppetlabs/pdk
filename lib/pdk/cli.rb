@@ -13,8 +13,44 @@ require 'pdk/report'
 require 'pdk/util/version'
 require 'pdk/util/puppet_version'
 
+class Cri::Command::CriExitException
+  def initialize(is_error:)
+    @is_error = is_error
+    PDK.analytics.event('CLI', 'invalid command', label: PDK::CLI.anonymised_args.join(' ')) if error?
+  end
+end
+
 module PDK::CLI
+  # Attempt to anonymise the raw ARGV array if the command parsing failed.
+  #
+  # If an item does not start with '-' but is preceeded by an item that does
+  # start with '-', assume that these items are an option/value pair and redact
+  # the value. Any additional values that do not start with '-' that follow an
+  # option/value pair are assumed to be arguments (rather than subcommand
+  # names) and are also redacted.
+  #
+  # @example
+  #   # Where PDK::CLI.args => ['new', 'plan', '--some', 'value', 'plan_name']
+  #
+  #   PDK::CLI.anonymised_args
+  #     => ['new', 'plan', '--some', 'redacted', 'redacted']
+  #
+  # @return Array[String] the command arguments with any identifying values
+  #   redacted.
+  def self.anonymised_args
+    in_args = false
+    @args.map do |arg|
+      if arg.start_with?('-')
+        in_args = true
+        arg
+      else
+        in_args ? 'redacted' : arg
+      end
+    end
+  end
+
   def self.run(args)
+    @args = args
     PDK::Config.analytics_config_interview! unless PDK::Config.analytics_config_exist?
     @base_cmd.run(args)
   rescue PDK::CLI::ExitWithError => e

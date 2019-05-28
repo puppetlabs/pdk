@@ -31,6 +31,7 @@ module PDK::CLI
       targets = []
 
       if opts[:list]
+        PDK::CLI::Util.analytics_screen_view('validate', opts)
         PDK.logger.info(_('Available validators: %{validator_names}') % { validator_names: validator_names.join(', ') })
         exit 0
       end
@@ -69,6 +70,12 @@ module PDK::CLI
         end
       else
         PDK.logger.info(_('Running all available validators...'))
+      end
+
+      if validators == PDK::Validate.validators
+        PDK::CLI::Util.analytics_screen_view('validate', opts)
+      else
+        PDK::CLI::Util.analytics_screen_view(['validate', validators.map(&:name).sort].flatten.join('_'), opts)
       end
 
       # Subsequent arguments are targets.

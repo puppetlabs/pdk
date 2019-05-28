@@ -31,6 +31,19 @@ describe '`pdk test unit`' do
     context 'when listing tests' do
       let(:args) { ['--list'] }
 
+      it 'submits the command to analytics' do
+        allow(PDK::Test::Unit).to receive(:list).and_return([])
+
+        expect(analytics).to receive(:screen_view).with(
+          'test_unit',
+          cli_options: 'list=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
+
+        expect { test_unit_cmd.run_this(args) }.to output.to_stdout
+      end
+
       context 'when no tests are found' do
         before(:each) do
           expect(PDK::Test::Unit).to receive(:list).and_return([])
@@ -65,6 +78,19 @@ describe '`pdk test unit`' do
 
     context 'when listing tests with verbose' do
       let(:args) { ['--list', '-v'] }
+
+      it 'submits the command to analytics' do
+        allow(PDK::Test::Unit).to receive(:list).and_return([])
+
+        expect(analytics).to receive(:screen_view).with(
+          'test_unit',
+          cli_options:   'list=true,verbose=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
+
+        expect { test_unit_cmd.run_this(args) }.to output.to_stdout
+      end
 
       context 'when no tests are found' do
         before(:each) do
@@ -106,6 +132,19 @@ describe '`pdk test unit`' do
             test_unit_cmd.run_this(['--clean-fixtures'])
           }.to exit_zero
         end
+
+        it 'submits the command to analytics' do
+          allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
+
+          expect(analytics).to receive(:screen_view).with(
+            'test_unit',
+            cli_options:   'clean-fixtures=true',
+            output_format: 'default',
+            ruby_version:  RUBY_VERSION,
+          )
+
+          expect { test_unit_cmd.run_this(['--clean-fixtures']) }.to exit_zero
+        end
       end
 
       context 'when not passed --clean-fixtures' do
@@ -114,6 +153,18 @@ describe '`pdk test unit`' do
           expect {
             test_unit_cmd.run_this([])
           }.to exit_zero
+        end
+
+        it 'submits the command to analytics' do
+          allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
+
+          expect(analytics).to receive(:screen_view).with(
+            'test_unit',
+            output_format: 'default',
+            ruby_version:  RUBY_VERSION,
+          )
+
+          expect { test_unit_cmd.run_this([]) }.to exit_zero
         end
       end
 
@@ -126,12 +177,36 @@ describe '`pdk test unit`' do
           expect { test_unit_cmd.run_this([]) }.to exit_zero
         end
 
+        it 'submits the command to analytics' do
+          allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
+
+          expect(analytics).to receive(:screen_view).with(
+            'test_unit',
+            output_format: 'default',
+            ruby_version:  RUBY_VERSION,
+          )
+
+          expect { test_unit_cmd.run_this([]) }.to exit_zero
+        end
+
         context 'with a format option' do
           before(:each) do
-            expect(PDK::CLI::Util::OptionNormalizer).to receive(:report_formats).with(['text:results.txt']).and_return([{ method: :write_text, target: 'results.txt' }]).twice
+            expect(PDK::CLI::Util::OptionNormalizer).to receive(:report_formats).with(['text:results.txt']).and_return([{ method: :write_text, target: 'results.txt' }]).at_least(:twice)
           end
 
           it do
+            expect { test_unit_cmd.run_this(['--format=text:results.txt']) }.to exit_zero
+          end
+
+          it 'submits the command to analytics' do
+            allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
+
+            expect(analytics).to receive(:screen_view).with(
+              'test_unit',
+              output_format: 'text',
+              ruby_version:  RUBY_VERSION,
+            )
+
             expect { test_unit_cmd.run_this(['--format=text:results.txt']) }.to exit_zero
           end
         end
@@ -146,6 +221,19 @@ describe '`pdk test unit`' do
           it do
             expect { test_unit_cmd.run_this(["--tests=#{tests}"]) }.to exit_zero
           end
+
+          it 'submits the command to analytics' do
+            allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
+
+            expect(analytics).to receive(:screen_view).with(
+              'test_unit',
+              cli_options:   'tests=redacted',
+              output_format: 'default',
+              ruby_version:  RUBY_VERSION,
+            )
+
+            expect { test_unit_cmd.run_this(["--tests=#{tests}"]) }.to exit_zero
+          end
         end
       end
 
@@ -155,6 +243,18 @@ describe '`pdk test unit`' do
         end
 
         it do
+          expect { test_unit_cmd.run_this([]) }.to exit_nonzero
+        end
+
+        it 'submits the command to analytics' do
+          allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
+
+          expect(analytics).to receive(:screen_view).with(
+            'test_unit',
+            output_format: 'default',
+            ruby_version:  RUBY_VERSION,
+          )
+
           expect { test_unit_cmd.run_this([]) }.to exit_nonzero
         end
       end
@@ -191,11 +291,32 @@ describe '`pdk test unit`' do
         test_unit_cmd.run_this(['--puppet-dev'])
       }.to exit_zero
     end
+
+    it 'submits the command to analytics' do
+      expect(analytics).to receive(:screen_view).with(
+        'test_unit',
+        cli_options:   'puppet-dev=true',
+        output_format: 'default',
+        ruby_version:  RUBY_VERSION,
+      )
+
+      expect {
+        test_unit_cmd.run_this(['--puppet-dev'])
+      }.to exit_zero
+    end
   end
 
   context 'when --puppet-version and --pe-version are specified' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
+
+      expect {
+        PDK::CLI.run(%w[test unit --puppet-version 4.10.10 --pe-version 2018.1.1])
+      }.to exit_nonzero
+    end
+
+    it 'does not submit the command to analytics' do
+      expect(analytics).not_to receive(:screen_view)
 
       expect {
         PDK::CLI.run(%w[test unit --puppet-version 4.10.10 --pe-version 2018.1.1])
@@ -233,6 +354,19 @@ describe '`pdk test unit`' do
         test_unit_cmd.run_this(["--puppet-version=#{puppet_version}"])
       }.to exit_zero
     end
+
+    it 'submits the command to analytics' do
+      expect(analytics).to receive(:screen_view).with(
+        'test_unit',
+        cli_options:   "puppet-version=#{puppet_version}",
+        output_format: 'default',
+        ruby_version:  RUBY_VERSION,
+      )
+
+      expect {
+        test_unit_cmd.run_this(["--puppet-version=#{puppet_version}"])
+      }.to exit_zero
+    end
   end
 
   context 'with --pe-version' do
@@ -260,6 +394,19 @@ describe '`pdk test unit`' do
 
     it 'activates resolved ruby version' do
       expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
+
+      expect {
+        test_unit_cmd.run_this(["--pe-version=#{pe_version}"])
+      }.to exit_zero
+    end
+
+    it 'submits the command to analytics' do
+      expect(analytics).to receive(:screen_view).with(
+        'test_unit',
+        cli_options:   "pe-version=#{pe_version}",
+        output_format: 'default',
+        ruby_version:  RUBY_VERSION,
+      )
 
       expect {
         test_unit_cmd.run_this(["--pe-version=#{pe_version}"])

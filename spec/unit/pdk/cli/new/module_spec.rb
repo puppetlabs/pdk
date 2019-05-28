@@ -9,11 +9,37 @@ describe 'Running `pdk new module`' do
       expect(logger).to receive(:info).with(%r{Creating new module:})
       PDK::CLI.run(%w[new module])
     end
+
+    it 'submits the command to analytics' do
+      allow(PDK::Generate::Module).to receive(:invoke)
+
+      expect(analytics).to receive(:screen_view).with(
+        'new_module',
+        output_format: 'default',
+        ruby_version: RUBY_VERSION,
+      )
+
+      PDK::CLI.run(%w[new module])
+    end
   end
 
   context 'when passed an invalid module name' do
     it 'informs the user that the module name is invalid' do
       expect(logger).to receive(:error).with(a_string_matching(%r{'123test'.*not.*valid module name}m))
+
+      expect { PDK::CLI.run(%w[new module 123test]) }.to exit_nonzero
+    end
+
+    # Unlike most other commands, the validation of parameters does not happen
+    # at the CLI layer as they can be later modified during the interview.
+    # FIXME - extract validation logic so module name can be validated here if
+    # specified
+    it 'submits the command to analytics' do
+      expect(analytics).to receive(:screen_view).with(
+        'new_module',
+        output_format: 'default',
+        ruby_version:  RUBY_VERSION,
+      )
 
       expect { PDK::CLI.run(%w[new module 123test]) }.to exit_nonzero
     end
@@ -28,12 +54,36 @@ describe 'Running `pdk new module`' do
       PDK::CLI.run(['new', 'module', module_name])
     end
 
+    it 'submits the command to analytics' do
+      allow(PDK::Generate::Module).to receive(:invoke)
+
+      expect(analytics).to receive(:screen_view).with(
+        'new_module',
+        output_format: 'default',
+        ruby_version:  RUBY_VERSION,
+      )
+
+      PDK::CLI.run(['new', 'module', module_name])
+    end
+
     context 'and a target directory' do
       let(:target_dir) { 'target' }
 
       it 'passes the target directory to PDK::Generate::Module.invoke' do
         expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(module_name: module_name, target_dir: target_dir))
         expect(logger).to receive(:info).with("Creating new module: #{module_name}")
+        PDK::CLI.run(['new', 'module', module_name, target_dir])
+      end
+
+      it 'submits the command to analytics' do
+        allow(PDK::Generate::Module).to receive(:invoke)
+
+        expect(analytics).to receive(:screen_view).with(
+          'new_module',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
+
         PDK::CLI.run(['new', 'module', module_name, target_dir])
       end
     end
@@ -46,6 +96,19 @@ describe 'Running `pdk new module`' do
         expect(logger).to receive(:info).with("Creating new module: #{module_name}")
         PDK::CLI.run(['new', 'module', '--template-url', template_url, module_name])
       end
+
+      it 'submits the command to analytics' do
+        allow(PDK::Generate::Module).to receive(:invoke)
+
+        expect(analytics).to receive(:screen_view).with(
+          'new_module',
+          cli_options:   'template-url=redacted',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
+
+        PDK::CLI.run(['new', 'module', '--template-url', template_url, module_name])
+      end
     end
 
     context 'and the template-ref without the template-url option' do
@@ -53,6 +116,12 @@ describe 'Running `pdk new module`' do
 
       it 'does not invoke PDK::Generate::Module' do
         expect(PDK::Generate::Module).not_to receive(:invoke)
+        expect { PDK::CLI.run(['new', 'module', '--template-ref', template_ref, module_name]) }.to exit_nonzero
+      end
+
+      it 'does not submit a command to analytics' do
+        expect(analytics).not_to receive(:screen_view)
+
         expect { PDK::CLI.run(['new', 'module', '--template-ref', template_ref, module_name]) }.to exit_nonzero
       end
     end
@@ -65,12 +134,38 @@ describe 'Running `pdk new module`' do
         expect(logger).to receive(:info).with("Creating new module: #{module_name}")
         PDK::CLI.run(['new', 'module', '--license', license, module_name])
       end
+
+      it 'submits the command to analytics' do
+        allow(PDK::Generate::Module).to receive(:invoke)
+
+        expect(analytics).to receive(:screen_view).with(
+          'new_module',
+          cli_options:   'license=redacted',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
+
+        PDK::CLI.run(['new', 'module', '--license', license, module_name])
+      end
     end
 
     context 'and the skip-interview flag' do
       it 'passes true as the value of the skip-interview option to PDK::Generate::Module.invoke' do
         expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(:'skip-interview' => true))
         expect(logger).to receive(:info).with("Creating new module: #{module_name}")
+        PDK::CLI.run(['new', 'module', '--skip-interview', module_name])
+      end
+
+      it 'submits the command to analytics' do
+        allow(PDK::Generate::Module).to receive(:invoke)
+
+        expect(analytics).to receive(:screen_view).with(
+          'new_module',
+          cli_options:   'skip-interview=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
+
         PDK::CLI.run(['new', 'module', '--skip-interview', module_name])
       end
     end
@@ -81,12 +176,38 @@ describe 'Running `pdk new module`' do
         expect(logger).to receive(:info).with("Creating new module: #{module_name}")
         PDK::CLI.run(['new', 'module', '--full-interview', module_name])
       end
+
+      it 'submits the command to analytics' do
+        allow(PDK::Generate::Module).to receive(:invoke)
+
+        expect(analytics).to receive(:screen_view).with(
+          'new_module',
+          cli_options:   'full-interview=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
+
+        PDK::CLI.run(['new', 'module', '--full-interview', module_name])
+      end
     end
 
     context 'and the --skip-interview and --full-interview flags have been passed' do
       it 'ignores full-interview and continues with a log message' do
         expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --skip-interview.}i))
         expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(:'skip-interview' => true, :'full-interview' => false))
+
+        PDK::CLI.run(['new', 'module', '--skip-interview', '--full-interview'])
+      end
+
+      it 'submits the command to analytics' do
+        allow(PDK::Generate::Module).to receive(:invoke)
+
+        expect(analytics).to receive(:screen_view).with(
+          'new_module',
+          cli_options:   'skip-interview=true,full-interview=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
 
         PDK::CLI.run(['new', 'module', '--skip-interview', '--full-interview'])
       end
@@ -99,6 +220,18 @@ describe 'Running `pdk new module`' do
     it 'validates and parses the module name' do
       expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(module_name: 'test123', username: 'user'))
       expect(logger).to receive(:info).with("Creating new module: #{module_name}")
+      PDK::CLI.run(['new', 'module', module_name])
+    end
+
+    it 'submits the command to analytics' do
+      allow(PDK::Generate::Module).to receive(:invoke)
+
+      expect(analytics).to receive(:screen_view).with(
+        'new_module',
+        output_format: 'default',
+        ruby_version:  RUBY_VERSION,
+      )
+
       PDK::CLI.run(['new', 'module', module_name])
     end
   end

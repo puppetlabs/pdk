@@ -7,6 +7,9 @@ module PDK
         CUSTOM_DIMENSIONS = {
           operating_system: :cd1,
           output_format:    :cd2,
+          ruby_version:     :cd3,
+          cli_options:      :cd4,
+          env_vars:         :cd5,
         }.freeze
 
         attr_reader :user_id
@@ -14,6 +17,7 @@ module PDK
         attr_reader :app_name
         attr_reader :app_id
         attr_reader :app_version
+        attr_reader :app_installer
 
         def initialize(opts)
           # lazy-load expensive gem code
@@ -30,6 +34,7 @@ module PDK
           @app_name = opts[:app_name]
           @app_id = opts[:app_id]
           @app_version = opts[:app_version]
+          @app_installer = opts[:app_installer]
         end
 
         def screen_view(screen, **kwargs)
@@ -83,21 +88,23 @@ module PDK
         # https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
         def base_params
           {
-            v:   PROTOCOL_VERSION,
+            v:    PROTOCOL_VERSION,
             # Client ID
-            cid: user_id,
+            cid:  user_id,
             # Tracking ID
-            tid: app_id,
+            tid:  app_id,
             # Application Name
-            an:  app_name,
+            an:   app_name,
             # Application Version
-            av:  app_version,
+            av:   app_version,
+            # Application Installer ID
+            aiid: app_installer,
             # Anonymize IPs
-            aip: true,
+            aip:  true,
             # User locale
-            ul:  Locale.current.to_rfc,
+            ul:   Locale.current.to_rfc,
             # Custom Dimension 1 (Operating System)
-            cd1: @os.value,
+            cd1:  @os.value,
           }
         end
 

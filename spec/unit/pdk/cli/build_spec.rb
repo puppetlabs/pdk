@@ -18,6 +18,12 @@ describe 'PDK::CLI build' do
 
       expect { PDK::CLI.run(['build']) }.to exit_nonzero
     end
+
+    it 'does not submit the command to analytics' do
+      expect(analytics).not_to receive(:screen_view)
+
+      expect { PDK::CLI.run(['build']) }.to exit_nonzero
+    end
   end
 
   context 'when run from inside a module' do
@@ -67,6 +73,13 @@ describe 'PDK::CLI build' do
           expect(mock_metadata_obj).to receive(:interview_for_forge!)
           expect(mock_metadata_obj).to receive(:write!).with('metadata.json')
         end
+
+        it 'submits the command to analytics' do
+          allow(mock_metadata_obj).to receive(:interview_for_forge!)
+          allow(mock_metadata_obj).to receive(:write!)
+
+          expect(analytics).to receive(:screen_view).with('build', cli_options: 'target-dir=redacted', output_format: 'default', ruby_version: RUBY_VERSION)
+        end
       end
 
       context 'with --force option' do
@@ -74,6 +87,13 @@ describe 'PDK::CLI build' do
 
         it 'outputs an warning and continues' do
           expect(logger).to receive(:warn).with(a_string_matching(%r{fields in the metadata\.json: operatingsystem_support, source}im))
+
+          expect { PDK::CLI.run(['build'] + command_opts) }.not_to raise_error
+        end
+
+        it 'submits the command to analytics' do
+          expect(analytics).to receive(:screen_view).with('build', cli_options: 'force=true,target-dir=redacted', output_format: 'default', ruby_version: RUBY_VERSION)
+
           expect { PDK::CLI.run(['build'] + command_opts) }.not_to raise_error
         end
       end
@@ -91,6 +111,10 @@ describe 'PDK::CLI build' do
         expect(mock_metadata_obj).not_to receive(:interview_for_forge!)
         expect(mock_metadata_obj).not_to receive(:write!)
       end
+
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with('build', cli_options: 'target-dir=redacted', output_format: 'default', ruby_version: RUBY_VERSION)
+      end
     end
 
     context 'and provided no flags' do
@@ -98,6 +122,10 @@ describe 'PDK::CLI build' do
 
       it 'invokes the builder with the default target directory' do
         expect(PDK::Module::Build).to receive(:new).with(hash_including(:'target-dir' => File.join(Dir.pwd, 'pkg'))).and_return(mock_builder)
+      end
+
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with('build', cli_options: 'target-dir=redacted', output_format: 'default', ruby_version: RUBY_VERSION)
       end
     end
 
@@ -108,6 +136,10 @@ describe 'PDK::CLI build' do
 
       it 'invokes the builder with the specified target directory' do
         expect(PDK::Module::Build).to receive(:new).with(hash_including(:'target-dir' => '/tmp/pdk_builds')).and_return(mock_builder)
+      end
+
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with('build', cli_options: 'target-dir=redacted', output_format: 'default', ruby_version: RUBY_VERSION)
       end
     end
 
