@@ -29,6 +29,10 @@ environment:
 install:
   - ps: |
       if ($ENV:USE_MSYS -ne $Null) {
+        # Manually remove conflicting packages to allow the MSYS2 update to
+        # proceed https://github.com/msys2/MINGW-packages/issues/5434
+        $ENV:PATH = "C:\msys64\usr\bin;" + $ENV:PATH
+        bash -l -c "pacman -R --noconfirm mingw-w64-i686-gcc-ada mingw-w64-x86_64-gcc-ada mingw-w64-i686-gcc-objc mingw-w64-x86_64-gcc-objc"
         Push-Location "C:\Ruby${ENV:RUBY_VERSION}\bin"
         .\ridk.ps1 install 2 3
         .\ridk.ps1 enable
