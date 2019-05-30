@@ -121,6 +121,24 @@ module PDK
           @environment.merge!(additional_env)
         end
 
+        def check_for_legacy_env_vars
+          if ENV['PUPPET_GEM_VERSION']
+            PDK.logger.warn_once _(
+              'PUPPET_GEM_VERSION is not supported by PDK. ' \
+              'Please use the --puppet-version option on your PDK command ' \
+              'or set the PDK_PUPPET_VERSION environment variable instead',
+            )
+            @process.environment['PUPPET_GEM_VERSION'] = nil
+          end
+
+          %w[FACTER HIERA].each do |gem|
+            if ENV["#{gem}_GEM_VERSION"]
+              PDK.logger.warn_once _("#{gem}_GEM_VERSION is not supported by PDK.")
+              @process.environment["#{gem}_GEM_VERSION"] = nil
+            end
+          end
+        end
+
         def execute!
           # Start spinning if configured.
           @spinner.auto_spin if @spinner
@@ -129,6 +147,8 @@ module PDK
           @environment.each do |k, v|
             @process.environment[k] = v
           end
+
+          check_for_legacy_env_vars
 
           @process.environment['BUNDLE_IGNORE_CONFIG'] = '1'
 
