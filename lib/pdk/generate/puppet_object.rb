@@ -219,9 +219,9 @@ module PDK
               # TODO: refactor to a search-and-execute form instead
               return # work is done # rubocop:disable Lint/NonLocalExitFromIterator
             elsif template[:allow_fallback]
-              PDK.logger.debug(_('Unable to find a %{type} template in %{url}; trying next template directory.') % { type: object_type, url: template[:url] })
+              PDK.logger.debug(_('Unable to find a %{type} template in %{url}; trying next template directory.') % { type: object_type, url: template[:uri] })
             else
-              raise PDK::CLI::FatalError, _('Unable to find the %{type} template in %{url}.') % { type: object_type, url: template[:url] }
+              raise PDK::CLI::FatalError, _('Unable to find the %{type} template in %{url}.') % { type: object_type, url: template[:uri] }
             end
           end
         end
