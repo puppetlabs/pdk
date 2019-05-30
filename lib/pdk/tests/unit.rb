@@ -7,7 +7,7 @@ module PDK
   module Test
     class Unit
       def self.cmd(tests, opts = {})
-        rake_args = opts.key?(:parallel) ? 'parallel_spec_standalone' : 'spec_standalone'
+        rake_args = opts[:parallel] ? 'parallel_spec_standalone' : 'spec_standalone'
         rake_args += "[#{tests}]" unless tests.nil?
         rake_args
       end
@@ -72,23 +72,23 @@ module PDK
 
         environment = { 'CI_SPEC_OPTIONS' => '--format j' }
         environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]
-        spinner_msg = options.key?(:parallel) ? _('Running unit tests in parallel.') : _('Running unit tests.')
+        spinner_msg = options[:parallel] ? _('Running unit tests in parallel.') : _('Running unit tests.')
         result = rake(cmd(tests, options), spinner_msg, environment)
 
-        json_result = if options.key?(:parallel)
+        json_result = if options[:parallel]
                         PDK::Util.find_all_json_in(result[:stdout])
                       else
                         PDK::Util.find_first_json_in(result[:stdout])
                       end
 
-        if parallel_with_no_tests?(options.key?(:parallel), json_result, result)
+        if parallel_with_no_tests?(options[:parallel], json_result, result)
           json_result = [{ 'messages' => ['No examples found.'] }]
           result[:exit_code] = 0
         end
 
         raise PDK::CLI::FatalError, _('Unit test output did not contain a valid JSON result: %{output}') % { output: result[:stdout] } if json_result.nil? || json_result.empty?
 
-        json_result = merge_json_results(json_result) if options.key?(:parallel)
+        json_result = merge_json_results(json_result) if options[:parallel]
 
         parse_output(report, json_result, result[:duration])
 

@@ -85,11 +85,11 @@ module PDK::CLI
                        end
 
       options = targets.empty? ? {} : { targets: targets }
-      options[:auto_correct] = true if opts.key?(:'auto-correct')
+      options[:auto_correct] = true if opts[:'auto-correct']
 
       # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
       puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
-      PDK::Util::PuppetVersion.fetch_puppet_dev if opts.key?(:'puppet-dev')
+      PDK::Util::PuppetVersion.fetch_puppet_dev if opts[:'puppet-dev']
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
 
       options.merge!(puppet_env[:gemset])
