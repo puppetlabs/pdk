@@ -53,10 +53,10 @@ describe 'PDK::CLI new task' do
     context 'and provided a valid task name' do
       let(:generator) { PDK::Generate::Task }
       let(:generator_double) { instance_double(generator) }
-      let(:generator_opts) { instance_of(Hash) }
+      let(:generator_opts) { {} }
 
       before(:each) do
-        allow(generator).to receive(:new).with(anything, 'test_task', generator_opts).and_return(generator_double)
+        allow(generator).to receive(:new).with(anything, 'test_task', hash_including(generator_opts)).and_return(generator_double)
       end
 
       it 'generates the task' do

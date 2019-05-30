@@ -25,7 +25,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'when no arguments or options are provided' do
     it 'invokes each validator with no report and no options and exits zero' do
-      expect(validators).to all(receive(:invoke).with(report, puppet: puppet_version).and_return(0))
+      expect(validators).to all(receive(:invoke).with(report, hash_including(puppet: puppet_version)).and_return(0))
 
       expect(logger).to receive(:info).with('Running all available validators...')
 
@@ -61,7 +61,7 @@ describe 'Running `pdk validate` in a module' do
     let(:validator) { PDK::Validate::MetadataValidator }
 
     it 'only invokes the given validator and exits zero' do
-      expect(validator).to receive(:invoke).with(report, puppet: puppet_version).and_return(0)
+      expect(validator).to receive(:invoke).with(report, hash_including(puppet: puppet_version)).and_return(0)
 
       validators.reject { |r| r == validator }.each do |v|
         expect(v).not_to receive(:invoke)
@@ -80,7 +80,7 @@ describe 'Running `pdk validate` in a module' do
     end
 
     it 'invokes each given validator and exits zero' do
-      expect(invoked_validators).to all(receive(:invoke).with(report, puppet: puppet_version).and_return(0))
+      expect(invoked_validators).to all(receive(:invoke).with(report, hash_including(puppet: puppet_version)).and_return(0))
 
       (validators | invoked_validators).each do |validator|
         expect(validator).not_to receive(:invoke)
@@ -95,7 +95,7 @@ describe 'Running `pdk validate` in a module' do
 
     it 'warns about unknown validators, invokes known validators, and exits zero' do
       expect(logger).to receive(:warn).with(%r{Unknown validator 'bad-val'. Available validators: #{validator_names}}i)
-      expect(validator).to receive(:invoke).with(report, puppet: puppet_version).and_return(0)
+      expect(validator).to receive(:invoke).with(report, hash_including(puppet: puppet_version)).and_return(0)
 
       expect { PDK::CLI.run(['validate', 'puppet,bad-val']) }.to exit_zero
     end
@@ -105,7 +105,7 @@ describe 'Running `pdk validate` in a module' do
     let(:validator) { PDK::Validate::MetadataValidator }
 
     it 'invokes the specified validator with the target as an option' do
-      expect(validator).to receive(:invoke).with(report, puppet: puppet_version, targets: ['lib/', 'manifests/']).and_return(0)
+      expect(validator).to receive(:invoke).with(report, hash_including(puppet: puppet_version, targets: ['lib/', 'manifests/'])).and_return(0)
 
       expect { PDK::CLI.run(['validate', 'metadata', 'lib/', 'manifests/']) }.to exit_zero
     end
@@ -113,7 +113,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'when targets are provided as arguments and no validators are specified' do
     it 'invokes all validators with the target as an option' do
-      expect(validators).to all(receive(:invoke).with(report, puppet: puppet_version, targets: ['lib/', 'manifests/']).and_return(0))
+      expect(validators).to all(receive(:invoke).with(report, hash_including(puppet: puppet_version, targets: ['lib/', 'manifests/'])).and_return(0))
 
       expect(logger).to receive(:info).with('Running all available validators...')
 
@@ -123,7 +123,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'when no report formats are specified' do
     it 'reports to stdout as text' do
-      expect(validators).to all(receive(:invoke).with(report, puppet: puppet_version).and_return(0))
+      expect(validators).to all(receive(:invoke).with(report, hash_including(puppet: puppet_version)).and_return(0))
       expect(report).to receive(:write_text).with($stdout)
       expect(report).not_to receive(:write_junit)
 
@@ -133,7 +133,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'when a report format is specified' do
     it 'reports to stdout as the specified format' do
-      expect(validators).to all(receive(:invoke).with(report, puppet: puppet_version).and_return(0))
+      expect(validators).to all(receive(:invoke).with(report, hash_including(puppet: puppet_version)).and_return(0))
       expect(report).to receive(:write_junit).with($stdout)
       expect(report).not_to receive(:write_text)
 
@@ -143,7 +143,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'when multiple report formats are specified' do
     it 'reports to each target as the specified format' do
-      expect(validators).to all(receive(:invoke).with(report, puppet: puppet_version).and_return(0))
+      expect(validators).to all(receive(:invoke).with(report, hash_including(puppet: puppet_version)).and_return(0))
       expect(report).to receive(:write_text).with($stderr)
       expect(report).to receive(:write_text).with($stdout)
       expect(report).to receive(:write_junit).with('testfile.xml')

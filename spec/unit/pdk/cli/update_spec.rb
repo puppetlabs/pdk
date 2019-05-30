@@ -26,7 +26,12 @@ describe 'PDK::CLI update' do
 
     context 'and provided no flags' do
       it 'invokes the updater with no options' do
-        expect(PDK::Module::Update).to receive(:new).with({}).and_return(updater)
+        expect(PDK::Module::Update).to receive(:new) { |opts|
+          expect(opts[:noop]).to be false if opts.key?(:noop)
+          expect(opts[:force]).to be false if opts.key?(:false) # rubocop:disable Lint/BooleanSymbol
+          expect(opts).not_to include(:'template-ref')
+        }.and_return(updater)
+
         expect(updater).to receive(:run)
 
         PDK::CLI.run(%w[update])
@@ -35,7 +40,7 @@ describe 'PDK::CLI update' do
 
     context 'and the --noop flag has been passed' do
       it 'passes the noop option through to the updater' do
-        expect(PDK::Module::Update).to receive(:new).with(noop: true).and_return(updater)
+        expect(PDK::Module::Update).to receive(:new).with(hash_including(noop: true)).and_return(updater)
         expect(updater).to receive(:run)
 
         PDK::CLI.run(%w[update --noop])
@@ -44,7 +49,7 @@ describe 'PDK::CLI update' do
 
     context 'and the --force flag has been passed' do
       it 'passes the force option through to the updater' do
-        expect(PDK::Module::Update).to receive(:new).with(force: true).and_return(updater)
+        expect(PDK::Module::Update).to receive(:new).with(hash_including(force: true)).and_return(updater)
         expect(updater).to receive(:run)
 
         PDK::CLI.run(%w[update --force])
