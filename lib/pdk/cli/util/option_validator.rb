@@ -28,6 +28,10 @@ module PDK
         # Let's assume that only strings similar to module names can actually be resolved by the puppet language.
         singleton_class.send(:alias_method, :valid_provider_name?, :valid_module_name?)
 
+        # The name has to be a ruby symbol.
+        # While overly strict, let's apply the provider and module name rules for consistency.
+        singleton_class.send(:alias_method, :valid_transport_name?, :valid_provider_name?)
+
         # Validate a Puppet namespace against the regular expression in the
         # documentation: https://docs.puppet.com/puppet/4.10/lang_reserved.html#classes-and-defined-resource-types
         def self.valid_namespace?(string)
