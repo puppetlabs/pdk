@@ -6,6 +6,8 @@ RSpec.shared_context :set_path do
   let(:path) { windows_node? ? nil : "#{install_dir}/bin:$PATH" }
 end
 
+set :env, PDK_DISABLE_ANALYTICS: 'true'
+
 RSpec.configure do |c|
   c.include SpecUtils
   c.extend SpecUtils
