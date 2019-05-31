@@ -253,7 +253,7 @@ module PDK
         else
           questions.reject! { |q| q[:name] == 'module_name' } if opts.key?(:module_name)
           questions.reject! { |q| q[:name] == 'license' } if opts.key?(:license)
-          questions.reject! { |q| q[:forge_only] } unless opts.key?(:'full-interview')
+          questions.reject! { |q| q[:forge_only] } unless opts[:'full-interview']
         end
 
         interview.add_questions(questions)
