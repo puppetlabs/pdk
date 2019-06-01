@@ -78,7 +78,7 @@ describe 'PDK::CLI build' do
           allow(mock_metadata_obj).to receive(:interview_for_forge!)
           allow(mock_metadata_obj).to receive(:write!)
 
-          expect(analytics).to receive(:screen_view).with('build', cli_options: 'target-dir=redacted', output_format: 'default', ruby_version: RUBY_VERSION)
+          expect(analytics).to receive(:screen_view).with('build', hash_including(output_format: 'default', ruby_version: RUBY_VERSION))
         end
       end
 
@@ -92,7 +92,7 @@ describe 'PDK::CLI build' do
         end
 
         it 'submits the command to analytics' do
-          expect(analytics).to receive(:screen_view).with('build', cli_options: 'force=true,target-dir=redacted', output_format: 'default', ruby_version: RUBY_VERSION)
+          expect(analytics).to receive(:screen_view).with('build', hash_including(cli_options: %r{force=true}, output_format: 'default', ruby_version: RUBY_VERSION))
 
           expect { PDK::CLI.run(['build'] + command_opts) }.not_to raise_error
         end
@@ -113,7 +113,7 @@ describe 'PDK::CLI build' do
       end
 
       it 'submits the command to analytics' do
-        expect(analytics).to receive(:screen_view).with('build', cli_options: 'target-dir=redacted', output_format: 'default', ruby_version: RUBY_VERSION)
+        expect(analytics).to receive(:screen_view).with('build', hash_including(output_format: 'default', ruby_version: RUBY_VERSION))
       end
     end
 
@@ -121,11 +121,11 @@ describe 'PDK::CLI build' do
       include_context 'exits cleanly'
 
       it 'invokes the builder with the default target directory' do
-        expect(PDK::Module::Build).to receive(:new).with(hash_including(:'target-dir' => File.join(Dir.pwd, 'pkg'))).and_return(mock_builder)
+        expect(PDK::Module::Build).to receive(:new).with(hash_with_defaults_including(:'target-dir' => File.join(Dir.pwd, 'pkg'))).and_return(mock_builder)
       end
 
       it 'submits the command to analytics' do
-        expect(analytics).to receive(:screen_view).with('build', cli_options: 'target-dir=redacted', output_format: 'default', ruby_version: RUBY_VERSION)
+        expect(analytics).to receive(:screen_view).with('build', hash_including(output_format: 'default', ruby_version: RUBY_VERSION))
       end
     end
 

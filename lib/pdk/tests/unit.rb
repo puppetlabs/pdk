@@ -8,7 +8,7 @@ module PDK
     class Unit
       def self.cmd(tests, opts = {})
         rake_args = opts[:parallel] ? 'parallel_spec_standalone' : 'spec_standalone'
-        rake_args += "[#{tests}]" unless tests.nil?
+        rake_args += "[#{tests}]" unless tests.nil? || tests.empty?
         rake_args
       end
 
@@ -68,7 +68,7 @@ module PDK
 
         setup
 
-        tests = options.fetch(:tests)
+        tests = options[:tests]
 
         environment = { 'CI_SPEC_OPTIONS' => '--format j' }
         environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]
