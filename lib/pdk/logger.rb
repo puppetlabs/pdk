@@ -10,6 +10,7 @@ module PDK
 
     def initialize
       super(STDERR)
+      @sent_messages = {}
 
       # TODO: Decide on output format.
       self.formatter = proc do |severity, _datetime, _progname, msg|
@@ -27,6 +28,13 @@ module PDK
       end
 
       self.level = ::Logger::INFO
+    end
+
+    def warn_once(*args)
+      hash = args.inspect.hash
+      return if (@sent_messages[::Logger::WARN] ||= {}).key?(hash)
+      @sent_messages[::Logger::WARN][hash] = true
+      warn(*args)
     end
 
     def enable_debug_output

@@ -4,6 +4,23 @@ describe 'puppet version selection' do
   context 'in a new module' do
     include_context 'in a new module', 'version_select'
 
+    %w[PUPPET FACTER HIERA].each do |gem|
+      context "when the legacy #{gem}_GEM_VERSION environment variable is used" do
+        if Gem.win_platform?
+          pre_cmd = "$env:#{gem}_GEM_VERSION='1.0.0';"
+          post_cmd = "; remove-item env:\\#{gem}_GEM_VERSION"
+        else
+          pre_cmd = "#{gem}_GEM_VERSION=1.0.0"
+          post_cmd = ''
+        end
+
+        describe command("#{pre_cmd} pdk validate#{post_cmd}") do
+          its(:exit_status) { is_expected.to eq(0) }
+          its(:stderr) { is_expected.to match(%r{#{gem}_GEM_VERSION is not supported by PDK}im) }
+        end
+      end
+    end
+
     %w[5.5.0 4.10.10].each do |puppet_version|
       describe command("pdk validate --puppet-version #{puppet_version}") do
         its(:exit_status) { is_expected.to eq(0) }

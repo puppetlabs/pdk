@@ -32,4 +32,13 @@ describe PDK::Logger do
 
     it { is_expected.to have_attributes(debug?: true) }
   end
+
+  describe '#warn_once' do
+    it 'only sends each message once' do
+      expect(STDERR).to receive(:write).with("pdk (WARN): message 1\n").once
+
+      pdk_logger.warn_once('message 1')
+      pdk_logger.warn_once('message 1')
+    end
+  end
 end
