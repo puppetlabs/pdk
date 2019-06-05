@@ -75,6 +75,9 @@ module PDK
 
         @module_metadata = module_metadata
 
+        template_type = uri.default? ? 'default' : 'custom'
+        PDK.analytics.event('TemplateDir', 'initialize', label: template_type)
+
         yield self
       ensure
         # If we cloned a git repo to get the template, remove the clone once
@@ -256,14 +259,28 @@ module PDK
 
         if @config.nil?
           conf_defaults = read_config(config_path)
-          sync_config = read_config(sync_config_path) unless sync_config_path.nil?
+          @sync_config = read_config(sync_config_path) unless sync_config_path.nil?
           @config = conf_defaults
-          @config.deep_merge!(sync_config, knockout_prefix: '---') unless sync_config.nil?
+          @config.deep_merge!(@sync_config, knockout_prefix: '---') unless @sync_config.nil?
         end
         file_config = @config.fetch(:global, {})
         file_config['module_metadata'] = @module_metadata
         file_config.merge!(@config.fetch(dest_path, {})) unless dest_path.nil?
-        file_config.merge!(@config)
+        file_config.merge!(@config).tap do |c|
+          if uri.default?
+            file_value = if c['unmanaged']
+                           'unmanaged'
+                         elsif c['delete']
+                           'deleted'
+                         elsif @sync_config && @sync_config.key?(dest_path)
+                           'customized'
+                         else
+                           'default'
+                         end
+
+            PDK.analytics.event('TemplateDir', 'file', label: dest_path, value: file_value)
+          end
+        end
       end
 
       # Generates a hash of data from a given yaml file location.

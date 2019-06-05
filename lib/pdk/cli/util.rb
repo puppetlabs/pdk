@@ -198,6 +198,41 @@ module PDK
         raise PDK::CLI::ExitWithError, _('--template-url may not be used to specify paths containing #\'s.')
       end
       module_function :validate_template_opts
+
+      def analytics_screen_view(screen_name, opts = {})
+        dimensions = {
+          ruby_version: RUBY_VERSION,
+        }
+
+        cmd_opts = opts.dup.reject do |_, v|
+          v.nil? || (v.respond_to?(:empty?) && v.empty?)
+        end
+
+        if (format_args = cmd_opts.delete(:format))
+          formats = PDK::CLI::Util::OptionNormalizer.report_formats(format_args)
+          dimensions[:output_format] = formats.map { |r| r[:method].to_s.gsub(%r{\Awrite_}, '') }.sort.uniq.join(',')
+        else
+          dimensions[:output_format] = 'default'
+        end
+
+        safe_opts = [:'puppet-version', :'pe-version']
+        redacted_opts = cmd_opts.map do |k, v|
+          value = if [true, false].include?(v) || safe_opts.include?(k)
+                    v
+                  else
+                    'redacted'
+                  end
+          "#{k}=#{value}"
+        end
+        dimensions[:cli_options] = redacted_opts.join(',') unless redacted_opts.empty?
+
+        ignored_env_vars = %w[PDK_ANALYTICS_CONFIG PDK_DISABLE_ANALYTICS]
+        env_vars = ENV.select { |k, _| k.start_with?('PDK_') && !ignored_env_vars.include?(k) }.map { |k, v| "#{k}=#{v}" }
+        dimensions[:env_vars] = env_vars.join(',') unless env_vars.empty?
+
+        PDK.analytics.screen_view(screen_name, dimensions)
+      end
+      module_function :analytics_screen_view
     end
   end
 end

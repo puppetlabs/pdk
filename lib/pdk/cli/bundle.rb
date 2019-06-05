@@ -19,6 +19,8 @@ EOF
 
       PDK::CLI::Util.validate_puppet_version_opts({})
 
+      PDK::CLI::Util.analytics_screen_view('bundle')
+
       # Ensure that the correct Ruby is activated before running commend.
       puppet_env = PDK::CLI::Util.puppet_from_opts_or_env({})
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])

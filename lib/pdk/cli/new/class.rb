@@ -24,6 +24,8 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid class name") % { name: class_name }
       end
 
+      PDK::CLI::Util.analytics_screen_view('new_class', opts)
+
       PDK::Generate::PuppetClass.new(module_dir, class_name, opts).run
     end
   end

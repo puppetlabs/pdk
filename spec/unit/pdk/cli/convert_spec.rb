@@ -11,50 +11,111 @@ describe 'PDK::CLI convert' do
 
       expect { PDK::CLI.run(%w[convert]) }.to exit_nonzero
     end
+
+    it 'does not submit the command to analytics' do
+      expect(analytics).not_to receive(:screen_view)
+
+      expect { PDK::CLI.run(%w[convert]) }.to exit_nonzero
+    end
   end
 
   context 'when run from inside a module' do
     before(:each) do
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
+      allow(PDK::Module::Convert).to receive(:invoke)
     end
 
     context 'and provided no flags' do
+      after(:each) do
+        PDK::CLI.run(['convert'])
+      end
+
       it 'invokes the converter with no template specified' do
         expect(PDK::Module::Convert).to receive(:invoke).with(hash_not_including(:'template-url'))
+      end
 
-        PDK::CLI.run(['convert'])
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'convert',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
       end
     end
 
     context 'and the --template-url option has been passed' do
+      after(:each) do
+        PDK::CLI.run(['convert', '--template-url', 'https://my/template'])
+      end
+
       it 'invokes the converter with the user supplied template' do
         expect(PDK::Module::Convert).to receive(:invoke).with(hash_including(:'template-url' => 'https://my/template'))
+      end
 
-        PDK::CLI.run(['convert', '--template-url', 'https://my/template'])
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'convert',
+          cli_options:   'template-url=redacted',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
       end
     end
 
     context 'and the --template-ref option has been passed' do
+      after(:each) do
+        PDK::CLI.run(['convert', '--template-url', 'https://my/template', '--template-ref', '1.0.0'])
+      end
+
       it 'invokes the converter with the user supplied template' do
         expect(PDK::Module::Convert).to receive(:invoke).with(hash_including(:'template-url' => 'https://my/template', :'template-ref' => '1.0.0'))
+      end
 
-        PDK::CLI.run(['convert', '--template-url', 'https://my/template', '--template-ref', '1.0.0'])
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'convert',
+          cli_options:   'template-url=redacted,template-ref=redacted',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
       end
     end
 
     context 'and the --noop flag has been passed' do
+      after(:each) do
+        PDK::CLI.run(['convert', '--noop'])
+      end
+
       it 'passes the noop option through to the converter' do
         expect(PDK::Module::Convert).to receive(:invoke).with(hash_including(noop: true))
+      end
 
-        PDK::CLI.run(['convert', '--noop'])
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'convert',
+          cli_options:   'noop=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
       end
     end
 
     context 'and the --force flag has been passed' do
+      after(:each) do
+        PDK::CLI.run(['convert', '--force'])
+      end
+
       it 'passes the force option through to the converter' do
         expect(PDK::Module::Convert).to receive(:invoke).with(hash_including(force: true))
+      end
 
-        PDK::CLI.run(['convert', '--force'])
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'convert',
+          cli_options:   'force=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
       end
     end
 
@@ -64,39 +125,89 @@ describe 'PDK::CLI convert' do
 
         expect { PDK::CLI.run(['convert', '--noop', '--force']) }.to exit_nonzero
       end
+
+      it 'does not submit the command to analytics' do
+        expect(analytics).not_to receive(:screen_view)
+
+        expect { PDK::CLI.run(['convert', '--noop', '--force']) }.to exit_nonzero
+      end
     end
 
     context 'and the --skip-interview flag has been passed' do
+      after(:each) do
+        PDK::CLI.run(['convert', '--skip-interview'])
+      end
+
       it 'passes the skip-interview option through to the converter' do
         expect(PDK::Module::Convert).to receive(:invoke).with(hash_including(:'skip-interview' => true))
+      end
 
-        PDK::CLI.run(['convert', '--skip-interview'])
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'convert',
+          cli_options:   'skip-interview=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
       end
     end
 
     context 'and the --full-interview flag has been passed' do
+      after(:each) do
+        PDK::CLI.run(['convert', '--full-interview'])
+      end
+
       it 'passes the full-interview option through to the converter' do
         expect(PDK::Module::Convert).to receive(:invoke).with(hash_including(:'full-interview' => true))
+      end
 
-        PDK::CLI.run(['convert', '--full-interview'])
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'convert',
+          cli_options:   'full-interview=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
       end
     end
 
     context 'and the --skip-interview and --full-interview flags have been passed' do
+      after(:each) do
+        PDK::CLI.run(['convert', '--skip-interview', '--full-interview'])
+      end
+
       it 'ignores full-interview and continues with a log message' do
         expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --skip-interview.}i))
         expect(PDK::Module::Convert).to receive(:invoke).with(hash_including(:'skip-interview' => true, :'full-interview' => false))
+      end
 
-        PDK::CLI.run(['convert', '--skip-interview', '--full-interview'])
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'convert',
+          cli_options:   'skip-interview=true,full-interview=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
       end
     end
 
     context 'and the --force and --full-interview flags have been passed' do
+      after(:each) do
+        PDK::CLI.run(['convert', '--force', '--full-interview'])
+      end
+
       it 'ignores full-interview and continues with a log message' do
         expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --force.}i))
         expect(PDK::Module::Convert).to receive(:invoke).with(hash_including(:force => true, :'full-interview' => false))
+      end
 
-        PDK::CLI.run(['convert', '--force', '--full-interview'])
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'convert',
+          cli_options:   'force=true,full-interview=true',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
       end
     end
   end

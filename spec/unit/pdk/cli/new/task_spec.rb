@@ -11,11 +11,23 @@ describe 'PDK::CLI new task' do
     it 'exits non-zero and prints the `pdk new task` help' do
       expect { PDK::CLI.run(args) }.to exit_nonzero.and output(help_text).to_stdout
     end
+
+    it 'does not submit the command to analytics' do
+      expect(analytics).not_to receive(:screen_view)
+
+      expect { PDK::CLI.run(args) }.to exit_nonzero.and output(help_text).to_stdout
+    end
   end
 
   shared_examples 'it exits with an error' do |expected_error|
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(expected_error))
+
+      expect { PDK::CLI.run(args) }.to exit_nonzero
+    end
+
+    it 'does not submit the command to analytics' do
+      expect(analytics).not_to receive(:screen_view)
 
       expect { PDK::CLI.run(args) }.to exit_nonzero
     end
@@ -52,7 +64,7 @@ describe 'PDK::CLI new task' do
 
     context 'and provided a valid task name' do
       let(:generator) { PDK::Generate::Task }
-      let(:generator_double) { instance_double(generator) }
+      let(:generator_double) { instance_double(generator, run: true) }
       let(:generator_opts) { {} }
 
       before(:each) do
@@ -61,6 +73,16 @@ describe 'PDK::CLI new task' do
 
       it 'generates the task' do
         expect(generator_double).to receive(:run)
+
+        PDK::CLI.run(%w[new task test_task])
+      end
+
+      it 'submits the command to analytics' do
+        expect(analytics).to receive(:screen_view).with(
+          'new_task',
+          output_format: 'default',
+          ruby_version:  RUBY_VERSION,
+        )
 
         PDK::CLI.run(%w[new task test_task])
       end
@@ -74,6 +96,17 @@ describe 'PDK::CLI new task' do
 
         it 'generates the task with the specified description' do
           expect(generator_double).to receive(:run)
+
+          PDK::CLI.run(['new', 'task', 'test_task', '--description', 'test_task description'])
+        end
+
+        it 'submits the command to analytics' do
+          expect(analytics).to receive(:screen_view).with(
+            'new_task',
+            cli_options:   'description=redacted',
+            output_format: 'default',
+            ruby_version:  RUBY_VERSION,
+          )
 
           PDK::CLI.run(['new', 'task', 'test_task', '--description', 'test_task description'])
         end

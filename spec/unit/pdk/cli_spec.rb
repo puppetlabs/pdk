@@ -46,4 +46,16 @@ describe PDK::CLI do
       described_class.run([])
     end
   end
+
+  context 'when provided an invalid subcommand' do
+    it 'submits an event to analytics' do
+      expect(analytics).to receive(:event).with(
+        'CLI', 'invalid command', label: 'test acceptance --an-opt redacted redacted'
+      )
+
+      expect {
+        described_class.run(['test', 'acceptance', '--an-opt', 'opt-value', 'some_arg'])
+      }.to exit_nonzero.and output.to_stderr
+    end
+  end
 end

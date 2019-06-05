@@ -21,6 +21,8 @@ module PDK::CLI
 
       PDK::CLI::Util.validate_template_opts(opts)
 
+      PDK::CLI::Util.analytics_screen_view('new_module', opts)
+
       if opts[:'skip-interview'] && opts[:'full-interview']
         PDK.logger.info _('Ignoring --full-interview and continuing with --skip-interview.')
         opts[:'full-interview'] = false
@@ -36,8 +38,6 @@ module PDK::CLI
         end
         opts[:target_dir] = target_dir.nil? ? opts[:module_name] : target_dir
       end
-
-      PDK.analytics.screen_view('new_module')
 
       PDK.logger.info(_('Creating new module: %{modname}') % { modname: module_name })
       PDK::Generate::Module.invoke(opts)

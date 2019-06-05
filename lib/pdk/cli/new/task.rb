@@ -24,6 +24,8 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid task name") % { name: task_name }
       end
 
+      PDK::CLI::Util.analytics_screen_view('new_task', opts)
+
       PDK::Generate::Task.new(module_dir, task_name, opts).run
     end
   end
