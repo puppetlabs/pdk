@@ -133,7 +133,7 @@ module PDK
 
           %w[FACTER HIERA].each do |gem|
             if ENV["#{gem}_GEM_VERSION"]
-              PDK.logger.warn_once _("#{gem}_GEM_VERSION is not supported by PDK.")
+              PDK.logger.warn_once _("%{varname} is not supported by PDK.") % { varname: "#{gem}_GEM_VERSION"}
               @process.environment["#{gem}_GEM_VERSION"] = nil
             end
           end

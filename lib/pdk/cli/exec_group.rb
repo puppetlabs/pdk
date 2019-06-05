@@ -27,7 +27,7 @@ module PDK
       end
 
       def register(&block)
-        raise PDK::CLI::FatalError, 'No block registered' unless block_given?
+        raise PDK::CLI::FatalError, _('No block registered') unless block_given?
 
         @threads_or_procs << if parallel?
                                Thread.new do
