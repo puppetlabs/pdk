@@ -125,7 +125,7 @@ module PDK
           if ENV['PUPPET_GEM_VERSION']
             PDK.logger.warn_once _(
               'PUPPET_GEM_VERSION is not supported by PDK. ' \
-              'Please use the --puppet-version option on your PDK command ' \
+              'Use the --puppet-version option on your PDK command ' \
               'or set the PDK_PUPPET_VERSION environment variable instead',
             )
             @process.environment['PUPPET_GEM_VERSION'] = nil
@@ -133,7 +133,7 @@ module PDK
 
           %w[FACTER HIERA].each do |gem|
             if ENV["#{gem}_GEM_VERSION"]
-              PDK.logger.warn_once _("%{varname} is not supported by PDK.") % { varname: "#{gem}_GEM_VERSION"}
+              PDK.logger.warn_once _('%{varname} is not supported by PDK.') % { varname: "#{gem}_GEM_VERSION" }
               @process.environment["#{gem}_GEM_VERSION"] = nil
             end
           end

@@ -56,7 +56,7 @@ module PDK
 
           PDK.logger.error clone_result[:stdout]
           PDK.logger.error clone_result[:stderr]
-          raise PDK::CLI::FatalError, _("Unable to clone git repository at '%{repo}'.") % { repo: DEFAULT_PUPPET_DEV_URL }
+          raise PDK::CLI::FatalError, _("Unable to clone git repository from '%{repo}'.") % { repo: DEFAULT_PUPPET_DEV_URL }
         end
 
         # Fetch Updates from remote repository

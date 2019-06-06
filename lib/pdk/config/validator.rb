@@ -13,7 +13,7 @@ module PDK
       def self.boolean
         {
           proc:    ->(value) { [true, false].include?(value) },
-          message: _('must be a boolean true or false'),
+          message: _('must be a boolean: true or false'),
         }
       end
 

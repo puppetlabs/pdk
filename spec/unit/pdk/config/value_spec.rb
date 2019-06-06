@@ -12,7 +12,7 @@ describe PDK::Config::Value do
       let(:validator) { ->(_) { true } }
 
       it 'raises an error' do
-        expect { validate }.to raise_error(ArgumentError, 'validator must be a Hash')
+        expect { validate }.to raise_error(ArgumentError, '`validator` must be a Hash')
       end
     end
 

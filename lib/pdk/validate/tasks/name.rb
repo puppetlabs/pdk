@@ -7,7 +7,7 @@ module PDK
     class Tasks
       class Name < BaseValidator
         INVALID_TASK_MSG = _(
-          'Invalid task name. Task names must start with a lowercase letter' \
+          'Invalid task name. Task names must start with a lowercase letter ' \
           'and can only contain lowercase letters, numbers, and underscores.',
         )
 

@@ -164,7 +164,7 @@ module PDK
           [puppet_ver_specs, pe_ver_specs].each do |offending|
             next if offending.empty?
 
-            raise PDK::CLI::ExitWithError, _('You cannot specify a %{first} and %{second} at the same time') % {
+            raise PDK::CLI::ExitWithError, _('You cannot specify a %{first} and %{second} at the same time.') % {
               first: pup_dev_spec,
               second: offending.first,
             }
