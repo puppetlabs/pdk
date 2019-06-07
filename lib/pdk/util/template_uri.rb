@@ -96,7 +96,7 @@ module PDK
 
       # @returns String
       def git_ref
-        @uri.fragment || self.class.default_template_ref
+        @uri.fragment || self.class.default_template_ref(self)
       end
 
       def git_ref=(ref)
@@ -175,7 +175,7 @@ module PDK
         # 2. Construct the hash
         if explicit_url
           explicit_uri = Addressable::URI.parse(uri_safe(explicit_url))
-          explicit_uri.fragment = explicit_ref || default_template_ref
+          explicit_uri.fragment = explicit_ref || default_template_ref(new(explicit_uri))
         else
           explicit_uri = nil
         end
@@ -196,7 +196,7 @@ module PDK
                         nil
                       end
         default_uri = default_template_uri.uri
-        default_uri.fragment = default_template_ref
+        default_uri.fragment = default_template_ref(default_template_uri)
 
         ary = []
         ary << { type: _('--template-url'), uri: explicit_uri, allow_fallback: false } if explicit_url
@@ -207,12 +207,12 @@ module PDK
       end
 
       # @returns String
-      def self.default_template_ref
-        if PDK::Util.development_mode?
-          'master'
-        else
-          PDK::TEMPLATE_REF
-        end
+      def self.default_template_ref(uri = nil)
+        return 'master' if PDK::Util.development_mode?
+        return PDK::TEMPLATE_REF if uri.nil?
+
+        uri = new(uri) unless uri.is_a?(self)
+        uri.default? ? PDK::TEMPLATE_REF : 'master'
       end
 
       # @returns Addressable::URI

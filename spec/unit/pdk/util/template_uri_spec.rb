@@ -152,16 +152,16 @@ describe PDK::Util::TemplateURI do
           let(:opts_or_uri) { { :'template-url' => 'cli-templates' } }
 
           it 'returns the specified template' do
-            expect(template_uri.to_s).to eq("cli-templates##{described_class.default_template_ref}")
+            expect(template_uri.to_s).to eq('cli-templates#master')
           end
         end
 
         context 'and passed windows template-url' do
-          let(:opts_or_uri) { { :'template-url' => 'C:\cli-templates' } }
+          let(:opts_or_uri) { { :'template-url' => 'C:\\cli-templates' } }
 
           it 'returns the specified template' do
             allow(Gem).to receive(:win_platform?).and_return(true)
-            expect(template_uri.to_s).to eq("C:\\cli-templates##{described_class.default_template_ref}")
+            expect(template_uri.to_s).to eq('C:\\cli-templates#master')
           end
         end
 
@@ -229,7 +229,7 @@ describe PDK::Util::TemplateURI do
       let(:opts_or_uri) { 'https://github.com/my/pdk-templates.git' }
 
       it 'returns the default ref' do
-        expect(template_uri.git_ref).to eq described_class.default_template_ref
+        expect(template_uri.git_ref).to eq(described_class.default_template_ref(opts_or_uri))
       end
     end
   end
@@ -302,27 +302,37 @@ describe PDK::Util::TemplateURI do
   end
 
   describe '.default_template_ref' do
-    subject { described_class.default_template_ref }
+    subject { described_class.default_template_ref(uri) }
+
+    before(:each) do
+      allow(PDK::Util).to receive(:development_mode?).and_return(development_mode)
+    end
 
     context 'with a custom template repo' do
-      before(:each) do
-        allow(described_class).to receive(:default_template_url).and_return('custom_template_url')
+      let(:uri) { described_class.new('https://github.com/my/template') }
+
+      context 'in development mode' do
+        let(:development_mode) { true }
+
+        it 'returns master' do
+          is_expected.to eq('master')
+        end
       end
 
-      it 'returns master' do
-        is_expected.to eq('master')
+      context 'not in development mode' do
+        let(:development_mode) { false }
+
+        it 'returns master' do
+          is_expected.to eq('master')
+        end
       end
     end
 
     context 'with the default template repo' do
-      before(:each) do
-        allow(described_class).to receive(:default_template_url).and_return('puppetlabs_template_url')
-      end
+      let(:uri) { described_class.default_template_uri }
 
       context 'not in development mode' do
-        before(:each) do
-          allow(PDK::Util).to receive(:development_mode?).and_return(false)
-        end
+        let(:development_mode) { false }
 
         it 'returns the built-in TEMPLATE_REF' do
           is_expected.to eq(PDK::TEMPLATE_REF)
@@ -330,9 +340,27 @@ describe PDK::Util::TemplateURI do
       end
 
       context 'in development mode' do
-        before(:each) do
-          allow(PDK::Util).to receive(:development_mode?).and_return(true)
+        let(:development_mode) { true }
+
+        it 'returns master' do
+          is_expected.to eq('master')
         end
+      end
+    end
+
+    context 'with an explicit nil template' do
+      let(:uri) { nil }
+
+      context 'not in development mode' do
+        let(:development_mode) { false }
+
+        it 'returns the built-in TEMPLATE_REF' do
+          is_expected.to eq(PDK::TEMPLATE_REF)
+        end
+      end
+
+      context 'in development mode' do
+        let(:development_mode) { true }
 
         it 'returns master' do
           is_expected.to eq('master')
