@@ -48,12 +48,19 @@ module PDK
         end
 
         def default_ruby_version
-          # For now, the packaged versions will be using default of 2.4.5
-          # FIXME: make this dynamic
-          return '2.4.5' if PDK::Util.package_install?
-
-          # TODO: may not be a safe assumption that highest available version should be default
-          latest_ruby_version
+          @default_ruby_version ||= if PDK::Util.package_install?
+                                      # Default to the ruby that supports the latest puppet gem. If you wish to default to a
+                                      # specific Puppet Gem version use the following example;
+                                      #
+                                      # PDK::Util::PuppetVersion.find_gem_for('5.5.10')[:ruby_version]
+                                      #
+                                      PDK::Util::PuppetVersion.latest_available[:ruby_version]
+                                    else
+                                      # TODO: may not be a safe assumption that highest available version should be default
+                                      # WARNING Do NOT use PDK::Util::PuppetVersion.*** methods as it can recurse into this
+                                      # method and cause Stack Level Too Deep errors.
+                                      latest_ruby_version
+                                    end
         end
 
         def latest_ruby_version
