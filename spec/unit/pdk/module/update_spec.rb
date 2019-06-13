@@ -276,6 +276,7 @@ describe PDK::Module::Update do
     let(:template_url) { 'https://github.com/puppetlabs/pdk-templates#0.0.1' }
 
     before(:each) do
+      allow(PDK::Util::TemplateURI).to receive(:new).and_call_original
       allow(PDK::Util::TemplateURI).to receive(:new).with(template_url).and_return(module_template_uri)
     end
 
@@ -302,6 +303,7 @@ describe PDK::Module::Update do
             before(:each) do
               allow(PDK::Util).to receive(:package_install?).and_return(true)
               allow(PDK::Util::Version).to receive(:git_ref).and_return('1234acb')
+              allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('package', 'cachedir'))
             end
 
             it 'returns the default ref' do
