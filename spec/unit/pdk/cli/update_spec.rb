@@ -7,6 +7,7 @@ describe 'PDK::CLI update' do
   end
   let(:current_version) { '1.2.3' }
   let(:new_version) { '1.2.4' }
+  let(:module_pdk_version) { PDK::VERSION }
 
   context 'when not run from inside a module' do
     include_context 'run outside module'
@@ -28,6 +29,7 @@ describe 'PDK::CLI update' do
     before(:each) do
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
       allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
+      allow(PDK::Util).to receive(:module_pdk_version).and_return(module_pdk_version)
     end
 
     context 'and provided no flags' do
@@ -111,6 +113,28 @@ describe 'PDK::CLI update' do
         expect(analytics).not_to receive(:screen_view)
 
         expect { PDK::CLI.run(%w[update --noop --force]) }.to exit_nonzero
+      end
+    end
+
+    context 'and the module metadata specifies a newer PDK version' do
+      let(:module_pdk_version) { '999.9.9' }
+
+      context 'and the --force flag has not been passed' do
+        it 'warns the user and then aborts' do
+          expect(logger).to receive(:warn).with(a_string_matching(%r{newer than your PDK version}i))
+          expect(logger).to receive(:error).with(a_string_matching(%r{update your PDK installation}i))
+
+          expect { PDK::CLI.run(%w[update]) }.to exit_nonzero
+        end
+      end
+
+      context 'and the --force flag has been passed' do
+        it 'warns the user and then continues' do
+          allow(PDK::Module::Update).to receive(:new).with(hash_including(force: true)).and_return(updater)
+          expect(logger).to receive(:warn).with(a_string_matching(%r{newer than your PDK version}i))
+
+          PDK::CLI.run(%w[update --force])
+        end
       end
     end
   end

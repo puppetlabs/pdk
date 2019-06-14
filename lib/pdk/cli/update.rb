@@ -26,6 +26,25 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when updating a module')
       end
 
+      if Gem::Version.new(PDK::VERSION) < Gem::Version.new(PDK::Util.module_pdk_version)
+        PDK.logger.warn _(
+          'This module has been updated to PDK %{module_pdk_version} which ' \
+          'is newer than your PDK version (%{user_pdk_version}), proceed ' \
+          'with caution!',
+        ) % {
+          module_pdk_version: PDK::Util.module_pdk_version,
+          user_pdk_version:   PDK::VERSION,
+        }
+
+        unless opts[:force]
+          raise PDK::CLI::ExitWithError, _(
+            'Please update your PDK installation and try again. ' \
+            'You may also use the --force flag to override this and ' \
+            'continue at your own risk.',
+          )
+        end
+      end
+
       PDK::CLI::Util.analytics_screen_view('update', opts)
 
       updater = PDK::Module::Update.new(opts)
