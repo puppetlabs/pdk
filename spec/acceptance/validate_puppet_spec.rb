@@ -47,7 +47,7 @@ class foo {
         its(:exit_status) { is_expected.to eq(0) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -167,7 +167,7 @@ class foo {
 
       describe command('pdk validate puppet') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
       end
     end
 
@@ -333,7 +333,7 @@ class foo {
 
         describe command("pdk validate puppet --format text:stdout --format junit:report.xml #{clean_pp}") do
           its(:exit_status) { is_expected.to eq(0) }
-          its(:stdout) { is_expected.to have_no_output }
+          its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
           its(:stderr) { is_expected.to match(syntax_spinner_text) }
           its(:stderr) { is_expected.to match(lint_spinner_text) }
 
@@ -439,7 +439,7 @@ class foo {
 
       describe command('pdk validate puppet') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
       end
     end
   end
