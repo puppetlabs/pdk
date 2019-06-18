@@ -25,6 +25,15 @@ describe 'Updating an existing module' do
           create_remote_file(get_working_node, File.join(module_dir, 'metadata.json'), metadata.to_json)
 
           sync_yaml = YAML.safe_load(open("https://raw.githubusercontent.com/#{mod}/master/.sync.yml").read)
+
+          sync_yaml['Gemfile'].each_key do |gem_type|
+            sync_yaml['Gemfile'][gem_type].each_key do |group|
+              sync_yaml['Gemfile'][gem_type][group].reject! do |gem|
+                gem['gem'] !~ %r{\Apuppet-module-(?:posix|win)-system}
+              end
+            end
+          end
+
           sync_yaml['Gemfile']['required'][':system_tests'] << { 'gem' => 'nokogiri', 'version' => '1.8.5' }
           create_remote_file(get_working_node, File.join(module_dir, '.sync.yml'), sync_yaml.to_yaml)
         end
