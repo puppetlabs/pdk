@@ -7,6 +7,7 @@ RSpec/FilePath:
   Exclude:
     - 'spec/unit/pdk/validate/metadata/metadata_json_lint_spec.rb'
     - 'spec/unit/pdk/validate/metadata/metadata_syntax_spec.rb'
+    - 'spec/unit/pdk/validate/puppet/puppet_epp_spec.rb'
     - 'spec/unit/pdk/validate/puppet/puppet_lint_spec.rb'
     - 'spec/unit/pdk/validate/puppet/puppet_syntax_spec.rb'
     - 'spec/unit/pdk/validate/ruby/rubocop_spec.rb'
