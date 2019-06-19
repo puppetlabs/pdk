@@ -19,12 +19,6 @@ describe PDK::Validate::PuppetEPP do
 
   it_behaves_like 'it accepts .epp targets'
 
-  describe '.pattern_ignore' do
-    it 'does not match plan files' do
-      expect(described_class.pattern_ignore).to eq('')
-    end
-  end
-
   describe '.invoke' do
     context 'when the validator runs correctly' do
       before(:each) do
