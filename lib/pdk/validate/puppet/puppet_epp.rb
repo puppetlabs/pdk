@@ -36,7 +36,7 @@ module PDK
       end
 
       def self.pattern
-        '**/**.epp'
+        '**/*.epp'
       end
 
       def self.pattern_ignore
