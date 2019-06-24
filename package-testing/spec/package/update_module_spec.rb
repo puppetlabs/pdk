@@ -28,8 +28,8 @@ describe 'Updating an existing module' do
 
           sync_yaml['Gemfile'].each_key do |gem_type|
             sync_yaml['Gemfile'][gem_type].each_key do |group|
-              sync_yaml['Gemfile'][gem_type][group].reject! do |gem|
-                gem['gem'] !~ %r{\Apuppet-module-(?:posix|win)-system}
+              sync_yaml['Gemfile'][gem_type][group].select! do |gem|
+                gem['gem'] =~ %r{\Apuppet-module-(?:posix|win)-system}
               end
             end
           end
