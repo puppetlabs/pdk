@@ -20,7 +20,7 @@ module PDK
           },
           {
             'operatingsystem'        => 'RedHat',
-            'operatingsystemrelease' => ['8'],
+            'operatingsystemrelease' => ['7'],
           },
           {
             'operatingsystem'        => 'Scientific',
@@ -30,16 +30,16 @@ module PDK
         'Debian based Linux' => [
           {
             'operatingsystem'        => 'Debian',
-            'operatingsystemrelease' => ['9'],
+            'operatingsystemrelease' => ['8'],
           },
           {
             'operatingsystem'        => 'Ubuntu',
-            'operatingsystemrelease' => ['18.04'],
+            'operatingsystemrelease' => ['16.04'],
           },
         ],
         'Fedora' => {
           'operatingsystem'        => 'Fedora',
-          'operatingsystemrelease' => ['29'],
+          'operatingsystemrelease' => ['25'],
         },
         'OSX' => {
           'operatingsystem'        => 'Darwin',
@@ -47,7 +47,7 @@ module PDK
         },
         'SLES' => {
           'operatingsystem'        => 'SLES',
-          'operatingsystemrelease' => ['15'],
+          'operatingsystemrelease' => ['12'],
         },
         'Solaris' => {
           'operatingsystem'        => 'Solaris',
@@ -55,7 +55,7 @@ module PDK
         },
         'Windows' => {
           'operatingsystem'        => 'windows',
-          'operatingsystemrelease' => %w[2019 10],
+          'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
         },
       }.freeze
 
