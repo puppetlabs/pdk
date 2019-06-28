@@ -64,6 +64,7 @@ describe PDK::CLI::Util do
     before(:each) do
       allow(PDK.logger).to receive(:debug?).and_return(false)
       allow($stderr).to receive(:isatty).and_return(true)
+      allow(PDK::CLI::Util).to receive(:ci_environment?).and_return(false) # rubocop:disable RSpec/DescribedClass This reads better
       ENV.delete('PDK_FRONTEND')
     end
 
@@ -82,6 +83,14 @@ describe PDK::CLI::Util do
     context 'when PDK_FRONTEND env var is set to noninteractive' do
       before(:each) do
         ENV['PDK_FRONTEND'] = 'noninteractive'
+      end
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when in a Continuous Integration environment' do
+      before(:each) do
+        allow(PDK::CLI::Util).to receive(:ci_environment?).and_return(true) # rubocop:disable RSpec/DescribedClass This reads better
       end
 
       it { is_expected.to be_falsey }
