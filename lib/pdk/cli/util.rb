@@ -53,18 +53,18 @@ module PDK
       # @return [Boolean] Whether the PDK is in a CI based environment
       def ci_environment?
         [
-          'APPVEYOR_BUILD_FOLDER', # AppVeyor CI
-          'GITLAB_CI',             # GitLab CI
-          'JENKINS_URL',           # Jenkins
-          'BUILD_DEFINITIONNAME',  # Azure Pipelines
-          'TEAMCITY_VERSION',      # Team City
-          'BAMBOO_BUILDKEY',       # Bamboo
-          'GOCD_SERVER_URL',       # Go CD
-          'TRAVIS',                # Travis CI
-          'GITHUB_WORKFLOW'        # GitHub Actions
-        ].each { |name| return true if ENV.key?(name) }
-
-        false
+          'CI',                     # Generic
+          'CONTINUOUS_INTEGRATION', # Generic
+          'APPVEYOR_BUILD_FOLDER',  # AppVeyor CI
+          'GITLAB_CI',              # GitLab CI
+          'JENKINS_URL',            # Jenkins
+          'BUILD_DEFINITIONNAME',   # Azure Pipelines
+          'TEAMCITY_VERSION',       # Team City
+          'BAMBOO_BUILDKEY',        # Bamboo
+          'GOCD_SERVER_URL',        # Go CD
+          'TRAVIS',                 # Travis CI
+          'GITHUB_WORKFLOW',        # GitHub Actions
+        ].any? { |name| ENV.key?(name) }
       end
       module_function :ci_environment?
 
