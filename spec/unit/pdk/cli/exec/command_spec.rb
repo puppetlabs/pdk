@@ -3,6 +3,10 @@ require 'spec_helper'
 describe PDK::CLI::Exec::Command do
   subject(:command) { described_class.new('/bin/echo', 'foo') }
 
+  before(:each) do
+    allow(PDK::CLI::Util).to receive(:ci_environment?).and_return(false)
+  end
+
   describe '.context=' do
     context 'when setting to an expected value' do
       it 'accepts :system' do
