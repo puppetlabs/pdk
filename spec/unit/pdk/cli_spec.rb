@@ -9,6 +9,54 @@ describe PDK::CLI do
     end
   end
 
+  context 'analytics opt-out prompt' do
+    before(:each) do
+      # Temporarily bypass suite-wide analytics disable
+      allow(ENV).to receive(:[]).and_call_original
+      allow(ENV).to receive(:[]).with('PDK_ANALYTICS_CONFIG').and_return(nil)
+      allow(ENV).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(nil)
+
+      # Suppress output
+      allow($stdout).to receive(:puts).with(anything)
+    end
+
+    context 'when analytics config does not yet exist' do
+      before(:each) do
+        allow(PDK::Config).to receive(:analytics_config_exist?).and_return(false)
+      end
+
+      it 'prompts the user about analytics config' do
+        expect(PDK::Config).to receive(:analytics_config_interview!)
+
+        expect { described_class.run(['--version']) }.to exit_zero
+      end
+
+      context 'when PDK_DISABLE_ANALYTICS is set' do
+        before(:each) do
+          allow(ENV).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return('true')
+        end
+
+        it 'does not prompt the user about analytics config' do
+          expect(PDK::Config).not_to receive(:analytics_config_interview!)
+
+          expect { described_class.run(['--version']) }.to exit_zero
+        end
+      end
+    end
+
+    context 'when analytics config already exists' do
+      before(:each) do
+        allow(PDK::Config).to receive(:analytics_config_exist?).and_return(true)
+      end
+
+      it 'does not prompt the user about analytics config' do
+        expect(PDK::Config).not_to receive(:analytics_config_interview!)
+
+        expect { described_class.run(['--version']) }.to exit_zero
+      end
+    end
+  end
+
   ['validate', 'test unit', 'bundle'].each do |command|
     context "when #{command} command used but not in a module folder" do
       include_context 'run outside module'
