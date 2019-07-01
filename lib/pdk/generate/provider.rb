@@ -72,6 +72,11 @@ module PDK
       def target_type_spec_path
         @target_type_spec_path ||= File.join(module_dir, 'spec', 'unit', 'puppet', 'type', object_name) + '_spec.rb'
       end
+
+      # transform a object name into a ruby class name
+      def self.class_name_from_object_name(object_name)
+        object_name.to_s.split('_').map(&:capitalize).join
+      end
     end
   end
 end
