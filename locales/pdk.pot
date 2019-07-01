@@ -6,11 +6,11 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.10.0-82-gd468eda\n"
+"Project-Id-Version: puppet development kit v1.11.0-5-gd7565ab\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2019-06-27 13:23+1000\n"
-"PO-Revision-Date: 2019-06-27 13:23+1000\n"
+"POT-Creation-Date: 2019-07-01 15:57+1000\n"
+"PO-Revision-Date: 2019-07-01 15:57+1000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -495,43 +495,43 @@ msgstr ""
 msgid "Answer \"Y\" to continue or \"n\" to cancel."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:65
+#: ../lib/pdk/cli/util.rb:86
 msgid "This module is not PDK compatible. Run `pdk convert` to make it compatible with your version of PDK."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:71
+#: ../lib/pdk/cli/util.rb:92
 msgid "This module template is out of date. Run `pdk convert` to make it compatible with your version of PDK."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:76
+#: ../lib/pdk/cli/util.rb:97
 msgid "This module is compatible with a newer version of PDK. Upgrade your version of PDK to ensure compatibility."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:80
+#: ../lib/pdk/cli/util.rb:101
 msgid "This module is compatible with an older version of PDK. Run `pdk update` to update it to your version of PDK."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:106
+#: ../lib/pdk/cli/util.rb:127
 msgid "Using Ruby %{version}"
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:116
+#: ../lib/pdk/cli/util.rb:137
 msgid "Using %{gem} %{version}"
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:146
+#: ../lib/pdk/cli/util.rb:167
 msgid "You cannot specify a %{first} and %{second} at the same time"
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:158
+#: ../lib/pdk/cli/util.rb:179
 msgid "You cannot specify a %{first} and %{second} at the same time."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:194
+#: ../lib/pdk/cli/util.rb:215
 msgid "--template-ref requires --template-url to also be specified."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:198
+#: ../lib/pdk/cli/util.rb:219
 msgid "--template-url may not be used to specify paths containing #'s."
 msgstr ""
 
