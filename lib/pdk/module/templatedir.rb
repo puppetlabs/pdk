@@ -160,7 +160,6 @@ module PDK
       def object_template_for(object_type)
         object_path = File.join(@object_dir, "#{object_type}.erb")
         type_path = File.join(@object_dir, "#{object_type}_type.erb")
-        device_path = File.join(@object_dir, "#{object_type}_device.erb")
         spec_path = File.join(@object_dir, "#{object_type}_spec.erb")
         type_spec_path = File.join(@object_dir, "#{object_type}_type_spec.erb")
 
@@ -168,7 +167,6 @@ module PDK
           result = { object: object_path }
           result[:type] = type_path if File.file?(type_path) && File.readable?(type_path)
           result[:spec] = spec_path if File.file?(spec_path) && File.readable?(spec_path)
-          result[:device] = device_path if File.file?(device_path) && File.readable?(device_path)
           result[:type_spec] = type_spec_path if File.file?(type_spec_path) && File.readable?(type_spec_path)
           result
         else
