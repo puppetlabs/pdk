@@ -81,6 +81,13 @@ module PDK
         nil
       end
 
+      # @abstract Subclass and implement {#target_device_path}. Implementations
+      #   of this method should return a String containing the destination path
+      #   of the device class being generated.
+      def target_device_path
+        nil
+      end
+
       # Retrieves the type of the object being generated, e.g. :class,
       # :defined_type, etc. This is specified in the subclass' OBJECT_TYPE
       # constant.
@@ -99,7 +106,7 @@ module PDK
       #
       # @api public
       def check_preconditions
-        [target_object_path, target_type_path, target_spec_path, target_type_spec_path].compact.each do |target_file|
+        [target_object_path, target_type_path, target_device_path, target_spec_path, target_type_spec_path].compact.each do |target_file|
           next unless File.exist?(target_file)
 
           raise PDK::CLI::ExitWithError, _("Unable to generate %{object_type}; '%{file}' already exists.") % {
@@ -125,6 +132,7 @@ module PDK
 
           render_file(target_object_path, template_path[:object], data)
           render_file(target_type_path, template_path[:type], data) if template_path[:type]
+          render_file(target_device_path, template_path[:device], data) if template_path[:device]
           render_file(target_spec_path, template_path[:spec], data) if template_path[:spec]
           render_file(target_type_spec_path, template_path[:type_spec], data) if template_path[:type_spec]
         end
@@ -219,9 +227,9 @@ module PDK
               # TODO: refactor to a search-and-execute form instead
               return # work is done # rubocop:disable Lint/NonLocalExitFromIterator
             elsif template[:allow_fallback]
-              PDK.logger.debug(_('Unable to find a %{type} template in %{url}; trying next template directory.') % { type: object_type, url: template[:url] })
+              PDK.logger.debug(_('Unable to find a %{type} template in %{url}; trying next template directory.') % { type: object_type, url: template[:uri] })
             else
-              raise PDK::CLI::FatalError, _('Unable to find the %{type} template in %{url}.') % { type: object_type, url: template[:url] }
+              raise PDK::CLI::FatalError, _('Unable to find the %{type} template in %{url}.') % { type: object_type, url: template[:uri] }
             end
           end
         end
@@ -278,6 +286,11 @@ module PDK
         rescue ArgumentError => e
           raise PDK::CLI::FatalError, _("'%{dir}' does not contain valid Puppet module metadata: %{msg}") % { dir: module_dir, msg: e.message }
         end
+      end
+
+      # transform a object name into a ruby class name
+      def self.class_name_from_object_name(object_name)
+        object_name.to_s.split('_').map(&:capitalize).join
       end
     end
   end

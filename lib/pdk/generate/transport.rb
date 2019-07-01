@@ -2,8 +2,8 @@ require 'pdk/generate/puppet_object'
 
 module PDK
   module Generate
-    class Provider < PuppetObject
-      OBJECT_TYPE = :provider
+    class Transport < PuppetObject
+      OBJECT_TYPE = :transport
 
       # Prepares the data needed to render the new defined type template.
       #
@@ -13,14 +13,14 @@ module PDK
       def template_data
         data = {
           name: object_name,
-          provider_class: Provider.class_name_from_object_name(object_name),
+          transport_class: Transport.class_name_from_object_name(object_name),
         }
 
         data
       end
 
       def raise_precondition_error(error)
-        raise PDK::CLI::ExitWithError, _('%{error}: Creating a provider needs some local configuration in your module.' \
+        raise PDK::CLI::ExitWithError, _('%{error}: Creating a transport needs some local configuration in your module.' \
           ' Please follow the docs at https://github.com/puppetlabs/puppet-resource_api#getting-started.') % { error: error }
       end
 
@@ -52,25 +52,35 @@ module PDK
         end
       end
 
-      # @return [String] the path where the new provider will be written.
+      # @return [String] the path where the new transport will be written.
       def target_object_path
-        @target_object_path ||= File.join(module_dir, 'lib', 'puppet', 'provider', object_name, object_name) + '.rb'
+        @target_object_path ||= File.join(module_dir, 'lib', 'puppet', 'transport', object_name) + '.rb'
       end
 
-      # @return [String] the path where the new type will be written.
+      # @return [String] the path where the new schema will be written.
       def target_type_path
-        @target_type_path ||= File.join(module_dir, 'lib', 'puppet', 'type', object_name) + '.rb'
+        @target_type_path ||= File.join(module_dir, 'lib', 'puppet', 'transport', 'schema', object_name) + '.rb'
       end
 
-      # @return [String] the path where the tests for the new provider
+      # @return [String] the path where the deviceshim for the transport will be written.
+      def target_device_path
+        @target_device_path ||= File.join(module_dir, 'lib', 'puppet', 'util', 'network_device', object_name, 'device.rb')
+      end
+
+      # @return [String] the path where the tests for the new transport
       # will be written.
       def target_spec_path
-        @target_spec_path ||= File.join(module_dir, 'spec', 'unit', 'puppet', 'provider', object_name, object_name) + '_spec.rb'
+        @target_spec_path ||= File.join(module_dir, 'spec', 'unit', 'puppet', 'transport', object_name) + '_spec.rb'
       end
 
-      # @return [String] the path where the tests for the new type will be written.
+      # @return [String] the path where the tests for the new schema will be written.
       def target_type_spec_path
-        @target_type_spec_path ||= File.join(module_dir, 'spec', 'unit', 'puppet', 'type', object_name) + '_spec.rb'
+        @target_type_spec_path ||= File.join(module_dir, 'spec', 'unit', 'puppet', 'transport', 'schema', object_name) + '_spec.rb'
+      end
+
+      # transform a object name into a ruby class name
+      def self.class_name_from_object_name(object_name)
+        object_name.to_s.split('_').map(&:capitalize).join
       end
     end
   end
