@@ -167,6 +167,7 @@ module PDK::CLI
   require 'pdk/cli/validate'
   require 'pdk/cli/module'
   require 'pdk/cli/console'
+  require 'pdk/cli/release'
 
   @base_cmd.add_command Cri::Command.new_basic_help
 end
