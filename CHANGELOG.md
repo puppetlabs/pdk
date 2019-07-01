@@ -4,6 +4,19 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.11.1](https://github.com/puppetlabs/pdk/tree/v1.11.1) (2019-07-01)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.11.0...v1.11.1)
+
+**Closed issues:**
+
+- PDK explicitly asking for consent to collect anonymous usage information [\#690](https://github.com/puppetlabs/pdk/issues/690)
+
+**Merged pull requests:**
+
+- \(PDK-1415\) Allow analytics opt-out prompt to be disabled via ENV [\#691](https://github.com/puppetlabs/pdk/pull/691) ([scotje](https://github.com/scotje))
+- \(PDK-1414\) Detect common CI environments and set non-interactive [\#689](https://github.com/puppetlabs/pdk/pull/689) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1409\) Bump PDK version to 1.11.1.pre [\#688](https://github.com/puppetlabs/pdk/pull/688) ([rodjek](https://github.com/rodjek))
+
 ## [v1.11.0](https://github.com/puppetlabs/pdk/tree/v1.11.0) (2019-06-27)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.10.0...v1.11.0)
 
@@ -23,6 +36,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- \(PDK-1403\) Release 1.11.0 [\#687](https://github.com/puppetlabs/pdk/pull/687) ([rodjek](https://github.com/rodjek))
 - \(FIXUP\) Avoid attempting to append nokogiri pin to nil in package tests [\#686](https://github.com/puppetlabs/pdk/pull/686) ([scotje](https://github.com/scotje))
 - Revert "\(PDK-1366\) Update default operatingsystem versions" [\#685](https://github.com/puppetlabs/pdk/pull/685) ([rodjek](https://github.com/rodjek))
 - \(maint\) Clear Gemfile overrides before pdk update test [\#684](https://github.com/puppetlabs/pdk/pull/684) ([rodjek](https://github.com/rodjek))
