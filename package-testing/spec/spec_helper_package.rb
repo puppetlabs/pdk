@@ -1,4 +1,5 @@
 require 'beaker-rspec'
+require 'beaker-puppet'
 
 Dir['./spec/package/support/*.rb'].sort.each { |f| require f }
 
