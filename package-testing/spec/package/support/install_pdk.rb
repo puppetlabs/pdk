@@ -1,4 +1,7 @@
 module PackageHelpers
+  extend Beaker::DSL::InstallUtils::FOSSUtils
+  extend Beaker::DSL::InstallUtils::Puppet5
+
   module_function
 
   def install_pdk_on(host)
