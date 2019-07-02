@@ -350,10 +350,10 @@ module PDK
 
             PDK.logger.error reset_result[:stdout]
             PDK.logger.error reset_result[:stderr]
-            raise PDK::CLI::FatalError, _("Unable to set HEAD of git repository at '%{repo}' to ref:'%{ref}'.") % { repo: path, ref: ref }
+            raise PDK::CLI::FatalError, _("Unable to checkout '%{ref}' of git repository at '%{path}'.") % { ref: ref, path: path }
           end
         else
-          PDK.logger.warn _("Uncommitted changes found when attempting to set HEAD of git repository at '%{repo}' to ref '%{ref}'; skipping git reset.") % { repo: path, ref: ref }
+          PDK.logger.warn _("Uncommitted changes found when attempting to checkout '%{ref}' of git repository at '%{path}'; skipping git reset.") % { ref: ref, path: path }
         end
       end
 

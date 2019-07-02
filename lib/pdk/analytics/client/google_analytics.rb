@@ -39,7 +39,7 @@ module PDK
 
         def screen_view(screen, **kwargs)
           custom_dimensions = walk_keys(kwargs) do |k|
-            CUSTOM_DIMENSIONS[k] || raise("Unknown analytics key '#{k}'")
+            CUSTOM_DIMENSIONS[k] || raise(_("Unknown analytics key '%{key}'") % { key: k })
           end
 
           screen_view_params = {
@@ -54,7 +54,7 @@ module PDK
 
         def event(category, action, label: nil, value: nil, **kwargs)
           custom_dimensions = walk_keys(kwargs) do |k|
-            CUSTOM_DIMENSIONS[k] || raise("Unknown analytics key '#{k}'")
+            CUSTOM_DIMENSIONS[k] || raise(_("Unknown analytics key '%{key}'") % { key: k })
           end
 
           event_params = {

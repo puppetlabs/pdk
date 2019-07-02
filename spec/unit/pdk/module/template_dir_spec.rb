@@ -187,7 +187,7 @@ describe PDK::Module::TemplateDir do
           expect(logger).to receive(:error).with(result[:stderr])
           expect {
             template_dir.checkout_template_ref(path, ref)
-          }.to raise_error(PDK::CLI::FatalError, %r{unable to set head of git repository}i)
+          }.to raise_error(PDK::CLI::FatalError, %r{Unable to checkout '12345678' of git repository at '/path/to/workdir'}i)
         end
       end
     end

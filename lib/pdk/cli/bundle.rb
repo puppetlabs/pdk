@@ -6,8 +6,6 @@ module PDK::CLI
     description _(<<-EOF
 [experimental] For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.
 Careless use of this command can lead to errors that pdk can't help recover from.
-
-Note that for PowerShell the '--' needs to be escaped using a backtick: '`--' to avoid it being parsed by the shell.
 EOF
                  )
     skip_option_parsing

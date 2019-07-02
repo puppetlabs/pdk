@@ -125,7 +125,7 @@ module PDK
         end
       rescue ArgumentError => e
         raise PDK::CLI::ExitWithError, _(
-          '%{message} Please rename the file or exclude it from the package ' \
+          '%{message} Rename the file or exclude it from the package ' \
           'by adding it to the .pdkignore file in your module.',
         ) % { message: e.message }
       end

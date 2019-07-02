@@ -6,11 +6,11 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.11.0-5-gd7565ab\n"
+"Project-Id-Version: puppet development kit v1.11.1-1-g8953096\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2019-07-01 15:57+1000\n"
-"PO-Revision-Date: 2019-07-01 15:57+1000\n"
+"POT-Creation-Date: 2019-07-01 12:09+0100\n"
+"PO-Revision-Date: 2019-07-01 12:09+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -18,6 +18,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: ../lib/pdk/analytics/client/google_analytics.rb:42 ../lib/pdk/analytics/client/google_analytics.rb:57
+msgid "Unknown analytics key '%{key}'"
+msgstr ""
 
 #: ../lib/pdk/answer_file.rb:59
 msgid "Answer file can be updated only with a Hash"
@@ -163,11 +167,9 @@ msgstr ""
 msgid ""
 "[experimental] For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.\n"
 "Careless use of this command can lead to errors that pdk can't help recover from.\n"
-"\n"
-"Note that for PowerShell the '--' needs to be escaped using a backtick: '`--' to avoid it being parsed by the shell.\n"
 msgstr ""
 
-#: ../lib/pdk/cli/bundle.rb:17
+#: ../lib/pdk/cli/bundle.rb:15
 msgid "`pdk bundle` can only be run from inside a valid module directory."
 msgstr ""
 
@@ -228,11 +230,11 @@ msgid "Expected execution context to be :system or :module but got '%{context}'.
 msgstr ""
 
 #: ../lib/pdk/cli/exec.rb:126
-msgid "PUPPET_GEM_VERSION is not supported by PDK. Please use the --puppet-version option on your PDK command or set the PDK_PUPPET_VERSION environment variable instead"
+msgid "PUPPET_GEM_VERSION is not supported by PDK. Use the --puppet-version option on your PDK command or set the PDK_PUPPET_VERSION environment variable instead"
 msgstr ""
 
 #: ../lib/pdk/cli/exec.rb:136
-msgid "#{gem}_GEM_VERSION is not supported by PDK."
+msgid "%{varname} is not supported by PDK."
 msgstr ""
 
 #: ../lib/pdk/cli/exec.rb:175
@@ -261,6 +263,10 @@ msgstr ""
 
 #: ../lib/pdk/cli/exec.rb:267
 msgid "Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})"
+msgstr ""
+
+#: ../lib/pdk/cli/exec_group.rb:30
+msgid "No block registered"
 msgstr ""
 
 #: ../lib/pdk/cli/module.rb:4
@@ -519,11 +525,7 @@ msgstr ""
 msgid "Using %{gem} %{version}"
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:167
-msgid "You cannot specify a %{first} and %{second} at the same time"
-msgstr ""
-
-#: ../lib/pdk/cli/util.rb:179
+#: ../lib/pdk/cli/util.rb:167 ../lib/pdk/cli/util.rb:179
 msgid "You cannot specify a %{first} and %{second} at the same time."
 msgstr ""
 
@@ -638,7 +640,7 @@ msgid "Unable to open %{file} for writing"
 msgstr ""
 
 #: ../lib/pdk/config/validator.rb:16
-msgid "must be a boolean true or false"
+msgid "must be a boolean: true or false"
 msgstr ""
 
 #: ../lib/pdk/config/validator.rb:26
@@ -646,7 +648,7 @@ msgid "must be a version 4 UUID"
 msgstr ""
 
 #: ../lib/pdk/config/value.rb:42
-msgid "validator must be a Hash"
+msgid "`validator` must be a Hash"
 msgstr ""
 
 #: ../lib/pdk/config/value.rb:43
@@ -795,35 +797,37 @@ msgstr ""
 msgid "If there is a public issue tracker for this module, enter its URL here."
 msgstr ""
 
-#: ../lib/pdk/generate/module.rb:261
-msgid "update"
-msgstr ""
-
-#: ../lib/pdk/generate/module.rb:261
-msgid "create"
-msgstr ""
-
 #: ../lib/pdk/generate/module.rb:262
 msgid ""
 "\n"
-"We need to %{action} the metadata.json file for this module, so we\\'re going to ask you %{count} questions.\n"
+"We need to update the metadata.json file for this module, so we\\'re going to ask you %{count} questions.\n"
+msgstr ""
+
+#: ../lib/pdk/generate/module.rb:269
+msgid ""
+"\n"
+"We need to create the metadata.json file for this module, so we\\'re going to ask you %{count} questions.\n"
+msgstr ""
+
+#: ../lib/pdk/generate/module.rb:277
+msgid ""
 "If the question is not applicable to this module, accept the default option shown after each question. You can modify any answers at any time by manually updating the metadata.json file.\n"
 "\n"
 msgstr ""
 
-#: ../lib/pdk/generate/module.rb:276
+#: ../lib/pdk/generate/module.rb:286
 msgid "No answers given, interview cancelled."
 msgstr ""
 
-#: ../lib/pdk/generate/module.rb:300
+#: ../lib/pdk/generate/module.rb:310
 msgid "Metadata will be generated based on this information, continue?"
 msgstr ""
 
-#: ../lib/pdk/generate/module.rb:302
+#: ../lib/pdk/generate/module.rb:312
 msgid "Interview cancelled; exiting."
 msgstr ""
 
-#: ../lib/pdk/generate/module.rb:306
+#: ../lib/pdk/generate/module.rb:316
 msgid "Process cancelled; exiting."
 msgstr ""
 
@@ -904,7 +908,7 @@ msgid "A task named '%{name}' already exists in this module; defined in %{file}"
 msgstr ""
 
 #: ../lib/pdk/module/build.rb:127
-msgid "%{message} Please rename the file or exclude it from the package by adding it to the .pdkignore file in your module."
+msgid "%{message} Rename the file or exclude it from the package by adding it to the .pdkignore file in your module."
 msgstr ""
 
 #: ../lib/pdk/module/build.rb:155
@@ -1062,11 +1066,11 @@ msgid "Unable to clone git repository at '%{repo}' into '%{dest}'."
 msgstr ""
 
 #: ../lib/pdk/module/templatedir.rb:353
-msgid "Unable to set HEAD of git repository at '%{repo}' to ref:'%{ref}'."
+msgid "Unable to checkout '%{ref}' of git repository at '%{path}'."
 msgstr ""
 
 #: ../lib/pdk/module/templatedir.rb:356
-msgid "Uncommitted changes found when attempting to set HEAD of git repository at '%{repo}' to ref '%{ref}'; skipping git reset."
+msgid "Uncommitted changes found when attempting to checkout '%{ref}' of git repository at '%{path}'; skipping git reset."
 msgstr ""
 
 #: ../lib/pdk/module/update.rb:14
@@ -1272,11 +1276,11 @@ msgid "Git command failed: git %{args}"
 msgstr ""
 
 #: ../lib/pdk/util/git.rb:84
-msgid "Unable to locate git work dir \"%{workdir}"
+msgid "Unable to locate git work dir \"%{workdir}\""
 msgstr ""
 
 #: ../lib/pdk/util/git.rb:85
-msgid "Unable to locate git dir \"%{gitdir}"
+msgid "Unable to locate git dir \"%{gitdir}\""
 msgstr ""
 
 #: ../lib/pdk/util/git.rb:100
@@ -1292,7 +1296,7 @@ msgid "Unable to find a Puppet gem in current Ruby environment or from Rubygems.
 msgstr ""
 
 #: ../lib/pdk/util/puppet_version.rb:59
-msgid "Unable to clone git repository at '%{repo}'."
+msgid "Unable to clone git repository from '%{repo}'."
 msgstr ""
 
 #: ../lib/pdk/util/puppet_version.rb:68
@@ -1452,7 +1456,7 @@ msgid "Unable to validate Task Metadata. %{error}."
 msgstr ""
 
 #: ../lib/pdk/validate/tasks/name.rb:9
-msgid "Invalid task name. Task names must start with a lowercase letterand can only contain lowercase letters, numbers, and underscores."
+msgid "Invalid task name. Task names must start with a lowercase letter and can only contain lowercase letters, numbers, and underscores."
 msgstr ""
 
 #: ../lib/pdk/validate/tasks/name.rb:23

@@ -81,8 +81,8 @@ module PDK
       end
 
       def self.work_dir_clean?(repo)
-        raise PDK::CLI::ExitWithError, _('Unable to locate git work dir "%{workdir}') % { workdir: repo } unless File.directory?(repo)
-        raise PDK::CLI::ExitWithError, _('Unable to locate git dir "%{gitdir}') % { gitdir: repo } unless File.directory?(File.join(repo, '.git'))
+        raise PDK::CLI::ExitWithError, _('Unable to locate git work dir "%{workdir}"') % { workdir: repo } unless File.directory?(repo)
+        raise PDK::CLI::ExitWithError, _('Unable to locate git dir "%{gitdir}"') % { gitdir: repo } unless File.directory?(File.join(repo, '.git'))
 
         git('--work-tree', repo, '--git-dir', File.join(repo, '.git'), 'status', '--untracked-files=no', '--porcelain', repo)[:stdout].empty?
       end

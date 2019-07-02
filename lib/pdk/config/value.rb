@@ -39,7 +39,7 @@ module PDK
       #
       # @return [nil]
       def validate(validator)
-        raise ArgumentError, _('validator must be a Hash') unless validator.is_a?(Hash)
+        raise ArgumentError, _('`validator` must be a Hash') unless validator.is_a?(Hash)
         raise ArgumentError, _('the :proc key must contain a Proc') unless validator.key?(:proc) && validator[:proc].is_a?(Proc)
         raise ArgumentError, _('the :message key must contain a String') unless validator.key?(:message) && validator[:message].is_a?(String)
 
