@@ -76,5 +76,5 @@ Gemfile.local
 /archive/
 /sut-files.tgz
 
-+# Puppet packaging files
- +/ext/packaging/
+# Puppet packaging files
+/ext/packaging/
