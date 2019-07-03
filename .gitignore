@@ -78,3 +78,6 @@ Gemfile.local
 
 # Puppet packaging files
 /ext/packaging/
+
+# generated artifacts from rake tasks
+/output
