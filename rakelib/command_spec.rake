@@ -20,6 +20,12 @@ def describe_command(cri_command)
   }
 end
 
+def cri_option_is_a_hash?
+  return @cri_option_is_a_hash unless @cri_option_is_a_hash.nil?
+  @cri_option_is_a_hash = Gem::Version.new(Cri::VERSION) <= Gem::Version.new('2.11.0')
+  @cri_option_is_a_hash
+end
+
 def describe_option(cri_option)
-  cri_option.reject { |k, _| k == :block }
+  (cri_option_is_a_hash? ? cri_option : cri_option.to_h).reject { |k, _| k == :block }
 end
