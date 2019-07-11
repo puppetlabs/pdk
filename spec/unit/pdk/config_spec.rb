@@ -8,6 +8,7 @@ describe PDK::Config do
   let(:user_config_content) { '{}' }
   let(:analytics_config_content) { nil }
   let(:bolt_analytics_content) { nil }
+  let(:bolt_analytics_path) { '~/.puppetlabs/bolt/analytics.yaml' }
 
   def mock_file(path, content)
     allow(PDK::Util::Filesystem).to receive(:file?).with(File.expand_path(path)).and_return(true)
@@ -21,7 +22,7 @@ describe PDK::Config do
     mock_file(PDK.answers.answer_file_path, answer_file_content)
     mock_file(described_class.analytics_config_path, analytics_config_content)
     mock_file(described_class.user_config_path, user_config_content)
-    mock_file('~/.puppetlabs/bolt/analytics.yaml', bolt_analytics_content) if bolt_analytics_content
+    mock_file(bolt_analytics_path, bolt_analytics_content) if bolt_analytics_content
   end
 
   describe 'user.analytics.disabled' do
@@ -52,6 +53,19 @@ describe PDK::Config do
         it 'returns the value from the bolt configuration' do
           expect(config.user['analytics']['disabled']).to be_falsey
         end
+
+        context 'and the bolt configuration is unparsable' do
+          before(:each) do
+            allow(PDK::Config::YAML).to receive(:new).and_call_original
+            allow(PDK::Config::YAML).to receive(:new)
+              .with(file: File.expand_path(bolt_analytics_path))
+              .and_raise(PDK::Config::LoadError)
+          end
+
+          it 'returns true' do
+            expect(config.user['analytics']['disabled']).to be_truthy
+          end
+        end
       end
     end
   end
@@ -81,6 +95,20 @@ describe PDK::Config do
 
         it 'returns the value from the bolt configuration' do
           expect(config.user['analytics']['user-id']).to eq(uuid)
+        end
+
+        context 'and the bolt configuration is unparsable' do
+          before(:each) do
+            allow(PDK::Config::YAML).to receive(:new).and_call_original
+            allow(PDK::Config::YAML).to receive(:new)
+              .with(file: File.expand_path(bolt_analytics_path))
+              .and_raise(PDK::Config::LoadError)
+          end
+
+          it 'generates a new UUID' do
+            expect(SecureRandom).to receive(:uuid).and_call_original
+            config.user['analytics']['user-id']
+          end
         end
       end
     end
