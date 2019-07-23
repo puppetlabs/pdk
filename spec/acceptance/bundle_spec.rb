@@ -12,8 +12,7 @@ describe 'pdk bundle' do
 
     describe command('pdk bundle env') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to have_no_output }
-      its(:stderr) { is_expected.to match(%r{## Environment}) }
+      its(:stdout) { is_expected.to match(%r{## Environment}) }
     end
 
     context 'when running in a subdirectory of the module root' do
@@ -27,8 +26,7 @@ describe 'pdk bundle' do
 
       describe command('pdk bundle exec puppet-lint init.pp') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to have_no_output }
-        its(:stderr) { is_expected.to match(%r{double quoted string}im) }
+        its(:stdout) { is_expected.to match(%r{double quoted string}im) }
       end
     end
 
