@@ -384,7 +384,7 @@ describe PDK::Generate::Module do
               },
               {
                 'operatingsystem'        => 'RedHat',
-                'operatingsystemrelease' => ['7'],
+                'operatingsystemrelease' => ['8'],
               },
               {
                 'operatingsystem'        => 'Scientific',
@@ -392,15 +392,15 @@ describe PDK::Generate::Module do
               },
               {
                 'operatingsystem'        => 'Debian',
-                'operatingsystemrelease' => ['8'],
+                'operatingsystemrelease' => ['9'],
               },
               {
                 'operatingsystem'        => 'Ubuntu',
-                'operatingsystemrelease' => ['16.04'],
+                'operatingsystemrelease' => ['18.04'],
               },
               {
                 'operatingsystem'        => 'windows',
-                'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+                'operatingsystemrelease' => %w[2019 10],
               },
             ],
           )
@@ -631,15 +631,15 @@ describe PDK::Generate::Module do
           'operatingsystem_support' => [
             {
               'operatingsystem'        => 'Debian',
-              'operatingsystemrelease' => ['8'],
+              'operatingsystemrelease' => ['9'],
             },
             {
               'operatingsystem'        => 'Ubuntu',
-              'operatingsystemrelease' => ['16.04'],
+              'operatingsystemrelease' => ['18.04'],
             },
             {
               'operatingsystem'        => 'windows',
-              'operatingsystemrelease' => ['2008 R2', '2012 R2', '10'],
+              'operatingsystemrelease' => %w[2019 10],
             },
             {
               'operatingsystem'        => 'Solaris',
