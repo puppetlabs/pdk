@@ -227,11 +227,19 @@ module PDK
               entry_meta = {
                 name: entry,
               }
-              entry_meta[:mode] = if Minitar.dir?(entry)
-                                    File.stat(entry).mode | 0o755
-                                  else
-                                    File.stat(entry).mode | 0o644
-                                  end
+
+              orig_mode = File.stat(entry).mode
+              min_mode = Minitar.dir?(entry) ? 0o755 : 0o644
+
+              entry_meta[:mode] = orig_mode | min_mode
+
+              if entry_meta[:mode] != orig_mode
+                PDK.logger.debug(_('Updated permissions of packaged \'%{entry}\' to %{new_mode}') % {
+                  entry: entry,
+                  new_mode: (entry_meta[:mode] & 0o7777).to_s(8),
+                })
+              end
+
               Minitar.pack_file(entry_meta, tar)
             end
           ensure
