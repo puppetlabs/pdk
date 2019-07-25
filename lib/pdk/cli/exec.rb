@@ -13,7 +13,7 @@ module PDK
   module CLI
     module Exec
       require 'pdk/cli/exec/command'
-      require 'pdk/cli/exec/command/interactive'
+      require 'pdk/cli/exec/interactive_command'
 
       def self.execute(*cmd)
         Command.new(*cmd).execute!

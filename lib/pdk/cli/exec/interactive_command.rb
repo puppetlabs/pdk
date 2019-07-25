@@ -84,12 +84,22 @@ module PDK
           # Use the string form of command to ensure command is invoked via a shell
           system(@resolved_env, command_string)
 
+          exit_code = child_status.exitstatus
           duration = Time.now - start_time
 
-          PDK.logger.debug(_("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})") %
-            { command: command_string, duration_in_seconds: duration, exit_code: $CHILD_STATUS.exitstatus })
+          PDK.logger.debug(_("Execution of '%{command}' complete (duration: \
+                              %{duration_in_seconds}s; exit code: %{exit_code})") %
+                              {
+                                command: command_string,
+                                exit_code: exit_code,
+                                duration_in_seconds: duration,
+                              })
 
-          { exit_code: $CHILD_STATUS.exitstatus, duration: duration }
+          { exit_code: exit_code, duration: duration }
+        end
+
+        def child_status
+          $CHILD_STATUS
         end
 
         def stop_spinner
