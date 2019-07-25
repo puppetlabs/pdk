@@ -220,8 +220,22 @@ module PDK
         FileUtils.rm_f(package_file)
 
         Dir.chdir(target_dir) do
-          Zlib::GzipWriter.open(package_file) do |package_fd|
-            Minitar.pack(release_name, package_fd)
+          begin
+            gz = Zlib::GzipWriter.new(File.open(package_file, 'wb'))
+            tar = Minitar::Output.new(gz)
+            Find.find(release_name) do |entry|
+              entry_meta = {
+                name: entry,
+              }
+              entry_meta[:mode] = if Minitar.dir?(entry)
+                                    File.stat(entry).mode | 0o755
+                                  else
+                                    File.stat(entry).mode | 0o644
+                                  end
+              Minitar.pack_file(entry_meta, tar)
+            end
+          ensure
+            tar.close
           end
         end
       end
