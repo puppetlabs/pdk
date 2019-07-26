@@ -39,6 +39,7 @@ group :test do
 end
 
 group :acceptance do
+  gem 'minitar-cli'
   gem 'serverspec'
 end
 

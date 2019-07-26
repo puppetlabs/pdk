@@ -9,6 +9,7 @@ describe 'pdk build', module_command: true do
       'version'                 => '0.1.0',
       'author'                  => 'testuser',
       'summary'                 => 'a test module',
+      'license'                 => 'Apache-2.0',
       'source'                  => 'https://github.com/testuser/puppet-build',
       'project_page'            => 'https://testuser.github.io/puppet-build',
       'issues_url'              => 'https://github.com/testuser/puppet-build/issues',
@@ -25,6 +26,10 @@ describe 'pdk build', module_command: true do
         File.open('metadata.json', 'w') do |f|
           f.puts metadata.to_json
         end
+
+        # Deliberately set some problematic file modes
+        File.chmod(0o640, 'metadata.json')
+        File.chmod(0o700, 'spec')
       end
 
       after(:all) do
@@ -37,8 +42,26 @@ describe 'pdk build', module_command: true do
         its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
         its(:stderr) { is_expected.to match(%r{Build of #{metadata['name']} has completed successfully}) }
 
-        describe file(File.join('pkg', "#{metadata['name']}-#{metadata['version']}.tar.gz")) do
+        pkg_file = File.join('pkg', "#{metadata['name']}-#{metadata['version']}.tar.gz")
+
+        describe file(pkg_file) do
           it { is_expected.to be_file }
+
+          describe command("minitar list -l #{pkg_file}") do
+            its(:exit_status) { is_expected.to eq(0) }
+            its(:stdout) do
+              is_expected.to satisfy('show that all the files in the tarball have sane modes') do |output|
+                output.split("\n").all? do |line|
+                  pattern = if line.start_with?('d')
+                              %r{\Adrwxr.xr.x } # directories should be at least 0755
+                            else
+                              %r{\A-rw.r..r.. } # files should be at least 0644
+                            end
+                  line =~ pattern
+                end
+              end
+            end
+          end
         end
       end
     end
