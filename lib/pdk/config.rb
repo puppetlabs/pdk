@@ -33,6 +33,14 @@ module PDK
       end
     end
 
+    # Resolves *all* filtered settings from all namespaces
+    #
+    # @param filter [String] Only resolve setting names which match the filter. See PDK::Config::Namespace.be_resolved? for matching rules
+    # @return [Hash{String => Object}] All resolved settings for example {'user.module_defaults.author' => 'johndoe'}
+    def resolve(filter = nil)
+      user.resolve(filter)
+    end
+
     def self.bolt_analytics_config
       file = File.expand_path('~/.puppetlabs/bolt/analytics.yaml')
       PDK::Config::YAML.new(file: file)

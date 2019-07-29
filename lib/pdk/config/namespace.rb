@@ -141,6 +141,28 @@ module PDK
         end
       end
 
+      # Resolves all filtered settings, including child namespaces, fully namespaced and filling in default values.
+      #
+      # @param filter [String] Only resolve setting names which match the filter. See #be_resolved? for matching rules
+      # @return [Hash{String => Object}] All resolved settings for example {'user.module_defaults.author' => 'johndoe'}
+      def resolve(filter = nil)
+        # Explicitly force values to be loaded if they have not already
+        # done so. This will not cause them to be persisted to disk
+        (@values.keys - data.keys).each { |key_name| self[key_name] }
+        resolved = {}
+        data.each do |data_name, obj|
+          case obj
+          when PDK::Config::Namespace
+            # Query the child namespace
+            resolved.merge!(obj.resolve(filter))
+          else
+            setting_name = [name, data_name.to_s].join('.')
+            resolved[setting_name] = self[data_name] if be_resolved?(setting_name, filter)
+          end
+        end
+        resolved
+      end
+
       # @return [Boolean] true if the namespace has a parent, otherwise false.
       def child_namespace?
         !parent.nil?
@@ -170,6 +192,21 @@ module PDK
       end
 
       private
+
+      # Determines whether a setting name should be resolved using the filter
+      #  Returns true when filter is nil.
+      #  Returns true if the filter is exactly the same name as the setting.
+      #  Returns true if the name is a sub-key of the filter e.g.
+      #    Given a filter of user.module_defaults, `user.module_defaults.author` will return true, but `user.analytics.disabled` will return false.
+      #
+      # @param name [String] The setting name to test.
+      # @param filter [String] The filter used to test on the name.
+      # @return [Boolean] Whether the name passes the filter.
+      def be_resolved?(name, filter = nil)
+        return true if filter.nil? # If we're not filtering, this value should always be resolved
+        return true if name == filter # If it's exactly the same name then it should be resolved
+        name.start_with?(filter + '.') # If name is a subkey of the filter then it should be resolved
+      end
 
       # @abstract Subclass and override {#parse_data} to implement parsing logic
       #   for a particular config file format.

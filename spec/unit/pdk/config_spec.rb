@@ -96,6 +96,11 @@ describe PDK::Config do
       end
     end
 
+    def uuid_regex(uuid)
+      # Depending on the YAML or JSON generator, it may, or may not have quotes
+      %r{user-id: (?:#{uuid}|'#{uuid}'|\"#{uuid}\")}
+    end
+
     context 'default value' do
       context 'when there is no pre-existing bolt configuration' do
         it 'generates a new UUID' do
@@ -107,7 +112,7 @@ describe PDK::Config do
           new_id = SecureRandom.uuid
           expect(SecureRandom).to receive(:uuid).and_return(new_id)
           # Expect that the user-id is saved to the config file
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{user-id: (?:|\'|'")#{new_id}(?:|\'|'")})
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), uuid_regex(new_id))
           # ... and that it returns the new id
           expect(config.user['analytics']['user-id']).to eq(new_id)
         end
@@ -123,7 +128,7 @@ describe PDK::Config do
 
         it 'saves the UUID to the analytics config file' do
           # Expect that the user-id is saved to the config file
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{user-id: (?:|\'|'")#{uuid}(?:|\'|'")})
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), uuid_regex(uuid))
           config.user['analytics']['user-id']
         end
 
@@ -144,7 +149,7 @@ describe PDK::Config do
             new_id = SecureRandom.uuid
             expect(SecureRandom).to receive(:uuid).and_return(new_id)
             # Expect that the user-id is saved to the config file
-            expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{user-id: (?:|\'|'")#{new_id}(?:|\'|'")})
+            expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), uuid_regex(new_id))
             # ... and that it returns the new id
             expect(config.user['analytics']['user-id']).to eq(new_id)
           end
