@@ -25,15 +25,12 @@ EOF
 
       gemfile_env = PDK::Util::Bundler::BundleHelper.gemfile_env(puppet_env[:gemset])
 
-      command = PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
+      command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
         c.context = :pwd
         c.update_environment(gemfile_env)
       end
 
       result = command.execute!
-
-      $stderr.puts result[:stdout]
-      $stderr.puts result[:stderr]
 
       exit result[:exit_code]
     end
