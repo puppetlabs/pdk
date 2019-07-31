@@ -81,8 +81,7 @@ module PDK
 
           start_time = Time.now
 
-          # Use the string form of command to ensure command is invoked via a shell
-          system(@resolved_env, command_string)
+          system(@resolved_env, *argv)
 
           exit_code = child_status.exitstatus
           duration = Time.now - start_time
