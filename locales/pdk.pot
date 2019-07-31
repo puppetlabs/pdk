@@ -6,11 +6,11 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.11.1-1-g8953096\n"
+"Project-Id-Version: puppet development kit v1.11.1-46-g675b567\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2019-07-01 12:09+0100\n"
-"PO-Revision-Date: 2019-07-01 12:09+0100\n"
+"POT-Creation-Date: 2019-07-31 20:31+1000\n"
+"PO-Revision-Date: 2019-07-31 20:31+1000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -209,60 +209,74 @@ msgstr ""
 msgid "An unexpected error has occurred. Try running the command again with --debug"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:23
+#: ../lib/pdk/cli/exec.rb:35
 msgid "Unable to find `%{name}`. Check that it is installed and try again."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:45
+#: ../lib/pdk/cli/exec.rb:57
 msgid "PDK package installation not found. Trying '%{fallback}' from the system PATH instead."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:54
+#: ../lib/pdk/cli/exec.rb:66
 msgid "Could not find '%{vendored_bin}' in PDK package. Trying '%{fallback}' from the system PATH instead."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:61
+#: ../lib/pdk/cli/exec.rb:73
 msgid "Using '%{vendored_bin}' from PDK package."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:98
+#: ../lib/pdk/cli/exec/command.rb:46
 msgid "Expected execution context to be :system or :module but got '%{context}'."
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:126
-msgid "PUPPET_GEM_VERSION is not supported by PDK. Use the --puppet-version option on your PDK command or set the PDK_PUPPET_VERSION environment variable instead"
-msgstr ""
-
-#: ../lib/pdk/cli/exec.rb:136
-msgid "%{varname} is not supported by PDK."
-msgstr ""
-
-#: ../lib/pdk/cli/exec.rb:175
+#: ../lib/pdk/cli/exec/command.rb:85 ../lib/pdk/cli/exec/interactive_command.rb:44
 msgid "Current working directory is not part of a module. (No metadata.json was found.)"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:202
+#: ../lib/pdk/cli/exec/command.rb:112
 msgid "STDOUT: %{output}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:205
+#: ../lib/pdk/cli/exec/command.rb:115
 msgid "STDERR: %{output}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:237
+#: ../lib/pdk/cli/exec/command.rb:129
+msgid "PUPPET_GEM_VERSION is not supported by PDK. Use the --puppet-version option on your PDK command or set the PDK_PUPPET_VERSION environment variable instead"
+msgstr ""
+
+#: ../lib/pdk/cli/exec/command.rb:138
+msgid "%{varname} is not supported by PDK."
+msgstr ""
+
+#: ../lib/pdk/cli/exec/command.rb:197
 msgid "Executing '%{command}'"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:240
+#: ../lib/pdk/cli/exec/command.rb:200 ../lib/pdk/cli/exec/interactive_command.rb:76
 msgid "Command environment:"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:251
+#: ../lib/pdk/cli/exec/command.rb:211
 msgid "Failed to execute '%{command}': %{message}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec.rb:267
+#: ../lib/pdk/cli/exec/command.rb:227
 msgid "Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})"
+msgstr ""
+
+#: ../lib/pdk/cli/exec/interactive_command.rb:18 ../lib/pdk/cli/exec/interactive_command.rb:22 ../lib/pdk/cli/exec/interactive_command.rb:26 ../lib/pdk/cli/exec/interactive_command.rb:30 ../lib/pdk/cli/exec/interactive_command.rb:34 ../lib/pdk/cli/exec/interactive_command.rb:105
+msgid "This method is not implemented for PDK::CLI::Exec::InteractiveCommand"
+msgstr ""
+
+#: ../lib/pdk/cli/exec/interactive_command.rb:73
+msgid "Executing '%{command}' interactively"
+msgstr ""
+
+#: ../lib/pdk/cli/exec/interactive_command.rb:89
+msgid ""
+"Execution of '%{command}' complete (duration: \\\n"
+"                              %{duration_in_seconds}s; exit code: %{exit_code})"
 msgstr ""
 
 #: ../lib/pdk/cli/exec_group.rb:30
@@ -399,6 +413,18 @@ msgstr ""
 
 #: ../lib/pdk/cli/new/task.rb:24
 msgid "'%{name}' is not a valid task name"
+msgstr ""
+
+#: ../lib/pdk/cli/new/transport.rb:4
+msgid "transport [options] <name>"
+msgstr ""
+
+#: ../lib/pdk/cli/new/transport.rb:5
+msgid "[experimental] Create a new ruby transport named <name> using given options"
+msgstr ""
+
+#: ../lib/pdk/cli/new/transport.rb:19
+msgid "'%{name}' is not a valid transport name"
 msgstr ""
 
 #: ../lib/pdk/cli/test.rb:4
@@ -610,20 +636,24 @@ msgstr ""
 msgid "Validating module using %{num_of_threads} threads"
 msgstr ""
 
-#: ../lib/pdk/config.rb:55
+#: ../lib/pdk/config.rb:40
+msgid "Unable to load %{file}: %{message}"
+msgstr ""
+
+#: ../lib/pdk/config.rb:62
 msgid ""
 "PDK collects anonymous usage information to help us understand how it is being used and make decisions on how to improve it. You can find out more about what data we collect and how it is used in the PDK documentation at %{url}.\n"
 msgstr ""
 
-#: ../lib/pdk/config.rb:61
+#: ../lib/pdk/config.rb:68
 msgid "You can opt in or out of the usage data collection at any time by editing the analytics configuration file at %{path} and changing the '%{key}' value."
 msgstr ""
 
-#: ../lib/pdk/config.rb:73
+#: ../lib/pdk/config.rb:80
 msgid "Do you consent to the collection of anonymous PDK usage information?"
 msgstr ""
 
-#: ../lib/pdk/config.rb:85
+#: ../lib/pdk/config.rb:92
 msgid "No answer given, opting out of analytics collection."
 msgstr ""
 
@@ -835,76 +865,80 @@ msgstr ""
 msgid "%{error}: Creating a provider needs some local configuration in your module. Please follow the docs at https://github.com/puppetlabs/puppet-resource_api#getting-started."
 msgstr ""
 
-#: ../lib/pdk/generate/provider.rb:33
+#: ../lib/pdk/generate/provider.rb:33 ../lib/pdk/generate/transport.rb:33
 msgid ".sync.yml not found"
 msgstr ""
 
-#: ../lib/pdk/generate/provider.rb:37
+#: ../lib/pdk/generate/provider.rb:37 ../lib/pdk/generate/transport.rb:37
 msgid ".sync.yml contents is not a Hash"
 msgstr ""
 
-#: ../lib/pdk/generate/provider.rb:39
+#: ../lib/pdk/generate/provider.rb:39 ../lib/pdk/generate/transport.rb:39
 msgid "Gemfile configuration not found"
 msgstr ""
 
-#: ../lib/pdk/generate/provider.rb:41
+#: ../lib/pdk/generate/provider.rb:41 ../lib/pdk/generate/transport.rb:41
 msgid "Gemfile.optional configuration not found"
 msgstr ""
 
-#: ../lib/pdk/generate/provider.rb:43
+#: ../lib/pdk/generate/provider.rb:43 ../lib/pdk/generate/transport.rb:43
 msgid "Gemfile.optional.:development configuration not found"
 msgstr ""
 
-#: ../lib/pdk/generate/provider.rb:45
+#: ../lib/pdk/generate/provider.rb:45 ../lib/pdk/generate/transport.rb:45
 msgid "puppet-resource_api not found in the Gemfile config"
 msgstr ""
 
-#: ../lib/pdk/generate/provider.rb:47
+#: ../lib/pdk/generate/provider.rb:47 ../lib/pdk/generate/transport.rb:47
 msgid "spec/spec_helper.rb configuration not found"
 msgstr ""
 
-#: ../lib/pdk/generate/provider.rb:49
+#: ../lib/pdk/generate/provider.rb:49 ../lib/pdk/generate/transport.rb:49
 msgid "spec/spec_helper.rb.mock_with configuration not found"
 msgstr ""
 
-#: ../lib/pdk/generate/provider.rb:51
+#: ../lib/pdk/generate/provider.rb:51 ../lib/pdk/generate/transport.rb:51
 msgid "spec/spec_helper.rb.mock_with not set to ':rspec'"
 msgstr ""
 
-#: ../lib/pdk/generate/puppet_object.rb:105
+#: ../lib/pdk/generate/puppet_object.rb:112
 msgid "Unable to generate %{object_type}; '%{file}' already exists."
 msgstr ""
 
-#: ../lib/pdk/generate/puppet_object.rb:171
+#: ../lib/pdk/generate/puppet_object.rb:179
 msgid "Creating '%{file}' from template."
 msgstr ""
 
-#: ../lib/pdk/generate/puppet_object.rb:178
+#: ../lib/pdk/generate/puppet_object.rb:186
 msgid "Unable to create directory '%{path}': %{message}"
 msgstr ""
 
-#: ../lib/pdk/generate/puppet_object.rb:186
+#: ../lib/pdk/generate/puppet_object.rb:194
 msgid "Unable to write to file '%{path}': %{message}"
 msgstr ""
 
-#: ../lib/pdk/generate/puppet_object.rb:209
+#: ../lib/pdk/generate/puppet_object.rb:217
 msgid "No %{dir_type} template found; trying next template directory."
 msgstr ""
 
-#: ../lib/pdk/generate/puppet_object.rb:222
+#: ../lib/pdk/generate/puppet_object.rb:230
 msgid "Unable to find a %{type} template in %{url}; trying next template directory."
 msgstr ""
 
-#: ../lib/pdk/generate/puppet_object.rb:224
+#: ../lib/pdk/generate/puppet_object.rb:232
 msgid "Unable to find the %{type} template in %{url}."
 msgstr ""
 
-#: ../lib/pdk/generate/puppet_object.rb:279
+#: ../lib/pdk/generate/puppet_object.rb:287
 msgid "'%{dir}' does not contain valid Puppet module metadata: %{msg}"
 msgstr ""
 
 #: ../lib/pdk/generate/task.rb:54
 msgid "A task named '%{name}' already exists in this module; defined in %{file}"
+msgstr ""
+
+#: ../lib/pdk/generate/transport.rb:23
+msgid "%{error}: Creating a transport needs some local configuration in your module. Please follow the docs at https://github.com/puppetlabs/puppet-resource_api#getting-started."
 msgstr ""
 
 #: ../lib/pdk/module/build.rb:127
@@ -921,6 +955,10 @@ msgstr ""
 
 #: ../lib/pdk/module/build.rb:206
 msgid "'%{path}' could not be split at a directory separator into two parts, the first having a maximum length of 155 bytes and the second having a maximum length of 100 bytes."
+msgstr ""
+
+#: ../lib/pdk/module/build.rb:237
+msgid "Updated permissions of packaged '%{entry}' to %{new_mode}"
 msgstr ""
 
 #: ../lib/pdk/module/convert.rb:23 ../lib/pdk/module/update.rb:20
@@ -1037,39 +1075,39 @@ msgid ""
 "%{exception}: %{message}"
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:204
+#: ../lib/pdk/module/templatedir.rb:206
 msgid "The built-in template has substantially changed. Please run \"pdk convert\" on your module to continue."
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:206
+#: ../lib/pdk/module/templatedir.rb:208
 msgid "The specified template '%{path}' is not a directory."
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:211
+#: ../lib/pdk/module/templatedir.rb:213
 msgid "The template at '%{path}' does not contain a 'moduleroot/' directory."
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:216
+#: ../lib/pdk/module/templatedir.rb:218
 msgid "The template at '%{path}' does not contain a 'moduleroot_init/' directory, which indicates you are using an older style of template. Before continuing please use the --template-url flag when running the pdk new commands to pass a new style template."
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:232
+#: ../lib/pdk/module/templatedir.rb:234
 msgid "The directory '%{dir}' doesn't exist"
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:301
+#: ../lib/pdk/module/templatedir.rb:303
 msgid "'%{file}' is not a valid YAML file: %{problem} %{context} at line %{line} column %{column}"
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:336
+#: ../lib/pdk/module/templatedir.rb:338
 msgid "Unable to clone git repository at '%{repo}' into '%{dest}'."
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:353
+#: ../lib/pdk/module/templatedir.rb:355
 msgid "Unable to checkout '%{ref}' of git repository at '%{path}'."
 msgstr ""
 
-#: ../lib/pdk/module/templatedir.rb:356
+#: ../lib/pdk/module/templatedir.rb:358
 msgid "Uncommitted changes found when attempting to checkout '%{ref}' of git repository at '%{path}'; skipping git reset."
 msgstr ""
 
@@ -1427,8 +1465,12 @@ msgstr ""
 msgid "Checking metadata syntax (%{targets})."
 msgstr ""
 
-#: ../lib/pdk/validate/metadata/metadata_syntax.rb:69 ../lib/pdk/validate/tasks/metadata_lint.rb:77 ../lib/pdk/validate/yaml/syntax.rb:74
+#: ../lib/pdk/validate/metadata/metadata_syntax.rb:69 ../lib/pdk/validate/tasks/metadata_lint.rb:77 ../lib/pdk/validate/yaml/syntax.rb:76
 msgid "Could not be read."
+msgstr ""
+
+#: ../lib/pdk/validate/puppet/puppet_epp.rb:47
+msgid "Checking Puppet EPP syntax (%{pattern})."
 msgstr ""
 
 #: ../lib/pdk/validate/puppet/puppet_lint.rb:22
@@ -1467,10 +1509,14 @@ msgstr ""
 msgid "Checking YAML syntax (%{targets})."
 msgstr ""
 
-#: ../lib/pdk/validate/yaml/syntax.rb:97
+#: ../lib/pdk/validate/yaml/syntax.rb:65
+msgid "Validating yaml content of %{parsed_targets}"
+msgstr ""
+
+#: ../lib/pdk/validate/yaml/syntax.rb:99
 msgid "%{problem} %{context}"
 msgstr ""
 
-#: ../lib/pdk/validate/yaml/syntax.rb:109
+#: ../lib/pdk/validate/yaml/syntax.rb:111
 msgid "Unsupported class: %{message}"
 msgstr ""

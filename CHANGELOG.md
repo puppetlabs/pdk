@@ -4,6 +4,39 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.12.0](https://github.com/puppetlabs/pdk/tree/v1.12.0) (2019-07-31)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.11.1...v1.12.0)
+
+**Implemented enhancements:**
+
+- \(PDK-421\) Validate EPP syntax [\#680](https://github.com/puppetlabs/pdk/pull/680) ([raphink](https://github.com/raphink))
+- \(FM-8081\) pdk new transport [\#666](https://github.com/puppetlabs/pdk/pull/666) ([DavidS](https://github.com/DavidS))
+
+**Fixed bugs:**
+
+- Checking Ruby code style fails [\#697](https://github.com/puppetlabs/pdk/issues/697)
+- template-url does not properly match ssh URI [\#653](https://github.com/puppetlabs/pdk/issues/653)
+- pdk build should fix file + directory rights for tar file [\#618](https://github.com/puppetlabs/pdk/issues/618)
+
+**Merged pull requests:**
+
+- \(FIXUP\) Bypass shell invocation for PDK::CLI::Exec::InteractiveCommand [\#717](https://github.com/puppetlabs/pdk/pull/717) ([scotje](https://github.com/scotje))
+- \(maint\) Expect pdk test unit to run more than 1 test [\#714](https://github.com/puppetlabs/pdk/pull/714) ([rodjek](https://github.com/rodjek))
+- \(PDK-1309\) Ensure file modes in built modules are sane [\#713](https://github.com/puppetlabs/pdk/pull/713) ([rodjek](https://github.com/rodjek))
+- \(PDK-641\) Make `pdk bundle` fully interactive [\#712](https://github.com/puppetlabs/pdk/pull/712) ([scotje](https://github.com/scotje))
+- \(PDK-1366\) Update default operatingsystem versions [\#711](https://github.com/puppetlabs/pdk/pull/711) ([rodjek](https://github.com/rodjek))
+- \(PDK-421\) Update acceptance tests for EPP Validation [\#709](https://github.com/puppetlabs/pdk/pull/709) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1434\) Gracefully handle unparsable bolt analytics config [\#705](https://github.com/puppetlabs/pdk/pull/705) ([rodjek](https://github.com/rodjek))
+- \(MAINT\) Add debug logging of yaml files being validated [\#704](https://github.com/puppetlabs/pdk/pull/704) ([npwalker](https://github.com/npwalker))
+- \(maint\) Fix typo in gitignore [\#700](https://github.com/puppetlabs/pdk/pull/700) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1333\) Fix command\_spec rake task for newer CRI versions [\#699](https://github.com/puppetlabs/pdk/pull/699) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1429\) Bump version to 1.11.2.pre [\#698](https://github.com/puppetlabs/pdk/pull/698) ([scotje](https://github.com/scotje))
+- \(FM-8081\) pdk new transport [\#696](https://github.com/puppetlabs/pdk/pull/696) ([DavidS](https://github.com/DavidS))
+- \(maint\) Update beaker in package tests [\#695](https://github.com/puppetlabs/pdk/pull/695) ([rodjek](https://github.com/rodjek))
+- Revert "Merge pull request \#666 from DavidS/fm-8081-pdk-new-transport" [\#693](https://github.com/puppetlabs/pdk/pull/693) ([DavidS](https://github.com/DavidS))
+- \(maint\) Message and string fixes [\#676](https://github.com/puppetlabs/pdk/pull/676) ([DavidS](https://github.com/DavidS))
+- \(PDK-1333\) command\_spec rake task [\#644](https://github.com/puppetlabs/pdk/pull/644) ([rodjek](https://github.com/rodjek))
+
 ## [v1.11.1](https://github.com/puppetlabs/pdk/tree/v1.11.1) (2019-07-01)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.11.0...v1.11.1)
 
@@ -13,6 +46,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Merged pull requests:**
 
+- \(PDK-1423\) Release 1.11.1 [\#692](https://github.com/puppetlabs/pdk/pull/692) ([rodjek](https://github.com/rodjek))
 - \(PDK-1415\) Allow analytics opt-out prompt to be disabled via ENV [\#691](https://github.com/puppetlabs/pdk/pull/691) ([scotje](https://github.com/scotje))
 - \(PDK-1414\) Detect common CI environments and set non-interactive [\#689](https://github.com/puppetlabs/pdk/pull/689) ([glennsarti](https://github.com/glennsarti))
 - \(PDK-1409\) Bump PDK version to 1.11.1.pre [\#688](https://github.com/puppetlabs/pdk/pull/688) ([rodjek](https://github.com/rodjek))
