@@ -1,4 +1,4 @@
 module PDK
-  VERSION = '1.11.2.pre'.freeze
+  VERSION = '1.12.0'.freeze
   TEMPLATE_REF = VERSION
 end
