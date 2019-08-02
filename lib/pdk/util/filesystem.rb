@@ -54,6 +54,11 @@ module PDK
         File.readable?(*args)
       end
       module_function :readable?
+
+      def exist?(*args)
+        File.exist?(*args)
+      end
+      module_function :exist?
       #:nocov:
     end
   end

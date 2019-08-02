@@ -74,7 +74,7 @@ module PDK
 
           if options[:noop] && new_metadata.nil?
             update_manager.add_file(metadata_path, '')
-          elsif File.file?(metadata_path)
+          elsif PDK::Util::Filesystem.file?(metadata_path)
             update_manager.modify_file(metadata_path, new_metadata.to_json)
           else
             update_manager.add_file(metadata_path, new_metadata.to_json)
@@ -86,7 +86,7 @@ module PDK
             elsif file_status == :delete
               update_manager.remove_file(file_path)
             elsif file_status == :manage
-              if File.exist? file_path
+              if PDK::Util::Filesystem.exist?(file_path)
                 update_manager.modify_file(file_path, file_content)
               else
                 update_manager.add_file(file_path, file_content)
@@ -107,8 +107,8 @@ module PDK
       end
 
       def update_metadata(metadata_path, template_metadata)
-        if File.file?(metadata_path)
-          unless File.readable?(metadata_path)
+        if PDK::Util::Filesystem.file?(metadata_path)
+          unless PDK::Util::Filesystem.readable?(metadata_path)
             raise PDK::CLI::ExitWithError, _('Unable to update module metadata; %{path} exists but it is not readable.') % {
               path: metadata_path,
             }
@@ -124,7 +124,7 @@ module PDK
           rescue ArgumentError
             metadata = PDK::Generate::Module.prepare_metadata(options) unless options[:noop]
           end
-        elsif File.exist?(metadata_path)
+        elsif PDK::Util::Filesystem.exist?(metadata_path)
           raise PDK::CLI::ExitWithError, _('Unable to update module metadata; %{path} exists but it is not a file.') % {
             path: metadata_path,
           }
