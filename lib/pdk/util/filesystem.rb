@@ -49,6 +49,11 @@ module PDK
         File.fnmatch(*args)
       end
       module_function :fnmatch
+
+      def readable?(*args)
+        File.readable?(*args)
+      end
+      module_function :readable?
       #:nocov:
     end
   end
