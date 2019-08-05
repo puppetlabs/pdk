@@ -1,35 +1,60 @@
 module PDK
   class Config
-    # A class for describing the value of a {PDK::Config} setting.
+    # A class for describing the setting of a {PDK::Config} setting.
     #
     # Generally, this is never instantiated manually, but is instead
-    # instantiated by passing a block to {PDK::Config::Namespace#value}.
+    # instantiated by passing a block to {PDK::Config::Namespace#setting}.
     #
     # @example
     #
     # PDK::Config::Namespace.new('analytics') do
-    #   value :disabled do
+    #   setting :disabled do
     #     validate PDK::Config::Validator.boolean
     #     default_to { false }
     #   end
     # end
-    class Value
-      # Initialises an empty value definition.
+    class Setting
+      attr_reader :namespace
+
+      attr_writer :previous_setting
+
+      # Initialises an empty setting definition.
       #
-      # @param name [String,Symbol] the name of the value.
-      def initialize(name)
-        @name = name
+      # @param name [String,Symbol] the name of the setting.
+      # @param namespace [PDK::Config::Namespace] The namespace this setting belongs to
+      def initialize(name, namespace, initial_value = nil)
+        @name = name.to_s
         @validators = []
+        @namespace = namespace
+        @value = initial_value
       end
 
-      # Assign a validator to the value.
+      def qualified_name
+        [namespace.name, @name].join('.')
+      end
+
+      def value # rubocop:disable Style/TrivialAccessors
+        @value
+      end
+
+      def value=(obj)
+        validate!(obj)
+        @value = obj
+      end
+
+      def to_s
+        @value.to_s
+      end
+
+      # Assign a validator to the setting.
+      # TODO: Do not override?
       #
       # @param validator [Hash{Symbol => [Proc,String]}]
-      # @option validator [Proc] :proc a lambda that takes the value to be
-      #   validated as the argument and returns `true` if the value is valid.
+      # @option validator [Proc] :proc a lambda that takes the setting to be
+      #   validated as the argument and returns `true` if the setting is valid.
       # @option validator [String] :message a description of what the validator
       #   is testing for, that is displayed to the user as part of the error
-      #   message for invalid values.
+      #   message for invalid settings.
       #
       # @raise [ArgumentError] if not passed a Hash.
       # @raise [ArgumentError] if the Hash doesn't have a `:proc` key that
@@ -46,30 +71,30 @@ module PDK
         @validators << validator
       end
 
-      # Validate a value against the assigned validators.
+      # Validate a setting against the assigned validators.
       #
-      # @param key [String] the name of the value being validated.
-      # @param value [Object] the value being validated.
+      # @param setting [Object] the setting being validated.
       #
       # @raise [ArgumentError] if any of the assigned validators fail to
-      #   validate the value.
+      #   validate the setting.
       #
       # @return [nil]
-      def validate!(key, value)
+      def validate!(value)
         @validators.each do |validator|
           next if validator[:proc].call(value)
 
           raise ArgumentError, _('%{key} %{message}') % {
-            key:     key,
+            key:     qualified_name,
             message: validator[:message],
           }
         end
       end
 
-      # Assign a default value.
+      # Assign a default value proc for the setting.
+      # TODO: Do not override
       #
       # @param block [Proc] a block that is lazy evaluated when necessary in
-      #   order to determine the default value.
+      #   order to determine the default setting.
       #
       # @return [nil]
       def default_to(&block)
@@ -77,16 +102,21 @@ module PDK
         @default_to = block
       end
 
-      # Evaluate the default value block.
+      # Evaluate the default setting.
       #
       # @return [Object,nil] the result of evaluating the block given to
-      #   {#default_to}, or `nil` if the value has no default.
+      #   {#default_to}, or `nil` if the setting has no default.
       def default
-        default? ? @default_to.call : nil
+        return @default_to.call if default_block?
+        # If there is a previous setting in the chain, use its default
+        @previous_setting.nil? ? nil : @previous_setting.default
       end
 
-      # @return [Boolean] true if the value has a default value block.
-      def default?
+      private
+
+      # @return [Boolean] true if the setting has a default setting block.
+      # TODO: Do not override
+      def default_block?
         !@default_to.nil?
       end
     end

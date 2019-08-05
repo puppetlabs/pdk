@@ -18,6 +18,8 @@ describe PDK::Config do
 
   before(:each) do
     allow(PDK::Util::Filesystem).to receive(:file?).with(anything).and_return(false)
+    # Allow the JSON Schema documents to actually be read. Rspec matchers are LIFO
+    allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original
     allow(PDK::Util).to receive(:configdir).and_return(File.join('path', 'to', 'configdir'))
     mock_file(PDK.answers.answer_file_path, answer_file_content)
     mock_file(described_class.analytics_config_path, analytics_config_content)
@@ -36,7 +38,7 @@ describe PDK::Config do
       end
 
       it 'can not be set to a string' do
-        expect { config.user['analytics']['disabled'] = 'no' }.to raise_error(%r{must be a boolean})
+        expect { config.user['analytics']['disabled'] = 'no' }.to raise_error(ArgumentError)
       end
     end
 
@@ -92,7 +94,7 @@ describe PDK::Config do
       end
 
       it 'can not be set to other values' do
-        expect { config.user['analytics']['user-id'] = 'totally a UUID' }.to raise_error(%r{must be a version 4 UUID})
+        expect { config.user['analytics']['user-id'] = 'totally a UUID' }.to raise_error(ArgumentError)
       end
     end
 
@@ -165,18 +167,16 @@ describe PDK::Config do
       prompt.input << responses.join("\r") + "\r"
       prompt.input.rewind
 
-      allow(PDK).to receive(:config).and_return(
-        instance_double(described_class, user: described_class::Namespace.new('user')),
-      )
       allow(PDK::CLI::Util).to receive(:interactive?).and_return(true)
-
-      described_class.analytics_config_interview!
+      # Mock any file writing
+      allow(PDK::Util::Filesystem).to receive(:write_file).with(anything, anything)
     end
 
     context 'when the user responds yes' do
       let(:responses) { ['yes'] }
 
       it 'sets user.analytics.disabled to false' do
+        described_class.analytics_config_interview!
         expect(PDK.config.user['analytics']['disabled']).to be_falsey
       end
     end
@@ -185,6 +185,7 @@ describe PDK::Config do
       let(:responses) { ['no'] }
 
       it 'sets user.analytics.disabled to true' do
+        described_class.analytics_config_interview!
         expect(PDK.config.user['analytics']['disabled']).to be_truthy
       end
     end
@@ -193,6 +194,7 @@ describe PDK::Config do
       let(:responses) { [''] }
 
       it 'sets user.analytics.disabled to false' do
+        described_class.analytics_config_interview!
         expect(PDK.config.user['analytics']['disabled']).to be_falsey
       end
     end
@@ -201,6 +203,7 @@ describe PDK::Config do
       let(:responses) { ["\003"] } # \003 == Ctrl-C
 
       it 'sets user.analytics.disabled to true' do
+        described_class.analytics_config_interview!
         expect(PDK.config.user['analytics']['disabled']).to be_truthy
       end
     end
