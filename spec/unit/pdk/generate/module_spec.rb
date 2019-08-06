@@ -97,7 +97,7 @@ describe PDK::Generate::Module do
         allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
         allow(File).to receive(:open).with(%r{pdk-test-writable}, anything) { raise Errno::EACCES unless target_parent_writeable }
         allow(FileUtils).to receive(:rm_f).with(%r{pdk-test-writable})
-        allow(test_template_dir).to receive(:render).and_yield('test_file_path', 'test_file_content')
+        allow(test_template_dir).to receive(:render).and_yield('test_file_path', 'test_file_content', :manage)
       end
 
       context 'when the parent directory of the target is not writable' do
@@ -122,7 +122,7 @@ describe PDK::Generate::Module do
         let(:content) { 'test_file_content' }
 
         before(:each) do
-          allow(test_template_dir).to receive(:render).and_yield('test_file_path', content)
+          allow(test_template_dir).to receive(:render).and_yield('test_file_path', content, :manage)
         end
 
         it 'writes the rendered files from the template to the temporary directory' do
@@ -130,6 +130,36 @@ describe PDK::Generate::Module do
 
           test_template_file.rewind
           expect(test_template_file.read).to eq(content + "\n")
+        end
+      end
+
+      context 'when the module template contains unmanaged template files' do
+        let(:content) { 'test_file_content' }
+
+        before(:each) do
+          allow(test_template_dir).to receive(:render).and_yield('test_file_path', content, :unmanage)
+        end
+
+        it 'writes the rendered files from the template to the temporary directory' do
+          described_class.invoke(invoke_opts)
+
+          test_template_file.rewind
+          expect(test_template_file.read).to eq(content + "\n")
+        end
+      end
+
+      context 'when the module template contains files with delete option set' do
+        let(:content) { 'test_file_content' }
+
+        before(:each) do
+          allow(test_template_dir).to receive(:render).and_yield('test_file_path', content, :delete)
+        end
+
+        it 'does not writes the deleted files from the template to the temporary directory' do
+          described_class.invoke(invoke_opts)
+
+          test_template_file.rewind
+          expect(test_template_file.read).to eq('')
         end
       end
 
