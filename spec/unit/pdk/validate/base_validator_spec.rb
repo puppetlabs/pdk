@@ -158,6 +158,35 @@ describe PDK::Validate::BaseValidator do
       end
     end
 
+    context 'when given specific targets which are not in the glob_pattern' do
+      let(:pattern) { ['metadata.json', 'tasks/*.json'] }
+      let(:targets) { ['target1.pp', 'target2/'] }
+
+      before(:each) do
+        # The glob simulates a module with a metadata.json
+        allow(PDK::Util::Filesystem).to receive(:glob).with(File.join(module_root, 'metadata.json'), anything).and_return([File.join(module_root, 'metadata.json')])
+        # The glob simulates a module without any tasks
+        allow(PDK::Util::Filesystem).to receive(:glob).with(File.join(module_root, 'tasks/*.json'), anything).and_return([])
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('target1.pp').and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('target2/').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with('target1.pp').and_return(true)
+
+        targets.map do |t|
+          allow(PDK::Util::Filesystem).to receive(:expand_path).with(t).and_return(File.join(module_root, t))
+        end
+
+        Array[described_class.pattern].flatten.map do |p|
+          allow(PDK::Util::Filesystem).to receive(:expand_path).with(p).and_return(File.join(module_root, p))
+        end
+      end
+
+      it 'returns all targets as skipped' do
+        expect(target_files[0]).to be_empty
+        expect(target_files[1]).to eq(targets)
+        expect(target_files[2]).to be_empty
+      end
+    end
+
     context 'when given specific targets which are case insensitive on a case insensitive file system' do
       let(:targets) { ['target2/'] }
       let(:glob_pattern) { File.join(module_root, described_class.pattern) }
