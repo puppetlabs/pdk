@@ -1,7 +1,9 @@
 require 'spec_helper'
 
 describe PDK::Config::Namespace do
-  subject(:config) { described_class.new('config') }
+  subject(:config) { described_class.new('config', config_options) }
+
+  let(:config_options) { {} }
 
   shared_context :with_a_nested_namespace do |name|
     before(:each) do
@@ -14,6 +16,20 @@ describe PDK::Config::Namespace do
       path = File.expand_path(File.join('path', 'to', name))
       allow(PDK::Util::Filesystem).to receive(:read_file).with(path, anything)
       allow(PDK::Util::Filesystem).to receive(:write_file).with(path, anything)
+      allow(PDK::Util::Filesystem).to receive(:mkdir_p)
+
+      config.mount(name, PDK::Config::JSON.new(file: path))
+    end
+  end
+
+  shared_context :with_a_mounted_file_with_content do |name, content|
+    before(:each) do
+      path = File.expand_path(File.join('path', 'to', name))
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(path).and_return(content)
+      allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
+      allow(PDK::Util::Filesystem).to receive(:file?).with(path).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:write_file).with(path, anything)
+      allow(PDK::Util::Filesystem).to receive(:mkdir_p)
 
       config.mount(name, PDK::Config::JSON.new(file: path))
     end
@@ -64,6 +80,62 @@ describe PDK::Config::Namespace do
 
     it 'can access arbitrarily deep values' do
       expect(config[:bar][:baz]).to eq({})
+    end
+
+    it 'does not save values when reading defaults' do
+      expect(config).to receive(:save_data).never # rubocop:disable RSpec/SubjectStub This is an expectation, not a stub
+      expect(config[:missing]).to eq({})
+    end
+
+    context 'when persistent_defaults is true' do
+      let(:config_options) { { persistent_defaults: true } }
+
+      before(:each) do
+        # Add a value with a default value
+        config.value('spec_test') do
+          default_to { 'spec_default' }
+        end
+      end
+
+      it 'saves default values to disk' do
+        expect(config).to receive(:save_data).once # rubocop:disable RSpec/SubjectStub This is an expectation, not a stub
+        expect(config[:spec_test]).to eq('spec_default')
+      end
+    end
+
+    context 'when persistent_defaults is false' do
+      let(:config_options) { { persistent_defaults: false } }
+
+      before(:each) do
+        # Add a value with a default value
+        config.value('spec_test') do
+          default_to { 'spec_default' }
+        end
+      end
+
+      it 'does not save default values to disk' do
+        expect(config).to receive(:save_data).never # rubocop:disable RSpec/SubjectStub This is an expectation, not a stub
+        expect(config[:spec_test]).to eq('spec_default')
+      end
+    end
+  end
+
+  describe '#fetch' do
+    before(:each) do
+      config[:foo] = 'bar'
+    end
+
+    it 'can access values with either Symbol or String keys' do
+      expect([config.fetch(:foo, 'default'), config.fetch('foo', 'default')]).to all(eq('bar'))
+    end
+
+    it 'will return the specified default value for unknown values' do
+      expect([config.fetch(:missing, 'default'), config.fetch('missing', 'default')]).to all(eq('default'))
+    end
+
+    it 'does not save values when using the default' do
+      expect(config).to receive(:save_data).never # rubocop:disable RSpec/SubjectStub This is an expectation, not a stub
+      config.fetch(:missing, 'default')
     end
   end
 

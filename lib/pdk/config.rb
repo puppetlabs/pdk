@@ -15,7 +15,7 @@ module PDK
       @user ||= PDK::Config::JSON.new('user', file: PDK::Config.user_config_path) do
         mount :module_defaults, PDK::Config::JSON.new(file: PDK.answers.answer_file_path)
 
-        mount :analytics, PDK::Config::YAML.new(file: PDK::Config.analytics_config_path) do
+        mount :analytics, PDK::Config::YAML.new(file: PDK::Config.analytics_config_path, persistent_defaults: true) do
           value :disabled do
             validate PDK::Config::Validator.boolean
             default_to { PDK::Config.bolt_analytics_config.fetch('disabled', true) }
