@@ -122,7 +122,12 @@ module PDK
           PDK.logger.debug(_("Rendering '%{template}'...") % { template: template_file })
           dest_path = template_file.sub(%r{\.erb\Z}, '')
           config = config_for(dest_path)
-          dest_status = :manage
+
+          dest_status = if template_loc.start_with?(@moduleroot_init)
+                          :init
+                        else
+                          :manage
+                        end
 
           if config['unmanaged']
             dest_status = :unmanage

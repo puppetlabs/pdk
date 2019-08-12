@@ -16,6 +16,10 @@ module PDK
         @options = options
       end
 
+      def convert?
+        instance_of?(PDK::Module::Convert)
+      end
+
       def run
         stage_changes!
 
@@ -68,7 +72,7 @@ module PDK
       def stage_changes!
         metadata_path = 'metadata.json'
 
-        PDK::Module::TemplateDir.new(template_uri, nil, false) do |templates|
+        PDK::Module::TemplateDir.new(template_uri, nil, true) do |templates|
           new_metadata = update_metadata(metadata_path, templates.metadata)
           templates.module_metadata = new_metadata.data unless new_metadata.nil?
 
@@ -81,11 +85,16 @@ module PDK
           end
 
           templates.render do |file_path, file_content, file_status|
-            if file_status == :unmanage
+            case file_status
+            when :unmanage
               PDK.logger.debug(_("skipping '%{path}'") % { path: file_path })
-            elsif file_status == :delete
+            when :delete
               update_manager.remove_file(file_path)
-            elsif file_status == :manage
+            when :init
+              if convert? && !PDK::Util::Filesystem.exist?(file_path)
+                update_manager.add_file(file_path, file_content)
+              end
+            when :manage
               if PDK::Util::Filesystem.exist?(file_path)
                 update_manager.modify_file(file_path, file_content)
               else
