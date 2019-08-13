@@ -1,0 +1,313 @@
+# This is Windows Only right now
+if (($PSVersionTable.PSEdition -eq 'Desktop') -or
+    (($PSVersionTable.PSEdition -eq 'Core') -and $IsWindows)) {
+  $fso = New-Object -ComObject Scripting.FileSystemObject
+
+  $env:DEVKIT_BASEDIR = (Get-ItemProperty -Path "HKLM:\Software\Puppet Labs\DevelopmentKit").RememberedInstallDir64
+  # Windows API GetShortPathName requires inline C#, so use COM instead
+  $env:DEVKIT_BASEDIR = $fso.GetFolder($env:DEVKIT_BASEDIR).ShortPath
+  $env:RUBY_DIR       = "$($env:DEVKIT_BASEDIR)\private\ruby\2.4.5"
+  $env:SSL_CERT_FILE  = "$($env:DEVKIT_BASEDIR)\ssl\cert.pem"
+  $env:SSL_CERT_DIR   = "$($env:DEVKIT_BASEDIR)\ssl\certs"
+  # Disable the spinner
+  $env:PDK_FRONTEND   = 'noninteractive'
+
+  function Invoke-PDK($PDKArgs) {
+    if ($DebugPreference -ne 'SilentlyContinue') { $PDKArgs += @('--debug') }
+    Write-Verbose "Using PDK comamand line $($PDKArgs -join ' ')"
+
+    if ($env:ConEmuANSI -eq 'ON') {
+      &$env:RUBY_DIR\bin\ruby -S -- $env:RUBY_DIR\bin\pdk $PDKArgs
+    } else {
+      &$env:DEVKIT_BASEDIR\private\tools\bin\ansicon.exe $env:RUBY_DIR\bin\ruby -S -- $env:RUBY_DIR\bin\pdk $PDKArgs
+    }
+  }
+
+} else {
+  Throw 'The PDK module is not supported on this platform yet'
+  return
+}
+
+<%
+@pdk_pwsh_commands.each do |cmd|
+-%>
+<#
+.DESCRIPTION
+<%= cmd['description'] -%>
+<%
+  cmd['options'].reject { |_, item| item['reserved']}.each do |param_name, option| %>
+
+.PARAMETER <%= param_name %>
+<%= option['desc'] -%>
+<%
+  end
+-%>
+
+#>
+Function <%= cmd['function_name'] %>
+{
+  [CmdletBinding()]
+  param(
+<%
+  function_params = []
+  cmd['options'].reject { |_, item| item['reserved']}.each do |param_name, option|
+    output = "    [#{option['type']}] $#{param_name}"
+    output = "    [Parameter(Position = #{option['position']})]\n" + output if option['position'] >= 0
+    function_params << output
+  end
+%><%= function_params.join(",\n\n") %>
+  )
+<%
+  # Construct the command to actually send to PDK
+  if cmd['pdk_subcommand'].nil? -%>
+  $args = @('<%= cmd['pdk_verb'] %>')
+<%  else -%>
+  $args = @('<%= cmd['pdk_verb'] %>', '<%= cmd['pdk_subcommand'] %>')
+<%  end
+
+  # Add the non-positional parameters
+  cmd['options'].select { |_, item| item['position'] == -1 }.each do |param_name, param|
+    case param['type']
+    when 'Switch' -%>
+  if ($<%= param_name -%>) { $args += @('--<%= param['pdkname'] %>') }
+<%  when 'Verbose' -%>
+  if ($VerbosePreference -eq 'Continue') { $args += '--<%= param['pdkname'] %>' }
+<%  else -%>
+  if (![string]::IsNullOrEmpty($<%= param_name -%>)) { $args += @('--<%= param['pdkname'] %>', $<%= param_name -%> )}
+<%  end
+  end
+
+  # Add the positional parameters. They come after the non-positional ones
+  cmd['options'].select { |_, item| item['position'] >= 0 }.each do |param_name, _| -%>
+  if (![string]::IsNullOrEmpty($<%= param_name -%>)) { $args += $<%= param_name -%> }
+<% end -%>
+
+  Invoke-PDK -PDKArgs $args
+}
+Export-ModuleMember -Function <%= cmd['function_name'] %>
+<%
+end
+%>
+
+# --------------------------
+# These are manually created
+# --------------------------
+
+$invokePDKSource = @"
+using System;
+using System.Diagnostics;
+using System.Management.Automation;
+
+namespace Puppet
+{
+  public class PDKInvoker
+  {
+    private System.Management.Automation.Host.PSHostUserInterface _psUI;
+
+    public PDKInvoker(System.Management.Automation.Host.PSHostUserInterface psUI)
+    {
+      _psUI = psUI;
+    }
+
+    public void InvokePDK(string rubyPath, string[] pdkArguments, string workingDir)
+    {
+      Process process = new Process();
+      process.StartInfo.FileName = rubyPath;
+      process.StartInfo.Arguments = String.Join(" ", pdkArguments);
+      process.StartInfo.CreateNoWindow = false;
+      process.StartInfo.UseShellExecute = false;
+
+      process.StartInfo.RedirectStandardOutput = true;
+      process.StartInfo.RedirectStandardError = true;
+      process.StartInfo.StandardErrorEncoding = System.Text.Encoding.UTF8;
+      process.StartInfo.StandardOutputEncoding = System.Text.Encoding.UTF8;
+
+      process.OutputDataReceived += new DataReceivedEventHandler(OutputHandler);
+      process.ErrorDataReceived += new DataReceivedEventHandler(ErrorOutputHandler);
+
+      _psUI.WriteVerboseLine(String.Format("Using PDK comamand line {0}", String.Join(" ", pdkArguments)));
+
+      process.Start();
+      process.BeginOutputReadLine();
+      process.BeginErrorReadLine();
+      process.WaitForExit();
+      process.CancelOutputRead();
+      process.CancelErrorRead();
+    }
+
+    private void OutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+    {
+      if (outLine == null) { return; }
+      if (outLine.Data == null) { return; }
+      string line = outLine.Data;
+      if (line.Trim() == "") { return; }
+      _psUI.WriteVerboseLine(line);
+    }
+
+    private void ErrorOutputHandler(object sendingProcess, DataReceivedEventArgs outLine)
+    {
+      if (outLine == null) { return; }
+      if (outLine.Data == null) { return; }
+      string line = outLine.Data;
+      if (line.Trim() == "") { return; }
+
+      if (line.StartsWith("pdk (INFO): "))
+      {
+        _psUI.WriteVerboseLine(line.Substring(12));
+      }
+      else if (line.StartsWith("pdk (WARN): "))
+      {
+        _psUI.WriteWarningLine(line.Substring(12));
+      }
+      else
+      {
+        _psUI.WriteVerboseLine(line);
+      }
+    }
+  }
+}
+"@
+
+Add-Type -TypeDefinition $invokePDKSource -Language CSharp
+
+function Invoke-PDK2($PDKArgs) {
+  if ($DebugPreference -ne 'SilentlyContinue') { $PDKArgs += @('--debug') }
+  $processArgs = @('-S', '--', "$env:RUBY_DIR\bin\pdk") + $PDKArgs
+
+  $junitXMLFile = New-TemporaryFile
+  $processArgs += "--format=junit:${junitXMLFile}"
+
+  $Invoker = New-Object 'Puppet.PDKInvoker' -ArgumentList @($Host.UI)
+
+  $Invoker.InvokePDK("$env:RUBY_DIR\bin\ruby", $processArgs, (get-location).Path)
+
+  Write-Output $junitXMLFile
+}
+
+Function ConvertFrom-JUnitXML($JUnitFile, $StartTimeStamp) {
+  # Ref - https://llg.cubic.org/docs/junit/
+  # TODO Should error trap here
+  $xmlDoc = [XML](Get-Content -Path $JUnitFile -Raw)
+
+  # Should really use a Class here but for now creating a PSCustomObject
+  $resultHash = @{
+    'PassedCount' = 0
+    'ErrorCount' = 0
+    'FailedCount' = 0
+    'SkippedCount' = 0
+    'TotalCount' = 0
+    'Duration' = (New-TimeSpan -Start $StartTimeStamp -End (Get-Date))
+    'StartTime' = $StartTimeStamp
+    'Tests' = [System.Collections.ArrayList]::new()
+  }
+
+  $xmlDoc.SelectNodes("//testcase") | ForEach-Object {
+    $testCase = $_
+
+    $classArray = $testcase.classname.Split(".",2)
+    $nameArray = $testcase.name.Split(":",3)
+
+    # Should really use a Class here but for now creating a PSCustomObject
+    $testHash = @{
+      'Source' = $classArray[0]
+      'Name' = $classArray[1]
+      'File' = $nameArray[0]
+      'Line' = [int]$nameArray[1]
+      'Result' = 'Success'
+      'Message' = $null
+      'Detail' = $null
+    }
+    $resultHash['TotalCount']++
+
+    $node = $testCase.SelectSingleNode("failure")
+    if ($null -ne $node) {
+      $testHash['Result'] = 'Failure'
+      $testHash['Message'] = $node.message
+      $testHash['Detail'] = $node.'#text'
+      $resultHash['FailedCount']++
+    }
+
+    $node = $testCase.SelectSingleNode("skipped")
+    if ($null -ne $node) {
+      $testHash['Result'] = 'Skipped'
+      $testHash['Message'] = $node.message
+      $testHash['Detail'] = $node.'#text'
+      $resultHash['SkippedCount']++
+    }
+
+    $resultHash['Tests'].Add((New-Object -Type psobject -Property $testHash)) | Out-Null
+  }
+
+  # Post Processing
+  $resultHash['PassedCount'] = $resultHash['TotalCount'] - $resultHash['ErrorCount'] - $resultHash['FailedCount'] - $resultHash['SkippedCount']
+
+  Write-Output (New-Object -Type psobject -Property $resultHash)
+}
+
+<#
+.DESCRIPTION
+Run unit tests.
+
+.PARAMETER PeVersion
+Puppet Enterprise version to run tests or validations against.
+
+.PARAMETER CleanFixtures
+Clean up downloaded fixtures after the test run.
+
+.PARAMETER PuppetDev
+When specified, PDK will validate or test against the current Puppet source from github.com. To use this option, you must have network access to https://github.com.
+
+.PARAMETER PuppetVersion
+Puppet version to run tests or validations against.
+
+.PARAMETER Parallel
+Run unit tests in parallel.
+
+.PARAMETER Raw
+Output the Raw JUnitXML instead of interpretting the results
+#>
+Function Test-PDKUnit2
+{
+  [CmdletBinding()]
+  param(
+    [String] $PeVersion,
+
+    [Switch] $CleanFixtures,
+
+    [Switch] $PuppetDev,
+
+    [String] $PuppetVersion,
+
+    [Switch] $Parallel,
+
+    [Switch] $Raw
+  )
+
+  Process {
+    $args = @('test', 'unit')
+    if (![string]::IsNullOrEmpty($PeVersion)) { $args += @('--pe-version', $PeVersion )}
+    if ($CleanFixtures) { $args += @('--clean-fixtures') }
+    if ($VerbosePreference -eq 'Continue') { $args += '--verbose' }
+    if ($PuppetDev) { $args += @('--puppet-dev') }
+    if (![string]::IsNullOrEmpty($PuppetVersion)) { $args += @('--puppet-version', $PuppetVersion )}
+    if ($Parallel) { $args += @('--parallel') }
+
+    $StartTimeStamp = (Get-Date)
+    $JUnitFile = Invoke-PDK2 -PDKArgs $args
+
+    If (Test-Path -Path $JUnitFile) {
+      if ($Raw) {
+        Get-Content -Path $JUnitFile -Raw
+      } else {
+        ConvertFrom-JUnitXML -JUnitFile $JUnitFile -StartTimeStamp $StartTimeStamp
+      }
+    } else {
+      Throw "PDK did not generate a JUnit XML file at ${JUnitFile}"
+    }
+  }
+
+  End {
+    If (Test-Path -Path $JUnitFile) { Remove-Item -Path $JUnitFile -Force -Confirm:$false | Out-Null }
+  }
+}
+Export-ModuleMember -Function Test-PDKUnit2
