@@ -52,14 +52,9 @@ module PDK
             if PDK::Util::Filesystem.directory?(target)
               target_root = PDK::Util.module_root
               pattern_glob = Array(pattern).map { |p| PDK::Util::Filesystem.glob(File.join(target_root, p), File::FNM_DOTMATCH) }
-              target_list = pattern_glob.flatten.map do |file|
-                if PDK::Util::Filesystem.fnmatch(File.join(PDK::Util::Filesystem.expand_path(PDK::Util.canonical_path(target)), '*'), file, File::FNM_DOTMATCH)
-                  Pathname.new(file).relative_path_from(Pathname.new(PDK::Util.module_root)).to_s
-                else
-                  PDK.logger.debug(_('%{validator}: Skipped \'%{target}\'. Target directory does not exist.') % { validator: name, target: target })
-                  nil
-                end
-              end
+              target_list = pattern_glob.flatten
+                                        .select { |glob| PDK::Util::Filesystem.fnmatch(File.join(PDK::Util::Filesystem.expand_path(PDK::Util.canonical_path(target)), '*'), glob, File::FNM_DOTMATCH) }
+                                        .map { |glob| Pathname.new(glob).relative_path_from(Pathname.new(PDK::Util.module_root)).to_s }
 
               ignore_list = ignore_pathspec
               target_list = target_list.reject { |file| ignore_list.match(file) }
