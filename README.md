@@ -107,13 +107,11 @@ This command runs all available unit tests.
 
 ### `pdk bundle` command
 
-This command executes arbitrary commands in a bundler context within the module you're currently working on. Arguments to this command are passed straight through to bundler. This command is experimental  and can lead to errors that can't be resolved by the pdk itself.
-
-Note that for most uses, you must use the `--` to separate bundler options from pdk options. Compare the following two commands:
+This command executes arbitrary commands in a bundler context within the module you're currently working on. Arguments to this command are passed straight through to bundler. This command is experimental  and can lead to errors that can't be resolved by PDK itself.
 
 ## Module Compatibility
 
-**PDK Version Compatibility:** Modules created with PDK version validate against and run on all Puppet and Ruby version combinations currently under maintenance (see https://docs.puppet.com/puppet/latest/about_agent.html and https://puppet.com/misc/puppet-enterprise-lifecycle)
+**PDK Version Compatibility:** Modules created with PDK validate against and run on all Puppet and Ruby version combinations currently under maintenance (see https://docs.puppet.com/puppet/latest/about_agent.html and https://puppet.com/misc/puppet-enterprise-lifecycle)
 
 ## Contributing
 
