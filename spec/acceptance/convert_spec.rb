@@ -135,4 +135,21 @@ describe 'pdk convert', module_command: true do
       it { is_expected.not_to be_file }
     end
   end
+
+  context 'when an init-only templated file is missing' do
+    include_context 'in a new module', 'init_missing', template: template_repo
+
+    before(:all) do
+      FileUtils.rm_f('README.md')
+    end
+
+    describe command("#{pdk_convert_base} --force --skip-interview") do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to have_no_output }
+      its(:stdout) { is_expected.to match(%r{-+files to be added-+\nREADME\.md}mi) }
+      describe file('README.md') do
+        it { is_expected.to be_file }
+      end
+    end
+  end
 end

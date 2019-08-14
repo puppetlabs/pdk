@@ -15,18 +15,18 @@ describe PDK::Module::Metadata do
     end
 
     it 'can populate itself from a metadata.json file on disk' do
-      allow(File).to receive(:file?).with(metadata_json_path).and_return(true)
-      allow(File).to receive(:readable?).with(metadata_json_path).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_json_path).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_json_path).and_return(true)
       allow(PDK::Util).to receive(:package_install?).and_return(false)
-      allow(File).to receive(:read).with(metadata_json_path).and_return(metadata_json_content)
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_json_path).and_return(metadata_json_content)
 
       expect(described_class.from_file(metadata_json_path).data).to include('name' => 'foo-bar', 'version' => '0.1.0')
     end
 
     it 'can populate itself from a metadata.json file on disk with a trailing newline' do
-      allow(File).to receive(:file?).with(metadata_json_path).and_return(true)
-      allow(File).to receive(:readable?).with(metadata_json_path).and_return(true)
-      allow(File).to receive(:read).with(metadata_json_path).and_return(metadata_json_content + "\n")
+      allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_json_path).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_json_path).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_json_path).and_return(metadata_json_content + "\n")
 
       expect(described_class.from_file(metadata_json_path).data).to include('name' => 'foo-bar', 'version' => '0.1.0')
     end
@@ -36,21 +36,21 @@ describe PDK::Module::Metadata do
     end
 
     it 'raises an ArgumentError if the file does not exist' do
-      allow(File).to receive(:file?).with(metadata_json_path).and_return(false)
+      allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_json_path).and_return(false)
       expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, %r{'#{metadata_json_path}'.*not exist})
     end
 
     it 'raises an ArgumentError if the file exists but is not readable' do
-      allow(File).to receive(:file?).with(metadata_json_path).and_return(true)
-      allow(File).to receive(:readable?).with(metadata_json_path).and_return(false)
+      allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_json_path).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_json_path).and_return(false)
 
       expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, %r{Unable to open '#{metadata_json_path}'})
     end
 
     it 'raises an ArgumentError if the file contains invalid JSON' do
-      allow(File).to receive(:file?).with(metadata_json_path).and_return(true)
-      allow(File).to receive(:readable?).with(metadata_json_path).and_return(true)
-      allow(File).to receive(:read).with(metadata_json_path).and_return('{"foo": }')
+      allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_json_path).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_json_path).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_json_path).and_return('{"foo": }')
 
       expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, %r{Invalid JSON.*unexpected token})
     end

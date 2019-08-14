@@ -344,4 +344,10 @@ describe PDK::Module::Update do
       end
     end
   end
+
+  describe '#convert?' do
+    subject { described_class.new.convert? }
+
+    it { is_expected.to be_falsey }
+  end
 end

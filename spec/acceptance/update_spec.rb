@@ -62,5 +62,21 @@ describe 'pdk update', module_command: true do
         end
       end
     end
+
+    context 'that is missing an init-only templated file' do
+      before(:all) do
+        FileUtils.rm_f('README.md')
+      end
+
+      describe command('pdk update --force') do
+        its(:exit_status) { is_expected.to eq(0) }
+        its(:stderr) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{no changes required}i) }
+
+        describe file('README.md') do
+          it { is_expected.not_to be_file }
+        end
+      end
+    end
   end
 end

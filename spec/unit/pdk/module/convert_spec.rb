@@ -120,7 +120,7 @@ describe PDK::Module::Convert do
       include_context 'no changes in the summary'
 
       before(:each) do
-        allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with('a/path/to/file').and_return(true)
         allow(update_manager).to receive(:changes?).and_return(false)
         allow(template_dir).to receive(:render)
         allow(PDK::Module::TemplateDir).to receive(:files_in_template).and_return({})
@@ -141,7 +141,7 @@ describe PDK::Module::Convert do
       include_context 'completes a convert'
 
       before(:each) do
-        allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with('a/path/to/file').and_return(true)
         allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['Gemfile'])
@@ -182,7 +182,7 @@ describe PDK::Module::Convert do
       include_context 'completes a convert'
 
       before(:each) do
-        allow(File).to receive(:exist?).with('a/path/to/file').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with('a/path/to/file').and_return(true)
         allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['some/file'])
@@ -258,6 +258,38 @@ describe PDK::Module::Convert do
       end
     end
 
+    context 'when there are init files to add' do
+      let(:options) { { noop: true } }
+      let(:template_files) do
+        { path: 'a/path/to/file', content: 'file contents', status: :init }
+      end
+
+      context 'and the files already exist' do
+        include_context 'no changes in the summary'
+
+        before(:each) do
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(template_files[:path]).and_return(true)
+          allow(update_manager).to receive(:changes?).and_return(false)
+        end
+
+        it 'does not stage the file for addition' do
+          expect(update_manager).not_to receive(:add_file).with(template_files[:path], anything)
+        end
+      end
+
+      context 'and the files do not exist' do
+        before(:each) do
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(template_files[:path]).and_return(false)
+          allow(update_manager).to receive(:changes?).and_return(true)
+          allow(update_manager).to receive(:add_file)
+        end
+
+        it 'stages the file for addition' do
+          expect(update_manager).to receive(:add_file).with(template_files[:path], template_files[:content])
+        end
+      end
+    end
+
     context 'when there are files to add' do
       include_context 'has changes in the summary'
       include_context 'added files in the summary'
@@ -274,7 +306,7 @@ describe PDK::Module::Convert do
       end
 
       before(:each) do
-        allow(File).to receive(:exist?).with('a/path/to/file').and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with('a/path/to/file').and_return(false)
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['path/to/file'])
 
@@ -344,6 +376,12 @@ describe PDK::Module::Convert do
     end
   end
 
+  describe '#convert?' do
+    subject { described_class.new.convert? }
+
+    it { is_expected.to be_truthy }
+  end
+
   describe '#template_uri' do
     subject { described_class.new(options).template_uri }
 
@@ -396,18 +434,18 @@ describe PDK::Module::Convert do
 
     context 'when the metadata file exists' do
       before(:each) do
-        allow(File).to receive(:exist?).with(metadata_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(metadata_path).and_return(true)
       end
 
       context 'and is a file' do
         before(:each) do
-          allow(File).to receive(:file?).with(metadata_path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_path).and_return(true)
         end
 
         context 'and is readable' do
           before(:each) do
-            allow(File).to receive(:readable?).with(metadata_path).and_return(true)
-            allow(File).to receive(:read).with(metadata_path).and_return(existing_metadata)
+            allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_path).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_path).and_return(existing_metadata)
           end
 
           let(:existing_metadata) do
@@ -453,7 +491,7 @@ describe PDK::Module::Convert do
 
         context 'and is not readable' do
           before(:each) do
-            allow(File).to receive(:readable?).with(metadata_path).and_return(false)
+            allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_path).and_return(false)
           end
 
           it 'exits with an error' do
@@ -466,7 +504,7 @@ describe PDK::Module::Convert do
 
       context 'and is not a file' do
         before(:each) do
-          allow(File).to receive(:file?).with(metadata_path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_path).and_return(false)
         end
 
         it 'exits with an error' do
