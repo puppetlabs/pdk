@@ -2,12 +2,12 @@ require 'bundler'
 require 'childprocess'
 require 'English'
 require 'tempfile'
-require 'tty-spinner'
 require 'tty-which'
 
 require 'pdk/util'
 require 'pdk/util/git'
 require 'pdk/util/ruby_version'
+require 'pdk/cli/util/spinner'
 
 module PDK
   module CLI

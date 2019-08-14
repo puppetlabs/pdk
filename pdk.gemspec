@@ -31,9 +31,9 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'minitar', '~> 0.6.1'
   spec.add_runtime_dependency 'net-ssh', '~> 4.2.0'
   spec.add_runtime_dependency 'pathspec', '~> 0.2.1'
-  spec.add_runtime_dependency 'tty-prompt', '0.13.1'
-  spec.add_runtime_dependency 'tty-spinner', '0.5.0'
-  spec.add_runtime_dependency 'tty-which', '0.3.0'
+  spec.add_runtime_dependency 'tty-prompt', '~> 0.13'
+  spec.add_runtime_dependency 'tty-spinner', '~> 0.5'
+  spec.add_runtime_dependency 'tty-which', '~> 0.3'
 
   # Analytics dependencies
   spec.add_runtime_dependency 'concurrent-ruby', '~> 1.1.5'

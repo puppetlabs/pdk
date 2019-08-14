@@ -1,4 +1,5 @@
 require 'pdk/util'
+require 'forwardable'
 
 module PDK
   module Util

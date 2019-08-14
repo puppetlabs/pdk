@@ -95,3 +95,11 @@ RSpec.shared_context :validators do
     ]
   end
 end
+
+# Add method to StringIO needed for TTY::TestPrompt to work on tty-prompt >=
+# 0.19 (see https://github.com/piotrmurach/tty-prompt/issues/104)
+class StringIO
+  def wait_readable(*)
+    true
+  end
+end
