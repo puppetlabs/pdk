@@ -1,7 +1,7 @@
-require 'tty-spinner'
 require 'tty-which'
 
 require 'pdk/util'
+require 'pdk/cli/util/spinner'
 
 module PDK
   module CLI

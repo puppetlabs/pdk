@@ -4,6 +4,8 @@ module PDK
   module CLI
     module Util
       class Interview < TTY::Prompt::AnswersCollector
+        READER = defined?(TTY::Reader) ? TTY::Reader : TTY::Prompt::Reader
+
         def pastel
           @pastel ||= Pastel.new
         end
@@ -60,7 +62,7 @@ module PDK
             @prompt.puts ''
           end
           @answers
-        rescue TTY::Prompt::Reader::InputInterrupt
+        rescue READER::InputInterrupt
           nil
         end
       end
