@@ -45,6 +45,11 @@ describe PDK::Config do
         it 'returns true' do
           expect(config.user['analytics']['disabled']).to be_truthy
         end
+
+        it 'saves the disabled value to the analytics config file' do
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{disabled: true})
+          config.user['analytics']['disabled']
+        end
       end
 
       context 'when there is a pre-existing bolt configuration' do
@@ -52,6 +57,11 @@ describe PDK::Config do
 
         it 'returns the value from the bolt configuration' do
           expect(config.user['analytics']['disabled']).to be_falsey
+        end
+
+        it 'saves the disabled value to the analytics config file' do
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{disabled: false})
+          config.user['analytics']['disabled']
         end
 
         context 'and the bolt configuration is unparsable' do
@@ -64,6 +74,11 @@ describe PDK::Config do
 
           it 'returns true' do
             expect(config.user['analytics']['disabled']).to be_truthy
+          end
+
+          it 'saves the disabled value to the analytics config file' do
+            expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{disabled: true})
+            config.user['analytics']['disabled']
           end
         end
       end
@@ -87,6 +102,15 @@ describe PDK::Config do
           expect(SecureRandom).to receive(:uuid).and_call_original
           config.user['analytics']['user-id']
         end
+
+        it 'saves the UUID to the analytics config file' do
+          new_id = SecureRandom.uuid
+          expect(SecureRandom).to receive(:uuid).and_return(new_id)
+          # Expect that the user-id is saved to the config file
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{user-id: (?:|\'|'")#{new_id}(?:|\'|'")})
+          # ... and that it returns the new id
+          expect(config.user['analytics']['user-id']).to eq(new_id)
+        end
       end
 
       context 'when there is a pre-existing bolt configuration' do
@@ -95,6 +119,12 @@ describe PDK::Config do
 
         it 'returns the value from the bolt configuration' do
           expect(config.user['analytics']['user-id']).to eq(uuid)
+        end
+
+        it 'saves the UUID to the analytics config file' do
+          # Expect that the user-id is saved to the config file
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{user-id: (?:|\'|'")#{uuid}(?:|\'|'")})
+          config.user['analytics']['user-id']
         end
 
         context 'and the bolt configuration is unparsable' do
@@ -108,6 +138,15 @@ describe PDK::Config do
           it 'generates a new UUID' do
             expect(SecureRandom).to receive(:uuid).and_call_original
             config.user['analytics']['user-id']
+          end
+
+          it 'saves the UUID to the analytics config file' do
+            new_id = SecureRandom.uuid
+            expect(SecureRandom).to receive(:uuid).and_return(new_id)
+            # Expect that the user-id is saved to the config file
+            expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{user-id: (?:|\'|'")#{new_id}(?:|\'|'")})
+            # ... and that it returns the new id
+            expect(config.user['analytics']['user-id']).to eq(new_id)
           end
         end
       end

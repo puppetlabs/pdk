@@ -20,12 +20,16 @@ module PDK
       #   contents of the namespace (defaults to nil).
       # @option params [self] :parent the parent {self} that this namespace is
       #   a child of (defaults to nil).
+      # @option params [self] :persistent_defaults whether default values should be persisted
+      #   to disk when evaluated. By default they are not persisted to disk. This is typically
+      #   used for settings which a randomly generated, instead of being deterministic, e.g. analytics user-id
       # @param block [Proc] a block that is evaluated within the new instance.
-      def initialize(name = nil, file: nil, parent: nil, &block)
+      def initialize(name = nil, file: nil, parent: nil, persistent_defaults: false, &block)
         @file = File.expand_path(file) unless file.nil?
         @values = {}
         @name = name.to_s
         @parent = parent
+        @persistent_defaults = persistent_defaults
 
         instance_eval(&block) if block_given?
       end
@@ -104,11 +108,6 @@ module PDK
         data.fetch(key.to_s, default_value)
       end
 
-      # Set the value of the named key.
-      #
-      # If the key has been pre-configured with {#value}, then the value of the
-      # key will be validated against any validators that have been configured.
-      #
       # After the value has been set in memory, the value will then be
       # persisted to disk.
       #
@@ -117,9 +116,8 @@ module PDK
       #
       # @return [nil]
       def []=(key, value)
-        @values[key.to_s].validate!([name, key.to_s].join('.'), value) if @values.key?(key.to_s)
-
-        data[key.to_s] = value
+        set_volatile_value(key, value)
+        # Persist the change
         save_data
       end
 
@@ -185,6 +183,19 @@ module PDK
         {}
       end
 
+      # Set the value of the named key.
+      #
+      # If the key has been pre-configured with {#value}, then the value of the
+      # key will be validated against any validators that have been configured.
+      #
+      # @param key [String,Symbol] the name of the configuration value.
+      # @param value [Object] the value of the configuration value.
+      def set_volatile_value(key, value)
+        @values[key.to_s].validate!([name, key.to_s].join('.'), value) if @values.key?(key.to_s)
+
+        data[key.to_s] = value
+      end
+
       # Read the file associated with the namespace.
       #
       # @raise [PDK::Config::LoadError] if the file is removed during read.
@@ -228,7 +239,7 @@ module PDK
       def save_data
         return if file.nil?
 
-        FileUtils.mkdir_p(File.dirname(file))
+        PDK::Util::Filesystem.mkdir_p(File.dirname(file))
 
         PDK::Util::Filesystem.write_file(file, serialize_data(to_h))
       rescue Errno::EACCES
@@ -243,24 +254,27 @@ module PDK
       #
       # @return [Hash<String => Object>] the contents of the namespace.
       def data
+        # It's possible for parse_data to return nil, so just return an empty hash
         @data ||= parse_data(load_data, file).tap do |h|
-          h.default_proc = default_config_value
-        end
+          h.default_proc = default_config_value unless h.nil?
+        end || {}
       end
 
       # The default behaviour of the namespace when the requested value does
       # not exist.
       #
       # If the value has been pre-configured with {#value} to have a default
-      # value, resolve the default value and set it in the namespace
-      # (triggering a call to {#save_data}. Otherwise, set the value to a new
-      # Hash to allow for arbitrary level of nested values.
+      # value, resolve the default value and set it in the namespace and optionally
+      # save the new default.
+      # Otherwise, set the value to a new Hash to allow for arbitrary level of nested values.
       #
       # @return [Proc] suitable for use by {Hash#default_proc}.
       def default_config_value
         ->(hash, key) do
           if @values.key?(key) && @values[key].default?
-            self[key] = @values[key].default
+            set_volatile_value(key, @values[key].default)
+            save_data if @persistent_defaults
+            hash[key]
           else
             hash[key] = {}.tap do |h|
               h.default_proc = default_config_value

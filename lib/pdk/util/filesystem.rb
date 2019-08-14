@@ -30,6 +30,11 @@ module PDK
       end
       module_function :directory?
 
+      def mkdir_p(*args)
+        FileUtils.mkdir_p(*args)
+      end
+      module_function :mkdir_p
+
       def file?(*args)
         File.file?(*args)
       end
