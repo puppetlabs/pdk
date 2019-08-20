@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in pdk.gemspec
 gemspec
 
-if RUBY_VERSION < '2.4.0'
+if RUBY_VERSION < '2.3.0'
   # avoid newer versions that do not support ruby 2.1 anymore
   gem 'cri', '>= 2.10.1', '< 2.11.0'
   gem 'nokogiri', '1.7.2'
