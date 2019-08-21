@@ -8,7 +8,7 @@ if RUBY_VERSION < '2.4.0'
   gem 'cri', '>= 2.10.1', '< 2.11.0'
   gem 'nokogiri', '1.7.2'
 else
-  gem 'nokogiri', '~> 1.8.5' # rubocop:disable Bundler/DuplicatedGem
+  gem 'nokogiri', '~> 1.10.4' # rubocop:disable Bundler/DuplicatedGem
 end
 
 group :development do
