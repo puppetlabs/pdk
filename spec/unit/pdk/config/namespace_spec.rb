@@ -139,6 +139,61 @@ describe PDK::Config::Namespace do
     end
   end
 
+  describe '#resolve' do
+    let(:config_options) { { persistent_defaults: false } }
+
+    include_context :with_a_mounted_file_with_content, 'mounted', '{"setting1": "value1"}'
+
+    before(:each) do
+      # Add a value with a default value
+      config.value('spec_test') do
+        default_to { 'spec_default' }
+      end
+      # The resolver should not trigger any saves unless persistent_defaults is set to true
+      expect(PDK::Util::Filesystem).to receive(:write_file).never
+    end
+
+    context 'with an empty filter' do
+      let(:filter) { nil }
+
+      it 'resolves all settings' do
+        result = config.resolve(filter)
+        expect(result.count).to eq(2)
+        expect(result['config.spec_test']).to eq('spec_default')
+        expect(result['config.mounted.setting1']).to eq('value1')
+      end
+    end
+
+    context 'with a setting name' do
+      let(:filter) { 'config.spec_test' }
+
+      it 'resolves only one setting' do
+        result = config.resolve(filter)
+        expect(result.count).to eq(1)
+        expect(result['config.spec_test']).to eq('spec_default')
+      end
+    end
+
+    context 'with a tree name' do
+      let(:filter) { 'config.mounted' }
+
+      it 'resolves only settings in the tree' do
+        result = config.resolve(filter)
+        expect(result.count).to eq(1)
+        expect(result['config.mounted.setting1']).to eq('value1')
+      end
+    end
+
+    context 'with a name that cannot be resolved' do
+      let(:filter) { 'does.not.exist' }
+
+      it 'returns an empty hash' do
+        result = config.resolve(filter)
+        expect(result).to eq({})
+      end
+    end
+  end
+
   describe '#namespace' do
     before(:each) do
       config.namespace('test')
