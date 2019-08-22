@@ -1,5 +1,5 @@
 require 'pdk/util'
-
+require 'addressable'
 module PDK
   module Util
     class TemplateURI
