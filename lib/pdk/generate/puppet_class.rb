@@ -4,6 +4,7 @@ module PDK
   module Generate
     class PuppetClass < PuppetObject
       OBJECT_TYPE = :class
+      PUPPET_STRINGS_TYPE = 'puppet_classes'.freeze
 
       # Prepares the data needed to render the new Puppet class template.
       #

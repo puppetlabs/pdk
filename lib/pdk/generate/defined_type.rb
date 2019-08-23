@@ -4,6 +4,7 @@ module PDK
   module Generate
     class DefinedType < PuppetObject
       OBJECT_TYPE = :defined_type
+      PUPPET_STRINGS_TYPE = 'defined_types'.freeze
 
       # Prepares the data needed to render the new defined type template.
       #

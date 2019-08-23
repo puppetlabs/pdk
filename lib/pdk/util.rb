@@ -6,6 +6,7 @@ require 'pdk/util/windows'
 require 'pdk/util/vendored_file'
 require 'pdk/util/filesystem'
 require 'pdk/util/template_uri'
+require 'pdk/util/puppet_strings'
 
 module PDK
   module Util
