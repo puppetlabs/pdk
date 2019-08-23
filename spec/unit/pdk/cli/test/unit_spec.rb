@@ -127,7 +127,7 @@ describe '`pdk test unit`' do
 
       context 'when passed --clean-fixtures' do
         it 'invokes the command with :clean-fixtures => true' do
-          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_including(:puppet => puppet_version, :tests => anything, :'clean-fixtures' => true)).once.and_return(0)
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(:puppet => puppet_version, :tests => anything, :'clean-fixtures' => true)).once.and_return(0)
           expect {
             test_unit_cmd.run_this(['--clean-fixtures'])
           }.to exit_zero
@@ -149,7 +149,7 @@ describe '`pdk test unit`' do
 
       context 'when not passed --clean-fixtures' do
         it 'invokes the command without :clean-fixtures' do
-          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_including(puppet: puppet_version, tests: anything)).once.and_return(0)
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(puppet: puppet_version, tests: anything)).once.and_return(0)
           expect {
             test_unit_cmd.run_this([])
           }.to exit_zero
@@ -170,7 +170,7 @@ describe '`pdk test unit`' do
 
       context 'when tests pass' do
         before(:each) do
-          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_including(:tests)).once.and_return(0)
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(tests: anything)).once.and_return(0)
         end
 
         it do
@@ -239,7 +239,7 @@ describe '`pdk test unit`' do
 
       context 'when tests fail' do
         before(:each) do
-          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_including(:tests)).once.and_return(1)
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(tests: anything)).once.and_return(1)
         end
 
         it do

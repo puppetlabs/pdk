@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'bundler', '>= 1.15.0', '< 3.0.0'
   spec.add_runtime_dependency 'childprocess', '~> 0.7.1'
-  spec.add_runtime_dependency 'cri', ' >= 2.10.1', '<= 2.15.6'
+  spec.add_runtime_dependency 'cri', '~> 2.10'
   spec.add_runtime_dependency 'diff-lcs', '1.3'
   spec.add_runtime_dependency 'ffi', '~> 1.9.0'
   spec.add_runtime_dependency 'gettext-setup', '~> 0.24'
