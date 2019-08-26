@@ -1,4 +1,27 @@
 require 'spec_helper_acceptance'
+require 'open3'
+
+class IO
+  def expects(expected)
+    combined_output = ''
+
+    loop do
+      rs, = IO.select([self], [], [], 10)
+
+      next unless (r = rs[0])
+
+      data = r.sysread(1024)
+      combined_output << data
+
+      if expected.match?(combined_output) && !r.ready?
+        yield combined_output
+        break
+      end
+    end
+  rescue EOFError
+    nil
+  end
+end
 
 describe 'pdk bundle' do
   context 'in a new module' do
@@ -13,6 +36,23 @@ describe 'pdk bundle' do
     describe command('pdk bundle env') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stdout) { is_expected.to match(%r{## Environment}) }
+    end
+
+    context 'when running an interactive command' do
+      it 'works interactively' do
+        command = 'pdk bundle exec irb -f --echo --prompt simple'
+        prompt = %r{>> \Z}m
+        exit_command = "exit\n"
+
+        Open3.popen2e(command) do |stdin, stdouterr, _|
+          stdouterr.expects(prompt) { |_| stdin.syswrite "require 'date'\n" }
+          stdouterr.expects(prompt) { |_| stdin.syswrite "Date.today.year\n" }
+          stdouterr.expects(prompt) do |output|
+            expect(output).to match(%r{=> #{Date.today.year}}m)
+            stdin.syswrite exit_command
+          end
+        end
+      end
     end
 
     context 'when running in a subdirectory of the module root' do
