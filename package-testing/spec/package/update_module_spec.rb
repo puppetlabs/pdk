@@ -34,9 +34,6 @@ describe 'Updating an existing module' do
             end
           end
 
-          sync_yaml['Gemfile']['required'][':system_tests'] ||= []
-          sync_yaml['Gemfile']['required'][':system_tests'] << { 'gem' => 'nokogiri', 'version' => '1.8.5' }
-
           create_remote_file(get_working_node, File.join(module_dir, '.sync.yml'), sync_yaml.to_yaml)
         end
 
