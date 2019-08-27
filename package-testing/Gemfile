@@ -16,7 +16,7 @@ gem 'beaker-hostgenerator', *location_for(ENV['BEAKER_HOSTGENERATOR_VERSION'] ||
 gem 'beaker-puppet', '= 1.18.5'
 gem 'beaker-rspec', '= 6.2.4'
 gem 'beaker-vmpooler', '= 1.3.3'
-gem 'nokogiri', '= 1.10.3'
+gem 'nokogiri', '= 1.10.4'
 gem 'rake', '= 12.3.2'
 
 group :development do
