@@ -45,6 +45,10 @@ module PDK
         end
       end
 
+      def spec_only?
+        @options[:spec_only]
+      end
+
       # @abstract Subclass and implement {#template_data} to provide data to
       #   the templates during rendering. Implementations of this method should
       #   return a Hash!{Symbol => Object}.
@@ -99,6 +103,37 @@ module PDK
         self.class::OBJECT_TYPE
       end
 
+      # Retrieves the type of the object being generated as represented in
+      # the JSON output of puppet-strings.
+      #
+      # @return [String] the type of the object being generated or nil if
+      #   there is no mapping.
+      #
+      # @api private
+      def self.puppet_strings_type
+        return nil unless const_defined?(:PUPPET_STRINGS_TYPE)
+
+        self::PUPPET_STRINGS_TYPE
+      end
+
+      # Returns an array of possible target path strings.
+      def targets
+        targets = [
+          target_spec_path,
+          target_type_spec_path,
+        ]
+
+        unless spec_only?
+          targets += [
+            target_object_path,
+            target_type_path,
+            target_device_path,
+          ]
+        end
+
+        targets.compact
+      end
+
       # Check preconditions of this template group. By default this only makes sure that the target files do not
       # already exist. Override this (and call super) to add your own preconditions.
       #
@@ -106,12 +141,12 @@ module PDK
       #
       # @api public
       def check_preconditions
-        [target_object_path, target_type_path, target_device_path, target_spec_path, target_type_spec_path].compact.each do |target_file|
+        targets.each do |target_file|
           next unless File.exist?(target_file)
 
           raise PDK::CLI::ExitWithError, _("Unable to generate %{object_type}; '%{file}' already exists.") % {
             file:        target_file,
-            object_type: object_type,
+            object_type: spec_only? ? 'unit test' : object_type,
           }
         end
       end
@@ -130,7 +165,7 @@ module PDK
         with_templates do |template_path, config_hash|
           data = template_data.merge(configs: config_hash)
 
-          render_file(target_object_path, template_path[:object], data)
+          render_file(target_object_path, template_path[:object], data) unless spec_only?
           render_file(target_type_path, template_path[:type], data) if template_path[:type]
           render_file(target_device_path, template_path[:device], data) if template_path[:device]
           render_file(target_spec_path, template_path[:spec], data) if template_path[:spec]

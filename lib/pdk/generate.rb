@@ -8,5 +8,13 @@ require 'pdk/module/metadata'
 require 'pdk/module/templatedir'
 
 module PDK
-  module Generate; end
+  module Generate
+    GENERATORS = [
+      PDK::Generate::DefinedType,
+      PDK::Generate::Provider,
+      PDK::Generate::PuppetClass,
+      PDK::Generate::Task,
+      PDK::Generate::Transport,
+    ].freeze
+  end
 end

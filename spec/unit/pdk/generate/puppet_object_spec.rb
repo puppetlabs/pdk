@@ -25,6 +25,28 @@ describe PDK::Generate::PuppetObject do
     allow(PDK).to receive(:answers).and_return({})
   end
 
+  describe '#spec_only?' do
+    subject { templated_object.spec_only? }
+
+    context 'when initialised with option :spec_only => true' do
+      let(:options) { { spec_only: true } }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when initialised with option :spec_only => false' do
+      let(:options) { { spec_only: false } }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when initialised without a :spec_only option' do
+      let(:options) { {} }
+
+      it { is_expected.to be_falsey }
+    end
+  end
+
   describe '#template_data' do
     it 'needs to be implemented by the subclass' do
       expect {
@@ -250,6 +272,7 @@ describe PDK::Generate::PuppetObject do
 
     context 'when the target object file exists' do
       before(:each) do
+        allow(File).to receive(:exist?).with(target_spec_path).and_return(false)
         allow(File).to receive(:exist?).with(target_object_path).and_return(true)
       end
 
@@ -266,6 +289,46 @@ describe PDK::Generate::PuppetObject do
 
       it 'raises an error' do
         expect { templated_object.run }.to raise_error(PDK::CLI::ExitWithError, %r{'#{target_spec_path}' already exists})
+      end
+    end
+
+    context 'when only generating specs' do
+      let(:options) { { spec_only: true } }
+
+      context 'when the target spec file exists' do
+        before(:each) do
+          allow(File).to receive(:exist?).with(target_spec_path).and_return(true)
+        end
+
+        it 'raises an error' do
+          msg = %r{unable to generate unit test; '#{target_spec_path}' already exists}i
+          expect {
+            templated_object.run
+          }.to raise_error(PDK::CLI::ExitWithError, msg)
+        end
+      end
+
+      context 'when the target spec file does not exist' do
+        let(:object_template) { '/tmp/test_template/object.erb' }
+        let(:spec_template) { '/tmp/test_template/spec.erb' }
+
+        before(:each) do
+          allow(File).to receive(:exist?).with(target_spec_path).and_return(false)
+          allow(templated_object).to receive(:with_templates).and_yield({ object: object_template, spec: spec_template }, {})
+        end
+
+        after(:each) do
+          templated_object.run
+        end
+
+        it 'renders the spec file' do
+          expect(templated_object).to receive(:render_file).with(target_spec_path, spec_template, anything)
+        end
+
+        it 'does not attempt to render the object' do
+          allow(templated_object).to receive(:render_file).with(target_spec_path, anything, anything)
+          expect(templated_object).not_to receive(:render_file).with(target_object_path, anything, anything)
+        end
       end
     end
   end
