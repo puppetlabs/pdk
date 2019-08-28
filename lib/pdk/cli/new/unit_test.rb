@@ -2,7 +2,14 @@ module PDK::CLI
   @new_define_cmd = @new_cmd.define_command do
     name 'unit_test'
     usage _('unit_test [options] <name>')
-    summary _('Create a new unit test for the object named <name> using given options')
+    summary _('(Experimental) Create a new unit test for the object named <name>')
+    description _(<<-EOF
+Generate a new rspec-puppet unit test for an existing class or defined type.
+
+Please note, this is an experimental feature; the functionality and UX is
+subject to change in future releases.
+EOF
+                 )
     PDK::CLI.puppet_version_options(self)
     PDK::CLI.puppet_dev_option(self)
 
