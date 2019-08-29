@@ -4,6 +4,39 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.13.0](https://github.com/puppetlabs/pdk/tree/v1.13.0) (2019-08-29)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.12.0...v1.13.0)
+
+**Implemented enhancements:**
+
+- Don't buffer output from bundle commands [\#364](https://github.com/puppetlabs/pdk/issues/364)
+- Provide official docker image with pdk [\#336](https://github.com/puppetlabs/pdk/issues/336)
+- \(PDK-1175\) pdk new unit\_test [\#735](https://github.com/puppetlabs/pdk/pull/735) ([rodjek](https://github.com/rodjek))
+- \(PDK-871\) Relax dependencies on tty-\* gems [\#730](https://github.com/puppetlabs/pdk/pull/730) ([rodjek](https://github.com/rodjek))
+- \(PDK-1363\) Apply init templates during module convert [\#729](https://github.com/puppetlabs/pdk/pull/729) ([rodjek](https://github.com/rodjek))
+- \(PDK-1107\) Add pdk config get CLI command [\#715](https://github.com/puppetlabs/pdk/pull/715) ([glennsarti](https://github.com/glennsarti))
+
+**Fixed bugs:**
+
+- Problem running "pdk validate manifests/" with pdk 1.12.0 [\#722](https://github.com/puppetlabs/pdk/issues/722)
+- Windows MSI installer fails with PDK 1.12.0 [\#721](https://github.com/puppetlabs/pdk/issues/721)
+- Handle deleted template files for new module [\#725](https://github.com/puppetlabs/pdk/pull/725) ([seanmil](https://github.com/seanmil))
+- \(GH-722\) Do not emit nil targets for validators against a directory [\#724](https://github.com/puppetlabs/pdk/pull/724) ([glennsarti](https://github.com/glennsarti))
+- \(maint\) avoid interfering with local ruby configs [\#86](https://github.com/puppetlabs/pdk/pull/86) ([DavidS](https://github.com/DavidS))
+
+**Merged pull requests:**
+
+- \(FIXUP\) Remove nokogiri version pin from package-testing [\#738](https://github.com/puppetlabs/pdk/pull/738) ([scotje](https://github.com/scotje))
+- \(PDK-1464\) Update nokogiri due to CVE-2019-5477 [\#733](https://github.com/puppetlabs/pdk/pull/733) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1465\) Remove net-ssh from gemspec [\#732](https://github.com/puppetlabs/pdk/pull/732) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1384\) Updates to be compatible with latest Cri [\#731](https://github.com/puppetlabs/pdk/pull/731) ([scotje](https://github.com/scotje))
+- \(docs\) minor fixups to README [\#727](https://github.com/puppetlabs/pdk/pull/727) ([jbondpdx](https://github.com/jbondpdx))
+- \(PDK-1107\) Config fetch and \[\] should have no side effects [\#726](https://github.com/puppetlabs/pdk/pull/726) ([glennsarti](https://github.com/glennsarti))
+- \(MAINT\) Bump version to 1.13.0.pre [\#720](https://github.com/puppetlabs/pdk/pull/720) ([scotje](https://github.com/scotje))
+- \(MAINT\) Allow use of RSPEC\_PATTERN env var when running package tests [\#719](https://github.com/puppetlabs/pdk/pull/719) ([scotje](https://github.com/scotje))
+- \(maint\) Remove Hipchat notifications [\#716](https://github.com/puppetlabs/pdk/pull/716) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1432\) Autogenerate PowerShell modules from code [\#701](https://github.com/puppetlabs/pdk/pull/701) ([glennsarti](https://github.com/glennsarti))
+
 ## [v1.12.0](https://github.com/puppetlabs/pdk/tree/v1.12.0) (2019-07-31)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.11.1...v1.12.0)
 
