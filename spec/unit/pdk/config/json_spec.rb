@@ -11,20 +11,7 @@ describe PDK::Config::JSON do
 
   it_behaves_like 'a file based namespace', "{\n  \"foo\": \"bar\"\n}", 'foo' => 'bar'
 
-  describe '#serialize_data' do
-    subject(:serialized_data) { json_config.serialize_data(json_config.to_h) }
+  it_behaves_like 'a file based namespace without a schema'
 
-    context 'when there is no data stored' do
-      it 'writes an empty JSON object to disk' do
-        expect(serialized_data).to eq("{\n}")
-      end
-    end
-
-    context 'when there is data stored' do
-      it 'writes the JSON object to disk' do
-        json_config['foo'] = 'bar'
-        expect(serialized_data).to eq("{\n  \"foo\": \"bar\"\n}")
-      end
-    end
-  end
+  it_behaves_like 'a json file based namespace'
 end
