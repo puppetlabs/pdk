@@ -7,7 +7,7 @@ rescue StandardError # rubocop:disable Lint/HandleExceptions In this I don't wan
   # Do nothing
 end
 
-describe PDK::Config::JSONSchemaNamespace, :if => Gem.win_platform? do
+describe PDK::Config::JSONSchemaNamespace do
   subject(:namespace) { described_class.new('spec', schema_file: temp_schema_file) }
 
   let(:temp_schema_file) do

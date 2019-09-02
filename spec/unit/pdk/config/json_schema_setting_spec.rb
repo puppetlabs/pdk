@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'pdk/config/json_schema_setting'
 
-describe PDK::Config::JSONSchemaSetting, :if => Gem.win_platform? do
+describe PDK::Config::JSONSchemaSetting do
   subject(:setting) { described_class.new('spec_setting', namespace, initial_value) }
 
   let(:initial_value) { nil }

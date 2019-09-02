@@ -17,7 +17,6 @@ describe PDK::Config do
   end
 
   before(:each) do
-    skip('Tests are failing on non-Windows platforms') unless Gem.win_platform?
     allow(PDK::Util::Filesystem).to receive(:file?).with(anything).and_return(false)
     # Allow the JSON Schema documents to actually be read. Rspec matchers are LIFO
     allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original

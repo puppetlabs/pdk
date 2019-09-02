@@ -37,15 +37,11 @@ describe PDK::Config::YAMLWithSchema do
     SCHEMA
   end
 
-  if Gem.win_platform?
-    it_behaves_like 'a file based namespace', "---\nfoo: bar\n", { 'foo' => 'bar' }, true
+  it_behaves_like 'a file based namespace', "---\nfoo: bar\n", { 'foo' => 'bar' }, true
 
-    it_behaves_like 'a file based namespace with a schema', "---\nextra_setting: \"extra value\"\nfoo: oldvalue"
+  it_behaves_like 'a file based namespace with a schema', "---\nextra_setting: \"extra value\"\nfoo: oldvalue"
 
-    it_behaves_like 'a yaml file based namespace'
-  else
-    skip('Tests are failing on non-Windows platforms')
-  end
+  it_behaves_like 'a yaml file based namespace'
 
   it 'inherits from JSONSchemaNamespace' do
     expect(yaml_config).to be_a(PDK::Config::JSONSchemaNamespace)

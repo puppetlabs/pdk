@@ -37,15 +37,11 @@ describe PDK::Config::JSONWithSchema do
     SCHEMA
   end
 
-  if Gem.win_platform?
-    it_behaves_like 'a file based namespace', "{\n  \"foo\": \"bar\"\n}", 'foo' => 'bar'
+  it_behaves_like 'a file based namespace', "{\n  \"foo\": \"bar\"\n}", 'foo' => 'bar'
 
-    it_behaves_like 'a file based namespace with a schema', "{\n\"extra_setting\": \"extra_value\",\n\"foo\": \"oldvalue\"\n}\n"
+  it_behaves_like 'a file based namespace with a schema', "{\n\"extra_setting\": \"extra_value\",\n\"foo\": \"oldvalue\"\n}\n"
 
-    it_behaves_like 'a json file based namespace'
-  else
-    skip('Tests are failing on non-Windows platforms')
-  end
+  it_behaves_like 'a json file based namespace'
 
   it 'inherits from JSONSchemaNamespace' do
     expect(json_config).to be_a(PDK::Config::JSONSchemaNamespace)
