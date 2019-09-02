@@ -1,9 +1,10 @@
 require 'pdk/config/errors'
-require 'pdk/config/json'
 require 'pdk/config/namespace'
 require 'pdk/config/validator'
 require 'pdk/config/setting'
 require 'pdk/config/yaml'
+require 'pdk/config/yaml_with_schema'
+require 'pdk/config/json'
 
 module PDK
   def self.config
@@ -15,14 +16,12 @@ module PDK
       @user ||= PDK::Config::JSON.new('user', file: PDK::Config.user_config_path) do
         mount :module_defaults, PDK::Config::JSON.new(file: PDK.answers.answer_file_path)
 
-        mount :analytics, PDK::Config::YAML.new(file: PDK::Config.analytics_config_path, persistent_defaults: true) do
+        mount :analytics, PDK::Config::YAMLWithSchema.new(file: PDK::Config.analytics_config_path, persistent_defaults: true, schema_file: PDK::Config.json_schema('analytics')) do
           setting :disabled do
-            validate PDK::Config::Validator.boolean
             default_to { PDK::Config.bolt_analytics_config.fetch('disabled', true) }
           end
 
           setting 'user-id' do
-            validate PDK::Config::Validator.uuid
             default_to do
               require 'securerandom'
 
@@ -58,6 +57,15 @@ module PDK
 
     def self.user_config_path
       File.join(PDK::Util.configdir, 'user_config.json')
+    end
+
+    def self.json_schemas_path
+      File.join(__dir__, 'config')
+    end
+
+    # return nil if not exist
+    def self.json_schema(name)
+      File.join(json_schemas_path, name + '_schema.json')
     end
 
     def self.analytics_config_exist?

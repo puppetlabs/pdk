@@ -18,6 +18,8 @@ describe PDK::Config do
 
   before(:each) do
     allow(PDK::Util::Filesystem).to receive(:file?).with(anything).and_return(false)
+    # Allow the JSON Schema documents to actually be read. Rspec matchers are LIFO
+    allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original
     allow(PDK::Util).to receive(:configdir).and_return(File.join('path', 'to', 'configdir'))
     mock_file(PDK.answers.answer_file_path, answer_file_content)
     mock_file(described_class.analytics_config_path, analytics_config_content)
@@ -36,7 +38,7 @@ describe PDK::Config do
       end
 
       it 'can not be set to a string' do
-        expect { config.user['analytics']['disabled'] = 'no' }.to raise_error(%r{must be a boolean})
+        expect { config.user['analytics']['disabled'] = 'no' }.to raise_error(ArgumentError)
       end
     end
 
@@ -92,7 +94,7 @@ describe PDK::Config do
       end
 
       it 'can not be set to other values' do
-        expect { config.user['analytics']['user-id'] = 'totally a UUID' }.to raise_error(%r{must be a version 4 UUID})
+        expect { config.user['analytics']['user-id'] = 'totally a UUID' }.to raise_error(ArgumentError)
       end
     end
 
