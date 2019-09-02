@@ -11,30 +11,16 @@ describe PDK::Config::YAML do
   end
   let(:data) { nil }
 
-  describe '#parse_data' do
-    subject(:parse_data) { yaml_config.parse_data(data, tempfile) }
+ it_behaves_like 'a file based namespace', "---\nfoo: bar\n", 'foo' => 'bar'
 
-    context 'when the file does not exist or is unreadable' do
-      let(:data) { nil }
-
-      it 'returns an empty hash' do
-        expect(parse_data).to eq({})
-      end
-    end
-
-    context 'when the file contains a valid YAML object' do
-      let(:data) { "---\nfoo: bar\n" }
-
-      it 'returns the parsed YAML as a Hash' do
-        expect(parse_data).to eq('foo' => 'bar')
-      end
-    end
+  describe '#parse_file' do
+    subject(:parse_file) { yaml_config.parse_file(tempfile) {} }
 
     context 'when the file contains invalid YAML' do
       let(:data) { "---\n\tfoo: bar" }
 
       it 'raises PDK::Config::LoadError' do
-        expect { parse_data }.to raise_error(PDK::Config::LoadError, %r{syntax error}i)
+        expect { parse_file }.to raise_error(PDK::Config::LoadError, %r{syntax error}i)
       end
     end
 
@@ -42,7 +28,7 @@ describe PDK::Config::YAML do
       let(:data) { "--- !ruby/object:File {}\n" }
 
       it 'raises PDK::Config::LoadError' do
-        expect { parse_data }.to raise_error(PDK::Config::LoadError, %r{unsupported class}i)
+        expect { parse_file }.to raise_error(PDK::Config::LoadError, %r{unsupported class}i)
       end
     end
   end

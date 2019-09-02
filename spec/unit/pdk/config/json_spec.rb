@@ -6,31 +6,10 @@ describe PDK::Config::JSON do
 
   let(:tempfile) do
     file = Tempfile.new('test')
-    file.write(data)
-    file.close
     file.path
   end
-  let(:data) { '{}' }
 
-  describe '#parse_data' do
-    subject(:parse_data) { json_config.parse_data(data, tempfile) }
-
-    context 'when the file does not exist or is unreadable' do
-      let(:data) { nil }
-
-      it 'returns an empty hash' do
-        expect(parse_data).to eq({})
-      end
-    end
-
-    context 'when the file contains a valid JSON object' do
-      let(:data) { '{ "foo": "bar" }' }
-
-      it 'returns the parsed JSON as a Hash' do
-        expect(parse_data).to eq('foo' => 'bar')
-      end
-    end
-  end
+  it_behaves_like 'a file based namespace', "{\n  \"foo\": \"bar\"\n}", 'foo' => 'bar'
 
   describe '#serialize_data' do
     subject(:serialized_data) { json_config.serialize_data(json_config.to_h) }

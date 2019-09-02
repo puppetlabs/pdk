@@ -2,7 +2,7 @@ require 'pdk/config/errors'
 require 'pdk/config/json'
 require 'pdk/config/namespace'
 require 'pdk/config/validator'
-require 'pdk/config/value'
+require 'pdk/config/setting'
 require 'pdk/config/yaml'
 
 module PDK
@@ -16,12 +16,12 @@ module PDK
         mount :module_defaults, PDK::Config::JSON.new(file: PDK.answers.answer_file_path)
 
         mount :analytics, PDK::Config::YAML.new(file: PDK::Config.analytics_config_path, persistent_defaults: true) do
-          value :disabled do
+          setting :disabled do
             validate PDK::Config::Validator.boolean
             default_to { PDK::Config.bolt_analytics_config.fetch('disabled', true) }
           end
 
-          value 'user-id' do
+          setting 'user-id' do
             validate PDK::Config::Validator.uuid
             default_to do
               require 'securerandom'

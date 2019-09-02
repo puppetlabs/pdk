@@ -165,18 +165,16 @@ describe PDK::Config do
       prompt.input << responses.join("\r") + "\r"
       prompt.input.rewind
 
-      allow(PDK).to receive(:config).and_return(
-        instance_double(described_class, user: described_class::Namespace.new('user')),
-      )
       allow(PDK::CLI::Util).to receive(:interactive?).and_return(true)
-
-      described_class.analytics_config_interview!
+      # Mock any file writing
+      allow(PDK::Util::Filesystem).to receive(:write_file).with(anything, anything)
     end
 
     context 'when the user responds yes' do
       let(:responses) { ['yes'] }
 
       it 'sets user.analytics.disabled to false' do
+        described_class.analytics_config_interview!
         expect(PDK.config.user['analytics']['disabled']).to be_falsey
       end
     end
@@ -185,6 +183,7 @@ describe PDK::Config do
       let(:responses) { ['no'] }
 
       it 'sets user.analytics.disabled to true' do
+        described_class.analytics_config_interview!
         expect(PDK.config.user['analytics']['disabled']).to be_truthy
       end
     end
@@ -193,6 +192,7 @@ describe PDK::Config do
       let(:responses) { [''] }
 
       it 'sets user.analytics.disabled to false' do
+        described_class.analytics_config_interview!
         expect(PDK.config.user['analytics']['disabled']).to be_falsey
       end
     end
@@ -201,6 +201,7 @@ describe PDK::Config do
       let(:responses) { ["\003"] } # \003 == Ctrl-C
 
       it 'sets user.analytics.disabled to true' do
+        described_class.analytics_config_interview!
         expect(PDK.config.user['analytics']['disabled']).to be_truthy
       end
     end
