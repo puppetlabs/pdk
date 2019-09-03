@@ -12,6 +12,7 @@ module PDK
 
   class Config
     def user
+      require 'pdk/answer_file'
       @user ||= PDK::Config::JSON.new('user', file: PDK::Config.user_config_path) do
         mount :module_defaults, PDK::Config::JSON.new(file: PDK.answers.answer_file_path)
 
