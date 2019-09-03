@@ -76,6 +76,7 @@ module PDK
         end
 
         # Only update the answers files after metadata has been written.
+        require 'pdk/answer_file'
         if template_uri.default?
           # If the user specifies our default template url via the command
           # line, remove the saved template-url answer so that the template_uri
@@ -118,6 +119,7 @@ module PDK
       end
 
       def self.prepare_metadata(opts = {})
+        require 'pdk/answer_file'
         opts[:username] = (opts[:username] || PDK.answers['forge_username'] || username_from_login).downcase
 
         defaults = PDK::Module::Metadata::DEFAULTS.dup
@@ -319,6 +321,7 @@ module PDK
           end
         end
 
+        require 'pdk/answer_file'
         PDK.answers.update!(
           {
             'forge_username' => opts[:username],

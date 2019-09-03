@@ -137,6 +137,7 @@ module PDK::CLI
     end
 
     option nil, 'answer-file', _('Path to an answer file.'), argument: :required, hidden: true do |value|
+      require 'pdk/answer_file'
       PDK.answer_file = value
     end
   end
