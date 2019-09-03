@@ -1,6 +1,5 @@
 require 'pdk/config/errors'
 require 'pdk/config/namespace'
-require 'pdk/config/validator'
 require 'pdk/config/setting'
 require 'pdk/config/yaml'
 require 'pdk/config/yaml_with_schema'
