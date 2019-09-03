@@ -46,8 +46,7 @@ module PDK
         @value.to_s
       end
 
-      # Assign a validator to the setting.
-      # TODO: Do not override?
+      # Assign a validator to the setting. Subclasses should not override this method.
       #
       # @param validator [Hash{Symbol => [Proc,String]}]
       # @option validator [Proc] :proc a lambda that takes the setting to be
@@ -90,8 +89,7 @@ module PDK
         end
       end
 
-      # Assign a default value proc for the setting.
-      # TODO: Do not override
+      # Assign a default value proc for the setting. Subclasses should not override this method.
       #
       # @param block [Proc] a block that is lazy evaluated when necessary in
       #   order to determine the default setting.
@@ -114,8 +112,7 @@ module PDK
 
       private
 
-      # @return [Boolean] true if the setting has a default setting block.
-      # TODO: Do not override
+      # @return [Boolean] true if the setting has a default setting block. Subclasses should not override this method.
       def default_block?
         !@default_to.nil?
       end
