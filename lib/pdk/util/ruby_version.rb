@@ -115,9 +115,7 @@ module PDK
         else
           # This allows the subprocess to find the 'bundler' gem, which isn't
           # in GEM_HOME for gem installs.
-          # TODO: There must be a better way to do this than shelling out to
-          # gem... Perhaps can be replaced with "Gem.path"?
-          [File.absolute_path(File.join(`gem which bundler`, '..', '..', '..', '..'))]
+          [File.absolute_path(File.join(bundler_basedir, '..', '..', '..'))]
         end
       end
 
@@ -166,6 +164,10 @@ module PDK
 
       def versions
         self.class.versions
+      end
+
+      def bundler_basedir
+        Gem::Specification.latest_specs.find { |spec| spec.name.eql?('bundler') }.base_dir
       end
     end
   end
