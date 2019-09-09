@@ -151,6 +151,18 @@ module PDK
         end
       end
 
+      # Check the preconditions of this template group, behaving as a
+      # predicate rather than raising an exception.
+      #
+      # @return [Boolean] true if the generator is safe to run, otherwise
+      #   false.
+      def can_run?
+        check_preconditions
+        true
+      rescue PDK::CLI::ExitWithError
+        false
+      end
+
       # Check that the templates can be rendered. Find an appropriate template
       # and create the target files from the template. This is the main entry
       # point for the class.

@@ -152,4 +152,80 @@ describe 'pdk convert', module_command: true do
       end
     end
   end
+
+  context 'when adding missing tests' do
+    # A real bare bones modules here. Testing to ensure that the functionality
+    # works even when the module didn't have puppet-strings installed before
+    # the convert.
+
+    context 'to a module with no missing tests' do
+      before(:all) do
+        FileUtils.mkdir('module_with_all_tests')
+        Dir.chdir('module_with_all_tests')
+
+        FileUtils.mkdir_p('manifests')
+        FileUtils.mkdir_p(File.join('spec', 'classes'))
+
+        File.open(File.join('manifests', 'some_class.pp'), 'wb') do |f|
+          f.puts 'class module_with_all_tests::some_class { }'
+        end
+
+        File.open(File.join('spec', 'classes', 'some_class_spec.rb'), 'wb') do |f|
+          f.puts "require 'spec_helper'"
+          f.puts "describe 'module_with_all_tests::some_class' do"
+          f.puts 'end'
+        end
+      end
+
+      after(:all) do
+        Dir.chdir('..')
+        FileUtils.rm_rf('module_with_all_tests')
+      end
+
+      describe command("#{pdk_convert_base} --force --skip-interview --add-tests") do
+        its(:exit_status) { is_expected.to eq(0) }
+        its(:stderr) { is_expected.not_to match(%r{some_class_spec\.rb}m) }
+      end
+    end
+
+    context 'to a module with missing tests' do
+      before(:all) do
+        FileUtils.mkdir('module_with_missing_tests')
+        Dir.chdir('module_with_missing_tests')
+
+        FileUtils.mkdir_p(File.join('manifests', 'namespaced'))
+
+        File.open(File.join('manifests', 'some_class.pp'), 'wb') do |f|
+          f.puts 'class module_with_missing_tests::some_class { }'
+        end
+        File.open(File.join('manifests', 'namespaced', 'some_define.pp'), 'wb') do |f|
+          f.puts 'define module_with_missing_tests::namespaced::some_define() { }'
+        end
+      end
+
+      after(:all) do
+        Dir.chdir('..')
+        FileUtils.rm_rf('module_with_missing_tests')
+      end
+
+      class_path = File.join('spec', 'classes', 'some_class_spec.rb')
+      define_path = File.join('spec', 'defines', 'namespaced', 'some_define_spec.rb')
+
+      describe command("#{pdk_convert_base} --force --skip-interview --add-tests") do
+        its(:exit_status) { is_expected.to eq(0) }
+        its(:stderr) { is_expected.to match(%r{#{Regexp.escape(class_path)}}m) }
+        its(:stderr) { is_expected.to match(%r{#{Regexp.escape(define_path)}}m) }
+
+        describe file(class_path) do
+          it { is_expected.to be_file }
+          its(:content) { is_expected.to match(%r{describe 'module_with_missing_tests::some_class'}m) }
+        end
+
+        describe file(define_path) do
+          it { is_expected.to be_file }
+          its(:content) { is_expected.to match(%r{describe 'module_with_missing_tests::namespaced::some_define'}m) }
+        end
+      end
+    end
+  end
 end

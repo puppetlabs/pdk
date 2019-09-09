@@ -12,6 +12,7 @@ module PDK::CLI
     PDK::CLI.full_interview_option(self)
     flag nil, :noop, _('Do not convert the module, just output what would be done.')
     flag nil, :force, _('Convert the module automatically, with no prompts.')
+    flag nil, :'add-tests', _('Add any missing tests while converting the module.')
 
     run do |opts, _args, _cmd|
       require 'pdk/module/convert'

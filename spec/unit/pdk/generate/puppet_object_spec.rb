@@ -235,6 +235,78 @@ describe PDK::Generate::PuppetObject do
     end
   end
 
+  describe '#can_run?' do
+    subject { templated_object.can_run? }
+
+    include_context :with_puppet_object_module_metadata
+
+    let(:target_object_path) { '/tmp/test_module/object_file' }
+    let(:target_spec_path) { '/tmp/test_module/spec_file' }
+    let(:target_object_exists) { false }
+    let(:target_spec_exists) { false }
+
+    before(:each) do
+      allow(File).to receive(:exist?).with(target_object_path).and_return(target_object_exists)
+      allow(File).to receive(:exist?).with(target_spec_path).and_return(target_spec_exists)
+      allow(templated_object).to receive(:target_object_path).and_return(target_object_path)
+      allow(templated_object).to receive(:target_spec_path).and_return(target_spec_path)
+    end
+
+    context 'when :spec_only => false' do
+      let(:options) { { spec_only: false } }
+
+      context 'and the target object exists' do
+        let(:target_object_exists) { true }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and the target spec exists' do
+        let(:target_spec_exists) { true }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and both target object and spec exist' do
+        let(:target_object_exists) { true }
+        let(:target_spec_exists) { true }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and neither target object nor spec exist' do
+        it { is_expected.to be_truthy }
+      end
+    end
+
+    context 'when :spec_only => true' do
+      let(:options) { { spec_only: true } }
+
+      context 'and the target object exists' do
+        let(:target_object_exists) { true }
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'and the target spec exists' do
+        let(:target_spec_exists) { true }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and both target object and spec exist' do
+        let(:target_object_exists) { true }
+        let(:target_spec_exists) { true }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and neither target object nor spec exist' do
+        it { is_expected.to be_truthy }
+      end
+    end
+  end
+
   describe '#run' do
     include_context :with_puppet_object_module_metadata
 
