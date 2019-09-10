@@ -15,8 +15,8 @@ describe PDK::Generate::DefinedType do
   let(:expected_name) { given_name }
 
   before(:each) do
-    test_metadata = instance_double(PDK::Module::Metadata, data: { 'name' => module_name })
-    allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(module_dir, 'metadata.json')).and_return(test_metadata)
+    test_metadata = { 'name' => module_name }
+    allow(PDK::Util).to receive(:module_metadata).and_return(test_metadata)
   end
 
   shared_examples 'it generates the template data' do

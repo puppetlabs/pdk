@@ -87,8 +87,8 @@ describe PDK::Generate::PuppetObject do
 
       it 'raises a fatal error' do
         expect {
-          templated_object.module_metadata
-        }.to raise_error(PDK::CLI::FatalError, %r{'#{module_dir}'.*not contain.*metadata})
+          templated_object.module_name
+        }.to raise_error(PDK::CLI::FatalError, %r{'#{metadata_path}'.*not exist})
       end
     end
   end
