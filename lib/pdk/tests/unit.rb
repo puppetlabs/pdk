@@ -16,14 +16,28 @@ module PDK
         @rake ||= File.join(PDK::Util.module_root, 'bin', 'rake')
       end
 
-      def self.rake(task, spinner_text, environment = {})
+      def self.cmd_with_args(task)
         argv = [rake_bin, task]
         argv.unshift(File.join(PDK::Util::RubyVersion.bin_path, 'ruby.exe')) if Gem.win_platform?
+        argv
+      end
 
-        command = PDK::CLI::Exec::Command.new(*argv).tap do |c|
+      def self.rake(task, spinner_text, environment = {})
+        command = PDK::CLI::Exec::Command.new(*cmd_with_args(task)).tap do |c|
           c.context = :module
           c.add_spinner(spinner_text) if spinner_text
           c.environment = environment
+        end
+
+        command.execute!
+      end
+
+      def self.interactive_rake(task, environment)
+        command = PDK::CLI::Exec::InteractiveCommand.new(*cmd_with_args(task)).tap do |c|
+          c.context = :module
+          c.environment = environment.reject do |key, _|
+            key == 'CI_SPEC_OPTIONS'
+          end
         end
 
         command.execute!
@@ -73,6 +87,12 @@ module PDK
         environment = { 'CI_SPEC_OPTIONS' => '--format j' }
         environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]
         spinner_msg = options[:parallel] ? _('Running unit tests in parallel.') : _('Running unit tests.')
+
+        if options[:interactive]
+          result = interactive_rake(cmd(tests, options), environment)
+          return result[:exit_code]
+        end
+
         result = rake(cmd(tests, options), spinner_msg, environment)
 
         json_result = if options[:parallel]

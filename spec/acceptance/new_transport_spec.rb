@@ -85,8 +85,8 @@ SYNC
         end
 
         describe command('pdk test unit') do
-          its(:stderr) { is_expected.to match(%r{0 failures}) }
-          its(:stderr) { is_expected.not_to match(%r{no examples found}i) }
+          its(:stdout) { is_expected.to match(%r{0 failures}) }
+          its(:stdout) { is_expected.not_to match(%r{no examples found}i) }
           its(:exit_status) { is_expected.to eq(0) }
         end
       end

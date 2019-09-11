@@ -70,8 +70,10 @@ module PDK::CLI
 
         report = PDK::Report.new
         report_formats = if opts[:format]
+                           opts[:interactive] = false
                            PDK::CLI::Util::OptionNormalizer.report_formats(opts[:format])
                          else
+                           opts[:interactive] = true
                            [{
                              method: PDK::Report.default_format,
                              target: PDK::Report.default_target,

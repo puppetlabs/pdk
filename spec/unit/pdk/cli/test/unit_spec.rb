@@ -127,7 +127,16 @@ describe '`pdk test unit`' do
 
       context 'when passed --clean-fixtures' do
         it 'invokes the command with :clean-fixtures => true' do
-          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(:puppet => puppet_version, :tests => anything, :'clean-fixtures' => true)).once.and_return(0)
+          expect(PDK::Test::Unit).to receive(:invoke).with(
+            reporter,
+            hash_with_defaults_including(
+              :puppet           => puppet_version,
+              :tests            => anything,
+              :'clean-fixtures' => true,
+              :interactive      => true,
+            ),
+          ).once.and_return(0)
+
           expect {
             test_unit_cmd.run_this(['--clean-fixtures'])
           }.to exit_zero
@@ -149,7 +158,7 @@ describe '`pdk test unit`' do
 
       context 'when not passed --clean-fixtures' do
         it 'invokes the command without :clean-fixtures' do
-          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(puppet: puppet_version, tests: anything)).once.and_return(0)
+          expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(puppet: puppet_version, tests: anything, interactive: true)).once.and_return(0)
           expect {
             test_unit_cmd.run_this([])
           }.to exit_zero
@@ -169,11 +178,9 @@ describe '`pdk test unit`' do
       end
 
       context 'when tests pass' do
-        before(:each) do
+        it 'exits cleanly' do
           expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(tests: anything)).once.and_return(0)
-        end
 
-        it do
           expect { test_unit_cmd.run_this([]) }.to exit_zero
         end
 
@@ -192,6 +199,7 @@ describe '`pdk test unit`' do
         context 'with a format option' do
           before(:each) do
             expect(PDK::CLI::Util::OptionNormalizer).to receive(:report_formats).with(['text:results.txt']).and_return([{ method: :write_text, target: 'results.txt' }]).at_least(:twice)
+            expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(tests: anything, interactive: false)).once.and_return(0)
           end
 
           it do
@@ -216,6 +224,7 @@ describe '`pdk test unit`' do
 
           before(:each) do
             expect(PDK::CLI::Util::OptionValidator).to receive(:comma_separated_list?).with(tests).and_return(true)
+            expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(tests: anything, interactive: true)).once.and_return(0)
           end
 
           it do

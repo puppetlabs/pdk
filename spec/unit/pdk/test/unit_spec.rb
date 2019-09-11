@@ -278,6 +278,7 @@ describe PDK::Test::Unit do
 
   describe '.invoke' do
     let(:report) { PDK::Report.new }
+    let(:rspec_json_output) { '{}' }
 
     before(:each) do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
@@ -287,6 +288,30 @@ describe PDK::Test::Unit do
       allow(described_class).to receive(:tear_down)
       allow_any_instance_of(PDK::CLI::Exec::Command).to receive(:execute!).and_return(stdout: rspec_json_output, exit_code: -1)
       allow(described_class).to receive(:parse_output)
+    end
+
+    context 'when running interactively' do
+      subject(:exit_code) do
+        described_class.invoke(report, interactive: true)
+      end
+
+      before(:each) do
+        allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new)
+          .and_return(command)
+      end
+
+      let(:command) do
+        instance_double(
+          PDK::CLI::Exec::InteractiveCommand,
+          :context=     => true,
+          :environment= => true,
+        )
+      end
+
+      it 'runs the rake task interactively' do
+        expect(command).to receive(:execute!).and_return(exit_code: 0)
+        expect(exit_code).to eq(0)
+      end
     end
 
     context 'in parallel without examples' do

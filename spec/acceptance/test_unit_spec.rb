@@ -15,17 +15,14 @@ describe 'pdk test unit', module_command: true do
     describe command('pdk test unit') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
-      its(:stderr) { is_expected.to match(%r{running unit tests}i) }
-      its(:stderr) { is_expected.to match(%r{no examples found}i) }
-      its(:stderr) { is_expected.to match(%r{evaluated 0 tests}i) }
+      its(:stdout) { is_expected.to match(%r{no examples found}i) }
+      its(:stdout) { is_expected.to match(%r{0 examples, 0 failures}i) }
     end
 
     describe command('pdk test unit --parallel') do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
-      its(:stderr) { is_expected.to match(%r{running unit tests in parallel}i) }
-      its(:stderr) { is_expected.to match(%r{no examples found}i) }
-      its(:stderr) { is_expected.to match(%r{evaluated 0 tests}i) }
+      its(:stderr) { is_expected.to match(%r{No files for parallel_spec to run against}i) }
     end
 
     context 'with passing tests' do
@@ -61,13 +58,13 @@ describe 'pdk test unit', module_command: true do
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.to eq(0) }
         its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
-        its(:stderr) { is_expected.to match(%r{running unit tests.*[1-9]\d* tests.*0 failures}im) }
+        its(:stdout) { is_expected.to match(%r{[1-9]\d* examples?.*0 failures}im) }
       end
 
       describe command('pdk test unit --parallel') do
         its(:exit_status) { is_expected.to eq(0) }
         its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
-        its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*[1-9]\d* tests.*0 failures}im) }
+        its(:stdout) { is_expected.to match(%r{[1-9]\d* examples?.*0 failures}im) }
       end
     end
 
@@ -94,7 +91,7 @@ describe 'pdk test unit', module_command: true do
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
         its(:stdout) { is_expected.to match(%r{failed.*expected: true.*got: false}im) }
-        its(:stderr) { is_expected.to match(%r{running unit tests.*1 tests.*1 failures}im) }
+        its(:stdout) { is_expected.to match(%r{1 examples?.*1 failures?}im) }
       end
     end
 
@@ -121,7 +118,7 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{running unit tests.*1 tests.*0 failures.*1 pending}im) }
+        its(:stdout) { is_expected.to match(%r{1 examples?.*0 failures.*1 pending}im) }
       end
     end
 
@@ -157,8 +154,8 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stderr) { is_expected.to match(%r{An error occurred while loading.*syntax_spec.rb}) }
-        its(:stderr) { is_expected.to match(%r{SyntaxError}) }
+        its(:stdout) { is_expected.to match(%r{An error occurred while loading.*syntax_spec.rb}) }
+        its(:stdout) { is_expected.to match(%r{SyntaxError}) }
       end
     end
 
@@ -204,12 +201,13 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{running unit tests.*[1-9]\d* tests.*0 failures}im) }
+        its(:stdout) { is_expected.to match(%r{[1-9]\d* examples?.*0 failures}im) }
       end
 
       describe command('pdk test unit --parallel') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{running unit tests in parallel.*[1-9]\d* tests.*0 failures}im) }
+        its(:stdout) { is_expected.to match(%r{[1-9]\d* processes for [1-9]\d* specs}m) }
+        its(:stdout) { is_expected.to match(%r{[1-9]\d* examples?.*0 failures}im) }
       end
     end
 
