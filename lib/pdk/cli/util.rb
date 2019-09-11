@@ -103,6 +103,20 @@ module PDK
       end
       module_function :module_version_check
 
+      def check_for_deprecated_puppet(version)
+        return unless version.is_a?(Gem::Version)
+
+        deprecated_below = Gem::Version.new('5.0.0')
+        return unless version < deprecated_below
+
+        deprecated_msg = _(
+          'Support for Puppet versions older than %{version} is ' \
+          'deprecated and will be removed in a future version of PDK.',
+        ) % { version: deprecated_below.to_s }
+        PDK.logger.warn(deprecated_msg)
+      end
+      module_function :check_for_deprecated_puppet
+
       def puppet_from_opts_or_env(opts)
         use_puppet_dev = (opts || {})[:'puppet-dev'] || ENV['PDK_PUPPET_DEV']
         desired_puppet_version = (opts || {})[:'puppet-version'] || ENV['PDK_PUPPET_VERSION']
@@ -127,6 +141,8 @@ module PDK
         PDK.logger.info(_('Using Ruby %{version}') % {
           version: puppet_env[:ruby_version],
         })
+
+        check_for_deprecated_puppet(puppet_env[:gem_version])
 
         gemset = { puppet: puppet_env[:gem_version].to_s }
 
