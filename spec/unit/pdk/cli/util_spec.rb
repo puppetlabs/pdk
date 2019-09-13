@@ -349,6 +349,39 @@ describe PDK::CLI::Util do
         expect { puppet_env }.to raise_error(PDK::CLI::ExitWithError, 'error msg')
       end
     end
+
+    context 'when the Puppet version is older than 5.0.0' do
+      let(:options) { { :'puppet-version' => '4.10.10' } }
+      let(:ruby_version) { '2.1.9' }
+      let(:puppet_version) { '4.10.10' }
+
+      before(:each) do
+        allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
+      end
+
+      it 'warn the user about the deprecated version' do
+        expect(logger).to receive(:warn)
+          .with(a_string_matching(%r{older than 5\.0\.0 is deprecated}))
+
+        puppet_env
+      end
+    end
+
+    context 'when the Puppet version is at least 5.0.0' do
+      let(:options) { { :'puppet-version' => '5.0.0' } }
+      let(:ruby_version) { '2.4.5' }
+      let(:puppet_version) { '5.0.0' }
+
+      before(:each) do
+        allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
+      end
+
+      it 'does not issue a deprecation warning' do
+        expect(logger).not_to receive(:warn)
+
+        puppet_env
+      end
+    end
   end
 
   describe '.validate_template_opts' do
