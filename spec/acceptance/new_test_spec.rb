@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk new unit_test', module_command: true do
+describe 'pdk new test', module_command: true do
   context 'in a new module' do
     include_context 'in a new module', 'new_unit_test'
 
@@ -15,7 +15,7 @@ describe 'pdk new unit_test', module_command: true do
     end
 
     context 'when creating a test for the main class' do
-      describe command('pdk new unit_test new_unit_test') do
+      describe command('pdk new test --unit new_unit_test') do
         its(:exit_status) { is_expected.to eq 0 }
         its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
         its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
@@ -31,7 +31,7 @@ describe 'pdk new unit_test', module_command: true do
     end
 
     context 'when creating a test for a defined type' do
-      describe command('pdk new unit_test def_type') do
+      describe command('pdk new test def_type') do
         its(:exit_status) { is_expected.to eq 0 }
         its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
         its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
