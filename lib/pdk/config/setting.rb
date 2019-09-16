@@ -16,6 +16,17 @@ module PDK
     class Setting
       attr_reader :namespace
 
+      # It is possible to have multiple setting definitions for the same setting; for example, defining a default value with a lambda, but the
+      # the validation is within a JSON schema document. These are expressed as two settings objects, and uses a single linked list to join them
+      # together:
+      #
+      # (PDK::Config::JSONSchemaSetting) --previous_setting--> (PDK::Config::Setting)
+      #
+      # So in the example above, calling `default` the on the first object in the list will:
+      # 1. Look at `default` on PDK::Config::JSONSchemaSetting
+      # 2. If a default could not be found then it calls `default` on previous_setting
+      # 3. If a default could not be found then it calls `default` on previous_setting.previous_setting
+      # 4. and so on down the linked list (chain) of settings
       attr_writer :previous_setting
 
       # Initialises an empty setting definition.
