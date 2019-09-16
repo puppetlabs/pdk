@@ -131,6 +131,30 @@ describe PDK::Module::Convert do
       it 'returns without syncing the changes' do
         expect(update_manager).not_to receive(:sync_changes!)
       end
+
+      context 'and it is to add tests' do
+        let(:options) { { :'add-tests' => true } }
+
+        context 'and there are tests to add' do
+          before(:each) do
+            allow(instance).to receive(:missing_tests?).and_return(true)
+          end
+
+          it 'attempts to add missing tests' do
+            expect(instance).to receive(:add_tests!)
+          end
+        end
+
+        context 'and there are no tests to add' do
+          before(:each) do
+            allow(instance).to receive(:missing_tests?).and_return(false)
+          end
+
+          it 'does not attempt to add missing tests' do
+            expect(instance).not_to receive(:add_tests!)
+          end
+        end
+      end
     end
 
     context 'when the Gemfile has been modified' do
@@ -216,11 +240,39 @@ describe PDK::Module::Convert do
           it 'syncs the pending changes' do
             expect(update_manager).to receive(:sync_changes!)
           end
+
+          context 'and it is to add tests' do
+            let(:options) { { :'add-tests' => true } }
+
+            context 'and there are tests to add' do
+              before(:each) do
+                allow(instance).to receive(:missing_tests?).and_return(true)
+              end
+
+              it 'attempts to add missing tests' do
+                expect(instance).to receive(:add_tests!)
+              end
+            end
+
+            context 'and there are no tests to add' do
+              before(:each) do
+                allow(instance).to receive(:missing_tests?).and_return(false)
+              end
+
+              it 'does not attempt to add missing tests' do
+                expect(instance).not_to receive(:add_tests!)
+              end
+            end
+          end
         end
 
         context 'if the user chooses not to continue' do
           it 'does not sync the changes' do
             expect(update_manager).not_to receive(:sync_changes!)
+          end
+
+          it 'does not attempt to add missing tests' do
+            expect(instance).not_to receive(:add_tests!)
           end
         end
       end
@@ -239,6 +291,10 @@ describe PDK::Module::Convert do
         it 'does not sync the changes' do
           expect(update_manager).not_to receive(:sync_changes!)
         end
+
+        it 'does not attempt to add missing tests' do
+          expect(instance).not_to receive(:add_tests!)
+        end
       end
 
       context 'and run in force mode' do
@@ -254,6 +310,30 @@ describe PDK::Module::Convert do
 
         it 'syncs the pending changes' do
           expect(update_manager).to receive(:sync_changes!)
+        end
+
+        context 'and it is to add tests' do
+          let(:options) { super().merge(:'add-tests' => true) }
+
+          context 'and there are tests to add' do
+            before(:each) do
+              allow(instance).to receive(:missing_tests?).and_return(true)
+            end
+
+            it 'attempts to add missing tests' do
+              expect(instance).to receive(:add_tests!)
+            end
+          end
+
+          context 'and there are no tests to add' do
+            before(:each) do
+              allow(instance).to receive(:missing_tests?).and_return(false)
+            end
+
+            it 'does not attempt to add missing tests' do
+              expect(instance).not_to receive(:add_tests!)
+            end
+          end
         end
       end
     end
@@ -517,6 +597,160 @@ describe PDK::Module::Convert do
 
     context 'when the metadata file does not exist' do
       it_behaves_like 'it interviews the user for the metadata'
+    end
+  end
+
+  describe '#add_tests?' do
+    subject { described_class.new(options).add_tests? }
+
+    context 'when add-tests => true' do
+      let(:options) { { :'add-tests' => true } }
+
+      it { is_expected.to be_truthy }
+    end
+
+    context 'when add-tests => false' do
+      let(:options) { { :'add-tests' => false } }
+
+      it { is_expected.to be_falsey }
+    end
+  end
+
+  describe '#test_generators' do
+    subject { described_class.new.test_generators }
+
+    before(:each) do
+      allow(PDK::Util::PuppetStrings).to receive(:all_objects).and_return(objects)
+      allow(PDK::Util).to receive(:module_root).and_return(module_root)
+      allow(PDK::Util).to receive(:module_metadata).and_return(metadata)
+    end
+
+    let(:metadata) { { 'name' => 'myuser-mymodule' } }
+    let(:module_root) { File.join('path', 'to', 'module') }
+
+    context 'when there are no objects' do
+      let(:objects) { [] }
+
+      it 'returns an empty array' do
+        is_expected.to eq([])
+      end
+    end
+
+    context 'when there are objects' do
+      let(:objects) do
+        [
+          [
+            PDK::Generate::PuppetClass, [
+              { 'name' => 'foo' },
+              { 'name' => 'bar' },
+            ]
+          ],
+        ]
+      end
+
+      it 'returns an array of generators' do
+        is_expected.to all(be_an_instance_of(PDK::Generate::PuppetClass))
+      end
+
+      it 'instantiates all the generators as spec_only' do
+        is_expected.to all(have_attributes(spec_only?: true))
+      end
+    end
+  end
+
+  describe '#missing_tests?' do
+    subject { instance.missing_tests? }
+
+    before(:each) do
+      allow(PDK::Util::PuppetStrings).to receive(:all_objects).and_return(objects)
+      allow(PDK::Util).to receive(:module_root).and_return(module_root)
+      allow(PDK::Util).to receive(:module_metadata).and_return(metadata)
+    end
+
+    let(:instance) { described_class.new }
+    let(:metadata) { { 'name' => 'myuser-mymodule' } }
+    let(:module_root) { File.join('path', 'to', 'module') }
+
+    context 'when there are no objects' do
+      let(:objects) { [] }
+
+      it { is_expected.to be_falsey }
+    end
+
+    context 'when there are objects' do
+      let(:objects) do
+        [
+          [
+            PDK::Generate::PuppetClass, [
+              { 'name' => 'mymodule::foo' },
+            ]
+          ],
+        ]
+      end
+
+      context 'when the spec file exists' do
+        before(:each) do
+          instance.test_generators.each do |gen|
+            allow(File).to receive(:exist?).with(gen.target_spec_path).and_return(true)
+          end
+        end
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'when the spec file does not exist' do
+        before(:each) do
+          instance.test_generators.each do |gen|
+            allow(File).to receive(:exist?).with(gen.target_spec_path).and_return(false)
+          end
+        end
+
+        it { is_expected.to be_truthy }
+      end
+    end
+  end
+
+  describe '#add_tests!' do
+    let(:instance) { described_class.new }
+
+    let(:generators) do
+      [
+        instance_double(PDK::Generate::PuppetClass),
+      ]
+    end
+
+    before(:each) do
+      allow(instance).to receive(:test_generators).and_return(generators)
+    end
+
+    context 'when the generators can run' do
+      before(:each) do
+        generators.each do |g|
+          allow(g).to receive(:can_run?).and_return(true)
+        end
+      end
+
+      it 'runs the generators' do
+        expect(generators).to all(receive(:run))
+
+        instance.add_tests!
+      end
+    end
+
+    context 'when the generators can not run' do
+      before(:each) do
+        generators.each do |g|
+          allow(g).to receive(:can_run?).and_return(false)
+        end
+      end
+
+      it 'does not run the generators' do
+        generators.each do |g|
+          expect(g).not_to receive(:run)
+        end
+
+        instance.add_tests!
+      end
     end
   end
 end

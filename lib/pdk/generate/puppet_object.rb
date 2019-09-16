@@ -151,6 +151,18 @@ module PDK
         end
       end
 
+      # Check the preconditions of this template group, behaving as a
+      # predicate rather than raising an exception.
+      #
+      # @return [Boolean] true if the generator is safe to run, otherwise
+      #   false.
+      def can_run?
+        check_preconditions
+        true
+      rescue PDK::CLI::ExitWithError
+        false
+      end
+
       # Check that the templates can be rendered. Find an appropriate template
       # and create the target files from the template. This is the main entry
       # point for the class.
@@ -299,28 +311,13 @@ module PDK
       # Retrieves the name of the module (without the forge username) from the
       # module metadata.
       #
-      # @raise (see #module_metadata)
       # @return [String] The name of the module.
       #
       # @api private
       def module_name
-        @module_name ||= module_metadata.data['name'].rpartition('-').last
-      end
-
-      # Parses the metadata.json file for the module.
-      #
-      # @raise [PDK::CLI::FatalError] if the metadata.json file does not exist,
-      #   can not be read, or contains invalid metadata.
-      #
-      # @return [PDK::Module::Metadata] the parsed module metadata.
-      #
-      # @api private
-      def module_metadata
-        @module_metadata ||= begin
-          PDK::Module::Metadata.from_file(File.join(module_dir, 'metadata.json'))
-        rescue ArgumentError => e
-          raise PDK::CLI::FatalError, _("'%{dir}' does not contain valid Puppet module metadata: %{msg}") % { dir: module_dir, msg: e.message }
-        end
+        @module_name ||= PDK::Util.module_metadata['name'].rpartition('-').last
+      rescue ArgumentError => e
+        raise PDK::CLI::FatalError, e
       end
 
       # transform a object name into a ruby class name

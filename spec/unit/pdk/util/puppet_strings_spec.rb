@@ -180,6 +180,58 @@ describe PDK::Util::PuppetStrings do
     end
   end
 
+  describe '.all_objects' do
+    subject(:result) { described_class.all_objects }
+
+    before(:each) do
+      allow(described_class).to receive(:generate_hash).and_return(puppet_strings_data)
+    end
+
+    context 'when there are no results from puppet-strings' do
+      let(:puppet_strings_data) { {} }
+
+      it 'returns an empty array' do
+        expect(result).to eq([])
+      end
+    end
+
+    context 'when the puppet-strings result includes objects that PDK has no generator for' do
+      let(:puppet_strings_data) do
+        {
+          'data_types' => [
+            { 'name' => 'mymodule::my_object' },
+          ],
+        }
+      end
+
+      it 'filters the generatorless objects out of the result' do
+        expect(result).to eq([])
+      end
+    end
+
+    context 'when the puppet-strings result includes objects with generators' do
+      let(:puppet_strings_data) do
+        {
+          'puppet_classes' => [
+            { 'name' => 'mymodule::my_class' },
+          ],
+          'defined_types' => [
+            { 'name' => 'mymodule::my_define' },
+          ],
+        }
+      end
+
+      it 'returns an associative array' do
+        expect(result).to eq(
+          [
+            [PDK::Generate::DefinedType, [{ 'name' => 'mymodule::my_define' }]],
+            [PDK::Generate::PuppetClass, [{ 'name' => 'mymodule::my_class' }]],
+          ],
+        )
+      end
+    end
+  end
+
   describe '.find_generator' do
     subject { described_class.find_generator(type) }
 

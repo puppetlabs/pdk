@@ -80,6 +80,24 @@ module PDK
         [generator, known_objects[object_type].find { |obj| object_names.include?(obj['name']) }]
       end
 
+      # Generate a list of all objects that PDK has a generator for.
+      #
+      # @returns [Array[Array[PDK::Generate::PuppetObject,
+      #   Array[Hash{String=>Object}]]]] an associative array where the first
+      #   element of each pair is the generator class and the second element of
+      #   each pair is an array of description hashes from puppet-strings.
+      def self.all_objects
+        generators = PDK::Generate::GENERATORS.select do |gen|
+          gen.respond_to?(:puppet_strings_type) && !gen.puppet_strings_type.nil?
+        end
+
+        known_objects = generate_hash
+
+        generators.map { |gen| [gen, known_objects[gen.puppet_strings_type]] }.reject do |_, obj|
+          obj.nil? || obj.empty?
+        end
+      end
+
       # Evaluates the mapping of puppet-strings object type to PDK generator
       # class.
       #

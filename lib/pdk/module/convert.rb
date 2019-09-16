@@ -24,7 +24,12 @@ module PDK
         stage_changes!
 
         unless update_manager.changes?
-          PDK::Report.default_target.puts(_('No changes required.'))
+          if adding_tests?
+            add_tests!
+          else
+            PDK::Report.default_target.puts(_('No changes required.'))
+          end
+
           return
         end
 
@@ -54,6 +59,8 @@ module PDK
 
         PDK::Util::Bundler.ensure_bundle! if needs_bundle_update?
 
+        add_tests! if adding_tests?
+
         print_result 'Convert completed'
       end
 
@@ -63,6 +70,36 @@ module PDK
 
       def force?
         options[:force]
+      end
+
+      def add_tests?
+        options[:'add-tests']
+      end
+
+      def adding_tests?
+        add_tests? && missing_tests?
+      end
+
+      def missing_tests?
+        test_generators.any? { |gen| gen.can_run? }
+      end
+
+      def test_generators
+        return @test_generators unless @test_generators.nil?
+
+        test_gens = PDK::Util::PuppetStrings.all_objects.map do |generator, objects|
+          (objects || []).map do |obj|
+            generator.new(Dir.pwd, obj['name'], spec_only: true)
+          end
+        end
+
+        @test_generators = test_gens.flatten
+      end
+
+      def add_tests!
+        test_generators.each do |gen|
+          gen.run if gen.can_run?
+        end
       end
 
       def needs_bundle_update?
