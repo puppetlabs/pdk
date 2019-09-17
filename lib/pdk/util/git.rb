@@ -36,6 +36,8 @@ module PDK
       end
 
       def self.git_bin
+        require 'pdk/cli/exec'
+
         git_bin = Gem.win_platform? ? 'git.exe' : 'git'
         vendored_bin_path = File.join(git_bindir, git_bin)
 
@@ -43,12 +45,16 @@ module PDK
       end
 
       def self.git(*args)
+        require 'pdk/cli/exec'
+
         PDK::CLI::Exec.ensure_bin_present!(git_bin, 'git')
 
         PDK::CLI::Exec.execute(git_bin, *args)
       end
 
       def self.git_with_env(env, *args)
+        require 'pdk/cli/exec'
+
         PDK::CLI::Exec.ensure_bin_present!(git_bin, 'git')
 
         PDK::CLI::Exec.execute_with_env(env, git_bin, *args)

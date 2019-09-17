@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli/exec/interactive_command'
 
 describe PDK::CLI::Exec::InteractiveCommand do
   subject(:command) { described_class.new('/bin/echo', 'foo') }

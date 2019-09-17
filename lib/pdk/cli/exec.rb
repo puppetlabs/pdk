@@ -12,22 +12,27 @@ require 'pdk/cli/util/spinner'
 module PDK
   module CLI
     module Exec
-      require 'pdk/cli/exec/command'
-      require 'pdk/cli/exec/interactive_command'
-
       def self.execute(*cmd)
+        require 'pdk/cli/exec/command'
+
         Command.new(*cmd).execute!
       end
 
       def self.execute_with_env(env, *cmd)
+        require 'pdk/cli/exec/command'
+
         Command.new(*cmd).tap { |c| c.environment = env }.execute!
       end
 
       def self.execute_interactive(*cmd)
+        require 'pdk/cli/exec/interactive_command'
+
         InteractiveCommand.new(*cmd).execute!
       end
 
       def self.execute_interactive_with_env(env, *cmd)
+        require 'pdk/cli/exec/interactive_command'
+
         InteractiveCommand.new(*cmd).tap { |c| c.environment = env }.execute!
       end
 

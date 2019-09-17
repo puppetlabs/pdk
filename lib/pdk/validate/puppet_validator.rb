@@ -1,5 +1,4 @@
 require 'pdk'
-require 'pdk/cli/exec'
 require 'pdk/validate/base_validator'
 require 'pdk/validate/puppet/puppet_lint'
 require 'pdk/validate/puppet/puppet_syntax'

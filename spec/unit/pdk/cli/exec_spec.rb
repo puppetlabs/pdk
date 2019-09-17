@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli/exec'
 
 describe PDK::CLI::Exec do
   describe '#try_vendored_bin' do

@@ -1,5 +1,4 @@
 require 'pdk'
-require 'pdk/cli/exec'
 require 'pdk/util/bundler'
 require 'json'
 
@@ -23,6 +22,8 @@ module PDK
       end
 
       def self.rake(task, spinner_text, environment = {})
+        require 'pdk/cli/exec/command'
+
         command = PDK::CLI::Exec::Command.new(*cmd_with_args(task)).tap do |c|
           c.context = :module
           c.add_spinner(spinner_text) if spinner_text
@@ -33,6 +34,8 @@ module PDK
       end
 
       def self.interactive_rake(task, environment)
+        require 'pdk/cli/exec/interactive_command'
+
         command = PDK::CLI::Exec::InteractiveCommand.new(*cmd_with_args(task)).tap do |c|
           c.context = :module
           c.environment = environment.reject do |key, _|

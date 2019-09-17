@@ -2,7 +2,6 @@ require 'bundler'
 require 'digest'
 require 'fileutils'
 require 'pdk/util'
-require 'pdk/cli/exec'
 
 module PDK
   module Util
@@ -239,6 +238,9 @@ module PDK
         end
 
         def bundle_command(*args)
+          require 'pdk/cli/exec'
+          require 'pdk/cli/exec/command'
+
           PDK::CLI::Exec::Command.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
             c.context = :module
           end

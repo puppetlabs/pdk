@@ -1,5 +1,3 @@
-require 'pdk/cli/exec'
-
 module PDK
   module Util
     module PuppetStrings
@@ -13,6 +11,8 @@ module PDK
       #
       # @return [Hash{Symbol=>Object}] the result of the command execution.
       def self.puppet(*args)
+        require 'pdk/cli/exec/command'
+
         PDK::Util::Bundler.ensure_binstubs!('puppet')
 
         argv = [File.join(PDK::Util.module_root, 'bin', 'puppet')] + args

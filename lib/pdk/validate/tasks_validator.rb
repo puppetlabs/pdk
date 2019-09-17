@@ -1,5 +1,4 @@
 require 'pdk'
-require 'pdk/cli/exec'
 require 'pdk/validate/base_validator'
 require 'pdk/validate/tasks/metadata_lint'
 require 'pdk/validate/tasks/name'

@@ -11,6 +11,8 @@ EOF
     skip_option_parsing
 
     run do |_opts, args, _cmd|
+      require 'pdk/cli/exec/interactive_command'
+
       PDK::CLI::Util.ensure_in_module!(
         message: _('`pdk bundle` can only be run from inside a valid module directory.'),
       )

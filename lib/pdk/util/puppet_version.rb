@@ -226,11 +226,15 @@ module PDK
       end
 
       def find_in_rubygems(requirement)
+        require 'pdk/util/ruby_version'
+
         version = rubygems_puppet_versions.find { |r| requirement.satisfied_by?(r) }
         version.nil? ? nil : { gem_version: version, ruby_version: PDK::Util::RubyVersion.default_ruby_version }
       end
 
       def find_in_package_cache(requirement)
+        require 'pdk/util/ruby_version'
+
         PDK::Util::RubyVersion.versions.each do |ruby_version, _|
           PDK::Util::RubyVersion.use(ruby_version)
           version = PDK::Util::RubyVersion.available_puppet_versions.find { |r| requirement.satisfied_by?(r) }

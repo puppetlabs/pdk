@@ -1,5 +1,4 @@
 require 'pdk/version'
-require 'pdk/cli/exec'
 require 'pdk/util/git'
 require 'pdk/logger'
 

@@ -107,6 +107,8 @@ module PDK::CLI
 
       exit_code = 0
       if opts[:parallel]
+        require 'pdk/cli/exec_group'
+
         exec_group = PDK::CLI::ExecGroup.new(_('Validating module using %{num_of_threads} threads' % { num_of_threads: validators.count }), opts)
 
         validators.each do |validator|
