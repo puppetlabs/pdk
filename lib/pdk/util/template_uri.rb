@@ -168,6 +168,7 @@ module PDK
       #   the template file is not in this template directory.
       #
       def self.templates(opts)
+        require 'pdk/answer_file'
         explicit_url = opts.fetch(:'template-url', nil)
         explicit_ref = opts.fetch(:'template-ref', nil)
 

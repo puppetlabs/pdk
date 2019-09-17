@@ -248,6 +248,8 @@ module PDK
       module_function :validate_template_opts
 
       def analytics_screen_view(screen_name, opts = {})
+        require 'pdk/analytics'
+
         dimensions = {
           ruby_version: RUBY_VERSION,
         }

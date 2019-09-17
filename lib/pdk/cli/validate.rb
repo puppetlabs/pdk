@@ -26,6 +26,8 @@ module PDK::CLI
         exit 0
       end
 
+      require 'pdk/validate'
+
       validator_names = PDK::Validate.validators.map { |v| v.name }
       validators = PDK::Validate.validators
       targets = []

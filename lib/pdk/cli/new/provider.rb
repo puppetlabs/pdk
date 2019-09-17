@@ -21,6 +21,8 @@ module PDK::CLI
 
       PDK::CLI::Util.analytics_screen_view('new_provider', opts)
 
+      require 'pdk/generate/provider'
+
       PDK::Generate::Provider.new(module_dir, provider_name, opts).run
     end
   end

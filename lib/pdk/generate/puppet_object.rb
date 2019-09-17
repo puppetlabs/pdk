@@ -1,6 +1,5 @@
 require 'fileutils'
 
-require 'pdk'
 require 'pdk/logger'
 require 'pdk/module/metadata'
 require 'pdk/module/templatedir'

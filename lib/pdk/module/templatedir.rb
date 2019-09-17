@@ -39,6 +39,8 @@ module PDK
       #
       # @api public
       def initialize(uri, module_metadata = {}, init = false)
+        require 'pdk/analytics'
+
         unless block_given?
           raise ArgumentError, _('%{class_name} must be initialized with a block.') % { class_name: self.class.name }
         end

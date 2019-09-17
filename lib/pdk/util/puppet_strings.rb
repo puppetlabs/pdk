@@ -87,6 +87,8 @@ module PDK
       #   element of each pair is the generator class and the second element of
       #   each pair is an array of description hashes from puppet-strings.
       def self.all_objects
+        require 'pdk/generate'
+
         generators = PDK::Generate::GENERATORS.select do |gen|
           gen.respond_to?(:puppet_strings_type) && !gen.puppet_strings_type.nil?
         end
@@ -110,6 +112,8 @@ module PDK
       #   PDK::Util::PuppetStrings.find_generator('puppet_classes')
       #   => PDK::Generate::PuppetClass
       def self.find_generator(type)
+        require 'pdk/generate'
+
         PDK::Generate::GENERATORS.find do |gen|
           gen.respond_to?(:puppet_strings_type) && gen.puppet_strings_type == type
         end

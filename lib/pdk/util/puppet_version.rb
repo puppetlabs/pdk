@@ -133,6 +133,8 @@ module PDK
       end
 
       def from_module_metadata(metadata = nil)
+        require 'pdk/module/metadata'
+
         if metadata.nil?
           metadata_file = PDK::Util.find_upwards('metadata.json')
 
