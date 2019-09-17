@@ -11,6 +11,7 @@ module PDK::CLI
     option nil, 'skip_validation', _('Skips the module validation check.')
     option nil, 'skip_changelog', _('Skips the automatic changelog generation.')
     option nil, 'skip_dependency', _('Skips the module dependency check.')
+    option nil, 'skip_documentation', _('Skipts the documentation update.')
 
     run do |opts, _args, _cmd|
       require 'pdk/module/build'
@@ -38,6 +39,11 @@ module PDK::CLI
             type:     :yes,
           },
           {
+            name:     'documentation',
+            question: _('Do you want to update the documentation for this module?'),
+            type:     :yes,
+          },
+          {
             name:     'publish',
             question: _('Do you want to publish the module on the Puppet Forge?'),
             type:     :yes,
@@ -53,6 +59,7 @@ module PDK::CLI
           opts[:skip_validation] = !answers['validation']
           opts[:skip_changelog] = !answers['changelog']
           opts[:skip_dependency] = !answers['dependency']
+          opts[:skip_documentation] = !answers['documentation']
         end
       end
 
@@ -113,6 +120,16 @@ module PDK::CLI
         # Create new changelog with the correct version
         changelog_generator.generate_changelog
         PDK.logger.info _("New changelog generated with version #{new_version}")
+      end
+
+      if opts[:skip_documentation]
+        PDK.logger.info _('Skipping documentation update for this module')
+      else
+        PDK.logger.info _('Updating documentation using puppet strings')
+        result = system('bundle exec puppet strings generate --format markdown --out REFERENCE.md')
+        unless result
+          PDK.logger.error _('Error updating documentation with puppet strings.')
+            end
       end
 
       if opts[:skip_dependency]
