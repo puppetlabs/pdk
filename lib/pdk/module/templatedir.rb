@@ -3,7 +3,6 @@ require 'deep_merge'
 require 'pdk/util'
 require 'pdk/util/git'
 require 'pdk/cli/errors'
-require 'pdk/template_file'
 
 module PDK
   module Module
@@ -119,6 +118,8 @@ module PDK
       #
       # @api public
       def render
+        require 'pdk/template_file'
+
         PDK::Module::TemplateDir.files_in_template(@dirs).each do |template_file, template_loc|
           template_file = template_file.to_s
           PDK.logger.debug(_("Rendering '%{template}'...") % { template: template_file })

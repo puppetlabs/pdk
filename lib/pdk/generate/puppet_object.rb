@@ -1,7 +1,6 @@
 require 'fileutils'
 
 require 'pdk/logger'
-require 'pdk/template_file'
 require 'pdk/util/filesystem'
 
 module PDK
@@ -200,6 +199,8 @@ module PDK
       #
       # @api private
       def render_file(dest_path, template_path, data)
+        require 'pdk/template_file'
+
         write_file(dest_path) do
           PDK::TemplateFile.new(template_path, data).render
         end
