@@ -205,14 +205,14 @@ module PDK
       end
 
       def rubygems_puppet_versions
-        return @rubygems_puppet_versions unless @rubygems_puppet_versions.nil?
-
-        fetcher = Gem::SpecFetcher.fetcher
-        puppet_tuples = fetcher.detect(:released) do |spec_tuple|
-          spec_tuple.name == 'puppet' && Gem::Platform.match(spec_tuple.platform)
+        @rubygems_puppet_versions ||= begin
+          fetcher = Gem::SpecFetcher.fetcher
+          puppet_tuples = fetcher.detect(:released) do |spec_tuple|
+            spec_tuple.name == 'puppet' && Gem::Platform.match(spec_tuple.platform)
+          end
+          puppet_versions = puppet_tuples.map { |name, _| name.version }.uniq
+          puppet_versions.sort { |a, b| b <=> a }
         end
-        puppet_versions = puppet_tuples.map { |name, _| name.version }.uniq
-        @rubygems_puppet_versions = puppet_versions.sort { |a, b| b <=> a }
       end
 
       def find_gem(requirement)
