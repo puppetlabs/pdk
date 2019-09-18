@@ -1,5 +1,3 @@
-require 'pdk/generate/module'
-require 'pdk/module/update_manager'
 require 'pdk/util'
 require 'pdk/report'
 
@@ -107,6 +105,8 @@ module PDK
       end
 
       def stage_changes!
+        require 'pdk/module/templatedir'
+
         metadata_path = 'metadata.json'
 
         PDK::Module::TemplateDir.new(template_uri, nil, true) do |templates|
@@ -145,6 +145,8 @@ module PDK
       end
 
       def update_manager
+        require 'pdk/module/update_manager'
+
         @update_manager ||= PDK::Module::UpdateManager.new
       end
 
@@ -153,6 +155,8 @@ module PDK
       end
 
       def update_metadata(metadata_path, template_metadata)
+        require 'pdk/generate/module'
+
         if PDK::Util::Filesystem.file?(metadata_path)
           unless PDK::Util::Filesystem.readable?(metadata_path)
             raise PDK::CLI::ExitWithError, _('Unable to update module metadata; %{path} exists but it is not readable.') % {

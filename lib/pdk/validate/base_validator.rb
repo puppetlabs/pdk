@@ -1,5 +1,4 @@
 require 'pdk'
-require 'pdk/module'
 
 module PDK
   module Validate
@@ -81,6 +80,8 @@ module PDK
       end
 
       def self.ignore_pathspec
+        require 'pdk/module'
+
         ignore_pathspec = PDK::Module.default_ignored_pathspec(ignore_dotfiles?)
 
         if respond_to?(:pattern_ignore)

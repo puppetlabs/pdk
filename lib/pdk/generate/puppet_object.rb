@@ -1,8 +1,6 @@
 require 'fileutils'
 
 require 'pdk/logger'
-require 'pdk/module/metadata'
-require 'pdk/module/templatedir'
 require 'pdk/template_file'
 require 'pdk/util/filesystem'
 
@@ -258,6 +256,8 @@ module PDK
       #
       # @api private
       def with_templates
+        require 'pdk/module/templatedir'
+
         templates.each do |template|
           if template[:uri].nil?
             PDK.logger.debug(_('No %{dir_type} template found; trying next template directory.') % { dir_type: template[:type] })

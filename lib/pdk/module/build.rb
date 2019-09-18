@@ -3,7 +3,6 @@ require 'minitar'
 require 'zlib'
 require 'pathspec'
 require 'find'
-require 'pdk/module'
 require 'pdk/tests/unit'
 
 module PDK
@@ -26,6 +25,8 @@ module PDK
       #
       # @return [Hash{String => Object}] The hash of metadata values.
       def metadata
+        require 'pdk/module/metadata'
+
         @metadata ||= PDK::Module::Metadata.from_file(File.join(module_dir, 'metadata.json')).data
       end
 
@@ -268,6 +269,8 @@ module PDK
       #
       # @return [PathSpec] The populated ignore path matcher.
       def ignored_files
+        require 'pdk/module'
+
         @ignored_files ||=
           begin
             ignored = if ignore_file.nil?

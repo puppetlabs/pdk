@@ -14,6 +14,7 @@ module PDK::CLI
 
     run do |opts, _args, _cmd|
       require 'pdk/module/build'
+      require 'pdk/module/metadata'
 
       # Make sure build is being run in a valid module directory with a metadata.json
       PDK::CLI::Util.ensure_in_module!(

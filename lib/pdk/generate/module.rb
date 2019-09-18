@@ -5,8 +5,6 @@ require 'tty-prompt'
 
 require 'pdk'
 require 'pdk/logger'
-require 'pdk/module/metadata'
-require 'pdk/module/templatedir'
 require 'pdk/cli/util'
 require 'pdk/cli/util/interview'
 require 'pdk/cli/util/option_validator'
@@ -32,6 +30,8 @@ module PDK
       end
 
       def self.invoke(opts = {})
+        require 'pdk/module/templatedir'
+
         validate_options(opts) unless opts[:module_name].nil?
 
         metadata = prepare_metadata(opts)
@@ -119,6 +119,8 @@ module PDK
 
       def self.prepare_metadata(opts = {})
         require 'pdk/answer_file'
+        require 'pdk/module/metadata'
+
         opts[:username] = (opts[:username] || PDK.answers['forge_username'] || username_from_login).downcase
 
         defaults = PDK::Module::Metadata::DEFAULTS.dup

@@ -218,6 +218,8 @@ module PDK
 
     # TO-DO: Refactor replacement of lib/pdk/module/build.rb:metadata to use this function instead
     def module_metadata
+      require 'pdk/module/metadata'
+
       PDK::Module::Metadata.from_file(File.join(module_root, 'metadata.json')).data
     end
     module_function :module_metadata
