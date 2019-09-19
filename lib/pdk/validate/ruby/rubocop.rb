@@ -1,7 +1,4 @@
-require 'pdk/util'
-require 'pdk/util/bundler'
 require 'pdk/validate/base_validator'
-require 'pdk/validate/ruby_validator'
 
 module PDK
   module Validate

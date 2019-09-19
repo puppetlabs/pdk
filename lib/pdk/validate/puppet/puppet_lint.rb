@@ -1,4 +1,3 @@
-require 'pdk/util'
 require 'pdk/validate/base_validator'
 
 module PDK

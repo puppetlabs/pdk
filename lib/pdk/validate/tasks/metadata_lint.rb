@@ -1,7 +1,4 @@
 require 'pdk/validate/base_validator'
-require 'pdk/util'
-require 'pathname'
-require 'json-schema'
 
 module PDK
   module Validate
@@ -64,6 +61,8 @@ module PDK
 
           return_val = 0
           create_spinner(targets, options)
+
+          require 'json-schema'
 
           targets.each do |target|
             unless File.readable?(target)

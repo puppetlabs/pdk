@@ -1,5 +1,4 @@
 require 'pdk/validate/base_validator'
-require 'pathname'
 
 module PDK
   module Validate
