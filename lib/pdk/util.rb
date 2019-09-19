@@ -132,6 +132,14 @@ module PDK
     end
     module_function :module_root
 
+    # The module's fixtures directory for spec testing
+    # @return [String] - the path to the module's fixtures directory
+    def module_fixtures_dir
+      dir = module_root
+      File.join(module_root, 'spec', 'fixtures') unless dir.nil?
+    end
+    module_function :module_fixtures_dir
+
     # Returns true or false depending on if any of the common directories in a module
     # are found in the current directory
     #
