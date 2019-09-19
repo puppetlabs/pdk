@@ -11,6 +11,7 @@ require 'pdk/logger'
 require 'pdk/report'
 require 'pdk/util/version'
 require 'pdk/util/puppet_version'
+require 'pdk/util/filesystem'
 
 class Cri::Command::CriExitException
   def initialize(is_error:)
@@ -75,6 +76,8 @@ module PDK::CLI
   end
 
   def self.template_url_option(dsl)
+    require 'pdk/util/template_uri'
+
     desc = _('Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})') % { default_url: PDK::Util::TemplateURI.default_template_uri }
 
     dsl.option nil, 'template-url', desc, argument: :required

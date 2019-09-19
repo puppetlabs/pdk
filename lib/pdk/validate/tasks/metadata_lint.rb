@@ -42,6 +42,8 @@ module PDK
         end
 
         def self.schema_file
+          require 'pdk/util/vendored_file'
+
           schema = PDK::Util::VendoredFile.new('task.json', FORGE_SCHEMA_URL).read
 
           JSON.parse(schema)

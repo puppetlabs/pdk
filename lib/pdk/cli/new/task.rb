@@ -7,6 +7,8 @@ module PDK::CLI
     option nil, :description, _('A short description of the purpose of the task'), argument: :required
 
     run do |opts, args, _cmd|
+      require 'pdk/generate/task'
+
       PDK::CLI::Util.ensure_in_module!(
         message:   _('Tasks can only be created from inside a valid module directory.'),
         log_level: :info,

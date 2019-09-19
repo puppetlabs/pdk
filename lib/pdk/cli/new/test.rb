@@ -8,6 +8,8 @@ module PDK::CLI
     PDK::CLI.puppet_dev_option(self)
 
     run do |opts, args, _cmd|
+      require 'pdk/util/puppet_strings'
+
       PDK::CLI::Util.validate_puppet_version_opts(opts)
       PDK::CLI::Util.ensure_in_module!(
         message: _('Tests can only be created from inside a valid module directory.'),

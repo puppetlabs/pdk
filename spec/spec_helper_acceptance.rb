@@ -3,6 +3,7 @@ require 'serverspec'
 require 'tmpdir'
 require 'open3'
 require 'pdk/generate/module'
+require 'pdk/util/template_uri'
 require 'tempfile'
 require 'json'
 

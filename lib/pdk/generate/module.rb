@@ -9,6 +9,7 @@ require 'pdk/cli/util/interview'
 require 'pdk/cli/util/option_validator'
 require 'pdk/util'
 require 'pdk/util/version'
+require 'pdk/util/filesystem'
 
 module PDK
   module Generate

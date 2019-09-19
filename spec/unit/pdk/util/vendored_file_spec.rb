@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'net/https'
+require 'pdk/util/vendored_file'
 
 describe PDK::Util::VendoredFile do
   describe '#read' do

@@ -193,6 +193,8 @@ module PDK
       end
 
       def fetch_pe_version_map
+        require 'pdk/util/vendored_file'
+
         map = PDK::Util::VendoredFile.new('pe_versions.json', PE_VERSIONS_URL).read
 
         JSON.parse(map)

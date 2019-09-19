@@ -1,12 +1,7 @@
-require 'tmpdir'
-require 'tempfile'
-
-require 'pdk/util/version'
+# PDK::Util::Windows can not be lazy loaded because it conditionally requires
+# other files on Windows only. This can probably be fixed up with a later
+# refactoring.
 require 'pdk/util/windows'
-require 'pdk/util/vendored_file'
-require 'pdk/util/filesystem'
-require 'pdk/util/template_uri'
-require 'pdk/util/puppet_strings'
 
 module PDK
   module Util
@@ -45,6 +40,8 @@ module PDK
     #
     # @return [String] The temporary directory path.
     def make_tmpdir_name(base)
+      require 'tmpdir'
+
       t = Time.now.strftime('%Y%m%d')
       name = "#{base}#{t}-#{Process.pid}-#{rand(0x100000000).to_s(36)}"
       File.join(Dir.tmpdir, name)
@@ -69,11 +66,15 @@ module PDK
     module_function :canonical_path
 
     def package_install?
+      require 'pdk/util/version'
+
       !PDK::Util::Version.version_file.nil?
     end
     module_function :package_install?
 
     def development_mode?
+      require 'pdk/util/version'
+
       (!PDK::Util::Version.git_ref.nil? || PDK::VERSION.end_with?('.pre'))
     end
     module_function :development_mode?
@@ -85,6 +86,7 @@ module PDK
 
     def pdk_package_basedir
       raise PDK::CLI::FatalError, _('Package basedir requested for non-package install.') unless package_install?
+      require 'pdk/util/version'
 
       File.dirname(PDK::Util::Version.version_file)
     end
