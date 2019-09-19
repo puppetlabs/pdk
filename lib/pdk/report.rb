@@ -1,7 +1,4 @@
-require 'rexml/document'
-require 'time'
 require 'pdk/report/event'
-require 'socket'
 
 module PDK
   class Report
@@ -48,6 +45,10 @@ module PDK
     # @param target [#write] an IO object that the report will be written to.
     #   Defaults to PDK::Report.default_target.
     def write_junit(target = self.class.default_target)
+      require 'rexml/document'
+      require 'time'
+      require 'socket'
+
       # Open a File Object for IO if target is a string containing a filename or path
       target = File.open(target, 'w') if target.is_a? String
 
