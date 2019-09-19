@@ -1,4 +1,3 @@
-require 'pdk'
 require 'pdk/util/bundler'
 require 'json'
 

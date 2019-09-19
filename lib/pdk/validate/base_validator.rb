@@ -1,5 +1,3 @@
-require 'pdk'
-
 module PDK
   module Validate
     class BaseValidator

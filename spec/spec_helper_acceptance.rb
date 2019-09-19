@@ -4,6 +4,7 @@ require 'tmpdir'
 require 'open3'
 require 'pdk/generate/module'
 require 'tempfile'
+require 'json'
 
 # automatically load any shared examples or contexts
 Dir['./spec/acceptance/support/**/*.rb'].sort.each { |f| require f }

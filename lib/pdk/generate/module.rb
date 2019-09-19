@@ -3,7 +3,6 @@ require 'pathname'
 require 'fileutils'
 require 'tty-prompt'
 
-require 'pdk'
 require 'pdk/logger'
 require 'pdk/cli/util'
 require 'pdk/cli/util/interview'

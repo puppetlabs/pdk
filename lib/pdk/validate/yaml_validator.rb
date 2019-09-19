@@ -1,4 +1,3 @@
-require 'pdk'
 require 'pdk/validate/base_validator'
 require 'pdk/validate/yaml/syntax'
 

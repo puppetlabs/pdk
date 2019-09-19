@@ -1,4 +1,3 @@
-require 'pdk'
 require 'pdk/util'
 require 'pdk/util/bundler'
 require 'pdk/validate/base_validator'
