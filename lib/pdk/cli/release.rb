@@ -129,7 +129,7 @@ module PDK::CLI
         result = system('bundle exec puppet strings generate --format markdown --out REFERENCE.md')
         unless result
           PDK.logger.error _('Error updating documentation with puppet strings.')
-            end
+        end
       end
 
       if opts[:skip_dependency]
