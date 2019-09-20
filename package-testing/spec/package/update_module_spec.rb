@@ -3,7 +3,7 @@ require 'open-uri'
 require 'json'
 
 modules = [
-  # 'puppetlabs/puppetlabs-motd', # TODO: need to resolve puppet_litmus dependencies to re-enable motd
+  'puppetlabs/puppetlabs-motd',
   'puppetlabs/puppetlabs-concat',
   'puppetlabs/puppetlabs-inifile',
 ]
