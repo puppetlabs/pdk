@@ -60,14 +60,14 @@ describe 'Updating an existing module' do
         let(:cwd) { repo_dir }
 
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{0 failures}m) }
+        its(:stdout) { is_expected.to match(%r{0 failures}m) }
       end
 
       describe command('pdk test unit --parallel') do
         let(:cwd) { repo_dir }
 
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{0 failures}m) }
+        its(:stdout) { is_expected.to match(%r{0 failures}m) }
       end
 
       describe command('pdk build --force') do
