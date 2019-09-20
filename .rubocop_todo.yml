@@ -21,6 +21,10 @@ RSpec/NestedGroups:
     - 'spec/unit/generate/puppet_object_spec.rb'
     - 'spec/unit/template_file_spec.rb'
 
+RSpec/AnyInstance:
+  Exclude: 
+    - 'spec/unit/pdk/cli/console_spec.rb'
+    
 Style/ClassAndModuleChildren:
   Enabled: false
 
