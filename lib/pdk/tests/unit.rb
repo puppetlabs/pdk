@@ -1,6 +1,3 @@
-require 'pdk/util/bundler'
-require 'json'
-
 module PDK
   module Test
     class Unit
@@ -11,10 +8,14 @@ module PDK
       end
 
       def self.rake_bin
+        require 'pdk/util'
+
         @rake ||= File.join(PDK::Util.module_root, 'bin', 'rake')
       end
 
       def self.cmd_with_args(task)
+        require 'pdk/util/ruby_version'
+
         argv = [rake_bin, task]
         argv.unshift(File.join(PDK::Util::RubyVersion.bin_path, 'ruby.exe')) if Gem.win_platform?
         argv
@@ -80,6 +81,9 @@ module PDK
       end
 
       def self.invoke(report, options = {})
+        require 'pdk/util'
+        require 'pdk/util/bundler'
+
         PDK::Util::Bundler.ensure_binstubs!('rake', 'rspec-core')
 
         setup
@@ -206,6 +210,9 @@ module PDK
 
       # @return array of { :id, :full_description }
       def self.list(options = {})
+        require 'pdk/util'
+        require 'pdk/util/bundler'
+
         PDK::Util::Bundler.ensure_binstubs!('rake')
 
         environment = {}
