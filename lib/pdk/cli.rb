@@ -1,5 +1,6 @@
 require 'cri'
 
+require 'pdk/analytics'
 require 'pdk/cli/errors'
 require 'pdk/cli/util'
 require 'pdk/cli/util/command_redirector'

@@ -1,4 +1,3 @@
-require 'pdk/util'
 require 'forwardable'
 
 module PDK
@@ -41,6 +40,8 @@ module PDK
         end
 
         def scan_for_packaged_rubies
+          require 'pdk/util'
+
           ruby_basedir = File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', '*')
           Dir[ruby_basedir].sort.map { |ruby_dir|
             version = File.basename(ruby_dir)
@@ -49,6 +50,9 @@ module PDK
         end
 
         def default_ruby_version
+          require 'pdk/util'
+          require 'pdk/util/puppet_version'
+
           @default_ruby_version ||= if PDK::Util.package_install?
                                       # Default to the ruby that supports the latest puppet gem. If you wish to default to a
                                       # specific Puppet Gem version use the following example;
@@ -69,6 +73,8 @@ module PDK
         end
 
         def versions
+          require 'pdk/util'
+
           @versions ||= if PDK::Util.package_install?
                           scan_for_packaged_rubies
                         else
@@ -84,6 +90,8 @@ module PDK
       end
 
       def bin_path
+        require 'pdk/util'
+
         if PDK::Util.package_install?
           File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', ruby_version, 'bin')
         else
@@ -92,6 +100,8 @@ module PDK
       end
 
       def gem_paths_raw
+        require 'pdk/util'
+
         if PDK::Util.package_install?
           # Subprocesses use their own set of gems which are managed by pdk or
           # installed with the package. We also include the separate gem path
@@ -115,6 +125,8 @@ module PDK
       end
 
       def gem_home
+        require 'pdk/util'
+
         # `bundle install --path` ignores all "system" installed gems and
         # causes unnecessary package installs. `bundle install` (without
         # --path) installs into GEM_HOME, which by default is non-user

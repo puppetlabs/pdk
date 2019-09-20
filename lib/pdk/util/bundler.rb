@@ -1,14 +1,11 @@
-require 'bundler'
-require 'digest'
-require 'fileutils'
-require 'pdk/util'
-
 module PDK
   module Util
     module Bundler
       class BundleHelper; end
 
       def self.ensure_bundle!(gem_overrides = nil)
+        require 'fileutils'
+
         bundle = BundleHelper.new
 
         # This will default ensure_bundle! to re-resolving everything to latest
@@ -69,6 +66,8 @@ module PDK
       end
 
       def self.bundle_cache_key(gemfile, gem_overrides)
+        require 'digest'
+
         override_sig = (gem_overrides || {}).sort_by { |gem, _| gem.to_s }.to_s
         Digest::MD5.hexdigest(gemfile.to_s + override_sig)
       end
@@ -76,6 +75,7 @@ module PDK
 
       class BundleHelper
         def gemfile
+          require 'pdk/util'
           @gemfile ||= PDK::Util.find_upwards('Gemfile')
         end
 
@@ -107,6 +107,9 @@ module PDK
         end
 
         def lock!
+          require 'pdk/util'
+          require 'fileutils'
+
           if PDK::Util.package_install?
             # In packaged installs, use vendored Gemfile.lock as a starting point.
             # Subsequent 'bundle install' will still pick up any new dependencies.
@@ -184,6 +187,8 @@ module PDK
         end
 
         def install!(gem_overrides = {})
+          require 'pdk/util/ruby_version'
+
           argv = ['install', "--gemfile=#{gemfile}"]
           argv << '-j4' unless Gem.win_platform? && Gem::Version.new(PDK::Util::RubyVersion.active_ruby_version) < Gem::Version.new('2.3.5')
 

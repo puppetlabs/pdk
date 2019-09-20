@@ -20,8 +20,8 @@ describe PDK::Util::VendoredFile do
     before(:each) do
       allow(PDK::Util).to receive(:package_cachedir).and_return(package_cachedir)
       allow(PDK::Util).to receive(:cachedir).and_return(cachedir)
-      allow(File).to receive(:read).with(package_vendored_path).and_return(package_vendored_content)
-      allow(File).to receive(:read).with(gem_vendored_path).and_return(gem_vendored_content)
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(package_vendored_path).and_return(package_vendored_content)
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(gem_vendored_path).and_return(gem_vendored_content)
     end
 
     context 'when running from a package install' do
@@ -41,7 +41,7 @@ describe PDK::Util::VendoredFile do
 
       context 'and the file has already been cached on disk' do
         before(:each) do
-          allow(File).to receive(:file?).with(gem_vendored_path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:file?).with(gem_vendored_path).and_return(true)
         end
 
         it 'returns the content of the vendored file' do
@@ -51,7 +51,7 @@ describe PDK::Util::VendoredFile do
 
       context 'and the file has not already been cached on disk' do
         before(:each) do
-          allow(File).to receive(:file?).with(gem_vendored_path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:file?).with(gem_vendored_path).and_return(false)
           allow(Net::HTTP::Get).to receive(:new).with(anything).and_return(mock_request)
           allow(Net::HTTP).to receive(:new).with(any_args).and_return(mock_http)
           allow(mock_http).to receive(:use_ssl=).with(anything)
@@ -68,7 +68,7 @@ describe PDK::Util::VendoredFile do
             allow(mock_http).to receive(:request).with(mock_request).and_return(mock_response)
             allow(mock_response).to receive(:code).and_return('200')
             allow(mock_response).to receive(:body).and_return(gem_vendored_content)
-            allow(FileUtils).to receive(:mkdir_p).with(File.dirname(gem_vendored_path))
+            allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.dirname(gem_vendored_path))
             allow(File).to receive(:open).with(any_args).and_call_original
             allow(File).to receive(:open).with(gem_vendored_path, 'wb').and_yield(cached_file)
           end
