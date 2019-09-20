@@ -26,10 +26,12 @@ module PDK
       # @param block [Proc] a block that is evaluated within the new instance.
       def initialize(name = nil, file: nil, parent: nil, persistent_defaults: false, &block)
         @file = File.expand_path(file) unless file.nil?
-        @values = {}
+        @settings = {}
         @name = name.to_s
         @parent = parent
         @persistent_defaults = persistent_defaults
+        @mounts = {}
+        @loaded_from_file = false
 
         instance_eval(&block) if block_given?
       end
@@ -43,9 +45,9 @@ module PDK
       # @param block [Proc] a block that is evaluated within the new [self].
       #
       # @return [nil]
-      def value(key, &block)
-        @values[key.to_s] ||= PDK::Config::Value.new(key.to_s)
-        @values[key.to_s].instance_eval(&block) if block_given?
+      def setting(key, &block)
+        @settings[key.to_s] ||= PDK::Config::Setting.new(key.to_s, self)
+        @settings[key.to_s].instance_eval(&block) if block_given?
       end
 
       # Mount a provided [self] (or subclass) into the namespace.
@@ -64,7 +66,7 @@ module PDK
         obj.parent = self
         obj.name = key.to_s
         obj.instance_eval(&block) if block_given?
-        data[key.to_s] = obj
+        @mounts[key.to_s] = obj
       end
 
       # Create and mount a new child namespace.
@@ -88,11 +90,21 @@ module PDK
       #
       # @return [Object] the requested value.
       def [](key)
-        data[key.to_s]
+        # Check if it's a mount first...
+        return @mounts[key.to_s] unless @mounts[key.to_s].nil?
+        # Check if it's a setting, otherwise nil
+        return nil if settings[key.to_s].nil?
+        return settings[key.to_s].value unless settings[key.to_s].value.nil?
+        default_value = settings[key.to_s].default
+        return default_value if default_value.nil? || !@persistent_defaults
+        # Persist the default value
+        settings[key.to_s].value = default_value
+        save_data
+        default_value
       end
 
       # Get the value of the named key or the provided default value if not
-      # present.
+      # present. Note that this does not trigger persistent defaults
       #
       # This differs from {#[]} in an important way in that it allows you to
       # return a default value, which is not possible using `[] || default` as
@@ -105,7 +117,12 @@ module PDK
       #
       # @return [Object] the requested value.
       def fetch(key, default_value)
-        data.fetch(key.to_s, default_value)
+        # Check if it's a mount first...
+        return @mounts[key.to_s] unless @mounts[key.to_s].nil?
+        # Check if it's a setting, otherwise default_value
+        return default_value if settings[key.to_s].nil?
+        # Check if has a value, otherwise default_value
+        settings[key.to_s].value.nil? ? default_value : settings[key.to_s].value
       end
 
       # After the value has been set in memory, the value will then be
@@ -116,6 +133,8 @@ module PDK
       #
       # @return [nil]
       def []=(key, value)
+        # You can't set the value of a mount
+        raise ArgumentError, _('Namespace mounts can not be set a value') unless @mounts[key.to_s].nil?
         set_volatile_value(key, value)
         # Persist the change
         save_data
@@ -131,14 +150,11 @@ module PDK
       # @return [Hash{String => Object}] the values from the namespace that
       #   should be persisted to disk.
       def to_h
-        data.inject({}) do |new_hash, (key, value)|
-          new_hash[key] = if value.is_a?(PDK::Config::Namespace)
-                            value.include_in_parent? ? value.to_h : nil
-                          else
-                            value
-                          end
-          new_hash.delete_if { |_, v| v.nil? }
-        end
+        new_hash = {}
+        settings.each_pair { |k, v| new_hash[k] = v.value }
+        @mounts.each_pair { |k, mount_point| new_hash[k] = mount_point.to_h if mount_point.include_in_parent? }
+        new_hash.delete_if { |_, v| v.nil? }
+        new_hash
       end
 
       # Resolves all filtered settings, including child namespaces, fully namespaced and filling in default values.
@@ -146,20 +162,16 @@ module PDK
       # @param filter [String] Only resolve setting names which match the filter. See #be_resolved? for matching rules
       # @return [Hash{String => Object}] All resolved settings for example {'user.module_defaults.author' => 'johndoe'}
       def resolve(filter = nil)
-        # Explicitly force values to be loaded if they have not already
-        # done so. This will not cause them to be persisted to disk
-        (@values.keys - data.keys).each { |key_name| self[key_name] }
         resolved = {}
-        data.each do |data_name, obj|
-          case obj
-          when PDK::Config::Namespace
-            # Query the child namespace
-            resolved.merge!(obj.resolve(filter))
-          else
-            setting_name = [name, data_name.to_s].join('.')
-            resolved[setting_name] = self[data_name] if be_resolved?(setting_name, filter)
+        # Resolve the settings
+        settings.values.each do |setting|
+          setting_name = setting.qualified_name
+          if be_resolved?(setting_name, filter)
+            resolved[setting_name] = setting.value.nil? ? setting.default : setting.value
           end
         end
+        # Resolve the mounts
+        @mounts.values.each { |mount| resolved.merge!(mount.resolve(filter)) }
         resolved
       end
 
@@ -208,16 +220,38 @@ module PDK
         name.start_with?(filter + '.') # If name is a subkey of the filter then it should be resolved
       end
 
-      # @abstract Subclass and override {#parse_data} to implement parsing logic
+      # @abstract Subclass and override {#parse_file} to implement parsing logic
       #   for a particular config file format.
       #
       # @param data [String] The content of the file to be parsed.
       # @param filename [String] The path to the file to be parsed.
       #
-      # @return [Hash{String => Object}] the data to be loaded into the
+      # @yield [String, Object] the data to be loaded into the
       #   namespace.
-      def parse_data(_data, _filename)
-        {}
+      def parse_file(_filename); end
+
+      # @abstract Subclass and override {#serialize_data} to implement generating
+      #   logic for a particular config file format.
+      #
+      # @param data [Hash{String => Object}] the data stored in the namespace
+      #
+      # @return [String] the serialized contents of the namespace suitable for
+      #   writing to disk.
+      def serialize_data(_data); end
+
+      # @abstract Subclass and override {#create_missing_setting} to implement logic
+      # when a setting is dynamically created, for example when attempting to
+      # set the value of an unknown setting
+      #
+      # @param data [Hash{String => Object}] the data stored in the namespace
+      #
+      # @return [String] the serialized contents of the namespace suitable for
+      #   writing to disk.
+      def create_missing_setting(key, initial_value = nil)
+        # Need to use `@settings` and `@mounts` here to stop recursive calls
+        return unless @mounts[key.to_s].nil?
+        return unless @settings[key.to_s].nil?
+        @settings[key.to_s] = PDK::Config::Setting.new(key.to_s, self, initial_value)
       end
 
       # Set the value of the named key.
@@ -228,39 +262,31 @@ module PDK
       # @param key [String,Symbol] the name of the configuration value.
       # @param value [Object] the value of the configuration value.
       def set_volatile_value(key, value)
-        @values[key.to_s].validate!([name, key.to_s].join('.'), value) if @values.key?(key.to_s)
-
-        data[key.to_s] = value
+        # Need to use `settings` here to force the backing file to be loaded
+        return create_missing_setting(key, value) if settings[key.to_s].nil?
+        # Need to use `@settings` here to stop recursive calls from []=
+        @settings[key.to_s].value = value
       end
 
-      # Read the file associated with the namespace.
+      # Helper method to read files.
       #
       # @raise [PDK::Config::LoadError] if the file is removed during read.
       # @raise [PDK::Config::LoadError] if the user doesn't have the
       #   permissions needed to read the file.
       # @return [String,nil] the contents of the file or nil if the file does
       #   not exist.
-      def load_data
-        return if file.nil?
-        return unless PDK::Util::Filesystem.file?(file)
+      def load_data(filename)
+        return if filename.nil?
+        return unless PDK::Util::Filesystem.file?(filename)
 
         PDK::Util::Filesystem.read_file(file)
       rescue Errno::ENOENT => e
         raise PDK::Config::LoadError, e.message
       rescue Errno::EACCES
         raise PDK::Config::LoadError, _('Unable to open %{file} for reading') % {
-          file: file,
+          file: filename,
         }
       end
-
-      # @abstract Subclass and override {#save_data} to implement generating
-      #   logic for a particular config file format.
-      #
-      # @param data [Hash{String => Object}] the data stored in the namespace
-      #
-      # @return [String] the serialized contents of the namespace suitable for
-      #   writing to disk.
-      def serialize_data(_data); end
 
       # Persist the contents of the namespace to disk.
       #
@@ -289,35 +315,17 @@ module PDK
 
       # Memoised accessor for the loaded data.
       #
-      # @return [Hash<String => Object>] the contents of the namespace.
-      def data
-        # It's possible for parse_data to return nil, so just return an empty hash
-        @data ||= parse_data(load_data, file).tap do |h|
-          h.default_proc = default_config_value unless h.nil?
-        end || {}
-      end
-
-      # The default behaviour of the namespace when the requested value does
-      # not exist.
-      #
-      # If the value has been pre-configured with {#value} to have a default
-      # value, resolve the default value and set it in the namespace and optionally
-      # save the new default.
-      # Otherwise, set the value to a new Hash to allow for arbitrary level of nested values.
-      #
-      # @return [Proc] suitable for use by {Hash#default_proc}.
-      def default_config_value
-        ->(hash, key) do
-          if @values.key?(key) && @values[key].default?
-            set_volatile_value(key, @values[key].default)
-            save_data if @persistent_defaults
-            hash[key]
-          else
-            hash[key] = {}.tap do |h|
-              h.default_proc = default_config_value
-            end
-          end
+      # @return [Hash<String => PDK::Config::Setting>] the contents of the namespace.
+      def settings
+        return @settings if @loaded_from_file
+        @loaded_from_file = true
+        return @settings if file.nil?
+        parse_file(file) do |key, parsed_setting|
+          # Create a settings chain if a setting already exists
+          parsed_setting.previous_setting = @settings[key] unless @settings[key].nil?
+          @settings[key] = parsed_setting
         end
+        @settings
       end
     end
   end

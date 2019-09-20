@@ -1,5 +1,12 @@
 require 'spec_helper'
 
+def spec_simple_validator
+  {
+    proc:    ->(value) { value.match(%r{(bar|baz)}) },
+    message: _('must be bar or baz'),
+  }
+end
+
 describe PDK::Config::Namespace do
   subject(:config) { described_class.new('config', config_options) }
 
@@ -35,42 +42,9 @@ describe PDK::Config::Namespace do
     end
   end
 
-  describe '#load_data' do
-    context 'when creating a namespace from a file' do
-      subject(:new_namespace) { described_class.new('new_namespace', file: path) }
-
-      let(:path) { File.expand_path(File.join('path', 'to', 'my', 'config', 'file')) }
-
-      before(:each) do
-        allow(PDK::Util::Filesystem).to receive(:file?).with(path).and_return(true)
-      end
-
-      context 'when the file is deleted mid-read' do
-        before(:each) do
-          allow(PDK::Util::Filesystem).to receive(:read_file).with(path).and_raise(Errno::ENOENT, 'error')
-        end
-
-        it 'raises PDK::Config::LoadError' do
-          expect { new_namespace[:test] }.to raise_error(PDK::Config::LoadError, %r{error})
-        end
-      end
-
-      context 'when the file is unreadable' do
-        before(:each) do
-          allow(PDK::Util::Filesystem).to receive(:read_file).with(path).and_raise(Errno::EACCES)
-        end
-
-        it 'raises PDK::Config::LoadError' do
-          expect {
-            new_namespace[:test]
-          }.to raise_error(PDK::Config::LoadError, "Unable to open #{path} for reading")
-        end
-      end
-    end
-  end
-
   describe '#[]' do
     before(:each) do
+      config.setting('foo')
       config[:foo] = 'bar'
     end
 
@@ -78,13 +52,13 @@ describe PDK::Config::Namespace do
       expect([config[:foo], config['foo']]).to all(eq('bar'))
     end
 
-    it 'can access arbitrarily deep values' do
-      expect(config[:bar][:baz]).to eq({})
+    it 'returns nil for settings that do not exist and is not a mount' do
+      expect(config[:missing]).to be_nil
     end
 
     it 'does not save values when reading defaults' do
       expect(config).to receive(:save_data).never # rubocop:disable RSpec/SubjectStub This is an expectation, not a stub
-      expect(config[:missing]).to eq({})
+      expect(config[:missing]).to be_nil
     end
 
     context 'when persistent_defaults is true' do
@@ -92,7 +66,7 @@ describe PDK::Config::Namespace do
 
       before(:each) do
         # Add a value with a default value
-        config.value('spec_test') do
+        config.setting('spec_test') do
           default_to { 'spec_default' }
         end
       end
@@ -108,7 +82,7 @@ describe PDK::Config::Namespace do
 
       before(:each) do
         # Add a value with a default value
-        config.value('spec_test') do
+        config.setting('spec_test') do
           default_to { 'spec_default' }
         end
       end
@@ -120,8 +94,40 @@ describe PDK::Config::Namespace do
     end
   end
 
+  describe '#[]=' do
+    before(:each) do
+      config.setting('foo') { validate spec_simple_validator }
+      config[:foo] = 'bar'
+    end
+
+    it 'can set values via Symbol keys' do
+      config[:foo] = 'baz'
+      expect(config['foo']).to eq('baz')
+    end
+
+    it 'can set values via String keys' do
+      config['foo'] = 'baz'
+      expect(config[:foo]).to eq('baz')
+    end
+
+    it 'dynamically adds settings if they do not exist' do
+      config['missing'] = 'something'
+      expect(config[:missing]).to eq('something')
+    end
+
+    it 'raises ArgumentError if key is a mount name' do
+      config.mount('invalid', PDK::Config::Namespace.new('invalid')) # rubocop:disable RSpec/DescribedClass No.
+      expect { config['invalid'] = 'baz' }.to raise_error(ArgumentError, %r{Namespace mounts can not be set a value})
+    end
+
+    it 'raises ArgumentError if the setting is not valid' do
+      expect { config['foo'] = 'not_valid' }.to raise_error(ArgumentError, %r{must be bar or baz})
+    end
+  end
+
   describe '#fetch' do
     before(:each) do
+      config.setting('foo')
       config[:foo] = 'bar'
     end
 
@@ -146,7 +152,7 @@ describe PDK::Config::Namespace do
 
     before(:each) do
       # Add a value with a default value
-      config.value('spec_test') do
+      config.setting('spec_test') do
         default_to { 'spec_default' }
       end
       # The resolver should not trigger any saves unless persistent_defaults is set to true
@@ -158,6 +164,7 @@ describe PDK::Config::Namespace do
 
       it 'resolves all settings' do
         result = config.resolve(filter)
+
         expect(result.count).to eq(2)
         expect(result['config.spec_test']).to eq('spec_default')
         expect(result['config.mounted.setting1']).to eq('value1')
@@ -236,12 +243,12 @@ describe PDK::Config::Namespace do
     end
   end
 
-  describe '#value' do
+  describe '#setting' do
     before(:each) do
-      config.value('my_value') { default_to { 'foo' } }
+      config.setting('my_value') { default_to { 'foo' } }
     end
 
-    it 'configures the rules for a new value in a namespace' do
+    it 'configures the rules for a new setting in a namespace' do
       expect(config['my_value']).to eq('foo')
     end
   end
@@ -274,7 +281,14 @@ describe PDK::Config::Namespace do
     include_context :with_a_mounted_file, 'mounted'
 
     before(:each) do
+      # Create the settings
+      config.setting('in_root')
+      config.setting('nil_setting')
+      config['nested'].setting('value')
+      config['mounted'].setting('value')
+      # Set the setting values
       config['in_root'] = true
+      config['nil_setting'] = nil
       config['nested']['value'] = 'is saved too'
       config['mounted']['value'] = 'is saved to a different file'
     end
@@ -289,6 +303,10 @@ describe PDK::Config::Namespace do
 
     it 'does not include the values in mounted files' do
       expect(config.to_h).not_to have_key('mounted')
+    end
+
+    it 'does not include settings with nil values' do
+      expect(config.to_h).not_to include('nil_setting' => nil)
     end
   end
 
