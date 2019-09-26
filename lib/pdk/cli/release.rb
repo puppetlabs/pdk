@@ -34,6 +34,11 @@ module PDK::CLI
             type:     :yes,
           },
           {
+            name:     'guess_version',
+            question: _('Do you want to try and set the version automatically ?'),
+            type:     :yes,
+          },
+          {
             name:     'dependency',
             question: _('Do you want to run the dependency-checker on this module?'),
             type:     :yes,
@@ -60,6 +65,23 @@ module PDK::CLI
           opts[:skip_changelog] = !answers['changelog']
           opts[:skip_dependency] = !answers['dependency']
           opts[:skip_documentation] = !answers['documentation']
+
+          unless answers['guess_version']
+            questions = [
+              {
+                name:             'version',
+                question:         _('Please set the module version'),
+                help:             _('This value is the version that will be used in the changelog generator and building of the module.'),
+                required:         true,
+                validate_pattern: %r{(\*|\d+(\.\d+){0,2}(\.\*)?)$}i,
+                validate_message: _('The version format should be in the format x.y.z where x represents the major version, y the minor version and z the build number.'),
+              },
+            ]
+            interview = PDK::CLI::Util::Interview.new(prompt)
+            interview.add_questions(questions)
+            ver_answer = interview.run
+            opts[:version_number] = ver_answer['version']
+          end
         end
       end
 
@@ -101,12 +123,17 @@ module PDK::CLI
       if opts[:skip_changelog]
         PDK.logger.info _('Skipping automatic changelog generation')
       else
-        # Use changelog generator to establish version
-        PDK.logger.info _('Generating changelog...')
+        new_version = 'v0.0.1'
         changelog_generator = PDK::CLI::Util::ChangelogGenerator.new
-        changelog_generator.generate_changelog
+        if opts[:version_number]
+          new_version = opts[:version_number]
+        else
+          # Use changelog generator to establish version
+          PDK.logger.info _('Generating changelog to get next version number')
+          changelog_generator.generate_changelog
 
-        new_version = changelog_generator.get_next_version(module_metadata.data['version'])
+          new_version = changelog_generator.get_next_version(module_metadata.data['version'])
+        end
 
         PDK.logger.info _('Updating version to %{module_version}') % {
           module_version: new_version,
