@@ -69,6 +69,8 @@ module PDK
       module_function :ci_environment?
 
       def interactive?
+        require 'pdk/logger'
+
         return false if PDK.logger.debug?
         return !ENV['PDK_FRONTEND'].casecmp('noninteractive').zero? if ENV['PDK_FRONTEND']
         return false if ci_environment?

@@ -1,14 +1,3 @@
-require 'bundler'
-require 'childprocess'
-require 'English'
-require 'tempfile'
-require 'tty-which'
-
-require 'pdk/util'
-require 'pdk/util/git'
-require 'pdk/util/ruby_version'
-require 'pdk/cli/util/spinner'
-
 module PDK
   module CLI
     module Exec
@@ -37,6 +26,8 @@ module PDK
       end
 
       def self.ensure_bin_present!(bin_path, bin_name)
+        require 'tty-which'
+
         message = _('Unable to find `%{name}`. Check that it is installed and try again.') % {
           name: bin_name,
         }
@@ -51,6 +42,8 @@ module PDK
       end
 
       def self.bundle_bin
+        require 'pdk/util/ruby_version'
+
         bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
         vendored_bin_path = File.join('private', 'ruby', PDK::Util::RubyVersion.active_ruby_version, 'bin', bundle_bin)
 
@@ -58,6 +51,8 @@ module PDK
       end
 
       def self.try_vendored_bin(vendored_bin_path, fallback)
+        require 'pdk/util'
+
         unless PDK::Util.package_install?
           PDK.logger.debug(_("PDK package installation not found. Trying '%{fallback}' from the system PATH instead.") % {
             fallback: fallback,
