@@ -1,8 +1,3 @@
-require 'fileutils'
-
-require 'pdk/logger'
-require 'pdk/util/filesystem'
-
 module PDK
   module Generate
     class PuppetObject
@@ -137,8 +132,10 @@ module PDK
       #
       # @api public
       def check_preconditions
+        require 'pdk/util/filesystem'
+
         targets.each do |target_file|
-          next unless File.exist?(target_file)
+          next unless PDK::Util::Filesystem.exist?(target_file)
 
           raise PDK::CLI::ExitWithError, _("Unable to generate %{object_type}; '%{file}' already exists.") % {
             file:        target_file,
@@ -221,12 +218,15 @@ module PDK
       #
       # @api private
       def write_file(dest_path)
+        require 'pdk/logger'
+        require 'pdk/util/filesystem'
+
         PDK.logger.info(_("Creating '%{file}' from template.") % { file: dest_path })
 
         file_content = yield
 
         begin
-          FileUtils.mkdir_p(File.dirname(dest_path))
+          PDK::Util::Filesystem.mkdir_p(File.dirname(dest_path))
         rescue SystemCallError => e
           raise PDK::CLI::FatalError, _("Unable to create directory '%{path}': %{message}") % {
             path:    File.dirname(dest_path),
@@ -257,7 +257,9 @@ module PDK
       #
       # @api private
       def with_templates
+        require 'pdk/logger'
         require 'pdk/module/templatedir'
+        require 'pdk/util/template_uri'
 
         templates.each do |template|
           if template[:uri].nil?
@@ -305,6 +307,8 @@ module PDK
       #
       # @api private
       def templates
+        require 'pdk/util/template_uri'
+
         @templates ||= PDK::Util::TemplateURI.templates(@options)
       end
 
@@ -315,6 +319,8 @@ module PDK
       #
       # @api private
       def module_name
+        require 'pdk/util'
+
         @module_name ||= PDK::Util.module_metadata['name'].rpartition('-').last
       rescue ArgumentError => e
         raise PDK::CLI::FatalError, e
