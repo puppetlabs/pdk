@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'pdk/util/bundler'
+require 'pdk/cli/exec/command'
 
 RSpec.describe PDK::Util::Bundler do
   describe 'class methods' do
@@ -203,7 +204,7 @@ RSpec.describe PDK::Util::Bundler do
     end
 
     describe '.mark_as_bundled!' do
-      let(:gemfile) { '/newly/bundled/Gemfile' }
+      let(:gemfile) { File.join(FIXTURES_DIR, 'module_gemfile') }
       let(:overrides) { {} }
 
       it 'changes response of already_bundled? from false to true' do
@@ -347,52 +348,35 @@ RSpec.describe PDK::Util::Bundler do
     end
 
     describe '#installed?' do
-      let(:gemfile) { '/Gemfile' }
+      let(:gemfile) { File.join(FIXTURES_DIR, 'basic_module_gemfile') }
 
       before(:each) do
         allow(instance).to receive(:gemfile).and_return(gemfile)
       end
 
-      it 'invokes `bundle check`' do
-        expect_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 0)
-
-        instance.installed?
-      end
-
-      it 'returns true if `bundle check` exits zero' do
-        allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 0)
-
-        expect(instance.installed?).to be true
-      end
-
-      context 'when `bundle check` exits non-zero' do
-        before(:each) do
-          allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 1, stderr: 'this is an error message')
+      context 'all gems are present' do
+        it 'returns true' do
+          expect(instance.installed?).to be true
         end
+      end
+
+      context 'has missing gems' do
+        let(:gemfile) { File.join(FIXTURES_DIR, 'module_gemfile') }
 
         it 'returns false' do
           expect(instance.installed?).to be false
         end
       end
 
-      context 'packaged install' do
-        include_context 'packaged install'
-
-        it 'invokes `bundle check` without --path option' do
-          expect_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 0)
-
-          instance.installed?
-        end
-      end
-
       context 'with gem overrides' do
         let(:overrides) { { puppet: '1.2.3' } }
 
-        it 'updates env before invoking `bundle check`' do
-          cmd_double = allow_command([bundle_regex, 'check', "--gemfile=#{gemfile}", '--dry-run'], exit_code: 0)
-
-          expect(cmd_double).to receive(:update_environment).with(hash_including('PUPPET_GEM_VERSION' => '1.2.3'))
-
+        it 'updates env before checking bundler specs' do
+          allow(PDK::Util::RubyVersion).to receive(:active_ruby_version).and_return('2.5.3')
+          expect(ENV).to receive(:[]=).with('PUPPET_GEM_VERSION', '1.2.3')
+          expect(ENV).to receive(:[]=).with('BUNDLER_SPEC_RUBY_VERSION', '2.5.3')
+          expect(ENV).to receive(:[]=).with('BUNDLER_SPEC_RUBY_VERSION', nil)
+          expect(ENV).to receive(:[]=).with('PUPPET_GEM_VERSION', nil)
           instance.installed?(overrides)
         end
       end

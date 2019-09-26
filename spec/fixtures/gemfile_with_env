@@ -1,0 +1,3 @@
+source ENV['GEM_SOURCE'] || 'https://rubygems.org'
+
+gem 'puppet', ENV['PUPPET_GEM_VERSION'] || '6.9.0'

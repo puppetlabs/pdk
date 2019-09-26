@@ -1,8 +1,10 @@
+require 'pdk/cli/exec'
+require 'pdk/util/ruby_version'
+require 'bundler'
 module PDK
   module Util
     module Bundler
       class BundleHelper; end
-
       def self.ensure_bundle!(gem_overrides = nil)
         require 'fileutils'
 
@@ -10,7 +12,6 @@ module PDK
 
         # This will default ensure_bundle! to re-resolving everything to latest
         gem_overrides ||= { puppet: nil, hiera: nil, facter: nil }
-
         if already_bundled?(bundle.gemfile, gem_overrides)
           PDK.logger.debug(_('Bundler managed gems already up to date.'))
           return
@@ -92,18 +93,37 @@ module PDK
           !gemfile_lock.nil? && File.file?(gemfile_lock)
         end
 
-        def installed?(gem_overrides = {})
-          PDK.logger.debug(_('Checking for missing Gemfile dependencies.'))
-
-          argv = ['check', "--gemfile=#{gemfile}", '--dry-run']
-
-          cmd = bundle_command(*argv).tap do |c|
-            c.update_environment(gemfile_env(gem_overrides)) unless gem_overrides.empty?
+        # @return [Bundler::Definition]
+        # @param gem_overrides [Hash] one of three keys that contain puppet version
+        def gemfile_definition(gem_overrides = {})
+          gem_overrides ||= {}
+          @gemfile_definition ||= begin
+            env_vars = gemfile_env(gem_overrides)
+            env_vars['BUNDLER_SPEC_RUBY_VERSION'] = PDK::Util::RubyVersion.active_ruby_version
+            env_vars.each { |name, value| ENV[name.to_s] = value }
+            # set the desired ruby version so the Gemfile renders correctly
+            ::Bundler.configure
+            ::Bundler::Definition.build(gemfile, gemfile_lock, nil)
+          ensure
+            # reset env variable back to nil so we don't cause environment pollution
+            env_vars.each { |name, _value| ENV[name.to_s] = nil }
           end
+        end
 
-          result = cmd.execute!
+        # @return [Boolean] - true if the gemfile with the given overrides is installed
+        # @param gem_overrides [Hash] one of three keys that contain puppet version
+        # @example installed?({puppet: '6.10.0'})
+        # @note does not allow you to check arbitrary gems not already in the gemfile
+        def installed?(gem_overrides = {})
+          return false if !File.file?(gemfile) && ::Bundler.frozen_bundle?
 
-          result[:exit_code].zero?
+          definition = gemfile_definition(gem_overrides)
+          definition.validate_runtime!
+          # true if missing_specs is empty
+          definition.missing_specs.empty?
+        rescue ::Bundler::BundlerError => e
+          PDK.logger.debug(e.message)
+          false
         end
 
         def lock!

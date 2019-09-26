@@ -21,7 +21,7 @@ RSpec.describe 'bundler performance' do
 
   describe 'windows', if: OS.windows? do
     it '#installed?' do
-      expect { bundler.installed? }.to perform_under(1600).ms
+      expect { bundler.installed? }.to perform_under(50).ms
     end
 
     it '#install!' do
@@ -35,7 +35,7 @@ RSpec.describe 'bundler performance' do
 
   describe 'unix', if: OS.unix? do
     it '#installed?' do
-      expect { bundler.installed? }.to perform_under(1500).ms
+      expect { bundler.installed? }.to perform_under(20).ms
     end
 
     it '#install!' do
@@ -43,7 +43,7 @@ RSpec.describe 'bundler performance' do
     end
 
     it '#update_lock!' do
-      expect { bundler.update_lock! }.to perform_under(2700).ms
+      expect { bundler.update_lock! }.to perform_under(2900).ms
     end
   end
 end
