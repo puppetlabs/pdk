@@ -1,14 +1,3 @@
-require 'etc'
-require 'pathname'
-require 'fileutils'
-require 'tty-prompt'
-
-require 'pdk/logger'
-require 'pdk/cli/util'
-require 'pdk/cli/util/interview'
-require 'pdk/cli/util/option_validator'
-require 'pdk/util'
-require 'pdk/util/version'
 require 'pdk/util/filesystem'
 
 module PDK
@@ -17,6 +6,8 @@ module PDK
       extend PDK::Util::Filesystem
 
       def self.validate_options(opts)
+        require 'pdk/cli/util/option_validator'
+
         unless PDK::CLI::Util::OptionValidator.valid_module_name?(opts[:module_name])
           error_msg = _(
             "'%{module_name}' is not a valid module name.\n" \
@@ -31,6 +22,10 @@ module PDK
 
       def self.invoke(opts = {})
         require 'pdk/module/templatedir'
+        require 'pdk/util'
+        require 'pdk/util/template_uri'
+        require 'fileutils'
+        require 'pathname'
 
         validate_options(opts) unless opts[:module_name].nil?
 
@@ -89,7 +84,12 @@ module PDK
 
         begin
           if FileUtils.mv(temp_target_dir, target_dir)
-            Dir.chdir(target_dir) { PDK::Util::Bundler.ensure_bundle! } unless opts[:'skip-bundle-install']
+            unless opts[:'skip-bundle-install']
+              Dir.chdir(target_dir) do
+                require 'pdk/util/bundler'
+                PDK::Util::Bundler.ensure_bundle!
+              end
+            end
 
             PDK.logger.info _('Module \'%{name}\' generated at path \'%{path}\', from template \'%{url}\'.') % { name: opts[:module_name], path: target_dir, url: template_uri.git_remote }
             PDK.logger.info(_('In your module directory, add classes with the \'pdk new class\' command.'))
@@ -104,6 +104,8 @@ module PDK
       end
 
       def self.username_from_login
+        require 'etc'
+
         login = Etc.getlogin || ''
         login_clean = login.downcase.gsub(%r{[^0-9a-z]}i, '')
         login_clean = 'username' if login_clean.empty?
@@ -137,6 +139,8 @@ module PDK
       end
 
       def self.prepare_module_directory(target_dir)
+        require 'fileutils'
+
         [
           File.join(target_dir, 'examples'),
           File.join(target_dir, 'files'),
@@ -156,6 +160,9 @@ module PDK
       end
 
       def self.module_interview(metadata, opts = {})
+        require 'pdk/module/metadata'
+        require 'pdk/cli/util/interview'
+
         questions = [
           {
             name:             'module_name',
@@ -310,6 +317,8 @@ module PDK
         metadata.update!(answers)
 
         if opts[:prompt].nil? || opts[:prompt]
+          require 'pdk/cli/util'
+
           continue = PDK::CLI::Util.prompt_for_yes(
             _('Metadata will be generated based on this information, continue?'),
             prompt:         prompt,

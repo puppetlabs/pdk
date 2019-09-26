@@ -73,6 +73,8 @@ module PDK
     end
 
     def self.analytics_config_interview!
+      require 'pdk/cli/util'
+
       return unless PDK::CLI::Util.interactive?
 
       pre_message = _(
@@ -97,6 +99,8 @@ module PDK
           type:     :yes,
         },
       ]
+
+      require 'pdk/cli/util/interview'
 
       PDK.logger.info(text: pre_message, wrap: true)
       prompt = TTY::Prompt.new(help_color: :cyan)
