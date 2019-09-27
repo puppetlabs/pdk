@@ -5,7 +5,9 @@ gemspec
 
 if RUBY_VERSION < '2.3.0'
   # avoid newer versions that do not support ruby 2.1 anymore
+  gem 'addressable', '2.6.0'
   gem 'cri', '>= 2.10.1', '< 2.11.0'
+  gem 'net-ssh', '4.2.0'
   gem 'nokogiri', '1.7.2'
 else
   gem 'nokogiri', '~> 1.10.4' # rubocop:disable Bundler/DuplicatedGem
@@ -34,7 +36,7 @@ group :test do
   end
   gem 'parallel', '= 1.13.0'
   gem 'parser', '~> 2.5.1.2'
-  gem 'rake', '~> 10.0'
+  gem 'rake', '>= 10.0', '<= 12.3.3' # rake 13.0 forces ruby 2.2
   gem 'rspec', '~> 3.0'
   gem 'rspec-xsd'
   gem 'rubocop', '~> 0.57.2'

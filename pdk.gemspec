@@ -3,25 +3,26 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'pdk/version'
 
 Gem::Specification.new do |spec|
-  spec.name    = 'pdk'
+  spec.name = 'pdk'
   spec.version = PDK::VERSION
   spec.authors = ['Puppet, Inc.']
-  spec.email   = ['pdk-maintainers@puppet.com']
+  spec.email = ['pdk-maintainers@puppet.com']
 
-  spec.summary     = 'A key part of the Puppet Development Kit, the shortest path to better modules'
+  spec.summary = 'A key part of the Puppet Development Kit, the shortest path to better modules'
   spec.description = 'A CLI to facilitate easy, unified development workflows for Puppet modules.'
-  spec.homepage    = 'https://github.com/puppetlabs/pdk'
+  spec.homepage = 'https://github.com/puppetlabs/pdk'
 
-  spec.files         = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*', 'exe/**/*', 'locales/**/*']
-  spec.bindir        = 'exe'
-  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.files = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*', 'exe/**/*', 'locales/**/*']
+  spec.bindir = 'exe'
+  spec.executables = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
   spec.required_ruby_version = '>= 2.1.9'
 
+  spec.add_runtime_dependency 'addressable', '2.6.0'
   spec.add_runtime_dependency 'bundler', '>= 1.15.0', '< 3.0.0'
   spec.add_runtime_dependency 'childprocess', '~> 0.7.1'
-  spec.add_runtime_dependency 'cri', '~> 2.10'
+  spec.add_runtime_dependency 'cri', '= 2.10.1'
   spec.add_runtime_dependency 'diff-lcs', '1.3'
   spec.add_runtime_dependency 'ffi', '~> 1.9.0'
   spec.add_runtime_dependency 'gettext-setup', '~> 0.24'
