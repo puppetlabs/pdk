@@ -1,5 +1,3 @@
-require 'pdk/util/bundler'
-
 module PDK::CLI
   @validate_cmd = @base_cmd.define_command do
     name 'validate'
@@ -102,6 +100,8 @@ module PDK::CLI
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
 
       options.merge!(puppet_env[:gemset])
+
+      require 'pdk/util/bundler'
 
       PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 

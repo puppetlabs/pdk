@@ -9,6 +9,7 @@ module PDK::CLI
 
     run do |opts, args, _cmd|
       require 'pdk/util/puppet_strings'
+      require 'pdk/util/bundler'
 
       PDK::CLI::Util.validate_puppet_version_opts(opts)
       PDK::CLI::Util.ensure_in_module!(

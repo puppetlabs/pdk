@@ -41,7 +41,11 @@ module PDK
 
         update_manager.sync_changes!
 
-        PDK::Util::Bundler.ensure_bundle! if needs_bundle_update?
+        if needs_bundle_update?
+          require 'pdk/util/bundler'
+
+          PDK::Util::Bundler.ensure_bundle!
+        end
 
         print_result 'Update completed'
       end

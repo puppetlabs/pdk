@@ -22,6 +22,7 @@ module PDK::CLI
     run do |opts, _args, _cmd|
       require 'pdk/tests/unit'
       require 'pdk/report'
+      require 'pdk/util/bundler'
 
       PDK::CLI::Util.validate_puppet_version_opts(opts)
 
