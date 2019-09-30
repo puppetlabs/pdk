@@ -1,4 +1,3 @@
-require 'json'
 require 'pdk/util/filesystem'
 
 module PDK
@@ -80,6 +79,8 @@ module PDK
     #
     # @return [Hash{String => Object}] The existing questions and answers.
     def read_from_disk
+      require 'json'
+
       return {} if !File.file?(answer_file_path) || File.zero?(answer_file_path)
 
       unless File.readable?(answer_file_path)
@@ -108,6 +109,8 @@ module PDK
     #
     # @raise [PDK::CLI::FatalError] if the answer file can not be written to.
     def save_to_disk
+      require 'json'
+
       FileUtils.mkdir_p(File.dirname(answer_file_path))
 
       write_file(answer_file_path, JSON.pretty_generate(answers))
