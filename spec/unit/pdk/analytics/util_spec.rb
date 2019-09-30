@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'concurrent/configuration'
 require 'concurrent/future'
 require 'facter'
+require 'pdk/analytics/util'
 
 describe PDK::Analytics::Util do
   describe '.fetch_os_async' do

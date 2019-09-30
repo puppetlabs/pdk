@@ -25,6 +25,7 @@ module PDK
           require 'concurrent/future'
           require 'httpclient'
           require 'locale'
+          require 'pdk/analytics/util'
 
           @http = HTTPClient.new
           @user_id = opts[:user_id]
@@ -78,6 +79,8 @@ module PDK
           # Handle analytics submission in the background to avoid blocking the
           # app or polluting the log with errors
           Concurrent::Future.execute(executor: @executor) do
+            require 'json'
+
             logger.debug "Submitting analytics: #{JSON.pretty_generate(params)}"
             @http.post(TRACKING_URL, params)
             logger.debug 'Completed analytics submission'

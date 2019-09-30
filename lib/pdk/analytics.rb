@@ -1,10 +1,13 @@
-require 'securerandom'
-require 'pdk/analytics/util'
 require 'pdk/analytics/client/google_analytics'
 require 'pdk/analytics/client/noop'
 
 module PDK
   def self.analytics
+    require 'pdk/config'
+    require 'pdk/logger'
+    require 'pdk/util'
+    require 'pdk/version'
+
     @analytics ||= PDK::Analytics.build_client(
       logger:        PDK.logger,
       disabled:      ENV['PDK_DISABLE_ANALYTICS'] || PDK.config.user['analytics']['disabled'],
