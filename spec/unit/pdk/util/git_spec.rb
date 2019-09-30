@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/util/git'
 
 describe PDK::Util::Git do
   describe '.repo?' do

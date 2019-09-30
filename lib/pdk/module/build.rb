@@ -1,10 +1,3 @@
-require 'fileutils'
-require 'minitar'
-require 'zlib'
-require 'pathspec'
-require 'find'
-require 'pdk/tests/unit'
-
 module PDK
   module Module
     class Build
@@ -72,6 +65,8 @@ module PDK
       #
       # If the directory already exists, remove it first.
       def create_build_dir
+        require 'fileutils'
+
         cleanup_build_dir
 
         FileUtils.mkdir_p(build_dir)
@@ -81,6 +76,8 @@ module PDK
       #
       # @return nil.
       def cleanup_build_dir
+        require 'fileutils'
+
         FileUtils.rm_rf(build_dir, secure: true)
       end
 
@@ -100,6 +97,8 @@ module PDK
       #
       # @return nil
       def stage_module_in_build_dir
+        require 'find'
+
         Find.find(module_dir) do |path|
           next if path == module_dir
 
@@ -113,6 +112,9 @@ module PDK
       #
       # @return nil.
       def stage_path(path)
+        require 'pathname'
+        require 'fileutils'
+
         relative_path = Pathname.new(path).relative_path_from(Pathname.new(module_dir))
         dest_path = File.join(build_dir, relative_path)
 
@@ -150,6 +152,8 @@ module PDK
       #
       # @return nil.
       def warn_symlink(path)
+        require 'pathname'
+
         symlink_path = Pathname.new(path)
         module_path = Pathname.new(module_dir)
 
@@ -218,6 +222,11 @@ module PDK
       #
       # @return nil.
       def build_package
+        require 'fileutils'
+        require 'zlib'
+        require 'minitar'
+        require 'find'
+
         FileUtils.rm_f(package_file)
 
         Dir.chdir(target_dir) do
@@ -270,6 +279,7 @@ module PDK
       # @return [PathSpec] The populated ignore path matcher.
       def ignored_files
         require 'pdk/module'
+        require 'pathspec'
 
         @ignored_files ||=
           begin
