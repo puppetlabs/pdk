@@ -1,16 +1,11 @@
-require 'diff/lcs'
-require 'diff/lcs/hunk'
-require 'English'
-require 'fileutils'
-require 'set'
-require 'pdk/util/filesystem'
-
 module PDK
   module Module
     class UpdateManager
       # Initialises a blank UpdateManager object, which is used to store and
       # process file additions/removals/modifications.
       def initialize
+        require 'set'
+
         @modified_files = Set.new
         @added_files = Set.new
         @removed_files = Set.new
@@ -45,11 +40,13 @@ module PDK
       # @raise (see #calculate_diffs)
       # @return [Hash{Symbol => Set,Hash}] the summary of the pending changes.
       def changes
+        require 'pdk/util/filesystem'
+
         calculate_diffs
 
         {
           added:    @added_files,
-          removed:  @removed_files.select { |f| File.exist?(f) },
+          removed:  @removed_files.select { |f| PDK::Util::Filesystem.exist?(f) },
           modified: @diff_cache.reject { |_, value| value.nil? },
         }
       end
@@ -106,9 +103,11 @@ module PDK
       #
       # @raise [PDK::CLI::ExitWithError] if the file could not be removed.
       def unlink_file(path)
-        if File.file?(path)
+        require 'pdk/util/filesystem'
+
+        if PDK::Util::Filesystem.file?(path)
           PDK.logger.debug(_("unlinking '%{path}'") % { path: path })
-          FileUtils.rm(path)
+          PDK::Util::Filesystem.rm(path)
         else
           PDK.logger.debug(_("'%{path}': already gone") % { path: path })
         end
@@ -127,14 +126,16 @@ module PDK
       # @raise [PDK::CLI::ExitWithError] if a file being modified isn't
       #   readable.
       def calculate_diffs
+        require 'pdk/util/filesystem'
+
         @modified_files.each do |file|
           next if @diff_cache.key?(file[:path])
 
-          unless File.readable?(file[:path])
+          unless PDK::Util::Filesystem.readable?(file[:path])
             raise PDK::CLI::ExitWithError, _("Unable to open '%{path}' for reading") % { path: file[:path] }
           end
 
-          old_content = File.read(file[:path])
+          old_content = PDK::Util::Filesystem.read_file(file[:path])
           file_diff = unified_diff(file[:path], old_content, file[:content])
           @diff_cache[file[:path]] = file_diff
         end
@@ -147,7 +148,9 @@ module PDK
       #
       # @raise [PDK::CLI::ExitWithError] if the file is not writeable.
       def write_file(path, content)
-        FileUtils.mkdir_p(File.dirname(path))
+        require 'pdk/util/filesystem'
+
+        PDK::Util::Filesystem.mkdir_p(File.dirname(path))
         PDK.logger.debug(_("writing '%{path}'") % { path: path })
         PDK::Util::Filesystem.write_file(path, content)
       rescue Errno::EACCES
@@ -167,6 +170,9 @@ module PDK
       #
       # @return [String] The unified diff of the pending changes to the file.
       def unified_diff(path, old_content, new_content, lines_of_context = 3)
+        require 'diff/lcs'
+        require 'English'
+
         output = []
 
         old_lines = old_content.split($INPUT_RECORD_SEPARATOR).map(&:chomp)
@@ -175,6 +181,8 @@ module PDK
         diffs = Diff::LCS.diff(old_lines, new_lines)
 
         return if diffs.empty?
+
+        require 'diff/lcs/hunk'
 
         file_mtime = File.stat(path).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
         now = Time.now.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
