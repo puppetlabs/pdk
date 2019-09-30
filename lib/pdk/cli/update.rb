@@ -1,6 +1,3 @@
-require 'pdk/cli/util'
-require 'pdk/util'
-
 module PDK::CLI
   @update_cmd = @base_cmd.define_command do
     name 'update'
@@ -13,6 +10,8 @@ module PDK::CLI
     PDK::CLI.template_ref_option(self)
 
     run do |opts, _args, _cmd|
+      require 'pdk/cli/util'
+      require 'pdk/util'
       require 'pdk/module/update'
 
       PDK::CLI::Util.ensure_in_module!(
