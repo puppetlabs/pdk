@@ -1,6 +1,3 @@
-require 'pdk/cli/util/option_validator'
-require 'pdk/report'
-
 module PDK::CLI
   @test_unit_cmd = @test_cmd.define_command do
     name 'unit'
@@ -15,6 +12,7 @@ module PDK::CLI
     flag :c, 'clean-fixtures', _('Clean up downloaded fixtures after the test run.')
 
     option nil, :tests, _('Specify a comma-separated list of unit test files to run.'), argument: :required, default: '' do |values|
+      require 'pdk/cli/util/option_validator'
       PDK::CLI::Util::OptionValidator.comma_separated_list?(values)
     end
 
@@ -23,6 +21,7 @@ module PDK::CLI
 
     run do |opts, _args, _cmd|
       require 'pdk/tests/unit'
+      require 'pdk/report'
 
       PDK::CLI::Util.validate_puppet_version_opts(opts)
 
