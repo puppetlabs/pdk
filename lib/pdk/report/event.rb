@@ -1,6 +1,3 @@
-require 'rexml/document'
-require 'pathname'
-
 module PDK
   class Report
     class Event
@@ -132,6 +129,8 @@ module PDK
       #
       # @return [REXML::Element] The rendered event.
       def to_junit
+        require 'rexml/document'
+
         testcase = REXML::Element.new('testcase')
         testcase.attributes['classname'] = [source, test].compact.join('.')
         testcase.attributes['name'] = [file, line, column].compact.join(':')
@@ -194,6 +193,9 @@ module PDK
         unless value.is_a?(String)
           raise ArgumentError, _('File must be a String.')
         end
+
+        require 'pathname'
+        require 'pdk/util'
 
         path = Pathname.new(value)
 
