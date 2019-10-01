@@ -1,4 +1,7 @@
 require 'pdk/cli/util'
+require 'pdk/validate'
+require 'pdk/util/bundler'
+require 'pdk/cli/util/interview'
 require 'pdk/cli/util/changelog_generator'
 
 module PDK::CLI
@@ -11,9 +14,9 @@ module PDK::CLI
     option nil, 'skip_validation', _('Skips the module validation check.')
     option nil, 'skip_changelog', _('Skips the automatic changelog generation.')
     option nil, 'skip_dependency', _('Skips the module dependency check.')
-    option nil, 'skip_documentation', _('Skipts the documentation update.')
+    option nil, 'skip_documentation', _('Skips the documentation update.')
 
-    run do |opts, _args, _cmd|
+    run do |opts, args, _cmd|
       require 'pdk/module/build'
 
       # Make sure build is being run in a valid module directory with a metadata.json
@@ -82,6 +85,29 @@ module PDK::CLI
             ver_answer = interview.run
             opts[:version_number] = ver_answer['version']
           end
+          if answers['publish']
+            questions = [
+              {
+                name:             'apikey',
+                question:         _('Please set the api key(authorization token) to upload on the Puppet Forge'),
+                help:             _('This value is used for authentication on the Puppet Forge to upload your module tarball.'),
+                required:         true,
+              },
+            ]
+            interview = PDK::CLI::Util::Interview.new(prompt)
+            interview.add_questions(questions)
+            api_answer = interview.run
+            opts[:apikey] = api_answer['apikey']
+          end
+        end
+      end
+
+      args.each do |item|
+        if item =~ %r{^with_version.+}
+          opts[:version_number] = item.split('=')[1]
+        end
+        if item =~ %r{^forge_token.+}
+          opts[:apikey] = item.split('=')[1]
         end
       end
 
@@ -122,6 +148,15 @@ module PDK::CLI
 
       if opts[:skip_changelog]
         PDK.logger.info _('Skipping automatic changelog generation')
+        if opts[:version_number]
+          PDK.logger.info _('Updating version to %{module_version}') % {
+            module_version: opts[:version_number],
+          }
+
+          # Bump version in metadata file
+          module_metadata.data['version'] = opts[:version_number]
+          module_metadata.write!('metadata.json')
+        end
       else
         new_version = 'v0.0.1'
         changelog_generator = PDK::CLI::Util::ChangelogGenerator.new
@@ -223,6 +258,30 @@ module PDK::CLI
         package_name: module_metadata.data['name'],
         package_path: builder.package_file,
       }
+
+      if opts[:apikey]
+        # TODO: Replace this code when the upload functionality is added to the forge ruby gem
+        file_data = Base64.encode64(File.open(builder.package_file, 'rb').read)
+
+        PDK.logger.info _('Uploading tarball to puppet forge...')
+        uri = URI('https://forgeapi.puppetlabs.com/v3/releases')
+        request = Net::HTTP::Post.new(uri.path)
+        request['Authorization'] = 'Bearer ' + opts[:apikey]
+        request['Content-Type'] = 'application/json'
+        data = { file: file_data }
+
+        request.body = data.to_json
+
+        response = Net::HTTP.start(uri.host, uri.port, use_ssl: true, verify_mode: OpenSSL::SSL::VERIFY_NONE) do |http|
+          http.request(request)
+        end
+
+        if response.is_a?(Net::HTTPSuccess)
+          PDK.logger.info _('Upload successful')
+        else
+          PDK.logger.error _('Error uploading to Puppet Forge: %{result}') % { result: response }
+        end
+      end
     end
   end
 end
