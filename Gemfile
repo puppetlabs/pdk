@@ -39,7 +39,9 @@ group :test do
 end
 
 group :acceptance do
-  gem 'minitar-cli'
+  # minitar-cli has not had a release in a while, so I have a fork that bumps
+  # the version number and dependency to work with minitar 0.9
+  gem 'minitar-cli', git: 'https://github.com/rodjek/minitar-cli', branch: '0.9'
   gem 'serverspec'
 end
 
