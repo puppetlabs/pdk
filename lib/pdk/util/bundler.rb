@@ -109,6 +109,7 @@ module PDK
         def lock!
           require 'pdk/util'
           require 'fileutils'
+          require 'pdk/util/ruby_version'
 
           if PDK::Util.package_install?
             # In packaged installs, use vendored Gemfile.lock as a starting point.
