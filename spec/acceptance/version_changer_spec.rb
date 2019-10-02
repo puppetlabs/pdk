@@ -80,13 +80,15 @@ end
         its(:stderr) { is_expected.not_to match(%r{Using Puppet file://}i) }
       end
 
+      # Note that there is no guarantee that the master branch of puppet is compatible with the PDK under test
+      # so we can only test that the validate command is using the expected puppet gem location
       describe command('pdk validate --puppet-dev') do
         its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
-        its(:exit_status) { is_expected.to eq(0) }
       end
 
+      # Note that there is no guarantee that the master branch of puppet is compatible with the PDK under test
+      # so we can only test that the test command is using the expected puppet gem location
       describe command('pdk test unit --puppet-dev') do
-        its(:exit_status) { is_expected.to eq(0) }
         its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
       end
     end
