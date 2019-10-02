@@ -28,6 +28,10 @@ end
 group :test do
   gem 'coveralls'
   gem 'license_finder', '~> 3.0.4'
+  if RUBY_VERSION < '2.4'
+    # license_finder depends on rubyzip which requires Ruby 2.4 in 2.x
+    gem 'rubyzip', '< 2.0.0'
+  end
   gem 'parallel', '= 1.13.0'
   gem 'parser', '~> 2.5.1.2'
   gem 'rake', '~> 10.0'
