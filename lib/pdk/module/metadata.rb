@@ -1,4 +1,3 @@
-require 'json'
 require 'pdk/util/filesystem'
 
 module PDK
@@ -102,6 +101,7 @@ module PDK
           raise ArgumentError, _("Unable to open '%{file}' for reading.") % { file: metadata_json_path }
         end
 
+        require 'json'
         begin
           data = JSON.parse(PDK::Util::Filesystem.read_file(metadata_json_path))
         rescue JSON::JSONError => e
@@ -120,6 +120,8 @@ module PDK
       end
 
       def to_json
+        require 'json'
+
         JSON.pretty_generate(@data.dup.delete_if { |_key, value| value.nil? })
       end
 
@@ -132,6 +134,8 @@ module PDK
       end
 
       def interview_for_forge!
+        require 'pdk/generate/module'
+
         PDK::Generate::Module.module_interview(self, only_ask: missing_fields)
       end
 

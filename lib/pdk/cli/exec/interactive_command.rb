@@ -35,6 +35,8 @@ module PDK
         end
 
         def execute!
+          require 'pdk/util'
+
           @resolved_env = resolved_env_for_command
 
           if [:module, :pwd].include?(context)
@@ -98,6 +100,8 @@ module PDK
         end
 
         def child_status
+          require 'English'
+
           $CHILD_STATUS
         end
 

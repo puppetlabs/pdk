@@ -19,6 +19,8 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid transport name") % { name: transport_name }
       end
 
+      require 'pdk/generate/transport'
+
       PDK::Generate::Transport.new(module_dir, transport_name, opts).run
     end
   end

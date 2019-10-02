@@ -1,14 +1,3 @@
-require 'bundler'
-require 'childprocess'
-require 'English'
-require 'tempfile'
-require 'tty-which'
-
-require 'pdk/util'
-require 'pdk/util/git'
-require 'pdk/util/ruby_version'
-require 'pdk/cli/util/spinner'
-
 module PDK
   module CLI
     module Exec
@@ -20,6 +9,9 @@ module PDK
         attr_writer :exec_group
 
         def initialize(*argv)
+          require 'childprocess'
+          require 'tempfile'
+
           @argv = argv
 
           @process = ChildProcess.build(*@argv)
@@ -50,6 +42,8 @@ module PDK
         end
 
         def register_spinner(spinner, opts = {})
+          require 'pdk/cli/util'
+
           return unless PDK::CLI::Util.interactive?
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
@@ -58,9 +52,13 @@ module PDK
         end
 
         def add_spinner(message, opts = {})
+          require 'pdk/cli/util'
+
           return unless PDK::CLI::Util.interactive?
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
+
+          require 'pdk/cli/util/spinner'
 
           @spinner = TTY::Spinner.new("[:spinner] #{message}", opts.merge(PDK::CLI::Util.spinner_opts_for_platform))
         end
@@ -77,6 +75,7 @@ module PDK
           resolved_env_for_command.each { |k, v| @process.environment[k] = v }
 
           if [:module, :pwd].include?(context)
+            require 'pdk/util'
             mod_root = PDK::Util.module_root
 
             unless mod_root
@@ -155,6 +154,10 @@ module PDK
           resolved_env['BUNDLE_IGNORE_CONFIG'] = '1'
 
           if [:module, :pwd].include?(context)
+            require 'pdk/util'
+            require 'pdk/util/git'
+            require 'pdk/util/ruby_version'
+
             resolved_env['GEM_HOME'] = PDK::Util::RubyVersion.gem_home
             resolved_env['GEM_PATH'] = PDK::Util::RubyVersion.gem_path
 
@@ -186,6 +189,8 @@ module PDK
         end
 
         def run_process_in_clean_env!
+          require 'bundler'
+
           ::Bundler.with_clean_env do
             run_process!
           end

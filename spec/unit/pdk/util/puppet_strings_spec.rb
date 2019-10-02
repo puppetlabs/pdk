@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/util/puppet_strings'
 
 describe PDK::Util::PuppetStrings do
   describe '.puppet' do

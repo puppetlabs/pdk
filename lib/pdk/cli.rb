@@ -1,17 +1,18 @@
 require 'cri'
 
+require 'pdk/analytics'
 require 'pdk/cli/errors'
 require 'pdk/cli/util'
 require 'pdk/cli/util/command_redirector'
 require 'pdk/cli/util/option_normalizer'
 require 'pdk/cli/util/option_validator'
-require 'pdk/cli/exec_group'
-require 'pdk/generate/module'
+require 'pdk/config'
 require 'pdk/i18n'
 require 'pdk/logger'
 require 'pdk/report'
 require 'pdk/util/version'
 require 'pdk/util/puppet_version'
+require 'pdk/util/filesystem'
 
 class Cri::Command::CriExitException
   def initialize(is_error:)
@@ -76,6 +77,8 @@ module PDK::CLI
   end
 
   def self.template_url_option(dsl)
+    require 'pdk/util/template_uri'
+
     desc = _('Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})') % { default_url: PDK::Util::TemplateURI.default_template_uri }
 
     dsl.option nil, 'template-url', desc, argument: :required
@@ -137,6 +140,7 @@ module PDK::CLI
     end
 
     option nil, 'answer-file', _('Path to an answer file.'), argument: :required, hidden: true do |value|
+      require 'pdk/answer_file'
       PDK.answer_file = value
     end
   end

@@ -1,8 +1,4 @@
-require 'pdk'
-require 'pdk/cli/exec'
 require 'pdk/validate/base_validator'
-require 'fileutils'
-require 'tmpdir'
 
 module PDK
   module Validate
@@ -63,12 +59,16 @@ module PDK
       end
 
       def self.validate_tmpdir
+        require 'tmpdir'
+
         @validate_tmpdir ||= Dir.mktmpdir('puppet-epp-validate')
       end
 
       def self.remove_validate_tmpdir
         return unless @validate_tmpdir
         return unless File.directory?(@validate_tmpdir)
+
+        require 'fileutils'
 
         FileUtils.remove_entry_secure(@validate_tmpdir)
         @validate_tmpdir = nil

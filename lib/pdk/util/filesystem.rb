@@ -64,6 +64,11 @@ module PDK
         File.exist?(*args)
       end
       module_function :exist?
+
+      def rm(*args)
+        FileUtils.rm(*args)
+      end
+      module_function :rm
       #:nocov:
     end
   end

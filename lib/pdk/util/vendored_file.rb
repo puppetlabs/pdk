@@ -1,29 +1,10 @@
-require 'pdk/util'
-require 'net/https'
-require 'openssl'
-require 'fileutils'
-require 'pdk/util/filesystem'
-
 module PDK
   module Util
     class VendoredFile
       class DownloadError < StandardError; end
 
-      HTTP_ERRORS = [
-        EOFError,
-        Errno::ECONNRESET,
-        Errno::EINVAL,
-        Errno::ECONNREFUSED,
-        Net::HTTPBadResponse,
-        Net::HTTPHeaderSyntaxError,
-        Net::ProtocolError,
-        Timeout::Error,
-      ].freeze
-
       attr_reader :file_name
       attr_reader :url
-
-      include PDK::Util::Filesystem
 
       def initialize(file_name, url)
         @file_name = file_name
@@ -31,21 +12,39 @@ module PDK
       end
 
       def read
-        return File.read(package_vendored_path) if PDK::Util.package_install?
-        return File.read(gem_vendored_path) if File.file?(gem_vendored_path)
+        require 'pdk/util'
+        require 'pdk/util/filesystem'
+
+        return PDK::Util::Filesystem.read_file(package_vendored_path) if PDK::Util.package_install?
+        return PDK::Util::Filesystem.read_file(gem_vendored_path) if PDK::Util::Filesystem.file?(gem_vendored_path)
 
         content = download_file
 
         # TODO: should only write if it's valid JSON
         # TODO: need a way to invalidate if out of date
-        FileUtils.mkdir_p(File.dirname(gem_vendored_path))
-        write_file(gem_vendored_path, content)
+        PDK::Util::Filesystem.mkdir_p(File.dirname(gem_vendored_path))
+        PDK::Util::Filesystem.write_file(gem_vendored_path, content)
         content
       end
 
       private
 
       def download_file
+        require 'uri'
+        require 'net/https'
+        require 'openssl'
+
+        http_errors = [
+          EOFError,
+          Errno::ECONNRESET,
+          Errno::EINVAL,
+          Errno::ECONNREFUSED,
+          Net::HTTPBadResponse,
+          Net::HTTPHeaderSyntaxError,
+          Net::ProtocolError,
+          Timeout::Error,
+        ]
+
         PDK.logger.debug _('%{file_name} was not found in the cache, downloading it from %{url}.') % {
           file_name: file_name,
           url:       url,
@@ -69,7 +68,7 @@ module PDK
         end
 
         response.body
-      rescue *HTTP_ERRORS => e
+      rescue *http_errors => e
         raise DownloadError, _('Unable to download %{url}. Check internet connectivity and try again. %{error}') % {
           url: url,
           error: e,
@@ -77,10 +76,15 @@ module PDK
       end
 
       def package_vendored_path
+        require 'pdk/util'
+
         @package_vendored_path ||= File.join(PDK::Util.package_cachedir, file_name)
       end
 
       def gem_vendored_path
+        require 'pdk/util'
+        require 'pdk/version'
+
         @gem_vendored_path ||= File.join(PDK::Util.cachedir, PDK::VERSION, file_name)
       end
     end

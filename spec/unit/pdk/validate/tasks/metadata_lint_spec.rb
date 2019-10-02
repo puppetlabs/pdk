@@ -68,6 +68,8 @@ describe PDK::Validate::Tasks::MetadataLint do
 
     before(:each) do
       allow(described_class).to receive(:schema_file).and_return(schema)
+      allow(File).to receive(:file?).and_call_original
+      allow(File).to receive(:read).and_call_original
       targets.each do |target|
         allow(File).to receive(:directory?).with(target[:name]).and_return(target.fetch(:directory, false))
         allow(File).to receive(:file?).with(target[:name]).and_return(target.fetch(:file, true))

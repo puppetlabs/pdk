@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/template_file'
 
 describe PDK::TemplateFile do
   subject(:template_file) { described_class.new(template_path, data) }

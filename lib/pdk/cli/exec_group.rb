@@ -1,15 +1,13 @@
-require 'tty-which'
-
-require 'pdk/util'
-require 'pdk/cli/util/spinner'
-
 module PDK
   module CLI
     class ExecGroup
       def initialize(message, opts = {})
+        require 'pdk/cli/util'
         @options = opts.merge(PDK::CLI::Util.spinner_opts_for_platform)
 
         if PDK::CLI::Util.interactive?
+          require 'pdk/cli/util/spinner'
+
           @spinner = if parallel?
                        TTY::Spinner::Multi.new("[:spinner] #{message}", @options)
                      else
@@ -41,6 +39,8 @@ module PDK
       end
 
       def add_spinner(message, opts = {})
+        require 'pdk/cli/util'
+
         return unless PDK::CLI::Util.interactive?
         @spinner.register("[:spinner] #{message}", @options.merge(opts).merge(PDK::CLI::Util.spinner_opts_for_platform))
       end

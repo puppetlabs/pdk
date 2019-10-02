@@ -1,5 +1,4 @@
 require 'pdk/config/json_schema_namespace'
-require 'pdk/config/json_schema_setting'
 
 module PDK
   class Config
@@ -12,6 +11,7 @@ module PDK
         data = load_data(filename)
         data = '' if data.nil?
         require 'yaml'
+        require 'json-schema'
 
         @raw_data = ::YAML.safe_load(data, [Symbol], [], true)
         @raw_data = {} if @raw_data.nil?
@@ -25,6 +25,8 @@ module PDK
             message:  e.message,
           }
         end
+
+        require 'pdk/config/json_schema_setting'
 
         schema_property_names.each do |key|
           yield key, PDK::Config::JSONSchemaSetting.new(key, self, @raw_data[key])

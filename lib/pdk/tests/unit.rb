@@ -1,8 +1,3 @@
-require 'pdk'
-require 'pdk/cli/exec'
-require 'pdk/util/bundler'
-require 'json'
-
 module PDK
   module Test
     class Unit
@@ -13,16 +8,22 @@ module PDK
       end
 
       def self.rake_bin
+        require 'pdk/util'
+
         @rake ||= File.join(PDK::Util.module_root, 'bin', 'rake')
       end
 
       def self.cmd_with_args(task)
+        require 'pdk/util/ruby_version'
+
         argv = [rake_bin, task]
         argv.unshift(File.join(PDK::Util::RubyVersion.bin_path, 'ruby.exe')) if Gem.win_platform?
         argv
       end
 
       def self.rake(task, spinner_text, environment = {})
+        require 'pdk/cli/exec/command'
+
         command = PDK::CLI::Exec::Command.new(*cmd_with_args(task)).tap do |c|
           c.context = :module
           c.add_spinner(spinner_text) if spinner_text
@@ -33,6 +34,8 @@ module PDK
       end
 
       def self.interactive_rake(task, environment)
+        require 'pdk/cli/exec/interactive_command'
+
         command = PDK::CLI::Exec::InteractiveCommand.new(*cmd_with_args(task)).tap do |c|
           c.context = :module
           c.environment = environment.reject do |key, _|
@@ -78,6 +81,9 @@ module PDK
       end
 
       def self.invoke(report, options = {})
+        require 'pdk/util'
+        require 'pdk/util/bundler'
+
         PDK::Util::Bundler.ensure_binstubs!('rake', 'rspec-core')
 
         setup
@@ -204,6 +210,9 @@ module PDK
 
       # @return array of { :id, :full_description }
       def self.list(options = {})
+        require 'pdk/util'
+        require 'pdk/util/bundler'
+
         PDK::Util::Bundler.ensure_binstubs!('rake')
 
         environment = {}

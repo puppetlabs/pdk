@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/module/metadata'
 
 describe PDK::Module::Metadata do
   context '.from_file' do

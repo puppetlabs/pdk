@@ -1,12 +1,9 @@
-require 'pdk/version'
-require 'pdk/cli/exec'
-require 'pdk/util/git'
-require 'pdk/logger'
-
 module PDK
   module Util
     module Version
       def self.version_string
+        require 'pdk/version'
+
         "#{PDK::VERSION} #{pdk_ref}".strip.freeze
       end
 
@@ -25,6 +22,7 @@ module PDK
       end
 
       def self.git_ref
+        require 'pdk/util/git'
         source_git_dir = File.join(File.expand_path('../../..', File.dirname(__FILE__)), '.git')
 
         return unless File.directory?(source_git_dir)
@@ -33,6 +31,8 @@ module PDK
       end
 
       def self.version_file
+        require 'pdk/util'
+
         # FIXME: this gets called a LOT and doesn't currently get cached
         PDK::Util.find_upwards('PDK_VERSION', File.dirname(__FILE__))
       end

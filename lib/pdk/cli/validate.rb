@@ -1,5 +1,3 @@
-require 'pdk/util/bundler'
-
 module PDK::CLI
   @validate_cmd = @base_cmd.define_command do
     name 'validate'
@@ -25,6 +23,8 @@ module PDK::CLI
         PDK::CLI.run(['validate', '--help'])
         exit 0
       end
+
+      require 'pdk/validate'
 
       validator_names = PDK::Validate.validators.map { |v| v.name }
       validators = PDK::Validate.validators
@@ -101,10 +101,14 @@ module PDK::CLI
 
       options.merge!(puppet_env[:gemset])
 
+      require 'pdk/util/bundler'
+
       PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
       exit_code = 0
       if opts[:parallel]
+        require 'pdk/cli/exec_group'
+
         exec_group = PDK::CLI::ExecGroup.new(_('Validating module using %{num_of_threads} threads' % { num_of_threads: validators.count }), opts)
 
         validators.each do |validator|

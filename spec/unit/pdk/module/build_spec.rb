@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'pdk/module/build'
+require 'pathspec'
 
 describe PDK::Module::Build do
   subject { described_class.new(initialize_options) }

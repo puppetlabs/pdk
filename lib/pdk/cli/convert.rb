@@ -1,5 +1,3 @@
-require 'pdk/cli/util'
-
 module PDK::CLI
   @convert_cmd = @base_cmd.define_command do
     name 'convert'
@@ -16,6 +14,7 @@ module PDK::CLI
 
     run do |opts, _args, _cmd|
       require 'pdk/module/convert'
+      require 'pdk/cli/util'
 
       PDK::CLI::Util.ensure_in_module!(
         check_module_layout: true,

@@ -1,5 +1,3 @@
-require 'pdk/util'
-
 module PDK
   module Util
     class TemplateURI
@@ -34,6 +32,8 @@ module PDK
       # /c:/foo#master (internal use only)
       #
       def initialize(opts_or_uri)
+        require 'addressable'
+
         # If a uri string is passed, skip the valid uri finding code.
         @uri = if opts_or_uri.is_a?(self.class)
                  opts_or_uri.uri
@@ -81,6 +81,8 @@ module PDK
       end
 
       def self.git_remote(uri)
+        require 'addressable'
+
         if uri.is_a?(Addressable::URI) && uri.fragment
           human_readable(uri.to_s.chomp('#' + uri.fragment))
         else
@@ -105,6 +107,9 @@ module PDK
 
       # @returns PDK::Util::TemplateURI
       def self.default_template_uri(ref = nil)
+        require 'pdk/util'
+        require 'addressable'
+
         if PDK::Util.package_install?
           PDK::Util::TemplateURI.new(Addressable::URI.new(scheme: 'file', host: '', path: File.join(PDK::Util.package_cachedir, 'pdk-templates.git'), fragment: ref))
         else
@@ -117,6 +122,8 @@ module PDK
       end
 
       def ref_is_tag?
+        require 'pdk/util/git'
+
         PDK::Util::Git.git('ls-remote', '--tags', '--exit-code', git_remote, git_ref)[:exit_code].zero?
       end
 
@@ -140,6 +147,9 @@ module PDK
       end
 
       def self.parse_scp_url(url)
+        require 'pathname'
+        require 'addressable'
+
         # Valid URIs to avoid catching:
         # - absolute local paths
         # - have :'s in paths when preceeded by a slash
@@ -168,6 +178,10 @@ module PDK
       #   the template file is not in this template directory.
       #
       def self.templates(opts)
+        require 'pdk/answer_file'
+        require 'pdk/util'
+        require 'addressable'
+
         explicit_url = opts.fetch(:'template-url', nil)
         explicit_ref = opts.fetch(:'template-ref', nil)
 
@@ -208,6 +222,9 @@ module PDK
 
       # @returns String
       def self.default_template_ref(uri = nil)
+        require 'pdk/util'
+        require 'pdk/version'
+
         return 'master' if PDK::Util.development_mode?
         return PDK::TEMPLATE_REF if uri.nil?
 
@@ -228,6 +245,10 @@ module PDK
       end
 
       def self.valid_template?(template)
+        require 'addressable'
+        require 'pdk/util/git'
+        require 'pdk/module/templatedir'
+
         return false if template.nil? || !template.is_a?(Hash)
         return false if template[:uri].nil? || !template[:uri].is_a?(Addressable::URI)
 

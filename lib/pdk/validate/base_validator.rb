@@ -1,7 +1,3 @@
-require 'pdk'
-require 'pdk/cli/exec'
-require 'pdk/module'
-
 module PDK
   module Validate
     class BaseValidator
@@ -82,6 +78,8 @@ module PDK
       end
 
       def self.ignore_pathspec
+        require 'pdk/module'
+
         ignore_pathspec = PDK::Module.default_ignored_pathspec(ignore_dotfiles?)
 
         if respond_to?(:pattern_ignore)
@@ -136,6 +134,8 @@ module PDK
       end
 
       def self.invoke(report, options = {})
+        require 'pdk/cli/exec/command'
+
         targets, skipped, invalid = parse_targets(options)
 
         process_skipped(report, skipped)
@@ -154,6 +154,7 @@ module PDK
         if self::INVOKE_STYLE == :per_target
           targets = targets.combination(1).to_a
         else
+          require 'pdk/cli/exec_group'
           targets = targets.each_slice(1000).to_a
           options[:split_exec] = PDK::CLI::ExecGroup.new(spinner_text(targets), parallel: false)
         end

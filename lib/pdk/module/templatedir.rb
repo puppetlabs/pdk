@@ -1,10 +1,3 @@
-require 'yaml'
-require 'deep_merge'
-require 'pdk/util'
-require 'pdk/util/git'
-require 'pdk/cli/errors'
-require 'pdk/template_file'
-
 module PDK
   module Module
     class TemplateDir
@@ -39,6 +32,10 @@ module PDK
       #
       # @api public
       def initialize(uri, module_metadata = {}, init = false)
+        require 'pdk/analytics'
+        require 'pdk/util/template_uri'
+        require 'pdk/util/git'
+
         unless block_given?
           raise ArgumentError, _('%{class_name} must be initialized with a block.') % { class_name: self.class.name }
         end
@@ -83,6 +80,7 @@ module PDK
         # If we cloned a git repo to get the template, remove the clone once
         # we're done with it.
         if temp_dir_clone
+          require 'fileutils'
           FileUtils.remove_dir(@path)
         end
       end
@@ -96,6 +94,8 @@ module PDK
       #
       # @api public
       def metadata
+        require 'pdk/util/version'
+
         {
           'pdk-version'  => PDK::Util::Version.version_string,
           'template-url' => uri.metadata_format,
@@ -117,6 +117,8 @@ module PDK
       #
       # @api public
       def render
+        require 'pdk/template_file'
+
         PDK::Module::TemplateDir.files_in_template(@dirs).each do |template_file, template_loc|
           template_file = template_file.to_s
           PDK.logger.debug(_("Rendering '%{template}'...") % { template: template_file })
@@ -207,6 +209,8 @@ module PDK
       def validate_module_template!
         # rubocop:disable Style/GuardClause
         unless File.directory?(@path)
+          require 'pdk/util'
+
           if PDK::Util.package_install? && File.fnmatch?(File.join(PDK::Util.package_cachedir, '*'), @path)
             raise ArgumentError, _('The built-in template has substantially changed. Please run "pdk convert" on your module to continue.')
           else
@@ -260,11 +264,15 @@ module PDK
       #
       # @api private
       def config_for(dest_path, sync_config_path = nil)
+        require 'pdk/util'
+        require 'pdk/analytics'
+
         module_root = PDK::Util.module_root
         sync_config_path ||= File.join(module_root, '.sync.yml') unless module_root.nil?
         config_path = File.join(@path, 'config_defaults.yml')
 
         if @config.nil?
+          require 'deep_merge'
           conf_defaults = read_config(config_path)
           @sync_config = read_config(sync_config_path) unless sync_config_path.nil?
           @config = conf_defaults
@@ -302,6 +310,8 @@ module PDK
       # @api private
       def read_config(loc)
         if File.file?(loc) && File.readable?(loc)
+          require 'yaml'
+
           begin
             YAML.safe_load(File.read(loc), [], [], true)
           rescue Psych::SyntaxError => e
@@ -329,6 +339,9 @@ module PDK
         # @todo When switching this over to using rugged, cache the cloned
         # template repo in `%AppData%` or `$XDG_CACHE_DIR` and update before
         # use.
+        require 'pdk/util'
+        require 'pdk/util/git'
+
         temp_dir = PDK::Util.make_tmpdir_name('pdk-templates')
         origin_repo = uri.git_remote
         git_ref = uri.git_ref
@@ -348,6 +361,8 @@ module PDK
 
       # @api private
       def checkout_template_ref(path, ref)
+        require 'pdk/util/git'
+
         if PDK::Util::Git.work_dir_clean?(path)
           Dir.chdir(path) do
             full_ref = PDK::Util::Git.ls_remote(path, ref)
@@ -365,6 +380,8 @@ module PDK
       end
 
       def cache_template_ref(path, ref = nil)
+        require 'pdk/util/git'
+
         @template_ref ||= PDK::Util::Git.describe(File.join(path, '.git'), ref)
       end
     end
