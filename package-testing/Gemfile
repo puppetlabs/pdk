@@ -19,6 +19,11 @@ gem 'beaker-vmpooler', '= 1.3.3'
 gem 'nokogiri', '= 1.10.4'
 gem 'rake', '= 12.3.2'
 
+# net-ping has a implicit dependency on win32-security
+if File::ALT_SEPARATOR
+  gem 'win32-security', require: false
+end
+
 group :development do
   gem 'pry-byebug', '~> 3.4'
 end
