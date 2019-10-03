@@ -19,11 +19,14 @@ EOF
 
       PDK::CLI::Util.analytics_screen_view('bundle')
 
-      # Ensure that the correct Ruby is activated before running commend.
+      # Ensure that the correct Ruby is activated before running command.
       puppet_env = PDK::CLI::Util.puppet_from_opts_or_env({})
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
 
       gemfile_env = PDK::Util::Bundler::BundleHelper.gemfile_env(puppet_env[:gemset])
+
+      require 'pdk/cli/exec'
+      require 'pdk/cli/exec/interactive_command'
 
       command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
         c.context = :pwd
