@@ -25,38 +25,46 @@ module PDK::CLI
         log_level: :info,
       )
       unless opts[:force]
-        questions = [
-          {
+        questions = []
+
+        unless opts[:skip_validation]
+          questions << {
             name:     'validation',
             question: _('Do you want to run the module validation ?'),
             type:     :yes,
-          },
-          {
+          }
+        end
+        unless opts[:skip_changelog]
+          questions << {
             name:     'changelog',
             question: _('Do you want to run the automatic changelog generation ?'),
             type:     :yes,
-          },
-          {
+          }
+          questions << {
             name:     'guess_version',
             question: _('Do you want to try and set the version automatically ?'),
             type:     :yes,
-          },
-          {
+          }
+        end
+        unless opts[:skip_dependency]
+          questions << {
             name:     'dependency',
             question: _('Do you want to run the dependency-checker on this module?'),
             type:     :yes,
-          },
+          }
+        end
+        unless opts[:skip_documentation]
           {
             name:     'documentation',
             question: _('Do you want to update the documentation for this module?'),
             type:     :yes,
-          },
-          {
-            name:     'publish',
-            question: _('Do you want to publish the module on the Puppet Forge?'),
-            type:     :yes,
-          },
-        ]
+          }
+        end
+        questions << {
+          name:     'publish',
+          question: _('Do you want to publish the module on the Puppet Forge?'),
+          type:     :yes,
+        }
 
         prompt = TTY::Prompt.new(help_color: :cyan)
         interview = PDK::CLI::Util::Interview.new(prompt)
