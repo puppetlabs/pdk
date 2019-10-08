@@ -26,6 +26,9 @@ EOF
         message: _('Console can only be run from inside a valid module directory'),
         log_level: :fatal,
       )
+
+      PDK::CLI::Util.module_version_check
+
       processed_options, processed_args = process_opts(args)
 
       PDK::CLI::Util.validate_puppet_version_opts(processed_options)

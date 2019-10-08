@@ -10,6 +10,7 @@ describe 'pdk console' do
   before(:each) do
     allow_any_instance_of(PDK::Util::Bundler::BundleHelper).to receive(:gemfile_lock).and_return(File.join(FIXTURES_DIR, 'module_gemfile_lockfile'))
     allow(Bundler).to receive(:default_lockfile).and_return(File.join(FIXTURES_DIR, 'module_gemfile_lockfile'))
+    allow(PDK::CLI::Util).to receive(:module_version_check).and_return(true)
   end
 
   shared_context 'with a mocked rubygems response' do
