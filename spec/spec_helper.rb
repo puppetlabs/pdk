@@ -39,6 +39,8 @@ Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
 
 analytics_config = nil
 
+FIXTURES_DIR = File.join(__dir__, 'fixtures')
+
 RSpec.shared_context :stubbed_logger do
   let(:logger) { instance_double('PDK::Logger').as_null_object }
 
@@ -102,5 +104,23 @@ end
 class StringIO
   def wait_readable(*)
     true
+  end
+end
+
+module OS
+  def self.windows?
+    (%r{cygwin|mswin|mingw|bccwin|wince|emx} =~ RUBY_PLATFORM) != nil
+  end
+
+  def self.mac?
+    (%r{darwin} =~ RUBY_PLATFORM) != nil
+  end
+
+  def self.unix?
+    !OS.windows?
+  end
+
+  def self.linux?
+    OS.unix? && !OS.mac?
   end
 end
