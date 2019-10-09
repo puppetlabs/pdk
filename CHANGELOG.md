@@ -4,6 +4,31 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.14.0](https://github.com/puppetlabs/pdk/tree/v1.14.0) (2019-10-09)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.13.0...v1.14.0)
+
+**Implemented enhancements:**
+
+- Add new "pdk console" command [\#758](https://github.com/puppetlabs/pdk/pull/758) ([logicminds](https://github.com/logicminds))
+- \(PDK-1495\) Update pdk new test UX [\#749](https://github.com/puppetlabs/pdk/pull/749) ([rodjek](https://github.com/rodjek))
+- \(PDK-680\) Make `pdk test unit` interactive by default [\#748](https://github.com/puppetlabs/pdk/pull/748) ([rodjek](https://github.com/rodjek))
+- \(PDK-1047\) Add --add-tests to pdk convert [\#746](https://github.com/puppetlabs/pdk/pull/746) ([rodjek](https://github.com/rodjek))
+
+**Merged pull requests:**
+
+- \(fixup\) Fix Bundle CLI lazy load [\#767](https://github.com/puppetlabs/pdk/pull/767) ([glennsarti](https://github.com/glennsarti))
+- \(fixup\) Missing require from lazy load PR [\#766](https://github.com/puppetlabs/pdk/pull/766) ([rodjek](https://github.com/rodjek))
+- \(maint\) Loosen tests for puppet-dev [\#765](https://github.com/puppetlabs/pdk/pull/765) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-680\) Update package tests for interactive `pdk test unit` [\#756](https://github.com/puppetlabs/pdk/pull/756) ([rodjek](https://github.com/rodjek))
+- \(maint\) - Add new utility method for fixtures dir [\#755](https://github.com/puppetlabs/pdk/pull/755) ([logicminds](https://github.com/logicminds))
+- \(maint\) Lazy load dependencies [\#754](https://github.com/puppetlabs/pdk/pull/754) ([rodjek](https://github.com/rodjek))
+- \(maint\) - Allow no output when reading puppet\_from\_opts [\#753](https://github.com/puppetlabs/pdk/pull/753) ([logicminds](https://github.com/logicminds))
+- \(maint\) Refactors method to use block assignment [\#752](https://github.com/puppetlabs/pdk/pull/752) ([logicminds](https://github.com/logicminds))
+- \(maint\) Add CODEOWNERS file [\#751](https://github.com/puppetlabs/pdk/pull/751) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1367\) Deprecation warning for Puppet \< 5.0.0 [\#747](https://github.com/puppetlabs/pdk/pull/747) ([rodjek](https://github.com/rodjek))
+- \(PDK-1112\) Create json schema to validate pdk config file [\#742](https://github.com/puppetlabs/pdk/pull/742) ([glennsarti](https://github.com/glennsarti))
+- \(MAINT\) Bump version to 1.14.0.pre [\#741](https://github.com/puppetlabs/pdk/pull/741) ([scotje](https://github.com/scotje))
+
 ## [v1.13.0](https://github.com/puppetlabs/pdk/tree/v1.13.0) (2019-08-29)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.12.0...v1.13.0)
 
