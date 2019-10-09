@@ -1,3 +1,4 @@
+require 'pdk/util'
 require 'pdk/util/filesystem'
 
 module PDK
