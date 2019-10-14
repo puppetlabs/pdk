@@ -13,6 +13,7 @@ require 'pdk/report'
 require 'pdk/util/version'
 require 'pdk/util/puppet_version'
 require 'pdk/util/filesystem'
+require 'pdk/version'
 
 class Cri::Command::CriExitException
   def initialize(is_error:)
