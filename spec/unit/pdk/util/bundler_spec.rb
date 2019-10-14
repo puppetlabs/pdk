@@ -6,8 +6,8 @@ RSpec.describe PDK::Util::Bundler do
     # Default to non-package install
     include_context 'not packaged install'
 
-    let(:gemfile) { '/Gemfile' }
-    let(:gemfile_lock) { "#{gemfile}.lock" }
+    let(:gemfile) { File.join(FIXTURES_DIR, 'module_gemfile') }
+    let(:gemfile_lock) { File.join(FIXTURES_DIR, 'module_gemfile_lockfile') }
     let(:bundle_helper) do
       instance_double(PDK::Util::Bundler::BundleHelper, gemfile: gemfile, gemfile?: true, gemfile_lock: gemfile_lock)
     end

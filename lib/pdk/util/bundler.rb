@@ -189,7 +189,6 @@ module PDK
 
         def install!(gem_overrides = {})
           require 'pdk/util/ruby_version'
-
           argv = ['install', "--gemfile=#{gemfile}"]
           argv << '-j4' unless Gem.win_platform? && Gem::Version.new(PDK::Util::RubyVersion.active_ruby_version) < Gem::Version.new('2.3.5')
 

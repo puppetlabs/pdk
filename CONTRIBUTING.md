@@ -48,6 +48,15 @@ Runs Ruby style checks. Use `rake rubocop:auto_correct` to fix the easy ones.
 
 Runs acceptance tests on the current pdk code. These tests are executed on commits and pull requests to this repo using both travis and appveyor.
 
+## Performance testing
+Performance testing is new and there are not many tests as a result.  If you are improving a function for performance
+we suggest you create a performance based test before refactoring.  Your initial test should be set to a known performance number with a 10% margin of error, even if it is really bad. 
+
+`perform_under(1000).ms`
+
+Later, when you are testing you can set your target performance number and refactor until you have acheived your goal. 
+
+Performance tests should be created under `spec/performance`.
 # Testing packages
 
 The package-testing/ folder contains files for testing built packages of pdk. This is for Puppet's packaging CI, so contributors outside of Puppet, Inc. don't need to worry about executing it. It uses [beaker](https://github.com/puppetlabs/beaker) to provision a VM, fetch and install a pdk installation package, and then run the acceptance tests on that VM.
