@@ -62,7 +62,7 @@ build-iPhoneSimulator/
 /tmp/
 /vendor/gems/
 Gemfile.local
-
+spec/fixtures/.bundle/
 # ignore bundler generated binstubs, but keep setup/console scripts
 /bin/*
 !/bin/setup

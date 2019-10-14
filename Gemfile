@@ -36,6 +36,7 @@ group :test do
   gem 'parser', '~> 2.5.1.2'
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'
+  gem 'rspec-benchmark'
   gem 'rspec-xsd'
   gem 'rubocop', '~> 0.57.2'
   gem 'rubocop-rspec', '~> 1.27.0'
