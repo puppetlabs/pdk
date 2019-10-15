@@ -38,8 +38,11 @@ module PDK
           case data
           when %r{^### Changed}
             current_version_map[0] += 1
+            current_version_map[1] = 0
+            current_version_map[2] = 0
           when %r{^### Added}
             current_version_map[1] += 1
+            current_version_map[2] = 0
           when %r{^### Fixed}
             current_version_map[2] += 1
           else
