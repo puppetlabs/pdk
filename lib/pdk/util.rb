@@ -6,6 +6,8 @@ require 'pdk/util/windows'
 module PDK
   module Util
     autoload :Filesystem, 'pdk/util/filesystem'
+    autoload :Version, 'pdk/util/version'
+    autoload :PuppetVersion, 'pdk/util/puppet_version'
 
     MODULE_FOLDERS = %w[
       manifests
