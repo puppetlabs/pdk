@@ -30,7 +30,6 @@ end
 
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'tempfile'
-require 'json'
 
 # automatically load any shared examples or contexts
 Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
