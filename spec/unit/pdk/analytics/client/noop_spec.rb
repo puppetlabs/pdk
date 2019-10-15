@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/analytics/client/noop'
 
 describe PDK::Analytics::Client::Noop do
   subject(:client) { described_class.new(options) }
