@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'securerandom'
+require 'pdk/analytics'
 
 describe PDK::Analytics do
   let(:default_config) { {} }

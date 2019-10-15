@@ -1,13 +1,7 @@
-require 'pdk/analytics/client/google_analytics'
-require 'pdk/analytics/client/noop'
+require 'pdk'
 
 module PDK
   def self.analytics
-    require 'pdk/config'
-    require 'pdk/logger'
-    require 'pdk/util'
-    require 'pdk/version'
-
     @analytics ||= PDK::Analytics.build_client(
       logger:        PDK.logger,
       disabled:      ENV['PDK_DISABLE_ANALYTICS'] || PDK.config.user['analytics']['disabled'],
@@ -21,10 +15,12 @@ module PDK
   end
 
   module Analytics
-    CLIENTS = {
-      noop:             Client::Noop,
-      google_analytics: Client::GoogleAnalytics,
-    }.freeze
+    autoload :Util, 'pdk/analytics/util'
+
+    module Client
+      autoload :Noop, 'pdk/analytics/client/noop'
+      autoload :GoogleAnalytics, 'pdk/analytics/client/google_analytics'
+    end
 
     def self.build_client(opts = {})
       opts[:logger] ||= ::Logger.new(STDERR)
@@ -32,13 +28,14 @@ module PDK
 
       if opts[:disabled]
         opts[:logger].debug 'Analytics opt-out is set, analytics will be disabled'
-        CLIENTS[:noop].new(opts)
-      else
-        CLIENTS[opts[:client]].new(opts)
+        opts[:client] = :noop
       end
+
+      client_const = opts[:client].to_s.split('_').map(&:capitalize).join
+      PDK::Analytics::Client.const_get(client_const).new(opts)
     rescue StandardError => e
       opts[:logger].debug "Failed to initialize analytics client, analytics will be disabled: #{e}"
-      CLIENTS[:noop].new(opts)
+      PDK::Analytics::Client::Noop.new(opts)
     end
   end
 end
