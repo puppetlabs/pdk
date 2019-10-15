@@ -108,6 +108,7 @@ module PDK
           raise ArgumentError, _('Invalid JSON in metadata.json: %{msg}') % { msg: e.message }
         end
 
+        require 'pdk/util'
         data['template-url'] = PDK::Util::TemplateURI.default_template_uri.metadata_format if PDK::Util.package_install? && data['template-url'] == PDK::Util::TemplateURI::PACKAGED_TEMPLATE_KEYWORD
         new(data)
       end
