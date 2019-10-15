@@ -13,7 +13,6 @@ require 'pdk/report'
 require 'pdk/util/version'
 require 'pdk/util/puppet_version'
 require 'pdk/util/filesystem'
-require 'pdk/version'
 
 class Cri::Command::CriExitException
   def initialize(is_error:)
@@ -116,6 +115,7 @@ module PDK::CLI
     default_subcommand 'help'
 
     flag nil, :version, _('Show version of pdk.') do |_, _|
+      require 'pdk/version'
       puts PDK::Util::Version.version_string
       exit 0
     end
