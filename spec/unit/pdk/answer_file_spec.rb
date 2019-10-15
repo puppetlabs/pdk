@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'stringio'
+require 'pdk/answer_file'
 
 shared_context 'a valid answer file' do
   subject(:answer_file) { described_class.new }

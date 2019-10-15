@@ -5,6 +5,8 @@ require 'pdk/util/windows'
 
 module PDK
   module Util
+    autoload :Filesystem, 'pdk/util/filesystem'
+
     MODULE_FOLDERS = %w[
       manifests
       lib
