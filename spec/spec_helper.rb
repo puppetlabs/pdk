@@ -29,8 +29,6 @@ if ENV['COVERAGE'] == 'yes'
 end
 
 $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
-require 'pdk'
-require 'pdk/cli'
 require 'tempfile'
 require 'json'
 
@@ -50,6 +48,7 @@ RSpec.shared_context :stubbed_logger do
 end
 
 RSpec.shared_context :stubbed_analytics do
+  require 'pdk/analytics'
   let(:analytics) { PDK::Analytics::Client::Noop.new(logger: logger) }
 
   before(:each) do |example|
@@ -67,6 +66,7 @@ RSpec.configure do |c|
   c.include_context :stubbed_analytics
 
   c.before(:suite) do
+    require 'yaml'
     analytics_config = Tempfile.new('analytics.yml')
     analytics_config.write(YAML.dump(disabled: true))
     analytics_config.close
