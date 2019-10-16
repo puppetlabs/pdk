@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/puppet/puppet_lint'
 
 shared_examples_for 'it sets the common puppet-lint options' do
   it 'sets the output format as JSON' do
