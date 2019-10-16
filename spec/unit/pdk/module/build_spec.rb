@@ -5,10 +5,6 @@ require 'pathspec'
 describe PDK::Module::Build do
   subject { described_class.new(initialize_options) }
 
-  before(:each) do
-    allow(PDK::Test::Unit).to receive(:tear_down)
-  end
-
   let(:initialize_options) { {} }
   let(:root_dir) { Gem.win_platform? ? 'C:/' : '/' }
 
