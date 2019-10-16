@@ -2,6 +2,9 @@ require 'pdk'
 
 module PDK
   module Validate
+    autoload :BaseValidator, 'pdk/validate/base_validator'
+    autoload :MetadataJSONLint, 'pdk/validate/metadata/metadata_json_lint'
+    autoload :MetadataSyntax, 'pdk/validate/metadata/metadata_syntax'
     autoload :MetadataValidator, 'pdk/validate/metadata_validator'
     autoload :PuppetValidator, 'pdk/validate/puppet_validator'
     autoload :RubyValidator, 'pdk/validate/ruby_validator'
