@@ -14,6 +14,7 @@ module PDK
     autoload :Git, 'pdk/util/git'
     autoload :PuppetStrings, 'pdk/util/puppet_strings'
     autoload :PuppetVersion, 'pdk/util/puppet_version'
+    autoload :RubyVersion, 'pdk/util/ruby_version'
     autoload :TemplateURI, 'pdk/util/template_uri'
     autoload :Version, 'pdk/util/version'
 
