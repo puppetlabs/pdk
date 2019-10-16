@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/puppet/puppet_epp'
 
 describe PDK::Validate::PuppetEPP do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }
