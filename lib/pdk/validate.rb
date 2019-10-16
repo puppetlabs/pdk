@@ -10,6 +10,7 @@ module PDK
     autoload :PuppetLint, 'pdk/validate/puppet/puppet_lint'
     autoload :PuppetSyntax, 'pdk/validate/puppet/puppet_syntax'
     autoload :PuppetValidator, 'pdk/validate/puppet_validator'
+    autoload :Rubocop, 'pdk/validate/ruby/rubocop'
     autoload :RubyValidator, 'pdk/validate/ruby_validator'
     autoload :TasksValidator, 'pdk/validate/tasks_validator'
     autoload :YAMLValidator, 'pdk/validate/yaml_validator'
