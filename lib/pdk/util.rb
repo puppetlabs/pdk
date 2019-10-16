@@ -13,6 +13,7 @@ module PDK
     autoload :Filesystem, 'pdk/util/filesystem'
     autoload :Git, 'pdk/util/git'
     autoload :Version, 'pdk/util/version'
+    autoload :PuppetStrings, 'pdk/util/puppet_strings'
     autoload :PuppetVersion, 'pdk/util/puppet_version'
 
     MODULE_FOLDERS = %w[
