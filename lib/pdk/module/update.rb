@@ -1,4 +1,4 @@
-require 'pdk/module/convert'
+require 'pdk'
 
 module PDK
   module Module
