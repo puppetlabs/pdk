@@ -1,4 +1,4 @@
-require 'pdk/config/namespace'
+require 'pdk'
 
 # Due to https://github.com/ruby-json-schema/json-schema/issues/439
 # Windows file paths "appear" as uri's with no host and a schema of drive letter
@@ -22,6 +22,8 @@ module JSON
     end
   end
 end
+
+require 'json-schema'
 
 module PDK
   class Config
@@ -104,7 +106,6 @@ module PDK
       #
       # @return [JSON::Schema]
       def create_empty_schema
-        require 'json-schema'
         ::JSON::Schema.new({}, 'http://json-schema.org/draft-06/schema#')
       end
 
@@ -116,8 +117,6 @@ module PDK
 
         # Create an empty schema by default.
         @document_schema = create_empty_schema
-
-        require 'json-schema'
 
         return @document_schema if @schema_file.nil?
         unless PDK::Util::Filesystem.file?(@schema_file)

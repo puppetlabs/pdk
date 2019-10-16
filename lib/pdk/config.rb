@@ -1,10 +1,4 @@
 require 'pdk'
-require 'pdk/config/errors'
-require 'pdk/config/namespace'
-require 'pdk/config/setting'
-require 'pdk/config/yaml'
-require 'pdk/config/yaml_with_schema'
-require 'pdk/config/json'
 
 module PDK
   def self.config
@@ -12,8 +6,15 @@ module PDK
   end
 
   class Config
+    autoload :JSON, 'pdk/config/json'
+    autoload :JSONSchemaNamespace, 'pdk/config/json_schema_namespace'
+    autoload :LoadError, 'pdk/config/errors'
+    autoload :Namespace, 'pdk/config/namespace'
+    autoload :Setting, 'pdk/config/setting'
+    autoload :YAML, 'pdk/config/yaml'
+    autoload :YAMLWithSchema, 'pdk/config/yaml_with_schema'
+
     def user
-      require 'pdk/answer_file'
       @user ||= PDK::Config::JSON.new('user', file: PDK::Config.user_config_path) do
         mount :module_defaults, PDK::Config::JSON.new(file: PDK.answers.answer_file_path)
 
