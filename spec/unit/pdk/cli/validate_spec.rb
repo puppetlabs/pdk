@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'pdk/validate'
+require 'pdk/cli'
 
 describe 'Running `pdk validate` in a module' do
   subject { PDK::CLI.instance_variable_get(:@validate_cmd) }
@@ -45,12 +45,6 @@ describe 'Running `pdk validate` in a module' do
     end
 
     context 'with --parallel' do
-      let(:spinner) { instance_double('TTY::Spinner::Multi').as_null_object }
-
-      before(:each) do
-        allow(TTY::Spinner::Multi).to receive(:new).and_return(spinner)
-      end
-
       it 'invokes each validator with no report and no options and exits zero' do
         expect(validators).to all(receive(:invoke).and_return(0))
 

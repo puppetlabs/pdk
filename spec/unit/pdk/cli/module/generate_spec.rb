@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli'
 
 describe 'Running pdk module generate' do
   subject { PDK::CLI.instance_variable_get(:@module_generate_cmd) }

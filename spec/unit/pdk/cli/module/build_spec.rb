@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli'
 
 describe 'Running pdk module build' do
   subject { PDK::CLI.instance_variable_get(:@module_build_cmd) }

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli/errors'
 
 describe PDK::CLI::FatalError do # rubocop:disable RSpec/MultipleDescribes
   subject(:error) { described_class.new }

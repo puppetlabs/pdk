@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli'
 
 describe 'PDK::CLI new defined_type' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new defined_type}m) }

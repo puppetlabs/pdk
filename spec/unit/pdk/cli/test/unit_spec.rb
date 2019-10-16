@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'pdk/tests/unit'
+require 'pdk/cli'
 
 describe '`pdk test unit`' do
   subject(:test_unit_cmd) { PDK::CLI.instance_variable_get(:@test_unit_cmd) }

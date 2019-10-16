@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli'
 
 describe 'PDK::CLI update' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk update}m) }
