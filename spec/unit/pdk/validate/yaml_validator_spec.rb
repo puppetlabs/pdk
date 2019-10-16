@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/yaml_validator'
 
 describe PDK::Validate::YAMLValidator do
   let(:yaml_validators) do

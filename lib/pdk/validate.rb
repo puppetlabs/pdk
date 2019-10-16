@@ -21,6 +21,10 @@ module PDK
       autoload :MetadataLint, 'pdk/validate/tasks/metadata_lint'
     end
 
+    class YAML
+      autoload :Syntax, 'pdk/validate/yaml/syntax'
+    end
+
     def self.validators
       @validators ||= [
         MetadataValidator,
