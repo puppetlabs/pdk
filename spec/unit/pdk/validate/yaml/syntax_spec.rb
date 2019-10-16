@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/yaml/syntax'
 
 describe PDK::Validate::YAML::Syntax do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }
