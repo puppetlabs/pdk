@@ -21,6 +21,7 @@ module PDK
     autoload :FatalError, 'pdk/cli/errors'
     autoload :Util, 'pdk/cli/util'
     autoload :Exec, 'pdk/cli/exec'
+    autoload :ExecGroup, 'pdk/cli/exec_group'
   end
 
   module Test
