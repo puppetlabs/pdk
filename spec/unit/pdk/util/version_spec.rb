@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/util/version'
 
 describe PDK::Util::Version do
   context 'Getting the version_string' do
