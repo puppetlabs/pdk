@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/report/event'
 
 describe PDK::Report::Event do
   subject(:junit_event) { event.to_junit }
