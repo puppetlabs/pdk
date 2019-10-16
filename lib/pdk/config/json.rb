@@ -1,4 +1,4 @@
-require 'pdk/config/namespace'
+require 'pdk'
 
 module PDK
   class Config
