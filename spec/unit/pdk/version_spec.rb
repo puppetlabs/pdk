@@ -1,5 +1,5 @@
 require 'spec_helper'
-load File.expand_path(File.join(__FILE__, '..', '..', '..', '..', 'lib', 'pdk', 'version.rb'))
+require 'pdk/version'
 
 describe 'PDK version string' do
   it 'has major minor and patch numbers' do
