@@ -2,22 +2,6 @@ require 'pdk'
 autoload :JSON, 'json'
 
 module PDK
-  # Singleton accessor to the current answer file being used by the PDK.
-  #
-  # @return [PDK::AnswerFile] The AnswerFile instance currently being used by
-  #   the PDK.
-  def self.answers
-    @answer_file ||= PDK::AnswerFile.new
-  end
-
-  # Specify the path to a custom answer file that the PDK should use.
-  #
-  # @param path [String] A path on disk to the file where the PDK should store
-  #   answers to interactive questions.
-  def self.answer_file=(path)
-    @answer_file = PDK::AnswerFile.new(path)
-  end
-
   class AnswerFile
     attr_reader :answers
     attr_reader :answer_file_path

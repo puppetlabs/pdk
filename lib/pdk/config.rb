@@ -1,3 +1,4 @@
+require 'pdk'
 require 'pdk/config/errors'
 require 'pdk/config/namespace'
 require 'pdk/config/setting'
