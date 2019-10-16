@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/puppet_validator'
 
 describe PDK::Validate::PuppetValidator do
   let(:report) { PDK::Report.new }

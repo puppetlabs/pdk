@@ -1,7 +1,4 @@
-require 'pdk/validate/base_validator'
-require 'pdk/validate/puppet/puppet_lint'
-require 'pdk/validate/puppet/puppet_syntax'
-require 'pdk/validate/puppet/puppet_epp'
+require 'pdk'
 
 module PDK
   module Validate
