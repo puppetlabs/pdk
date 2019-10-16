@@ -1,5 +1,7 @@
 require 'pdk'
 
+autoload :Logger, 'logger'
+
 module PDK
   def self.analytics
     @analytics ||= PDK::Analytics.build_client(
