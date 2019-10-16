@@ -89,7 +89,7 @@ module PDK
       def self.all_objects
         require 'pdk/generate'
 
-        generators = PDK::Generate::GENERATORS.select do |gen|
+        generators = PDK::Generate.generators.select do |gen|
           gen.respond_to?(:puppet_strings_type) && !gen.puppet_strings_type.nil?
         end
 
@@ -114,7 +114,7 @@ module PDK
       def self.find_generator(type)
         require 'pdk/generate'
 
-        PDK::Generate::GENERATORS.find do |gen|
+        PDK::Generate.generators.find do |gen|
           gen.respond_to?(:puppet_strings_type) && gen.puppet_strings_type == type
         end
       end

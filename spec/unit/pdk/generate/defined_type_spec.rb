@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/generate/defined_type'
 
 describe PDK::Generate::DefinedType do
   subject(:generator) { described_class.new(module_dir, given_name, options) }
