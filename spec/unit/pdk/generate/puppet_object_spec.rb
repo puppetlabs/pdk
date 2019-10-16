@@ -1,4 +1,6 @@
 require 'spec_helper'
+require 'pdk/generate/puppet_object'
+require 'addressable'
 
 shared_context :with_puppet_object_module_metadata do
   let(:module_metadata) { '{"name": "testuser-test_module"}' }
