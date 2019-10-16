@@ -12,9 +12,10 @@ module PDK
     autoload :Bundler, 'pdk/util/bundler'
     autoload :Filesystem, 'pdk/util/filesystem'
     autoload :Git, 'pdk/util/git'
-    autoload :Version, 'pdk/util/version'
     autoload :PuppetStrings, 'pdk/util/puppet_strings'
     autoload :PuppetVersion, 'pdk/util/puppet_version'
+    autoload :TemplateURI, 'pdk/util/template_uri'
+    autoload :Version, 'pdk/util/version'
 
     MODULE_FOLDERS = %w[
       manifests
