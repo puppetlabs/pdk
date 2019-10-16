@@ -1,11 +1,13 @@
-require 'pdk/validate/metadata_validator'
-require 'pdk/validate/puppet_validator'
-require 'pdk/validate/ruby_validator'
-require 'pdk/validate/tasks_validator'
-require 'pdk/validate/yaml_validator'
+require 'pdk'
 
 module PDK
   module Validate
+    autoload :MetadataValidator, 'pdk/validate/metadata_validator'
+    autoload :PuppetValidator, 'pdk/validate/puppet_validator'
+    autoload :RubyValidator, 'pdk/validate/ruby_validator'
+    autoload :TasksValidator, 'pdk/validate/tasks_validator'
+    autoload :YAMLValidator, 'pdk/validate/yaml_validator'
+
     def self.validators
       @validators ||= [
         MetadataValidator,
