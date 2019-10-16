@@ -1,10 +1,6 @@
 require 'logger'
 
 module PDK
-  def self.logger
-    @logger ||= PDK::Logger.new
-  end
-
   class Logger < ::Logger
     WRAP_COLUMN_LIMIT = 78
 

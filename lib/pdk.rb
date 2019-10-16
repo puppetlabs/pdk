@@ -1,11 +1,11 @@
 require 'pdk/i18n'
-require 'pdk/logger'
 
 module PDK
   autoload :Analytics, 'pdk/analytics'
   autoload :AnswerFile, 'pdk/answer_file'
   autoload :Config, 'pdk/config'
   autoload :Generate, 'pdk/generate'
+  autoload :Logger, 'pdk/logger'
   autoload :Report, 'pdk/report'
   autoload :TEMPLATE_REF, 'pdk/version'
   autoload :Util, 'pdk/util'
@@ -34,5 +34,9 @@ module PDK
   #   answers to interactive questions.
   def self.answer_file=(path)
     @answer_file = PDK::AnswerFile.new(path)
+  end
+
+  def self.logger
+    @logger ||= PDK::Logger.new
   end
 end
