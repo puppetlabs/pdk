@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli/util/command_redirector'
 
 describe PDK::CLI::Util::CommandRedirector do
   subject(:command_redirector) do
