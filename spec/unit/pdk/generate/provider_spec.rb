@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'pdk/generate/provider'
 
+# rubocop:disable RSpec/EmptyExampleGroup
 describe PDK::Generate::Provider do
   subject(:generator) { described_class.new(module_dir, given_name, options) }
 
@@ -8,5 +9,6 @@ describe PDK::Generate::Provider do
   let(:options) { {} }
   let(:given_name) { 'test_provider' }
 
-  # TODO Write some tests!!
+  # TODO: Write some tests!!
 end
+# rubocop:enable RSpec/EmptyExampleGroup

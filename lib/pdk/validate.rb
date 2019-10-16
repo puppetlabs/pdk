@@ -2,7 +2,7 @@ require 'pdk'
 
 module PDK
   module Validate
-    # TODO Fix validator namespacing
+    # TODO: Fix validator namespacing
     autoload :BaseValidator, 'pdk/validate/base_validator'
     autoload :MetadataJSONLint, 'pdk/validate/metadata/metadata_json_lint'
     autoload :MetadataSyntax, 'pdk/validate/metadata/metadata_syntax'

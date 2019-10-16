@@ -14,8 +14,8 @@ module PDK
   autoload :Validate, 'pdk/validate'
   autoload :VERSION, 'pdk/version'
 
-  # TODO - Refactor backend code to not raise CLI errors or use CLI util
-  #        methods.
+  # TODO: Refactor backend code to not raise CLI errors or use CLI util
+  #       methods.
   module CLI
     autoload :ExitWithError, 'pdk/cli/errors'
     autoload :FatalError, 'pdk/cli/errors'
