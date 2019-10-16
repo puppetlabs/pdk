@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/tasks_validator'
 
 describe PDK::Validate::TasksValidator do
   let(:report) { PDK::Report.new }
