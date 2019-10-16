@@ -115,7 +115,6 @@ module PDK::CLI
     default_subcommand 'help'
 
     flag nil, :version, _('Show version of pdk.') do |_, _|
-      require 'pdk/version'
       puts PDK::Util::Version.version_string
       exit 0
     end
@@ -156,6 +155,7 @@ module PDK::CLI
   require 'pdk/cli/validate'
   require 'pdk/cli/module'
   require 'pdk/cli/console'
+  require 'pdk/version'
 
   @base_cmd.add_command Cri::Command.new_basic_help
 end
