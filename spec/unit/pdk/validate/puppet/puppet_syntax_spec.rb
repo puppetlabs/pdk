@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/puppet/puppet_syntax'
 
 describe PDK::Validate::PuppetSyntax do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }
