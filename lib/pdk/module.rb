@@ -1,5 +1,12 @@
 module PDK
   module Module
+    autoload :Build, 'pdk/module/build'
+    autoload :Convert, 'pdk/module/convert'
+    autoload :Metadata, 'pdk/module/metadata'
+    autoload :TemplateDir, 'pdk/module/templatedir'
+    autoload :UpdateManager, 'pdk/module/update_manager'
+    autoload :Update, 'pdk/module/update'
+
     DEFAULT_IGNORED = [
       '/pkg/',
       '~*',

@@ -6,6 +6,7 @@ module PDK
   autoload :Config, 'pdk/config'
   autoload :Generate, 'pdk/generate'
   autoload :Logger, 'pdk/logger'
+  autoload :Module, 'pdk/module'
   autoload :Report, 'pdk/report'
   autoload :TEMPLATE_REF, 'pdk/version'
   autoload :Util, 'pdk/util'
