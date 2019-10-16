@@ -1,4 +1,5 @@
 require 'ostruct'
+require 'pdk'
 
 module PDK
   class TemplateFile < OpenStruct

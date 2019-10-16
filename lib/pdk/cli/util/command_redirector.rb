@@ -1,3 +1,4 @@
+require 'pdk'
 require 'tty-prompt'
 
 module PDK

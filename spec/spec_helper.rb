@@ -47,7 +47,6 @@ RSpec.shared_context :stubbed_logger do
 end
 
 RSpec.shared_context :stubbed_analytics do
-  require 'pdk/analytics'
   let(:analytics) { PDK::Analytics::Client::Noop.new(logger: logger) }
 
   before(:each) do |example|

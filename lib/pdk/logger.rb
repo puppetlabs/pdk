@@ -1,4 +1,5 @@
 require 'logger'
+require 'pdk'
 
 module PDK
   class Logger < ::Logger
