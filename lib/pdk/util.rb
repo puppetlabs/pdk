@@ -16,6 +16,7 @@ module PDK
     autoload :PuppetVersion, 'pdk/util/puppet_version'
     autoload :RubyVersion, 'pdk/util/ruby_version'
     autoload :TemplateURI, 'pdk/util/template_uri'
+    autoload :VendoredFile, 'pdk/util/vendored_file'
     autoload :Version, 'pdk/util/version'
 
     MODULE_FOLDERS = %w[
