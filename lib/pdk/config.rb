@@ -8,6 +8,7 @@ module PDK
   class Config
     autoload :JSON, 'pdk/config/json'
     autoload :JSONSchemaNamespace, 'pdk/config/json_schema_namespace'
+    autoload :JSONSchemaSetting, 'pdk/config/json_schema_setting'
     autoload :LoadError, 'pdk/config/errors'
     autoload :Namespace, 'pdk/config/namespace'
     autoload :Setting, 'pdk/config/setting'
