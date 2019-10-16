@@ -46,4 +46,8 @@ module PDK
   def self.logger
     @logger ||= PDK::Logger.new
   end
+
+  def self.config
+    @config ||= PDK::Config.new
+  end
 end

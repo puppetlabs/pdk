@@ -1,10 +1,6 @@
 require 'pdk'
 
 module PDK
-  def self.config
-    @config ||= PDK::Config.new
-  end
-
   class Config
     autoload :JSON, 'pdk/config/json'
     autoload :JSONSchemaNamespace, 'pdk/config/json_schema_namespace'
