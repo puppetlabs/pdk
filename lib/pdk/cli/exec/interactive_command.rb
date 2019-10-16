@@ -1,4 +1,4 @@
-require 'pdk/cli/exec/command'
+require 'pdk'
 
 module PDK
   module CLI
