@@ -1,4 +1,4 @@
-require 'pdk/generate/puppet_object'
+require 'pdk'
 
 module PDK
   module Generate
