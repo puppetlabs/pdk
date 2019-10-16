@@ -9,7 +9,9 @@ autoload :Pathname, 'pathname'
 
 module PDK
   module Util
+    autoload :Bundler, 'pdk/util/bundler'
     autoload :Filesystem, 'pdk/util/filesystem'
+    autoload :Git, 'pdk/util/git'
     autoload :Version, 'pdk/util/version'
     autoload :PuppetVersion, 'pdk/util/puppet_version'
 

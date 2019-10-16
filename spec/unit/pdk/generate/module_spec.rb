@@ -1,6 +1,8 @@
 require 'spec_helper'
 require 'tempfile'
 require 'stringio'
+require 'tty/test_prompt'
+require 'pdk/generate/module'
 
 shared_context 'blank answer file' do
   let(:temp_answer_file) { Tempfile.new('pdk-test-answers') }
