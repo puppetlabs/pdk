@@ -1,4 +1,4 @@
-require 'pdk/config/json_schema_namespace'
+require 'pdk'
 
 module PDK
   class Config
