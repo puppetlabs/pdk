@@ -1,3 +1,5 @@
+require 'pdk'
+
 module PDK
   module Test
     class Unit

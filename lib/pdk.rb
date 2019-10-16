@@ -20,6 +20,11 @@ module PDK
     autoload :ExitWithError, 'pdk/cli/errors'
     autoload :FatalError, 'pdk/cli/errors'
     autoload :Util, 'pdk/cli/util'
+    autoload :Exec, 'pdk/cli/exec'
+  end
+
+  module Test
+    autoload :Unit, 'pdk/tests/unit'
   end
 
   # Singleton accessor to the current answer file being used by the PDK.
