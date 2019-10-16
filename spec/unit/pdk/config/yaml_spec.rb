@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/config/yaml'
 
 describe PDK::Config::YAML do
   subject(:yaml_config) { described_class.new(file: tempfile) }
