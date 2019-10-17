@@ -11,7 +11,7 @@ environment:
     #   BUNDLE_JOBS: 4
     - RUBY_VERSION: 24-x64
       USE_MSYS: true
-      SUITES: "acceptance:local"
+      SUITES: "acceptance:local_parallel"
       BUNDLE_JOBS: 4
     - RUBY_VERSION: 24-x64
       USE_MSYS: true

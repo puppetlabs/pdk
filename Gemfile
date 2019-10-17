@@ -33,6 +33,7 @@ group :test do
     gem 'rubyzip', '< 2.0.0'
   end
   gem 'parallel', '= 1.13.0'
+  gem 'parallel_tests', '~> 2.24.0'
   gem 'parser', '~> 2.5.1.2'
   gem 'rake', '~> 10.0'
   gem 'rspec', '~> 3.0'

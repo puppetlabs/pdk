@@ -57,6 +57,13 @@ namespace :acceptance do
     t.pattern = 'spec/acceptance/**.rb'
   end
   task local: [:binstubs]
+
+  task local_parallel: [:binstubs] do
+    require 'parallel_tests'
+
+    specs = Rake::FileList['spec/acceptance/**/*_spec.rb'].to_a
+    ParallelTests::CLI.new.run(['-t', 'rspec'] + specs)
+  end
 end
 
 RuboCop::RakeTask.new(:rubocop) do |task|

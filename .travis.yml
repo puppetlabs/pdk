@@ -17,7 +17,7 @@ matrix:
     - rvm: 2.4.3
       env: CHECK=rubocop
     - rvm: 2.4.3
-      env: CHECK=acceptance:local
+      env: CHECK=acceptance:local_parallel
     - rvm: 2.4.3
       env: CHECK=spec:coverage
     - rvm: 2.4.3
