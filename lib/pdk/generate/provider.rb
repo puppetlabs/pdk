@@ -21,7 +21,7 @@ module PDK
 
       def raise_precondition_error(error)
         raise PDK::CLI::ExitWithError, _('%{error}: Creating a provider needs some local configuration in your module.' \
-          ' Please follow the docs at https://github.com/puppetlabs/puppet-resource_api#getting-started.') % { error: error }
+          ' Please follow the docs at https://puppet.com/docs/puppet/latest/create_types_and_providers_resource_api.html.') % { error: error }
       end
 
       def check_preconditions
