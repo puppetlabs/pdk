@@ -2,6 +2,7 @@ module PDK
   module Util
     module Filesystem
       def write_file(path, content)
+        raise ArgumentError, "#{path} is empty" unless content
         raise ArgumentError unless path.is_a?(String) || path.respond_to?(:to_path)
 
         # Harmonize newlines across platforms.
