@@ -1,4 +1,5 @@
 require 'cri'
+require 'tty-prompt'
 
 require 'pdk'
 require 'pdk/cli/errors'

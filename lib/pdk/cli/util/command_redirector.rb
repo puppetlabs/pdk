@@ -1,5 +1,5 @@
-require 'pdk'
 require 'tty-prompt'
+require 'pdk'
 
 module PDK
   module CLI
