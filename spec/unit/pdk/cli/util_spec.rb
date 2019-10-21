@@ -27,15 +27,10 @@ describe PDK::CLI::Util do
       context 'when passed :check_module_layout => true' do
         let(:options) { { check_module_layout: true } }
 
-        %w[manifests lib tasks facts.d functions types].each do |dir|
-          context "when the current directory contains a '#{dir}' directory" do
-            before(:each) do
-              allow(File).to receive(:directory?).with(dir).and_return(true)
-            end
-
-            it 'does not raise an error' do
-              expect { ensure_in_module }.not_to raise_error
-            end
+        context 'when the current directory does contain a module layout' do
+          it 'raises an error' do
+            allow(PDK::Util).to receive(:in_module_root?).and_return(true)
+            expect { ensure_in_module }.not_to raise_error
           end
         end
 

@@ -37,6 +37,7 @@ Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
 analytics_config = nil
 
 FIXTURES_DIR = File.join(__dir__, 'fixtures')
+EMPTY_MODULE_ROOT = File.join(FIXTURES_DIR, 'module_root')
 
 RSpec.shared_context :stubbed_logger do
   let(:logger) { instance_double('PDK::Logger').as_null_object }

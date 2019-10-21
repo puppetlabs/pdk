@@ -85,6 +85,10 @@ describe PDK::Report do
           ]
         end
 
+        before(:each) do
+          allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
+        end
+
         it 'prints the coverage report last' do
           expect(text_report.split("\n")[-1]).to eq('coverage report text')
         end

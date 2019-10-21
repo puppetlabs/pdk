@@ -36,6 +36,7 @@ describe PDK::Validate::PuppetValidator do
       context 'and the PuppetLint validator succeeds' do
         before(:each) do
           allow(PDK::Validate::PuppetLint).to receive(:invoke).with(report, anything).and_return(0)
+          allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
         end
 
         it 'returns 0' do

@@ -360,6 +360,51 @@ describe PDK::Util do
     end
   end
 
+  describe '.in_module_root?' do
+    subject { described_class.module_root }
+
+    # We use NUL here because that should never be a valid directory name. But it will work with RSpec mocking.
+    let(:test_path) { '\x00path/test' }
+
+    before(:each) do
+      allow(PDK::Util::Filesystem).to receive(:directory?).and_call_original
+    end
+
+    # Directories which indicate a module root
+    %w[
+      manifests
+      lib/puppet
+      lib/puppet_x
+      lib/facter
+      tasks
+      facts.d
+      functions
+      types
+    ].each do |testcase|
+      it "detects #{testcase} as being in the root of a module" do
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
+        expect(described_class.in_module_root?(test_path)).to eq(true)
+      end
+    end
+
+    # Directories which do not indicate a module root
+    %w[
+      lib
+      Boltdir
+      puppet
+    ].each do |testcase|
+      it "detects #{testcase} as not being in the root of a module" do
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
+        expect(described_class.in_module_root?(test_path)).to eq(false)
+      end
+    end
+
+    it 'uses the current directory if a directory is not specified' do
+      expect(PDK::Util::Filesystem).to receive(:directory?) { |path| expect(path).to start_with(Dir.pwd) }.at_least(:once)
+      described_class.in_module_root?
+    end
+  end
+
   describe '.find_first_json_in' do
     it 'returns JSON from start of a string' do
       text = '{"version":"3.6.0", "examples":[]}bar'
@@ -421,6 +466,7 @@ describe PDK::Util do
     subject(:result) { described_class.module_metadata }
 
     before(:each) do
+      allow(described_class).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
       allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(described_class.module_root, 'metadata.json')).and_return(mock_metadata)
     end
 

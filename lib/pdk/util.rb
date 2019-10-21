@@ -21,7 +21,9 @@ module PDK
 
     MODULE_FOLDERS = %w[
       manifests
-      lib
+      lib/puppet
+      lib/puppet_x
+      lib/facter
       tasks
       facts.d
       functions
@@ -157,12 +159,13 @@ module PDK
     module_function :module_fixtures_dir
 
     # Returns true or false depending on if any of the common directories in a module
-    # are found in the current directory
+    # are found in the specified directory. If a directory is not specified, the current
+    # working directory is used.
     #
     # @return [boolean] True if any folders from MODULE_FOLDERS are found in the current dir,
     #   false otherwise.
-    def in_module_root?
-      PDK::Util::MODULE_FOLDERS.any? { |dir| File.directory?(dir) }
+    def in_module_root?(path = Dir.pwd)
+      PDK::Util::MODULE_FOLDERS.any? { |dir| PDK::Util::Filesystem.directory?(File.join(path, dir)) }
     end
     module_function :in_module_root?
 
