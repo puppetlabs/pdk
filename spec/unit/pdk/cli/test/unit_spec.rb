@@ -283,6 +283,7 @@ describe '`pdk test unit`' do
       allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev).and_return(nil)
       allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
       allow(PDK::CLI::Util).to receive(:module_version_check)
+      allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
     end
 
     it 'activates puppet github source' do
@@ -346,6 +347,7 @@ describe '`pdk test unit`' do
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including(:'puppet-version' => puppet_version)).and_return(puppet_env)
       allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
       allow(PDK::CLI::Util).to receive(:module_version_check)
+      allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
     end
 
     it 'activates resolved puppet version' do
@@ -391,6 +393,7 @@ describe '`pdk test unit`' do
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including(:'pe-version' => pe_version)).and_return(puppet_env)
       allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
       allow(PDK::CLI::Util).to receive(:module_version_check)
+      allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
     end
 
     it 'activates resolved puppet version' do

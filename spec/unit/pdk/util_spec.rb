@@ -466,6 +466,7 @@ describe PDK::Util do
     subject(:result) { described_class.module_metadata }
 
     before(:each) do
+      allow(described_class).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
       allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(described_class.module_root, 'metadata.json')).and_return(mock_metadata)
     end
 

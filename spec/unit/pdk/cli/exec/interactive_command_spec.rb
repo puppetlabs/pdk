@@ -105,6 +105,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
     context 'when running in the :module context' do
       before(:each) do
         command.context = :module
+        allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
       end
 
       it 'changes into the modroot path and then returns to original pwd' do
@@ -143,6 +144,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
     context 'when running in the :pwd context' do
       before(:each) do
         command.context = :pwd
+        allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
       end
 
       it 'does not change out of pwd' do

@@ -29,6 +29,7 @@ describe PDK::Validate::BaseValidator do
     context 'when validating less than 1000 targets' do
       before(:each) do
         allow(described_class).to receive(:parse_targets).and_return([(1..999).map(&:to_s), [], []])
+        allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
       end
 
       it 'executes the validator once' do
@@ -51,6 +52,7 @@ describe PDK::Validate::BaseValidator do
     context 'when validating more than 1000 targets' do
       before(:each) do
         allow(described_class).to receive(:parse_targets).and_return([(1..1001).map(&:to_s), [], []])
+        allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
       end
 
       it 'executes the validator for each block of up to 1000 targets' do
