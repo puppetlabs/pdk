@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/metadata_validator'
 
 describe PDK::Validate::MetadataValidator do
   let(:report) { PDK::Report.new }

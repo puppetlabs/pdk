@@ -1,3 +1,5 @@
+require 'pdk'
+
 module PDK
   class Report
     class Event

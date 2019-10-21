@@ -1,5 +1,4 @@
-require 'pdk/validate/base_validator'
-require 'pdk/validate/yaml/syntax'
+require 'pdk'
 
 module PDK
   module Validate

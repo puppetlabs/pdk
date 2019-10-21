@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli'
 
 describe PDK::CLI do
   context 'when invoking help' do

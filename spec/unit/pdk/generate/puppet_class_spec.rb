@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/generate/puppet_class'
 
 shared_examples 'it generates class template data' do
   it 'includes the class name in the template data' do

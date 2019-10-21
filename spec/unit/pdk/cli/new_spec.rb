@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/cli'
 
 describe 'Running `pdk new`' do
   subject { PDK::CLI.instance_variable_get(:@new_cmd) }

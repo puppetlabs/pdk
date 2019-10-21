@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/config/setting'
 
 describe PDK::Config::Setting do
   subject(:namespace) { PDK::Config::Namespace.new('rspec') }

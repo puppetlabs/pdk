@@ -1,10 +1,24 @@
+require 'pdk'
+
 # PDK::Util::Windows can not be lazy loaded because it conditionally requires
 # other files on Windows only. This can probably be fixed up with a later
 # refactoring.
 require 'pdk/util/windows'
 
+autoload :Pathname, 'pathname'
+
 module PDK
   module Util
+    autoload :Bundler, 'pdk/util/bundler'
+    autoload :Filesystem, 'pdk/util/filesystem'
+    autoload :Git, 'pdk/util/git'
+    autoload :PuppetStrings, 'pdk/util/puppet_strings'
+    autoload :PuppetVersion, 'pdk/util/puppet_version'
+    autoload :RubyVersion, 'pdk/util/ruby_version'
+    autoload :TemplateURI, 'pdk/util/template_uri'
+    autoload :VendoredFile, 'pdk/util/vendored_file'
+    autoload :Version, 'pdk/util/version'
+
     MODULE_FOLDERS = %w[
       manifests
       lib

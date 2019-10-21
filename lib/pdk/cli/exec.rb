@@ -1,6 +1,11 @@
+require 'pdk'
+
 module PDK
   module CLI
     module Exec
+      autoload :Command, 'pdk/cli/exec/command'
+      autoload :InteractiveCommand, 'pdk/cli/exec/interactive_command'
+
       def self.execute(*cmd)
         require 'pdk/cli/exec/command'
 

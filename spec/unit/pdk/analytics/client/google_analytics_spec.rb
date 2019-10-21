@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'httpclient'
 require 'concurrent/configuration'
 require 'concurrent/future'
+require 'pdk/analytics/client/google_analytics'
 
 describe PDK::Analytics::Client::GoogleAnalytics do
   subject(:client) { described_class.new(options) }

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/util/template_uri'
 
 describe PDK::Util::TemplateURI do
   subject(:template_uri) do

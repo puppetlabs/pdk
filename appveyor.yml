@@ -25,6 +25,10 @@ environment:
       USE_CYGWIN: true
       SUITES: "spec"
       BUNDLE_JOBS: 1
+    - RUBY_VERSION: 24-x64
+      USE_MSYS: true
+      SUITES: "test_pdk_as_library"
+      BUNDLE_JOBS: 1
 
 install:
   - ps: |

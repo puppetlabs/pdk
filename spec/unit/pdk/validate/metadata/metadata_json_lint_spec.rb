@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/metadata/metadata_json_lint'
 
 describe PDK::Validate::MetadataJSONLint do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }

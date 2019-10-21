@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/generate/task'
 
 describe PDK::Generate::Task do
   subject(:generator) { described_class.new(module_dir, given_name, options) }
@@ -88,6 +89,7 @@ describe PDK::Generate::Task do
 
     before(:each) do
       metadata_file = File.join(module_dir, 'tasks', "#{given_name}.json")
+      allow(File).to receive(:open).and_call_original
       allow(File).to receive(:open).with(metadata_file, 'wb').and_yield(mock_file)
       generator.write_task_metadata
       mock_file.rewind

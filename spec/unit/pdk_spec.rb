@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk'
 
 describe PDK do
   describe '.logger', use_stubbed_logger: false do

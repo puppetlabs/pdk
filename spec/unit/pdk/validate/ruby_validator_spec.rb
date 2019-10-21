@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/ruby_validator'
 
 describe PDK::Validate::RubyValidator do
   let(:report) { PDK::Report.new }

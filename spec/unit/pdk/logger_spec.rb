@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/logger'
 
 describe PDK::Logger do
   subject(:pdk_logger) { described_class.new }

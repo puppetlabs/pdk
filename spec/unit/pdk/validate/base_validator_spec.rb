@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/base_validator'
 
 describe PDK::Validate::BaseValidator do
   context 'a class inheriting from BaseValidator' do

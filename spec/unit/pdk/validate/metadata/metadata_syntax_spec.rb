@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/metadata/metadata_syntax'
 
 describe PDK::Validate::MetadataSyntax do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }

@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'tmpdir'
 require 'stringio'
+require 'pdk/report'
 
 describe PDK::Report do
   %w[junit text].each do |report_format|

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/config/namespace'
 
 def spec_simple_validator
   {

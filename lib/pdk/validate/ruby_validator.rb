@@ -1,5 +1,4 @@
-require 'pdk/validate/base_validator'
-require 'pdk/validate/ruby/rubocop'
+require 'pdk'
 
 module PDK
   module Validate

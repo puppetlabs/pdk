@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/util/filesystem'
 
 describe PDK::Util::Filesystem do
   describe '.read_file' do

@@ -1,8 +1,5 @@
 require 'spec_helper'
-require 'pdk/util/bundler'
-require 'pdk/cli/exec'
-require 'pdk/cli/exec/interactive_command'
-require 'pdk/util/ruby_version'
+require 'pdk/cli'
 
 describe 'pdk console' do
   let(:console_cmd) { PDK::CLI.instance_variable_get(:@console_cmd) }

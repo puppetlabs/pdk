@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'tempfile'
+require 'pdk/config/json'
 
 describe PDK::Config::JSON do
   subject(:json_config) { described_class.new(file: tempfile) }

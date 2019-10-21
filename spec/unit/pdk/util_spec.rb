@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/util'
 
 describe PDK::Util do
   let(:pdk_version) { '1.2.3' }

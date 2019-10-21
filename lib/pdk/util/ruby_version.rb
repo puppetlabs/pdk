@@ -1,3 +1,4 @@
+require 'pdk'
 require 'forwardable'
 
 module PDK

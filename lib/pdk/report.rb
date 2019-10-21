@@ -1,7 +1,9 @@
-require 'pdk/report/event'
+require 'pdk'
 
 module PDK
   class Report
+    autoload :Event, 'pdk/report/event'
+
     # @return [Array<String>] the list of supported report formats.
     def self.formats
       @report_formats ||= %w[junit text].freeze

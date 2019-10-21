@@ -1,18 +1,7 @@
 require 'cri'
 
-require 'pdk/analytics'
+require 'pdk'
 require 'pdk/cli/errors'
-require 'pdk/cli/util'
-require 'pdk/cli/util/command_redirector'
-require 'pdk/cli/util/option_normalizer'
-require 'pdk/cli/util/option_validator'
-require 'pdk/config'
-require 'pdk/i18n'
-require 'pdk/logger'
-require 'pdk/report'
-require 'pdk/util/version'
-require 'pdk/util/puppet_version'
-require 'pdk/util/filesystem'
 
 class Cri::Command::CriExitException
   def initialize(is_error:)
@@ -22,6 +11,8 @@ class Cri::Command::CriExitException
 end
 
 module PDK::CLI
+  autoload :Util, 'pdk/cli/util'
+
   # Attempt to anonymise the raw ARGV array if the command parsing failed.
   #
   # If an item does not start with '-' but is preceeded by an item that does

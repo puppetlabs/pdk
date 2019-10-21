@@ -1,4 +1,4 @@
-require 'pdk/util/filesystem'
+require 'pdk'
 
 module PDK
   module Generate

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate'
 
 describe PDK::Validate do
   include_context :validators

@@ -1,6 +1,12 @@
+require 'pdk'
+
 module PDK
   module CLI
     module Util
+      autoload :CommandRedirector, 'pdk/cli/util/command_redirector'
+      autoload :OptionNormalizer, 'pdk/cli/util/option_normalizer'
+      autoload :OptionValidator, 'pdk/cli/util/option_validator'
+
       # Ensures the calling code is being run from inside a module directory.
       #
       # @param opts [Hash] options to change the behavior of the check logic.

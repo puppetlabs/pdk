@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'rubocop'
 require 'ostruct'
+require 'pdk/validate/ruby/rubocop'
 
 shared_examples_for 'it sets the common rubocop options' do
   it 'sets the output format as JSON' do

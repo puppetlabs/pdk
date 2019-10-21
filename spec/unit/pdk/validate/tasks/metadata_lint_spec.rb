@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/tasks/metadata_lint'
 
 describe PDK::Validate::Tasks::MetadataLint do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }

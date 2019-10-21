@@ -29,6 +29,8 @@ matrix:
       env: CHECK=spec
     - rvm: 2.1.9
       env: CHECK=spec BUNDLER_VERSION=1.17.3
+    - rvm: 2.4.3
+      env: CHECK=test_pdk_as_library
 branches:
   only:
     - master

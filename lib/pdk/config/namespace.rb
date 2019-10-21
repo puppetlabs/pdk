@@ -1,3 +1,5 @@
+require 'pdk'
+
 module PDK
   class Config
     class Namespace

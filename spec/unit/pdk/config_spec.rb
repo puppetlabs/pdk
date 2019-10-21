@@ -1,5 +1,7 @@
 require 'spec_helper'
 require 'securerandom'
+require 'tty/test_prompt'
+require 'pdk/config'
 
 describe PDK::Config do
   subject(:config) { described_class.new }

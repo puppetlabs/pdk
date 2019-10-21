@@ -1,3 +1,5 @@
+require 'pdk'
+
 module PDK
   class Config
     # A class for describing the setting of a {PDK::Config} setting.

@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'pdk/validate/tasks/name'
 
 describe PDK::Validate::Tasks::Name do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }
