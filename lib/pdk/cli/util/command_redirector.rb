@@ -1,5 +1,5 @@
 require 'pdk'
-require 'tty-prompt'
+require 'tty/prompt'
 
 module PDK
   module CLI
@@ -18,7 +18,7 @@ module PDK
         def run
           @prompt.puts _('Did you mean \'%{command}\'?') % { command: pastel.bold(@command) }
           @prompt.yes?('-->')
-        rescue TTY::Prompt::Reader::InputInterrupt
+        rescue PDK::CLI::Util::Interview::READER::InputInterrupt
           nil
         end
       end

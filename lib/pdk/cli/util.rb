@@ -6,6 +6,8 @@ module PDK
       autoload :CommandRedirector, 'pdk/cli/util/command_redirector'
       autoload :OptionNormalizer, 'pdk/cli/util/option_normalizer'
       autoload :OptionValidator, 'pdk/cli/util/option_validator'
+      autoload :Interview, 'pdk/cli/util/interview'
+      autoload :Spinner, 'pdk/cli/util/spinner'
 
       # Ensures the calling code is being run from inside a module directory.
       #
@@ -37,6 +39,8 @@ module PDK
       module_function :spinner_opts_for_platform
 
       def prompt_for_yes(question_text, opts = {})
+        require 'tty/prompt'
+
         prompt = opts[:prompt] || TTY::Prompt.new(help_color: :cyan)
         validator = proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }
         response = nil
@@ -46,7 +50,7 @@ module PDK
             q.default opts[:default] unless opts[:default].nil?
             q.validate(validator, _('Answer "Y" to continue or "n" to cancel.'))
           end
-        rescue TTY::Prompt::Reader::InputInterrupt
+        rescue PDK::CLI::Util::Interview::READER::InputInterrupt
           PDK.logger.info opts[:cancel_message] if opts[:cancel_message]
         end
 

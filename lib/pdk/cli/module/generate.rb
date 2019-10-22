@@ -10,7 +10,7 @@ module PDK::CLI
 
     run do |opts, args, _cmd|
       require 'pdk/generate/module'
-      require 'tty-prompt'
+      require 'tty/prompt'
 
       module_name = args[0]
 
