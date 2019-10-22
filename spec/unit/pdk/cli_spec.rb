@@ -1,12 +1,46 @@
 require 'spec_helper'
 require 'pdk/cli'
 
+def deprecated_runtime?
+  Gem::Version.new(RbConfig::CONFIG['ruby_version']) < Gem::Version.new('2.4.0')
+end
+
 describe PDK::CLI do
   context 'when invoking help' do
     it 'outputs basic help' do
       expect($stdout).to receive(:puts).with(a_string_matching(%r{NAME.*USAGE.*DESCRIPTION.*COMMANDS.*OPTIONS}m))
 
       expect { described_class.run(['--help']) }.to exit_zero
+    end
+  end
+
+  context 'when invoked by Ruby < 2.4.0', if: deprecated_runtime? do
+    before(:each) do
+      allow($stdout).to receive(:puts)
+    end
+
+    it 'informs the user of the upcoming Ruby deprecation' do
+      expect(logger).to receive(:info).with(
+        text: a_string_matching(%r{ruby versions older than}i),
+        wrap: true,
+      )
+
+      described_class.run([])
+    end
+  end
+
+  context 'when invoked by Ruby >= 2.4.0', unless: deprecated_runtime? do
+    before(:each) do
+      allow($stdout).to receive(:puts)
+    end
+
+    it 'does not inform the user of an upcoming Ruby deprecation' do
+      expect(logger).not_to receive(:info).with(
+        text: a_string_matching(%r{ruby versions older than}i),
+        wrap: true,
+      )
+
+      described_class.run([])
     end
   end
 

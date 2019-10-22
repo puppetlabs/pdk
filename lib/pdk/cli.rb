@@ -46,7 +46,23 @@ module PDK::CLI
     end
   end
 
+  def self.deprecated_runtime?
+    Gem::Version.new(RbConfig::CONFIG['ruby_version']) < Gem::Version.new('2.4.0')
+  end
+
   def self.run(args)
+    if deprecated_runtime?
+      PDK.logger.info(
+        text: _(
+          'Support for Ruby versions older than 2.4 will be dropped in the ' \
+          'future PDK 2.0.0 release. We recommend updating your Ruby ' \
+          'installation to ensure that you can continue using the latest ' \
+          'version of PDK.',
+        ),
+        wrap: true,
+      )
+    end
+
     @args = args
     PDK::Config.analytics_config_interview! unless ENV['PDK_DISABLE_ANALYTICS'] || PDK::Config.analytics_config_exist?
     @base_cmd.run(args)
