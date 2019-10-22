@@ -1,4 +1,4 @@
-require 'tty-prompt'
+require 'tty/prompt'
 require 'pdk'
 
 module PDK

@@ -1,8 +1,12 @@
 require 'cri'
-require 'tty-prompt'
 
 require 'pdk'
 require 'pdk/cli/errors'
+
+module TTY
+  autoload :Prompt, 'tty/prompt'
+  autoload :TestPrompt, 'tty/test_prompt'
+end
 
 class Cri::Command::CriExitException
   def initialize(is_error:)
