@@ -28,7 +28,14 @@ module PDK::CLI
         opts[:'full-interview'] = false
       end
 
-      unless module_name.nil? || module_name.empty?
+      if module_name.nil? || module_name.empty?
+        if opts[:'skip-interview']
+          raise PDK::CLI::ExitWithError, _(
+            'You must specify a module name on the command line when running ' \
+            'with --skip-interview.',
+          )
+        end
+      else
         module_name_parts = module_name.split('-', 2)
         if module_name_parts.size > 1
           opts[:username] = module_name_parts[0]
