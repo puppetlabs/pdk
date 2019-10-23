@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'hitimes', '1.3.0'
   spec.add_runtime_dependency 'json-schema', '2.8.0'
   spec.add_runtime_dependency 'json_pure', '~> 2.1.0'
-  spec.add_runtime_dependency 'minitar', '~> 0.6'
+  spec.add_runtime_dependency 'minitar', '>= 0.6', '< 1.0'
   spec.add_runtime_dependency 'pathspec', '~> 0.2.1'
   spec.add_runtime_dependency 'tty-prompt', '~> 0.13'
   spec.add_runtime_dependency 'tty-spinner', '~> 0.5'
