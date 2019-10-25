@@ -10,6 +10,8 @@ module PDK
         attr_accessor :environment
         attr_writer :exec_group
 
+        TEMPFILE_MODE = File::RDWR | File::BINARY | File::CREAT | File::TRUNC
+
         def initialize(*argv)
           require 'childprocess'
           require 'tempfile'
@@ -19,8 +21,8 @@ module PDK
           @process = ChildProcess.build(*@argv)
           @process.leader = true
 
-          @stdout = Tempfile.new('stdout').tap { |io| io.sync = true }
-          @stderr = Tempfile.new('stderr').tap { |io| io.sync = true }
+          @stdout = Tempfile.new('stdout', mode: TEMPFILE_MODE).tap { |io| io.sync = true }
+          @stderr = Tempfile.new('stderr', mode: TEMPFILE_MODE).tap { |io| io.sync = true }
 
           @process.io.stdout = @stdout
           @process.io.stderr = @stderr
