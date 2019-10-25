@@ -2,6 +2,13 @@ require 'ffi'
 require 'pdk/util/windows/string'
 
 module PDK::Util::Windows::APITypes
+  module ::FFI::Library
+    def attach_function_private(*args)
+      attach_function(*args)
+      private args[0]
+    end
+  end
+
   class ::FFI::Pointer
     def self.from_string_to_wide_string(str, &_block)
       str = PDK::Util::Windows::String.wide_string(str)
@@ -28,6 +35,26 @@ module PDK::Util::Windows::APITypes
       }
       raise
     end
+
+    def read_arbitrary_wide_string_up_to(max_char_length = 512, null_terminator = :single_null, encode_options = {})
+      unless [:single_null, :double_null].include?(null_terminator)
+        raise ArgumentError, _(
+          'Unable to read wide strings with %{null_terminator} terminal nulls',
+        ) % { null_terminator: null_terminator }
+      end
+
+      terminator_width = (null_terminator == :single_null) ? 1 : 2
+      reader_method = (null_terminator == :single_null) ? :get_uint16 : :get_uint32
+
+      # Look for the null_terminator; if found, read up to that null
+      # (exclusive)
+      (0...max_char_length - terminator_width).each do |i|
+        return read_wide_string(i, Encoding::UTF_8, encode_options) if send(reader_method, (i * 2)).zero?
+      end
+
+      # String is longer than the max, read just up to the max
+      read_wide_string(max_char_length, Encoding::UTF_8, encode_options)
+    end
   end
 
   # FFI Types
@@ -47,4 +74,9 @@ module PDK::Util::Windows::APITypes
   # 8 bits per byte
   FFI.typedef :uchar, :byte
   FFI.typedef :uint16, :wchar
+
+  # FFI bool can be only 1 byte at times,
+  # Win32 BOOL is a signed int, and is always 4 bytes, even on x64
+  # https://blogs.msdn.com/b/oldnewthing/archive/2011/03/28/10146459.aspx
+  FFI.typedef :int32, :win32_bool
 end

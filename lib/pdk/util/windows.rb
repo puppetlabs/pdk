@@ -8,6 +8,7 @@ module PDK
         require 'pdk/util/windows/api_types'
         require 'pdk/util/windows/string'
         require 'pdk/util/windows/file'
+        require 'pdk/util/windows/process'
       end
     end
   end
