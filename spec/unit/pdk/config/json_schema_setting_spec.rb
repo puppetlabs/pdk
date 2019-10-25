@@ -28,7 +28,7 @@ describe PDK::Config::JSONSchemaSetting do
       <<-SCHEMA
       {
         "definitions": {},
-        "$schema": "http://json-schema.org/draft-06/schema#",
+        "$schema": "http://json-schema.org/draft-04/schema#",
         "$id": "http://puppet.com/schema/does_not_exist.json",
         "type": "object",
         "title": "A Schema",
@@ -66,7 +66,7 @@ describe PDK::Config::JSONSchemaSetting do
       <<-SCHEMA
       {
         "definitions": {},
-        "$schema": "http://json-schema.org/draft-06/schema#",
+        "$schema": "http://json-schema.org/draft-04/schema#",
         "$id": "http://puppet.com/schema/does_not_exist.json",
         "type": "object",
         "title": "A Schema",
