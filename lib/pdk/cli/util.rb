@@ -74,7 +74,7 @@ module PDK
           'GOCD_SERVER_URL',        # Go CD
           'TRAVIS',                 # Travis CI
           'GITHUB_WORKFLOW',        # GitHub Actions
-        ].any? { |name| ENV.key?(name) }
+        ].any? { |name| PDK::Util::Env.key?(name) }
       end
       module_function :ci_environment?
 
@@ -82,7 +82,7 @@ module PDK
         require 'pdk/logger'
 
         return false if PDK.logger.debug?
-        return !ENV['PDK_FRONTEND'].casecmp('noninteractive').zero? if ENV['PDK_FRONTEND']
+        return !PDK::Util::Env['PDK_FRONTEND'].casecmp('noninteractive').zero? if PDK::Util::Env['PDK_FRONTEND']
         return false if ci_environment?
         return false unless $stderr.isatty
 
@@ -137,9 +137,9 @@ module PDK
       # @return [Hash] - return hash of { gemset: <>, ruby_version: 2.x.x }
       def puppet_from_opts_or_env(opts, logging_disabled = false)
         opts ||= {}
-        use_puppet_dev = opts.fetch(:'puppet-dev', ENV['PDK_PUPPET_DEV'])
-        desired_puppet_version = opts.fetch(:'puppet-version', ENV['PDK_PUPPET_VERSION'])
-        desired_pe_version = opts.fetch(:'pe-version', ENV['PDK_PE_VERSION'])
+        use_puppet_dev = opts.fetch(:'puppet-dev', PDK::Util::Env['PDK_PUPPET_DEV'])
+        desired_puppet_version = opts.fetch(:'puppet-version', PDK::Util::Env['PDK_PUPPET_VERSION'])
+        desired_pe_version = opts.fetch(:'pe-version', PDK::Util::Env['PDK_PE_VERSION'])
 
         begin
           puppet_env =
@@ -189,15 +189,15 @@ module PDK
       def validate_puppet_version_opts(opts)
         puppet_ver_specs = []
         puppet_ver_specs << '--puppet-version option' if opts[:'puppet-version']
-        puppet_ver_specs << 'PDK_PUPPET_VERSION environment variable' if ENV['PDK_PUPPET_VERSION'] && !ENV['PDK_PUPPET_VERSION'].empty?
+        puppet_ver_specs << 'PDK_PUPPET_VERSION environment variable' if PDK::Util::Env['PDK_PUPPET_VERSION'] && !PDK::Util::Env['PDK_PUPPET_VERSION'].empty?
 
         pe_ver_specs = []
         pe_ver_specs << '--pe-version option' if opts[:'pe-version']
-        pe_ver_specs << 'PDK_PE_VERSION environment variable' if ENV['PDK_PE_VERSION'] && !ENV['PDK_PE_VERSION'].empty?
+        pe_ver_specs << 'PDK_PE_VERSION environment variable' if PDK::Util::Env['PDK_PE_VERSION'] && !PDK::Util::Env['PDK_PE_VERSION'].empty?
 
         puppet_dev_specs = []
         puppet_dev_specs << '--puppet-dev flag' if opts[:'puppet-dev']
-        puppet_dev_specs << 'PDK_PUPPET_DEV environment variable' if ENV['PDK_PUPPET_DEV'] && !ENV['PDK_PUPPET_DEV'].empty?
+        puppet_dev_specs << 'PDK_PUPPET_DEV environment variable' if PDK::Util::Env['PDK_PUPPET_DEV'] && !PDK::Util::Env['PDK_PUPPET_DEV'].empty?
 
         puppet_dev_specs.each do |pup_dev_spec|
           [puppet_ver_specs, pe_ver_specs].each do |offending|
@@ -227,7 +227,7 @@ module PDK
 
           PDK.logger.warn(_(warning_str) % {
             pup_ver_opt: opts[:'puppet-dev'],
-            pup_ver_env: ENV['PDK_PUPPET_DEV'],
+            pup_ver_env: PDK::Util::Env['PDK_PUPPET_DEV'],
           })
         elsif puppet_ver_specs.size == 2
           warning_str = 'Puppet version option from command line: "--puppet-version=%{pup_ver_opt}" '
@@ -235,7 +235,7 @@ module PDK
 
           PDK.logger.warn(_(warning_str) % {
             pup_ver_opt: opts[:'puppet-version'],
-            pup_ver_env: ENV['PDK_PUPPET_VERSION'],
+            pup_ver_env: PDK::Util::Env['PDK_PUPPET_VERSION'],
           })
         elsif pe_ver_specs.size == 2
           warning_str = 'Puppet Enterprise version option from command line: "--pe-version=%{pe_ver_opt}" '
@@ -243,7 +243,7 @@ module PDK
 
           PDK.logger.warn(_(warning_str) % {
             pup_ver_opt: opts[:'pe-version'],
-            pup_ver_env: ENV['PDK_PE_VERSION'],
+            pup_ver_env: PDK::Util::Env['PDK_PE_VERSION'],
           })
         end
       end
@@ -289,7 +289,7 @@ module PDK
         dimensions[:cli_options] = redacted_opts.join(',') unless redacted_opts.empty?
 
         ignored_env_vars = %w[PDK_ANALYTICS_CONFIG PDK_DISABLE_ANALYTICS]
-        env_vars = ENV.select { |k, _| k.start_with?('PDK_') && !ignored_env_vars.include?(k) }.map { |k, v| "#{k}=#{v}" }
+        env_vars = PDK::Util::Env.select { |k, _| k.start_with?('PDK_') && !ignored_env_vars.include?(k) }.map { |k, v| "#{k}=#{v}" }
         dimensions[:env_vars] = env_vars.join(',') unless env_vars.empty?
 
         PDK.analytics.screen_view(screen_name, dimensions)

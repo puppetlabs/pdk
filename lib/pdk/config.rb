@@ -51,7 +51,7 @@ module PDK
     end
 
     def self.analytics_config_path
-      ENV['PDK_ANALYTICS_CONFIG'] || File.join(File.dirname(PDK::Util.configdir), 'puppet', 'analytics.yml')
+      PDK::Util::Env['PDK_ANALYTICS_CONFIG'] || File.join(File.dirname(PDK::Util.configdir), 'puppet', 'analytics.yml')
     end
 
     def self.user_config_path

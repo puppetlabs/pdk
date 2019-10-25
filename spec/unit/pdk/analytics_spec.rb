@@ -10,7 +10,7 @@ describe PDK::Analytics do
   before(:each) do
     # We use a hard override to disable analytics for tests, but that obviously
     # interferes with these tests...
-    ENV.delete('PDK_DISABLE_ANALYTICS')
+    allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(nil)
   end
 
   describe '.build_client' do
