@@ -8,19 +8,26 @@ module PDK
     autoload :LoadError, 'pdk/config/errors'
     autoload :Namespace, 'pdk/config/namespace'
     autoload :Setting, 'pdk/config/setting'
+    autoload :Validator, 'pdk/config/validator'
     autoload :YAML, 'pdk/config/yaml'
-    autoload :YAMLWithSchema, 'pdk/config/yaml_with_schema'
 
     def user
       @user ||= PDK::Config::JSON.new('user', file: PDK::Config.user_config_path) do
         mount :module_defaults, PDK::Config::JSON.new(file: PDK.answers.answer_file_path)
 
-        mount :analytics, PDK::Config::YAMLWithSchema.new(file: PDK::Config.analytics_config_path, persistent_defaults: true, schema_file: PDK::Config.json_schema('analytics')) do
+        # Due to the json-schema gem having issues with Windows based paths, and only supporting Draft 05 (or less) do
+        # not use JSON validation yet.  Once PDK drops support for EOL rubies, we will be able to use the json_schemer gem
+        # Which has much more modern support
+        # Reference - https://github.com/puppetlabs/pdk/pull/777
+        # Reference - https://tickets.puppetlabs.com/browse/PDK-1526
+        mount :analytics, PDK::Config::YAML.new(file: PDK::Config.analytics_config_path, persistent_defaults: true) do
           setting :disabled do
+            validate PDK::Config::Validator.boolean
             default_to { PDK::Config.bolt_analytics_config.fetch('disabled', true) }
           end
 
           setting 'user-id' do
+            validate PDK::Config::Validator.uuid
             default_to do
               require 'securerandom'
 
