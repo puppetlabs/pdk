@@ -10,6 +10,8 @@ module PDK
         attr_accessor :environment
         attr_writer :exec_group
 
+        TEMPFILE_MODE = File::RDWR | File::BINARY | File::CREAT | File::TRUNC
+
         def initialize(*argv)
           require 'childprocess'
           require 'tempfile'
@@ -19,8 +21,8 @@ module PDK
           @process = ChildProcess.build(*@argv)
           @process.leader = true
 
-          @stdout = Tempfile.new('stdout').tap { |io| io.sync = true }
-          @stderr = Tempfile.new('stderr').tap { |io| io.sync = true }
+          @stdout = Tempfile.new('stdout', mode: TEMPFILE_MODE).tap { |io| io.sync = true }
+          @stderr = Tempfile.new('stderr', mode: TEMPFILE_MODE).tap { |io| io.sync = true }
 
           @process.io.stdout = @stdout
           @process.io.stderr = @stderr
@@ -126,7 +128,7 @@ module PDK
         protected
 
         def warn_on_legacy_env_vars!
-          if ENV['PUPPET_GEM_VERSION']
+          if PDK::Util::Env['PUPPET_GEM_VERSION']
             PDK.logger.warn_once _(
               'PUPPET_GEM_VERSION is not supported by PDK. ' \
               'Use the --puppet-version option on your PDK command ' \
@@ -135,7 +137,7 @@ module PDK
           end
 
           %w[FACTER HIERA].each do |gem|
-            if ENV["#{gem}_GEM_VERSION"]
+            if PDK::Util::Env["#{gem}_GEM_VERSION"]
               PDK.logger.warn_once _('%{varname} is not supported by PDK.') % { varname: "#{gem}_GEM_VERSION" }
             end
           end
@@ -146,7 +148,7 @@ module PDK
 
           resolved_env = {}
 
-          resolved_env['TERM'] = ENV['TERM']
+          resolved_env['TERM'] = PDK::Util::Env['TERM']
           resolved_env['PUPPET_GEM_VERSION'] = nil
           resolved_env['FACTER_GEM_VERSION'] = nil
           resolved_env['HIERA_GEM_VERSION'] = nil
@@ -172,7 +174,7 @@ module PDK
               PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path| File.join(gem_path, 'bin') },
               package_binpath,
               PDK::Util.package_install? ? PDK::Util::Git.git_paths : nil,
-              ENV['PATH'],
+              PDK::Util::Env['PATH'],
             ].compact.flatten.join(File::PATH_SEPARATOR)
           end
 

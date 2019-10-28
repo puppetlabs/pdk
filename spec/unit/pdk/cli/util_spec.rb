@@ -2,6 +2,10 @@ require 'spec_helper'
 require 'pdk/cli/util'
 
 describe PDK::CLI::Util do
+  before(:each) do
+    allow(PDK::Util::Env).to receive(:[]).and_call_original
+  end
+
   describe '.ensure_in_module!' do
     subject(:ensure_in_module) { described_class.ensure_in_module!(options) }
 
@@ -60,7 +64,7 @@ describe PDK::CLI::Util do
       allow(PDK.logger).to receive(:debug?).and_return(false)
       allow($stderr).to receive(:isatty).and_return(true)
       allow(PDK::CLI::Util).to receive(:ci_environment?).and_return(false) # rubocop:disable RSpec/DescribedClass This reads better
-      ENV.delete('PDK_FRONTEND')
+      allow(PDK::Util::Env).to receive(:[]).with('PDK_FRONTEND').and_return(nil)
     end
 
     context 'by default' do
@@ -77,7 +81,7 @@ describe PDK::CLI::Util do
 
     context 'when PDK_FRONTEND env var is set to noninteractive' do
       before(:each) do
-        ENV['PDK_FRONTEND'] = 'noninteractive'
+        allow(PDK::Util::Env).to receive(:[]).with('PDK_FRONTEND').and_return('noninteractive')
       end
 
       it { is_expected.to be_falsey }
@@ -217,11 +221,7 @@ describe PDK::CLI::Util do
       before(:each) do
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_path).and_return(puppet_version)
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_env).and_return(version_result)
-        ENV['PDK_PUPPET_DEV'] = 'true'
-      end
-
-      after(:each) do
-        ENV.delete('PDK_PUPPET_DEV')
+        allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_DEV').and_return('true')
       end
 
       it_behaves_like 'it returns a puppet environment'
@@ -246,11 +246,7 @@ describe PDK::CLI::Util do
 
       before(:each) do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
-        ENV['PDK_PUPPET_VERSION'] = '4.10.10'
-      end
-
-      after(:each) do
-        ENV.delete('PDK_PUPPET_VERSION')
+        allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return('4.10.10')
       end
 
       it_behaves_like 'it returns a puppet environment'
@@ -275,11 +271,7 @@ describe PDK::CLI::Util do
 
       before(:each) do
         allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with(anything).and_return(version_result)
-        ENV['PDK_PE_VERSION'] = '2017.3.1'
-      end
-
-      after(:each) do
-        ENV.delete('PDK_PE_VERSION')
+        allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return('2017.3.1')
       end
 
       it_behaves_like 'it returns a puppet environment'
@@ -442,11 +434,7 @@ describe PDK::CLI::Util do
 
       context 'when PDK_PUPPET_DEV is also set' do
         before(:each) do
-          ENV['PDK_PUPPET_DEV'] = 'true'
-        end
-
-        after(:each) do
-          ENV.delete('PDK_PUPPET_DEV')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_DEV').and_return('true')
         end
 
         it 'warns about option precedence' do
@@ -466,11 +454,7 @@ describe PDK::CLI::Util do
 
       context 'when PDK_PUPPET_VERSION is also set' do
         before(:each) do
-          ENV['PDK_PUPPET_VERSION'] = env_puppet_version
-        end
-
-        after(:each) do
-          ENV.delete('PDK_PUPPET_VERSION')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
         end
 
         it 'exits with error' do
@@ -488,11 +472,7 @@ describe PDK::CLI::Util do
 
       context 'when PDK_PE_VERSION is also set' do
         before(:each) do
-          ENV['PDK_PE_VERSION'] = env_pe_version
-        end
-
-        after(:each) do
-          ENV.delete('PDK_PE_VERSION')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_pe_version)
         end
 
         it 'exits with error' do
@@ -512,11 +492,7 @@ describe PDK::CLI::Util do
 
       context 'when PDK_PUPPET_VERSION is also set' do
         before(:each) do
-          ENV['PDK_PUPPET_VERSION'] = env_puppet_version
-        end
-
-        after(:each) do
-          ENV.delete('PDK_PUPPET_VERSION')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
         end
 
         it 'warns about option precedence' do
@@ -536,11 +512,7 @@ describe PDK::CLI::Util do
 
       context 'when PDK_PE_VERSION is also set' do
         before(:each) do
-          ENV['PDK_PE_VERSION'] = env_puppet_version
-        end
-
-        after(:each) do
-          ENV.delete('PDK_PE_VERSION')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_puppet_version)
         end
 
         it 'exits with error' do
@@ -560,11 +532,7 @@ describe PDK::CLI::Util do
 
       context 'when PDK_PE_VERSION is also set' do
         before(:each) do
-          ENV['PDK_PE_VERSION'] = env_pe_version
-        end
-
-        after(:each) do
-          ENV.delete('PDK_PE_VERSION')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_pe_version)
         end
 
         it 'warns about option precedence' do
@@ -584,11 +552,7 @@ describe PDK::CLI::Util do
 
       context 'when PDK_PUPPET_VERSION is also set' do
         before(:each) do
-          ENV['PDK_PUPPET_VERSION'] = env_puppet_version
-        end
-
-        after(:each) do
-          ENV.delete('PDK_PUPPET_VERSION')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
         end
 
         it 'exits with error' do
@@ -601,11 +565,7 @@ describe PDK::CLI::Util do
       let(:options) { {} }
 
       before(:each) do
-        ENV['PDK_PUPPET_VERSION'] = env_puppet_version
-      end
-
-      after(:each) do
-        ENV.delete('PDK_PUPPET_VERSION')
+        allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
       end
 
       it 'is silent' do
@@ -626,11 +586,7 @@ describe PDK::CLI::Util do
 
       context 'when PDK_PE_VERSION is also set' do
         before(:each) do
-          ENV['PDK_PE_VERSION'] = env_puppet_version
-        end
-
-        after(:each) do
-          ENV.delete('PDK_PE_VERSION')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_puppet_version)
         end
 
         it 'exits with error' do
@@ -651,11 +607,7 @@ describe PDK::CLI::Util do
       let(:options) { {} }
 
       before(:each) do
-        ENV['PDK_PE_VERSION'] = env_pe_version
-      end
-
-      after(:each) do
-        ENV.delete('PDK_PE_VERSION')
+        allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_pe_version)
       end
 
       it 'is silent' do
@@ -676,11 +628,7 @@ describe PDK::CLI::Util do
 
       context 'when PDK_PUPPET_VERSION is also set' do
         before(:each) do
-          ENV['PDK_PUPPET_VERSION'] = env_puppet_version
-        end
-
-        after(:each) do
-          ENV.delete('PDK_PUPPET_VERSION')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
         end
 
         it 'exits with error' do

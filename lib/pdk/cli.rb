@@ -64,7 +64,7 @@ module PDK::CLI
     end
 
     @args = args
-    PDK::Config.analytics_config_interview! unless ENV['PDK_DISABLE_ANALYTICS'] || PDK::Config.analytics_config_exist?
+    PDK::Config.analytics_config_interview! unless PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK::Config.analytics_config_exist?
     @base_cmd.run(args)
   rescue PDK::CLI::ExitWithError => e
     PDK.logger.send(e.log_level, e.message)

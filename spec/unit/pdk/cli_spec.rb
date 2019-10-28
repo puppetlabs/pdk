@@ -47,9 +47,9 @@ describe PDK::CLI do
   context 'analytics opt-out prompt' do
     before(:each) do
       # Temporarily bypass suite-wide analytics disable
-      allow(ENV).to receive(:[]).and_call_original
-      allow(ENV).to receive(:[]).with('PDK_ANALYTICS_CONFIG').and_return(nil)
-      allow(ENV).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(nil)
+      allow(PDK::Util::Env).to receive(:[]).and_call_original
+      allow(PDK::Util::Env).to receive(:[]).with('PDK_ANALYTICS_CONFIG').and_return(nil)
+      allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(nil)
 
       # Suppress output
       allow($stdout).to receive(:puts).with(anything)
@@ -68,7 +68,7 @@ describe PDK::CLI do
 
       context 'when PDK_DISABLE_ANALYTICS is set' do
         before(:each) do
-          allow(ENV).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return('true')
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return('true')
         end
 
         it 'does not prompt the user about analytics config' do

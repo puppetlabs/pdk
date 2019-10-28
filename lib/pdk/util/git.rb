@@ -110,7 +110,7 @@ module PDK
           }
         end
 
-        matching_refs = output[:stdout].split("\n").map { |r| r.split("\t") }
+        matching_refs = output[:stdout].split(%r{\r?\n}).map { |r| r.split("\t") }
         matching_ref = matching_refs.find { |_sha, remote_ref| remote_ref == "refs/tags/#{ref}" || remote_ref == "refs/remotes/origin/#{ref}" || remote_ref == "refs/heads/#{ref}" }
         raise PDK::CLI::ExitWithError, _('Unable to find a branch or tag named "%{ref}" in %{repo}') % { ref: ref, repo: repo } if matching_ref.nil?
         matching_ref.first

@@ -255,7 +255,7 @@ describe PDK::Util do
     context 'when running on Windows' do
       before(:each) do
         allow(Gem).to receive(:win_platform?).and_return(true)
-        allow(ENV).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
+        allow(PDK::Util::Env).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
       end
 
       it 'returns a path in the %LOCALAPPDATA% folder' do
@@ -281,7 +281,7 @@ describe PDK::Util do
     context 'when running on Windows' do
       before(:each) do
         allow(Gem).to receive(:win_platform?).and_return(true)
-        allow(ENV).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
+        allow(PDK::Util::Env).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
       end
 
       it 'returns a path in the %LOCALAPPDATA% folder' do

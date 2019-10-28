@@ -10,6 +10,7 @@ autoload :Pathname, 'pathname'
 module PDK
   module Util
     autoload :Bundler, 'pdk/util/bundler'
+    autoload :Env, 'pdk/util/env'
     autoload :Filesystem, 'pdk/util/filesystem'
     autoload :Git, 'pdk/util/git'
     autoload :PuppetStrings, 'pdk/util/puppet_strings'
@@ -118,7 +119,7 @@ module PDK
     # @return [String] Fully qualified path to per-user PDK cachedir.
     def cachedir
       if Gem.win_platform?
-        File.join(ENV['LOCALAPPDATA'], 'PDK', 'cache')
+        File.join(PDK::Util::Env['LOCALAPPDATA'], 'PDK', 'cache')
       else
         File.join(Dir.home, '.pdk', 'cache')
       end
@@ -127,9 +128,9 @@ module PDK
 
     def configdir
       if Gem.win_platform?
-        File.join(ENV['LOCALAPPDATA'], 'PDK')
+        File.join(PDK::Util::Env['LOCALAPPDATA'], 'PDK')
       else
-        File.join(ENV.fetch('XDG_CONFIG_HOME', File.join(Dir.home, '.config')), 'pdk')
+        File.join(PDK::Util::Env.fetch('XDG_CONFIG_HOME', File.join(Dir.home, '.config')), 'pdk')
       end
     end
     module_function :configdir
