@@ -33,7 +33,6 @@ module PDK::CLI
       end
 
       puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
-      PDK::Util::PuppetVersion.fetch_puppet_dev if opts[:'puppet-dev']
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
       PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
