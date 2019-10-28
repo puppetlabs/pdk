@@ -90,7 +90,7 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(%r{failed.*expected: true.*got: false}im) }
+        its(:stdout) { is_expected.to match(%r{expected: true.*got: false}im) }
         its(:stdout) { is_expected.to match(%r{1 examples?.*1 failures?}im) }
       end
     end

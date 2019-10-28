@@ -40,9 +40,7 @@ module PDK
 
         command = PDK::CLI::Exec::InteractiveCommand.new(*cmd_with_args(task)).tap do |c|
           c.context = :module
-          c.environment = environment.reject do |key, _|
-            key == 'CI_SPEC_OPTIONS'
-          end
+          c.environment = environment
         end
 
         command.execute!
@@ -97,6 +95,11 @@ module PDK
         spinner_msg = options[:parallel] ? _('Running unit tests in parallel.') : _('Running unit tests.')
 
         if options[:interactive]
+          environment['CI_SPEC_OPTIONS'] = if options[:verbose]
+                                             '--format documentation'
+                                           else
+                                             '--format progress'
+                                           end
           result = interactive_rake(cmd(tests, options), environment)
           return result[:exit_code]
         end
