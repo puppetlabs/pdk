@@ -292,13 +292,16 @@ describe PDK::Test::Unit do
 
     context 'when running interactively' do
       subject(:exit_code) do
-        described_class.invoke(report, interactive: true)
+        described_class.invoke(report, options)
       end
 
       before(:each) do
         allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new)
           .and_return(command)
+        allow(command).to receive(:execute!).and_return(exit_code: 0)
       end
+
+      let(:options) { { interactive: true } }
 
       let(:command) do
         instance_double(
@@ -309,8 +312,24 @@ describe PDK::Test::Unit do
       end
 
       it 'runs the rake task interactively' do
-        expect(command).to receive(:execute!).and_return(exit_code: 0)
         expect(exit_code).to eq(0)
+      end
+
+      context 'when --verbose is not passed' do
+        it 'uses the progress formatter' do
+          expect(command).to receive(:environment=).with(include('CI_SPEC_OPTIONS' => '--format progress'))
+
+          exit_code
+        end
+      end
+
+      context 'when --verbose is passed' do
+        let(:options) { super().merge(verbose: true) }
+
+        it 'uses the documentation formatter' do
+          expect(command).to receive(:environment=).with(include('CI_SPEC_OPTIONS' => '--format documentation'))
+          exit_code
+        end
       end
     end
 

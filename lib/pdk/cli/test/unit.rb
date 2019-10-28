@@ -66,8 +66,6 @@ module PDK::CLI
           end
         end
       else
-        PDK.logger.info _('--verbose has no effect when not used with --list') if opts[:verbose]
-
         report = PDK::Report.new
         report_formats = if opts[:format]
                            opts[:interactive] = false
