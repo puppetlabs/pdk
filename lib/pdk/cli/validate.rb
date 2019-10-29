@@ -96,7 +96,6 @@ module PDK::CLI
 
       # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
       puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
-      PDK::Util::PuppetVersion.fetch_puppet_dev if opts[:'puppet-dev']
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
 
       options.merge!(puppet_env[:gemset])

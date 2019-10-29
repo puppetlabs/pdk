@@ -144,6 +144,7 @@ module PDK
         begin
           puppet_env =
             if use_puppet_dev
+              PDK::Util::PuppetVersion.fetch_puppet_dev(run: :once)
               PDK::Util::PuppetVersion.puppet_dev_env
             elsif desired_puppet_version
               PDK::Util::PuppetVersion.find_gem_for(desired_puppet_version)

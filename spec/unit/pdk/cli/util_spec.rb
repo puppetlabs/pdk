@@ -201,6 +201,7 @@ describe PDK::CLI::Util do
       before(:each) do
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_path).and_return(puppet_version)
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_env).and_return(version_result)
+        allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev)
       end
 
       it_behaves_like 'it returns a puppet environment'
@@ -222,6 +223,7 @@ describe PDK::CLI::Util do
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_path).and_return(puppet_version)
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_env).and_return(version_result)
         allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_DEV').and_return('true')
+        allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev)
       end
 
       it_behaves_like 'it returns a puppet environment'

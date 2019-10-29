@@ -44,7 +44,13 @@ module PDK
         latest
       end
 
-      def fetch_puppet_dev
+      def puppet_dev_fetched?
+        !@puppet_dev_fetched.nil?
+      end
+
+      def fetch_puppet_dev(options = {})
+        return if options[:run] == :once && puppet_dev_fetched?
+
         require 'pdk/util/git'
         require 'fileutils'
 
@@ -76,6 +82,8 @@ module PDK
 
         # Reset local repo to latest
         reset_result = PDK::Util::Git.git('-C', puppet_dev_path, 'reset', '--hard', 'origin/master')
+
+        @puppet_dev_fetched = true
         return if reset_result[:exit_code].zero?
 
         PDK.logger.error reset_result[:stdout]

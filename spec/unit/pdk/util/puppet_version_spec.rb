@@ -96,6 +96,31 @@ describe PDK::Util::PuppetVersion do
   end
 
   describe '.fetch_puppet_dev' do
+    context 'if puppet source has already been fetched' do
+      before(:each) do
+        allow(described_class.instance).to receive(:puppet_dev_fetched?).and_return(true)
+      end
+
+      context 'when run with :run => :once' do
+        it 'does not perform any git operations' do
+          expect(PDK::Util::Git).not_to receive(:git)
+
+          described_class.fetch_puppet_dev(run: :once)
+        end
+      end
+
+      context 'when not run with :run => :once' do
+        it 'performs the git operations' do
+          allow(PDK::Util::Git).to receive(:remote_repo?).with(anything).and_return(true)
+          allow(PDK::Util).to receive(:cachedir).and_return(File.join('path', 'to'))
+
+          expect(PDK::Util::Git).to receive(:git).with(any_args).and_return(exit_code: 0).twice
+
+          described_class.fetch_puppet_dev
+        end
+      end
+    end
+
     context 'if puppet source is not cloned yet' do
       before(:each) do
         allow(PDK::Util::Git).to receive(:remote_repo?).with(anything).and_return(false)
