@@ -4,6 +4,37 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.14.1](https://github.com/puppetlabs/pdk/tree/v1.14.1) (2019-11-01)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.14.0...v1.14.1)
+
+**Fixed bugs:**
+
+- "pdk validate" fails with "uninitialized constant PDK::VERSION \(NameError\)" [\#786](https://github.com/puppetlabs/pdk/issues/786)
+- Networking facts missing for RHEL7 and facter 2.x [\#776](https://github.com/puppetlabs/pdk/issues/776)
+- 'pdk test unit --verbose' does not change the rspec output format [\#773](https://github.com/puppetlabs/pdk/issues/773)
+- rake build gives error NoMethodError: undefined method `package\_install?' for PDK::Util:Module [\#770](https://github.com/puppetlabs/pdk/issues/770)
+- PDK::Util.in\_module\_root? can give a false positive result [\#768](https://github.com/puppetlabs/pdk/issues/768)
+- pdk console --puppet-dev does not grab latest Puppet source [\#764](https://github.com/puppetlabs/pdk/issues/764)
+- \(PDK-1527\) Handle pdk new module --skip-interview without module name [\#788](https://github.com/puppetlabs/pdk/pull/788) ([rodjek](https://github.com/rodjek))
+
+**Merged pull requests:**
+
+- \(maint\) Raise error when template content is empty or nil [\#794](https://github.com/puppetlabs/pdk/pull/794) ([rodjek](https://github.com/rodjek))
+- \(PDK-1530\) Disable schema validation of config files [\#793](https://github.com/puppetlabs/pdk/pull/793) ([glennsarti](https://github.com/glennsarti))
+- \(\#764\) Ensure --puppet-dev checkout is always updated [\#792](https://github.com/puppetlabs/pdk/pull/792) ([rodjek](https://github.com/rodjek))
+- \(\#773\) Respect --verbose in interactive pdk test unit [\#791](https://github.com/puppetlabs/pdk/pull/791) ([rodjek](https://github.com/rodjek))
+- \(PDK-1443\) Windows safe Tempfiles & environment variable access [\#790](https://github.com/puppetlabs/pdk/pull/790) ([rodjek](https://github.com/rodjek))
+- \(maint\) Use same rspec pattern in acceptance suite [\#789](https://github.com/puppetlabs/pdk/pull/789) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1519\) Print deprecation notice on Ruby \< 2.4 [\#785](https://github.com/puppetlabs/pdk/pull/785) ([rodjek](https://github.com/rodjek))
+- \(maint\) Setup autoloads for TTY::Prompt [\#784](https://github.com/puppetlabs/pdk/pull/784) ([rtib](https://github.com/rtib))
+- \(GH-768\) Fix in\_module\_root? gives false positives [\#783](https://github.com/puppetlabs/pdk/pull/783) ([glennsarti](https://github.com/glennsarti))
+- \(maint\) Run acceptance:local tests in parallel during CI [\#781](https://github.com/puppetlabs/pdk/pull/781) ([rodjek](https://github.com/rodjek))
+- \(MAINT\) Fix new provider error message [\#780](https://github.com/puppetlabs/pdk/pull/780) ([michaeltlombardi](https://github.com/michaeltlombardi))
+- \(PDK-1525\) Use less restrictive minitar version [\#779](https://github.com/puppetlabs/pdk/pull/779) ([glennsarti](https://github.com/glennsarti))
+- \(maint\) PDK as a library [\#778](https://github.com/puppetlabs/pdk/pull/778) ([rodjek](https://github.com/rodjek))
+- \(PDK-1517\) Bump version to 1.15.0.pre [\#772](https://github.com/puppetlabs/pdk/pull/772) ([scotje](https://github.com/scotje))
+- \(\#770\) Add missing require to PDK::Module::Metadata.from\_file [\#771](https://github.com/puppetlabs/pdk/pull/771) ([hajee](https://github.com/hajee))
+
 ## [v1.14.0](https://github.com/puppetlabs/pdk/tree/v1.14.0) (2019-10-09)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.13.0...v1.14.0)
 
