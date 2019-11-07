@@ -11,8 +11,8 @@ module PDK
       attr_reader :target_dir
 
       def initialize(options = {})
-        @module_dir = File.expand_path(options[:module_dir] || Dir.pwd)
-        @target_dir = File.expand_path(options[:'target-dir'] || File.join(module_dir, 'pkg'))
+        @module_dir = PDK::Util::Filesystem.expand_path(options[:module_dir] || Dir.pwd)
+        @target_dir = PDK::Util::Filesystem.expand_path(options[:'target-dir'] || File.join(module_dir, 'pkg'))
       end
 
       # Read and parse the values from metadata.json for the module that is

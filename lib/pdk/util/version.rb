@@ -25,7 +25,7 @@ module PDK
 
       def self.git_ref
         require 'pdk/util/git'
-        source_git_dir = File.join(File.expand_path('../../..', File.dirname(__FILE__)), '.git')
+        source_git_dir = File.join(PDK::Util::Filesystem.expand_path('../../..', File.dirname(__FILE__)), '.git')
 
         return unless PDK::Util::Filesystem.directory?(source_git_dir)
 

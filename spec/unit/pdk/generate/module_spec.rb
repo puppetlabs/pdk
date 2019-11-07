@@ -57,7 +57,7 @@ describe PDK::Generate::Module do
       allow(File).to receive(:open).with(any_args).and_call_original
     end
 
-    let(:target_dir) { File.expand_path('/path/to/target/module') }
+    let(:target_dir) { PDK::Util::Filesystem.expand_path('/path/to/target/module') }
     let(:invoke_opts) do
       {
         :target_dir       => target_dir,

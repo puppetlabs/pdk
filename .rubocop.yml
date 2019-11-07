@@ -168,3 +168,12 @@ PDK/FileUtilsMkdirP:
     - lib/pdk/util/filesystem.rb
     - spec/acceptance/*
     - rakelib/command_spec.rake
+
+PDK/FileExpandPath:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - package-testing/**/*
+    - rakelib/*
+    - spec/spec_helper.rb
+    - spec/acceptance/**/*.rb
+    - pdk.gemspec

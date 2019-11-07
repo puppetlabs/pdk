@@ -134,6 +134,40 @@ module RuboCop
           end
         end
       end
+
+      class FileExpandPath < Cop
+        MSG = 'Use PDK::Util::Filesystem.expand_path instead of File.expand_path'.freeze
+
+        def_node_matcher :file_expand_path?,
+                         '(send (const nil? :File) :expand_path ...)'
+
+        def_node_matcher :allow_file?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :File))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_expand_path?,
+                        '(send nil? :receive (sym :expand_path))'
+
+        def on_send(node)
+          return unless file_expand_path?(node) || (allow_file?(node) && receive_expand_path?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if file_expand_path?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end

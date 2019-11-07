@@ -73,7 +73,7 @@ describe PDK::Report do
             {
               source:  'rspec',
               state:   :passed,
-              file:    "#{File.expand_path(Dir.pwd)}/private/cache/ruby/lib/rspec-puppet/coverage.rb",
+              file:    "#{PDK::Util::Filesystem.expand_path(Dir.pwd)}/private/cache/ruby/lib/rspec-puppet/coverage.rb",
               message: 'coverage report text',
             },
             {

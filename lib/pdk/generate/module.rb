@@ -16,7 +16,7 @@ module PDK
           raise PDK::CLI::ExitWithError, error_msg
         end
 
-        target_dir = File.expand_path(opts[:target_dir])
+        target_dir = PDK::Util::Filesystem.expand_path(opts[:target_dir])
         raise PDK::CLI::ExitWithError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if PDK::Util::Filesystem.exist?(target_dir)
       end
 
@@ -31,7 +31,7 @@ module PDK
 
         metadata = prepare_metadata(opts)
 
-        target_dir = File.expand_path(opts[:target_dir] || opts[:module_name])
+        target_dir = PDK::Util::Filesystem.expand_path(opts[:target_dir] || opts[:module_name])
         parent_dir = File.dirname(target_dir)
 
         begin

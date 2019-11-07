@@ -40,13 +40,13 @@ module PDK
     #   nil if the target file could not be found.
     def find_upwards(target, start_dir = nil)
       previous = nil
-      current  = File.expand_path(start_dir || Dir.pwd)
+      current  = PDK::Util::Filesystem.expand_path(start_dir || Dir.pwd)
 
       until !PDK::Util::Filesystem.directory?(current) || current == previous
         filename = File.join(current, target)
         return filename if PDK::Util::Filesystem.file?(filename)
         previous = current
-        current = File.expand_path('..', current)
+        current = PDK::Util::Filesystem.expand_path('..', current)
       end
     end
     module_function :find_upwards
@@ -77,7 +77,7 @@ module PDK
         end
         PDK::Util::Windows::File.get_long_pathname(path)
       else
-        File.expand_path(path)
+        PDK::Util::Filesystem.expand_path(path)
       end
     end
     module_function :canonical_path
