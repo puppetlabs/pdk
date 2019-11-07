@@ -64,12 +64,11 @@ describe PDK::Validate::PuppetEPP do
     context 'when a temp dir has been created' do
       before(:each) do
         described_class.validate_tmpdir
-        allow(File).to receive(:directory?).and_call_original
       end
 
       context 'and the path is a directory' do
         before(:each) do
-          allow(File).to receive(:directory?).with(tmpdir).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:directory?).with(tmpdir).and_return(true)
         end
 
         it 'removes the directory' do
@@ -79,7 +78,7 @@ describe PDK::Validate::PuppetEPP do
 
       context 'but the path is not a directory' do
         before(:each) do
-          allow(File).to receive(:directory?).with(tmpdir).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:directory?).with(tmpdir).and_return(false)
         end
 
         it 'does not attempt to remove the directory' do

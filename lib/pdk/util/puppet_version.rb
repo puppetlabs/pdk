@@ -59,7 +59,7 @@ module PDK
           # Check if the path has something in it already. Delete it and prepare for clone if so.
           if PDK::Util::Filesystem.exist? puppet_dev_path
             File.delete(puppet_dev_path) if PDK::Util::Filesystem.file? puppet_dev_path
-            FileUtils.rm_rf(puppet_dev_path) if File.directory? puppet_dev_path
+            FileUtils.rm_rf(puppet_dev_path) if PDK::Util::Filesystem.directory? puppet_dev_path
           end
 
           FileUtils.mkdir_p puppet_dev_path

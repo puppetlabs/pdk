@@ -63,7 +63,7 @@ module PDK
       end
 
       def self.repo?(maybe_repo)
-        return bare_repo?(maybe_repo) if File.directory?(maybe_repo)
+        return bare_repo?(maybe_repo) if PDK::Util::Filesystem.directory?(maybe_repo)
 
         remote_repo?(maybe_repo)
       end
@@ -80,7 +80,7 @@ module PDK
       end
 
       def self.work_tree?(path)
-        return false unless File.directory?(path)
+        return false unless PDK::Util::Filesystem.directory?(path)
 
         Dir.chdir(path) do
           rev_parse = git('rev-parse', '--is-inside-work-tree')
@@ -89,14 +89,14 @@ module PDK
       end
 
       def self.work_dir_clean?(repo)
-        raise PDK::CLI::ExitWithError, _('Unable to locate git work dir "%{workdir}"') % { workdir: repo } unless File.directory?(repo)
-        raise PDK::CLI::ExitWithError, _('Unable to locate git dir "%{gitdir}"') % { gitdir: repo } unless File.directory?(File.join(repo, '.git'))
+        raise PDK::CLI::ExitWithError, _('Unable to locate git work dir "%{workdir}"') % { workdir: repo } unless PDK::Util::Filesystem.directory?(repo)
+        raise PDK::CLI::ExitWithError, _('Unable to locate git dir "%{gitdir}"') % { gitdir: repo } unless PDK::Util::Filesystem.directory?(File.join(repo, '.git'))
 
         git('--work-tree', repo, '--git-dir', File.join(repo, '.git'), 'status', '--untracked-files=no', '--porcelain', repo)[:stdout].empty?
       end
 
       def self.ls_remote(repo, ref)
-        if File.directory?(repo)
+        if PDK::Util::Filesystem.directory?(repo)
           repo = 'file://' + repo
         end
 

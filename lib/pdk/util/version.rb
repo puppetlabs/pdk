@@ -27,7 +27,7 @@ module PDK
         require 'pdk/util/git'
         source_git_dir = File.join(File.expand_path('../../..', File.dirname(__FILE__)), '.git')
 
-        return unless File.directory?(source_git_dir)
+        return unless PDK::Util::Filesystem.directory?(source_git_dir)
 
         PDK::Util::Git.describe(source_git_dir)
       end

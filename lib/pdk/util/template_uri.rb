@@ -257,7 +257,7 @@ module PDK
         return true if PDK::Util::Git.repo?(git_remote(template[:uri]))
 
         path = human_readable(template[:uri].path)
-        if File.directory?(path)
+        if PDK::Util::Filesystem.directory?(path)
           begin
             PDK::Module::TemplateDir.new(path) {}
             return true

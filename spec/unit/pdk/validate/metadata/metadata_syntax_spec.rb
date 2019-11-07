@@ -6,7 +6,7 @@ describe PDK::Validate::MetadataSyntax do
 
   before(:each) do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
-    allow(File).to receive(:directory?).with(module_root).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:directory?).with(module_root).and_return(true)
   end
 
   it_behaves_like 'it accepts metadata.json targets'
@@ -19,7 +19,7 @@ describe PDK::Validate::MetadataSyntax do
 
     before(:each) do
       targets.each do |target|
-        allow(File).to receive(:directory?).with(target[:name]).and_return(target.fetch(:directory, false))
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(target[:name]).and_return(target.fetch(:directory, false))
         allow(PDK::Util::Filesystem).to receive(:file?).with(target[:name]).and_return(target.fetch(:file, true))
         allow(File).to receive(:readable?).with(target[:name]).and_return(target.fetch(:readable, true))
         allow(File).to receive(:read).with(target[:name]).and_return(target.fetch(:content, ''))

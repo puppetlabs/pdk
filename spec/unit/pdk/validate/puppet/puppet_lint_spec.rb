@@ -20,7 +20,7 @@ describe PDK::Validate::PuppetLint do
 
   before(:each) do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
-    allow(File).to receive(:directory?).with(module_root).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:directory?).with(module_root).and_return(true)
   end
 
   it 'defines the base validator attributes' do

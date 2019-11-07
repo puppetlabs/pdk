@@ -120,7 +120,7 @@ module PDK
         relative_path = Pathname.new(path).relative_path_from(Pathname.new(module_dir))
         dest_path = File.join(build_dir, relative_path)
 
-        if File.directory?(path)
+        if PDK::Util::Filesystem.directory?(path)
           FileUtils.mkdir_p(dest_path, mode: File.stat(path).mode)
         elsif File.symlink?(path)
           warn_symlink(path)
@@ -142,7 +142,7 @@ module PDK
       #
       # @return [Boolean] true if the path matches and should be ignored.
       def ignored_path?(path)
-        path = path.to_s + '/' if File.directory?(path)
+        path = path.to_s + '/' if PDK::Util::Filesystem.directory?(path)
 
         !ignored_files.match_paths([path], module_dir).empty?
       end

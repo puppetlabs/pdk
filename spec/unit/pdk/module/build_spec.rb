@@ -183,7 +183,7 @@ describe PDK::Module::Build do
 
     context 'when the path is a directory' do
       before(:each) do
-        allow(File).to receive(:directory?).with(path_to_stage).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(true)
         allow(File).to receive(:stat).with(path_to_stage).and_return(instance_double(File::Stat, mode: 0o100755))
       end
 
@@ -195,7 +195,7 @@ describe PDK::Module::Build do
 
     context 'when the path is a symlink' do
       before(:each) do
-        allow(File).to receive(:directory?).with(path_to_stage).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
         allow(File).to receive(:symlink?).with(path_to_stage).and_return(true)
       end
 
@@ -209,7 +209,7 @@ describe PDK::Module::Build do
 
     context 'when the path is a regular file' do
       before(:each) do
-        allow(File).to receive(:directory?).with(path_to_stage).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
         allow(File).to receive(:symlink?).with(path_to_stage).and_return(false)
       end
 

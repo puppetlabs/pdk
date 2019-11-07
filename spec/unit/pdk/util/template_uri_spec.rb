@@ -577,7 +577,7 @@ describe PDK::Util::TemplateURI do
 
           context 'but does point to a directory' do
             before(:each) do
-              allow(File).to receive(:directory?).with('/path/to/a/template').and_return(true)
+              allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/a/template').and_return(true)
             end
 
             context 'that contains a valid template' do

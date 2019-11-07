@@ -66,7 +66,7 @@ module PDK
 
       def self.remove_validate_tmpdir
         return unless @validate_tmpdir
-        return unless File.directory?(@validate_tmpdir)
+        return unless PDK::Util::Filesystem.directory?(@validate_tmpdir)
 
         require 'fileutils'
 

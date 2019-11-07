@@ -25,7 +25,7 @@ describe PDK::CLI::Util do
     context 'when there is no metadata.json' do
       before(:each) do
         allow(PDK::Util).to receive(:module_root).and_return(nil)
-        allow(File).to receive(:directory?).with(anything).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(false)
       end
 
       context 'when passed :check_module_layout => true' do
@@ -47,7 +47,7 @@ describe PDK::CLI::Util do
 
       context 'when not passed :check_module_layout' do
         before(:each) do
-          allow(File).to receive(:directory?).with(anything).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(true)
         end
 
         it 'raises an error' do
