@@ -152,3 +152,9 @@ PDK/FileFilePredicate:
   Exclude:
     - lib/pdk/util/filesystem.rb
     - Gemfile
+
+PDK/FileExistPredicate:
+  Exclude:
+    - Rakefile
+    - lib/pdk/util/filesystem.rb
+    - package-testing/Rakefile

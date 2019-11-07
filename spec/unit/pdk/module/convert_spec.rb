@@ -691,7 +691,7 @@ describe PDK::Module::Convert do
       context 'when the spec file exists' do
         before(:each) do
           instance.test_generators.each do |gen|
-            allow(File).to receive(:exist?).with(gen.target_spec_path).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:exist?).with(gen.target_spec_path).and_return(true)
           end
         end
 
@@ -701,7 +701,7 @@ describe PDK::Module::Convert do
       context 'when the spec file does not exist' do
         before(:each) do
           instance.test_generators.each do |gen|
-            allow(File).to receive(:exist?).with(gen.target_spec_path).and_return(false)
+            allow(PDK::Util::Filesystem).to receive(:exist?).with(gen.target_spec_path).and_return(false)
           end
         end
 

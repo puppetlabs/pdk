@@ -47,7 +47,7 @@ module PDK
       # Verify if there is an existing package in the target directory and prompts
       # the user if they want to overwrite it.
       def package_already_exists?
-        File.exist? package_file
+        PDK::Util::Filesystem.exist?(package_file)
       end
 
       # Check if the module is PDK Compatible. If not, then prompt the user if

@@ -248,8 +248,8 @@ describe PDK::Generate::PuppetObject do
     let(:target_spec_exists) { false }
 
     before(:each) do
-      allow(File).to receive(:exist?).with(target_object_path).and_return(target_object_exists)
-      allow(File).to receive(:exist?).with(target_spec_path).and_return(target_spec_exists)
+      allow(PDK::Util::Filesystem).to receive(:exist?).with(target_object_path).and_return(target_object_exists)
+      allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(target_spec_exists)
       allow(templated_object).to receive(:target_object_path).and_return(target_object_path)
       allow(templated_object).to receive(:target_spec_path).and_return(target_spec_path)
     end
@@ -326,8 +326,8 @@ describe PDK::Generate::PuppetObject do
       let(:spec_template) { '/tmp/test_template/spec.erb' }
 
       before(:each) do
-        allow(File).to receive(:exist?).with(target_object_path).and_return(false)
-        allow(File).to receive(:exist?).with(target_spec_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_object_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(false)
       end
 
       it 'renders the object file' do
@@ -346,8 +346,8 @@ describe PDK::Generate::PuppetObject do
 
     context 'when the target object file exists' do
       before(:each) do
-        allow(File).to receive(:exist?).with(target_spec_path).and_return(false)
-        allow(File).to receive(:exist?).with(target_object_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_object_path).and_return(true)
       end
 
       it 'raises an error' do
@@ -357,8 +357,8 @@ describe PDK::Generate::PuppetObject do
 
     context 'when the target spec file exists' do
       before(:each) do
-        allow(File).to receive(:exist?).with(target_object_path).and_return(false)
-        allow(File).to receive(:exist?).with(target_spec_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_object_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(true)
       end
 
       it 'raises an error' do
@@ -371,7 +371,7 @@ describe PDK::Generate::PuppetObject do
 
       context 'when the target spec file exists' do
         before(:each) do
-          allow(File).to receive(:exist?).with(target_spec_path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(true)
         end
 
         it 'raises an error' do
@@ -387,7 +387,7 @@ describe PDK::Generate::PuppetObject do
         let(:spec_template) { '/tmp/test_template/spec.erb' }
 
         before(:each) do
-          allow(File).to receive(:exist?).with(target_spec_path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(false)
           allow(templated_object).to receive(:with_templates).and_yield({ object: object_template, spec: spec_template }, {})
         end
 

@@ -73,7 +73,7 @@ describe PDK::Generate::Module do
 
     context 'when the target module directory already exists' do
       it 'raises a FatalError' do
-        allow(File).to receive(:exist?).with(target_dir).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_dir).and_return(true)
         expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
         expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
 
@@ -92,7 +92,7 @@ describe PDK::Generate::Module do
       let(:target_parent_writeable) { true }
 
       before(:each) do
-        allow(File).to receive(:exist?).with(target_dir).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_dir).and_return(false)
         allow(PDK::Util).to receive(:make_tmpdir_name).with(anything).and_return(temp_target_dir)
         allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
         allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')

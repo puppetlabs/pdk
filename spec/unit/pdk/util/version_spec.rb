@@ -11,7 +11,7 @@ describe PDK::Util::Version do
   context 'when running from a checkout' do
     before(:each) do
       allow(PDK::Util).to receive(:find_upwards).and_return('/tmp/package/PDK_VERSION')
-      allow(File).to receive(:exist?).with('/tmp/package/PDK_VERSION').and_return(false)
+      allow(PDK::Util::Filesystem).to receive(:exist?).with('/tmp/package/PDK_VERSION').and_return(false)
       allow(File).to receive(:directory?).with(%r{.git\Z}).and_return(true)
 
       result = instance_double('exec_git_describe_result')
@@ -33,7 +33,7 @@ describe PDK::Util::Version do
   context 'when running from a package' do
     before(:each) do
       allow(PDK::Util).to receive(:find_upwards).and_return('/tmp/package/PDK_VERSION')
-      allow(File).to receive(:exist?).with('/tmp/package/PDK_VERSION').and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:exist?).with('/tmp/package/PDK_VERSION').and_return(true)
       allow(File).to receive(:read).with('/tmp/package/PDK_VERSION').and_return('0.1.2.3.4.pkg_hash')
       allow(File).to receive(:directory?).with(%r{.git\Z}).and_return(false)
       allow(PDK::CLI::Exec).to receive(:git).never

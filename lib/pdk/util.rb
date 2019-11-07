@@ -72,7 +72,7 @@ module PDK
     # @return [String] Canonical path
     def canonical_path(path)
       if Gem.win_platform?
-        unless File.exist?(path)
+        unless PDK::Util::Filesystem.exist?(path)
           raise PDK::CLI::FatalError, _("Cannot resolve a full path to '%{path}', as it does not currently exist.") % { path: path }
         end
         PDK::Util::Windows::File.get_long_pathname(path)

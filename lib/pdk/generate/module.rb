@@ -17,7 +17,7 @@ module PDK
         end
 
         target_dir = File.expand_path(opts[:target_dir])
-        raise PDK::CLI::ExitWithError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if File.exist?(target_dir)
+        raise PDK::CLI::ExitWithError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if PDK::Util::Filesystem.exist?(target_dir)
       end
 
       def self.invoke(opts = {})

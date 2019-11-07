@@ -121,7 +121,9 @@ module PDK
               File.join(PDK::Util.package_cachedir, 'Gemfile.lock'),
             ]
 
-            vendored_gemfile_lock = vendored_lockfiles.find { |lockfile| File.exist?(lockfile) }
+            vendored_gemfile_lock = vendored_lockfiles.find do |lockfile|
+              PDK::Util::Filesystem.exist?(lockfile)
+            end
 
             unless vendored_gemfile_lock
               raise PDK::CLI::FatalError, _('Vendored Gemfile.lock (%{source}) not found.') % {

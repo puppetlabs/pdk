@@ -66,7 +66,7 @@ describe PDK::Module::UpdateManager do
 
     context 'when the file does not exist on disk' do
       before(:each) do
-        allow(File).to receive(:exist?).with(dummy_file).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(dummy_file).and_return(false)
       end
 
       it 'does not create a pending change' do
@@ -76,7 +76,7 @@ describe PDK::Module::UpdateManager do
 
     context 'when the file exists on disk' do
       before(:each) do
-        allow(File).to receive(:exist?).with(dummy_file).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(dummy_file).and_return(true)
       end
 
       it 'creates a pending change' do

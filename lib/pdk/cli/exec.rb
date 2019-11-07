@@ -67,7 +67,8 @@ module PDK
 
         vendored_bin_full_path = File.join(PDK::Util.pdk_package_basedir, vendored_bin_path)
 
-        unless File.exist?(vendored_bin_full_path)
+        require 'pdk/util/filesystem'
+        unless PDK::Util::Filesystem.exist?(vendored_bin_full_path)
           PDK.logger.debug(_("Could not find '%{vendored_bin}' in PDK package. Trying '%{fallback}' from the system PATH instead.") % {
             fallback: fallback,
             vendored_bin: vendored_bin_full_path,

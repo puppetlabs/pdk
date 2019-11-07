@@ -111,7 +111,7 @@ describe PDK::Util do
 
       context 'and the path does not exist' do
         before(:each) do
-          allow(File).to receive(:exist?).with(path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(path).and_return(false)
         end
 
         it 'raises a FatalError' do
@@ -123,7 +123,7 @@ describe PDK::Util do
 
       context 'and the path exists' do
         before(:each) do
-          allow(File).to receive(:exist?).with(path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(path).and_return(true)
         end
 
         it 'calls Puppet::Util::Windows::File.get_long_pathname to resolve the absolute path' do
