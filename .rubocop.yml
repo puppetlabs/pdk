@@ -191,3 +191,8 @@ PDK/FileReadablePredicate:
   Exclude:
     - lib/pdk/util/filesystem.rb
     - Gemfile
+
+PDK/FileUtilsRm:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb

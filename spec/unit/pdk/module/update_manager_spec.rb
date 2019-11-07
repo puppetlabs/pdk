@@ -98,14 +98,14 @@ describe PDK::Module::UpdateManager do
           end
 
           it 'removes the file' do
-            expect(FileUtils).to receive(:rm).with(dummy_file)
+            expect(PDK::Util::Filesystem).to receive(:rm).with(dummy_file)
 
             update_manager.sync_changes!
           end
 
           context 'but it fails to remove the file' do
             before(:each) do
-              allow(FileUtils).to receive(:rm).with(dummy_file).and_raise(StandardError, 'an unknown error')
+              allow(PDK::Util::Filesystem).to receive(:rm).with(dummy_file).and_raise(StandardError, 'an unknown error')
             end
 
             it 'exits with an error' do
@@ -122,7 +122,7 @@ describe PDK::Module::UpdateManager do
           end
 
           it 'does not attempt to remove the file' do
-            expect(FileUtils).not_to receive(:rm).with(dummy_file)
+            expect(PDK::Util::Filesystem).not_to receive(:rm).with(dummy_file)
 
             update_manager.sync_changes!
           end

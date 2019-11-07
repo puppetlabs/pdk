@@ -268,6 +268,39 @@ module RuboCop
           end
         end
       end
+
+      class FileUtilsRm < Cop
+        MSG = 'Use PDK::Util::Filesystem.rm instead of FileUtils.rm'.freeze
+
+        def_node_matcher :fileutils_rm?,
+                         '(send (const nil? :FileUtils) :rm ...)'
+
+        def_node_matcher :allow_fileutils?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :FileUtils))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_rm?, '(send nil? :receive (sym :rm))'
+
+        def on_send(node)
+          return unless fileutils_rm?(node) || (allow_fileutils?(node) && receive_rm?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if fileutils_rm?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end
