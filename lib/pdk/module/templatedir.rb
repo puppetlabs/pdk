@@ -213,7 +213,7 @@ module PDK
         unless PDK::Util::Filesystem.directory?(@path)
           require 'pdk/util'
 
-          if PDK::Util.package_install? && File.fnmatch?(File.join(PDK::Util.package_cachedir, '*'), @path)
+          if PDK::Util.package_install? && PDK::Util::Filesystem.fnmatch?(File.join(PDK::Util.package_cachedir, '*'), @path)
             raise ArgumentError, _('The built-in template has substantially changed. Please run "pdk convert" on your module to continue.')
           else
             raise ArgumentError, _("The specified template '%{path}' is not a directory.") % { path: @path }

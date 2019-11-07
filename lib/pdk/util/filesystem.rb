@@ -58,6 +58,11 @@ module PDK
       end
       module_function :fnmatch
 
+      def fnmatch?(*args)
+        File.fnmatch?(*args)
+      end
+      module_function :fnmatch?
+
       def readable?(*args)
         File.readable?(*args)
       end

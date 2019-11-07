@@ -182,3 +182,7 @@ PDK/DirGlob:
   Exclude:
     - lib/pdk/util/filesystem.rb
     - rakelib/command_spec.rake
+
+PDK/FileFnmatchPredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb

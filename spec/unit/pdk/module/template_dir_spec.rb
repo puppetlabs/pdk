@@ -118,7 +118,7 @@ describe PDK::Module::TemplateDir do
         before(:each) do
           # rubocop:disable RSpec/AnyInstance
           allow(PDK::Util).to receive(:package_install?).and_return(true)
-          allow(File).to receive(:fnmatch?).with(anything, path_or_url).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:fnmatch?).with(anything, path_or_url).and_return(true)
           allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('/', 'path', 'to', 'package', 'cachedir'))
           allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path_or_url)
           allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)

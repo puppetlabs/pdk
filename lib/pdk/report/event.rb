@@ -98,7 +98,7 @@ module PDK
       #   results.
       def rspec_puppet_coverage?
         @rspec_puppet_coverage_pattern ||= File.join('**', 'lib', 'rspec-puppet', 'coverage.rb')
-        source == 'rspec' && File.fnmatch?(@rspec_puppet_coverage_pattern, PDK::Util::Filesystem.expand_path(file))
+        source == 'rspec' && PDK::Util::Filesystem.fnmatch?(@rspec_puppet_coverage_pattern, PDK::Util::Filesystem.expand_path(file))
       end
 
       # Renders the event in a clang style text format.
