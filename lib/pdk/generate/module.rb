@@ -269,7 +269,7 @@ module PDK
 
         interview.add_questions(questions)
 
-        if File.file?('metadata.json')
+        if PDK::Util::Filesystem.file?('metadata.json')
           puts _(
             "\nWe need to update the metadata.json file for this module, so we\'re going to ask you %{count} " \
             "questions.\n",

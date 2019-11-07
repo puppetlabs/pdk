@@ -173,12 +173,12 @@ module PDK
         spec_path = File.join(@object_dir, "#{object_type}_spec.erb")
         type_spec_path = File.join(@object_dir, "#{object_type}_type_spec.erb")
 
-        if File.file?(object_path) && File.readable?(object_path)
+        if PDK::Util::Filesystem.file?(object_path) && File.readable?(object_path)
           result = { object: object_path }
-          result[:type] = type_path if File.file?(type_path) && File.readable?(type_path)
-          result[:spec] = spec_path if File.file?(spec_path) && File.readable?(spec_path)
-          result[:device] = device_path if File.file?(device_path) && File.readable?(device_path)
-          result[:type_spec] = type_spec_path if File.file?(type_spec_path) && File.readable?(type_spec_path)
+          result[:type] = type_path if PDK::Util::Filesystem.file?(type_path) && File.readable?(type_path)
+          result[:spec] = spec_path if PDK::Util::Filesystem.file?(spec_path) && File.readable?(spec_path)
+          result[:device] = device_path if PDK::Util::Filesystem.file?(device_path) && File.readable?(device_path)
+          result[:type_spec] = type_spec_path if PDK::Util::Filesystem.file?(type_spec_path) && File.readable?(type_spec_path)
           result
         else
           nil
@@ -244,7 +244,7 @@ module PDK
         dirs.each do |dir|
           raise ArgumentError, _("The directory '%{dir}' doesn't exist") % { dir: dir } unless Dir.exist?(dir)
           temp_paths += Dir.glob(File.join(dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
-            if File.file?(template_path) && !File.symlink?(template_path)
+            if PDK::Util::Filesystem.file?(template_path) && !File.symlink?(template_path)
               dirlocs << dir
             end
           end
@@ -311,7 +311,7 @@ module PDK
       #
       # @api private
       def read_config(loc)
-        if File.file?(loc) && File.readable?(loc)
+        if PDK::Util::Filesystem.file?(loc) && File.readable?(loc)
           require 'yaml'
 
           begin

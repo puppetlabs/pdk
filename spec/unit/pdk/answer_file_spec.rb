@@ -7,7 +7,7 @@ shared_context 'a valid answer file' do
 
   before(:each) do
     allow(PDK::Util).to receive(:package_install?).and_return(false)
-    allow(File).to receive(:file?).with(default_path).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:file?).with(default_path).and_return(true)
     allow(File).to receive(:zero?).with(default_path).and_return(false)
     allow(File).to receive(:readable?).with(default_path).and_return(true)
     allow(File).to receive(:read).with(default_path).and_return('{"question": "answer"}')
@@ -37,7 +37,7 @@ describe PDK::AnswerFile do
     context 'when the answer file does not exist' do
       before(:each) do
         allow(PDK::Util).to receive(:package_install?).and_return(false)
-        allow(File).to receive(:file?).with(default_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(default_path).and_return(false)
       end
 
       it 'creates an empty set of answers' do
@@ -48,7 +48,7 @@ describe PDK::AnswerFile do
     context 'when the answer file exists' do
       before(:each) do
         allow(PDK::Util).to receive(:package_install?).and_return(false)
-        allow(File).to receive(:file?).with(default_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(default_path).and_return(true)
       end
 
       context 'and contains no data' do

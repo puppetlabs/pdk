@@ -55,7 +55,7 @@ describe PDK::Util do
       allow(File).to receive(:directory?).with('/').and_return(true)
       allow(File).to receive(:expand_path).with('..', '/').and_return('/')
       allow(File).to receive(:expand_path).with(actual_start_dir).and_return(actual_start_dir)
-      allow(File).to receive(:file?).with(a_string_matching(%r{metadata\.json\Z})).and_return(false)
+      allow(PDK::Util::Filesystem).to receive(:file?).with(a_string_matching(%r{metadata\.json\Z})).and_return(false)
     end
 
     context 'when start_dir is nil' do
@@ -65,7 +65,7 @@ describe PDK::Util do
 
       context 'and the target file exists' do
         before(:each) do
-          allow(File).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
         end
 
         it { is_expected.to eq('/path/to/something/metadata.json') }
@@ -81,7 +81,7 @@ describe PDK::Util do
 
       context 'and the target file exists' do
         before(:each) do
-          allow(File).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
         end
 
         it { is_expected.to eq('/path/to/something/metadata.json') }

@@ -195,7 +195,7 @@ module PDK
         else
           explicit_uri = nil
         end
-        metadata_uri = if PDK::Util.module_root && File.file?(File.join(PDK::Util.module_root, 'metadata.json'))
+        metadata_uri = if PDK::Util.module_root && PDK::Util::Filesystem.file?(File.join(PDK::Util.module_root, 'metadata.json'))
                          if PDK::Util.module_metadata['template-url']
                            new(uri_safe(PDK::Util.module_metadata['template-url'])).uri
                          else

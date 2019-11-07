@@ -6,7 +6,7 @@ shared_context :with_puppet_object_module_metadata do
   let(:module_metadata) { '{"name": "testuser-test_module"}' }
 
   before(:each) do
-    allow(File).to receive(:file?).with(metadata_path).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_path).and_return(true)
     allow(File).to receive(:readable?).with(metadata_path).and_return(true)
     allow(File).to receive(:read).with(metadata_path).and_return(module_metadata)
   end
@@ -84,7 +84,7 @@ describe PDK::Generate::PuppetObject do
 
     context 'when the module metadata.json is not available' do
       before(:each) do
-        allow(File).to receive(:file?).with(metadata_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_path).and_return(false)
       end
 
       it 'raises a fatal error' do

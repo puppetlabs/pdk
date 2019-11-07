@@ -91,7 +91,7 @@ module PDK
         end
 
         def locked?
-          !gemfile_lock.nil? && File.file?(gemfile_lock)
+          !gemfile_lock.nil? && PDK::Util::Filesystem.file?(gemfile_lock)
         end
 
         def installed?(gem_overrides = {})
@@ -212,7 +212,7 @@ module PDK
 
         def binstubs!(gems)
           binstub_dir = File.join(File.dirname(gemfile), 'bin')
-          return true if gems.all? { |gem| File.file?(File.join(binstub_dir, gem)) }
+          return true if gems.all? { |gem| PDK::Util::Filesystem.file?(File.join(binstub_dir, gem)) }
 
           cmd = bundle_command('binstubs', *gems, '--force')
           result = cmd.execute!

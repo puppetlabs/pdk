@@ -344,7 +344,7 @@ describe PDK::Generate::Module do
       end
 
       before(:each) do
-        allow(File).to receive(:file?).with('metadata.json').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with('metadata.json').and_return(true)
       end
 
       it 'populates the metadata object based on user input' do
@@ -392,7 +392,7 @@ describe PDK::Generate::Module do
         end
 
         before(:each) do
-          allow(File).to receive(:file?).with('metadata.json').and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:file?).with('metadata.json').and_return(false)
         end
 
         it 'populates the Metadata object based on user input' do

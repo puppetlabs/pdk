@@ -44,7 +44,7 @@ module PDK
 
       until !File.directory?(current) || current == previous
         filename = File.join(current, target)
-        return filename if File.file?(filename)
+        return filename if PDK::Util::Filesystem.file?(filename)
         previous = current
         current = File.expand_path('..', current)
       end

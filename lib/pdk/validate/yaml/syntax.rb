@@ -65,7 +65,7 @@ module PDK
           PDK.logger.debug(_('Validating yaml content of %{parsed_targets}') % { parsed_targets: targets.to_s })
 
           targets.each do |target|
-            next unless File.file?(target)
+            next unless PDK::Util::Filesystem.file?(target)
 
             unless File.readable?(target)
               report.add_event(

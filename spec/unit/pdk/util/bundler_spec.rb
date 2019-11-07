@@ -330,7 +330,7 @@ RSpec.describe PDK::Util::Bundler do
       context 'when Gemfile.lock exists' do
         before(:each) do
           allow(PDK::Util).to receive(:find_upwards).with(%r{Gemfile$}).and_return('/Gemfile')
-          allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(true)
         end
 
         it { is_expected.to be true }
@@ -339,7 +339,7 @@ RSpec.describe PDK::Util::Bundler do
       context 'when Gemfile.lock does not exist' do
         before(:each) do
           allow(PDK::Util).to receive(:find_upwards).with(%r{Gemfile$}).and_return(nil)
-          allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(false)
         end
 
         it { is_expected.to be false }
@@ -629,7 +629,7 @@ RSpec.describe PDK::Util::Bundler do
 
       before(:each) do
         allow(instance).to receive(:gemfile).and_return(gemfile)
-        allow(File).to receive(:file?).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:file?).and_return(false)
       end
 
       it 'invokes `bundle binstubs` with requested gems' do
@@ -658,7 +658,7 @@ RSpec.describe PDK::Util::Bundler do
       context 'when binstubs for all requested gems are already present' do
         before(:each) do
           requested_gems.each do |gemname|
-            allow(File).to receive(:file?).with(%r{#{gemname}$}).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:file?).with(%r{#{gemname}$}).and_return(true)
           end
         end
 

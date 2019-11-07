@@ -346,7 +346,10 @@ module PDK
       def context_lines(max_num_lines = 5)
         return if file.nil? || line.nil?
 
-        file_path = [file, File.join(PDK::Util.module_root, file)].find { |r| File.file?(r) }
+        file_path = [file, File.join(PDK::Util.module_root, file)].find do |path|
+          PDK::Util::Filesystem.file?(path)
+        end
+
         return if file_path.nil?
 
         file_content = File.read(file_path).split("\n")

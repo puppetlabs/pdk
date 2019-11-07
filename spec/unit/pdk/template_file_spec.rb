@@ -37,7 +37,7 @@ describe PDK::TemplateFile do
 
     context 'that exists' do
       before(:each) do
-        expect(File).to receive(:file?).with(template_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(template_path).and_return(true)
         expect(File).to receive(:readable?).with(template_path).and_return(true)
       end
 
@@ -66,14 +66,14 @@ describe PDK::TemplateFile do
 
     context 'that does not exist' do
       it 'raises an ArgumentError' do
-        expect(File).to receive(:file?).with(template_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(template_path).and_return(false)
         expect { template_file.render }.to raise_error(ArgumentError, "'#{template_path}' is not a readable file")
       end
     end
 
     context 'that exists but is not readable' do
       it 'raises an ArgumentError' do
-        expect(File).to receive(:file?).with(template_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(template_path).and_return(true)
         expect(File).to receive(:readable?).with(template_path).and_return(false)
         expect { template_file.render }.to raise_error(ArgumentError, "'#{template_path}' is not a readable file")
       end

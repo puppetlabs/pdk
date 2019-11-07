@@ -174,7 +174,7 @@ describe PDK::Validate::MetadataJSONLint do
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!).with(described_class.cmd)
       targets.each do |target|
         allow(File).to receive(:directory?).with(target).and_return(false)
-        allow(File).to receive(:file?).with(target).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(target).and_return(true)
       end
     end
 

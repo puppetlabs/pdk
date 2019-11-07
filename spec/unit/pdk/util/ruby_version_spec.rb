@@ -178,8 +178,10 @@ describe PDK::Util::RubyVersion do
       allow(Dir).to receive(:[]).with(gem_home_pattern).and_return(gem_home_results.keys)
 
       gem_path_results.merge(gem_home_results).each do |spec_path, spec_content|
+        # rubocop:disable PDK/FileFilePredicate Gem internal method
         allow(File).to receive(:file?).with(spec_path).and_return(true)
         allow(File).to receive(:read).with(spec_path, mode: 'r:UTF-8:-').and_return(spec_content)
+        # rubocop:enable PDK/FileFilePredicate
       end
     end
 

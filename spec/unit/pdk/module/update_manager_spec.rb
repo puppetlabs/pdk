@@ -94,7 +94,7 @@ describe PDK::Module::UpdateManager do
       context 'when syncing the changes' do
         context 'and the file exists' do
           before(:each) do
-            allow(File).to receive(:file?).with(dummy_file).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:file?).with(dummy_file).and_return(true)
           end
 
           it 'removes the file' do
@@ -118,7 +118,7 @@ describe PDK::Module::UpdateManager do
 
         context 'and the file does not exist' do
           before(:each) do
-            allow(File).to receive(:file?).with(dummy_file).and_return(false)
+            allow(PDK::Util::Filesystem).to receive(:file?).with(dummy_file).and_return(false)
           end
 
           it 'does not attempt to remove the file' do

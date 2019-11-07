@@ -1,4 +1,6 @@
-require: rubocop-rspec
+require:
+  - rubocop-rspec
+  - ./ext/rubocop.rb
 inherit_from: .rubocop_todo.yml
 
 AllCops:
@@ -145,3 +147,8 @@ Style/SymbolArray:
 # Enforce LF line endings, even when on Windows
 Layout/EndOfLine:
   EnforcedStyle: lf
+
+PDK/FileFilePredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - Gemfile

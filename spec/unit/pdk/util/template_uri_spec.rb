@@ -136,8 +136,8 @@ describe PDK::Util::TemplateURI do
 
           it 'returns the metadata template' do
             allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
-            allow(File).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
-            allow(File).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
             expect(template_uri.to_s).to eq('metadata-templates')
           end
         end
@@ -494,8 +494,8 @@ describe PDK::Util::TemplateURI do
         allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
         allow(PDK::Util).to receive(:development_mode?).and_return(false)
         allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
-        allow(File).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
-        allow(File).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
       end
 
       context 'that is a pdk-default keyword' do
