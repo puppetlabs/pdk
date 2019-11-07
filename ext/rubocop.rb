@@ -100,6 +100,40 @@ module RuboCop
           end
         end
       end
+
+      class FileUtilsMkdirP < Cop
+        MSG = 'Use PDK::Util::Filesystem.mkdir_p instead of FileUtils.mkdir_p'.freeze
+
+        def_node_matcher :fileutils_mkdir_p?,
+                         '(send (const nil? :FileUtils) :mkdir_p ...)'
+
+        def_node_matcher :allow_fileutils?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :FileUtils))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_mkdir_p?,
+                        '(send nil? :receive (sym :mkdir_p))'
+
+        def on_send(node)
+          return unless fileutils_mkdir_p?(node) || (allow_fileutils?(node) && receive_mkdir_p?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if fileutils_mkdir_p?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end

@@ -71,7 +71,7 @@ module PDK
 
         cleanup_build_dir
 
-        FileUtils.mkdir_p(build_dir)
+        PDK::Util::Filesystem.mkdir_p(build_dir)
       end
 
       # Remove the temporary build directory and all its contents from disk.
@@ -121,7 +121,7 @@ module PDK
         dest_path = File.join(build_dir, relative_path)
 
         if PDK::Util::Filesystem.directory?(path)
-          FileUtils.mkdir_p(dest_path, mode: File.stat(path).mode)
+          PDK::Util::Filesystem.mkdir_p(dest_path, mode: File.stat(path).mode)
         elsif File.symlink?(path)
           warn_symlink(path)
         else

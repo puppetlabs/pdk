@@ -149,7 +149,7 @@ module PDK
           File.join(target_dir, 'tasks'),
         ].each do |dir|
           begin
-            FileUtils.mkdir_p(dir)
+            PDK::Util::Filesystem.mkdir_p(dir)
           rescue SystemCallError => e
             raise PDK::CLI::FatalError, _("Unable to create directory '%{dir}': %{message}") % {
               dir:     dir,

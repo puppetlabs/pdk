@@ -188,7 +188,7 @@ describe PDK::Module::Build do
       end
 
       it 'creates the directory in the build directory' do
-        expect(FileUtils).to receive(:mkdir_p).with(path_in_build_dir, mode: 0o100755)
+        expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(path_in_build_dir, mode: 0o100755)
         instance.stage_path(path_to_stage)
       end
     end
@@ -201,7 +201,7 @@ describe PDK::Module::Build do
 
       it 'warns the user about the symlink and skips over it' do
         expect(instance).to receive(:warn_symlink).with(path_to_stage)
-        expect(FileUtils).not_to receive(:mkdir_p).with(any_args)
+        expect(PDK::Util::Filesystem).not_to receive(:mkdir_p).with(any_args)
         expect(FileUtils).not_to receive(:cp).with(any_args)
         instance.stage_path(path_to_stage)
       end

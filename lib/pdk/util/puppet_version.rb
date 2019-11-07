@@ -62,7 +62,7 @@ module PDK
             FileUtils.rm_rf(puppet_dev_path) if PDK::Util::Filesystem.directory? puppet_dev_path
           end
 
-          FileUtils.mkdir_p puppet_dev_path
+          PDK::Util::Filesystem.mkdir_p puppet_dev_path
           clone_result = PDK::Util::Git.git('clone', DEFAULT_PUPPET_DEV_URL, puppet_dev_path)
           return if clone_result[:exit_code].zero?
 

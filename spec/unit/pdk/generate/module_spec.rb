@@ -761,18 +761,18 @@ describe PDK::Generate::Module do
     let(:path) { 'test123' }
 
     it 'creates a skeleton directory structure' do
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'examples'))
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'files'))
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'manifests'))
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'templates'))
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'tasks'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'examples'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'files'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'manifests'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'templates'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'tasks'))
 
       described_class.prepare_module_directory(path)
     end
 
     context 'when it fails to create a directory' do
       before(:each) do
-        allow(FileUtils).to receive(:mkdir_p).with(anything).and_raise(SystemCallError, 'some message')
+        allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(anything).and_raise(SystemCallError, 'some message')
       end
 
       it 'raises a FatalError' do

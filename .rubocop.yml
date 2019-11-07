@@ -162,3 +162,9 @@ PDK/FileExistPredicate:
 PDK/FileDirectoryPredicate:
   Exclude:
     - lib/pdk/util/filesystem.rb
+
+PDK/FileUtilsMkdirP:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/*
+    - rakelib/command_spec.rake

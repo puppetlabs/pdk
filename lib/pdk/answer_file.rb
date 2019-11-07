@@ -92,7 +92,7 @@ module PDK
     #
     # @raise [PDK::CLI::FatalError] if the answer file can not be written to.
     def save_to_disk
-      FileUtils.mkdir_p(File.dirname(answer_file_path))
+      PDK::Util::Filesystem.mkdir_p(File.dirname(answer_file_path))
 
       write_file(answer_file_path, JSON.pretty_generate(answers))
     rescue SystemCallError, IOError => e
