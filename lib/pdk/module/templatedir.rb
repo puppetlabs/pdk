@@ -173,12 +173,12 @@ module PDK
         spec_path = File.join(@object_dir, "#{object_type}_spec.erb")
         type_spec_path = File.join(@object_dir, "#{object_type}_type_spec.erb")
 
-        if PDK::Util::Filesystem.file?(object_path) && File.readable?(object_path)
+        if PDK::Util::Filesystem.file?(object_path) && PDK::Util::Filesystem.readable?(object_path)
           result = { object: object_path }
-          result[:type] = type_path if PDK::Util::Filesystem.file?(type_path) && File.readable?(type_path)
-          result[:spec] = spec_path if PDK::Util::Filesystem.file?(spec_path) && File.readable?(spec_path)
-          result[:device] = device_path if PDK::Util::Filesystem.file?(device_path) && File.readable?(device_path)
-          result[:type_spec] = type_spec_path if PDK::Util::Filesystem.file?(type_spec_path) && File.readable?(type_spec_path)
+          result[:type] = type_path if PDK::Util::Filesystem.file?(type_path) && PDK::Util::Filesystem.readable?(type_path)
+          result[:spec] = spec_path if PDK::Util::Filesystem.file?(spec_path) && PDK::Util::Filesystem.readable?(spec_path)
+          result[:device] = device_path if PDK::Util::Filesystem.file?(device_path) && PDK::Util::Filesystem.readable?(device_path)
+          result[:type_spec] = type_spec_path if PDK::Util::Filesystem.file?(type_spec_path) && PDK::Util::Filesystem.readable?(type_spec_path)
           result
         else
           nil
@@ -311,7 +311,7 @@ module PDK
       #
       # @api private
       def read_config(loc)
-        if PDK::Util::Filesystem.file?(loc) && File.readable?(loc)
+        if PDK::Util::Filesystem.file?(loc) && PDK::Util::Filesystem.readable?(loc)
           require 'yaml'
 
           begin

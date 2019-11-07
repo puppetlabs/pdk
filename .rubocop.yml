@@ -186,3 +186,8 @@ PDK/DirGlob:
 PDK/FileFnmatchPredicate:
   Exclude:
     - lib/pdk/util/filesystem.rb
+
+PDK/FileReadablePredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - Gemfile

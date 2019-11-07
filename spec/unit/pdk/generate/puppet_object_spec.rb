@@ -7,7 +7,7 @@ shared_context :with_puppet_object_module_metadata do
 
   before(:each) do
     allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_path).and_return(true)
-    allow(File).to receive(:readable?).with(metadata_path).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_path).and_return(true)
     allow(File).to receive(:read).with(metadata_path).and_return(module_metadata)
   end
 end

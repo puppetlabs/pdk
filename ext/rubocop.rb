@@ -235,6 +235,39 @@ module RuboCop
           end
         end
       end
+
+      class FileReadablePredicate < Cop
+        MSG = 'Use PDK::Util::Filesystem.readable? instead of File.readable?'.freeze
+
+        def_node_matcher :file_readable_predicate?,
+                         '(send (const nil? :File) :readable? ...)'
+
+        def_node_matcher :allow_file?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :File))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_readable?, '(send nil? :receive (sym :readable?))'
+
+        def on_send(node)
+          return unless file_readable_predicate?(node) || (allow_file?(node) && receive_readable?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if file_readable_predicate?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end

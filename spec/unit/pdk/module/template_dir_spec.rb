@@ -380,7 +380,7 @@ describe PDK::Module::TemplateDir do
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(PDK::Util::Filesystem).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
-      allow(File).to receive(:readable?).with(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:readable?).with(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(YAML).to receive(:safe_load).with(config_defaults, [], [], true).and_return config_hash
     end
 
@@ -411,7 +411,7 @@ describe PDK::Module::TemplateDir do
 
       before(:each) do
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/.sync.yml').and_return(true)
-        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:readable?).with('/path/to/module/.sync.yml').and_return(true)
         allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return(yaml_text)
         allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_return(yaml_hash)
         allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
@@ -491,7 +491,7 @@ describe PDK::Module::TemplateDir do
 
       before(:each) do
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/.sync.yml').and_return true
-        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return true
+        allow(PDK::Util::Filesystem).to receive(:readable?).with('/path/to/module/.sync.yml').and_return true
         allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return yaml_text
         allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_call_original
         allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')

@@ -72,7 +72,7 @@ module PDK
           require 'json-schema'
 
           targets.each do |target|
-            unless File.readable?(target)
+            unless PDK::Util::Filesystem.readable?(target)
               report.add_event(
                 file:     target,
                 source:   name,

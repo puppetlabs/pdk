@@ -67,7 +67,7 @@ module PDK
           targets.each do |target|
             next unless PDK::Util::Filesystem.file?(target)
 
-            unless File.readable?(target)
+            unless PDK::Util::Filesystem.readable?(target)
               report.add_event(
                 file:     target,
                 source:   name,

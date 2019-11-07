@@ -272,7 +272,7 @@ module PDK
           File.join(module_dir, '.pdkignore'),
           File.join(module_dir, '.pmtignore'),
           File.join(module_dir, '.gitignore'),
-        ].find { |file| PDK::Util::Filesystem.file?(file) && File.readable?(file) }
+        ].find { |file| PDK::Util::Filesystem.file?(file) && PDK::Util::Filesystem.readable?(file) }
       end
 
       # Instantiate a new PathSpec class and populate it with the pattern(s) of

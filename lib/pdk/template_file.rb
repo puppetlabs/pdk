@@ -62,7 +62,7 @@ module PDK
     #
     # @api private
     def template_content
-      if PDK::Util::Filesystem.file?(@template_file) && File.readable?(@template_file)
+      if PDK::Util::Filesystem.file?(@template_file) && PDK::Util::Filesystem.readable?(@template_file)
         return File.read(@template_file)
       end
 

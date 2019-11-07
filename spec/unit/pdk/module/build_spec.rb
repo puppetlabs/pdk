@@ -311,14 +311,14 @@ describe PDK::Module::Build do
         file_path = File.join(module_dir, file)
 
         allow(PDK::Util::Filesystem).to receive(:file?).with(file_path).and_return(true)
-        allow(File).to receive(:readable?).with(file_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:readable?).with(file_path).and_return(true)
       end
 
       (possible_files - available_files).each do |file|
         file_path = File.join(module_dir, file)
 
         allow(PDK::Util::Filesystem).to receive(:file?).with(file_path).and_return(false)
-        allow(File).to receive(:readable?).with(file_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:readable?).with(file_path).and_return(false)
       end
     end
 

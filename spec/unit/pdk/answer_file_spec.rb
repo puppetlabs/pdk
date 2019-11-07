@@ -9,7 +9,7 @@ shared_context 'a valid answer file' do
     allow(PDK::Util).to receive(:package_install?).and_return(false)
     allow(PDK::Util::Filesystem).to receive(:file?).with(default_path).and_return(true)
     allow(File).to receive(:zero?).with(default_path).and_return(false)
-    allow(File).to receive(:readable?).with(default_path).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(true)
     allow(File).to receive(:read).with(default_path).and_return('{"question": "answer"}')
   end
 end
@@ -64,7 +64,7 @@ describe PDK::AnswerFile do
       context 'and is unreadable' do
         before(:each) do
           allow(File).to receive(:zero?).with(default_path).and_return(false)
-          allow(File).to receive(:readable?).with(default_path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(false)
         end
 
         it 'raises a FatalError' do
@@ -77,7 +77,7 @@ describe PDK::AnswerFile do
 
         before(:each) do
           allow(File).to receive(:zero?).with(default_path).and_return(false)
-          allow(File).to receive(:readable?).with(default_path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(true)
           allow(File).to receive(:read).with(default_path).and_return(file_contents)
         end
 
