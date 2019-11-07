@@ -47,7 +47,7 @@ describe PDK::Generate::Task do
     let(:task_files) { [] }
 
     before(:each) do
-      allow(Dir).to receive(:glob).with(File.join(module_dir, 'tasks', "#{given_name}.*")).and_return(task_files)
+      allow(PDK::Util::Filesystem).to receive(:glob).with(File.join(module_dir, 'tasks', "#{given_name}.*")).and_return(task_files)
     end
 
     context 'when no files exist for the task' do

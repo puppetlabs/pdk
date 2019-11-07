@@ -168,6 +168,39 @@ module RuboCop
           end
         end
       end
+
+      class DirGlob < Cop
+        MSG = 'Use PDK::Util::Filesystem.glob instead of Dir.glob'.freeze
+
+        def_node_matcher :dir_glob?,
+                         '(send (const nil? :Dir) :glob ...)'
+
+        def_node_matcher :allow_dir?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :Dir))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_glob?, '(send nil? :receive (sym :glob))'
+
+        def on_send(node)
+          return unless dir_glob?(node) || (allow_dir?(node) && receive_glob?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if dir_glob?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end

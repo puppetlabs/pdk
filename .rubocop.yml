@@ -177,3 +177,8 @@ PDK/FileExpandPath:
     - spec/spec_helper.rb
     - spec/acceptance/**/*.rb
     - pdk.gemspec
+
+PDK/DirGlob:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - rakelib/command_spec.rake

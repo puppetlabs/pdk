@@ -258,7 +258,7 @@ describe PDK::Module::TemplateDir do
       before(:each) do
         allow(Dir).to receive(:exist?).with('/here/moduleroot').and_return true
         allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
-        allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
+        allow(PDK::Util::Filesystem).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
       end
 
       it 'returns the file name' do
@@ -273,7 +273,7 @@ describe PDK::Module::TemplateDir do
         allow(Dir).to receive(:exist?).with('/here/moduleroot').and_return true
         allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
         allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename2').and_return true
-        allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename', '/here/moduleroot/filename2']
+        allow(PDK::Util::Filesystem).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename', '/here/moduleroot/filename2']
       end
 
       it 'returns both the file names' do
@@ -291,8 +291,12 @@ describe PDK::Module::TemplateDir do
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/templates/moduleroot/.').and_return false
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/templates/moduleroot/filename').and_return true
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/templates/moduleroot_init/filename2').and_return true
-        allow(Dir).to receive(:glob).with('/path/to/templates/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/path/to/templates/moduleroot/.', '/path/to/templates/moduleroot/filename']
-        allow(Dir).to receive(:glob).with('/path/to/templates/moduleroot_init/**/*', File::FNM_DOTMATCH).and_return ['/path/to/templates/moduleroot_init/filename2']
+        allow(PDK::Util::Filesystem).to receive(:glob)
+          .with('/path/to/templates/moduleroot/**/*', File::FNM_DOTMATCH)
+          .and_return ['/path/to/templates/moduleroot/.', '/path/to/templates/moduleroot/filename']
+        allow(PDK::Util::Filesystem).to receive(:glob)
+          .with('/path/to/templates/moduleroot_init/**/*', File::FNM_DOTMATCH)
+          .and_return ['/path/to/templates/moduleroot_init/filename2']
       end
 
       it 'returns the file names from both directories' do
