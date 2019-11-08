@@ -443,6 +443,44 @@ module RuboCop
           end
         end
       end
+
+      class DirBrackets < Cop
+        MSG = 'Use PDK::Util::Filesystem.glob instead of Dir[]'.freeze
+
+        def_node_matcher :dir_brackets?,
+                         '(send (const nil? :Dir) :[] ...)'
+
+        def_node_matcher :allow_dir?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :Dir))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_brackets?, '(send nil? :receive (sym :[]))'
+
+        def on_send(node)
+          return unless dir_brackets?(node) || (allow_dir?(node) && receive_brackets?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            if dir_brackets?(node)
+              const = node.children[0].loc.expression
+              method = node.loc.selector
+              new_method = ".glob(#{node.arguments.map(&:source).join(', ')})"
+            else
+              const = node.children[0].children[2].loc.expression
+              method = node.children[2].receiver.node_parts[0].first_argument.loc.expression
+              new_method = ':glob'
+            end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+            corrector.replace(method, new_method)
+          end
+        end
+      end
     end
   end
 end

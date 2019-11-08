@@ -215,3 +215,11 @@ PDK/FileStat:
 PDK/DirExistPredicate:
   Exclude:
     - rakelib/*.rake
+
+PDK/DirBrackets:
+  Exclude:
+    - pdk.gemspec
+    - spec/spec_helper_acceptance.rb
+    - spec/spec_helper.rb
+    - rakelib/*.rake
+    - package-testing/spec/spec_helper_package.rb
