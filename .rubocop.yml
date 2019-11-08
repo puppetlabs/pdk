@@ -211,3 +211,7 @@ PDK/FileZeroPredicate:
 PDK/FileStat:
   Exclude:
     - lib/pdk/util/filesystem.rb
+
+PDK/DirExistPredicate:
+  Exclude:
+    - rakelib/*.rake

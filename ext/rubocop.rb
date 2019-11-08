@@ -405,6 +405,44 @@ module RuboCop
           end
         end
       end
+
+      class DirExistPredicate < Cop
+        MSG = 'Use PDK::Util::Filesystem.directory? instead of Dir.exist?'.freeze
+
+        def_node_matcher :dir_exist?,
+                         '(send (const nil? :Dir) {:exist? :exists?} ...)'
+
+        def_node_matcher :allow_dir?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :Dir))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_exist?, '(send nil? :receive (sym {:exist? :exists?}))'
+
+        def on_send(node)
+          return unless dir_exist?(node) || (allow_dir?(node) && receive_exist?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            if dir_exist?(node)
+              const = node.children[0].loc.expression
+              method = node.loc.selector
+              new_method = 'directory?'
+            else
+              const = node.children[0].children[2].loc.expression
+              method = node.children[2].receiver.node_parts[0].first_argument.loc.expression
+              new_method = ':directory?'
+            end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+            corrector.replace(method, new_method)
+          end
+        end
+      end
     end
   end
 end

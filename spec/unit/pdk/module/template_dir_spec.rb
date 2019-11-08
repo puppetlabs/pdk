@@ -232,7 +232,7 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/the/file/is/here'] }
 
       before(:each) do
-        allow(Dir).to receive(:exist?).with('/the/file/is/here').and_return true
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/the/file/is/here').and_return true
       end
 
       it 'returns an empty list' do
@@ -244,7 +244,7 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/the/file/is/nothere'] }
 
       before(:each) do
-        allow(Dir).to receive(:exists?).with('/the/file/is/nothere').and_return false
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/the/file/is/nothere').and_return false
       end
 
       it 'raises an error' do
@@ -256,7 +256,7 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/here/moduleroot'] }
 
       before(:each) do
-        allow(Dir).to receive(:exist?).with('/here/moduleroot').and_return true
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/here/moduleroot').and_return true
         allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
         allow(PDK::Util::Filesystem).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
       end
@@ -270,7 +270,7 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/here/moduleroot'] }
 
       before(:each) do
-        allow(Dir).to receive(:exist?).with('/here/moduleroot').and_return true
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/here/moduleroot').and_return true
         allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
         allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename2').and_return true
         allow(PDK::Util::Filesystem).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename', '/here/moduleroot/filename2']
@@ -285,9 +285,9 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/path/to/templates/moduleroot', '/path/to/templates/moduleroot_init'] }
 
       before(:each) do
-        allow(Dir).to receive(:exist?).with('/path/to/templates').and_return true
-        allow(Dir).to receive(:exist?).with('/path/to/templates/moduleroot').and_return true
-        allow(Dir).to receive(:exist?).with('/path/to/templates/moduleroot_init').and_return true
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates').and_return true
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates/moduleroot').and_return true
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates/moduleroot_init').and_return true
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/templates/moduleroot/.').and_return false
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/templates/moduleroot/filename').and_return true
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/templates/moduleroot_init/filename2').and_return true
