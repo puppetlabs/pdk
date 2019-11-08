@@ -77,6 +77,11 @@ module PDK
         FileUtils.rm(*args)
       end
       module_function :rm
+
+      def zero?(*args)
+        File.zero?(*args)
+      end
+      module_function :zero?
       #:nocov:
     end
   end

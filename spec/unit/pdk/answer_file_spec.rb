@@ -8,7 +8,7 @@ shared_context 'a valid answer file' do
   before(:each) do
     allow(PDK::Util).to receive(:package_install?).and_return(false)
     allow(PDK::Util::Filesystem).to receive(:file?).with(default_path).and_return(true)
-    allow(File).to receive(:zero?).with(default_path).and_return(false)
+    allow(PDK::Util::Filesystem).to receive(:zero?).with(default_path).and_return(false)
     allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(true)
     allow(PDK::Util::Filesystem).to receive(:read_file).with(default_path).and_return('{"question": "answer"}')
   end
@@ -53,7 +53,7 @@ describe PDK::AnswerFile do
 
       context 'and contains no data' do
         before(:each) do
-          allow(File).to receive(:zero?).with(default_path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:zero?).with(default_path).and_return(true)
         end
 
         it 'creates an empty set of answers' do
@@ -63,7 +63,7 @@ describe PDK::AnswerFile do
 
       context 'and is unreadable' do
         before(:each) do
-          allow(File).to receive(:zero?).with(default_path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:zero?).with(default_path).and_return(false)
           allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(false)
         end
 
@@ -76,7 +76,7 @@ describe PDK::AnswerFile do
         let(:file_contents) {}
 
         before(:each) do
-          allow(File).to receive(:zero?).with(default_path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:zero?).with(default_path).and_return(false)
           allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(true)
           allow(PDK::Util::Filesystem).to receive(:read_file).with(default_path).and_return(file_contents)
         end

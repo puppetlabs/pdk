@@ -64,7 +64,7 @@ module PDK
     #
     # @return [Hash{String => Object}] The existing questions and answers.
     def read_from_disk
-      return {} if !PDK::Util::Filesystem.file?(answer_file_path) || File.zero?(answer_file_path)
+      return {} if !PDK::Util::Filesystem.file?(answer_file_path) || PDK::Util::Filesystem.zero?(answer_file_path)
 
       unless PDK::Util::Filesystem.readable?(answer_file_path)
         raise PDK::CLI::FatalError, _("Unable to open '%{file}' for reading") % {

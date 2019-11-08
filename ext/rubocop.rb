@@ -339,6 +339,39 @@ module RuboCop
           end
         end
       end
+
+      class FileZeroPredicate < Cop
+        MSG = 'Use PDK::Util::Filesystem.zero? instead of File.zero?'.freeze
+
+        def_node_matcher :file_zero?,
+                         '(send (const nil? :File) :zero? ...)'
+
+        def_node_matcher :allow_file?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :File))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_zero?, '(send nil? :receive (sym :zero?))'
+
+        def on_send(node)
+          return unless file_zero?(node) || (allow_file?(node) && receive_zero?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if file_zero?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end

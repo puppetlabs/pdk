@@ -203,3 +203,7 @@ PDK/FileRead:
     - spec/acceptance/**/*.rb
     - Gemfile
     - spec/unit/pdk/util/filesystem_spec.rb
+
+PDK/FileZeroPredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
