@@ -82,6 +82,11 @@ module PDK
         File.zero?(*args)
       end
       module_function :zero?
+
+      def stat(*args)
+        File.stat(*args)
+      end
+      module_function :stat
       #:nocov:
     end
   end

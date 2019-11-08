@@ -152,7 +152,7 @@ describe PDK::Module::UpdateManager do
     before(:each) do
       allow(PDK::Util::Filesystem).to receive(:readable?).with(dummy_file).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(dummy_file).and_return(original_content)
-      allow(File).to receive(:stat).with(dummy_file).and_return(instance_double(File::Stat, mtime: Time.now - 60))
+      allow(PDK::Util::Filesystem).to receive(:stat).with(dummy_file).and_return(instance_double(File::Stat, mtime: Time.now - 60))
     end
 
     context 'when the file can not be opened for reading' do

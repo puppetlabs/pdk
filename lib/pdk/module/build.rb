@@ -121,7 +121,7 @@ module PDK
         dest_path = File.join(build_dir, relative_path)
 
         if PDK::Util::Filesystem.directory?(path)
-          PDK::Util::Filesystem.mkdir_p(dest_path, mode: File.stat(path).mode)
+          PDK::Util::Filesystem.mkdir_p(dest_path, mode: PDK::Util::Filesystem.stat(path).mode)
         elsif File.symlink?(path)
           warn_symlink(path)
         else
@@ -240,7 +240,7 @@ module PDK
                 name: entry,
               }
 
-              orig_mode = File.stat(entry).mode
+              orig_mode = PDK::Util::Filesystem.stat(entry).mode
               min_mode = Minitar.dir?(entry) ? 0o755 : 0o644
 
               entry_meta[:mode] = orig_mode | min_mode

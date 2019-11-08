@@ -184,7 +184,7 @@ describe PDK::Module::Build do
     context 'when the path is a directory' do
       before(:each) do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(true)
-        allow(File).to receive(:stat).with(path_to_stage).and_return(instance_double(File::Stat, mode: 0o100755))
+        allow(PDK::Util::Filesystem).to receive(:stat).with(path_to_stage).and_return(instance_double(File::Stat, mode: 0o100755))
       end
 
       it 'creates the directory in the build directory' do

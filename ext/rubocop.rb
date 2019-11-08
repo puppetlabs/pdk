@@ -372,6 +372,39 @@ module RuboCop
           end
         end
       end
+
+      class FileStat < Cop
+        MSG = 'Use PDK::Util::Filesystem.stat instead of File.stat'.freeze
+
+        def_node_matcher :file_stat?,
+                         '(send (const nil? :File) :stat ...)'
+
+        def_node_matcher :allow_file?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :File))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_stat?, '(send nil? :receive (sym :stat))'
+
+        def on_send(node)
+          return unless file_stat?(node) || (allow_file?(node) && receive_stat?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if file_stat?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end

@@ -207,3 +207,7 @@ PDK/FileRead:
 PDK/FileZeroPredicate:
   Exclude:
     - lib/pdk/util/filesystem.rb
+
+PDK/FileStat:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
