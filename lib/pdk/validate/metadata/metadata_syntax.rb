@@ -75,7 +75,7 @@ module PDK
           end
 
           begin
-            JSON.parse(File.read(target))
+            JSON.parse(PDK::Util::Filesystem.read_file(target))
 
             report.add_event(
               file:     target,

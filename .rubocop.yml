@@ -196,3 +196,10 @@ PDK/FileUtilsRm:
   Exclude:
     - lib/pdk/util/filesystem.rb
     - spec/acceptance/**/*.rb
+
+PDK/FileRead:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb
+    - Gemfile
+    - spec/unit/pdk/util/filesystem_spec.rb

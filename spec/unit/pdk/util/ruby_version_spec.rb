@@ -179,9 +179,11 @@ describe PDK::Util::RubyVersion do
 
       gem_path_results.merge(gem_home_results).each do |spec_path, spec_content|
         # rubocop:disable PDK/FileFilePredicate Gem internal method
+        # rubocop:disable PDK/FileRead Gem internal method
         allow(File).to receive(:file?).with(spec_path).and_return(true)
         allow(File).to receive(:read).with(spec_path, mode: 'r:UTF-8:-').and_return(spec_content)
         # rubocop:enable PDK/FileFilePredicate
+        # rubocop:enable PDK/FileRead
       end
     end
 

@@ -16,7 +16,7 @@ module PDK
 
       def self.pkg_sha
         if version_file && PDK::Util::Filesystem.exist?(version_file)
-          ver = File.read(version_file)
+          ver = PDK::Util::Filesystem.read_file(version_file)
           sha = ver.strip.split('.')[5] unless ver.nil?
         end
 

@@ -151,7 +151,7 @@ describe PDK::Module::UpdateManager do
 
     before(:each) do
       allow(PDK::Util::Filesystem).to receive(:readable?).with(dummy_file).and_return(true)
-      allow(File).to receive(:read).with(dummy_file).and_return(original_content)
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(dummy_file).and_return(original_content)
       allow(File).to receive(:stat).with(dummy_file).and_return(instance_double(File::Stat, mtime: Time.now - 60))
     end
 

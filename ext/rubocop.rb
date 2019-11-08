@@ -301,6 +301,44 @@ module RuboCop
           end
         end
       end
+
+      class FileRead < Cop
+        MSG = 'Use PDK::Util::Filesystem.read_file instead of File.read'.freeze
+
+        def_node_matcher :file_read?,
+                         '(send (const nil? :File) :read ...)'
+
+        def_node_matcher :allow_file?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :File))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_read?, '(send nil? :receive (sym :read))'
+
+        def on_send(node)
+          return unless file_read?(node) || (allow_file?(node) && receive_read?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            if file_read?(node)
+              const = node.children[0].loc.expression
+              method = node.loc.selector
+              new_method = 'read_file'
+            else
+              const = node.children[0].children[2].loc.expression
+              method = node.children[2].receiver.node_parts[0].first_argument.loc.expression
+              new_method = ':read_file'
+            end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+            corrector.replace(method, new_method)
+          end
+        end
+      end
     end
   end
 end

@@ -72,7 +72,7 @@ module PDK
         }
       end
 
-      answers = JSON.parse(File.read(answer_file_path))
+      answers = JSON.parse(PDK::Util::Filesystem.read_file(answer_file_path))
       if answers.is_a?(Hash)
         answers
       else

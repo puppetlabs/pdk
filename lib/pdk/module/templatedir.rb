@@ -315,7 +315,7 @@ module PDK
           require 'yaml'
 
           begin
-            YAML.safe_load(File.read(loc), [], [], true)
+            YAML.safe_load(PDK::Util::Filesystem.read_file(loc), [], [], true)
           rescue Psych::SyntaxError => e
             PDK.logger.warn _("'%{file}' is not a valid YAML file: %{problem} %{context} at line %{line} column %{column}") % {
               file:    loc,

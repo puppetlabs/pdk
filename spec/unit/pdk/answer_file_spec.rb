@@ -10,7 +10,7 @@ shared_context 'a valid answer file' do
     allow(PDK::Util::Filesystem).to receive(:file?).with(default_path).and_return(true)
     allow(File).to receive(:zero?).with(default_path).and_return(false)
     allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(true)
-    allow(File).to receive(:read).with(default_path).and_return('{"question": "answer"}')
+    allow(PDK::Util::Filesystem).to receive(:read_file).with(default_path).and_return('{"question": "answer"}')
   end
 end
 
@@ -78,7 +78,7 @@ describe PDK::AnswerFile do
         before(:each) do
           allow(File).to receive(:zero?).with(default_path).and_return(false)
           allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(true)
-          allow(File).to receive(:read).with(default_path).and_return(file_contents)
+          allow(PDK::Util::Filesystem).to receive(:read_file).with(default_path).and_return(file_contents)
         end
 
         context 'but contains invalid JSON' do

@@ -26,7 +26,7 @@ describe PDK::Validate::YAML::Syntax do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(target[:name]).and_return(target.fetch(:directory, false))
         allow(PDK::Util::Filesystem).to receive(:file?).with(target[:name]).and_return(target.fetch(:file, true))
         allow(PDK::Util::Filesystem).to receive(:readable?).with(target[:name]).and_return(target.fetch(:readable, true))
-        allow(File).to receive(:read).with(target[:name]).and_return(target.fetch(:content, ''))
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(target[:name]).and_return(target.fetch(:content, ''))
       end
     end
 

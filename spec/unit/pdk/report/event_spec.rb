@@ -424,7 +424,7 @@ describe PDK::Report::Event do
         end
 
         before(:each) do
-          allow(File).to receive(:read).with('testfile.rb').and_return(file_content)
+          allow(PDK::Util::Filesystem).to receive(:read_file).with('testfile.rb').and_return(file_content)
           allow(PDK::Util::Filesystem).to receive(:file?).with('testfile.rb').and_return(true)
           allow(PDK::Util).to receive(:module_root).and_return(File.join('my', 'module_root'))
         end

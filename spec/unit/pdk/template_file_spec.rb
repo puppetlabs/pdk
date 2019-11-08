@@ -45,20 +45,20 @@ describe PDK::TemplateFile do
         let(:template_path) { '/path/to/some/file.erb' }
 
         it 'renders the contents of the file as an ERB template' do
-          expect(File).to receive(:read).with(template_path).and_return('<%= some %>')
+          expect(PDK::Util::Filesystem).to receive(:read_file).with(template_path).and_return('<%= some %>')
           expect(template_file.render).to eq(data[:some])
         end
 
         # modulesync compatibility
         it 'exposes any data provided as :configs to the template as an instance variable' do
-          expect(File).to receive(:read).with(template_path).and_return("<%= @configs['test'] %>")
+          expect(PDK::Util::Filesystem).to receive(:read_file).with(template_path).and_return("<%= @configs['test'] %>")
           expect(template_file.render).to eq(data[:configs]['test'])
         end
       end
 
       context 'and does not have an .erb extension' do
         it 'renders the contents of the file as a plain file' do
-          expect(File).to receive(:read).with(template_path).and_return('some content')
+          expect(PDK::Util::Filesystem).to receive(:read_file).with(template_path).and_return('some content')
           expect(template_file.render).to eq('some content')
         end
       end

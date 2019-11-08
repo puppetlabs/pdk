@@ -80,7 +80,7 @@ module PDK
             end
 
             begin
-              ::YAML.safe_load(File.read(target), YAML_WHITELISTED_CLASSES, [], true)
+              ::YAML.safe_load(PDK::Util::Filesystem.read_file(target), YAML_WHITELISTED_CLASSES, [], true)
 
               report.add_event(
                 file:     target,

@@ -352,7 +352,7 @@ module PDK
 
         return if file_path.nil?
 
-        file_content = File.read(file_path).split("\n")
+        file_content = PDK::Util::Filesystem.read_file(file_path).split("\n")
         delta = (max_num_lines - 1) / 2
         min = [0, (line - 1) - delta].max
         max = [(line - 1) + delta, file_content.length].min
