@@ -78,6 +78,11 @@ module PDK
       end
       module_function :rm
 
+      def rm_f(*args)
+        FileUtils.rm_f(*args)
+      end
+      module_function :rm_f
+
       def zero?(*args)
         File.zero?(*args)
       end

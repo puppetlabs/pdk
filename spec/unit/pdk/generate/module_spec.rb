@@ -97,7 +97,7 @@ describe PDK::Generate::Module do
         allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
         allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
         allow(PDK::Util::Filesystem).to receive(:write_file).with(%r{pdk-test-writable}, anything) { raise Errno::EACCES unless target_parent_writeable }
-        allow(FileUtils).to receive(:rm_f).with(%r{pdk-test-writable})
+        allow(PDK::Util::Filesystem).to receive(:rm_f).with(%r{pdk-test-writable})
         allow(test_template_dir).to receive(:render).and_yield('test_file_path', 'test_file_content', :manage)
       end
 

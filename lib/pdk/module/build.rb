@@ -229,7 +229,7 @@ module PDK
         require 'minitar'
         require 'find'
 
-        FileUtils.rm_f(package_file)
+        PDK::Util::Filesystem.rm_f(package_file)
 
         Dir.chdir(target_dir) do
           begin

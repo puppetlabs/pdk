@@ -35,7 +35,7 @@ module PDK
         begin
           test_file = File.join(parent_dir, '.pdk-test-writable')
           PDK::Util::Filesystem.write_file(test_file, 'This file was created by the Puppet Development Kit to test if this folder was writable, you can safely remove this file.')
-          FileUtils.rm_f(test_file)
+          PDK::Util::Filesystem.rm_f(test_file)
         rescue Errno::EACCES
           raise PDK::CLI::FatalError, _("You do not have permission to write to '%{parent_dir}'") % {
             parent_dir: parent_dir,

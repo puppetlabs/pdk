@@ -236,3 +236,8 @@ PDK/FileOpen:
 PDK/FileSymlinkPredicate:
   Exclude:
     - lib/pdk/util/filesystem.rb
+
+PDK/FileUtilsRMF:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb
