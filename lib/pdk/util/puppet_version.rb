@@ -58,7 +58,7 @@ module PDK
         unless PDK::Util::Git.remote_repo? puppet_dev_path
           # Check if the path has something in it already. Delete it and prepare for clone if so.
           if PDK::Util::Filesystem.exist? puppet_dev_path
-            File.delete(puppet_dev_path) if PDK::Util::Filesystem.file? puppet_dev_path
+            PDK::Util::Filesystem.delete(puppet_dev_path) if PDK::Util::Filesystem.file? puppet_dev_path
             FileUtils.rm_rf(puppet_dev_path) if PDK::Util::Filesystem.directory? puppet_dev_path
           end
 

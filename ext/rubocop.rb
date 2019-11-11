@@ -536,6 +536,39 @@ module RuboCop
           end
         end
       end
+
+      class FileDelete < Cop
+        MSG = 'Use PDK::Util::Filesystem.rm instead of File.delete'.freeze
+
+        def_node_matcher :file_delete?,
+                         '(send (const nil? :File) :delete ...)'
+
+        def_node_matcher :allow_file?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :File))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_delete?, '(send nil? :receive (sym :delete))'
+
+        def on_send(node)
+          return unless file_delete?(node) || (allow_file?(node) && receive_delete?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if file_delete?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end
