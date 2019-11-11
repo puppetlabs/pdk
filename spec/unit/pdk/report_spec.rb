@@ -1,6 +1,4 @@
 require 'spec_helper'
-require 'tmpdir'
-require 'stringio'
 require 'pdk/report'
 
 describe PDK::Report do
@@ -47,24 +45,18 @@ describe PDK::Report do
     end
 
     context 'and rendering the report as text' do
-      subject(:text_report) do
-        io = StringIO.new
-        report.write_text(io)
-        io.rewind
-        io.read
+      after(:each) do
+        report.write_text('target')
       end
 
       it 'does not include passing events' do
-        expect(text_report.split("\n").length).to eq(1)
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(anything, satisfy { |content| content.split("\n").length == 1 })
       end
 
       it 'does include non-passing events' do
         expected_report = report.events.map(&:last).flatten.reject(&:pass?).map(&:to_text).join("\n")
-        expect(text_report.strip).to eq(expected_report)
-      end
-
-      it 'finishes with a trailing newline' do
-        expect(text_report[-1]).to eq("\n")
+        expect(PDK::Util::Filesystem).to receive(:write_file).with(anything, expected_report)
       end
 
       context 'and the report contains an rspec-puppet coverage report' do
@@ -90,46 +82,68 @@ describe PDK::Report do
         end
 
         it 'prints the coverage report last' do
-          expect(text_report.split("\n")[-1]).to eq('coverage report text')
+          expect(PDK::Util::Filesystem).to receive(:write_file)
+            .with(anything, satisfy { |content| content.split("\n").last == 'coverage report text' })
         end
       end
     end
 
     context 'and rendering the report as JUnit XML' do
-      subject(:junit_report) do
-        io = StringIO.new
-        report.write_junit(io)
-        io.rewind
-        REXML::Document.new(io)
+      after(:each) do
+        report.write_junit('target')
       end
 
       it 'produces parsable XML' do
-        expect(junit_report).to be_a(REXML::Document)
+        is_xml = satisfy do |content|
+          REXML::Document.new(content).is_a?(REXML::Document)
+        end
+
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(anything, is_xml)
       end
 
       it 'creates a testsuite for each event source' do
-        testsuites = junit_report.elements.to_a('/testsuites/testsuite')
-        expect(testsuites.length).to eq(2)
+        has_testsuites = satisfy do |content|
+          doc = REXML::Document.new(content)
+          testsuites = doc.elements.to_a('/testsuites/testsuite')
+          testsuites.length == 2
+        end
+
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(anything, has_testsuites)
       end
 
       it 'includes passing events in the testsuite' do
-        rubocop_suite = junit_report.elements['/testsuites/testsuite[@name="rubocop"]']
-        expect(rubocop_suite.attributes['tests']).to eq('1')
-        expect(rubocop_suite.attributes['failures']).to eq('0')
-        expect(rubocop_suite.elements.to_a('testcase').length).to eq(1)
-        expect(rubocop_suite.elements['testcase'].to_s).to eq(report.events['rubocop'].first.to_junit.to_s)
+        has_passing_events = satisfy do |content|
+          doc = REXML::Document.new(content)
+          rubocop_suite = doc.elements['/testsuites/testsuite[@name="rubocop"]']
+
+          rubocop_suite.attributes['tests'] == '1' &&
+            rubocop_suite.attributes['failures'] == '0' &&
+            rubocop_suite.elements.to_a('testcase').length == 1 &&
+            rubocop_suite.elements['testcase'].to_s == report.events['rubocop'].first.to_junit.to_s
+        end
+
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(anything, has_passing_events)
       end
 
       it 'includes non-passing events in the testsuite' do
-        puppet_lint_suite = junit_report.elements['/testsuites/testsuite[@name="puppet-lint"]']
-        expect(puppet_lint_suite.attributes['tests']).to eq('1')
-        expect(puppet_lint_suite.attributes['failures']).to eq('1')
-        expect(puppet_lint_suite.elements.to_a('testcase').length).to eq(1)
+        has_failing_events = satisfy do |content|
+          doc = REXML::Document.new(content)
+          puppet_lint_suite = doc.elements['/testsuites/testsuite[@name="puppet-lint"]']
+          # Strip whitespace out of element from document as it formats
+          # differently to an element not part of a document.
+          testcase = puppet_lint_suite.elements['testcase'].to_s.gsub(%r{\s*\n\s*}, '')
 
-        # Strip whitespace out of element from document as it formats
-        # differently to an element not part of a document.
-        testcase = puppet_lint_suite.elements['testcase'].to_s.gsub(%r{\s*\n\s*}, '')
-        expect(testcase).to eq(report.events['puppet-lint'].first.to_junit.to_s)
+          puppet_lint_suite.attributes['tests'] == '1' &&
+            puppet_lint_suite.attributes['failures'] == '1' &&
+            puppet_lint_suite.elements.to_a('testcase').length == 1 &&
+            testcase == report.events['puppet-lint'].first.to_junit.to_s
+        end
+
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(anything, has_failing_events)
       end
     end
   end

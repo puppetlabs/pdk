@@ -32,22 +32,15 @@ describe PDK::Module::UpdateManager do
     end
 
     context 'when syncing the changes' do
-      let(:dummy_file_io) { StringIO.new }
-
-      before(:each) do
-        allow(File).to receive(:open).with(any_args).and_call_original
-        allow(File).to receive(:open).with(dummy_file, 'wb').and_yield(dummy_file_io)
-        update_manager.sync_changes!
-        dummy_file_io.rewind
-      end
-
       it 'writes the file to disk' do
-        expect(dummy_file_io.read).to eq(content)
+        expect(PDK::Util::Filesystem).to receive(:write_file).with(dummy_file, content)
+
+        update_manager.sync_changes!
       end
 
       context 'but if the file can not be written to' do
         before(:each) do
-          allow(File).to receive(:open).with(dummy_file, 'wb').and_raise(Errno::EACCES)
+          allow(PDK::Util::Filesystem).to receive(:write_file).with(dummy_file, anything).and_raise(Errno::EACCES)
         end
 
         it 'exits with an error' do
@@ -204,22 +197,15 @@ describe PDK::Module::UpdateManager do
       end
 
       context 'when syncing the changes' do
-        let(:dummy_file_io) { StringIO.new }
-
-        before(:each) do
-          allow(File).to receive(:open).with(any_args).and_call_original
-          allow(File).to receive(:open).with(dummy_file, 'wb').and_yield(dummy_file_io)
-          update_manager.sync_changes!
-          dummy_file_io.rewind
-        end
-
         it 'writes the modified file to disk' do
-          expect(dummy_file_io.read).to eq(new_content)
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(dummy_file, new_content)
+
+          update_manager.sync_changes!
         end
 
         context 'but if the file can not be written to' do
           before(:each) do
-            allow(File).to receive(:open).with(dummy_file, 'wb').and_raise(Errno::EACCES)
+            allow(PDK::Util::Filesystem).to receive(:write_file).with(dummy_file, anything).and_raise(Errno::EACCES)
           end
 
           it 'exits with an error' do
@@ -250,7 +236,8 @@ describe PDK::Module::UpdateManager do
 
       context 'when syncing the changes' do
         it 'does not modify the file' do
-          expect(File).not_to receive(:open).with(dummy_file, 'wb')
+          expect(PDK::Util::Filesystem).not_to receive(:write_file).with(dummy_file, anything)
+
           update_manager.sync_changes!
         end
       end

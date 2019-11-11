@@ -84,25 +84,22 @@ describe PDK::Generate::Task do
   end
 
   describe '#write_task_metadata' do
-    let(:mock_file) { StringIO.new }
     let(:given_name) { 'test_task' }
-
-    before(:each) do
-      metadata_file = File.join(module_dir, 'tasks', "#{given_name}.json")
-      allow(File).to receive(:open).and_call_original
-      allow(File).to receive(:open).with(metadata_file, 'wb').and_yield(mock_file)
-      generator.write_task_metadata
-      mock_file.rewind
-    end
+    let(:metadata_file) { File.join(module_dir, 'tasks', "#{given_name}.json") }
 
     context 'when no description is provided in the options' do
       it 'writes the metadata with a sample description' do
-        expect(JSON.parse(mock_file.read)).to eq(
+        expected_content = {
           'puppet_task_version' => 1,
           'supports_noop'       => false,
           'description'         => 'A short description of this task',
           'parameters'          => {},
-        )
+        }
+
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(metadata_file, satisfy { |content| JSON.parse(content) == expected_content })
+
+        generator.write_task_metadata
       end
     end
 
@@ -110,12 +107,17 @@ describe PDK::Generate::Task do
       let(:options) { { description: 'This is a test task' } }
 
       it 'writes the metadata with the provided description' do
-        expect(JSON.parse(mock_file.read)).to eq(
+        expected_content = {
           'puppet_task_version' => 1,
           'supports_noop'       => false,
           'description'         => 'This is a test task',
           'parameters'          => {},
-        )
+        }
+
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(metadata_file, satisfy { |content| JSON.parse(content) == expected_content })
+
+        generator.write_task_metadata
       end
     end
   end

@@ -233,7 +233,7 @@ module PDK
 
         Dir.chdir(target_dir) do
           begin
-            gz = Zlib::GzipWriter.new(File.open(package_file, 'wb'))
+            gz = Zlib::GzipWriter.new(File.open(package_file, 'wb')) # rubocop:disable PDK/FileOpen
             tar = Minitar::Output.new(gz)
             Find.find(release_name) do |entry|
               entry_meta = {
@@ -288,11 +288,7 @@ module PDK
             ignored = if ignore_file.nil?
                         PathSpec.new
                       else
-                        fd = File.open(ignore_file, 'rb:UTF-8')
-                        data = fd.read
-                        fd.close
-
-                        PathSpec.new(data)
+                        PathSpec.new(PDK::Util::Filesystem.read_file(ignore_file, open_args: 'rb:UTF-8'))
                       end
 
             if File.realdirpath(target_dir).start_with?(File.realdirpath(module_dir))

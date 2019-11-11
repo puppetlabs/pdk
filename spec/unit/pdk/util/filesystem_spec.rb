@@ -11,7 +11,7 @@ describe PDK::Util::Filesystem do
 
     context 'when given a path to a readable file' do
       before(:each) do
-        allow(File).to receive(:read).with(path).and_return('some content')
+        allow(File).to receive(:read).with(path, anything).and_return('some content')
       end
 
       it 'does not raise an error' do
@@ -25,7 +25,7 @@ describe PDK::Util::Filesystem do
 
     context 'when given a path to an unreadable file' do
       before(:each) do
-        allow(File).to receive(:read).with(path).and_raise(Errno::EACCES, 'some error')
+        allow(File).to receive(:read).with(path, anything).and_raise(Errno::EACCES, 'some error')
       end
 
       context 'when nil_on_error => false' do

@@ -3,8 +3,6 @@ require 'pdk'
 module PDK
   module Generate
     class Module
-      extend PDK::Util::Filesystem
-
       def self.validate_options(opts)
         require 'pdk/cli/util/option_validator'
 
@@ -36,7 +34,7 @@ module PDK
 
         begin
           test_file = File.join(parent_dir, '.pdk-test-writable')
-          write_file(test_file, 'This file was created by the Puppet Development Kit to test if this folder was writable, you can safely remove this file.')
+          PDK::Util::Filesystem.write_file(test_file, 'This file was created by the Puppet Development Kit to test if this folder was writable, you can safely remove this file.')
           FileUtils.rm_f(test_file)
         rescue Errno::EACCES
           raise PDK::CLI::FatalError, _("You do not have permission to write to '%{parent_dir}'") % {
@@ -56,7 +54,7 @@ module PDK
               next if file_status == :delete
               file = Pathname.new(temp_target_dir) + file_path
               file.dirname.mkpath
-              write_file(file, file_content)
+              PDK::Util::Filesystem.write_file(file, file_content)
             end
 
             # Add information about the template used to generate the module to the

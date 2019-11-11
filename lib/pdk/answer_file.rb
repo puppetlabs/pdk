@@ -6,8 +6,6 @@ module PDK
     attr_reader :answers
     attr_reader :answer_file_path
 
-    include PDK::Util::Filesystem
-
     # Initialises the AnswerFile object, which stores the responses to certain
     # interactive questions.
     #
@@ -94,7 +92,7 @@ module PDK
     def save_to_disk
       PDK::Util::Filesystem.mkdir_p(File.dirname(answer_file_path))
 
-      write_file(answer_file_path, JSON.pretty_generate(answers))
+      PDK::Util::Filesystem.write_file(answer_file_path, JSON.pretty_generate(answers))
     rescue SystemCallError, IOError => e
       raise PDK::CLI::FatalError, _("Unable to write '%{file}': %{msg}") % {
         file: answer_file_path,

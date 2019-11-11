@@ -376,10 +376,10 @@ describe PDK::Module::Build do
     context 'when an ignore file is present in the module' do
       before(:each) do
         ignore_file_path = File.join(module_dir, '.pdkignore')
-        ignore_file_content = StringIO.new "/vendor/\n"
+        ignore_file_content = "/vendor/\n"
 
         allow(instance).to receive(:ignore_file).and_return(ignore_file_path)
-        allow(File).to receive(:open).with(ignore_file_path, 'rb:UTF-8').and_return(ignore_file_content)
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(ignore_file_path, anything).and_return(ignore_file_content)
       end
 
       it 'returns a PathSpec object populated by the ignore file' do

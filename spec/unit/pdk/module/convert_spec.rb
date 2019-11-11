@@ -96,11 +96,11 @@ describe PDK::Module::Convert do
       allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content], template_files[:status])
       allow(update_manager).to receive(:changes).and_return(changes)
       allow(update_manager).to receive(:changed?).with('Gemfile').and_return(false)
+      allow(PDK::Util::Filesystem).to receive(:write_file).with('convert_report.txt', anything)
     end
 
     after(:each, after_hook: true) do
       instance.run
-      FileUtils.rm_f('convert_report.txt')
     end
 
     context 'when an error is raised from TemplateDir', after_hook: false do
@@ -508,7 +508,6 @@ describe PDK::Module::Convert do
     let(:new_metadata_file) { StringIO.new }
 
     before(:each) do
-      allow(File).to receive(:open).with(any_args).and_call_original
       allow(PDK::Util).to receive(:package_install?).and_return(false)
     end
 

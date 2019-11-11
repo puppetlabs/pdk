@@ -109,8 +109,7 @@ describe PDK::Generate::PuppetObject do
     before(:each) do
       allow(logger).to receive(:info).with(a_string_matching(%r{creating '#{dest_path}' from template}i))
       allow(PDK::TemplateFile).to receive(:new).with(template_path, template_data).and_return(template_file)
-      allow(File).to receive(:open).with(any_args).and_call_original
-      allow(File).to receive(:open).with(dest_path, 'wb').and_yield(rendered_file)
+      allow(PDK::Util::Filesystem).to receive(:write_file).with(dest_path, anything)
     end
 
     it 'creates the parent directories for the destination path if needed' do
@@ -120,9 +119,10 @@ describe PDK::Generate::PuppetObject do
 
     it 'writes the rendered file content to the destination file' do
       allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(dest_dir)
+      expect(PDK::Util::Filesystem).to receive(:write_file)
+        .with(dest_path, template_content)
+
       templated_object.render_file(dest_path, template_path, template_data)
-      rendered_file.rewind
-      expect(rendered_file.read).to eq(template_content + "\n")
     end
 
     context 'when it fails to create the parent directories' do
@@ -139,7 +139,8 @@ describe PDK::Generate::PuppetObject do
 
     context 'when it fails to write the destination file' do
       before(:each) do
-        allow(File).to receive(:open).with(dest_path, 'wb').and_raise(SystemCallError, 'some message')
+        allow(PDK::Util::Filesystem).to receive(:write_file)
+          .with(dest_path, anything).and_raise(SystemCallError, 'some message')
         allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(dest_dir)
       end
 

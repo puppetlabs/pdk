@@ -481,6 +481,28 @@ module RuboCop
           end
         end
       end
+
+      class FileOpen < Cop
+        MSG = 'Use PDK::Util::Filesystem.read_file or PDK::Util::Filesystem.write_file instead of File.open'.freeze
+
+        def_node_matcher :file_open?,
+                         '(send (const nil? :File) :open ...)'
+
+        def_node_matcher :allow_file?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :File))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_open?, '(send nil? :receive (sym :open))'
+
+        def on_send(node)
+          return unless file_open?(node) || (allow_file?(node) && receive_open?(node))
+
+          add_offense(node)
+        end
+      end
     end
   end
 end

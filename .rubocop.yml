@@ -223,3 +223,12 @@ PDK/DirBrackets:
     - spec/spec_helper.rb
     - rakelib/*.rake
     - package-testing/spec/spec_helper_package.rb
+
+PDK/FileOpen:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/unit/pdk/util/filesystem_spec.rb
+    - Gemfile
+    - spec/acceptance/**/*.rb
+    - rakelib/*.rake
+    - package-testing/Rakefile

@@ -5,8 +5,6 @@ module PDK
     class Metadata
       attr_accessor :data
 
-      include PDK::Util::Filesystem
-
       OPERATING_SYSTEMS = {
         'RedHat based Linux' => [
           {
@@ -127,7 +125,7 @@ module PDK
       end
 
       def write!(path)
-        write_file(path, to_json)
+        PDK::Util::Filesystem.write_file(path, to_json)
       end
 
       def forge_ready?

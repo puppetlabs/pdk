@@ -162,31 +162,25 @@ describe PDK::AnswerFile do
     include_context 'a valid answer file'
 
     context 'when the file can be written to' do
-      let(:fake_file) { StringIO.new }
-
-      before(:each) do
-        allow(File).to receive(:open).with(default_path, 'wb').and_yield(fake_file)
-      end
-
       it 'writes the answer set to disk' do
-        answer_file.update!
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(anything, satisfy { |content| !content.empty? })
 
-        fake_file.rewind
-        expect(fake_file.read).not_to be_empty
+        answer_file.update!
       end
 
       it 'writes out the answers as valid JSON' do
-        answer_file.update!
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(anything, satisfy { |content| JSON.parse(content) == { 'question' => 'answer' } })
 
-        fake_file.rewind
-        expect(JSON.parse(fake_file.read)).to eq('question' => 'answer')
+        answer_file.update!
       end
     end
 
     context 'when an IOError is raised' do
       before(:each) do
-        allow(File).to receive(:open).with(any_args).and_call_original
-        allow(File).to receive(:open).with(default_path, 'wb').and_raise(IOError, 'some error message')
+        allow(PDK::Util::Filesystem).to receive(:write_file)
+          .with(default_path, anything).and_raise(IOError, 'some error message')
       end
 
       it 'raises a FatalError' do
@@ -197,8 +191,8 @@ describe PDK::AnswerFile do
 
     context 'when a SystemCallError is raised' do
       before(:each) do
-        allow(File).to receive(:open).with(any_args).and_call_original
-        allow(File).to receive(:open).with(default_path, 'wb').and_raise(SystemCallError, 'some other error')
+        allow(PDK::Util::Filesystem).to receive(:write_file)
+          .with(default_path, anything).and_raise(SystemCallError, 'some other error')
       end
 
       it 'raises a FatalError' do
