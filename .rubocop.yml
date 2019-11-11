@@ -232,3 +232,7 @@ PDK/FileOpen:
     - spec/acceptance/**/*.rb
     - rakelib/*.rake
     - package-testing/Rakefile
+
+PDK/FileSymlinkPredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb

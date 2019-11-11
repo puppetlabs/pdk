@@ -196,7 +196,7 @@ describe PDK::Module::Build do
     context 'when the path is a symlink' do
       before(:each) do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
-        allow(File).to receive(:symlink?).with(path_to_stage).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:symlink?).with(path_to_stage).and_return(true)
       end
 
       it 'warns the user about the symlink and skips over it' do
@@ -210,7 +210,7 @@ describe PDK::Module::Build do
     context 'when the path is a regular file' do
       before(:each) do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
-        allow(File).to receive(:symlink?).with(path_to_stage).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:symlink?).with(path_to_stage).and_return(false)
       end
 
       it 'copies the file into the build directory, preserving the permissions' do

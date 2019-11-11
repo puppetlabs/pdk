@@ -87,6 +87,11 @@ module PDK
         File.stat(*args)
       end
       module_function :stat
+
+      def symlink?(*args)
+        File.symlink?(*args)
+      end
+      module_function :symlink?
       #:nocov:
     end
   end

@@ -503,6 +503,39 @@ module RuboCop
           add_offense(node)
         end
       end
+
+      class FileSymlinkPredicate < Cop
+        MSG = 'Use PDK::Util::Filesystem.symlink? instead of File.symlink?'.freeze
+
+        def_node_matcher :file_symlink?,
+                         '(send (const nil? :File) :symlink? ...)'
+
+        def_node_matcher :allow_file?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :File))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_symlink?, '(send nil? :receive (sym :symlink?))'
+
+        def on_send(node)
+          return unless file_symlink?(node) || (allow_file?(node) && receive_symlink?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if file_symlink?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end

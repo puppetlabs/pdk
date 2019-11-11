@@ -122,7 +122,7 @@ module PDK
 
         if PDK::Util::Filesystem.directory?(path)
           PDK::Util::Filesystem.mkdir_p(dest_path, mode: PDK::Util::Filesystem.stat(path).mode)
-        elsif File.symlink?(path)
+        elsif PDK::Util::Filesystem.symlink?(path)
           warn_symlink(path)
         else
           validate_ustar_path!(relative_path.to_path)
