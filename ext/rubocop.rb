@@ -701,6 +701,48 @@ module RuboCop
           end
         end
       end
+
+      class FileUtilsRemoveDir < Cop
+        MSG = 'Use PDK::Util::Filesystem.rm_rf instead of FileUtils.remove_dir'.freeze
+
+        def_node_matcher :fileutils_remove_dir?,
+                         '(send (const nil? :FileUtils) :remove_dir ...)'
+
+        def_node_matcher :allow_fileutils?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :FileUtils))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_remove_dir?, '(send nil? :receive (sym :remove_dir))'
+
+        def on_send(node)
+          return unless fileutils_remove_dir?(node) || (allow_fileutils?(node) && receive_remove_dir?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            if fileutils_remove_dir?(node)
+              const = node.children[0].loc.expression
+              method = node.loc.selector
+              new_method = 'rm_rf'
+            else
+              const = node.children[0].children[2].loc.expression
+              method = if node.children[2].receiver
+                         node.children[2].receiver.node_parts[0].first_argument.loc.expression
+                       else
+                         node.children[2].first_argument.loc.expression
+                       end
+              new_method = ':rm_rf'
+            end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+            corrector.replace(method, new_method)
+          end
+        end
+      end
     end
   end
 end

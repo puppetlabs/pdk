@@ -122,7 +122,7 @@ describe PDK::Module::TemplateDir do
           allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('/', 'path', 'to', 'package', 'cachedir'))
           allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path_or_url)
           allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
-          allow(FileUtils).to receive(:remove_dir)
+          allow(PDK::Util::Filesystem).to receive(:rm_rf)
           allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', anything).and_return(stdout: 'ref', exit_code: 0)
           # rubocop:enable RSpec/AnyInstance
         end
@@ -151,7 +151,7 @@ describe PDK::Module::TemplateDir do
       # rubocop:disable RSpec/AnyInstance
       allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path)
       allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
-      allow(FileUtils).to receive(:remove_dir).with(path)
+      allow(PDK::Util::Filesystem).to receive(:rm_rf).with(path)
       allow_any_instance_of(described_class).to receive(:validate_module_template!)
       allow(PDK::Util::Git).to receive(:describe).and_return('git-ref')
       # rubocop:enable RSpec/AnyInstance
@@ -520,7 +520,7 @@ describe PDK::Module::TemplateDir do
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
-      allow(FileUtils).to receive(:remove_dir).with(tmp_path)
+      allow(PDK::Util::Filesystem).to receive(:rm_rf).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', 'default-sha').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
       allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:
@@ -548,7 +548,7 @@ describe PDK::Module::TemplateDir do
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
-      allow(FileUtils).to receive(:remove_dir).with(tmp_path)
+      allow(PDK::Util::Filesystem).to receive(:rm_rf).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', 'default-sha').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
       allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:

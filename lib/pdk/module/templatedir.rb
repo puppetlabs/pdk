@@ -82,8 +82,7 @@ module PDK
         # If we cloned a git repo to get the template, remove the clone once
         # we're done with it.
         if temp_dir_clone
-          require 'fileutils'
-          FileUtils.remove_dir(@path)
+          PDK::Util::Filesystem.rm_rf(@path)
         end
       end
 
