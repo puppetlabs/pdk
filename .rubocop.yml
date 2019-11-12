@@ -241,3 +241,10 @@ PDK/FileUtilsRMF:
   Exclude:
     - lib/pdk/util/filesystem.rb
     - spec/acceptance/**/*.rb
+
+PDK/FileUtilsRMRF:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb
+    - rakelib/*.rake
+    - spec/spec_helper_acceptance.rb

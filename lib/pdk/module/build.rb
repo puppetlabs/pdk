@@ -80,7 +80,7 @@ module PDK
       def cleanup_build_dir
         require 'fileutils'
 
-        FileUtils.rm_rf(build_dir, secure: true)
+        PDK::Util::Filesystem.rm_rf(build_dir, secure: true)
       end
 
       # Combine the module name and version into a Forge-compatible dash
