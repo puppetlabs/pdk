@@ -15,8 +15,8 @@ RSpec.describe PDK::Util::Bundler do
     before(:each) do
       # Allow us to mock/stub/expect calls to the internal bundle helper.
       allow(PDK::Util::Bundler::BundleHelper).to receive(:new).and_return(bundle_helper)
-      allow(FileUtils).to receive(:mv).with(gemfile_lock, anything)
-      allow(FileUtils).to receive(:mv).with(anything, gemfile_lock, force: true)
+      allow(PDK::Util::Filesystem).to receive(:mv).with(gemfile_lock, anything)
+      allow(PDK::Util::Filesystem).to receive(:mv).with(anything, gemfile_lock, force: true)
     end
 
     describe '.ensure_bundle!' do

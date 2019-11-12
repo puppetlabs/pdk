@@ -81,7 +81,7 @@ module PDK
         end
 
         begin
-          if FileUtils.mv(temp_target_dir, target_dir)
+          if PDK::Util::Filesystem.mv(temp_target_dir, target_dir)
             unless opts[:'skip-bundle-install']
               Dir.chdir(target_dir) do
                 require 'pdk/util/bundler'

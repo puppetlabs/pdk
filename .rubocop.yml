@@ -253,3 +253,8 @@ PDK/FileUtilsCP:
   Exclude:
     - lib/pdk/util/filesystem.rb
     - spec/acceptance/**/*.rb
+
+PDK/FileUtilsMV:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb

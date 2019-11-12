@@ -34,11 +34,11 @@ module PDK
           original_lockfile = bundle.gemfile_lock
           temp_lockfile = "#{original_lockfile}.tmp"
 
-          FileUtils.mv(original_lockfile, temp_lockfile)
+          PDK::Util::Filesystem.mv(original_lockfile, temp_lockfile)
 
           all_deps_available = bundle.installed?(gem_overrides)
         ensure
-          FileUtils.mv(temp_lockfile, original_lockfile, force: true)
+          PDK::Util::Filesystem.mv(temp_lockfile, original_lockfile, force: true)
         end
 
         bundle.update_lock!(with: gem_overrides, local: all_deps_available)

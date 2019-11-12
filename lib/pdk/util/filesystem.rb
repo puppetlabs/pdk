@@ -107,6 +107,11 @@ module PDK
         FileUtils.cp(*args)
       end
       module_function :cp
+
+      def mv(*args)
+        FileUtils.mv(*args)
+      end
+      module_function :mv
       #:nocov:
     end
   end

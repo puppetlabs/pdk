@@ -93,7 +93,7 @@ describe PDK::Generate::Module do
       before(:each) do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(target_dir).and_return(false)
         allow(PDK::Util).to receive(:make_tmpdir_name).with(anything).and_return(temp_target_dir)
-        allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
+        allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir)
         allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
         allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
         allow(PDK::Util::Filesystem).to receive(:write_file).with(%r{pdk-test-writable}, anything) { raise Errno::EACCES unless target_parent_writeable }
@@ -192,19 +192,19 @@ describe PDK::Generate::Module do
       end
 
       it 'moves the temporary directory to the target directory when done' do
-        expect(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
+        expect(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir)
         described_class.invoke(invoke_opts)
       end
 
       it 'prepares the bundler environment so that it is ready immediately' do
-        allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_return(true)
         expect(PDK::Util::Bundler).to receive(:ensure_bundle!)
         described_class.invoke(invoke_opts)
       end
 
       context 'when the move to the target directory fails due to invalid permissions' do
         before(:each) do
-          allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_raise(Errno::EACCES, 'permission denied')
+          allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_raise(Errno::EACCES, 'permission denied')
         end
 
         it 'raises a FatalError' do
@@ -219,7 +219,7 @@ describe PDK::Generate::Module do
 
       context 'when a template-url is supplied on the command line' do
         before(:each) do
-          allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
+          allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
           allow(PDK::Util).to receive(:default_template_uri).and_return(Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'))
         end
 
@@ -253,7 +253,7 @@ describe PDK::Generate::Module do
 
       context 'when a template-url is not supplied on the command line' do
         before(:each) do
-          allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
+          allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
           allow(PDK::Util).to receive(:development_mode?).and_return(true)
         end
 
