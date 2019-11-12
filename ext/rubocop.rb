@@ -635,6 +635,39 @@ module RuboCop
           end
         end
       end
+
+      class FileUtilsCP < Cop
+        MSG = 'Use PDK::Util::Filesystem.cp instead of FileUtils.cp'.freeze
+
+        def_node_matcher :fileutils_cp?,
+                         '(send (const nil? :FileUtils) :cp ...)'
+
+        def_node_matcher :allow_fileutils?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :FileUtils))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_cp?, '(send nil? :receive (sym :cp))'
+
+        def on_send(node)
+          return unless fileutils_cp?(node) || (allow_fileutils?(node) && receive_cp?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if fileutils_cp?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end

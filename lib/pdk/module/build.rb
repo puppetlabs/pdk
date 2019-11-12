@@ -126,7 +126,7 @@ module PDK
           warn_symlink(path)
         else
           validate_ustar_path!(relative_path.to_path)
-          FileUtils.cp(path, dest_path, preserve: true)
+          PDK::Util::Filesystem.cp(path, dest_path, preserve: true)
         end
       rescue ArgumentError => e
         raise PDK::CLI::ExitWithError, _(

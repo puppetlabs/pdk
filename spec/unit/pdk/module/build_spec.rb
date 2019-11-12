@@ -202,7 +202,7 @@ describe PDK::Module::Build do
       it 'warns the user about the symlink and skips over it' do
         expect(instance).to receive(:warn_symlink).with(path_to_stage)
         expect(PDK::Util::Filesystem).not_to receive(:mkdir_p).with(any_args)
-        expect(FileUtils).not_to receive(:cp).with(any_args)
+        expect(PDK::Util::Filesystem).not_to receive(:cp).with(any_args)
         instance.stage_path(path_to_stage)
       end
     end
@@ -214,7 +214,7 @@ describe PDK::Module::Build do
       end
 
       it 'copies the file into the build directory, preserving the permissions' do
-        expect(FileUtils).to receive(:cp).with(path_to_stage, path_in_build_dir, preserve: true)
+        expect(PDK::Util::Filesystem).to receive(:cp).with(path_to_stage, path_in_build_dir, preserve: true)
         instance.stage_path(path_to_stage)
       end
 

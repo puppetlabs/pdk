@@ -446,13 +446,13 @@ RSpec.describe PDK::Util::Bundler do
             allow(PDK::Util::Filesystem).to receive(:exist?).with(lockfile).and_return(true)
           end
 
-          allow(FileUtils).to receive(:cp)
+          allow(PDK::Util::Filesystem).to receive(:cp)
         end
 
         it 'copies a Gemfile.lock from vendored location' do
           # package_cachedir comes from 'packaged install' context
           lockfile = File.join(package_cachedir, "Gemfile-#{PDK::Util::RubyVersion.active_ruby_version}.lock")
-          expect(FileUtils).to receive(:cp).with(lockfile, %r{Gemfile\.lock$})
+          expect(PDK::Util::Filesystem).to receive(:cp).with(lockfile, %r{Gemfile\.lock$})
 
           instance.lock!
         end

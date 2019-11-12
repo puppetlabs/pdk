@@ -102,6 +102,11 @@ module PDK
         File.symlink?(*args)
       end
       module_function :symlink?
+
+      def cp(*args)
+        FileUtils.cp(*args)
+      end
+      module_function :cp
       #:nocov:
     end
   end
