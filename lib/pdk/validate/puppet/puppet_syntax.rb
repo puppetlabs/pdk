@@ -68,8 +68,6 @@ module PDK
         return unless @validate_tmpdir
         return unless PDK::Util::Filesystem.directory?(@validate_tmpdir)
 
-        require 'fileutils'
-
         PDK::Util::Filesystem.remove_entry_secure(@validate_tmpdir)
         @validate_tmpdir = nil
       end

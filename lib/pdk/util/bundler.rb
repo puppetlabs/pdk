@@ -6,8 +6,6 @@ module PDK
       class BundleHelper; end
 
       def self.ensure_bundle!(gem_overrides = nil)
-        require 'fileutils'
-
         bundle = BundleHelper.new
 
         # This will default ensure_bundle! to re-resolving everything to latest
@@ -110,7 +108,6 @@ module PDK
 
         def lock!
           require 'pdk/util'
-          require 'fileutils'
           require 'pdk/util/ruby_version'
 
           if PDK::Util.package_install?

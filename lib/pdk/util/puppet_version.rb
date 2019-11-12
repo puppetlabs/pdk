@@ -52,7 +52,6 @@ module PDK
         return if options[:run] == :once && puppet_dev_fetched?
 
         require 'pdk/util/git'
-        require 'fileutils'
 
         # Check if the source is cloned and is a readable git repo
         unless PDK::Util::Git.remote_repo? puppet_dev_path

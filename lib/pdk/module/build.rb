@@ -67,8 +67,6 @@ module PDK
       #
       # If the directory already exists, remove it first.
       def create_build_dir
-        require 'fileutils'
-
         cleanup_build_dir
 
         PDK::Util::Filesystem.mkdir_p(build_dir)
@@ -78,8 +76,6 @@ module PDK
       #
       # @return nil.
       def cleanup_build_dir
-        require 'fileutils'
-
         PDK::Util::Filesystem.rm_rf(build_dir, secure: true)
       end
 
@@ -115,7 +111,6 @@ module PDK
       # @return nil.
       def stage_path(path)
         require 'pathname'
-        require 'fileutils'
 
         relative_path = Pathname.new(path).relative_path_from(Pathname.new(module_dir))
         dest_path = File.join(build_dir, relative_path)
@@ -224,7 +219,6 @@ module PDK
       #
       # @return nil.
       def build_package
-        require 'fileutils'
         require 'zlib'
         require 'minitar'
         require 'find'

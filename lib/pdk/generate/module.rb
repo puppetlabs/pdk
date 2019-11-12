@@ -22,7 +22,6 @@ module PDK
         require 'pdk/module/templatedir'
         require 'pdk/util'
         require 'pdk/util/template_uri'
-        require 'fileutils'
         require 'pathname'
 
         validate_options(opts) unless opts[:module_name].nil?
@@ -137,8 +136,6 @@ module PDK
       end
 
       def self.prepare_module_directory(target_dir)
-        require 'fileutils'
-
         [
           File.join(target_dir, 'examples'),
           File.join(target_dir, 'files'),

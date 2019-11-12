@@ -1,4 +1,5 @@
 require 'pdk'
+autoload :FileUtils, 'fileutils'
 
 module PDK
   module Util
