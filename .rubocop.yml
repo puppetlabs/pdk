@@ -258,3 +258,8 @@ PDK/FileUtilsMV:
   Exclude:
     - lib/pdk/util/filesystem.rb
     - spec/acceptance/**/*.rb
+
+PDK/FileUtilsRemoveEntrySecure:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb

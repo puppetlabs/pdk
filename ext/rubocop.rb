@@ -743,6 +743,40 @@ module RuboCop
           end
         end
       end
+
+      class FileUtilsRemoveEntrySecure < Cop
+        MSG = 'Use PDK::Util::Filesystem.remove_entry_secure instead of FileUtils.remove_entry_secure'.freeze
+
+        def_node_matcher :fileutils_remove_entry_secure?,
+                         '(send (const nil? :FileUtils) :remove_entry_secure ...)'
+
+        def_node_matcher :allow_fileutils?, <<-MATCHER
+          (send
+            (send nil? {:allow :expect} (const nil? :FileUtils))
+            {:to :not_to}
+            ...)
+        MATCHER
+
+        def_node_search :receive_remove_entry_secure?, '(send nil? :receive (sym :remove_entry_secure))'
+
+        def on_send(node)
+          return unless fileutils_remove_entry_secure?(node) ||
+                        (allow_fileutils?(node) && receive_remove_entry_secure?(node))
+
+          add_offense(node)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            const = if fileutils_remove_entry_secure?(node)
+                      node.children[0].loc.expression
+                    else
+                      node.children[0].children[2].loc.expression
+                    end
+            corrector.replace(const, 'PDK::Util::Filesystem')
+          end
+        end
+      end
     end
   end
 end

@@ -88,6 +88,11 @@ module PDK
       end
       module_function :rm_rf
 
+      def remove_entry_secure(*args)
+        FileUtils.remove_entry_secure(*args)
+      end
+      module_function :remove_entry_secure
+
       def zero?(*args)
         File.zero?(*args)
       end

@@ -7,7 +7,7 @@ describe PDK::Validate::PuppetEPP do
 
   before(:each) do
     allow(Dir).to receive(:mktmpdir).with('puppet-epp-validate').and_return(tmpdir)
-    allow(FileUtils).to receive(:remove_entry_secure).with(tmpdir)
+    allow(PDK::Util::Filesystem).to receive(:remove_entry_secure).with(tmpdir)
   end
 
   it 'defines the base validator attributes' do
@@ -57,7 +57,7 @@ describe PDK::Validate::PuppetEPP do
       end
 
       it 'does not attempt to remove the directory' do
-        expect(FileUtils).not_to receive(:remove_entry_secure)
+        expect(PDK::Util::Filesystem).not_to receive(:remove_entry_secure)
       end
     end
 
@@ -72,7 +72,7 @@ describe PDK::Validate::PuppetEPP do
         end
 
         it 'removes the directory' do
-          expect(FileUtils).to receive(:remove_entry_secure).with(tmpdir)
+          expect(PDK::Util::Filesystem).to receive(:remove_entry_secure).with(tmpdir)
         end
       end
 
@@ -82,7 +82,7 @@ describe PDK::Validate::PuppetEPP do
         end
 
         it 'does not attempt to remove the directory' do
-          expect(FileUtils).not_to receive(:remove_entry_secure)
+          expect(PDK::Util::Filesystem).not_to receive(:remove_entry_secure)
         end
       end
     end

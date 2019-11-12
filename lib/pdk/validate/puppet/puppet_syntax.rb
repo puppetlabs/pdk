@@ -70,7 +70,7 @@ module PDK
 
         require 'fileutils'
 
-        FileUtils.remove_entry_secure(@validate_tmpdir)
+        PDK::Util::Filesystem.remove_entry_secure(@validate_tmpdir)
         @validate_tmpdir = nil
       end
 
