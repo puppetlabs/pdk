@@ -88,7 +88,7 @@ module PDK
               end
             end
 
-            PDK.logger.info _('Module \'%{name}\' generated at path \'%{path}\', from template \'%{url}\'.') % { name: opts[:module_name], path: target_dir, url: template_uri.git_remote }
+            PDK.logger.info _('Module \'%{name}\' generated at path \'%{path}\', from template \'%{url}\'.') % { name: opts[:module_name], path: target_dir, url: template_uri.bare_uri }
             PDK.logger.info(_('In your module directory, add classes with the \'pdk new class\' command.'))
           end
         rescue Errno::EACCES => e

@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'pdk/util/template_uri'
+require 'addressable'
 
 describe PDK::Util::TemplateURI do
   subject(:template_uri) do
@@ -179,12 +180,12 @@ describe PDK::Util::TemplateURI do
     end
   end
 
-  describe '.git_remote' do
+  describe '.bare_uri' do
     context 'when the uri has a fragment' do
       let(:opts_or_uri) { 'https://github.com/my/pdk-templates.git#custom' }
 
       it 'returns just the url portion' do
-        expect(template_uri.git_remote).to eq 'https://github.com/my/pdk-templates.git'
+        expect(template_uri.bare_uri).to eq 'https://github.com/my/pdk-templates.git'
       end
     end
 
@@ -192,7 +193,7 @@ describe PDK::Util::TemplateURI do
       let(:opts_or_uri) { 'https://github.com/my/pdk-templates.git' }
 
       it 'returns just the url portion' do
-        expect(template_uri.git_remote).to eq 'https://github.com/my/pdk-templates.git'
+        expect(template_uri.bare_uri).to eq 'https://github.com/my/pdk-templates.git'
       end
     end
 
@@ -202,7 +203,7 @@ describe PDK::Util::TemplateURI do
 
         it 'returns url portion' do
           allow(Gem).to receive(:win_platform?).and_return(false)
-          expect(template_uri.git_remote).to eq '/my/pdk-templates.git'
+          expect(template_uri.bare_uri).to eq '/my/pdk-templates.git'
         end
       end
 
@@ -211,18 +212,18 @@ describe PDK::Util::TemplateURI do
 
         it 'returns url portion' do
           allow(Gem).to receive(:win_platform?).and_return(true)
-          expect(template_uri.git_remote).to eq 'C:/my/pdk-templates.git'
+          expect(template_uri.bare_uri).to eq 'C:/my/pdk-templates.git'
         end
       end
     end
   end
 
-  describe '.git_ref' do
+  describe '.uri_fragment' do
     context 'when the uri has a fragment' do
       let(:opts_or_uri) { 'https://github.com/my/pdk-templates.git#custom' }
 
-      it 'returns just the ref portion' do
-        expect(template_uri.git_ref).to eq 'custom'
+      it 'returns just the fragment portion' do
+        expect(template_uri.uri_fragment).to eq 'custom'
       end
     end
 
@@ -230,7 +231,7 @@ describe PDK::Util::TemplateURI do
       let(:opts_or_uri) { 'https://github.com/my/pdk-templates.git' }
 
       it 'returns the default ref' do
-        expect(template_uri.git_ref).to eq(described_class.default_template_ref(opts_or_uri))
+        expect(template_uri.uri_fragment).to eq(described_class.default_template_ref(opts_or_uri))
       end
     end
   end
@@ -500,11 +501,12 @@ describe PDK::Util::TemplateURI do
 
       context 'that is a pdk-default keyword' do
         let(:metadata_url) { 'pdk-default#master' }
+        let(:expected_uri) { described_class.default_template_addressable_uri.tap { |obj| obj.fragment = 'master' } }
 
-        it 'converts the keyword to the defalut template' do
+        it 'converts the keyword to the default template' do
           is_expected.to include(
             type: 'metadata.json',
-            uri:  described_class.default_template_uri('master').uri,
+            uri: expected_uri,
             allow_fallback: true,
           )
         end
@@ -575,6 +577,11 @@ describe PDK::Util::TemplateURI do
             allow(PDK::Util::Git).to receive(:repo?).with('/path/to/a/template').and_return(false)
           end
 
+          def allow_template_dir(root, valid)
+            allow(PDK::Util::Filesystem).to receive(:directory?).with("#{root}/moduleroot").and_return(valid)
+            allow(PDK::Util::Filesystem).to receive(:directory?).with("#{root}/moduleroot_init").and_return(valid)
+          end
+
           context 'but does point to a directory' do
             before(:each) do
               allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/a/template').and_return(true)
@@ -582,6 +589,7 @@ describe PDK::Util::TemplateURI do
 
             context 'that contains a valid template' do
               before(:each) do
+                allow_template_dir('/path/to/a/template', true)
                 allow(PDK::Module::TemplateDir).to receive(:new).with('/path/to/a/template').and_yield
               end
 
@@ -590,6 +598,7 @@ describe PDK::Util::TemplateURI do
 
             context 'that does not contain a valid template' do
               before(:each) do
+                allow_template_dir('/path/to/a/template', false)
                 allow(PDK::Module::TemplateDir).to receive(:new).with('/path/to/a/template').and_raise(ArgumentError)
               end
 

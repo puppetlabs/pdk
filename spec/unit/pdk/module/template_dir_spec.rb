@@ -152,7 +152,7 @@ describe PDK::Module::TemplateDir do
       allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path)
       allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:rm_rf).with(path)
-      allow_any_instance_of(described_class).to receive(:validate_module_template!)
+      allow(described_class).to receive(:validate_module_template!)
       allow(PDK::Util::Git).to receive(:describe).and_return('git-ref')
       # rubocop:enable RSpec/AnyInstance
     end

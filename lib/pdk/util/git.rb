@@ -134,6 +134,10 @@ module PDK
         result[:stdout].strip
       end
 
+      def self.tag?(git_remote, tag_name)
+        git('ls-remote', '--tags', '--exit-code', git_remote, tag_name)[:exit_code].zero?
+      end
+
       # Clears any cached information for git queries
       # Should only be used during testing
       # @api private

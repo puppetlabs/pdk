@@ -2,9 +2,14 @@ require 'pdk'
 
 module PDK
   module Module
+    TEMPLATE_DIR_FILESYSTEM_TYPE = :filesystem
+    TEMPLATE_DIR_GIT_TYPE = :git
+
     class TemplateDir
       attr_accessor :module_metadata
       attr_reader :uri
+
+      attr_reader :template_dir_type
 
       # Initialises the TemplateDir object with the path or URL to the template
       # and the block of code to run to be run while the template is available.
@@ -45,32 +50,35 @@ module PDK
           raise ArgumentError, _('PDK::Module::TemplateDir.new must be initialized with a PDK::Util::TemplateURI, got a %{uri_type}') % { uri_type: uri.class }
         end
 
-        if PDK::Util::Git.repo?(uri.git_remote)
-          # This is either a bare local repo or a remote. either way it needs cloning.
-          @path = clone_template_repo(uri)
-          temp_dir_clone = true
-        else
-          # if it is a local path & non-bare repo then we can use it directly.
-          # Still have to check the branch.
-          @path = uri.shell_path
+        if PDK::Util::Git.repo?(uri.bare_uri)
+          @template_dir_type = TEMPLATE_DIR_GIT_TYPE
           # We don't do a checkout of local-path repos. There are lots of edge
           # cases or user un-expectations.
-          if PDK::Util::Git.work_tree?(@path)
+          if PDK::Util::Git.work_tree?(uri.shell_path)
+            @path = uri.shell_path
             PDK.logger.warn _("Repository '%{repo}' has a work-tree; skipping git reset.") % {
               repo: @path,
             }
+          else
+            # This is either a bare local repo or a remote. either way it needs cloning.
+            # A "remote" can also be git repo on the local filsystem.
+            @path = clone_template_repo(uri)
+            temp_dir_clone = true
           end
+        else
+          @path = uri.shell_path
+          @template_dir_type = TEMPLATE_DIR_FILESYSTEM_TYPE
         end
         @uri = uri
 
         @init = init
-        @moduleroot_dir = File.join(@path, 'moduleroot')
-        @moduleroot_init = File.join(@path, 'moduleroot_init')
+        @moduleroot_dir = self.class.moduleroot_dir(@path)
+        @moduleroot_init = self.class.moduleroot_init(@path)
         @dirs = [@moduleroot_dir]
         @dirs << @moduleroot_init if @init
         @object_dir = File.join(@path, 'object_templates')
 
-        validate_module_template!
+        self.class.validate_module_template!(@path)
 
         @module_metadata = module_metadata
 
@@ -91,17 +99,26 @@ module PDK
       # For git repositories, this will return the URL to the repository and
       # a reference to the HEAD.
       #
+      # For plain fileystem directories, this will return the URL to the repository only.
+      #
       # @return [Hash{String => String}] A hash of identifying metadata.
       #
       # @api public
       def metadata
         require 'pdk/util/version'
 
-        {
-          'pdk-version'  => PDK::Util::Version.version_string,
-          'template-url' => uri.metadata_format,
-          'template-ref' => cache_template_ref(@path),
-        }
+        result = { 'pdk-version' => PDK::Util::Version.version_string }
+        case @template_dir_type
+        when TEMPLATE_DIR_GIT_TYPE
+          result['template-url'] = uri.metadata_format
+          result['template-ref'] = cache_template_ref(@path)
+        when TEMPLATE_DIR_FILESYSTEM_TYPE
+          result['template-url'] = uri.bare_uri
+          result['template-ref'] = nil
+        else
+          raise PDK::CLI::FatalError, _('Unknown template directory type %{dir_type}') % { dir_type: @template_dir_type }
+        end
+        result
       end
 
       # Loop through the files in the template, yielding each rendered file to
@@ -198,6 +215,14 @@ module PDK
         config_for(nil)
       end
 
+      def self.moduleroot_dir(template_root_dir)
+        File.join(template_root_dir, 'moduleroot')
+      end
+
+      def self.moduleroot_init(template_root_dir)
+        File.join(template_root_dir, 'moduleroot_init')
+      end
+
       # Validate the content of the template directory.
       #
       # @raise [ArgumentError] If the specified path is not a directory.
@@ -206,27 +231,27 @@ module PDK
       #
       # @return [void]
       #
-      # @api private
-      def validate_module_template!
+      # @api public
+      def self.validate_module_template!(template_root_dir)
         # rubocop:disable Style/GuardClause
-        unless PDK::Util::Filesystem.directory?(@path)
+        unless PDK::Util::Filesystem.directory?(template_root_dir)
           require 'pdk/util'
 
-          if PDK::Util.package_install? && PDK::Util::Filesystem.fnmatch?(File.join(PDK::Util.package_cachedir, '*'), @path)
+          if PDK::Util.package_install? && PDK::Util::Filesystem.fnmatch?(File.join(PDK::Util.package_cachedir, '*'), template_root_dir)
             raise ArgumentError, _('The built-in template has substantially changed. Please run "pdk convert" on your module to continue.')
           else
-            raise ArgumentError, _("The specified template '%{path}' is not a directory.") % { path: @path }
+            raise ArgumentError, _("The specified template '%{path}' is not a directory.") % { path: template_root_dir }
           end
         end
 
-        unless PDK::Util::Filesystem.directory?(@moduleroot_dir)
-          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot/' directory.") % { path: @path }
+        unless PDK::Util::Filesystem.directory?(moduleroot_dir(template_root_dir))
+          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot/' directory.") % { path: template_root_dir }
         end
 
-        unless PDK::Util::Filesystem.directory?(@moduleroot_init)
+        unless PDK::Util::Filesystem.directory?(moduleroot_init(template_root_dir))
           # rubocop:disable Metrics/LineLength
-          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot_init/' directory, which indicates you are using an older style of template. Before continuing please use the --template-url flag when running the pdk new commands to pass a new style template.") % { path: @path }
-          # rubocop:enable Metrics/LineLength Style/GuardClause
+          raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot_init/' directory, which indicates you are using an older style of template. Before continuing please use the --template-url flag when running the pdk new commands to pass a new style template.") % { path: template_root_dir }
+          # rubocop:enable Metrics/LineLength
         end
         # rubocop:enable Style/GuardClause
       end
@@ -344,8 +369,8 @@ module PDK
         require 'pdk/util/git'
 
         temp_dir = PDK::Util.make_tmpdir_name('pdk-templates')
-        origin_repo = uri.git_remote
-        git_ref = uri.git_ref
+        origin_repo = uri.bare_uri
+        git_ref = uri.uri_fragment
 
         clone_result = PDK::Util::Git.git('clone', origin_repo, temp_dir)
 
@@ -381,6 +406,8 @@ module PDK
       end
 
       def cache_template_ref(path, ref = nil)
+        # Filesystem type template directories have no concept of a ref.
+        return nil if @template_dir_type == TEMPLATE_DIR_FILESYSTEM_TYPE
         require 'pdk/util/git'
 
         @template_ref ||= PDK::Util::Git.describe(File.join(path, '.git'), ref)

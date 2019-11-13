@@ -57,7 +57,7 @@ describe PDK::Module::Update do
       allow(instance).to receive(:print_summary)
       allow(instance).to receive(:new_version).and_return('1.4.0')
       allow(instance).to receive(:print_result)
-      allow(instance.template_uri).to receive(:ref_is_tag?).and_return(true)
+      allow(PDK::Util::Git).to receive(:tag?).with(String, String).and_return(true)
       allow(instance.update_manager).to receive(:sync_changes!)
       allow(instance.update_manager).to receive(:changes?).and_return(changes)
     end
@@ -272,8 +272,16 @@ describe PDK::Module::Update do
 
     include_context 'with mock metadata'
 
-    let(:module_template_uri) { instance_double(PDK::Util::TemplateURI, default?: true, ref_is_tag?: false, git_ref: '0.0.1') }
-    let(:template_url) { 'https://github.com/puppetlabs/pdk-templates#0.0.1' }
+    let(:module_template_ref) { '0.0.1' }
+    let(:module_template_uri) do
+      instance_double(
+        PDK::Util::TemplateURI,
+        default?: true,
+        bare_uri: 'https://github.com/puppetlabs/pdk-templates',
+        uri_fragment: module_template_ref,
+      )
+    end
+    let(:template_url) { "https://github.com/puppetlabs/pdk-templates##{module_template_ref}" }
 
     before(:each) do
       allow(PDK::Util::TemplateURI).to receive(:new).and_call_original
@@ -296,7 +304,7 @@ describe PDK::Module::Update do
 
         context 'and the ref of the template is a tag' do
           before(:each) do
-            allow(module_template_uri).to receive(:ref_is_tag?).and_return(true)
+            allow(PDK::Util::Git).to receive(:tag?).with(String, module_template_ref).and_return(true)
           end
 
           context 'and PDK is running from a package install' do
@@ -324,7 +332,7 @@ describe PDK::Module::Update do
 
         context 'but the ref of the template is not a tag' do
           before(:each) do
-            allow(module_template_uri).to receive(:ref_is_tag?).and_return(false)
+            allow(PDK::Util::Git).to receive(:tag?).with(String, module_template_ref).and_return(false)
           end
 
           it 'returns the ref from the metadata' do
