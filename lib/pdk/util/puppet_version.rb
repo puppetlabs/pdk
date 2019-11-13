@@ -52,17 +52,16 @@ module PDK
         return if options[:run] == :once && puppet_dev_fetched?
 
         require 'pdk/util/git'
-        require 'fileutils'
 
         # Check if the source is cloned and is a readable git repo
         unless PDK::Util::Git.remote_repo? puppet_dev_path
           # Check if the path has something in it already. Delete it and prepare for clone if so.
-          if File.exist? puppet_dev_path
-            File.delete(puppet_dev_path) if File.file? puppet_dev_path
-            FileUtils.rm_rf(puppet_dev_path) if File.directory? puppet_dev_path
+          if PDK::Util::Filesystem.exist? puppet_dev_path
+            PDK::Util::Filesystem.delete(puppet_dev_path) if PDK::Util::Filesystem.file? puppet_dev_path
+            PDK::Util::Filesystem.rm_rf(puppet_dev_path) if PDK::Util::Filesystem.directory? puppet_dev_path
           end
 
-          FileUtils.mkdir_p puppet_dev_path
+          PDK::Util::Filesystem.mkdir_p puppet_dev_path
           clone_result = PDK::Util::Git.git('clone', DEFAULT_PUPPET_DEV_URL, puppet_dev_path)
           return if clone_result[:exit_code].zero?
 

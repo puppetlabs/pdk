@@ -44,7 +44,7 @@ module PDK
           require 'pdk/util'
 
           ruby_basedir = File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', '*')
-          Dir[ruby_basedir].sort.map { |ruby_dir|
+          PDK::Util::Filesystem.glob(ruby_basedir).sort.map { |ruby_dir|
             version = File.basename(ruby_dir)
             [version, version.split('.').take(2).concat(['0']).join('.')]
           }.reverse.to_h
@@ -142,10 +142,10 @@ module PDK
       def available_puppet_versions
         return @available_puppet_versions unless @available_puppet_versions.nil?
 
-        puppet_spec_files = Dir[File.join(gem_home, 'specifications', '**', 'puppet*.gemspec')]
+        puppet_spec_files = PDK::Util::Filesystem.glob(File.join(gem_home, 'specifications', '**', 'puppet*.gemspec'))
 
         gem_path.split(File::PATH_SEPARATOR).each do |path|
-          puppet_spec_files += Dir[File.join(path, 'specifications', '**', 'puppet*.gemspec')]
+          puppet_spec_files += PDK::Util::Filesystem.glob(File.join(path, 'specifications', '**', 'puppet*.gemspec'))
         end
 
         puppet_specs = []

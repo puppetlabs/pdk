@@ -19,7 +19,7 @@ describe PDK::CLI::Exec do
 
       context 'when the file exists in the package' do
         before(:each) do
-          expect(File).to receive(:exist?).with('/foo/private/bin/bar').and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:exist?).with('/foo/private/bin/bar').and_return(true)
         end
 
         it 'returns the full path' do
@@ -29,7 +29,7 @@ describe PDK::CLI::Exec do
 
       context 'when the file is not in the package' do
         before(:each) do
-          expect(File).to receive(:exist?).with('/foo/private/bin/bar').and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:exist?).with('/foo/private/bin/bar').and_return(false)
         end
 
         it 'returns the full path' do

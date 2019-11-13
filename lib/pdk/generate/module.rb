@@ -3,8 +3,6 @@ require 'pdk'
 module PDK
   module Generate
     class Module
-      extend PDK::Util::Filesystem
-
       def self.validate_options(opts)
         require 'pdk/cli/util/option_validator'
 
@@ -16,28 +14,27 @@ module PDK
           raise PDK::CLI::ExitWithError, error_msg
         end
 
-        target_dir = File.expand_path(opts[:target_dir])
-        raise PDK::CLI::ExitWithError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if File.exist?(target_dir)
+        target_dir = PDK::Util::Filesystem.expand_path(opts[:target_dir])
+        raise PDK::CLI::ExitWithError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if PDK::Util::Filesystem.exist?(target_dir)
       end
 
       def self.invoke(opts = {})
         require 'pdk/module/templatedir'
         require 'pdk/util'
         require 'pdk/util/template_uri'
-        require 'fileutils'
         require 'pathname'
 
         validate_options(opts) unless opts[:module_name].nil?
 
         metadata = prepare_metadata(opts)
 
-        target_dir = File.expand_path(opts[:target_dir] || opts[:module_name])
+        target_dir = PDK::Util::Filesystem.expand_path(opts[:target_dir] || opts[:module_name])
         parent_dir = File.dirname(target_dir)
 
         begin
           test_file = File.join(parent_dir, '.pdk-test-writable')
-          write_file(test_file, 'This file was created by the Puppet Development Kit to test if this folder was writable, you can safely remove this file.')
-          FileUtils.rm_f(test_file)
+          PDK::Util::Filesystem.write_file(test_file, 'This file was created by the Puppet Development Kit to test if this folder was writable, you can safely remove this file.')
+          PDK::Util::Filesystem.rm_f(test_file)
         rescue Errno::EACCES
           raise PDK::CLI::FatalError, _("You do not have permission to write to '%{parent_dir}'") % {
             parent_dir: parent_dir,
@@ -56,7 +53,7 @@ module PDK
               next if file_status == :delete
               file = Pathname.new(temp_target_dir) + file_path
               file.dirname.mkpath
-              write_file(file, file_content)
+              PDK::Util::Filesystem.write_file(file, file_content)
             end
 
             # Add information about the template used to generate the module to the
@@ -83,7 +80,7 @@ module PDK
         end
 
         begin
-          if FileUtils.mv(temp_target_dir, target_dir)
+          if PDK::Util::Filesystem.mv(temp_target_dir, target_dir)
             unless opts[:'skip-bundle-install']
               Dir.chdir(target_dir) do
                 require 'pdk/util/bundler'
@@ -139,8 +136,6 @@ module PDK
       end
 
       def self.prepare_module_directory(target_dir)
-        require 'fileutils'
-
         [
           File.join(target_dir, 'examples'),
           File.join(target_dir, 'files'),
@@ -149,7 +144,7 @@ module PDK
           File.join(target_dir, 'tasks'),
         ].each do |dir|
           begin
-            FileUtils.mkdir_p(dir)
+            PDK::Util::Filesystem.mkdir_p(dir)
           rescue SystemCallError => e
             raise PDK::CLI::FatalError, _("Unable to create directory '%{dir}': %{message}") % {
               dir:     dir,
@@ -269,7 +264,7 @@ module PDK
 
         interview.add_questions(questions)
 
-        if File.file?('metadata.json')
+        if PDK::Util::Filesystem.file?('metadata.json')
           puts _(
             "\nWe need to update the metadata.json file for this module, so we\'re going to ask you %{count} " \
             "questions.\n",

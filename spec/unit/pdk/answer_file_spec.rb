@@ -7,10 +7,10 @@ shared_context 'a valid answer file' do
 
   before(:each) do
     allow(PDK::Util).to receive(:package_install?).and_return(false)
-    allow(File).to receive(:file?).with(default_path).and_return(true)
-    allow(File).to receive(:zero?).with(default_path).and_return(false)
-    allow(File).to receive(:readable?).with(default_path).and_return(true)
-    allow(File).to receive(:read).with(default_path).and_return('{"question": "answer"}')
+    allow(PDK::Util::Filesystem).to receive(:file?).with(default_path).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:zero?).with(default_path).and_return(false)
+    allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:read_file).with(default_path).and_return('{"question": "answer"}')
   end
 end
 
@@ -37,7 +37,7 @@ describe PDK::AnswerFile do
     context 'when the answer file does not exist' do
       before(:each) do
         allow(PDK::Util).to receive(:package_install?).and_return(false)
-        allow(File).to receive(:file?).with(default_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(default_path).and_return(false)
       end
 
       it 'creates an empty set of answers' do
@@ -48,12 +48,12 @@ describe PDK::AnswerFile do
     context 'when the answer file exists' do
       before(:each) do
         allow(PDK::Util).to receive(:package_install?).and_return(false)
-        allow(File).to receive(:file?).with(default_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(default_path).and_return(true)
       end
 
       context 'and contains no data' do
         before(:each) do
-          allow(File).to receive(:zero?).with(default_path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:zero?).with(default_path).and_return(true)
         end
 
         it 'creates an empty set of answers' do
@@ -63,8 +63,8 @@ describe PDK::AnswerFile do
 
       context 'and is unreadable' do
         before(:each) do
-          allow(File).to receive(:zero?).with(default_path).and_return(false)
-          allow(File).to receive(:readable?).with(default_path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:zero?).with(default_path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(false)
         end
 
         it 'raises a FatalError' do
@@ -76,9 +76,9 @@ describe PDK::AnswerFile do
         let(:file_contents) {}
 
         before(:each) do
-          allow(File).to receive(:zero?).with(default_path).and_return(false)
-          allow(File).to receive(:readable?).with(default_path).and_return(true)
-          allow(File).to receive(:read).with(default_path).and_return(file_contents)
+          allow(PDK::Util::Filesystem).to receive(:zero?).with(default_path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:readable?).with(default_path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:read_file).with(default_path).and_return(file_contents)
         end
 
         context 'but contains invalid JSON' do
@@ -162,31 +162,25 @@ describe PDK::AnswerFile do
     include_context 'a valid answer file'
 
     context 'when the file can be written to' do
-      let(:fake_file) { StringIO.new }
-
-      before(:each) do
-        allow(File).to receive(:open).with(default_path, 'wb').and_yield(fake_file)
-      end
-
       it 'writes the answer set to disk' do
-        answer_file.update!
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(anything, satisfy { |content| !content.empty? })
 
-        fake_file.rewind
-        expect(fake_file.read).not_to be_empty
+        answer_file.update!
       end
 
       it 'writes out the answers as valid JSON' do
-        answer_file.update!
+        expect(PDK::Util::Filesystem).to receive(:write_file)
+          .with(anything, satisfy { |content| JSON.parse(content) == { 'question' => 'answer' } })
 
-        fake_file.rewind
-        expect(JSON.parse(fake_file.read)).to eq('question' => 'answer')
+        answer_file.update!
       end
     end
 
     context 'when an IOError is raised' do
       before(:each) do
-        allow(File).to receive(:open).with(any_args).and_call_original
-        allow(File).to receive(:open).with(default_path, 'wb').and_raise(IOError, 'some error message')
+        allow(PDK::Util::Filesystem).to receive(:write_file)
+          .with(default_path, anything).and_raise(IOError, 'some error message')
       end
 
       it 'raises a FatalError' do
@@ -197,8 +191,8 @@ describe PDK::AnswerFile do
 
     context 'when a SystemCallError is raised' do
       before(:each) do
-        allow(File).to receive(:open).with(any_args).and_call_original
-        allow(File).to receive(:open).with(default_path, 'wb').and_raise(SystemCallError, 'some other error')
+        allow(PDK::Util::Filesystem).to receive(:write_file)
+          .with(default_path, anything).and_raise(SystemCallError, 'some other error')
       end
 
       it 'raises a FatalError' do

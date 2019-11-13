@@ -54,7 +54,7 @@ module PDK
         error = _("A task named '%{name}' already exists in this module; defined in %{file}")
         allowed_extensions = %w[.md .conf]
 
-        Dir.glob(File.join(module_dir, 'tasks', "#{task_name}.*")).each do |file|
+        PDK::Util::Filesystem.glob(File.join(module_dir, 'tasks', "#{task_name}.*")).each do |file|
           next if allowed_extensions.include?(File.extname(file))
 
           raise PDK::CLI::ExitWithError, error % { name: task_name, file: file }

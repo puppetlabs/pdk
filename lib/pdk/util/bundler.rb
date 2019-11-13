@@ -6,8 +6,6 @@ module PDK
       class BundleHelper; end
 
       def self.ensure_bundle!(gem_overrides = nil)
-        require 'fileutils'
-
         bundle = BundleHelper.new
 
         # This will default ensure_bundle! to re-resolving everything to latest
@@ -34,11 +32,11 @@ module PDK
           original_lockfile = bundle.gemfile_lock
           temp_lockfile = "#{original_lockfile}.tmp"
 
-          FileUtils.mv(original_lockfile, temp_lockfile)
+          PDK::Util::Filesystem.mv(original_lockfile, temp_lockfile)
 
           all_deps_available = bundle.installed?(gem_overrides)
         ensure
-          FileUtils.mv(temp_lockfile, original_lockfile, force: true)
+          PDK::Util::Filesystem.mv(temp_lockfile, original_lockfile, force: true)
         end
 
         bundle.update_lock!(with: gem_overrides, local: all_deps_available)
@@ -91,7 +89,7 @@ module PDK
         end
 
         def locked?
-          !gemfile_lock.nil? && File.file?(gemfile_lock)
+          !gemfile_lock.nil? && PDK::Util::Filesystem.file?(gemfile_lock)
         end
 
         def installed?(gem_overrides = {})
@@ -110,7 +108,6 @@ module PDK
 
         def lock!
           require 'pdk/util'
-          require 'fileutils'
           require 'pdk/util/ruby_version'
 
           if PDK::Util.package_install?
@@ -121,7 +118,9 @@ module PDK
               File.join(PDK::Util.package_cachedir, 'Gemfile.lock'),
             ]
 
-            vendored_gemfile_lock = vendored_lockfiles.find { |lockfile| File.exist?(lockfile) }
+            vendored_gemfile_lock = vendored_lockfiles.find do |lockfile|
+              PDK::Util::Filesystem.exist?(lockfile)
+            end
 
             unless vendored_gemfile_lock
               raise PDK::CLI::FatalError, _('Vendored Gemfile.lock (%{source}) not found.') % {
@@ -130,7 +129,7 @@ module PDK
             end
 
             PDK.logger.debug(_('Using vendored Gemfile.lock from %{source}.') % { source: vendored_gemfile_lock })
-            FileUtils.cp(vendored_gemfile_lock, File.join(PDK::Util.module_root, 'Gemfile.lock'))
+            PDK::Util::Filesystem.cp(vendored_gemfile_lock, File.join(PDK::Util.module_root, 'Gemfile.lock'))
           else
             argv = ['lock']
 
@@ -212,7 +211,7 @@ module PDK
 
         def binstubs!(gems)
           binstub_dir = File.join(File.dirname(gemfile), 'bin')
-          return true if gems.all? { |gem| File.file?(File.join(binstub_dir, gem)) }
+          return true if gems.all? { |gem| PDK::Util::Filesystem.file?(File.join(binstub_dir, gem)) }
 
           cmd = bundle_command('binstubs', *gems, '--force')
           result = cmd.execute!

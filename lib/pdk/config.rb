@@ -47,7 +47,7 @@ module PDK
     end
 
     def self.bolt_analytics_config
-      file = File.expand_path('~/.puppetlabs/bolt/analytics.yaml')
+      file = PDK::Util::Filesystem.expand_path('~/.puppetlabs/bolt/analytics.yaml')
       PDK::Config::YAML.new(file: file)
     rescue PDK::Config::LoadError => e
       PDK.logger.debug _('Unable to load %{file}: %{message}') % {

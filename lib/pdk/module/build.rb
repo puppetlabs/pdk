@@ -11,8 +11,8 @@ module PDK
       attr_reader :target_dir
 
       def initialize(options = {})
-        @module_dir = File.expand_path(options[:module_dir] || Dir.pwd)
-        @target_dir = File.expand_path(options[:'target-dir'] || File.join(module_dir, 'pkg'))
+        @module_dir = PDK::Util::Filesystem.expand_path(options[:module_dir] || Dir.pwd)
+        @target_dir = PDK::Util::Filesystem.expand_path(options[:'target-dir'] || File.join(module_dir, 'pkg'))
       end
 
       # Read and parse the values from metadata.json for the module that is
@@ -47,7 +47,7 @@ module PDK
       # Verify if there is an existing package in the target directory and prompts
       # the user if they want to overwrite it.
       def package_already_exists?
-        File.exist? package_file
+        PDK::Util::Filesystem.exist?(package_file)
       end
 
       # Check if the module is PDK Compatible. If not, then prompt the user if
@@ -67,20 +67,16 @@ module PDK
       #
       # If the directory already exists, remove it first.
       def create_build_dir
-        require 'fileutils'
-
         cleanup_build_dir
 
-        FileUtils.mkdir_p(build_dir)
+        PDK::Util::Filesystem.mkdir_p(build_dir)
       end
 
       # Remove the temporary build directory and all its contents from disk.
       #
       # @return nil.
       def cleanup_build_dir
-        require 'fileutils'
-
-        FileUtils.rm_rf(build_dir, secure: true)
+        PDK::Util::Filesystem.rm_rf(build_dir, secure: true)
       end
 
       # Combine the module name and version into a Forge-compatible dash
@@ -115,18 +111,17 @@ module PDK
       # @return nil.
       def stage_path(path)
         require 'pathname'
-        require 'fileutils'
 
         relative_path = Pathname.new(path).relative_path_from(Pathname.new(module_dir))
         dest_path = File.join(build_dir, relative_path)
 
-        if File.directory?(path)
-          FileUtils.mkdir_p(dest_path, mode: File.stat(path).mode)
-        elsif File.symlink?(path)
+        if PDK::Util::Filesystem.directory?(path)
+          PDK::Util::Filesystem.mkdir_p(dest_path, mode: PDK::Util::Filesystem.stat(path).mode)
+        elsif PDK::Util::Filesystem.symlink?(path)
           warn_symlink(path)
         else
           validate_ustar_path!(relative_path.to_path)
-          FileUtils.cp(path, dest_path, preserve: true)
+          PDK::Util::Filesystem.cp(path, dest_path, preserve: true)
         end
       rescue ArgumentError => e
         raise PDK::CLI::ExitWithError, _(
@@ -142,7 +137,7 @@ module PDK
       #
       # @return [Boolean] true if the path matches and should be ignored.
       def ignored_path?(path)
-        path = path.to_s + '/' if File.directory?(path)
+        path = path.to_s + '/' if PDK::Util::Filesystem.directory?(path)
 
         !ignored_files.match_paths([path], module_dir).empty?
       end
@@ -224,23 +219,22 @@ module PDK
       #
       # @return nil.
       def build_package
-        require 'fileutils'
         require 'zlib'
         require 'minitar'
         require 'find'
 
-        FileUtils.rm_f(package_file)
+        PDK::Util::Filesystem.rm_f(package_file)
 
         Dir.chdir(target_dir) do
           begin
-            gz = Zlib::GzipWriter.new(File.open(package_file, 'wb'))
+            gz = Zlib::GzipWriter.new(File.open(package_file, 'wb')) # rubocop:disable PDK/FileOpen
             tar = Minitar::Output.new(gz)
             Find.find(release_name) do |entry|
               entry_meta = {
                 name: entry,
               }
 
-              orig_mode = File.stat(entry).mode
+              orig_mode = PDK::Util::Filesystem.stat(entry).mode
               min_mode = Minitar.dir?(entry) ? 0o755 : 0o644
 
               entry_meta[:mode] = orig_mode | min_mode
@@ -272,7 +266,7 @@ module PDK
           File.join(module_dir, '.pdkignore'),
           File.join(module_dir, '.pmtignore'),
           File.join(module_dir, '.gitignore'),
-        ].find { |file| File.file?(file) && File.readable?(file) }
+        ].find { |file| PDK::Util::Filesystem.file?(file) && PDK::Util::Filesystem.readable?(file) }
       end
 
       # Instantiate a new PathSpec class and populate it with the pattern(s) of
@@ -288,11 +282,7 @@ module PDK
             ignored = if ignore_file.nil?
                         PathSpec.new
                       else
-                        fd = File.open(ignore_file, 'rb:UTF-8')
-                        data = fd.read
-                        fd.close
-
-                        PathSpec.new(data)
+                        PathSpec.new(PDK::Util::Filesystem.read_file(ignore_file, open_args: 'rb:UTF-8'))
                       end
 
             if File.realdirpath(target_dir).start_with?(File.realdirpath(module_dir))

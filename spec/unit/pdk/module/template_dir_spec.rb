@@ -59,22 +59,22 @@ describe PDK::Module::TemplateDir do
     let(:moduleroot_init) { File.join(path_or_url, 'moduleroot_init') }
 
     before(:each) do
-      allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(true)
     end
 
     context 'when the template path is a directory' do
       before(:each) do
-        allow(File).to receive(:directory?).with(path_or_url).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(path_or_url).and_return(true)
       end
 
       context 'and the template contains a moduleroot directory' do
         before(:each) do
-          allow(File).to receive(:directory?).with(moduleroot).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:directory?).with(moduleroot).and_return(true)
         end
 
         context 'and a moduleroot_init directory' do
           before(:each) do
-            allow(File).to receive(:directory?).with(moduleroot_init).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:directory?).with(moduleroot_init).and_return(true)
           end
 
           it 'does not raise an error' do
@@ -84,7 +84,7 @@ describe PDK::Module::TemplateDir do
 
         context 'but not a moduleroot_init directory' do
           before(:each) do
-            allow(File).to receive(:directory?).with(moduleroot_init).and_return(false)
+            allow(PDK::Util::Filesystem).to receive(:directory?).with(moduleroot_init).and_return(false)
           end
 
           it 'raises an ArgumentError' do
@@ -97,7 +97,7 @@ describe PDK::Module::TemplateDir do
 
       context 'and the template does not contain a moduleroot directory' do
         before(:each) do
-          allow(File).to receive(:directory?).with(moduleroot).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:directory?).with(moduleroot).and_return(false)
         end
 
         it 'raises an ArgumentError' do
@@ -110,7 +110,7 @@ describe PDK::Module::TemplateDir do
 
     context 'when the template path is not a directory' do
       before(:each) do
-        allow(File).to receive(:directory?).with(path_or_url).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(path_or_url).and_return(false)
         allow(PDK::Util).to receive(:package_install?).and_return(false)
       end
 
@@ -118,11 +118,11 @@ describe PDK::Module::TemplateDir do
         before(:each) do
           # rubocop:disable RSpec/AnyInstance
           allow(PDK::Util).to receive(:package_install?).and_return(true)
-          allow(File).to receive(:fnmatch?).with(anything, path_or_url).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:fnmatch?).with(anything, path_or_url).and_return(true)
           allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('/', 'path', 'to', 'package', 'cachedir'))
           allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path_or_url)
           allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
-          allow(FileUtils).to receive(:remove_dir)
+          allow(PDK::Util::Filesystem).to receive(:rm_rf)
           allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', anything).and_return(stdout: 'ref', exit_code: 0)
           # rubocop:enable RSpec/AnyInstance
         end
@@ -151,7 +151,7 @@ describe PDK::Module::TemplateDir do
       # rubocop:disable RSpec/AnyInstance
       allow_any_instance_of(described_class).to receive(:clone_template_repo).and_return(path)
       allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
-      allow(FileUtils).to receive(:remove_dir).with(path)
+      allow(PDK::Util::Filesystem).to receive(:rm_rf).with(path)
       allow_any_instance_of(described_class).to receive(:validate_module_template!)
       allow(PDK::Util::Git).to receive(:describe).and_return('git-ref')
       # rubocop:enable RSpec/AnyInstance
@@ -210,12 +210,12 @@ describe PDK::Module::TemplateDir do
 
   context 'with a valid template path' do
     it 'returns config hash with module metadata' do
-      allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(false)
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
-      allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
-      allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
+      allow(PDK::Util::Filesystem).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
       allow(Dir).to receive(:rmdir).with(tmp_path).and_return(0)
 
       allow(described_class).to receive(:new).with(uri, module_metadata).and_yield(template_dir)
@@ -232,7 +232,7 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/the/file/is/here'] }
 
       before(:each) do
-        allow(Dir).to receive(:exist?).with('/the/file/is/here').and_return true
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/the/file/is/here').and_return true
       end
 
       it 'returns an empty list' do
@@ -244,7 +244,7 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/the/file/is/nothere'] }
 
       before(:each) do
-        allow(Dir).to receive(:exists?).with('/the/file/is/nothere').and_return false
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/the/file/is/nothere').and_return false
       end
 
       it 'raises an error' do
@@ -256,9 +256,9 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/here/moduleroot'] }
 
       before(:each) do
-        allow(Dir).to receive(:exist?).with('/here/moduleroot').and_return true
-        allow(File).to receive(:file?).with('/here/moduleroot/filename').and_return true
-        allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/here/moduleroot').and_return true
+        allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
+        allow(PDK::Util::Filesystem).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
       end
 
       it 'returns the file name' do
@@ -270,10 +270,10 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/here/moduleroot'] }
 
       before(:each) do
-        allow(Dir).to receive(:exist?).with('/here/moduleroot').and_return true
-        allow(File).to receive(:file?).with('/here/moduleroot/filename').and_return true
-        allow(File).to receive(:file?).with('/here/moduleroot/filename2').and_return true
-        allow(Dir).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename', '/here/moduleroot/filename2']
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/here/moduleroot').and_return true
+        allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
+        allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename2').and_return true
+        allow(PDK::Util::Filesystem).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename', '/here/moduleroot/filename2']
       end
 
       it 'returns both the file names' do
@@ -285,14 +285,18 @@ describe PDK::Module::TemplateDir do
       let(:dirs) { ['/path/to/templates/moduleroot', '/path/to/templates/moduleroot_init'] }
 
       before(:each) do
-        allow(Dir).to receive(:exist?).with('/path/to/templates').and_return true
-        allow(Dir).to receive(:exist?).with('/path/to/templates/moduleroot').and_return true
-        allow(Dir).to receive(:exist?).with('/path/to/templates/moduleroot_init').and_return true
-        allow(File).to receive(:file?).with('/path/to/templates/moduleroot/.').and_return false
-        allow(File).to receive(:file?).with('/path/to/templates/moduleroot/filename').and_return true
-        allow(File).to receive(:file?).with('/path/to/templates/moduleroot_init/filename2').and_return true
-        allow(Dir).to receive(:glob).with('/path/to/templates/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/path/to/templates/moduleroot/.', '/path/to/templates/moduleroot/filename']
-        allow(Dir).to receive(:glob).with('/path/to/templates/moduleroot_init/**/*', File::FNM_DOTMATCH).and_return ['/path/to/templates/moduleroot_init/filename2']
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates').and_return true
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates/moduleroot').and_return true
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates/moduleroot_init').and_return true
+        allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/templates/moduleroot/.').and_return false
+        allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/templates/moduleroot/filename').and_return true
+        allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/templates/moduleroot_init/filename2').and_return true
+        allow(PDK::Util::Filesystem).to receive(:glob)
+          .with('/path/to/templates/moduleroot/**/*', File::FNM_DOTMATCH)
+          .and_return ['/path/to/templates/moduleroot/.', '/path/to/templates/moduleroot/filename']
+        allow(PDK::Util::Filesystem).to receive(:glob)
+          .with('/path/to/templates/moduleroot_init/**/*', File::FNM_DOTMATCH)
+          .and_return ['/path/to/templates/moduleroot_init/filename2']
       end
 
       it 'returns the file names from both directories' do
@@ -304,7 +308,7 @@ describe PDK::Module::TemplateDir do
 
   describe '.render(template_files)' do
     before(:each) do
-      allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(false)
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
@@ -370,13 +374,13 @@ describe PDK::Module::TemplateDir do
   describe '.config_for(dest_path)' do
     before(:each) do
       allow(Gem).to receive(:win_platform?).and_return(false)
-      allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(false)
       allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
       allow(PDK::CLI::Exec).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
-      allow(File).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
-      allow(File).to receive(:read).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
-      allow(File).to receive(:readable?).with(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:file?).with(anything).and_return(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(File.join(path_or_url, 'config_defaults.yml')).and_return(config_defaults)
+      allow(PDK::Util::Filesystem).to receive(:readable?).with(File.join(path_or_url, 'config_defaults.yml')).and_return(true)
       allow(YAML).to receive(:safe_load).with(config_defaults, [], [], true).and_return config_hash
     end
 
@@ -406,9 +410,9 @@ describe PDK::Module::TemplateDir do
       end
 
       before(:each) do
-        allow(File).to receive(:file?).with('/path/to/module/.sync.yml').and_return(true)
-        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return(true)
-        allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return(yaml_text)
+        allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/.sync.yml').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:readable?).with('/path/to/module/.sync.yml').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:read_file).with('/path/to/module/.sync.yml').and_return(yaml_text)
         allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_return(yaml_hash)
         allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
       end
@@ -486,9 +490,9 @@ describe PDK::Module::TemplateDir do
       end
 
       before(:each) do
-        allow(File).to receive(:file?).with('/path/to/module/.sync.yml').and_return true
-        allow(File).to receive(:readable?).with('/path/to/module/.sync.yml').and_return true
-        allow(File).to receive(:read).with('/path/to/module/.sync.yml').and_return yaml_text
+        allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/.sync.yml').and_return true
+        allow(PDK::Util::Filesystem).to receive(:readable?).with('/path/to/module/.sync.yml').and_return true
+        allow(PDK::Util::Filesystem).to receive(:read_file).with('/path/to/module/.sync.yml').and_return yaml_text
         allow(YAML).to receive(:safe_load).with(yaml_text, [], [], true).and_call_original
         allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
       end
@@ -508,7 +512,7 @@ describe PDK::Module::TemplateDir do
 
   describe '.metadata' do
     before(:each) do
-      allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
       allow(PDK::Util).to receive(:default_template_url).and_return(path_or_url)
       allow(PDK::Util::TemplateURI).to receive(:default_template_ref).and_return('default-ref')
@@ -516,7 +520,7 @@ describe PDK::Module::TemplateDir do
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
-      allow(FileUtils).to receive(:remove_dir).with(tmp_path)
+      allow(PDK::Util::Filesystem).to receive(:rm_rf).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', 'default-sha').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
       allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:
@@ -536,7 +540,7 @@ describe PDK::Module::TemplateDir do
 
   describe 'custom template' do
     before(:each) do
-      allow(File).to receive(:directory?).with(anything).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(true)
       allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
       allow(PDK::Util).to receive(:default_template_url).and_return('default-url')
       allow(PDK::Util::TemplateURI).to receive(:default_template_ref).and_return('default-ref')
@@ -544,7 +548,7 @@ describe PDK::Module::TemplateDir do
       allow(Dir).to receive(:chdir).with(tmp_path).and_yield
       allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
       allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
-      allow(FileUtils).to receive(:remove_dir).with(tmp_path)
+      allow(PDK::Util::Filesystem).to receive(:rm_rf).with(tmp_path)
       allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', 'default-sha').and_return(exit_code: 0, stdout: '1234abcd')
       allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
       allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:

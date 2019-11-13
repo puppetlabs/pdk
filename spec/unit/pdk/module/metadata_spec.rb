@@ -241,18 +241,9 @@ describe PDK::Module::Metadata do
       )
     end
 
-    let(:mock_file) { instance_double(File) }
-
-    before(:each) do
-      allow(File).to receive(:open).and_call_original
-      allow(File).to receive(:open).with(metadata_json_path, anything).and_yield(mock_file)
-    end
-
-    it 'writes metadata to disk with a trailing newline' do
-      # This is slightly roundabout but results in a much clearer failure description.
-      expect(mock_file).to receive(:write) do |content|
-        expect(content[-1]).to eq("\n")
-      end
+    it 'writes the metadata to disk' do
+      expect(PDK::Util::Filesystem).to receive(:write_file)
+        .with(metadata_json_path, satisfy { |content| JSON.parse(content)['name'] == 'foo-bar' })
 
       metadata.write!(metadata_json_path)
     end

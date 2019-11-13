@@ -27,7 +27,7 @@ module PDK
       #   used for settings which a randomly generated, instead of being deterministic, e.g. analytics user-id
       # @param block [Proc] a block that is evaluated within the new instance.
       def initialize(name = nil, file: nil, parent: nil, persistent_defaults: false, &block)
-        @file = File.expand_path(file) unless file.nil?
+        @file = PDK::Util::Filesystem.expand_path(file) unless file.nil?
         @settings = {}
         @name = name.to_s
         @parent = parent

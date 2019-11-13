@@ -40,13 +40,13 @@ module PDK
     #   nil if the target file could not be found.
     def find_upwards(target, start_dir = nil)
       previous = nil
-      current  = File.expand_path(start_dir || Dir.pwd)
+      current  = PDK::Util::Filesystem.expand_path(start_dir || Dir.pwd)
 
-      until !File.directory?(current) || current == previous
+      until !PDK::Util::Filesystem.directory?(current) || current == previous
         filename = File.join(current, target)
-        return filename if File.file?(filename)
+        return filename if PDK::Util::Filesystem.file?(filename)
         previous = current
-        current = File.expand_path('..', current)
+        current = PDK::Util::Filesystem.expand_path('..', current)
       end
     end
     module_function :find_upwards
@@ -72,12 +72,12 @@ module PDK
     # @return [String] Canonical path
     def canonical_path(path)
       if Gem.win_platform?
-        unless File.exist?(path)
+        unless PDK::Util::Filesystem.exist?(path)
           raise PDK::CLI::FatalError, _("Cannot resolve a full path to '%{path}', as it does not currently exist.") % { path: path }
         end
         PDK::Util::Windows::File.get_long_pathname(path)
       else
-        File.expand_path(path)
+        PDK::Util::Filesystem.expand_path(path)
       end
     end
     module_function :canonical_path

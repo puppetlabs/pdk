@@ -65,9 +65,9 @@ module PDK
           PDK.logger.debug(_('Validating yaml content of %{parsed_targets}') % { parsed_targets: targets.to_s })
 
           targets.each do |target|
-            next unless File.file?(target)
+            next unless PDK::Util::Filesystem.file?(target)
 
-            unless File.readable?(target)
+            unless PDK::Util::Filesystem.readable?(target)
               report.add_event(
                 file:     target,
                 source:   name,
@@ -80,7 +80,7 @@ module PDK
             end
 
             begin
-              ::YAML.safe_load(File.read(target), YAML_WHITELISTED_CLASSES, [], true)
+              ::YAML.safe_load(PDK::Util::Filesystem.read_file(target), YAML_WHITELISTED_CLASSES, [], true)
 
               report.add_event(
                 file:     target,

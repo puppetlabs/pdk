@@ -1,4 +1,6 @@
-require: rubocop-rspec
+require:
+  - rubocop-rspec
+  - ./ext/rubocop.rb
 inherit_from: .rubocop_todo.yml
 
 AllCops:
@@ -145,3 +147,119 @@ Style/SymbolArray:
 # Enforce LF line endings, even when on Windows
 Layout/EndOfLine:
   EnforcedStyle: lf
+
+PDK/FileFilePredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - Gemfile
+
+PDK/FileExistPredicate:
+  Exclude:
+    - Rakefile
+    - lib/pdk/util/filesystem.rb
+    - package-testing/Rakefile
+
+PDK/FileDirectoryPredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+
+PDK/FileUtilsMkdirP:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/*
+    - rakelib/command_spec.rake
+
+PDK/FileExpandPath:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - package-testing/**/*
+    - rakelib/*
+    - spec/spec_helper.rb
+    - spec/acceptance/**/*.rb
+    - pdk.gemspec
+
+PDK/DirGlob:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - rakelib/command_spec.rake
+
+PDK/FileFnmatchPredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+
+PDK/FileReadablePredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - Gemfile
+
+PDK/FileUtilsRm:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb
+
+PDK/FileRead:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb
+    - Gemfile
+    - spec/unit/pdk/util/filesystem_spec.rb
+
+PDK/FileZeroPredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+
+PDK/FileStat:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+
+PDK/DirExistPredicate:
+  Exclude:
+    - rakelib/*.rake
+
+PDK/DirBrackets:
+  Exclude:
+    - pdk.gemspec
+    - spec/spec_helper_acceptance.rb
+    - spec/spec_helper.rb
+    - rakelib/*.rake
+    - package-testing/spec/spec_helper_package.rb
+
+PDK/FileOpen:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/unit/pdk/util/filesystem_spec.rb
+    - Gemfile
+    - spec/acceptance/**/*.rb
+    - rakelib/*.rake
+    - package-testing/Rakefile
+
+PDK/FileSymlinkPredicate:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+
+PDK/FileUtilsRMF:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb
+
+PDK/FileUtilsRMRF:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb
+    - rakelib/*.rake
+    - spec/spec_helper_acceptance.rb
+
+PDK/FileUtilsCP:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb
+
+PDK/FileUtilsMV:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb
+
+PDK/FileUtilsRemoveEntrySecure:
+  Exclude:
+    - lib/pdk/util/filesystem.rb
+    - spec/acceptance/**/*.rb

@@ -21,7 +21,7 @@ describe PDK::Config::Namespace do
 
   shared_context :with_a_mounted_file do |name|
     before(:each) do
-      path = File.expand_path(File.join('path', 'to', name))
+      path = PDK::Util::Filesystem.expand_path(File.join('path', 'to', name))
       allow(PDK::Util::Filesystem).to receive(:read_file).with(path, anything)
       allow(PDK::Util::Filesystem).to receive(:write_file).with(path, anything)
       allow(PDK::Util::Filesystem).to receive(:mkdir_p)
@@ -32,7 +32,7 @@ describe PDK::Config::Namespace do
 
   shared_context :with_a_mounted_file_with_content do |name, content|
     before(:each) do
-      path = File.expand_path(File.join('path', 'to', name))
+      path = PDK::Util::Filesystem.expand_path(File.join('path', 'to', name))
       allow(PDK::Util::Filesystem).to receive(:read_file).with(path).and_return(content)
       allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
       allow(PDK::Util::Filesystem).to receive(:file?).with(path).and_return(true)

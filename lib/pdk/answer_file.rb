@@ -6,8 +6,6 @@ module PDK
     attr_reader :answers
     attr_reader :answer_file_path
 
-    include PDK::Util::Filesystem
-
     # Initialises the AnswerFile object, which stores the responses to certain
     # interactive questions.
     #
@@ -64,15 +62,15 @@ module PDK
     #
     # @return [Hash{String => Object}] The existing questions and answers.
     def read_from_disk
-      return {} if !File.file?(answer_file_path) || File.zero?(answer_file_path)
+      return {} if !PDK::Util::Filesystem.file?(answer_file_path) || PDK::Util::Filesystem.zero?(answer_file_path)
 
-      unless File.readable?(answer_file_path)
+      unless PDK::Util::Filesystem.readable?(answer_file_path)
         raise PDK::CLI::FatalError, _("Unable to open '%{file}' for reading") % {
           file: answer_file_path,
         }
       end
 
-      answers = JSON.parse(File.read(answer_file_path))
+      answers = JSON.parse(PDK::Util::Filesystem.read_file(answer_file_path))
       if answers.is_a?(Hash)
         answers
       else
@@ -92,9 +90,9 @@ module PDK
     #
     # @raise [PDK::CLI::FatalError] if the answer file can not be written to.
     def save_to_disk
-      FileUtils.mkdir_p(File.dirname(answer_file_path))
+      PDK::Util::Filesystem.mkdir_p(File.dirname(answer_file_path))
 
-      write_file(answer_file_path, JSON.pretty_generate(answers))
+      PDK::Util::Filesystem.write_file(answer_file_path, JSON.pretty_generate(answers))
     rescue SystemCallError, IOError => e
       raise PDK::CLI::FatalError, _("Unable to write '%{file}': %{msg}") % {
         file: answer_file_path,

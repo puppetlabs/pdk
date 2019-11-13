@@ -186,7 +186,7 @@ module PDK
 
         require 'diff/lcs/hunk'
 
-        file_mtime = File.stat(path).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
+        file_mtime = PDK::Util::Filesystem.stat(path).mtime.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
         now = Time.now.localtime.strftime('%Y-%m-%d %H:%M:%S.%N %z')
 
         output << "--- #{path}\t#{file_mtime}"

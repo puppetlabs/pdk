@@ -62,7 +62,7 @@ module PDK
         JSON.parser = JSON::Pure::Parser
 
         targets.each do |target|
-          unless File.readable?(target)
+          unless PDK::Util::Filesystem.readable?(target)
             report.add_event(
               file: target,
               source: name,
@@ -75,7 +75,7 @@ module PDK
           end
 
           begin
-            JSON.parse(File.read(target))
+            JSON.parse(PDK::Util::Filesystem.read_file(target))
 
             report.add_event(
               file:     target,

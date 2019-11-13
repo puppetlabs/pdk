@@ -13,9 +13,9 @@ describe PDK::Config do
   let(:bolt_analytics_path) { '~/.puppetlabs/bolt/analytics.yaml' }
 
   def mock_file(path, content)
-    allow(PDK::Util::Filesystem).to receive(:file?).with(File.expand_path(path)).and_return(true)
-    allow(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(path), anything)
-    allow(PDK::Util::Filesystem).to receive(:read_file).with(File.expand_path(path)).and_return(content)
+    allow(PDK::Util::Filesystem).to receive(:file?).with(PDK::Util::Filesystem.expand_path(path)).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(path), anything)
+    allow(PDK::Util::Filesystem).to receive(:read_file).with(PDK::Util::Filesystem.expand_path(path)).and_return(content)
   end
 
   before(:each) do
@@ -51,7 +51,7 @@ describe PDK::Config do
         end
 
         it 'saves the disabled value to the analytics config file' do
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{disabled: true})
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), %r{disabled: true})
           config.user['analytics']['disabled']
         end
       end
@@ -64,7 +64,7 @@ describe PDK::Config do
         end
 
         it 'saves the disabled value to the analytics config file' do
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{disabled: false})
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), %r{disabled: false})
           config.user['analytics']['disabled']
         end
 
@@ -72,7 +72,7 @@ describe PDK::Config do
           before(:each) do
             allow(PDK::Config::YAML).to receive(:new).and_call_original
             allow(PDK::Config::YAML).to receive(:new)
-              .with(file: File.expand_path(bolt_analytics_path))
+              .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
               .and_raise(PDK::Config::LoadError)
           end
 
@@ -81,7 +81,7 @@ describe PDK::Config do
           end
 
           it 'saves the disabled value to the analytics config file' do
-            expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), %r{disabled: true})
+            expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), %r{disabled: true})
             config.user['analytics']['disabled']
           end
         end
@@ -116,7 +116,7 @@ describe PDK::Config do
           new_id = SecureRandom.uuid
           expect(SecureRandom).to receive(:uuid).and_return(new_id)
           # Expect that the user-id is saved to the config file
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), uuid_regex(new_id))
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), uuid_regex(new_id))
           # ... and that it returns the new id
           expect(config.user['analytics']['user-id']).to eq(new_id)
         end
@@ -132,7 +132,7 @@ describe PDK::Config do
 
         it 'saves the UUID to the analytics config file' do
           # Expect that the user-id is saved to the config file
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), uuid_regex(uuid))
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), uuid_regex(uuid))
           config.user['analytics']['user-id']
         end
 
@@ -140,7 +140,7 @@ describe PDK::Config do
           before(:each) do
             allow(PDK::Config::YAML).to receive(:new).and_call_original
             allow(PDK::Config::YAML).to receive(:new)
-              .with(file: File.expand_path(bolt_analytics_path))
+              .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
               .and_raise(PDK::Config::LoadError)
           end
 
@@ -153,7 +153,7 @@ describe PDK::Config do
             new_id = SecureRandom.uuid
             expect(SecureRandom).to receive(:uuid).and_return(new_id)
             # Expect that the user-id is saved to the config file
-            expect(PDK::Util::Filesystem).to receive(:write_file).with(File.expand_path(described_class.analytics_config_path), uuid_regex(new_id))
+            expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), uuid_regex(new_id))
             # ... and that it returns the new id
             expect(config.user['analytics']['user-id']).to eq(new_id)
           end

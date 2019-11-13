@@ -424,8 +424,8 @@ describe PDK::Report::Event do
         end
 
         before(:each) do
-          allow(File).to receive(:read).with('testfile.rb').and_return(file_content)
-          allow(File).to receive(:file?).with('testfile.rb').and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:read_file).with('testfile.rb').and_return(file_content)
+          allow(PDK::Util::Filesystem).to receive(:file?).with('testfile.rb').and_return(true)
           allow(PDK::Util).to receive(:module_root).and_return(File.join('my', 'module_root'))
         end
 
@@ -434,8 +434,8 @@ describe PDK::Report::Event do
         end
 
         it 'falls back to using the path to the spec file relative to the module root' do
-          allow(File).to receive(:file?).with('testfile.rb').and_return(false)
-          expect(File).to receive(:file?).with(File.join('my', 'module_root', 'testfile.rb')).and_return(nil)
+          allow(PDK::Util::Filesystem).to receive(:file?).with('testfile.rb').and_return(false)
+          expect(PDK::Util::Filesystem).to receive(:file?).with(File.join('my', 'module_root', 'testfile.rb')).and_return(nil)
 
           text_event
         end

@@ -84,7 +84,7 @@ EOF
 
     def check_fixtures_dir
       existing_path = base_module_path.split(':').find do |path|
-        Dir.exist?(path) && Dir.entries(path).length > 2
+        PDK::Util::Filesystem.directory?(path) && Dir.entries(path).length > 2
       end
       PDK.logger.warn _('Module fixtures not found, please run pdk bundle exec rake spec_prep.') unless existing_path
     end

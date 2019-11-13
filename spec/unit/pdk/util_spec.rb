@@ -38,24 +38,24 @@ describe PDK::Util do
     let(:actual_start_dir) { '/path/to/something/deep/in/a/module' }
 
     before(:each) do
-      allow(File).to receive(:directory?).with('/path/to/something/deep/in/a/module').and_return(true)
-      allow(File).to receive(:expand_path).with('..', '/path/to/something/deep/in/a/module').and_return('/path/to/something/deep/in/a')
-      allow(File).to receive(:directory?).with('/path/to/something/deep/in/a').and_return(true)
-      allow(File).to receive(:expand_path).with('..', '/path/to/something/deep/in/a').and_return('/path/to/something/deep/in')
-      allow(File).to receive(:directory?).with('/path/to/something/deep/in').and_return(true)
-      allow(File).to receive(:expand_path).with('..', '/path/to/something/deep/in').and_return('/path/to/something/deep')
-      allow(File).to receive(:directory?).with('/path/to/something/deep').and_return(true)
-      allow(File).to receive(:expand_path).with('..', '/path/to/something/deep').and_return('/path/to/something')
-      allow(File).to receive(:directory?).with('/path/to/something').and_return(true)
-      allow(File).to receive(:expand_path).with('..', '/path/to/something').and_return('/path/to')
-      allow(File).to receive(:directory?).with('/path/to').and_return(true)
-      allow(File).to receive(:expand_path).with('..', '/path/to').and_return('/path')
-      allow(File).to receive(:directory?).with('/path').and_return(true)
-      allow(File).to receive(:expand_path).with('..', '/path').and_return('/')
-      allow(File).to receive(:directory?).with('/').and_return(true)
-      allow(File).to receive(:expand_path).with('..', '/').and_return('/')
-      allow(File).to receive(:expand_path).with(actual_start_dir).and_return(actual_start_dir)
-      allow(File).to receive(:file?).with(a_string_matching(%r{metadata\.json\Z})).and_return(false)
+      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep/in/a/module').and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in/a/module').and_return('/path/to/something/deep/in/a')
+      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep/in/a').and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in/a').and_return('/path/to/something/deep/in')
+      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep/in').and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in').and_return('/path/to/something/deep')
+      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep').and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep').and_return('/path/to/something')
+      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something').and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something').and_return('/path/to')
+      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to').and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to').and_return('/path')
+      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path').and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path').and_return('/')
+      allow(PDK::Util::Filesystem).to receive(:directory?).with('/').and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/').and_return('/')
+      allow(PDK::Util::Filesystem).to receive(:expand_path).with(actual_start_dir).and_return(actual_start_dir)
+      allow(PDK::Util::Filesystem).to receive(:file?).with(a_string_matching(%r{metadata\.json\Z})).and_return(false)
     end
 
     context 'when start_dir is nil' do
@@ -65,7 +65,7 @@ describe PDK::Util do
 
       context 'and the target file exists' do
         before(:each) do
-          allow(File).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
         end
 
         it { is_expected.to eq('/path/to/something/metadata.json') }
@@ -81,7 +81,7 @@ describe PDK::Util do
 
       context 'and the target file exists' do
         before(:each) do
-          allow(File).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
         end
 
         it { is_expected.to eq('/path/to/something/metadata.json') }
@@ -111,7 +111,7 @@ describe PDK::Util do
 
       context 'and the path does not exist' do
         before(:each) do
-          allow(File).to receive(:exist?).with(path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(path).and_return(false)
         end
 
         it 'raises a FatalError' do
@@ -123,7 +123,7 @@ describe PDK::Util do
 
       context 'and the path exists' do
         before(:each) do
-          allow(File).to receive(:exist?).with(path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(path).and_return(true)
         end
 
         it 'calls Puppet::Util::Windows::File.get_long_pathname to resolve the absolute path' do
@@ -140,7 +140,7 @@ describe PDK::Util do
       end
 
       it 'calls File.expath_path to resolve the absolute path' do
-        expect(File).to receive(:expand_path).with(path)
+        expect(PDK::Util::Filesystem).to receive(:expand_path).with(path)
 
         described_class.canonical_path(path)
       end

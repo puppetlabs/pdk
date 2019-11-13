@@ -72,7 +72,7 @@ module PDK
           require 'json-schema'
 
           targets.each do |target|
-            unless File.readable?(target)
+            unless PDK::Util::Filesystem.readable?(target)
               report.add_event(
                 file:     target,
                 source:   name,
@@ -91,7 +91,7 @@ module PDK
               JSON.generator = JSON::Ext::Generator
 
               begin
-                errors = JSON::Validator.fully_validate(schema_file, File.read(target)) || []
+                errors = JSON::Validator.fully_validate(schema_file, PDK::Util::Filesystem.read_file(target)) || []
               rescue JSON::Schema::SchemaError => e
                 raise PDK::CLI::FatalError, _('Unable to validate Task Metadata. %{error}.') % { error: e.message }
               end

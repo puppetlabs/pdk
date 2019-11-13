@@ -15,8 +15,8 @@ RSpec.describe PDK::Util::Bundler do
     before(:each) do
       # Allow us to mock/stub/expect calls to the internal bundle helper.
       allow(PDK::Util::Bundler::BundleHelper).to receive(:new).and_return(bundle_helper)
-      allow(FileUtils).to receive(:mv).with(gemfile_lock, anything)
-      allow(FileUtils).to receive(:mv).with(anything, gemfile_lock, force: true)
+      allow(PDK::Util::Filesystem).to receive(:mv).with(gemfile_lock, anything)
+      allow(PDK::Util::Filesystem).to receive(:mv).with(anything, gemfile_lock, force: true)
     end
 
     describe '.ensure_bundle!' do
@@ -330,7 +330,7 @@ RSpec.describe PDK::Util::Bundler do
       context 'when Gemfile.lock exists' do
         before(:each) do
           allow(PDK::Util).to receive(:find_upwards).with(%r{Gemfile$}).and_return('/Gemfile')
-          allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(true)
         end
 
         it { is_expected.to be true }
@@ -339,7 +339,7 @@ RSpec.describe PDK::Util::Bundler do
       context 'when Gemfile.lock does not exist' do
         before(:each) do
           allow(PDK::Util).to receive(:find_upwards).with(%r{Gemfile$}).and_return(nil)
-          allow(File).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:file?).with(%r{Gemfile\.lock$}).and_return(false)
         end
 
         it { is_expected.to be false }
@@ -439,20 +439,20 @@ RSpec.describe PDK::Util::Bundler do
 
         before(:each) do
           # package_cachedir comes from 'packaged install' context
-          allow(File).to receive(:exist?).with("#{package_cachedir}/Gemfile.lock").and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:exist?).with("#{package_cachedir}/Gemfile.lock").and_return(true)
           allow(PDK::Util::RubyVersion).to receive(:active_ruby_version).and_return('2.4.4')
           PDK::Util::RubyVersion.versions.keys.each do |ruby_version|
             lockfile = File.join(package_cachedir, "Gemfile-#{ruby_version}.lock")
-            allow(File).to receive(:exist?).with(lockfile).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:exist?).with(lockfile).and_return(true)
           end
 
-          allow(FileUtils).to receive(:cp)
+          allow(PDK::Util::Filesystem).to receive(:cp)
         end
 
         it 'copies a Gemfile.lock from vendored location' do
           # package_cachedir comes from 'packaged install' context
           lockfile = File.join(package_cachedir, "Gemfile-#{PDK::Util::RubyVersion.active_ruby_version}.lock")
-          expect(FileUtils).to receive(:cp).with(lockfile, %r{Gemfile\.lock$})
+          expect(PDK::Util::Filesystem).to receive(:cp).with(lockfile, %r{Gemfile\.lock$})
 
           instance.lock!
         end
@@ -465,10 +465,10 @@ RSpec.describe PDK::Util::Bundler do
 
         context 'when vendored Gemfile.lock does not exist' do
           before(:each) do
-            allow(File).to receive(:exist?).with("#{package_cachedir}/Gemfile.lock").and_return(false)
+            allow(PDK::Util::Filesystem).to receive(:exist?).with("#{package_cachedir}/Gemfile.lock").and_return(false)
             PDK::Util::RubyVersion.versions.keys.each do |ruby_version|
               lockfile = File.join(package_cachedir, "Gemfile-#{ruby_version}.lock")
-              allow(File).to receive(:exist?).with(lockfile).and_return(false)
+              allow(PDK::Util::Filesystem).to receive(:exist?).with(lockfile).and_return(false)
             end
           end
 
@@ -629,7 +629,7 @@ RSpec.describe PDK::Util::Bundler do
 
       before(:each) do
         allow(instance).to receive(:gemfile).and_return(gemfile)
-        allow(File).to receive(:file?).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:file?).and_return(false)
       end
 
       it 'invokes `bundle binstubs` with requested gems' do
@@ -658,7 +658,7 @@ RSpec.describe PDK::Util::Bundler do
       context 'when binstubs for all requested gems are already present' do
         before(:each) do
           requested_gems.each do |gemname|
-            allow(File).to receive(:file?).with(%r{#{gemname}$}).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:file?).with(%r{#{gemname}$}).and_return(true)
           end
         end
 

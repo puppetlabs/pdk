@@ -9,7 +9,7 @@ describe PDK::Util::Git do
 
     context 'when maybe_repo is a directory' do
       before(:each) do
-        allow(File).to receive(:directory?).with(maybe_repo).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(maybe_repo).and_return(true)
         allow(described_class).to receive(:git_with_env).with(hash_including('GIT_DIR' => maybe_repo), 'rev-parse', '--is-bare-repository').and_return(result)
       end
 
@@ -40,7 +40,7 @@ describe PDK::Util::Git do
 
     context 'when maybe_repo is not a directory' do
       before(:each) do
-        allow(File).to receive(:directory?).with(maybe_repo).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(maybe_repo).and_return(false)
         allow(described_class).to receive(:git).with('ls-remote', '--exit-code', maybe_repo).and_return(result)
       end
 

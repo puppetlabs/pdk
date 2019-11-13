@@ -183,38 +183,38 @@ describe PDK::Module::Build do
 
     context 'when the path is a directory' do
       before(:each) do
-        allow(File).to receive(:directory?).with(path_to_stage).and_return(true)
-        allow(File).to receive(:stat).with(path_to_stage).and_return(instance_double(File::Stat, mode: 0o100755))
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:stat).with(path_to_stage).and_return(instance_double(File::Stat, mode: 0o100755))
       end
 
       it 'creates the directory in the build directory' do
-        expect(FileUtils).to receive(:mkdir_p).with(path_in_build_dir, mode: 0o100755)
+        expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(path_in_build_dir, mode: 0o100755)
         instance.stage_path(path_to_stage)
       end
     end
 
     context 'when the path is a symlink' do
       before(:each) do
-        allow(File).to receive(:directory?).with(path_to_stage).and_return(false)
-        allow(File).to receive(:symlink?).with(path_to_stage).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:symlink?).with(path_to_stage).and_return(true)
       end
 
       it 'warns the user about the symlink and skips over it' do
         expect(instance).to receive(:warn_symlink).with(path_to_stage)
-        expect(FileUtils).not_to receive(:mkdir_p).with(any_args)
-        expect(FileUtils).not_to receive(:cp).with(any_args)
+        expect(PDK::Util::Filesystem).not_to receive(:mkdir_p).with(any_args)
+        expect(PDK::Util::Filesystem).not_to receive(:cp).with(any_args)
         instance.stage_path(path_to_stage)
       end
     end
 
     context 'when the path is a regular file' do
       before(:each) do
-        allow(File).to receive(:directory?).with(path_to_stage).and_return(false)
-        allow(File).to receive(:symlink?).with(path_to_stage).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:symlink?).with(path_to_stage).and_return(false)
       end
 
       it 'copies the file into the build directory, preserving the permissions' do
-        expect(FileUtils).to receive(:cp).with(path_to_stage, path_in_build_dir, preserve: true)
+        expect(PDK::Util::Filesystem).to receive(:cp).with(path_to_stage, path_in_build_dir, preserve: true)
         instance.stage_path(path_to_stage)
       end
 
@@ -310,15 +310,15 @@ describe PDK::Module::Build do
       available_files.each do |file|
         file_path = File.join(module_dir, file)
 
-        allow(File).to receive(:file?).with(file_path).and_return(true)
-        allow(File).to receive(:readable?).with(file_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(file_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:readable?).with(file_path).and_return(true)
       end
 
       (possible_files - available_files).each do |file|
         file_path = File.join(module_dir, file)
 
-        allow(File).to receive(:file?).with(file_path).and_return(false)
-        allow(File).to receive(:readable?).with(file_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(file_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:readable?).with(file_path).and_return(false)
       end
     end
 
@@ -376,10 +376,10 @@ describe PDK::Module::Build do
     context 'when an ignore file is present in the module' do
       before(:each) do
         ignore_file_path = File.join(module_dir, '.pdkignore')
-        ignore_file_content = StringIO.new "/vendor/\n"
+        ignore_file_content = "/vendor/\n"
 
         allow(instance).to receive(:ignore_file).and_return(ignore_file_path)
-        allow(File).to receive(:open).with(ignore_file_path, 'rb:UTF-8').and_return(ignore_file_content)
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(ignore_file_path, anything).and_return(ignore_file_content)
       end
 
       it 'returns a PathSpec object populated by the ignore file' do

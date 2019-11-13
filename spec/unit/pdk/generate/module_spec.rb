@@ -3,12 +3,14 @@ require 'tempfile'
 require 'stringio'
 require 'tty/test_prompt'
 require 'pdk/generate/module'
+require 'addressable'
 
 shared_context 'blank answer file' do
   let(:temp_answer_file) { Tempfile.new('pdk-test-answers') }
 
   before(:each) do
     PDK.answer_file = temp_answer_file.path
+    allow(PDK::Util::Filesystem).to receive(:write_file).with(temp_answer_file.path, anything)
   end
 
   after(:each) do
@@ -28,17 +30,17 @@ end
 
 shared_context 'mock template dir' do
   let(:test_template_dir) { instance_double(PDK::Module::TemplateDir, metadata: {}) }
-  let(:test_template_file) { StringIO.new }
+  let(:test_template_path) { instance_double(Pathname, mkpath: true, to_path: '/a/path') }
 
   before(:each) do
     allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(test_template_dir)
 
-    dir_double = instance_double(Pathname, mkpath: true, to_path: '/a/path')
-    allow(dir_double).to receive(:+).with(anything).and_return(dir_double)
-    allow(dir_double).to receive(:dirname).and_return(dir_double)
-    allow(dir_double).to receive(:relative?).and_return(true)
-    allow(Pathname).to receive(:new).with(anything).and_return(dir_double)
-    allow(File).to receive(:open).with(dir_double, 'wb').and_yield(test_template_file)
+    allow(test_template_path).to receive(:+).with(anything).and_return(test_template_path)
+    allow(test_template_path).to receive(:dirname).and_return(test_template_path)
+    allow(test_template_path).to receive(:relative?).and_return(true)
+    allow(Pathname).to receive(:new).with(anything).and_return(test_template_path)
+    allow(PDK::Util::Filesystem).to receive(:write_file)
+      .with(test_template_path, anything)
     allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
   end
 end
@@ -47,17 +49,14 @@ shared_context 'mock metadata.json' do
   let(:metadata_json) { StringIO.new }
 
   before(:each) do
-    allow(File).to receive(:open).with(a_string_matching(%r{metadata\.json\Z}), 'wb').and_yield(metadata_json)
+    allow(PDK::Util::Filesystem).to receive(:write_file)
+      .with(a_string_matching(%r{metadata\.json\Z}), anything)
   end
 end
 
 describe PDK::Generate::Module do
   describe '.invoke' do
-    before(:each) do
-      allow(File).to receive(:open).with(any_args).and_call_original
-    end
-
-    let(:target_dir) { File.expand_path('/path/to/target/module') }
+    let(:target_dir) { PDK::Util::Filesystem.expand_path('/path/to/target/module') }
     let(:invoke_opts) do
       {
         :target_dir       => target_dir,
@@ -73,7 +72,7 @@ describe PDK::Generate::Module do
 
     context 'when the target module directory already exists' do
       it 'raises a FatalError' do
-        allow(File).to receive(:exist?).with(target_dir).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_dir).and_return(true)
         expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
         expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
 
@@ -92,13 +91,13 @@ describe PDK::Generate::Module do
       let(:target_parent_writeable) { true }
 
       before(:each) do
-        allow(File).to receive(:exist?).with(target_dir).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_dir).and_return(false)
         allow(PDK::Util).to receive(:make_tmpdir_name).with(anything).and_return(temp_target_dir)
-        allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
+        allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir)
         allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
         allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
-        allow(File).to receive(:open).with(%r{pdk-test-writable}, anything) { raise Errno::EACCES unless target_parent_writeable }
-        allow(FileUtils).to receive(:rm_f).with(%r{pdk-test-writable})
+        allow(PDK::Util::Filesystem).to receive(:write_file).with(%r{pdk-test-writable}, anything) { raise Errno::EACCES unless target_parent_writeable }
+        allow(PDK::Util::Filesystem).to receive(:rm_f).with(%r{pdk-test-writable})
         allow(test_template_dir).to receive(:render).and_yield('test_file_path', 'test_file_content', :manage)
       end
 
@@ -128,10 +127,10 @@ describe PDK::Generate::Module do
         end
 
         it 'writes the rendered files from the template to the temporary directory' do
-          described_class.invoke(invoke_opts)
+          allow(PDK::Util::Filesystem).to receive(:write_file)
+            .with(test_template_path, content)
 
-          test_template_file.rewind
-          expect(test_template_file.read).to eq(content + "\n")
+          described_class.invoke(invoke_opts)
         end
       end
 
@@ -143,10 +142,10 @@ describe PDK::Generate::Module do
         end
 
         it 'writes the rendered files from the template to the temporary directory' do
-          described_class.invoke(invoke_opts)
+          expect(PDK::Util::Filesystem).to receive(:write_file)
+            .with(test_template_path, content)
 
-          test_template_file.rewind
-          expect(test_template_file.read).to eq(content + "\n")
+          described_class.invoke(invoke_opts)
         end
       end
 
@@ -158,10 +157,10 @@ describe PDK::Generate::Module do
         end
 
         it 'does not writes the deleted files from the template to the temporary directory' do
-          described_class.invoke(invoke_opts)
+          expect(PDK::Util::Filesystem).not_to receive(:write_file)
+            .with(test_template_path, anything)
 
-          test_template_file.rewind
-          expect(test_template_file.read).to eq('')
+          described_class.invoke(invoke_opts)
         end
       end
 
@@ -178,27 +177,34 @@ describe PDK::Generate::Module do
         end
 
         it 'includes details about the template in the generated metadata.json' do
-          described_class.invoke(invoke_opts)
+          include_metadata = satisfy do |content|
+            metadata = JSON.parse(content)
+            template_metadata.all? do |key, _|
+              metadata[key] == template_metadata[key]
+            end
+          end
 
-          metadata_json.rewind
-          expect(JSON.parse(metadata_json.read)).to include(template_metadata)
+          expect(PDK::Util::Filesystem).to receive(:write_file)
+            .with(a_string_matching(%r{metadata\.json\Z}), include_metadata)
+
+          described_class.invoke(invoke_opts)
         end
       end
 
       it 'moves the temporary directory to the target directory when done' do
-        expect(FileUtils).to receive(:mv).with(temp_target_dir, target_dir)
+        expect(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir)
         described_class.invoke(invoke_opts)
       end
 
       it 'prepares the bundler environment so that it is ready immediately' do
-        allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_return(true)
         expect(PDK::Util::Bundler).to receive(:ensure_bundle!)
         described_class.invoke(invoke_opts)
       end
 
       context 'when the move to the target directory fails due to invalid permissions' do
         before(:each) do
-          allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_raise(Errno::EACCES, 'permission denied')
+          allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_raise(Errno::EACCES, 'permission denied')
         end
 
         it 'raises a FatalError' do
@@ -213,7 +219,7 @@ describe PDK::Generate::Module do
 
       context 'when a template-url is supplied on the command line' do
         before(:each) do
-          allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
+          allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
           allow(PDK::Util).to receive(:default_template_uri).and_return(Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'))
         end
 
@@ -247,7 +253,7 @@ describe PDK::Generate::Module do
 
       context 'when a template-url is not supplied on the command line' do
         before(:each) do
-          allow(FileUtils).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
+          allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
           allow(PDK::Util).to receive(:development_mode?).and_return(true)
         end
 
@@ -344,7 +350,7 @@ describe PDK::Generate::Module do
       end
 
       before(:each) do
-        allow(File).to receive(:file?).with('metadata.json').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with('metadata.json').and_return(true)
       end
 
       it 'populates the metadata object based on user input' do
@@ -392,7 +398,7 @@ describe PDK::Generate::Module do
         end
 
         before(:each) do
-          allow(File).to receive(:file?).with('metadata.json').and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:file?).with('metadata.json').and_return(false)
         end
 
         it 'populates the Metadata object based on user input' do
@@ -761,18 +767,18 @@ describe PDK::Generate::Module do
     let(:path) { 'test123' }
 
     it 'creates a skeleton directory structure' do
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'examples'))
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'files'))
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'manifests'))
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'templates'))
-      expect(FileUtils).to receive(:mkdir_p).with(File.join(path, 'tasks'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'examples'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'files'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'manifests'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'templates'))
+      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.join(path, 'tasks'))
 
       described_class.prepare_module_directory(path)
     end
 
     context 'when it fails to create a directory' do
       before(:each) do
-        allow(FileUtils).to receive(:mkdir_p).with(anything).and_raise(SystemCallError, 'some message')
+        allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(anything).and_raise(SystemCallError, 'some message')
       end
 
       it 'raises a FatalError' do

@@ -21,7 +21,7 @@ describe PDK::Validate::Tasks::MetadataLint do
 
   before(:each) do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
-    allow(File).to receive(:directory?).with(module_root).and_return(true)
+    allow(PDK::Util::Filesystem).to receive(:directory?).with(module_root).and_return(true)
   end
 
   it 'defines the base validator attributes' do
@@ -69,13 +69,11 @@ describe PDK::Validate::Tasks::MetadataLint do
 
     before(:each) do
       allow(described_class).to receive(:schema_file).and_return(schema)
-      allow(File).to receive(:file?).and_call_original
-      allow(File).to receive(:read).and_call_original
       targets.each do |target|
-        allow(File).to receive(:directory?).with(target[:name]).and_return(target.fetch(:directory, false))
-        allow(File).to receive(:file?).with(target[:name]).and_return(target.fetch(:file, true))
-        allow(File).to receive(:readable?).with(target[:name]).and_return(target.fetch(:readable, true))
-        allow(File).to receive(:read).with(target[:name]).and_return(target.fetch(:content, ''))
+        allow(PDK::Util::Filesystem).to receive(:directory?).with(target[:name]).and_return(target.fetch(:directory, false))
+        allow(PDK::Util::Filesystem).to receive(:file?).with(target[:name]).and_return(target.fetch(:file, true))
+        allow(PDK::Util::Filesystem).to receive(:readable?).with(target[:name]).and_return(target.fetch(:readable, true))
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(target[:name]).and_return(target.fetch(:content, ''))
       end
     end
 

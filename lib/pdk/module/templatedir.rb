@@ -82,8 +82,7 @@ module PDK
         # If we cloned a git repo to get the template, remove the clone once
         # we're done with it.
         if temp_dir_clone
-          require 'fileutils'
-          FileUtils.remove_dir(@path)
+          PDK::Util::Filesystem.rm_rf(@path)
         end
       end
 
@@ -173,12 +172,12 @@ module PDK
         spec_path = File.join(@object_dir, "#{object_type}_spec.erb")
         type_spec_path = File.join(@object_dir, "#{object_type}_type_spec.erb")
 
-        if File.file?(object_path) && File.readable?(object_path)
+        if PDK::Util::Filesystem.file?(object_path) && PDK::Util::Filesystem.readable?(object_path)
           result = { object: object_path }
-          result[:type] = type_path if File.file?(type_path) && File.readable?(type_path)
-          result[:spec] = spec_path if File.file?(spec_path) && File.readable?(spec_path)
-          result[:device] = device_path if File.file?(device_path) && File.readable?(device_path)
-          result[:type_spec] = type_spec_path if File.file?(type_spec_path) && File.readable?(type_spec_path)
+          result[:type] = type_path if PDK::Util::Filesystem.file?(type_path) && PDK::Util::Filesystem.readable?(type_path)
+          result[:spec] = spec_path if PDK::Util::Filesystem.file?(spec_path) && PDK::Util::Filesystem.readable?(spec_path)
+          result[:device] = device_path if PDK::Util::Filesystem.file?(device_path) && PDK::Util::Filesystem.readable?(device_path)
+          result[:type_spec] = type_spec_path if PDK::Util::Filesystem.file?(type_spec_path) && PDK::Util::Filesystem.readable?(type_spec_path)
           result
         else
           nil
@@ -210,21 +209,21 @@ module PDK
       # @api private
       def validate_module_template!
         # rubocop:disable Style/GuardClause
-        unless File.directory?(@path)
+        unless PDK::Util::Filesystem.directory?(@path)
           require 'pdk/util'
 
-          if PDK::Util.package_install? && File.fnmatch?(File.join(PDK::Util.package_cachedir, '*'), @path)
+          if PDK::Util.package_install? && PDK::Util::Filesystem.fnmatch?(File.join(PDK::Util.package_cachedir, '*'), @path)
             raise ArgumentError, _('The built-in template has substantially changed. Please run "pdk convert" on your module to continue.')
           else
             raise ArgumentError, _("The specified template '%{path}' is not a directory.") % { path: @path }
           end
         end
 
-        unless File.directory?(@moduleroot_dir)
+        unless PDK::Util::Filesystem.directory?(@moduleroot_dir)
           raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot/' directory.") % { path: @path }
         end
 
-        unless File.directory?(@moduleroot_init)
+        unless PDK::Util::Filesystem.directory?(@moduleroot_init)
           # rubocop:disable Metrics/LineLength
           raise ArgumentError, _("The template at '%{path}' does not contain a 'moduleroot_init/' directory, which indicates you are using an older style of template. Before continuing please use the --template-url flag when running the pdk new commands to pass a new style template.") % { path: @path }
           # rubocop:enable Metrics/LineLength Style/GuardClause
@@ -242,9 +241,9 @@ module PDK
         temp_paths = []
         dirlocs = []
         dirs.each do |dir|
-          raise ArgumentError, _("The directory '%{dir}' doesn't exist") % { dir: dir } unless Dir.exist?(dir)
-          temp_paths += Dir.glob(File.join(dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
-            if File.file?(template_path) && !File.symlink?(template_path)
+          raise ArgumentError, _("The directory '%{dir}' doesn't exist") % { dir: dir } unless PDK::Util::Filesystem.directory?(dir)
+          temp_paths += PDK::Util::Filesystem.glob(File.join(dir, '**', '*'), File::FNM_DOTMATCH).select do |template_path|
+            if PDK::Util::Filesystem.file?(template_path) && !PDK::Util::Filesystem.symlink?(template_path)
               dirlocs << dir
             end
           end
@@ -311,11 +310,11 @@ module PDK
       #
       # @api private
       def read_config(loc)
-        if File.file?(loc) && File.readable?(loc)
+        if PDK::Util::Filesystem.file?(loc) && PDK::Util::Filesystem.readable?(loc)
           require 'yaml'
 
           begin
-            YAML.safe_load(File.read(loc), [], [], true)
+            YAML.safe_load(PDK::Util::Filesystem.read_file(loc), [], [], true)
           rescue Psych::SyntaxError => e
             PDK.logger.warn _("'%{file}' is not a valid YAML file: %{problem} %{context} at line %{line} column %{column}") % {
               file:    loc,

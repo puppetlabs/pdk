@@ -51,9 +51,6 @@ module PDK
       require 'time'
       require 'socket'
 
-      # Open a File Object for IO if target is a string containing a filename or path
-      target = File.open(target, 'w') if target.is_a? String
-
       document = REXML::Document.new
       document << REXML::XMLDecl.new
       testsuites = REXML::Element.new('testsuites')
@@ -81,9 +78,14 @@ module PDK
       end
 
       document.elements << testsuites
-      document.write(target, 2)
-    ensure
-      target.close if target.is_a? File
+      report = ''
+      document.write(report, 2)
+
+      if target.is_a?(String)
+        PDK::Util::Filesystem.write_file(target, report)
+      else
+        target << report
+      end
     end
 
     # Renders the report as plain text.
@@ -94,22 +96,26 @@ module PDK
     # @param target [#write] an IO object that the report will be written to.
     #   Defaults to PDK::Report.default_target.
     def write_text(target = self.class.default_target)
-      # Open a File Object for IO if target is a string containing a filename or path
-      target = File.open(target, 'w') if target.is_a? String
       coverage_report = nil
+      report = []
 
       events.each do |_tool, tool_events|
         tool_events.each do |event|
           if event.rspec_puppet_coverage?
             coverage_report = event.to_text
           else
-            target.puts(event.to_text) unless event.pass?
+            report << event.to_text unless event.pass?
           end
         end
       end
-    ensure
-      target.puts "\n#{coverage_report}" if coverage_report
-      target.close if target.is_a? File
+
+      report << "\n#{coverage_report}" if coverage_report
+
+      if target.is_a?(String)
+        PDK::Util::Filesystem.write_file(target, report.join("\n"))
+      else
+        target << report.join("\n")
+      end
     end
   end
 end

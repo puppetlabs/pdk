@@ -1,4 +1,5 @@
 require 'pdk'
+autoload :FileUtils, 'fileutils'
 
 module PDK
   module Util
@@ -17,8 +18,8 @@ module PDK
       end
       module_function :write_file
 
-      def read_file(file, nil_on_error: false)
-        File.read(file)
+      def read_file(file, nil_on_error: false, open_args: 'r')
+        File.read(file, open_args: Array(open_args))
       rescue => e
         raise e unless nil_on_error
         nil
@@ -58,6 +59,11 @@ module PDK
       end
       module_function :fnmatch
 
+      def fnmatch?(*args)
+        File.fnmatch?(*args)
+      end
+      module_function :fnmatch?
+
       def readable?(*args)
         File.readable?(*args)
       end
@@ -72,6 +78,46 @@ module PDK
         FileUtils.rm(*args)
       end
       module_function :rm
+
+      def rm_f(*args)
+        FileUtils.rm_f(*args)
+      end
+      module_function :rm_f
+
+      def rm_rf(*args)
+        FileUtils.rm_rf(*args)
+      end
+      module_function :rm_rf
+
+      def remove_entry_secure(*args)
+        FileUtils.remove_entry_secure(*args)
+      end
+      module_function :remove_entry_secure
+
+      def zero?(*args)
+        File.zero?(*args)
+      end
+      module_function :zero?
+
+      def stat(*args)
+        File.stat(*args)
+      end
+      module_function :stat
+
+      def symlink?(*args)
+        File.symlink?(*args)
+      end
+      module_function :symlink?
+
+      def cp(*args)
+        FileUtils.cp(*args)
+      end
+      module_function :cp
+
+      def mv(*args)
+        FileUtils.mv(*args)
+      end
+      module_function :mv
       #:nocov:
     end
   end

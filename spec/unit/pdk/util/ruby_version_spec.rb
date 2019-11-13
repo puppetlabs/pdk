@@ -116,7 +116,7 @@ describe PDK::Util::RubyVersion do
         basedir = File.join('/', 'basedir')
         ruby_dirs = ['2.1.9', '2.4.4'].map { |r| File.join(basedir, 'private', 'ruby', r) }
         allow(PDK::Util).to receive(:pdk_package_basedir).and_return(basedir)
-        allow(Dir).to receive(:[]).with(File.join(basedir, 'private', 'ruby', '*')).and_return(ruby_dirs)
+        allow(PDK::Util::Filesystem).to receive(:glob).with(File.join(basedir, 'private', 'ruby', '*')).and_return(ruby_dirs)
       end
 
       it 'returns the Ruby versions included in the package' do
@@ -173,13 +173,17 @@ describe PDK::Util::RubyVersion do
 
     before(:each) do
       allow(instance).to receive(:gem_path).and_return(gem_path)
-      allow(Dir).to receive(:[]).with(gem_path_pattern).and_return(gem_path_results.keys)
+      allow(PDK::Util::Filesystem).to receive(:glob).with(gem_path_pattern).and_return(gem_path_results.keys)
       allow(instance).to receive(:gem_home).and_return(gem_home)
-      allow(Dir).to receive(:[]).with(gem_home_pattern).and_return(gem_home_results.keys)
+      allow(PDK::Util::Filesystem).to receive(:glob).with(gem_home_pattern).and_return(gem_home_results.keys)
 
       gem_path_results.merge(gem_home_results).each do |spec_path, spec_content|
+        # rubocop:disable PDK/FileFilePredicate Gem internal method
+        # rubocop:disable PDK/FileRead Gem internal method
         allow(File).to receive(:file?).with(spec_path).and_return(true)
         allow(File).to receive(:read).with(spec_path, mode: 'r:UTF-8:-').and_return(spec_content)
+        # rubocop:enable PDK/FileFilePredicate
+        # rubocop:enable PDK/FileRead
       end
     end
 

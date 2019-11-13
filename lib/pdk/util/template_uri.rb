@@ -195,7 +195,7 @@ module PDK
         else
           explicit_uri = nil
         end
-        metadata_uri = if PDK::Util.module_root && File.file?(File.join(PDK::Util.module_root, 'metadata.json'))
+        metadata_uri = if PDK::Util.module_root && PDK::Util::Filesystem.file?(File.join(PDK::Util.module_root, 'metadata.json'))
                          if PDK::Util.module_metadata['template-url']
                            new(uri_safe(PDK::Util.module_metadata['template-url'])).uri
                          else
@@ -257,7 +257,7 @@ module PDK
         return true if PDK::Util::Git.repo?(git_remote(template[:uri]))
 
         path = human_readable(template[:uri].path)
-        if File.directory?(path)
+        if PDK::Util::Filesystem.directory?(path)
           begin
             PDK::Module::TemplateDir.new(path) {}
             return true

@@ -98,7 +98,7 @@ module PDK
       #   results.
       def rspec_puppet_coverage?
         @rspec_puppet_coverage_pattern ||= File.join('**', 'lib', 'rspec-puppet', 'coverage.rb')
-        source == 'rspec' && File.fnmatch?(@rspec_puppet_coverage_pattern, File.expand_path(file))
+        source == 'rspec' && PDK::Util::Filesystem.fnmatch?(@rspec_puppet_coverage_pattern, PDK::Util::Filesystem.expand_path(file))
       end
 
       # Renders the event in a clang style text format.
@@ -346,10 +346,13 @@ module PDK
       def context_lines(max_num_lines = 5)
         return if file.nil? || line.nil?
 
-        file_path = [file, File.join(PDK::Util.module_root, file)].find { |r| File.file?(r) }
+        file_path = [file, File.join(PDK::Util.module_root, file)].find do |path|
+          PDK::Util::Filesystem.file?(path)
+        end
+
         return if file_path.nil?
 
-        file_content = File.read(file_path).split("\n")
+        file_content = PDK::Util::Filesystem.read_file(file_path).split("\n")
         delta = (max_num_lines - 1) / 2
         min = [0, (line - 1) - delta].max
         max = [(line - 1) + delta, file_content.length].min
