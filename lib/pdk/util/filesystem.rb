@@ -116,6 +116,20 @@ module PDK
 
       def mv(*args)
         FileUtils.mv(*args)
+      rescue Errno::ENOENT
+        # PDK-1169 - FileUtils.mv raises Errno::ENOENT when moving files inside
+        #            VMWare shared folders on Windows. So we need to catch this
+        #            case, check if the file exists to see if the exception is
+        #            legit and "move" the file with cp & rm.
+        src, dest, opts = args
+        raise unless File.exist?(src)
+
+        FileUtils.cp(src, dest, preserve: true)
+        if (opts ||= {})[:secure]
+          FileUtils.remove_entry_secure(src, opts[:force])
+        else
+          FileUtils.remove_entry(src, opts[:force])
+        end
       end
       module_function :mv
       #:nocov:
