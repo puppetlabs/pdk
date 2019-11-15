@@ -27,6 +27,8 @@ describe 'Updating an existing module' do
           sync_yaml = YAML.safe_load(open("https://raw.githubusercontent.com/#{mod}/master/.sync.yml").read)
 
           sync_yaml['Gemfile'].each_key do |gem_type|
+            next unless sync_yaml['Gemfile'][gem_type].respond_to?(:each_key)
+
             sync_yaml['Gemfile'][gem_type].each_key do |group|
               sync_yaml['Gemfile'][gem_type][group].select! do |gem|
                 gem['gem'] =~ %r{\Apuppet-module-(?:posix|win)-system}
