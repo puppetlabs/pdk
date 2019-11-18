@@ -54,6 +54,33 @@ describe PDK::Module::TemplateDir do
     end
   end
 
+  describe '#template_dir_type' do
+    before(:each) do
+      allow(described_class).to receive(:validate_module_template!).with(uri.shell_path).and_return(true)
+    end
+
+    context 'with a git based template directory' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
+        allow(PDK::Util::Git).to receive(:work_tree?).with(uri.shell_path).and_return(true)
+      end
+
+      it 'returns TEMPLATE_DIR_GIT_TYPE' do
+        expect(template_dir.template_dir_type).to eq(PDK::Module::TemplateDir::TEMPLATE_DIR_GIT_TYPE)
+      end
+    end
+
+    context 'with a plain filesystem template directory' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(false)
+      end
+
+      it 'returns TEMPLATE_DIR_FILESYSTEM_TYPE' do
+        expect(template_dir.template_dir_type).to eq(PDK::Module::TemplateDir::TEMPLATE_DIR_FILESYSTEM_TYPE)
+      end
+    end
+  end
+
   describe '#validate_module_template!' do
     let(:moduleroot) { File.join(path_or_url, 'moduleroot') }
     let(:moduleroot_init) { File.join(path_or_url, 'moduleroot_init') }
@@ -512,28 +539,33 @@ describe PDK::Module::TemplateDir do
 
   describe '.metadata' do
     before(:each) do
-      allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(true)
-      allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
-      allow(PDK::Util).to receive(:default_template_url).and_return(path_or_url)
-      allow(PDK::Util::TemplateURI).to receive(:default_template_ref).and_return('default-ref')
-      allow(PDK::Util).to receive(:make_tmpdir_name).with('pdk-templates').and_return(tmp_path)
-      allow(Dir).to receive(:chdir).with(tmp_path).and_yield
-      allow(PDK::Util::Git).to receive(:git).with('clone', path_or_url, tmp_path).and_return(exit_code: 0)
-      allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', 'default-sha').and_return(exit_code: 0)
-      allow(PDK::Util::Filesystem).to receive(:rm_rf).with(tmp_path)
-      allow(PDK::Util::Git).to receive(:git).with('--git-dir', anything, 'describe', '--all', '--long', '--always', 'default-sha').and_return(exit_code: 0, stdout: '1234abcd')
-      allow(PDK::Util::Git).to receive(:git).with('--work-tree', anything, '--git-dir', anything, 'status', '--untracked-files=no', '--porcelain', anything).and_return(exit_code: 0, stdout: '')
-      allow(PDK::Util::Git).to receive(:git).with('ls-remote', '--refs', 'file:///tmp/path', 'default-ref').and_return(exit_code: 0, stdout:
-                                                                                                                       "default-sha\trefs/heads/default-ref\n" \
-                                                                                                                       "default-sha\trefs/remotes/origin/default-ref")
       allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
-      allow(PDK::Util).to receive(:canonical_path).with(tmp_path).and_return(tmp_path)
-      allow(PDK::Util).to receive(:development_mode?).and_return(false)
+      allow(described_class).to receive(:validate_module_template!).with(uri.shell_path).and_return(true)
     end
 
-    context 'pdk data' do
-      it 'includes the PDK version and template info' do
-        expect(template_dir.metadata).to include('pdk-version' => '0.0.0', 'template-url' => path_or_url, 'template-ref' => '1234abcd')
+    context 'with a git based template directory' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(true)
+        allow(PDK::Util::Git).to receive(:work_tree?).with(uri.shell_path).and_return(true)
+        allow(PDK::Util::Git).to receive(:describe).with(File.join(uri.shell_path, '.git'), Object).and_return('1234abcd')
+      end
+
+      context 'pdk data' do
+        it 'includes the PDK version and template info' do
+          expect(template_dir.metadata).to include('pdk-version' => '0.0.0', 'template-url' => path_or_url, 'template-ref' => '1234abcd')
+        end
+      end
+    end
+
+    context 'with a plain filesystem template directory' do
+      before(:each) do
+        allow(PDK::Util::Git).to receive(:repo?).with(path_or_url).and_return(false)
+      end
+
+      context 'pdk data' do
+        it 'includes the PDK version and template info' do
+          expect(template_dir.metadata).to include('pdk-version' => '0.0.0', 'template-url' => path_or_url, 'template-ref' => nil)
+        end
       end
     end
   end
