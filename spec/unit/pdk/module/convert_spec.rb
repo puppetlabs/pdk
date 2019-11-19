@@ -75,10 +75,12 @@ describe PDK::Module::Convert do
   end
 
   describe '.new', after_hook: true do
+    require 'pdk/module/template_dir/base'
+
     let(:instance) { described_class.new(options) }
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
-    let(:template_dir) { instance_double(PDK::Module::TemplateDir, metadata: {}) }
+    let(:template_dir) { instance_double(PDK::Module::TemplateDir::Base, metadata: {}) }
     let(:metadata) { instance_double(PDK::Module::Metadata, data: {}) }
     let(:template_files) { { path: 'a/path/to/file', content: 'file contents', status: :manage } }
     let(:added_files) { Set.new }

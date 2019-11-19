@@ -29,7 +29,9 @@ shared_context 'allow summary to be printed to stdout' do
 end
 
 shared_context 'mock template dir' do
-  let(:test_template_dir) { instance_double(PDK::Module::TemplateDir, metadata: {}) }
+  require 'pdk/module/template_dir/base'
+
+  let(:test_template_dir) { instance_double(PDK::Module::TemplateDir::Base, metadata: {}) }
   let(:test_template_path) { instance_double(Pathname, mkpath: true, to_path: '/a/path') }
 
   before(:each) do

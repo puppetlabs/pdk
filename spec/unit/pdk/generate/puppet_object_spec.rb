@@ -155,12 +155,14 @@ describe PDK::Generate::PuppetObject do
   describe '#with_templates' do
     include_context :with_puppet_object_module_metadata
 
-    let(:default_templatedir) { instance_double('PDK::Module::TemplateDir', 'default') }
+    require 'pdk/module/template_dir/base'
+
+    let(:default_templatedir) { instance_double('PDK::Module::TemplateDir::Base', 'default') }
     let(:default_object_paths) { { object: 'default_object_path', spec: 'default_spec_path' } }
     let(:configs_hash) { {} }
-    let(:cli_templatedir) { instance_double('PDK::Module::TemplateDir', 'CLI') }
+    let(:cli_templatedir) { instance_double('PDK::Module::TemplateDir::Base', 'CLI') }
     let(:cli_object_paths) { { object: 'cli_object_path', spec: 'cli_spec_path' } }
-    let(:metadata_templatedir) { instance_double('PDK::Module::TemplateDir', 'metadata') }
+    let(:metadata_templatedir) { instance_double('PDK::Module::TemplateDir::Base', 'metadata') }
     let(:metadata_object_paths) { { object: 'metadata_object_path', spec: 'metadata_spec_path' } }
 
     before(:each) do
