@@ -5,7 +5,7 @@ module PDK::CLI
     summary _('This command is now \'pdk build\'.')
 
     run do |_opts, _args, _cmd|
-      PDK.logger.warn(_('Modules are built using the ‘pdk build’ command.'))
+      PDK.logger.warn(_("Modules are built using the 'pdk build' command."))
       exit 1
     end
   end
