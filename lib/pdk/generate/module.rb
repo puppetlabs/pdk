@@ -19,7 +19,6 @@ module PDK
       end
 
       def self.invoke(opts = {})
-        require 'pdk/module/templatedir'
         require 'pdk/util'
         require 'pdk/util/template_uri'
         require 'pathname'

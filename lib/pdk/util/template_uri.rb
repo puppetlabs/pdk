@@ -253,8 +253,6 @@ module PDK
 
       def self.valid_template?(template)
         require 'addressable'
-        require 'pdk/util/git'
-        require 'pdk/module/templatedir'
 
         return false if template.nil? || !template.is_a?(Hash)
         return false if template[:uri].nil? || !template[:uri].is_a?(Addressable::URI)

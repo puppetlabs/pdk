@@ -112,7 +112,6 @@ module PDK
       end
 
       def stage_changes!
-        require 'pdk/module/templatedir'
         require 'pdk/util/filesystem'
 
         metadata_path = 'metadata.json'

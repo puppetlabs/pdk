@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'yaml'
-require 'pdk/module/templatedir'
+require 'pdk/module/template_dir'
 
 describe PDK::Module::TemplateDir do
   subject(:template_dir) do

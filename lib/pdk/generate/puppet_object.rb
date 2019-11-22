@@ -260,7 +260,6 @@ module PDK
       # @api private
       def with_templates
         require 'pdk/logger'
-        require 'pdk/module/templatedir'
         require 'pdk/util/template_uri'
 
         templates.each do |template|
