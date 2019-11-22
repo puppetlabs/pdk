@@ -48,7 +48,7 @@ module PDK
         template_uri = PDK::Util::TemplateURI.new(opts)
 
         begin
-          PDK::Module::TemplateDir.new(template_uri, metadata.data, true) do |templates|
+          PDK::Module::TemplateDir.with(template_uri, metadata.data, true) do |templates|
             templates.render do |file_path, file_content, file_status|
               next if file_status == :delete
               file = Pathname.new(temp_target_dir) + file_path

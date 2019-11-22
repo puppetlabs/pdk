@@ -3,7 +3,7 @@ require 'pdk/module/template_dir/local'
 
 describe PDK::Module::TemplateDir do
   subject(:template_dir) do
-    described_class.new(uri, module_metadata, true) do |foo|
+    described_class.with(uri, module_metadata, true) do |foo|
       # block does nothing
     end
   end

@@ -17,7 +17,7 @@ module PDK
       # the template available on disk.
       #
       # @example Using a git repository as a template
-      #   PDK::Module::TemplateDir.new('https://github.com/puppetlabs/pdk-templates') do |t|
+      #   PDK::Module::TemplateDir.with('https://github.com/puppetlabs/pdk-templates') do |t|
       #     t.render do |filename, content|
       #       File.open(filename, 'w') do |file|
       #         file.write(content)
@@ -30,7 +30,7 @@ module PDK
       # @raise [ArgumentError] (see #validate_module_template!)
       #
       # @api public
-      def self.new(uri, module_metadata = {}, init = false)
+      def self.with(uri, module_metadata = {}, init = false)
         unless block_given?
           raise ArgumentError, _('%{class_name} must be initialized with a block.') % { class_name: self.class.name }
         end

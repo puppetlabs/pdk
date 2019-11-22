@@ -4,7 +4,7 @@ require 'pdk/module/templatedir'
 
 describe PDK::Module::TemplateDir do
   subject(:template_dir) do
-    described_class.new(uri, module_metadata, true) do |foo|
+    described_class.with(uri, module_metadata, true) do |foo|
       # block does nothing
     end
   end
@@ -36,7 +36,7 @@ describe PDK::Module::TemplateDir do
     allow(PDK::Util::Git).to receive(:work_tree?).with(uri.shell_path).and_return(false)
   end
 
-  describe '.new' do
+  describe '.with' do
     before(:each) do
       allow(described_class).to receive(:validate_module_template!).with(uri.shell_path).and_return(true)
     end
@@ -44,7 +44,7 @@ describe PDK::Module::TemplateDir do
     context 'when not passed a block' do
       it 'raises an ArgumentError' do
         expect {
-          described_class.new(uri, module_metadata)
+          described_class.with(uri, module_metadata)
         }.to raise_error(ArgumentError, %r{must be initialized with a block}i)
       end
     end
@@ -52,7 +52,7 @@ describe PDK::Module::TemplateDir do
     context 'when not initialized with a PDK::Util::TemplateURI' do
       it 'raises an ArgumentError' do
         expect {
-          described_class.new(path_or_url, module_metadata) {}
+          described_class.with(path_or_url, module_metadata) {}
         }.to raise_error(ArgumentError, %r{must be initialized with a PDK::Util::TemplateURI}i)
       end
     end
@@ -103,7 +103,7 @@ describe PDK::Module::TemplateDir do
           end
 
           it 'does not raise an error' do
-            expect { described_class.new(uri, module_metadata) {} }.not_to raise_error
+            expect { described_class.with(uri, module_metadata) {} }.not_to raise_error
           end
         end
 
@@ -114,7 +114,7 @@ describe PDK::Module::TemplateDir do
 
           it 'raises an ArgumentError' do
             expect {
-              described_class.new(uri, module_metadata) {}
+              described_class.with(uri, module_metadata) {}
             }.to raise_error(ArgumentError, %r{does not contain a 'moduleroot_init/'})
           end
         end
@@ -127,7 +127,7 @@ describe PDK::Module::TemplateDir do
 
         it 'raises an ArgumentError' do
           expect {
-            described_class.new(uri, module_metadata) {}
+            described_class.with(uri, module_metadata) {}
           }.to raise_error(ArgumentError, %r{does not contain a 'moduleroot/'})
         end
       end
@@ -156,14 +156,14 @@ describe PDK::Module::TemplateDir do
 
         it 'raises an ArgumentError' do
           expect {
-            described_class.new(uri, module_metadata) {}
+            described_class.with(uri, module_metadata) {}
           }.to raise_error(ArgumentError, %r{built-in template has substantially changed})
         end
       end
 
       it 'raises an ArgumentError' do
         expect {
-          described_class.new(uri, module_metadata) {}
+          described_class.with(uri, module_metadata) {}
         }.to raise_error(ArgumentError, %r{is not a directory})
       end
     end

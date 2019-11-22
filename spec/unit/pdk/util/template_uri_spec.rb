@@ -590,7 +590,7 @@ describe PDK::Util::TemplateURI do
             context 'that contains a valid template' do
               before(:each) do
                 allow_template_dir('/path/to/a/template', true)
-                allow(PDK::Module::TemplateDir).to receive(:new).with('/path/to/a/template').and_yield
+                allow(PDK::Module::TemplateDir).to receive(:with).with('/path/to/a/template').and_yield
               end
 
               it { is_expected.to be_truthy }
@@ -599,7 +599,7 @@ describe PDK::Util::TemplateURI do
             context 'that does not contain a valid template' do
               before(:each) do
                 allow_template_dir('/path/to/a/template', false)
-                allow(PDK::Module::TemplateDir).to receive(:new).with('/path/to/a/template').and_raise(ArgumentError)
+                allow(PDK::Module::TemplateDir).to receive(:with).with('/path/to/a/template').and_raise(ArgumentError)
               end
 
               it { is_expected.to be_falsey }

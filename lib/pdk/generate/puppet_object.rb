@@ -269,7 +269,7 @@ module PDK
             next
           end
 
-          PDK::Module::TemplateDir.new(PDK::Util::TemplateURI.new(template[:uri])) do |template_dir|
+          PDK::Module::TemplateDir.with(PDK::Util::TemplateURI.new(template[:uri])) do |template_dir|
             template_paths = template_dir.object_template_for(object_type)
 
             if template_paths
