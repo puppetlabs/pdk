@@ -777,6 +777,48 @@ module RuboCop
           end
         end
       end
+
+      class SmartQuotes < Cop
+        MSG = 'Use ASCII quotes instead of Unicode smart quotes'.freeze
+        SINGLE_QUOTES_PAT = %r{(?:\u2018|\u2019)}
+        DOUBLE_QUOTES_PAT = %r{(?:\u201C|\u201D)}
+
+        def on_str(node)
+          return unless node.loc.respond_to?(:begin) && node.loc.begin
+          return if part_of_ignored_node?(node)
+
+          add_offense(node) if smart_quotes?(node)
+        end
+
+        def on_regexp(node)
+          add_offense(node) if smart_quotes?(node)
+        end
+
+        def smart_quotes?(node)
+          smart_single_quotes?(node) || smart_double_quotes?(node)
+        end
+
+        def smart_single_quotes?(node)
+          node.source.index(SINGLE_QUOTES_PAT)
+        end
+
+        def smart_double_quotes?(node)
+          node.source.index(DOUBLE_QUOTES_PAT)
+        end
+
+        def autocorrect(node)
+          ->(corrector) do
+            if smart_single_quotes?(node)
+              new_str = node.source.gsub(SINGLE_QUOTES_PAT, "'")
+              if new_str.start_with?("'")
+                new_str[0] = '"'
+                new_str[-1] = '"'
+              end
+              corrector.replace(node.loc.expression, new_str)
+            end
+          end
+        end
+      end
     end
   end
 end
