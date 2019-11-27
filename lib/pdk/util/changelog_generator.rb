@@ -102,10 +102,12 @@ module PDK
       end
 
       def self.changelog_file
-        @changelog_file ||= PDK::Util::Filesystem.expand_path('CHANGELOG.MD')
+        # Default Changelog file is CHANGELOG.md, but also search for the .MD prefix as well.
+        @changelog_file ||= ['CHANGELOG.md', 'CHANGELOG.MD'].map { |file| PDK::Util::Filesystem.expand_path(file) }.find { |path| PDK::Util::Filesystem.file?(path) }
       end
 
       def self.changelog_content
+        return '' if changelog_file.nil?
         PDK::Util::Filesystem.read_file(changelog_file, open_args: 'rb:utf-8')
       end
     end
