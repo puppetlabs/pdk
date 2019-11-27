@@ -45,7 +45,7 @@ describe PDK::Module::TemplateDir do
       it 'raises an ArgumentError' do
         expect {
           described_class.with(uri, module_metadata)
-        }.to raise_error(ArgumentError, %r{must be initialized with a block}i)
+        }.to raise_error(ArgumentError, %r{must be passed a block}i)
       end
     end
 
@@ -53,7 +53,7 @@ describe PDK::Module::TemplateDir do
       it 'raises an ArgumentError' do
         expect {
           described_class.with(path_or_url, module_metadata) {}
-        }.to raise_error(ArgumentError, %r{must be initialized with a PDK::Util::TemplateURI}i)
+        }.to raise_error(ArgumentError, %r{must be passed a PDK::Util::TemplateURI}i)
       end
     end
 

@@ -39,7 +39,7 @@ module PDK
             raise ArgumentError, _('%{class_name} must be initialized with a block.') % { class_name: self.class.name }
           end
           unless uri.is_a? PDK::Util::TemplateURI
-            raise ArgumentError, _('PDK::Module::TemplateDir::Base.new must be initialized with a PDK::Util::TemplateURI, got a %{uri_type}') % { uri_type: uri.class }
+            raise ArgumentError, _('%{class_name} must be initialized with a PDK::Util::TemplateURI, got a %{uri_type}') % { uri_type: uri.class, class_name: self.class.name }
           end
 
           @path, @is_temporary_path = template_path(uri)

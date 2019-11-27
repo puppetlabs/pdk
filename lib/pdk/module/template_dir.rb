@@ -32,10 +32,10 @@ module PDK
       # @api public
       def self.with(uri, module_metadata = {}, init = false)
         unless block_given?
-          raise ArgumentError, _('%{class_name} must be initialized with a block.') % { class_name: self.class.name }
+          raise ArgumentError, _('%{class_name}.with must be passed a block.') % { class_name: name }
         end
         unless uri.is_a? PDK::Util::TemplateURI
-          raise ArgumentError, _('PDK::Module::TemplateDir.for must be initialized with a PDK::Util::TemplateURI, got a %{uri_type}') % { uri_type: uri.class }
+          raise ArgumentError, _('%{class_name}.with must be passed a PDK::Util::TemplateURI, got a %{uri_type}') % { uri_type: uri.class, class_name: name }
         end
 
         if PDK::Util::Git.repo?(uri.bare_uri)
