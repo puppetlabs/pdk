@@ -13,6 +13,7 @@ AllCops:
     # package testing gems
     - package-testing/vendor/**/*
     - package-testing/vendor/**/.*
+    - tmp/**/*
 
 Layout/IndentHeredoc:
   Description: The `squiggly` style would be preferable, but is only available from ruby 2.3. We'll enable this when we can.

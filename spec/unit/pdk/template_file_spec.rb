@@ -17,10 +17,12 @@ describe PDK::TemplateFile do
     end
 
     context 'when :template_dir has been passed in the data hash' do
+      require 'pdk/module/template_dir/base'
+
       let(:data) do
         {
           configs: { 'test' => 'value' },
-          template_dir: instance_double(PDK::Module::TemplateDir),
+          template_dir: instance_double(PDK::Module::TemplateDir::Base),
         }
       end
 

@@ -112,12 +112,11 @@ module PDK
       end
 
       def stage_changes!
-        require 'pdk/module/templatedir'
         require 'pdk/util/filesystem'
 
         metadata_path = 'metadata.json'
 
-        PDK::Module::TemplateDir.new(template_uri, nil, true) do |templates|
+        PDK::Module::TemplateDir.with(template_uri, nil, true) do |templates|
           new_metadata = update_metadata(metadata_path, templates.metadata)
           templates.module_metadata = new_metadata.data unless new_metadata.nil?
 

@@ -19,6 +19,8 @@ module PDK
     end
 
     module Git
+      GIT_QUERY_CACHE_TTL ||= 10
+
       def self.git_bindir
         @git_dir ||= File.join('private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
       end
@@ -63,9 +65,16 @@ module PDK
       end
 
       def self.repo?(maybe_repo)
-        return bare_repo?(maybe_repo) if PDK::Util::Filesystem.directory?(maybe_repo)
-
-        remote_repo?(maybe_repo)
+        result = cached_git_query(maybe_repo, :repo?)
+        return result unless result.nil?
+        result = if PDK::Util::Filesystem.directory?(maybe_repo)
+                   # Use boolean shortcircuiting here. The mostly likely type of git repo
+                   # is a "normal" repo with a working tree. Bare repos do not have work tree
+                   work_tree?(maybe_repo) || bare_repo?(maybe_repo)
+                 else
+                   remote_repo?(maybe_repo)
+                 end
+        cache_query_result(maybe_repo, :repo?, result)
       end
 
       def self.bare_repo?(maybe_repo)
@@ -81,10 +90,12 @@ module PDK
 
       def self.work_tree?(path)
         return false unless PDK::Util::Filesystem.directory?(path)
+        result = cached_git_query(path, :work_tree?)
+        return result unless result.nil?
 
         Dir.chdir(path) do
           rev_parse = git('rev-parse', '--is-inside-work-tree')
-          rev_parse[:exit_code].zero? && rev_parse[:stdout].strip == 'true'
+          cache_query_result(path, :work_tree?, rev_parse[:exit_code].zero? && rev_parse[:stdout].strip == 'true')
         end
       end
 
@@ -122,6 +133,47 @@ module PDK
         raise PDK::Util::GitError, args, result unless result[:exit_code].zero?
         result[:stdout].strip
       end
+
+      def self.tag?(git_remote, tag_name)
+        git('ls-remote', '--tags', '--exit-code', git_remote, tag_name)[:exit_code].zero?
+      end
+
+      # Clears any cached information for git queries
+      # Should only be used during testing
+      # @api private
+      def self.clear_cached_information
+        @git_repo_expire_cache = nil
+        @git_repo_cache = nil
+      end
+
+      def self.cached_git_query(repo, query)
+        # TODO: Not thread safe
+        if @git_repo_expire_cache.nil?
+          @git_repo_expire_cache = Time.now + GIT_QUERY_CACHE_TTL # Expire the cache every GIT_QUERY_CACHE_TTL seconds
+          @git_repo_cache = {}
+        elsif Time.now > @git_repo_expire_cache
+          @git_repo_expire_cache = Time.now + GIT_QUERY_CACHE_TTL
+          @git_repo_cache = {}
+        end
+        return nil if @git_repo_cache[repo].nil?
+        @git_repo_cache[repo][query]
+      end
+      private_class_method :cached_git_query
+
+      def self.cache_query_result(repo, query, result)
+        # TODO: Not thread safe?
+        if @git_repo_expire_cache.nil?
+          @git_repo_expire_cache = Time.now + GIT_QUERY_CACHE_TTL
+          @git_repo_cache = {}
+        end
+        if @git_repo_cache[repo].nil?
+          @git_repo_cache[repo] = { query => result }
+        else
+          @git_repo_cache[repo][query] = result
+        end
+        result
+      end
+      private_class_method :cache_query_result
     end
   end
 end

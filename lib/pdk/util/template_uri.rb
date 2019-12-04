@@ -35,15 +35,14 @@ module PDK
       #
       def initialize(opts_or_uri)
         require 'addressable'
-
         # If a uri string is passed, skip the valid uri finding code.
         @uri = if opts_or_uri.is_a?(self.class)
                  opts_or_uri.uri
                elsif opts_or_uri.is_a?(String)
                  begin
                    uri, ref = opts_or_uri.split('#', 2)
-                   if self.class.packaged_template?(uri)
-                     self.class.default_template_uri(ref).uri
+                   if PDK::Util::TemplateURI.packaged_template?(uri)
+                     PDK::Util::TemplateURI.default_template_addressable_uri.tap { |default| default.fragment = ref unless ref.nil? || ref.empty? }
                    else
                      Addressable::URI.parse(opts_or_uri)
                    end
@@ -53,7 +52,7 @@ module PDK
                elsif opts_or_uri.is_a?(Addressable::URI)
                  opts_or_uri.dup
                else
-                 self.class.first_valid_uri(self.class.templates(opts_or_uri))
+                 PDK::Util::TemplateURI.first_valid_uri(PDK::Util::TemplateURI.templates(opts_or_uri))
                end
       end
 
@@ -61,28 +60,44 @@ module PDK
         @uri == other.uri
       end
 
+      def bare_uri
+        PDK::Util::TemplateURI.bare_uri(@uri)
+      end
+
       # This is the URI represented in a format suitable for writing to
       # metadata.
       #
       # @returns String
       def metadata_format
-        if self.class.packaged_template?(git_remote)
-          self.class.human_readable("pdk-default##{git_ref}")
-        else
-          self.class.human_readable(@uri.to_s)
-        end
+        @metadata_format ||= if PDK::Util::TemplateURI.packaged_template?(bare_uri)
+                               PDK::Util::TemplateURI.human_readable("pdk-default##{uri_fragment}")
+                             else
+                               PDK::Util::TemplateURI.human_readable(@uri.to_s)
+                             end
       end
       alias to_s metadata_format
       alias to_str metadata_format
 
-      # This is the url without a fragment, suitable for git clones.
-      #
+      # Returns the fragment of the URI, of the default template's ref if one does not exist
       # @returns String
-      def git_remote
-        self.class.git_remote(@uri)
+      # @api private
+      def uri_fragment
+        @uri.fragment || self.class.default_template_ref(self)
       end
 
-      def self.git_remote(uri)
+      def uri_fragment=(fragment)
+        @uri.fragment = fragment
+      end
+
+      def default?
+        bare_uri == PDK::Util::TemplateURI.bare_uri(PDK::Util::TemplateURI.default_template_addressable_uri)
+      end
+
+      # Class Methods
+
+      # Remove the fragment off of URI. Useful for removing the branch
+      # for Git based URIs
+      def self.bare_uri(uri)
         require 'addressable'
 
         if uri.is_a?(Addressable::URI) && uri.fragment
@@ -98,35 +113,25 @@ module PDK
         self.class.human_readable(@uri.path)
       end
 
-      # @returns String
-      def git_ref
-        @uri.fragment || self.class.default_template_ref(self)
-      end
-
-      def git_ref=(ref)
-        @uri.fragment = ref
-      end
-
       # @returns PDK::Util::TemplateURI
-      def self.default_template_uri(ref = nil)
+      def self.default_template_uri
+        require 'pdk/util'
+        require 'addressable'
+
+        PDK::Util::TemplateURI.new(default_template_addressable_uri)
+      end
+
+      # @returns Addressable::URI
+      # @api private
+      def self.default_template_addressable_uri
         require 'pdk/util'
         require 'addressable'
 
         if PDK::Util.package_install?
-          PDK::Util::TemplateURI.new(Addressable::URI.new(scheme: 'file', host: '', path: File.join(PDK::Util.package_cachedir, 'pdk-templates.git'), fragment: ref))
+          Addressable::URI.new(scheme: 'file', host: '', path: File.join(PDK::Util.package_cachedir, 'pdk-templates.git'))
         else
-          PDK::Util::TemplateURI.new(Addressable::URI.new(scheme: 'https', host: 'github.com', path: '/puppetlabs/pdk-templates', fragment: ref))
+          Addressable::URI.new(scheme: 'https', host: 'github.com', path: '/puppetlabs/pdk-templates')
         end
-      end
-
-      def default?
-        git_remote == self.class.default_template_uri.git_remote
-      end
-
-      def ref_is_tag?
-        require 'pdk/util/git'
-
-        PDK::Util::Git.git('ls-remote', '--tags', '--exit-code', git_remote, git_ref)[:exit_code].zero?
       end
 
       # `C:...` urls are not URI-safe. They should be of the form `/C:...` to
@@ -248,18 +253,17 @@ module PDK
 
       def self.valid_template?(template)
         require 'addressable'
-        require 'pdk/util/git'
-        require 'pdk/module/templatedir'
 
         return false if template.nil? || !template.is_a?(Hash)
         return false if template[:uri].nil? || !template[:uri].is_a?(Addressable::URI)
 
-        return true if PDK::Util::Git.repo?(git_remote(template[:uri]))
+        return true if PDK::Util::Git.repo?(bare_uri(template[:uri]))
 
         path = human_readable(template[:uri].path)
         if PDK::Util::Filesystem.directory?(path)
+          # We know that it's not a git repository, but it's a valid path on disk
           begin
-            PDK::Module::TemplateDir.new(path) {}
+            PDK::Module::TemplateDir.validate_module_template!(path)
             return true
           rescue ArgumentError
             nil

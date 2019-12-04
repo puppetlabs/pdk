@@ -75,10 +75,12 @@ describe PDK::Module::Convert do
   end
 
   describe '.new', after_hook: true do
+    require 'pdk/module/template_dir/base'
+
     let(:instance) { described_class.new(options) }
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
-    let(:template_dir) { instance_double(PDK::Module::TemplateDir, metadata: {}) }
+    let(:template_dir) { instance_double(PDK::Module::TemplateDir::Base, metadata: {}) }
     let(:metadata) { instance_double(PDK::Module::Metadata, data: {}) }
     let(:template_files) { { path: 'a/path/to/file', content: 'file contents', status: :manage } }
     let(:added_files) { Set.new }
@@ -90,7 +92,7 @@ describe PDK::Module::Convert do
 
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
       allow(instance).to receive(:update_metadata).with(any_args).and_return(metadata)
-      allow(PDK::Module::TemplateDir).to receive(:new).with(anything, anything, anything).and_yield(template_dir)
+      allow(PDK::Module::TemplateDir).to receive(:with).with(anything, anything, anything).and_yield(template_dir)
       allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
       allow(template_dir).to receive(:module_metadata=)
       allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content], template_files[:status])
@@ -105,7 +107,7 @@ describe PDK::Module::Convert do
 
     context 'when an error is raised from TemplateDir', after_hook: false do
       before(:each) do
-        allow(PDK::Module::TemplateDir).to receive(:new)
+        allow(PDK::Module::TemplateDir).to receive(:with)
           .with(any_args).and_raise(ArgumentError, 'The specified template is not a directory')
       end
 

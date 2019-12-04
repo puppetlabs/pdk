@@ -19,7 +19,6 @@ module PDK
       end
 
       def self.invoke(opts = {})
-        require 'pdk/module/templatedir'
         require 'pdk/util'
         require 'pdk/util/template_uri'
         require 'pathname'
@@ -48,7 +47,7 @@ module PDK
         template_uri = PDK::Util::TemplateURI.new(opts)
 
         begin
-          PDK::Module::TemplateDir.new(template_uri, metadata.data, true) do |templates|
+          PDK::Module::TemplateDir.with(template_uri, metadata.data, true) do |templates|
             templates.render do |file_path, file_content, file_status|
               next if file_status == :delete
               file = Pathname.new(temp_target_dir) + file_path
@@ -88,7 +87,7 @@ module PDK
               end
             end
 
-            PDK.logger.info _('Module \'%{name}\' generated at path \'%{path}\', from template \'%{url}\'.') % { name: opts[:module_name], path: target_dir, url: template_uri.git_remote }
+            PDK.logger.info _('Module \'%{name}\' generated at path \'%{path}\', from template \'%{url}\'.') % { name: opts[:module_name], path: target_dir, url: template_uri.bare_uri }
             PDK.logger.info(_('In your module directory, add classes with the \'pdk new class\' command.'))
           end
         rescue Errno::EACCES => e

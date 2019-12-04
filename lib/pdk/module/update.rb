@@ -6,7 +6,7 @@ module PDK
       GIT_DESCRIBE_PATTERN = %r{\A(?<base>.+?)-(?<additional_commits>\d+)-g(?<sha>.+)\Z}
 
       def run
-        template_uri.git_ref = new_template_version
+        template_uri.uri_fragment = new_template_version
 
         stage_changes!
 
@@ -71,10 +71,10 @@ module PDK
       def new_template_version
         return options[:'template-ref'] if options[:'template-ref']
 
-        if template_uri.default? && template_uri.ref_is_tag? && PDK::Util.package_install?
+        if template_uri.default? && PDK::Util::Git.tag?(template_uri.bare_uri, template_uri.uri_fragment) && PDK::Util.package_install?
           PDK::Util::TemplateURI.default_template_ref
         else
-          template_uri.git_ref
+          template_uri.uri_fragment
         end
       end
 
@@ -101,7 +101,7 @@ module PDK
         return template_ref if template_ref == PDK::TEMPLATE_REF
 
         sha_length = GIT_DESCRIBE_PATTERN.match(current_template_version)[:sha].length - 1
-        "#{template_ref}@#{PDK::Util::Git.ls_remote(template_uri.git_remote, template_ref)[0..sha_length]}"
+        "#{template_ref}@#{PDK::Util::Git.ls_remote(template_uri.bare_uri, template_ref)[0..sha_length]}"
       end
 
       def update_message
@@ -113,7 +113,7 @@ module PDK
 
         format_string % {
           module_name:     module_metadata.data['name'],
-          template_url:    template_uri.git_remote,
+          template_url:    template_uri.bare_uri,
           current_version: current_version,
           new_version:     new_version,
         }
