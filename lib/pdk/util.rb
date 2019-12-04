@@ -10,6 +10,7 @@ autoload :Pathname, 'pathname'
 module PDK
   module Util
     autoload :Bundler, 'pdk/util/bundler'
+    autoload :ChangelogGenerator, 'pdk/util/changelog_generator'
     autoload :Env, 'pdk/util/env'
     autoload :Filesystem, 'pdk/util/filesystem'
     autoload :Git, 'pdk/util/git'
@@ -30,6 +31,16 @@ module PDK
       functions
       types
     ].freeze
+
+    #:nocov:
+    # This method just wraps core Ruby functionality and
+    # can be ignored for code coverage
+
+    # Calls Kernel.exit with an exitcode
+    def exit_process(exit_code)
+      exit exit_code
+    end
+    #:nocov:
 
     # Searches upwards from current working directory for the given target file.
     #
