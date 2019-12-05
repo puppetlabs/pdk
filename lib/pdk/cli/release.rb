@@ -136,14 +136,14 @@ module PDK::CLI
         opts[:'skip-dependency'] = !answers['dependency']
         opts[:'skip-documentation'] = !answers['documentation']
 
-        prepare_version_interview(opts) if answers['setversion']
+        prepare_version_interview(prompt, opts) if answers['setversion']
 
-        prepare_publish_interview(opts) if answers['publish']
+        prepare_publish_interview(prompt, opts) if answers['publish']
       end
       answers
     end
 
-    def self.prepare_version_interview(opts)
+    def self.prepare_version_interview(prompt, opts)
       questions = [
         {
           name:             'version',
@@ -160,7 +160,7 @@ module PDK::CLI
       opts[:version] = ver_answer['version']
     end
 
-    def self.prepare_publish_interview(opts)
+    def self.prepare_publish_interview(prompt, opts)
       return if opts[:'forge-token']
       questions = [
         {
