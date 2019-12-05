@@ -37,15 +37,23 @@ module PDK::CLI
         log_level: :info,
       )
 
-      unless opts[:force]
-        Release.prepare_interview(opts)
-      end
+      Release.prepare_interview(opts) unless opts[:force]
 
-      # Don't pass tokens to analytics
-      PDK::CLI::Util.analytics_screen_view('release', opts.reject { |k, _| k == :'forge-token' })
+      Release.send_analytics('release', opts)
 
       release = PDK::Module::Release.new(nil, opts)
 
+      Release.module_compatibility_checks!(release, opts)
+
+      release.run
+    end
+  end
+
+  module Release
+    # Checks whether the module is compatible with PDK release process
+    # @param release PDK::Module::Release Object representing the release
+    # @param opts Options Hash from Cri
+    def self.module_compatibility_checks!(release, opts)
       unless release.module_metadata.forge_ready?
         if opts[:force]
           PDK.logger.warn _(
@@ -60,7 +68,7 @@ module PDK::CLI
         end
       end
 
-      unless release.pdk_compatible?
+      unless release.pdk_compatible? # rubocop:disable Style/GuardClause Nope!
         if opts[:force]
           PDK.logger.warn _('This module is not compatible with PDK, so PDK can not validate or test this build.')
         else
@@ -73,12 +81,14 @@ module PDK::CLI
           end
         end
       end
-
-      release.run
     end
-  end
 
-  module Release
+    # Send_analytics for the given command and Cri options
+    def self.send_analytics(command, opts)
+      # Don't pass tokens to analytics
+      PDK::CLI::Util.analytics_screen_view(command, opts.reject { |k, _| k == :'forge-token' })
+    end
+
     def self.prepare_interview(opts)
       questions = []
 
@@ -177,3 +187,6 @@ module PDK::CLI
     end
   end
 end
+
+require 'pdk/cli/release/prep'
+require 'pdk/cli/release/publish'
