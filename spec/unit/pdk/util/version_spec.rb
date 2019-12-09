@@ -36,7 +36,7 @@ describe PDK::Util::Version do
       allow(PDK::Util::Filesystem).to receive(:exist?).with('/tmp/package/PDK_VERSION').and_return(true)
       allow(PDK::Util::Filesystem).to receive(:read_file).with('/tmp/package/PDK_VERSION').and_return('0.1.2.3.4.pkg_hash')
       allow(PDK::Util::Filesystem).to receive(:directory?).with(%r{.git\Z}).and_return(false)
-      allow(PDK::CLI::Exec).to receive(:git).never
+      expect(PDK::CLI::Exec).not_to receive(:git)
     end
 
     describe '#git_ref' do

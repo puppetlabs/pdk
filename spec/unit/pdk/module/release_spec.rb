@@ -72,12 +72,12 @@ describe PDK::Module::Release do
       end
 
       it 'does not do anything' do
-        expect(instance).to receive(:run_validations).never
-        expect(instance).to receive(:run_documentation).never
-        expect(instance).to receive(:run_dependency_checker).never
-        expect(instance).to receive(:run_build).never
-        expect(instance).to receive(:run_publish).never
-        expect(PDK::Util::ChangelogGenerator).to receive(:generate_changelog).never
+        expect(instance).not_to receive(:run_validations)
+        expect(instance).not_to receive(:run_documentation)
+        expect(instance).not_to receive(:run_dependency_checker)
+        expect(instance).not_to receive(:run_build)
+        expect(instance).not_to receive(:run_publish)
+        expect(PDK::Util::ChangelogGenerator).not_to receive(:generate_changelog)
 
         instance.run
       end
@@ -159,7 +159,7 @@ describe PDK::Module::Release do
 
       it 'does not save the version if it has not changed' do
         expect(PDK::Util::ChangelogGenerator).to receive(:compute_next_version).with('1.0.0').and_return('1.0.0')
-        expect(mock_metadata_object).to receive(:write!).never
+        expect(mock_metadata_object).not_to receive(:write!)
 
         instance.run
 

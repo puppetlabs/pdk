@@ -66,7 +66,7 @@ describe 'PDK::CLI release publish' do
     end
 
     it 'does not start an interview when --force is used' do
-      expect(PDK::CLI::Util::Interview).to receive(:new).never
+      expect(PDK::CLI::Util::Interview).not_to receive(:new)
 
       PDK::CLI.run(cli_args.concat(%w[--force]))
     end
