@@ -11,6 +11,7 @@ module PDK::CLI
     flag nil, :noop, _('Do not convert the module, just output what would be done.')
     flag nil, :force, _('Convert the module automatically, with no prompts.')
     flag nil, :'add-tests', _('Add any missing tests while converting the module.')
+    flag nil, :'default-template', _('Convert the module to use the default PDK template.')
 
     run do |opts, _args, _cmd|
       require 'pdk/module/convert'
@@ -22,11 +23,18 @@ module PDK::CLI
         log_level:           :info,
       )
 
-      PDK::CLI::Util.validate_template_opts(opts)
-
       if opts[:noop] && opts[:force]
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when converting a module')
       end
+
+      if opts[:'default-template']
+        raise PDK::CLI::ExitWithError, _('You can not specify --template-url and --default-template.') if opts[:'template-url']
+
+        opts[:'template-url'] = PDK::Util::TemplateURI.default_template_addressable_uri.to_s
+        PDK.answers.update!('template-url' => nil)
+      end
+
+      PDK::CLI::Util.validate_template_opts(opts)
 
       PDK::CLI::Util.analytics_screen_view('convert', opts)
 

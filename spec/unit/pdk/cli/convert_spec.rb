@@ -211,5 +211,55 @@ describe 'PDK::CLI convert' do
         )
       end
     end
+
+    context 'and the --default-template flag has been passed' do
+      let(:answers) { instance_double(PDK::AnswerFile, update!: true) }
+      let(:args) { ['convert', '--default-template'] }
+
+      before(:each) do
+        allow(PDK).to receive(:answers).and_return(answers)
+      end
+
+      context 'with the --template-url option' do
+        let(:args) { super() + ['--template-url', 'https://some/template'] }
+
+        it 'exits with an error' do
+          msg = %r{can not specify --template-url and --default-template}i
+          expect(logger).to receive(:error).with(a_string_matching(msg))
+
+          expect { PDK::CLI.run(args) }.to exit_nonzero
+        end
+
+        it 'does not submit the command to analytics' do
+          expect(analytics).not_to receive(:screen_view)
+
+          expect { PDK::CLI.run(args) }.to exit_nonzero
+        end
+      end
+
+      context 'without the --template-url option' do
+        after(:each) { PDK::CLI.run(args) }
+
+        it 'converts the module to the default template' do
+          expected_template = PDK::Util::TemplateURI.default_template_addressable_uri.to_s
+
+          expect(PDK::Module::Convert).to receive(:invoke)
+            .with(hash_including(:'template-url' => expected_template))
+        end
+
+        it 'clears the saved template-url answer' do
+          expect(answers).to receive(:update!).with('template-url' => nil)
+        end
+
+        it 'submits the command to analytics' do
+          expect(analytics).to receive(:screen_view).with(
+            'convert',
+            cli_options:   'default-template=true,template-url=redacted',
+            output_format: 'default',
+            ruby_version:  RUBY_VERSION,
+          )
+        end
+      end
+    end
   end
 end
