@@ -153,6 +153,24 @@ describe 'pdk convert', module_command: true do
     end
   end
 
+  context 'when converting to the default template' do
+    include_context 'in a new module', 'non_default_template'
+
+    answer_file = File.join('..', 'non_default_template_answers.json')
+
+    describe command("pdk convert --default-template --force --answer-file #{answer_file}") do
+      its(:exit_status) { is_expected.to eq(0) }
+
+      describe file('metadata.json') do
+        its(:content_as_json) { is_expected.to include('template-url' => "#{template_repo}#master") }
+      end
+
+      describe file(answer_file) do
+        its(:content_as_json) { is_expected.to include('template-url' => nil) }
+      end
+    end
+  end
+
   context 'when adding missing tests' do
     # A real bare bones modules here. Testing to ensure that the functionality
     # works even when the module didn't have puppet-strings installed before
