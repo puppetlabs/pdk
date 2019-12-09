@@ -58,7 +58,7 @@ describe PDK::Config::Namespace do
     end
 
     it 'does not save values when reading defaults' do
-      expect(config).to receive(:save_data).never # rubocop:disable RSpec/SubjectStub This is an expectation, not a stub
+      expect(config).not_to receive(:save_data)
       expect(config[:missing]).to be_nil
     end
 
@@ -89,7 +89,7 @@ describe PDK::Config::Namespace do
       end
 
       it 'does not save default values to disk' do
-        expect(config).to receive(:save_data).never # rubocop:disable RSpec/SubjectStub This is an expectation, not a stub
+        expect(config).not_to receive(:save_data)
         expect(config[:spec_test]).to eq('spec_default')
       end
     end
@@ -141,7 +141,7 @@ describe PDK::Config::Namespace do
     end
 
     it 'does not save values when using the default' do
-      expect(config).to receive(:save_data).never # rubocop:disable RSpec/SubjectStub This is an expectation, not a stub
+      expect(config).not_to receive(:save_data)
       config.fetch(:missing, 'default')
     end
   end
@@ -157,7 +157,7 @@ describe PDK::Config::Namespace do
         default_to { 'spec_default' }
       end
       # The resolver should not trigger any saves unless persistent_defaults is set to true
-      expect(PDK::Util::Filesystem).to receive(:write_file).never
+      expect(PDK::Util::Filesystem).not_to receive(:write_file)
     end
 
     context 'with an empty filter' do
