@@ -78,7 +78,19 @@ module PDK
         end
       end
 
+      def pinned_to_puppetlabs_template_tag?
+        return false unless template_uri.puppetlabs_template?
+        return false unless PDK::Util::Git.tag?(template_uri.bare_uri, template_uri.uri_fragment)
+        return false if latest_template?
+
+        template_uri.uri_fragment == new_template_version
+      end
+
       private
+
+      def latest_template?
+        [PDK::TEMPLATE_REF, 'master'].include?(template_uri.uri_fragment)
+      end
 
       def current_template_version
         @current_template_version ||= module_metadata.data['template-ref']
