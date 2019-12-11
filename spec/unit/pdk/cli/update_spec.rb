@@ -4,11 +4,13 @@ require 'pdk/cli'
 describe 'PDK::CLI update' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk update}m) }
   let(:updater) do
-    instance_double(PDK::Module::Update, run: true, current_version: current_version, new_version: new_version)
+    instance_double(PDK::Module::Update, run: true, current_version: current_version, new_version: new_version, pinned_to_puppetlabs_template_tag?: pinned_to_tag, template_uri: template_uri)
   end
   let(:current_version) { '1.2.3' }
   let(:new_version) { '1.2.4' }
   let(:module_pdk_version) { PDK::VERSION }
+  let(:pinned_to_tag) { false }
+  let(:template_uri) { PDK::Util::TemplateURI.new("pdk-default##{current_version}") }
 
   context 'when not run from inside a module' do
     include_context 'run outside module'
@@ -56,6 +58,23 @@ describe 'PDK::CLI update' do
           output_format: 'default',
           ruby_version:  RUBY_VERSION,
         )
+      end
+    end
+
+    context 'and the module is pinned to tagged version of our template' do
+      after(:each) do
+        PDK::CLI.run(%w[update])
+      end
+
+      before(:each) do
+        allow(PDK::Module::Update).to receive(:new).with(any_args).and_return(updater)
+        allow(updater).to receive(:run)
+      end
+
+      let(:pinned_to_tag) { true }
+
+      it 'informs the user that the template is pinned' do
+        expect(logger).to receive(:info).with(a_string_matching(%r{module is currently pinned}i))
       end
     end
 

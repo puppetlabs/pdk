@@ -7,6 +7,7 @@ module PDK
 
       PACKAGED_TEMPLATE_KEYWORD = 'pdk-default'.freeze
       DEPRECATED_TEMPLATE_URL = 'https://github.com/puppetlabs/pdk-module-template'.freeze
+      PDK_TEMPLATE_URL = 'https://github.com/puppetlabs/pdk-templates'.freeze
 
       LEGACY_PACKAGED_TEMPLATE_PATHS = {
         'windows' => 'file:///C:/Program Files/Puppet Labs/DevelopmentKit/share/cache/pdk-templates.git',
@@ -93,6 +94,10 @@ module PDK
         bare_uri == PDK::Util::TemplateURI.bare_uri(PDK::Util::TemplateURI.default_template_addressable_uri)
       end
 
+      def puppetlabs_template?
+        self.class.packaged_template?(bare_uri) || bare_uri == PDK_TEMPLATE_URL
+      end
+
       # Class Methods
 
       # Remove the fragment off of URI. Useful for removing the branch
@@ -130,7 +135,7 @@ module PDK
         if PDK::Util.package_install?
           Addressable::URI.new(scheme: 'file', host: '', path: File.join(PDK::Util.package_cachedir, 'pdk-templates.git'))
         else
-          Addressable::URI.new(scheme: 'https', host: 'github.com', path: '/puppetlabs/pdk-templates')
+          Addressable::URI.parse(PDK_TEMPLATE_URL)
         end
       end
 

@@ -48,6 +48,18 @@ module PDK::CLI
 
       updater = PDK::Module::Update.new(opts)
 
+      if updater.pinned_to_puppetlabs_template_tag?
+        PDK.logger.info _(
+          'This module is currently pinned to version %{current_version} ' \
+          'of the default template. If you would like to update your ' \
+          'module to the latest version of the template, please run `pdk ' \
+          'update --template-ref %{new_version}`.',
+        ) % {
+          current_version: updater.template_uri.uri_fragment,
+          new_version:     PDK::TEMPLATE_REF,
+        }
+      end
+
       updater.run
     end
   end

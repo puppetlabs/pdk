@@ -45,6 +45,114 @@ describe PDK::Module::Update do
     end
   end
 
+  describe '#pinned_to_puppetlabs_template_tag?' do
+    subject { instance.pinned_to_puppetlabs_template_tag? }
+
+    let(:instance) { described_class.new(options) }
+
+    include_context 'with mock metadata'
+
+    context 'when running from a package install' do
+      include_context 'packaged install'
+
+      before(:each) do
+        allow(PDK::Util).to receive(:development_mode?).and_return(false)
+      end
+
+      context 'and the template-url is set to the pdk-default keyword' do
+        let(:template_url) { 'pdk-default#1.0.0' }
+
+        before(:each) do
+          allow(PDK::Util::Git).to receive(:tag?).with(any_args).and_return(true)
+        end
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'and the template-url is not set to the pdk-default keyword' do
+        let(:template_url) { 'https://github.com/puppetlabs/pdk-templates' }
+
+        context 'and the url fragment is set to a tag name' do
+          let(:template_url) { super() + '#1.0.0' }
+
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
+          end
+
+          it { is_expected.to be_truthy }
+        end
+
+        context 'and the url fragment is set to the latest template tag' do
+          let(:template_url) { super() + "##{PDK::TEMPLATE_REF}" }
+
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
+          end
+
+          it { is_expected.to be_falsey }
+        end
+
+        context 'and the url fragment is not set to a tag name' do
+          let(:template_url) { super() + '#my_branch' }
+
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(false)
+          end
+
+          it { is_expected.to be_falsey }
+        end
+      end
+    end
+
+    context 'when not running from a package install' do
+      include_context 'not packaged install'
+
+      context 'and the template-url is set to the pdk-default keyword' do
+        let(:template_url) { 'pdk-default#1.0.0' }
+
+        before(:each) do
+          allow(PDK::Util::Git).to receive(:tag?).with(any_args).and_return(true)
+        end
+
+        it { is_expected.to be_truthy }
+      end
+
+      context 'and the template-url is not set to the pdk-default keyword' do
+        let(:template_url) { 'https://github.com/puppetlabs/pdk-templates' }
+
+        context 'and the url fragment is set to a tag name' do
+          let(:template_url) { super() + '#1.0.0' }
+
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
+          end
+
+          it { is_expected.to be_truthy }
+        end
+
+        context 'and the url fragment is set to the latest template tag' do
+          let(:template_url) { super() + "##{PDK::TEMPLATE_REF}" }
+
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
+          end
+
+          it { is_expected.to be_falsey }
+        end
+
+        context 'and the url fragment is not set to a tag name' do
+          let(:template_url) { super() + '#my_branch' }
+
+          before(:each) do
+            allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(false)
+          end
+
+          it { is_expected.to be_falsey }
+        end
+      end
+    end
+  end
+
   describe '#run' do
     let(:instance) { described_class.new(options) }
     let(:template_ref) { '1.3.2-0-g1234567' }
