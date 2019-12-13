@@ -4,6 +4,33 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.15.0](https://github.com/puppetlabs/pdk/tree/v1.15.0) (2019-12-13)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.14.1...v1.15.0)
+
+**Implemented enhancements:**
+
+- \(PDK-1488\) Inform user if updating a pinned module [\#816](https://github.com/puppetlabs/pdk/pull/816) ([rodjek](https://github.com/rodjek))
+- \(PDK-1487\) Add --default-template flag to pdk convert [\#814](https://github.com/puppetlabs/pdk/pull/814) ([rodjek](https://github.com/rodjek))
+- \(GH-808\) Implement pdk release prep and publish subcommands [\#813](https://github.com/puppetlabs/pdk/pull/813) ([glennsarti](https://github.com/glennsarti))
+- \(GH-808\) Implement pdk release subcommand [\#809](https://github.com/puppetlabs/pdk/pull/809) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1364\) Allow non-git template directories to be used [\#803](https://github.com/puppetlabs/pdk/pull/803) ([glennsarti](https://github.com/glennsarti))
+
+**Fixed bugs:**
+
+- \(UI\) Remove UTF-8 "smart quotes" from PDK output [\#806](https://github.com/puppetlabs/pdk/issues/806)
+- \(GH-808\) Fix prompt for pdk release [\#812](https://github.com/puppetlabs/pdk/pull/812) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1169\) Add VMWare fallback to PDK::Util::Filesystem.mv [\#802](https://github.com/puppetlabs/pdk/pull/802) ([rodjek](https://github.com/rodjek))
+
+**Closed issues:**
+
+- Implement `pdk release` command as per RFC \(part 1\) [\#808](https://github.com/puppetlabs/pdk/issues/808)
+- Cannot install pdk 1.14.1.0-1xenial deb - Operation not permitted [\#798](https://github.com/puppetlabs/pdk/issues/798)
+
+**Merged pull requests:**
+
+- \(\#806\) Use ASCII quotes instead of Unicode quotes [\#807](https://github.com/puppetlabs/pdk/pull/807) ([rodjek](https://github.com/rodjek))
+- \(PDK-1523\) Refactor filesystem operations to use PDK::Util::Filesystem [\#799](https://github.com/puppetlabs/pdk/pull/799) ([rodjek](https://github.com/rodjek))
+
 ## [v1.14.1](https://github.com/puppetlabs/pdk/tree/v1.14.1) (2019-11-01)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.14.0...v1.14.1)
 
