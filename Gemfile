@@ -27,6 +27,7 @@ end
 
 group :test do
   gem 'coveralls'
+  gem 'json', '~> 2.2.0'
   gem 'license_finder', '~> 3.0.4'
   if RUBY_VERSION < '2.4'
     # license_finder depends on rubyzip which requires Ruby 2.4 in 2.x
