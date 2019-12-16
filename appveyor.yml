@@ -11,8 +11,13 @@ environment:
     #   BUNDLE_JOBS: 4
     - RUBY_VERSION: 24-x64
       USE_MSYS: true
+      SUITES: "acceptance:smoke"
+      BUNDLE_JOBS: 4
+    - RUBY_VERSION: 24-x64
+      USE_MSYS: true
       SUITES: "acceptance:local_parallel"
       BUNDLE_JOBS: 4
+      UPDATE_BUNDLER: true
     - RUBY_VERSION: 24-x64
       USE_MSYS: true
       SUITES: "spec"
@@ -53,7 +58,11 @@ install:
       }
       $ENV:SSL_CERT_FILE = $CACertFile
   - echo %PATH%
-  - gem update bundler
+  # TODO: We can't use the same BUNDLER_VERSION technique that is in Travis CI for some reason. For the moment, we can at least just update the bundler gem
+  - ps: |
+      if ($ENV:UPDATE_BUNDLER) {
+        & gem update bundler
+      }
   - bundle install --retry 2 --without development
 
 build: off
@@ -63,8 +72,10 @@ branches:
     - master
 
 before_test:
-  - bundle env
+  - bundle --version
+  - gem --version
   - type Gemfile.lock
+  - bundle list
 
 test_script:
   - bundle exec rake %SUITES%

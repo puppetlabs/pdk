@@ -163,7 +163,8 @@ module PDK
             require 'pdk/util/ruby_version'
 
             resolved_env['GEM_HOME'] = PDK::Util::RubyVersion.gem_home
-            resolved_env['GEM_PATH'] = PDK::Util::RubyVersion.gem_path
+            gem_path = PDK::Util::RubyVersion.gem_path
+            resolved_env['GEM_PATH'] = gem_path.empty? ? resolved_env['GEM_HOME'] : gem_path
 
             # Make sure invocation of Ruby prefers our private installation.
             package_binpath = PDK::Util.package_install? ? File.join(PDK::Util.pdk_package_basedir, 'bin') : nil
@@ -171,7 +172,7 @@ module PDK
             resolved_env['PATH'] = [
               PDK::Util::RubyVersion.bin_path,
               File.join(resolved_env['GEM_HOME'], 'bin'),
-              PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path| File.join(gem_path, 'bin') },
+              PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path_raw| File.join(gem_path_raw, 'bin') },
               package_binpath,
               PDK::Util.package_install? ? PDK::Util::Git.git_paths : nil,
               PDK::Util::Env['PATH'],
@@ -195,8 +196,13 @@ module PDK
         def run_process_in_clean_env!
           require 'bundler'
 
-          ::Bundler.with_clean_env do
-            run_process!
+          # Bundler 2.1.0 has deprecated the use of `Bundler.with_clean_env` in favour of
+          # `Bundler.with_unbundled_env`. So prefer to use the newer method if it exists
+          # otherwise revert back to the old method.
+          if ::Bundler.respond_to?(:with_unbundled_env)
+            run_process_with_unbundled_env!
+          else
+            run_process_with_clean_env!
           end
         end
 
@@ -236,6 +242,28 @@ module PDK
           PDK.logger.debug(_("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})") %
             { command: command_string, duration_in_seconds: @duration, exit_code: @process.exit_code })
         end
+
+        private
+
+        #:nocov:
+        # These are just bundler helper methods and are tested via the public run_process_in_clean_env! method
+        def run_process_with_unbundled_env!
+          # Bundler 2.1.0 or greater
+          ::Bundler.with_unbundled_env do
+            run_process!
+          end
+        end
+        #:nocov:
+
+        #:nocov:
+        # These are just bundler helper methods and are tested via the public run_process_in_clean_env! method
+        def run_process_with_clean_env!
+          # Bundler 2.0.2 or less
+          ::Bundler.with_clean_env do
+            run_process!
+          end
+        end
+        #:nocov:
       end
     end
   end

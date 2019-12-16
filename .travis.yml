@@ -2,12 +2,15 @@ sudo: false
 language: ruby
 bundler_args: "--without development"
 script:
+  - bundle --version
+  - gem --version
   - cat Gemfile.lock
   - bundle list
   - bundle exec rake $CHECK
 before_install:
   - if [ $BUNDLER_VERSION ]; then
-      gem install -v $BUNDLER_VERSION bundler --no-document;
+      rvm @global do gem uninstall bundler --executables --force;
+      rvm @global do gem install bundler -v $BUNDLER_VERSION;
     else
       gem install bundler --no-document;
     fi
@@ -16,6 +19,9 @@ matrix:
   include:
     - rvm: 2.4.3
       env: CHECK=rubocop
+    # Make sure that the we still work with an older Bundler version
+    - rvm: 2.4.3
+      env: CHECK=acceptance:smoke BUNDLER_VERSION=2.0.2
     - rvm: 2.4.3
       env: CHECK=acceptance:local_parallel
     - rvm: 2.4.3

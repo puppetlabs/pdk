@@ -84,7 +84,13 @@ describe 'pdk bundle' do
 
       describe command('pdk bundle env') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stderr) { is_expected.to match(%r{error parsing `gemfile`}i) }
+        if ENV['APPVEYOR']
+          # TODO: This is very strange that Appveyor emits the error on STDOUT instead of STDERR
+          # For moment switch the expectation based on the APPVEYOR environment variable
+          its(:stdout) { is_expected.to match(%r{error parsing `gemfile`}i) }
+        else
+          its(:stderr) { is_expected.to match(%r{error parsing `gemfile`}i) }
+        end
       end
     end
   end

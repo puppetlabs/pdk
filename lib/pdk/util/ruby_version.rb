@@ -126,6 +126,7 @@ module PDK
       def gem_home
         require 'pdk/util'
 
+        # TODO: bundle install --path is deprecated
         # `bundle install --path` ignores all "system" installed gems and
         # causes unnecessary package installs. `bundle install` (without
         # --path) installs into GEM_HOME, which by default is non-user
