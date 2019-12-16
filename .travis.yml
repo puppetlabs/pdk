@@ -7,6 +7,7 @@ script:
   - bundle exec rake $CHECK
 before_install:
   - if [ $BUNDLER_VERSION ]; then
+      gem uninstall -i /home/travis/.rvm/gems/ruby-2.4.3@global bundler --force --all --executables;
       gem install -v $BUNDLER_VERSION bundler --no-document;
     else
       gem install bundler --no-document;
@@ -17,7 +18,7 @@ matrix:
     - rvm: 2.4.3
       env: CHECK=rubocop
     - rvm: 2.4.3
-      env: CHECK=acceptance:local_parallel
+      env: CHECK=acceptance:local_parallel BUNDLER_VERSION=2.0.2
     - rvm: 2.4.3
       env: CHECK=spec:coverage
     - rvm: 2.4.3
