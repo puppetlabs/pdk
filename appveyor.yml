@@ -53,6 +53,7 @@ install:
       }
       $ENV:SSL_CERT_FILE = $CACertFile
   - echo %PATH%
+  - gem update bundler
   - bundle install --retry 2 --without development
 
 build: off

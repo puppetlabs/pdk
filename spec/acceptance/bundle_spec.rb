@@ -84,7 +84,7 @@ describe 'pdk bundle' do
 
       describe command('pdk bundle env') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(%r{error parsing `gemfile`}i) }
+        its(:stderr) { is_expected.to match(%r{error parsing `gemfile`}i) }
       end
     end
   end
