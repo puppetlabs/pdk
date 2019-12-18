@@ -498,6 +498,24 @@ describe PDK::Util do
 
       expect(described_class.find_first_json_in(text)).to eq(expected)
     end
+
+    context 'with balanced nested JSON fragment' do
+      it 'returns largest valid JSON document' do
+        text = '{"version": "3.6.0", "content": "{\"nested\": \"fragment\"}"}'
+        expected = { 'version' => '3.6.0', 'content' => '{"nested": "fragment"}' }
+
+        expect(described_class.find_first_json_in(text)).to eq(expected)
+      end
+    end
+
+    context 'with unbalanced nested JSON fragment' do
+      it 'returns largest valid JSON document' do
+        text = '{"version": "3.6.0", "content": "{{\"nested\": \"fragment\"}"}'
+        expected = { 'version' => '3.6.0', 'content' => '{{"nested": "fragment"}' }
+
+        expect(described_class.find_first_json_in(text)).to eq(expected)
+      end
+    end
   end
 
   describe '.find_all_json_in' do
