@@ -80,7 +80,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
       end
 
       it "executes in parent process' bundler env" do
-        expect(::Bundler).not_to receive(:with_clean_env)
+        expect(::Bundler).not_to receive(:with_unbundled_env)
 
         command.execute!
       end
@@ -119,7 +119,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
       end
 
       it "executes in module's bundler env" do
-        expect(::Bundler).to receive(:with_clean_env).and_call_original
+        expect(command).to receive(:run_process_in_clean_env!).and_call_original # rubocop:disable RSpec/SubjectStub This is fine
 
         command.execute!
       end
@@ -156,7 +156,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
       end
 
       it "executes in module's bundler env" do
-        expect(::Bundler).to receive(:with_clean_env).and_call_original
+        expect(command).to receive(:run_process_in_clean_env!).and_call_original # rubocop:disable RSpec/SubjectStub This is fine
 
         command.execute!
       end

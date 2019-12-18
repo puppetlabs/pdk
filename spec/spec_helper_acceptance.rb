@@ -45,9 +45,12 @@ end
 tempdir = nil
 analytics_config = nil
 
-# bundler won't install bundler into the --path, so in order to access ::Bundler.with_clean_env
+# TODO: --path is deprecated
+# bundler won't install bundler into the --path, so in order to access ::Bundler.with_unbundled_env
 # from within pdk during spec tests, we have to manually re-add the global gem path :(
-ENV['GEM_PATH'] = [ENV['GEM_PATH'], File.absolute_path(File.join(`bundle show bundler`, '..', '..')).to_s].compact.join(File::PATH_SEPARATOR)
+bundler_spec = Gem::Specification.find_by_name('bundler')
+bundler_path = bundler_spec.gem_dir
+ENV['GEM_PATH'] = [ENV['GEM_PATH'], File.absolute_path(File.join(bundler_path, '..', '..')).to_s].compact.join(File::PATH_SEPARATOR)
 
 # Save bundle environment from being purged by specinfra. This needs to be repeated for every example, as specinfra does not correctly reset the environment after a `describe command()` block
 # presumably https://github.com/mizzy/specinfra/blob/79b62b37909545b67b7492574a97c300fb1dc91e/lib/specinfra/backend/exec.rb#L143-L165

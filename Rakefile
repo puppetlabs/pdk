@@ -64,6 +64,13 @@ namespace :acceptance do
     specs = Rake::FileList['spec/acceptance/**/*_spec.rb'].to_a
     ParallelTests::CLI.new.run(['-t', 'rspec'] + specs)
   end
+
+  desc 'Run acceptance smoke tests against current code'
+  RSpec::Core::RakeTask.new(:smoke) do |t|
+    t.rspec_opts = '--tag ~package' # Exclude package specific examples
+    # We only need to run a subset of the acceptance suite.
+    t.pattern = 'spec/acceptance/bundle_spec.rb'
+  end
 end
 
 RuboCop::RakeTask.new(:rubocop) do |task|
