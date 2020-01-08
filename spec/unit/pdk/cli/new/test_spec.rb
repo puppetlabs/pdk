@@ -21,8 +21,10 @@ describe 'PDK::CLI new test' do
   end
 
   context 'when run from inside a module' do
+    let(:root_dir) { '/path/to/test/module' }
+
     before(:each) do
-      allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
+      allow(PDK::Util).to receive(:module_root).and_return(root_dir)
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
       allow(PDK::Util::RubyVersion).to receive(:use)
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: '2.4.5', gemset: { puppet: '5.0.0' })
@@ -83,7 +85,7 @@ describe 'PDK::CLI new test' do
         end
 
         it 'generates a unit test for the class' do
-          expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'my_module::test_class', include(spec_only: true)).and_return(generator)
+          expect(PDK::Generate::PuppetClass).to receive(:new).with(root_dir, 'my_module::test_class', include(spec_only: true)).and_return(generator)
           expect(generator).to receive(:run)
         end
 
@@ -105,7 +107,7 @@ describe 'PDK::CLI new test' do
         end
 
         it 'generates a unit test for the class' do
-          expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'my_module::test_class', include(spec_only: true)).and_return(generator)
+          expect(PDK::Generate::PuppetClass).to receive(:new).with(root_dir, 'my_module::test_class', include(spec_only: true)).and_return(generator)
           expect(generator).to receive(:run)
         end
 

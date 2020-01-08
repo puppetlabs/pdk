@@ -18,7 +18,6 @@ module PDK::CLI
       )
 
       object_name = args[0]
-      module_dir = Dir.pwd
 
       if object_name.nil? || object_name.empty?
         puts command.help
@@ -41,7 +40,7 @@ module PDK::CLI
 
         PDK::CLI::Util.analytics_screen_view('new_test', opts)
 
-        generator.new(module_dir, obj['name'], opts.merge(spec_only: true)).run
+        generator.new(PDK::Util.module_root, obj['name'], opts.merge(spec_only: true)).run
       rescue PDK::Util::PuppetStrings::NoObjectError
         raise PDK::CLI::ExitWithError, _('Unable to find anything called "%{object}" to generate unit tests for.') % { object: object_name }
       rescue PDK::Util::PuppetStrings::NoGeneratorError => e

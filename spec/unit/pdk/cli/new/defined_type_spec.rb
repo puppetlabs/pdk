@@ -69,7 +69,7 @@ describe 'PDK::CLI new defined_type' do
       let(:generator_opts) { instance_of(Hash) }
 
       before(:each) do
-        allow(generator).to receive(:new).with(anything, 'test_define', generator_opts).and_return(generator_double)
+        allow(generator).to receive(:new).with(module_root, 'test_define', generator_opts).and_return(generator_double)
       end
 
       after(:each) do

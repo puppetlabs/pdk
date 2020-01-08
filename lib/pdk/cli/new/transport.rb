@@ -8,7 +8,6 @@ module PDK::CLI
       PDK::CLI::Util.ensure_in_module!
 
       transport_name = args[0]
-      module_dir = Dir.pwd
 
       if transport_name.nil? || transport_name.empty?
         puts command.help
@@ -21,7 +20,7 @@ module PDK::CLI
 
       require 'pdk/generate/transport'
 
-      PDK::Generate::Transport.new(module_dir, transport_name, opts).run
+      PDK::Generate::Transport.new(PDK::Util.module_root, transport_name, opts).run
     end
   end
 end

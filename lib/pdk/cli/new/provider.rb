@@ -8,7 +8,6 @@ module PDK::CLI
       PDK::CLI::Util.ensure_in_module!
 
       provider_name = args[0]
-      module_dir = Dir.pwd
 
       if provider_name.nil? || provider_name.empty?
         puts command.help
@@ -23,7 +22,7 @@ module PDK::CLI
 
       require 'pdk/generate/provider'
 
-      PDK::Generate::Provider.new(module_dir, provider_name, opts).run
+      PDK::Generate::Provider.new(PDK::Util.module_root, provider_name, opts).run
     end
   end
 end

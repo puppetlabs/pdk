@@ -21,8 +21,10 @@ describe 'PDK::CLI new class' do
   end
 
   context 'when run from inside a module' do
+    let(:root_dir) { '/path/to/test/module' }
+
     before(:each) do
-      allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
+      allow(PDK::Util).to receive(:module_root).and_return(root_dir)
     end
 
     context 'and not provided with a class name' do
@@ -71,7 +73,7 @@ describe 'PDK::CLI new class' do
       end
 
       it 'generates the class' do
-        expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'test_class', instance_of(Hash)).and_return(generator)
+        expect(PDK::Generate::PuppetClass).to receive(:new).with(root_dir, 'test_class', instance_of(Hash)).and_return(generator)
         expect(generator).to receive(:run)
       end
 

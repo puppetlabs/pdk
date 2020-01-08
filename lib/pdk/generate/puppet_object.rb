@@ -16,7 +16,7 @@ module PDK
       # OBJECT_TYPE constant and implement the {#template_data},
       # {#target_object_path} and {#target_spec_path} methods.
       #
-      # @param module_dir [String] The path to the module directory that the
+      # @param module_dir [String] The path to the root of module that the
       #   will contain the object.
       # @param object_name [String] The name of the object.
       # @param options [Hash{Symbol => Object}]
