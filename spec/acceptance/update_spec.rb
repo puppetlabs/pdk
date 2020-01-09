@@ -34,8 +34,8 @@ describe 'pdk update', module_command: true do
 
       describe command('pdk update --noop') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{-+files to be added-+\n\.travis\.yml}mi) }
-        its(:stdout) { is_expected.to match(%r{-+files to be modified-+\nmetadata\.json}mi) }
+        its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/\.travis\.yml}mi) }
+        its(:stdout) { is_expected.to match(%r{-+files to be modified-+\n.*/metadata\.json}mi) }
         its(:stderr) { is_expected.to match(%r{updating \w+?-update using the default template}i) }
 
         describe file('update_report.txt') do
@@ -49,8 +49,8 @@ describe 'pdk update', module_command: true do
 
       describe command('pdk update --force') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{-+files to be added-+\n\.travis\.yml}mi) }
-        its(:stdout) { is_expected.to match(%r{-+files to be modified-+\nmetadata\.json}mi) }
+        its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/\.travis\.yml}mi) }
+        its(:stdout) { is_expected.to match(%r{-+files to be modified-+\n.*/metadata\.json}mi) }
         its(:stderr) { is_expected.to match(%r{updating \w+?-update using the default template}i) }
 
         describe file('update_report.txt') do

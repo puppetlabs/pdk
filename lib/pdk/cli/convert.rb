@@ -48,7 +48,7 @@ module PDK::CLI
         opts[:'full-interview'] = false
       end
 
-      PDK::Module::Convert.invoke(opts)
+      PDK::Module::Convert.invoke(PDK::Util.module_root, opts)
     end
   end
 end
