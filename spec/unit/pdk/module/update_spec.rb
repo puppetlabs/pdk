@@ -2,6 +2,7 @@ require 'spec_helper'
 require 'pdk/module/update'
 
 describe PDK::Module::Update do
+  let(:module_root) { File.join('path', 'to', 'update') }
   let(:options) { {} }
   let(:mock_metadata) do
     instance_double(
@@ -16,9 +17,13 @@ describe PDK::Module::Update do
   let(:template_url) { 'https://github.com/puppetlabs/pdk-templates' }
   let(:template_ref) { nil }
 
+  def module_path(relative_path)
+    File.join(module_root, relative_path)
+  end
+
   shared_context 'with mock metadata' do
     before(:each) do
-      allow(PDK::Module::Metadata).to receive(:from_file).with('metadata.json').and_return(mock_metadata)
+      allow(PDK::Module::Metadata).to receive(:from_file).with(module_path('metadata.json')).and_return(mock_metadata)
     end
   end
 
@@ -48,7 +53,7 @@ describe PDK::Module::Update do
   describe '#pinned_to_puppetlabs_template_tag?' do
     subject { instance.pinned_to_puppetlabs_template_tag? }
 
-    let(:instance) { described_class.new(options) }
+    let(:instance) { described_class.new(module_root, options) }
 
     include_context 'with mock metadata'
 
@@ -154,7 +159,7 @@ describe PDK::Module::Update do
   end
 
   describe '#run' do
-    let(:instance) { described_class.new(options) }
+    let(:instance) { described_class.new(module_root, options) }
     let(:template_ref) { '1.3.2-0-g1234567' }
     let(:changes) { true }
 
@@ -290,7 +295,7 @@ describe PDK::Module::Update do
   end
 
   describe '#module_metadata' do
-    subject(:result) { described_class.new(options).module_metadata }
+    subject(:result) { described_class.new(module_root, options).module_metadata }
 
     context 'when the metadata.json can be read' do
       include_context 'with mock metadata'
@@ -302,7 +307,7 @@ describe PDK::Module::Update do
 
     context 'when the metadata.json can not be read' do
       before(:each) do
-        allow(PDK::Module::Metadata).to receive(:from_file).with('metadata.json').and_raise(ArgumentError, 'some error')
+        allow(PDK::Module::Metadata).to receive(:from_file).with(module_path('metadata.json')).and_raise(ArgumentError, 'some error')
       end
 
       it 'raises an ExitWithError exception' do
@@ -312,7 +317,7 @@ describe PDK::Module::Update do
   end
 
   describe '#template_uri' do
-    subject { described_class.new(options).template_uri.to_s }
+    subject { described_class.new(module_root, options).template_uri.to_s }
 
     include_context 'with mock metadata'
 
@@ -322,7 +327,7 @@ describe PDK::Module::Update do
   end
 
   describe '#current_version' do
-    subject { described_class.new(options).current_version }
+    subject { described_class.new(module_root, options).current_version }
 
     include_context 'with mock metadata'
 
@@ -344,7 +349,7 @@ describe PDK::Module::Update do
   end
 
   describe '#new_version' do
-    subject { described_class.new(options).new_version }
+    subject { described_class.new(module_root, options).new_version }
 
     include_context 'with mock metadata'
 
@@ -376,7 +381,7 @@ describe PDK::Module::Update do
   end
 
   describe '#new_template_version' do
-    subject { described_class.new(options).new_template_version }
+    subject { described_class.new(module_root, options).new_template_version }
 
     include_context 'with mock metadata'
 
@@ -462,7 +467,7 @@ describe PDK::Module::Update do
   end
 
   describe '#convert?' do
-    subject { described_class.new.convert? }
+    subject { described_class.new(module_root).convert? }
 
     it { is_expected.to be_falsey }
   end

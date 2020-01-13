@@ -3,13 +3,16 @@ require 'pdk'
 module PDK
   module Module
     class Convert
-      def self.invoke(options)
-        new(options).run
+      def self.invoke(module_dir, options)
+        new(module_dir, options).run
       end
+
+      attr_reader :module_dir
 
       attr_reader :options
 
-      def initialize(options = {})
+      def initialize(module_dir, options = {})
+        @module_dir = module_dir
         @options = options
       end
 
@@ -94,7 +97,7 @@ module PDK
 
         test_gens = PDK::Util::PuppetStrings.all_objects.map do |generator, objects|
           (objects || []).map do |obj|
-            generator.new(Dir.pwd, obj['name'], spec_only: true)
+            generator.new(module_dir, obj['name'], spec_only: true)
           end
         end
 
@@ -114,7 +117,7 @@ module PDK
       def stage_changes!
         require 'pdk/util/filesystem'
 
-        metadata_path = 'metadata.json'
+        metadata_path = File.join(module_dir, 'metadata.json')
 
         PDK::Module::TemplateDir.with(template_uri, nil, true) do |templates|
           new_metadata = update_metadata(metadata_path, templates.metadata)
@@ -128,21 +131,22 @@ module PDK
             update_manager.add_file(metadata_path, new_metadata.to_json)
           end
 
-          templates.render do |file_path, file_content, file_status|
+          templates.render do |relative_file_path, file_content, file_status|
+            absolute_file_path = File.join(module_dir, relative_file_path)
             case file_status
             when :unmanage
-              PDK.logger.debug(_("skipping '%{path}'") % { path: file_path })
+              PDK.logger.debug(_("skipping '%{path}'") % { path: absolute_file_path })
             when :delete
-              update_manager.remove_file(file_path)
+              update_manager.remove_file(absolute_file_path)
             when :init
-              if convert? && !PDK::Util::Filesystem.exist?(file_path)
-                update_manager.add_file(file_path, file_content)
+              if convert? && !PDK::Util::Filesystem.exist?(absolute_file_path)
+                update_manager.add_file(absolute_file_path, file_content)
               end
             when :manage
-              if PDK::Util::Filesystem.exist?(file_path)
-                update_manager.modify_file(file_path, file_content)
+              if PDK::Util::Filesystem.exist?(absolute_file_path)
+                update_manager.modify_file(absolute_file_path, file_content)
               else
-                update_manager.add_file(file_path, file_content)
+                update_manager.add_file(absolute_file_path, file_content)
               end
             end
           end

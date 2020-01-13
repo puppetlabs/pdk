@@ -11,7 +11,6 @@ module PDK::CLI
       )
 
       defined_type_name = args[0]
-      module_dir = Dir.pwd
 
       if defined_type_name.nil? || defined_type_name.empty?
         puts command.help
@@ -26,7 +25,7 @@ module PDK::CLI
 
       require 'pdk/generate/defined_type'
 
-      PDK::Generate::DefinedType.new(module_dir, defined_type_name, opts).run
+      PDK::Generate::DefinedType.new(PDK::Util.module_root, defined_type_name, opts).run
     end
   end
 end

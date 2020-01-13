@@ -15,7 +15,6 @@ module PDK::CLI
       )
 
       task_name = args[0]
-      module_dir = Dir.pwd
 
       if task_name.nil? || task_name.empty?
         puts command.help
@@ -28,7 +27,7 @@ module PDK::CLI
 
       PDK::CLI::Util.analytics_screen_view('new_task', opts)
 
-      PDK::Generate::Task.new(module_dir, task_name, opts).run
+      PDK::Generate::Task.new(PDK::Util.module_root, task_name, opts).run
     end
   end
 end

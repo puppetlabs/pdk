@@ -11,6 +11,7 @@ describe 'PDK::CLI update' do
   let(:module_pdk_version) { PDK::VERSION }
   let(:pinned_to_tag) { false }
   let(:template_uri) { PDK::Util::TemplateURI.new("pdk-default##{current_version}") }
+  let(:module_root) { '/path/to/test/module' }
 
   context 'when not run from inside a module' do
     include_context 'run outside module'
@@ -30,7 +31,7 @@ describe 'PDK::CLI update' do
 
   context 'when run from inside a module' do
     before(:each) do
-      allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
+      allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
       allow(PDK::Util).to receive(:module_pdk_version).and_return(module_pdk_version)
     end
@@ -41,7 +42,7 @@ describe 'PDK::CLI update' do
       end
 
       it 'invokes the updater with no options' do
-        expect(PDK::Module::Update).to receive(:new) { |opts|
+        expect(PDK::Module::Update).to receive(:new) { |_, opts|
           expect(opts[:noop]).to be false if opts.key?(:noop)
           expect(opts[:force]).to be false if opts.key?(:false) # rubocop:disable Lint/BooleanSymbol
           expect(opts).not_to include(:'template-ref')
@@ -51,7 +52,7 @@ describe 'PDK::CLI update' do
       end
 
       it 'submits the command to analytics' do
-        allow(PDK::Module::Update).to receive(:new).with(anything).and_return(updater)
+        allow(PDK::Module::Update).to receive(:new).with(module_root, anything).and_return(updater)
 
         expect(analytics).to receive(:screen_view).with(
           'update',
@@ -67,7 +68,7 @@ describe 'PDK::CLI update' do
       end
 
       before(:each) do
-        allow(PDK::Module::Update).to receive(:new).with(any_args).and_return(updater)
+        allow(PDK::Module::Update).to receive(:new).with(module_root, any_args).and_return(updater)
         allow(updater).to receive(:run)
       end
 
@@ -84,12 +85,12 @@ describe 'PDK::CLI update' do
       end
 
       it 'passes the noop option through to the updater' do
-        expect(PDK::Module::Update).to receive(:new).with(hash_including(noop: true)).and_return(updater)
+        expect(PDK::Module::Update).to receive(:new).with(module_root, hash_including(noop: true)).and_return(updater)
         expect(updater).to receive(:run)
       end
 
       it 'submits the command to analytics' do
-        allow(PDK::Module::Update).to receive(:new).with(anything).and_return(updater)
+        allow(PDK::Module::Update).to receive(:new).with(module_root, anything).and_return(updater)
 
         expect(analytics).to receive(:screen_view).with(
           'update',
@@ -106,12 +107,12 @@ describe 'PDK::CLI update' do
       end
 
       it 'passes the force option through to the updater' do
-        expect(PDK::Module::Update).to receive(:new).with(hash_including(force: true)).and_return(updater)
+        expect(PDK::Module::Update).to receive(:new).with(module_root, hash_including(force: true)).and_return(updater)
         expect(updater).to receive(:run)
       end
 
       it 'submits the command to analytics' do
-        allow(PDK::Module::Update).to receive(:new).with(anything).and_return(updater)
+        allow(PDK::Module::Update).to receive(:new).with(module_root, anything).and_return(updater)
 
         expect(analytics).to receive(:screen_view).with(
           'update',
@@ -150,7 +151,7 @@ describe 'PDK::CLI update' do
 
       context 'and the --force flag has been passed' do
         it 'warns the user and then continues' do
-          allow(PDK::Module::Update).to receive(:new).with(hash_including(force: true)).and_return(updater)
+          allow(PDK::Module::Update).to receive(:new).with(module_root, hash_including(force: true)).and_return(updater)
           expect(logger).to receive(:warn).with(a_string_matching(%r{newer than your PDK version}i))
 
           PDK::CLI.run(%w[update --force])
@@ -161,7 +162,7 @@ describe 'PDK::CLI update' do
 
   context 'when run from inside an unconverted module' do
     before(:each) do
-      allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
+      allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(false)
     end
 

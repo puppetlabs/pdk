@@ -38,7 +38,7 @@ describe 'pdk convert', module_command: true do
     describe command("#{pdk_convert_base} --noop --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to have_no_output }
-      its(:stdout) { is_expected.to match(%r{-+files to be added-+\nmetadata\.json}mi) }
+      its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/metadata\.json}mi) }
     end
 
     describe file('convert_report.txt') do
@@ -67,7 +67,7 @@ describe 'pdk convert', module_command: true do
     describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to have_no_output }
-      its(:stdout) { is_expected.to match(%r{-+files to be added-+\nmetadata\.json}mi) }
+      its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/metadata\.json}mi) }
     end
 
     describe file('convert_report.txt') do
@@ -124,7 +124,7 @@ describe 'pdk convert', module_command: true do
     describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to have_no_output }
-      its(:stdout) { is_expected.to match(%r{-+files to be removed-+\n\.travis.yml}mi) }
+      its(:stdout) { is_expected.to match(%r{-+files to be removed-+\n.*/\.travis.yml}mi) }
     end
 
     describe file('.travis.yml') do
@@ -146,7 +146,7 @@ describe 'pdk convert', module_command: true do
     describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to have_no_output }
-      its(:stdout) { is_expected.to match(%r{-+files to be added-+\nREADME\.md}mi) }
+      its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/README\.md}mi) }
       describe file('README.md') do
         it { is_expected.to be_file }
       end

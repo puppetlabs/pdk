@@ -51,7 +51,7 @@ module PDK
       end
 
       def module_metadata
-        @module_metadata ||= PDK::Module::Metadata.from_file('metadata.json')
+        @module_metadata ||= PDK::Module::Metadata.from_file(File.join(module_dir, 'metadata.json'))
       rescue ArgumentError => e
         raise PDK::CLI::ExitWithError, e.message
       end

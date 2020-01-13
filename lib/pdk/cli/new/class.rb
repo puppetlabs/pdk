@@ -13,7 +13,6 @@ module PDK::CLI
       )
 
       class_name = args[0]
-      module_dir = Dir.pwd
 
       if class_name.nil? || class_name.empty?
         puts command.help
@@ -26,7 +25,7 @@ module PDK::CLI
 
       PDK::CLI::Util.analytics_screen_view('new_class', opts)
 
-      PDK::Generate::PuppetClass.new(module_dir, class_name, opts).run
+      PDK::Generate::PuppetClass.new(PDK::Util.module_root, class_name, opts).run
     end
   end
 end
