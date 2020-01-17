@@ -93,7 +93,6 @@ RSpec.shared_context :validators do
       PDK::Validate::YAMLValidator,
       PDK::Validate::PuppetValidator,
       PDK::Validate::RubyValidator,
-      PDK::Validate::TasksValidator,
     ]
   end
 end

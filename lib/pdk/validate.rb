@@ -39,9 +39,10 @@ module PDK
       autoload :RubyValidatorGroup, 'pdk/validate/ruby/ruby_validator_group'
     end
 
-    class Tasks
-      autoload :Name, 'pdk/validate/tasks/name'
-      autoload :MetadataLint, 'pdk/validate/tasks/metadata_lint'
+    module Tasks
+      autoload :TasksNameValidator, 'pdk/validate/tasks/tasks_name_validator'
+      autoload :TasksMetadataLintValidator, 'pdk/validate/tasks/tasks_metadata_lint_validator'
+      autoload :TasksValidatorGroup, 'pdk/validate/tasks/tasks_validator_group'
     end
 
     class YAML
@@ -54,7 +55,6 @@ module PDK
         YAMLValidator,
         PuppetValidator,
         RubyValidator,
-        TasksValidator,
       ].freeze
     end
 
