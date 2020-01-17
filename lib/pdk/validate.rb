@@ -34,6 +34,11 @@ module PDK
       autoload :PuppetValidatorGroup, 'pdk/validate/puppet/puppet_validator_group'
     end
 
+    module Ruby
+      autoload :RubyRubocopValidator, 'pdk/validate/ruby/ruby_rubocop_validator'
+      autoload :RubyValidatorGroup, 'pdk/validate/ruby/ruby_validator_group'
+    end
+
     class Tasks
       autoload :Name, 'pdk/validate/tasks/name'
       autoload :MetadataLint, 'pdk/validate/tasks/metadata_lint'
