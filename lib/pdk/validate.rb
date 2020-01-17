@@ -21,6 +21,12 @@ module PDK
     autoload :ValidatorGroup, 'pdk/validate/validator_group'
     autoload :YAMLValidator, 'pdk/validate/yaml_validator'
 
+    module Metadata
+      autoload :MetadataJSONLintValidator, 'pdk/validate/metadata/metadata_json_lint_validator'
+      autoload :MetadataSyntaxValidator, 'pdk/validate/metadata/metadata_syntax_validator'
+      autoload :MetadataValidatorGroup, 'pdk/validate/metadata/metadata_validator_group'
+    end
+
     class Tasks
       autoload :Name, 'pdk/validate/tasks/name'
       autoload :MetadataLint, 'pdk/validate/tasks/metadata_lint'
