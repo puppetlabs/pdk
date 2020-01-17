@@ -15,6 +15,7 @@ module PDK
     autoload :RubyValidator, 'pdk/validate/ruby_validator'
     autoload :TasksValidator, 'pdk/validate/tasks_validator'
     autoload :Validator, 'pdk/validate/validator'
+    autoload :ValidatorGroup, 'pdk/validate/validator_group'
     autoload :YAMLValidator, 'pdk/validate/yaml_validator'
 
     class Tasks
