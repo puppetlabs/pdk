@@ -233,7 +233,6 @@ describe PDK::Module::Release do
   end
 
   describe '#run_validations' do
-    let(:validator) { double(PDK::Validate::BaseValidator) } # rubocop:disable RSpec/VerifiedDoubles
     # Note that this test setup is quite fragile and indicates that the method
     # under test really needs to be refactored
 
@@ -244,17 +243,15 @@ describe PDK::Module::Release do
       allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev).and_return(nil)
       allow(PDK::Util::RubyVersion).to receive(:use).and_return(nil)
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!).and_return(nil)
-
-      allow(PDK::Validate).to receive(:validators).and_return([validator])
     end
 
     it 'calls the validators' do
-      expect(validator).to receive(:invoke).and_return(0)
+      expect(PDK::Validate).to receive(:invoke_validators_by_name).and_return(0)
       instance.run_validations({})
     end
 
     it 'raises when the validator returns a non-zero exit code' do
-      expect(validator).to receive(:invoke).and_return(1)
+      expect(PDK::Validate).to receive(:invoke_validators_by_name).and_return(1)
       expect { instance.run_validations({}) }.to raise_error(PDK::CLI::ExitWithError)
     end
   end

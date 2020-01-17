@@ -57,8 +57,9 @@ describe 'pdk validate tasks', module_command: true do
 
       describe command('pdk validate tasks') do
         its(:exit_status) { is_expected.not_to eq(0) }
+        # Note that these stderr tests are a little fragile due to execution order
         its(:stderr) { is_expected.to match(task_name_spinner) }
-        its(:stderr) { is_expected.not_to match(task_style_spinner) }
+        its(:stderr) { is_expected.to match(task_style_spinner) }
         its(:stdout) { is_expected.to match(%r{invalid task name}i) }
       end
     end

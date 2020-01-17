@@ -86,16 +86,6 @@ RSpec.configure do |c|
   c.root = File.dirname(__FILE__)
 end
 
-RSpec.shared_context :validators do
-  let(:validators) do
-    [
-      PDK::Validate::MetadataValidator,
-      PDK::Validate::PuppetValidator,
-      PDK::Validate::RubyValidator,
-    ]
-  end
-end
-
 # Add method to StringIO needed for TTY::TestPrompt to work on tty-prompt >=
 # 0.19 (see https://github.com/piotrmurach/tty-prompt/issues/104)
 class StringIO

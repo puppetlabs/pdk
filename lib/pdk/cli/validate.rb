@@ -26,13 +26,9 @@ module PDK::CLI
 
       require 'pdk/validate'
 
-      validator_names = PDK::Validate.validators.map { |v| v.name }
-      validators = PDK::Validate.validators
-      targets = []
-
       if opts[:list]
         PDK::CLI::Util.analytics_screen_view('validate', opts)
-        PDK.logger.info(_('Available validators: %{validator_names}') % { validator_names: validator_names.join(', ') })
+        PDK.logger.info(_('Available validators: %{validator_names}') % { validator_names: PDK::Validate.validator_names.join(', ') })
         exit 0
       end
 
@@ -45,23 +41,24 @@ module PDK::CLI
 
       PDK::CLI::Util.module_version_check
 
+      targets = []
+      validators_to_run = nil
       if args[0]
         # This may be a single validator, a list of validators, or a target.
         if Util::OptionValidator.comma_separated_list?(args[0])
           # This is a comma separated list. Treat each item as a validator.
-
           vals = Util::OptionNormalizer.comma_separated_list_to_array(args[0])
-          validators = PDK::Validate.validators.select { |v| vals.include?(v.name) }
+          validators_to_run = PDK::Validate.validator_names.select { |name| vals.include?(name) }
 
-          invalid = vals.reject { |v| validator_names.include?(v) }
-          invalid.each do |v|
-            PDK.logger.warn(_("Unknown validator '%{v}'. Available validators: %{validators}.") % { v: v, validators: validator_names.join(', ') })
+          vals.reject { |v| PDK::Validate.validator_names.include?(v) }
+              .each do |v|
+            PDK.logger.warn(_("Unknown validator '%{v}'. Available validators: %{validators}.") % { v: v, validators: PDK::Validate.validator_names.join(', ') })
           end
         else
           # This is a single item. Check if it's a known validator, or otherwise treat it as a target.
-          val = PDK::Validate.validators.find { |v| args[0] == v.name }
+          val = PDK::Validate.validator_names.find { |name| args[0] == name }
           if val
-            validators = [val]
+            validators_to_run = [val]
           else
             targets = [args[0]]
             # We now know that no validators were passed, so let the user know we're using all of them by default.
@@ -71,11 +68,12 @@ module PDK::CLI
       else
         PDK.logger.info(_('Running all available validators...'))
       end
+      validators_to_run = PDK::Validate.validator_names if validators_to_run.nil?
 
-      if validators == PDK::Validate.validators
+      if validators_to_run.sort == PDK::Validate.validator_names.sort
         PDK::CLI::Util.analytics_screen_view('validate', opts)
       else
-        PDK::CLI::Util.analytics_screen_view(['validate', validators.map(&:name).sort].flatten.join('_'), opts)
+        PDK::CLI::Util.analytics_screen_view(['validate', validators_to_run.sort].flatten.join('_'), opts)
       end
 
       # Subsequent arguments are targets.
@@ -104,25 +102,7 @@ module PDK::CLI
 
       PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
-      exit_code = 0
-      if opts[:parallel]
-        require 'pdk/cli/exec_group'
-
-        exec_group = PDK::CLI::ExecGroup.new(_('Validating module using %{num_of_threads} threads' % { num_of_threads: validators.count }), opts)
-
-        validators.each do |validator|
-          exec_group.register do
-            validator.invoke(report, options.merge(exec_group: exec_group))
-          end
-        end
-
-        exit_code = exec_group.exit_code
-      else
-        validators.each do |validator|
-          validator_exit_code = validator.invoke(report, options.dup)
-          exit_code = validator_exit_code if validator_exit_code != 0
-        end
-      end
+      exit_code, report = PDK::Validate.invoke_validators_by_name(validators_to_run, opts.fetch(:parallel, false), options)
 
       report_formats.each do |format|
         report.send(format[:method], format[:target])
