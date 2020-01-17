@@ -27,6 +27,13 @@ module PDK
       autoload :MetadataValidatorGroup, 'pdk/validate/metadata/metadata_validator_group'
     end
 
+    module Puppet
+      autoload :PuppetEPPValidator, 'pdk/validate/puppet/puppet_epp_validator'
+      autoload :PuppetLintValidator, 'pdk/validate/puppet/puppet_lint_validator'
+      autoload :PuppetSyntaxValidator, 'pdk/validate/puppet/puppet_syntax_validator'
+      autoload :PuppetValidatorGroup, 'pdk/validate/puppet/puppet_validator_group'
+    end
+
     class Tasks
       autoload :Name, 'pdk/validate/tasks/name'
       autoload :MetadataLint, 'pdk/validate/tasks/metadata_lint'
