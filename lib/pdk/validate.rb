@@ -45,14 +45,14 @@ module PDK
       autoload :TasksValidatorGroup, 'pdk/validate/tasks/tasks_validator_group'
     end
 
-    class YAML
-      autoload :Syntax, 'pdk/validate/yaml/syntax'
+    module YAML
+      autoload :YAMLSyntaxValidator, 'pdk/validate/yaml/yaml_syntax_validator'
+      autoload :YAMLValidatorGroup,  'pdk/validate/yaml/yaml_validator_group'
     end
 
     def self.validators
       @validators ||= [
         MetadataValidator,
-        YAMLValidator,
         PuppetValidator,
         RubyValidator,
       ].freeze
