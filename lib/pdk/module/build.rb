@@ -115,6 +115,8 @@ module PDK
         relative_path = Pathname.new(path).relative_path_from(Pathname.new(module_dir))
         dest_path = File.join(build_dir, relative_path)
 
+        validate_path_encoding!(relative_path.to_path)
+
         if PDK::Util::Filesystem.directory?(path)
           PDK::Util::Filesystem.mkdir_p(dest_path, mode: PDK::Util::Filesystem.stat(path).mode)
         elsif PDK::Util::Filesystem.symlink?(path)
@@ -209,6 +211,27 @@ module PDK
           "'%{path}' could not be split at a directory separator into two " \
           'parts, the first having a maximum length of 155 bytes and the ' \
           'second having a maximum length of 100 bytes.',
+        ) % { path: path }
+      end
+
+      # Checks if the path contains any non-ASCII characters.
+      #
+      # Java will throw an error when it encounters a path containing
+      # characters that are not supported by the hosts locale. In order to
+      # maximise compatibility we limit the paths to contain only ASCII
+      # characters, which should be part of any locale character set.
+      #
+      # @param path [String] the relative path to be added to the tar file.
+      #
+      # @raise [ArgumentError] if the path contains non-ASCII characters.
+      #
+      # @return [nil]
+      def validate_path_encoding!(path)
+        return unless path =~ %r{[^\x00-\x7F]}
+
+        raise ArgumentError, _(
+          "'%{path}' can only include ASCII characters in its path or " \
+          'filename in order to be compatible with a wide range of hosts.',
         ) % { path: path }
       end
 

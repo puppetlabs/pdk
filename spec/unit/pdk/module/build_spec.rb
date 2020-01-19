@@ -181,6 +181,29 @@ describe PDK::Module::Build do
       allow(instance).to receive(:release_name).and_return(release_name)
     end
 
+    context 'when the path contains non-ASCII characters' do
+      RSpec.shared_examples 'a failing path' do |relative_path|
+        let(:path) do
+          File.join(module_dir, relative_path).force_encoding(Encoding.find('filesystem')).encode('utf-8', invalid: :replace)
+        end
+
+        before(:each) do
+          allow(PDK::Util::Filesystem).to receive(:directory?).with(path).and_return(true)
+          allow(PDK::Util::Filesystem).to receive(:symlink?).with(path).and_return(false)
+          allow(PDK::Util::Filesystem).to receive(:cp).with(path, anything, anything).and_return(true)
+        end
+
+        it 'exits with an error' do
+          expect {
+            instance.stage_path(path)
+          }.to raise_error(PDK::CLI::ExitWithError, %r{can only include ASCII characters})
+        end
+      end
+
+      include_examples 'a failing path', "strange_unicode_\u{000100}"
+      include_examples 'a failing path', "\300\271to"
+    end
+
     context 'when the path is a directory' do
       before(:each) do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(true)
@@ -262,6 +285,26 @@ describe PDK::Module::Build do
         it 'raises an ArgumentError' do
           expect { instance.validate_ustar_path!(path) }.to raise_error(ArgumentError, err)
         end
+      end
+    end
+  end
+
+  describe '#validate_path_encoding!' do
+    subject(:instance) { described_class.new }
+
+    context 'when passed a path containing only ASCII characters' do
+      it 'does not raise an error' do
+        expect {
+          instance.validate_path_encoding!(File.join('path', 'to', 'file'))
+        }.not_to raise_error
+      end
+    end
+
+    context 'when passed a path containing non-ASCII characters' do
+      it 'raises an error' do
+        expect {
+          instance.validate_path_encoding!(File.join('path', "\330\271to", 'file'))
+        }.to raise_error(ArgumentError, %r{can only include ASCII characters})
       end
     end
   end
