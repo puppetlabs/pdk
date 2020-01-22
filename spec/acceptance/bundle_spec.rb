@@ -8,6 +8,7 @@ class IO
     loop do
       rs, = IO.select([self], [], [], 10)
 
+      next if rs.nil?
       next unless (r = rs[0])
 
       data = r.sysread(1024)
