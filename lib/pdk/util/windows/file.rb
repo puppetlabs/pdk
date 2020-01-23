@@ -44,6 +44,23 @@ module PDK::Util::Windows::File
   end
   module_function :get_short_pathname
 
+  # Wraps the call to get the short path name in Windows and swallows any errors.
+  #
+  # @api private
+  def safe_get_short_pathname(path)
+    # Note that the short path detection is not fool-proof.  For example if 8.3 filename creation is disabled
+    # there is no shortname to find. In that case it just returns the long name.
+    #
+    # Testing this is also not needed as it's just wrapping core Windows APIs
+    PDK::Util::Windows::File.get_short_pathname(path)
+  rescue RuntimeError => ex
+    # If there are any failures detecting the short path then log a warning and return the, possibly, long path
+    PDK.logger.warn(_("Failed to resolve the shortname of the path '%{path}': %{message}") %
+      { path: path, message: ex.message })
+    path
+  end
+  module_function :safe_get_short_pathname
+
   ffi_convention :stdcall
 
   # https://msdn.microsoft.com/en-us/library/windows/desktop/aa364980(v=vs.85).aspx

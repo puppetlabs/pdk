@@ -52,7 +52,14 @@ module PDK
         bundle_bin = Gem.win_platform? ? 'bundle.bat' : 'bundle'
         vendored_bin_path = File.join('private', 'ruby', PDK::Util::RubyVersion.active_ruby_version, 'bin', bundle_bin)
 
-        try_vendored_bin(vendored_bin_path, bundle_bin)
+        path = try_vendored_bin(vendored_bin_path, bundle_bin)
+        # If the fallback (bundle_bin) is returned then we know it can't be a short path as it's 'bundle.bat' (on Windows)
+        # Therefore just return early.
+        return path if path == bundle_bin
+
+        # Bundler is very sensitive to spaces in path names so on Windows use the ShortPath API
+        # to get a path that will probably not have spaces.
+        PDK::Util.on_windows? ? PDK::Util::Windows::File.safe_get_short_pathname(path) : path
       end
 
       def self.try_vendored_bin(vendored_bin_path, fallback)

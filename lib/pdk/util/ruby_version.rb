@@ -94,7 +94,10 @@ module PDK
         require 'pdk/util'
 
         if PDK::Util.package_install?
-          File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', ruby_version, 'bin')
+          # Bundler is very sensitive to spaces in path names so on Windows use the ShortPath API
+          # to get a path that will probably not have spaces.
+          pkg_base_dir = PDK::Util.on_windows? ? PDK::Util::Windows::File.safe_get_short_pathname(PDK::Util.pdk_package_basedir) : PDK::Util.pdk_package_basedir
+          File.join(pkg_base_dir, 'private', 'ruby', ruby_version, 'bin')
         else
           RbConfig::CONFIG['bindir']
         end
