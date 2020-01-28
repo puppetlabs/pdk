@@ -116,20 +116,7 @@ module PDK
       raise PDK::CLI::FatalError, _('Package basedir requested for non-package install.') unless package_install?
       require 'pdk/util/version'
 
-      dir = File.dirname(PDK::Util::Version.version_file)
-      return dir unless Gem.win_platform?
-
-      begin
-        # Note that the short path detection is not fool-proof.  For example if 8.3 filename creation is disabled
-        # there is no shortname to find. In that case it just returns the long name
-        short_path = PDK::Util::Windows::File.get_short_pathname(dir)
-      rescue RuntimeError => ex
-        # If there are any failures detecting the short path then log a warning and return the, possibly, long path
-        PDK.logger.warn(_("Failed to resolve the shortname of the PDK package directory '%{path}': %{message}") %
-          { path: dir, message: ex.message })
-        return dir
-      end
-      short_path
+      File.dirname(PDK::Util::Version.version_file)
     end
     module_function :pdk_package_basedir
 
