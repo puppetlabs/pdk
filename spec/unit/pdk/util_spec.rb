@@ -225,12 +225,6 @@ describe PDK::Util do
     end
 
     context 'when the PDK was installed from a native package', version_file: true do
-      # Note that on Windows, this is not testing the ShortPath conversion as the
-      # path is mocked and the ShortPath API call requires a real on-disk file.  This test
-      # succeeds because if there is an error in the ShortPath detection, it just uses the
-      # long path instead.
-      #
-      # This functionality is exercised properly in the package-testing (acceptance tests)
       it 'returns the directory where the version file is located' do
         is_expected.to eq(File.dirname(version_file))
       end
