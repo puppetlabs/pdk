@@ -28,7 +28,7 @@ matrix:
       env: CHECK=spec:coverage
     - rvm: 2.4.3
       env: CHECK=license_finder
-      bundler_args: "" # license_finder requires all gems installed
+      bundler_args: "--with development" # license_finder requires all gems installed. Also can't use an empty string so just include any bundler group
     - rvm: 2.5
       env: CHECK=spec
     - rvm: 2.3
