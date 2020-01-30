@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'concurrent/configuration'
 require 'concurrent/future'
-require 'facter'
+require 'facter-ng'
 require 'pdk/analytics/util'
 
 describe PDK::Analytics::Util do

@@ -8,7 +8,7 @@ module PDK
         require 'concurrent/future'
 
         Concurrent::Future.execute(executor: :io) do
-          require 'facter'
+          require 'facter-ng'
           os = Facter.value('os')
 
           os.nil? ? 'unknown' : "#{os['name']} #{os.fetch('release', {}).fetch('major', '')}".strip
