@@ -301,6 +301,59 @@ describe PDK::Util do
     end
   end
 
+  describe '.system_configdir' do
+    subject { described_class.system_configdir }
+
+    let(:program_data) { 'C:/mock_program_data' }
+    let(:windows_path) { File.join(program_data, 'PuppetLabs', 'PDK') }
+
+    before(:each) do
+      # Reset memoize values
+      described_class.instance_variable_set(:@system_configdir, nil)
+    end
+
+    context 'when running on Windows' do
+      before(:each) do
+        allow(Gem).to receive(:win_platform?).and_return(true)
+      end
+
+      context 'when ProgramData environment variable exists' do
+        before(:each) do
+          # ProgramData was added in Windows Vista
+          allow(PDK::Util::Env).to receive(:[]).with('ProgramData').and_return(program_data)
+          allow(PDK::Util::Env).to receive(:[]).with('AllUsersProfile').and_return(nil)
+        end
+
+        it 'returns a path in the Program Data directory' do
+          is_expected.to eq(windows_path)
+        end
+      end
+
+      context 'when AllUsersProfile environment variable exists' do
+        before(:each) do
+          # AllUsersProfile was added in Windows 2000
+          allow(PDK::Util::Env).to receive(:[]).with('ProgramData').and_return(nil)
+          allow(PDK::Util::Env).to receive(:[]).with('AllUsersProfile').and_return(program_data)
+        end
+
+        it 'returns a path in the Program Data directory' do
+          is_expected.to eq(windows_path)
+        end
+      end
+    end
+
+    context 'when running on a POSIX host' do
+      before(:each) do
+        allow(Gem).to receive(:win_platform?).and_return(false)
+        allow(Dir).to receive(:home).and_return('/home/test')
+      end
+
+      it 'returns a path inside the system opt directory' do
+        is_expected.to eq(File.join('opt', 'puppetlabs', 'pdk', 'config'))
+      end
+    end
+  end
+
   describe '.module_fixtures_dir' do
     subject { described_class.module_fixtures_dir }
 

@@ -11,7 +11,27 @@ module PDK
     autoload :Validator, 'pdk/config/validator'
     autoload :YAML, 'pdk/config/yaml'
 
+    # The user configuration settings.
+    # @deprecated This method is only provided as a courtesy until the `pdk set config` CLI and associated changes in this class, are completed.
+    #             Any read-only operations should be using `.get` or `.get_within_scopes`
+    # @return [PDK::Config::Namespace]
     def user
+      user_config
+    end
+
+    # The system level configuration settings.
+    # @return [PDK::Config::Namespace]
+    # @api private
+    def system_config
+      @system ||= PDK::Config::JSON.new('system', file: PDK::Config.system_config_path) do
+        mount :module_defaults, PDK::Config::JSON.new(file: PDK::Config.system_answers_path)
+      end
+    end
+
+    # The user level configuration settings.
+    # @return [PDK::Config::Namespace]
+    # @api private
+    def user_config
       @user ||= PDK::Config::JSON.new('user', file: PDK::Config.user_config_path) do
         mount :module_defaults, PDK::Config::JSON.new(file: PDK.answers.answer_file_path)
 
@@ -43,7 +63,51 @@ module PDK
     # @param filter [String] Only resolve setting names which match the filter. See PDK::Config::Namespace.be_resolved? for matching rules
     # @return [Hash{String => Object}] All resolved settings for example {'user.module_defaults.author' => 'johndoe'}
     def resolve(filter = nil)
-      user.resolve(filter)
+      system_config.resolve(filter).merge(user_config.resolve(filter))
+    end
+
+    # Returns a configuration setting by name. This name can either be a String, Array or parameters e.g. These are equivalent
+    # - PDK.config.get('user.a.b.c')
+    # - PDK.config.get(['user', 'a', 'b', 'c'])
+    # - PDK.config.get('user', 'a', 'b', 'c')
+    # @return [PDK::Config::Namespace, Object, nil] The value of the configuration setting. Returns nil if it does no exist
+    def get(root, *keys)
+      return nil if root.nil? || root.empty?
+
+      if keys.empty?
+        if root.is_a?(Array)
+          name = root
+        elsif root.is_a?(String)
+          name = split_key_string(root)
+        else
+          return nil
+        end
+      else
+        name = [root].concat(keys)
+      end
+
+      get_within_scopes(name[1..-1], [name[0]])
+    end
+
+    # Returns a configuration setting by name, using scope precedence rules. If no scopes are passed, then all scopes are queried using the default precedence rules
+    # @setting_name [String, Array[String]] The setting name to retrieve without the leading scope name e.g. Use 'setting' instead of 'system.setting'
+    # @scopes [Nil, Array[String]] The list of scopes, in order, to query in turn for the setting_name. Invalid or missing scopes are ignored.
+    # @return [PDK::Config::Namespace, Object, nil] The value of the configuration setting. Returns nil if it does no exist
+    def get_within_scopes(setting_name, scopes = nil)
+      raise ArgumentError, _('Expected an Array but got \'%{klass}\' for scopes') % { klass: scopes.class } unless scopes.nil? || scopes.is_a?(Array)
+      raise ArgumentError, _('Expected an Array or String but got \'%{klass}\' for setting_name') % { klass: setting_name.class } unless setting_name.is_a?(Array) || setting_name.is_a?(String)
+
+      setting_arr = setting_name.is_a?(String) ? split_key_string(setting_name) : setting_name
+      all_scope_names = all_scopes.keys
+
+      # Use only valid scope names
+      scopes = scopes.nil? ? all_scope_names : scopes & all_scope_names
+
+      scopes.each do |scope_name|
+        value = traverse_object(send(all_scopes[scope_name]), *setting_arr)
+        return value unless value.nil?
+      end
+      nil
     end
 
     def self.bolt_analytics_config
@@ -63,6 +127,14 @@ module PDK
 
     def self.user_config_path
       File.join(PDK::Util.configdir, 'user_config.json')
+    end
+
+    def self.system_config_path
+      File.join(PDK::Util.system_configdir, 'system_config.json')
+    end
+
+    def self.system_answers_path
+      File.join(PDK::Util.system_configdir, 'answers.json')
     end
 
     def self.json_schemas_path
@@ -123,5 +195,45 @@ module PDK
 
       PDK.logger.info(text: post_message, wrap: true)
     end
+
+    private
+
+    #:nocov: This is a private method and is tested elsewhere
+    def traverse_object(object, *names)
+      return nil if object.nil? || !object.respond_to?(:[])
+      return nil if names.nil? || names.empty?
+
+      name = names.shift
+      if names.empty?
+        # We're at the end of the traversal
+        object[name]
+      else
+        traverse_object(object[name], *names)
+      end
+    end
+    #:nocov:
+
+    #:nocov: This is a private method and is tested elsewhere
+    # Takes a string representation of a setting and splits into its constituent setting parts e.g.
+    # 'user.a.b.c' becomes ['user', 'a', 'b', 'c']
+    # @return [Array[String]] The string split into each setting name as an array
+    def split_key_string(key)
+      raise ArgumentError, _('Expected a String but got \'%{klass}\'') % { klass: key.class } unless key.is_a?(String)
+      key.split('.')
+    end
+    #:nocov:
+
+    #:nocov:
+    # Returns all known scope names and their associated method name to call, to query the scope
+    # Note - Order is important. This dictates the resolution precedence order (topmost is processed first)
+    # @return [Hash[String, Symbol]] A hash of the scope name then method name to call to query the scope (as a Symbol)
+    def all_scopes
+      # Note - Order is important. This dictates the resolution precedence order (topmost is processed first)
+      {
+        'user'   => :user_config,
+        'system' => :system_config,
+      }.freeze
+    end
+    #:nocov:
   end
 end
