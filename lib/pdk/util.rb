@@ -146,6 +146,15 @@ module PDK
     end
     module_function :configdir
 
+    def system_configdir
+      return @system_configdir unless @system_configdir.nil?
+      return @system_configdir = File.join('opt', 'puppetlabs', 'pdk', 'config') unless Gem.win_platform?
+
+      return @system_configdir = File.join(PDK::Util::Env['ProgramData'], 'PuppetLabs', 'PDK') unless PDK::Util::Env['ProgramData'].nil?
+      @system_configdir = File.join(PDK::Util::Env['AllUsersProfile'], 'PuppetLabs', 'PDK')
+    end
+    module_function :system_configdir
+
     # Returns path to the root of the module being worked on.
     #
     # @return [String, nil] Fully qualified base path to module, or nil if

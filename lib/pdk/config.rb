@@ -11,7 +11,27 @@ module PDK
     autoload :Validator, 'pdk/config/validator'
     autoload :YAML, 'pdk/config/yaml'
 
+    # The user configuration settings.
+    # @deprecated This method is only provided as a courtesy until the `pdk set config` CLI and associated changes in this class, are completed.
+    #             Any read-only operations should be using `.get` or `.pdk_setting`
+    # @return [PDK::Config::Namespace]
     def user
+      user_config
+    end
+
+    # The system level configuration settings.
+    # @return [PDK::Config::Namespace]
+    # @api private
+    def system_config
+      @system ||= PDK::Config::JSON.new('system', file: PDK::Config.system_config_path) do
+        mount :module_defaults, PDK::Config::JSON.new(file: PDK::Config.system_answers_path)
+      end
+    end
+
+    # The user level configuration settings.
+    # @return [PDK::Config::Namespace]
+    # @api private
+    def user_config
       @user ||= PDK::Config::JSON.new('user', file: PDK::Config.user_config_path) do
         mount :module_defaults, PDK::Config::JSON.new(file: PDK.answers.answer_file_path)
 
@@ -43,7 +63,26 @@ module PDK
     # @param filter [String] Only resolve setting names which match the filter. See PDK::Config::Namespace.be_resolved? for matching rules
     # @return [Hash{String => Object}] All resolved settings for example {'user.module_defaults.author' => 'johndoe'}
     def resolve(filter = nil)
-      user.resolve(filter)
+      system_config.resolve(filter).merge(user_config.resolve(filter))
+    end
+
+    def get(*name)
+      return nil if name.nil? || !name.is_a?(Array) || name.empty?
+      case name[0]
+      when 'user'
+        traverse_object(user_config, *name[1..-1])
+      when 'system'
+        traverse_object(system_config, *name[1..-1])
+      else
+        nil
+      end
+    end
+
+    # Gets a named setting using precedence from the user and system levels
+    # Note that name must NOT include user or system prefix
+    def pdk_setting(*name)
+      value = get(*['user'].concat(name))
+      value.nil? ? get(*['system'].concat(name)) : value
     end
 
     def self.bolt_analytics_config
@@ -63,6 +102,14 @@ module PDK
 
     def self.user_config_path
       File.join(PDK::Util.configdir, 'user_config.json')
+    end
+
+    def self.system_config_path
+      File.join(PDK::Util.system_configdir, 'system_config.json')
+    end
+
+    def self.system_answers_path
+      File.join(PDK::Util.system_configdir, 'answers.json')
     end
 
     def self.json_schemas_path
@@ -123,5 +170,22 @@ module PDK
 
       PDK.logger.info(text: post_message, wrap: true)
     end
+
+    private
+
+    #:nocov: This is a private method and is tested elsewhere
+    def traverse_object(object, *names)
+      return nil if object.nil? || !object.respond_to?(:[])
+      return nil if names.nil? || names.empty?
+
+      name = names.shift
+      if names.empty?
+        # We're at the end of the traversal
+        object[name]
+      else
+        traverse_object(object[name], *names)
+      end
+    end
+    #:nocov:
   end
 end
