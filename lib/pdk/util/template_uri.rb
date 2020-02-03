@@ -94,6 +94,10 @@ module PDK
         bare_uri == PDK::Util::TemplateURI.bare_uri(PDK::Util::TemplateURI.default_template_addressable_uri)
       end
 
+      def default_ref?
+        uri_fragment == self.class.default_template_ref(self)
+      end
+
       def puppetlabs_template?
         self.class.packaged_template?(bare_uri) || bare_uri == PDK_TEMPLATE_URL
       end
