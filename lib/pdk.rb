@@ -30,35 +30,22 @@ module PDK
     autoload :Unit, 'pdk/tests/unit'
   end
 
-  # Singleton accessor to the current answer file being used by the PDK.
-  #
-  # @return [PDK::AnswerFile] The AnswerFile instance currently being used by
-  #   the PDK.
-  def self.answers
-    @answer_file ||= PDK::AnswerFile.new
-  end
-
-  # Specify the path to a custom answer file that the PDK should use.
-  #
-  # @param path [String] A path on disk to the file where the PDK should store
-  #   answers to interactive questions.
-  def self.answer_file=(path)
-    @answer_file = PDK::AnswerFile.new(path)
-  end
-
   def self.logger
     @logger ||= PDK::Logger.new
   end
 
   def self.config
-    @config ||= PDK::Config.new
+    return @config unless @config.nil?
+    options = {}
+    options['user.module_defaults.path'] = PDK::Util::Env['PDK_ANSWER_FILE'] unless PDK::Util::Env['PDK_ANSWER_FILE'].nil?
+    @config = PDK::Config.new(options)
   end
 
   def self.analytics
     @analytics ||= PDK::Analytics.build_client(
       logger:        PDK.logger,
-      disabled:      PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK.config.user['analytics']['disabled'],
-      user_id:       PDK.config.user['analytics']['user-id'],
+      disabled:      PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK.config.pdk_setting('analytics', 'disabled'),
+      user_id:       PDK.config.pdk_setting('analytics', 'user-id'),
       app_id:        "UA-139917834-#{PDK::Util.development_mode? ? '2' : '1'}",
       client:        :google_analytics,
       app_name:      'pdk',

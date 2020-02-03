@@ -2,7 +2,9 @@ require 'spec_helper_acceptance'
 
 describe 'Specifying a template-ref' do
   after(:all) do
-    Dir.chdir('..')
+    # We may or may not be in the foo module directory.  If we are, go back one directory.
+    # This can happen if you only run a subset of tests in this file.
+    Dir.chdir('..') if Dir.pwd.end_with?('foo')
     FileUtils.rm_rf('foo')
     FileUtils.rm('foo_answers.json')
   end
@@ -12,9 +14,17 @@ describe 'Specifying a template-ref' do
       'pdk', 'new', 'module', 'foo',
       '--skip-interview',
       '--template-url', 'https://github.com/puppetlabs/pdk-templates',
-      '--template-ref', '1.7.0',
-      '--answer-file', 'foo_answers.json'
+      '--template-ref', '1.7.0'
     ]
+
+    before(:each) do
+      @old_answer_file = ENV['PDK_ANSWER_FILE']
+      ENV['PDK_ANSWER_FILE'] = 'foo_answers.json'
+    end
+
+    after(:each) do
+      ENV['PDK_ANSWER_FILE'] = @old_answer_file # rubocop:disable RSpec/InstanceVariable This is fine.
+    end
 
     describe command(create_cmd.join(' ')) do
       its(:exit_status) { is_expected.to eq(0) }

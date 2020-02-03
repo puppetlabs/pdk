@@ -2,8 +2,14 @@ require 'spec_helper'
 require 'pdk/cli'
 
 describe 'PDK::CLI convert' do
+  include_context 'mock configuration'
+
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk convert}m) }
   let(:module_root) { '/path/to/test/module' }
+
+  before(:each) do
+    allow(PDK::Util).to receive(:package_install?).and_return(false)
+  end
 
   context 'when not run from inside a module' do
     include_context 'run outside module'
@@ -214,12 +220,7 @@ describe 'PDK::CLI convert' do
     end
 
     context 'and the --default-template flag has been passed' do
-      let(:answers) { instance_double(PDK::AnswerFile, update!: true) }
       let(:args) { ['convert', '--default-template'] }
-
-      before(:each) do
-        allow(PDK).to receive(:answers).and_return(answers)
-      end
 
       context 'with the --template-url option' do
         let(:args) { super() + ['--template-url', 'https://some/template'] }
@@ -239,17 +240,19 @@ describe 'PDK::CLI convert' do
       end
 
       context 'without the --template-url option' do
-        after(:each) { PDK::CLI.run(args) }
+        subject(:run) { PDK::CLI.run(args) }
 
         it 'converts the module to the default template' do
           expected_template = PDK::Util::TemplateURI.default_template_addressable_uri.to_s
 
           expect(PDK::Module::Convert).to receive(:invoke)
             .with(module_root, hash_including(:'template-url' => expected_template))
+          run
         end
 
         it 'clears the saved template-url answer' do
-          expect(answers).to receive(:update!).with('template-url' => nil)
+          run
+          expect(PDK.config.user['module_defaults']['template-url']).to be_nil
         end
 
         it 'submits the command to analytics' do
@@ -259,6 +262,7 @@ describe 'PDK::CLI convert' do
             output_format: 'default',
             ruby_version:  RUBY_VERSION,
           )
+          run
         end
       end
     end

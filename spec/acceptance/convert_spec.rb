@@ -156,17 +156,28 @@ describe 'pdk convert', module_command: true do
   context 'when converting to the default template' do
     include_context 'in a new module', 'non_default_template'
 
-    answer_file = File.join('..', 'non_default_template_answers.json')
+    before(:each) do
+      @old_answer_file = ENV['PDK_ANSWER_FILE']
+      ENV['PDK_ANSWER_FILE'] = File.expand_path(File.join('..', 'non_default_template_answers.json'))
+    end
 
-    describe command("pdk convert --default-template --force --answer-file #{answer_file}") do
+    after(:each) do
+      ENV['PDK_ANSWER_FILE'] = @old_answer_file # rubocop:disable RSpec/InstanceVariable This is fine.
+    end
+
+    describe command('pdk convert --default-template --force') do
       its(:exit_status) { is_expected.to eq(0) }
 
+      # Note - The following file(...) tests can not be run in isolation and require the above
+      # `its(:exit_status)` to have run first.
       describe file('metadata.json') do
         its(:content_as_json) { is_expected.to include('template-url' => "#{template_repo}#master") }
       end
 
-      describe file(answer_file) do
-        its(:content_as_json) { is_expected.to include('template-url' => nil) }
+      describe file(File.join('..', 'non_default_template_answers.json')) do
+        it 'has a nil template-url' do
+          expect(subject.content_as_json['template-url']).to be_nil # rubocop:disable RSpec/NamedSubject We can't use named subjects here
+        end
       end
     end
   end

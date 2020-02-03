@@ -218,10 +218,11 @@ module PDK
                        else
                          nil
                        end
-        answers_uri = if [PACKAGED_TEMPLATE_KEYWORD, DEPRECATED_TEMPLATE_URL].include?(PDK.answers['template-url'])
+        default_template_url = PDK.config.pdk_setting('module_defaults', 'template-url')
+        answers_uri = if [PACKAGED_TEMPLATE_KEYWORD, DEPRECATED_TEMPLATE_URL].include?(default_template_url)
                         Addressable::URI.parse(default_template_uri)
-                      elsif PDK.answers['template-url']
-                        new(uri_safe(PDK.answers['template-url'])).uri
+                      elsif default_template_url
+                        new(uri_safe(default_template_url)).uri
                       else
                         nil
                       end

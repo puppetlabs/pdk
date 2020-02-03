@@ -11,6 +11,24 @@ module PDK
     autoload :Validator, 'pdk/config/validator'
     autoload :YAML, 'pdk/config/yaml'
 
+    # Create a new instance of the PDK Configuration
+    # @param options [Hash[String => String]] Optional hash to override configuration options
+    # @option options [String] 'system.path'                 Path to the system PDK configuration file
+    # @option options [String] 'system.module_defaults.path' Path to the system module answers PDK configuration file
+    # @option options [String] 'user.path'                   Path to the user PDK configuration file
+    # @option options [String] 'user.module_defaults.path'   Path to the user module answers PDK configuration file
+    # @option options [String] 'user.analytics.path'         Path to the user analytics PDK configuration file
+    def initialize(options = nil)
+      options = {} if options.nil?
+      @config_options = {
+        'system.path'                 => PDK::Config.system_config_path,
+        'system.module_defaults.path' => PDK::Config.system_answers_path,
+        'user.path'                   => PDK::Config.user_config_path,
+        'user.module_defaults.path'   => PDK::AnswerFile.default_answer_file_path,
+        'user.analytics.path'         => PDK::Config.analytics_config_path,
+      }.merge(options)
+    end
+
     # The user configuration settings.
     # @deprecated This method is only provided as a courtesy until the `pdk set config` CLI and associated changes in this class, are completed.
     #             Any read-only operations should be using `.get` or `.pdk_setting`
@@ -23,8 +41,9 @@ module PDK
     # @return [PDK::Config::Namespace]
     # @api private
     def system_config
-      @system ||= PDK::Config::JSON.new('system', file: PDK::Config.system_config_path) do
-        mount :module_defaults, PDK::Config::JSON.new(file: PDK::Config.system_answers_path)
+      local_options = @config_options
+      @system ||= PDK::Config::JSON.new('system', file: local_options['system.path']) do
+        mount :module_defaults, PDK::Config::JSON.new(file: local_options['system.module_defaults.path'])
       end
     end
 
@@ -32,15 +51,16 @@ module PDK
     # @return [PDK::Config::Namespace]
     # @api private
     def user_config
-      @user ||= PDK::Config::JSON.new('user', file: PDK::Config.user_config_path) do
-        mount :module_defaults, PDK::Config::JSON.new(file: PDK.answers.answer_file_path)
+      local_options = @config_options
+      @user ||= PDK::Config::JSON.new('user', file: local_options['user.path']) do
+        mount :module_defaults, PDK::Config::JSON.new(file: local_options['user.module_defaults.path'])
 
         # Due to the json-schema gem having issues with Windows based paths, and only supporting Draft 05 (or less) do
         # not use JSON validation yet.  Once PDK drops support for EOL rubies, we will be able to use the json_schemer gem
         # Which has much more modern support
         # Reference - https://github.com/puppetlabs/pdk/pull/777
         # Reference - https://tickets.puppetlabs.com/browse/PDK-1526
-        mount :analytics, PDK::Config::YAML.new(file: PDK::Config.analytics_config_path, persistent_defaults: true) do
+        mount :analytics, PDK::Config::YAML.new(file: local_options['user.analytics.path'], persistent_defaults: true) do
           setting :disabled do
             validate PDK::Config::Validator.boolean
             default_to { PDK::Config.bolt_analytics_config.fetch('disabled', true) }

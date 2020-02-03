@@ -6,11 +6,8 @@ require 'pdk/config'
 describe PDK::Config do
   subject(:config) { described_class.new }
 
-  let(:answer_file_content) { '{}' }
-  let(:user_config_content) { '{}' }
-  let(:system_config_content) { '{}' }
-  let(:analytics_config_content) { nil }
-  let(:bolt_analytics_content) { nil }
+  include_context 'mock configuration'
+
   let(:bolt_analytics_path) { '~/.puppetlabs/bolt/analytics.yaml' }
 
   def mock_file(path, content)
@@ -20,15 +17,8 @@ describe PDK::Config do
   end
 
   before(:each) do
-    allow(PDK::Util::Filesystem).to receive(:file?).with(anything).and_return(false)
     # Allow the JSON Schema documents to actually be read. Rspec matchers are LIFO
     allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original
-    allow(PDK::Util).to receive(:configdir).and_return(File.join('path', 'to', 'configdir'))
-    mock_file(PDK.answers.answer_file_path, answer_file_content)
-    mock_file(described_class.analytics_config_path, analytics_config_content)
-    mock_file(described_class.user_config_path, user_config_content)
-    mock_file(described_class.system_config_path, system_config_content)
-    mock_file(bolt_analytics_path, bolt_analytics_content) if bolt_analytics_content
   end
 
   describe '.system_config' do
