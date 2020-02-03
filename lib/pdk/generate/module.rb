@@ -46,6 +46,17 @@ module PDK
 
         template_uri = PDK::Util::TemplateURI.new(opts)
 
+        if template_uri.default? && template_uri.default_ref?
+          PDK.logger.info _('Using the default template-url and template-ref.')
+        else
+          PDK.logger.info _(
+            "Using the %{method} template-url and template-ref '%{template_uri}'." % {
+              method: opts.key?(:'template-url') ? _('specified') : _('saved'),
+              template_uri: template_uri.metadata_format,
+            },
+          )
+        end
+
         begin
           PDK::Module::TemplateDir.with(template_uri, metadata.data, true) do |templates|
             templates.render do |file_path, file_content, file_status|
@@ -67,7 +78,7 @@ module PDK
 
         # Only update the answers files after metadata has been written.
         require 'pdk/answer_file'
-        if template_uri.default?
+        if template_uri.default? && template_uri.default_ref?
           # If the user specifies our default template url via the command
           # line, remove the saved template-url answer so that the template_uri
           # resolution can find new default URLs in the future.
@@ -87,8 +98,13 @@ module PDK
               end
             end
 
-            PDK.logger.info _('Module \'%{name}\' generated at path \'%{path}\', from template \'%{url}\'.') % { name: opts[:module_name], path: target_dir, url: template_uri.bare_uri }
-            PDK.logger.info(_('In your module directory, add classes with the \'pdk new class\' command.'))
+            PDK.logger.info _("Module '%{name}' generated at path '%{path}'.") % {
+              name: opts[:module_name],
+              path: target_dir,
+            }
+            PDK.logger.info _(
+              "In your module directory, add classes with the 'pdk new class' command.",
+            )
           end
         rescue Errno::EACCES => e
           raise PDK::CLI::FatalError, _("Failed to move '%{source}' to '%{target}': %{message}") % {
