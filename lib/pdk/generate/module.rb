@@ -82,11 +82,11 @@ module PDK
           # If the user specifies our default template url via the command
           # line, remove the saved template-url answer so that the template_uri
           # resolution can find new default URLs in the future.
-          PDK.answers.update!('template-url' => nil) if opts.key?(:'template-url')
+          PDK.config.user['module_defaults']['template-url'] = nil if opts.key?(:'template-url')
         else
           # Save the template-url answers if the module was generated using a
           # template/reference other than ours.
-          PDK.answers.update!('template-url' => template_uri.metadata_format)
+          PDK.config.user['module_defaults']['template-url'] = template_uri.metadata_format
         end
 
         begin
@@ -135,13 +135,13 @@ module PDK
         require 'pdk/answer_file'
         require 'pdk/module/metadata'
 
-        opts[:username] = (opts[:username] || PDK.answers['forge_username'] || username_from_login).downcase
+        opts[:username] = (opts[:username] || PDK.config.get_within_scopes('module_defaults.forge_username') || username_from_login).downcase
 
         defaults = PDK::Module::Metadata::DEFAULTS.dup
 
         defaults['name'] = "#{opts[:username]}-#{opts[:module_name]}" unless opts[:module_name].nil?
-        defaults['author'] = PDK.answers['author'] unless PDK.answers['author'].nil?
-        defaults['license'] = PDK.answers['license'] unless PDK.answers['license'].nil?
+        defaults['author'] = PDK.config.get_within_scopes('module_defaults.author') unless PDK.config.get_within_scopes('module_defaults.author').nil?
+        defaults['license'] = PDK.config.get_within_scopes('module_defaults.license') unless PDK.config.get_within_scopes('module_defaults.license').nil?
         defaults['license'] = opts[:license] if opts.key?(:license)
 
         metadata = PDK::Module::Metadata.new(defaults)
@@ -342,13 +342,9 @@ module PDK
         end
 
         require 'pdk/answer_file'
-        PDK.answers.update!(
-          {
-            'forge_username' => opts[:username],
-            'author'         => answers['author'],
-            'license'        => answers['license'],
-          }.delete_if { |_key, value| value.nil? },
-        )
+        PDK.config.user['module_defaults']['forge_username'] = opts[:username] unless opts[:username].nil?
+        PDK.config.user['module_defaults']['author'] = answers['author'] unless answers['author'].nil?
+        PDK.config.user['module_defaults']['license'] = answers['license'] unless answers['license'].nil?
       end
     end
   end

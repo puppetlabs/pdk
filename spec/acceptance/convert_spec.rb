@@ -156,17 +156,30 @@ describe 'pdk convert', module_command: true do
   context 'when converting to the default template' do
     include_context 'in a new module', 'non_default_template'
 
-    answer_file = File.join('..', 'non_default_template_answers.json')
+    around(:each) do |example|
+      old_answer_file = ENV['PDK_ANSWER_FILE']
+      ENV['PDK_ANSWER_FILE'] = File.expand_path(File.join('..', 'non_default_template_answers.json'))
+      example.run
+      ENV['PDK_ANSWER_FILE'] = old_answer_file
+    end
 
-    describe command("pdk convert --default-template --force --answer-file #{answer_file}") do
+    describe command('pdk convert --default-template --force') do
       its(:exit_status) { is_expected.to eq(0) }
 
+      # Note - The following file(...) tests can not be run in isolation and require the above
+      # `its(:exit_status)` to have run first.
       describe file('metadata.json') do
         its(:content_as_json) { is_expected.to include('template-url' => "#{template_repo}#master") }
       end
 
-      describe file(answer_file) do
-        its(:content_as_json) { is_expected.to include('template-url' => nil) }
+      describe file(File.join('..', 'non_default_template_answers.json')) do
+        # Due to the serverspec file() resolving on the first pass, the file name will not be correct on the
+        # second pass. To get around this we use the subject(...) to resolve the filename correctly.
+        subject(:file_under_test) { file(File.join('..', 'non_default_template_answers.json')) }
+
+        it 'has a nil template-url' do
+          expect(file_under_test.content_as_json['template-url']).to be_nil
+        end
       end
     end
   end

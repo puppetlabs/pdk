@@ -8,10 +8,10 @@ shared_context 'in a new module' do |name, options = {}|
     argv = [
       'pdk', 'new', 'module', name,
       '--skip-interview',
-      '--template-url', template,
-      '--answer-file', File.join(Dir.pwd, "#{name}_answers.json")
+      '--template-url', template
     ]
-    output, status = Open3.capture2e(*argv)
+    env = { 'PDK_ANSWER_FILE' => File.join(Dir.pwd, "#{name}_answers.json") }
+    output, status = Open3.capture2e(env, *argv)
 
     raise "Failed to create test module:\n#{output}" unless status.success?
 
