@@ -283,7 +283,7 @@ module PDK
         return if filename.nil?
         return unless PDK::Util::Filesystem.file?(filename)
 
-        PDK::Util::Filesystem.read_file(file)
+        PDK::Util::Filesystem.read_file(filename)
       rescue Errno::ENOENT => e
         raise PDK::Config::LoadError, e.message
       rescue Errno::EACCES
