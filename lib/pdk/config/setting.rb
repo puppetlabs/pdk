@@ -46,8 +46,9 @@ module PDK
         [namespace.name, @name].join('.')
       end
 
-      def value # rubocop:disable Style/TrivialAccessors
-        @value
+      def value
+        # Duplicate arrays and hashes so that they are isolated from changes being made
+        (@value.is_a?(Hash) || @value.is_a?(Array)) ? @value.dup : @value
       end
 
       def value=(obj)

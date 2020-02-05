@@ -98,6 +98,8 @@ module PDK
         return nil if settings[key.to_s].nil?
         return settings[key.to_s].value unless settings[key.to_s].value.nil?
         default_value = settings[key.to_s].default
+        # Duplicate arrays and hashes so that they are isolated from changes being made
+        default_value = default_value.dup if default_value.is_a?(Hash) || default_value.is_a?(Array)
         return default_value if default_value.nil? || !@persistent_defaults
         # Persist the default value
         settings[key.to_s].value = default_value

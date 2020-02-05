@@ -179,11 +179,13 @@ module PDK
       return nil if names.nil? || names.empty?
 
       name = names.shift
+      value = object[name]
       if names.empty?
-        # We're at the end of the traversal
-        object[name]
+        return value if value.is_a?(PDK::Config::Namespace)
+        # Duplicate arrays and hashes so that they are isolated from changes being made
+        (value.is_a?(Hash) || value.is_a?(Array)) ? value.dup : value
       else
-        traverse_object(object[name], *names)
+        traverse_object(value, *names)
       end
     end
     #:nocov:

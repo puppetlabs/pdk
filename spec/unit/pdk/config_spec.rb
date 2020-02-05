@@ -91,6 +91,14 @@ describe PDK::Config do
       expect(config.get('system', 'setting', 'child', 'child_setting')).to eq('child_setting_value')
     end
 
+    it 'returns isolated objects' do
+      current_value = config.get('system', 'setting', 'child')
+      current_value['foo'] = 'bar'
+      expect(config.get('system', 'setting', 'child', 'child_setting')).to eq('child_setting_value')
+      # The setting in the current_value hash should not be present in config.get
+      expect(config.get('system', 'setting', 'child', 'foo')).to be_nil
+    end
+
     context 'given a setting name that does not exist' do
       let(:names) { %w[system setting missing_child child_setting] }
 
