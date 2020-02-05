@@ -283,5 +283,24 @@ module PDK
       nil
     end
     module_function :module_pdk_version
+
+    # Does a deep copy instead of a shallow copy of an object.
+    #
+    # @param object [Object] The object to duplicate
+    #
+    # @return [Object] duplicate of the original object
+    #   the current working dir does not appear to be within a module.
+    def deep_duplicate(object)
+      if object.is_a?(Array)
+        object.map { |item| deep_duplicate(item) }
+      elsif object.is_a?(Hash)
+        hash = object.dup
+        hash.each_pair { |key, value| hash[key] = deep_duplicate(value) }
+        hash
+      else
+        object
+      end
+    end
+    module_function :deep_duplicate
   end
 end

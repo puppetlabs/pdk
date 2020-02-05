@@ -62,6 +62,14 @@ describe PDK::Config::Namespace do
       expect(config[:missing]).to be_nil
     end
 
+    it 'returns isolated objects' do
+      config['foo'] = { 'setting' => 'value' }
+      expect(config['foo']).to eq('setting' => 'value')
+      current_value = config['foo']
+      current_value['wiz'] = 'should not change'
+      expect(config['foo']).to eq('setting' => 'value')
+    end
+
     context 'when persistent_defaults is true' do
       let(:config_options) { { persistent_defaults: true } }
 
@@ -143,6 +151,14 @@ describe PDK::Config::Namespace do
     it 'does not save values when using the default' do
       expect(config).not_to receive(:save_data)
       config.fetch(:missing, 'default')
+    end
+
+    it 'returns isolated objects' do
+      config['foo'] = { 'setting' => 'value' }
+      expect(config.fetch('foo', 'default')).to eq('setting' => 'value')
+      current_value = config.fetch('foo', 'default')
+      current_value['wiz'] = 'should not change'
+      expect(config.fetch('foo', 'default')).to eq('setting' => 'value')
     end
   end
 

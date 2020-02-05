@@ -97,7 +97,8 @@ module PDK
         # Check if it's a setting, otherwise nil
         return nil if settings[key.to_s].nil?
         return settings[key.to_s].value unless settings[key.to_s].value.nil?
-        default_value = settings[key.to_s].default
+        # Duplicate arrays and hashes so that they are isolated from changes being made
+        default_value = PDK::Util.deep_duplicate(settings[key.to_s].default)
         return default_value if default_value.nil? || !@persistent_defaults
         # Persist the default value
         settings[key.to_s].value = default_value

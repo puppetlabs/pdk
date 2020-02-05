@@ -599,4 +599,20 @@ describe PDK::Util do
       it { is_expected.to be_nil }
     end
   end
+
+  describe 'deep_duplicate' do
+    it 'deeply copies arrays' do
+      original = ['abc', 1, nil, ['foo', { 'bar' => 'baz' }], 1.0]
+      copy = described_class.deep_duplicate(original)
+
+      expect(copy).to eq(original)
+      expect(copy).not_to be(original)
+      # Nested arrays
+      expect(copy[3]).to eq(original[3])
+      expect(copy[3]).not_to be(original[3])
+      # Nested hashes
+      expect(copy[3][1]).to eq(original[3][1])
+      expect(copy[3][1]).not_to be(original[3][1])
+    end
+  end
 end
