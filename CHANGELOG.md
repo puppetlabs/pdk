@@ -4,6 +4,30 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.16.0](https://github.com/puppetlabs/pdk/tree/v1.16.0) (2020-02-05)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.15.0...v1.16.0)
+
+**Implemented enhancements:**
+
+- \(PDK-1545\) Include template-ref in module generation output [\#840](https://github.com/puppetlabs/pdk/pull/840) ([rodjek](https://github.com/rodjek))
+- \(PDK-1587\) Reject paths with non-ASCII characters when building [\#832](https://github.com/puppetlabs/pdk/pull/832) ([rodjek](https://github.com/rodjek))
+- \(PDK-1588\) Increase granularity of `pdk bundle` analytics [\#827](https://github.com/puppetlabs/pdk/pull/827) ([rodjek](https://github.com/rodjek))
+- \(PDK-1557\) Detect Control Repositories [\#826](https://github.com/puppetlabs/pdk/pull/826) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1556\) Use the module root when generating objects [\#824](https://github.com/puppetlabs/pdk/pull/824) ([glennsarti](https://github.com/glennsarti))
+
+**Fixed bugs:**
+
+- Puppetfile Resolver can't detect version of Puppet from PDK using Visual Studio Code [\#830](https://github.com/puppetlabs/pdk/issues/830)
+- Validate and Test failing on new module [\#811](https://github.com/puppetlabs/pdk/issues/811)
+
+**Merged pull requests:**
+
+- \(maint\) Fix license\_finder failures [\#837](https://github.com/puppetlabs/pdk/pull/837) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1590\) Remove Gemfile.lock before running bundle update [\#834](https://github.com/puppetlabs/pdk/pull/834) ([rodjek](https://github.com/rodjek))
+- \(maint\) Use case insensitive environment variable names on Windows [\#825](https://github.com/puppetlabs/pdk/pull/825) ([glennsarti](https://github.com/glennsarti))
+- \(maint\) Update methods for Bundler 2.x deprecations  [\#820](https://github.com/puppetlabs/pdk/pull/820) ([glennsarti](https://github.com/glennsarti))
+- \(MAINT\) Refactor how gem\_path to bundler is calculated [\#745](https://github.com/puppetlabs/pdk/pull/745) ([scotje](https://github.com/scotje))
+
 ## [v1.15.0](https://github.com/puppetlabs/pdk/tree/v1.15.0) (2019-12-13)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.14.1...v1.15.0)
 
