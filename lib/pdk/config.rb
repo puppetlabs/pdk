@@ -46,7 +46,7 @@ module PDK
     # @api private
     def system_config
       local_options = @config_options
-      @system ||= PDK::Config::JSON.new('system', file: local_options['system.path']) do
+      @system_config ||= PDK::Config::JSON.new('system', file: local_options['system.path']) do
         mount :module_defaults, PDK::Config::JSON.new(file: local_options['system.module_defaults.path'])
       end
     end
@@ -56,7 +56,7 @@ module PDK
     # @api private
     def user_config
       local_options = @config_options
-      @user ||= PDK::Config::JSON.new('user', file: local_options['user.path']) do
+      @user_config ||= PDK::Config::JSON.new('user', file: local_options['user.path']) do
         mount :module_defaults, PDK::Config::JSON.new(file: local_options['user.module_defaults.path'])
 
         # Due to the json-schema gem having issues with Windows based paths, and only supporting Draft 05 (or less) do
@@ -119,6 +119,8 @@ module PDK
     # - PDK.config.get('user.a.b.c')
     # - PDK.config.get(['user', 'a', 'b', 'c'])
     # - PDK.config.get('user', 'a', 'b', 'c')
+    # @param root [Array[String], String] The root setting name or the entire setting name as a single string
+    # @param keys [String] The child names of the setting
     # @return [PDK::Config::Namespace, Object, nil] The value of the configuration setting. Returns nil if it does no exist
     def get(root, *keys)
       return nil if root.nil? || root.empty?
@@ -167,6 +169,26 @@ module PDK
       raise ArgumentError, _('must be passed a block') unless block_given?
       value = get_within_scopes(setting_name, scopes)
       yield value unless value.nil?
+    end
+
+    # Sets a configuration setting by name. This name can either be a String or an Array
+    # - PDK.config.set('user.a.b.c', ...)
+    # - PDK.config.set(['user', 'a', 'b', 'c'], ...)
+    # @param key [String, Array[String]] The name of the configuration key to change
+    # @param value [Object] The value to set the configuration setting to
+    # @param options [Hash] Changes the behaviour of the setting process
+    # @option options [Boolean] :force Disables any munging or array processing, and sets the value as it is. Default is false
+    # @return [Object] The new value of the configuration setting
+    def set(key, value, options = {})
+      options = {
+        force: false,
+      }.merge(options)
+
+      names = key.is_a?(String) ? split_key_string(key) : key
+      raise ArgumentError, _('Invalid configuration names') if names.nil? || !names.is_a?(Array) || names.empty?
+      scope_name = names[0]
+      raise ArgumentError, _("Unknown configuration root '%{name}'") % { name: scope_name } if all_scopes[scope_name].nil?
+      deep_set_object(value, options[:force], send(all_scopes[scope_name]), *names[1..-1])
     end
 
     def self.bolt_analytics_config
@@ -260,7 +282,12 @@ module PDK
     #:nocov: This is a private method and is tested elsewhere
     def traverse_object(object, *names)
       return nil if object.nil? || !object.respond_to?(:[])
-      return nil if names.nil? || names.empty?
+      return nil if names.nil?
+      # It's possible to pass in empty names at the root traversal layer
+      # but this should _only_ happen at the root namespace level
+      if names.empty?
+        return (object.is_a?(PDK::Config::Namespace) ? object : nil)
+      end
 
       name = names.shift
       value = object[name]
@@ -295,6 +322,70 @@ module PDK
         'user'    => :user_config,
         'system'  => :system_config,
       }.freeze
+    end
+
+    #:nocov: This is a private method and is tested elsewhere
+    # Deeply traverses an object tree via `[]` and sets the last
+    # element to the value specified.
+    #
+    # Creating any missing parent hashes during the traversal
+    def deep_set_object(value, force, namespace, *names)
+      raise ArgumentError, _('Missing or invalid namespace') unless namespace.is_a?(PDK::Config::Namespace)
+      raise ArgumentError, _('Missing a name to set') if names.nil? || names.empty?
+
+      name = names.shift
+      current_value = namespace[name]
+
+      # If the next thing in the traversal chain is another namespace, set the value using that child namespace.
+      if current_value.is_a?(PDK::Config::Namespace)
+        return deep_set_object(value, force, current_value, *names)
+      end
+
+      # We're at the end of the name traversal
+      if names.empty?
+        if force || !current_value.is_a?(Array)
+          namespace[name] = value
+          return value
+        end
+
+        # Arrays are a special case if we're not forcing the value
+        namespace[name] = current_value << value unless current_value.include?(value)
+        return value
+      end
+
+      # Need to generate a deep hash using the current remaining names
+      # So given an origin *names of ['a', 'b', 'c', 'd'] and a value 'foo',
+      # we eventually want a hash of `{"b"=>{"c"=>{"d"=>"foo"}}}`
+      #
+      # The code above has already shifted the first element so we currently have
+      # name : 'a'
+      # names: ['b', 'c', 'd']
+      #
+      #
+      # First we need to pop off the last element ('d') in this case as we need to set that in the `reduce` call below
+      # So now we have:
+      # name : 'a'
+      # names: ['b', 'c']
+      # last_name : 'd'
+      last_name = names.pop
+      # Using reduce and an accumulator, we create the nested hash from the deepest value first. In this case the deepest value
+      # is the last_name, so the starting condition is {"d"=>"foo"}
+      # After the first iteration ('c'), the accumulator has {"c"=>{"d"=>"foo"}}}
+      # After the last iteration ('b'), the accumulator has {"b"=>{"c"=>{"d"=>"foo"}}}
+      hash_value = names.reverse.reduce(last_name => value) { |accumulator, item| { item => accumulator } }
+
+      # If the current value is nil, then it can't be a namespace or an existing value
+      # or
+      # If the current value is not a Hash and are forcing the change.
+      if current_value.nil? || (force && !current_value.is_a?(Hash))
+        namespace[name] = hash_value
+        return value
+      end
+
+      raise ArgumentError, _("Unable to set '%{key}' to '%{value}' as it is not a Hash") % { key: namespace.name + '.' + name, value: hash_value } unless current_value.is_a?(Hash)
+
+      namespace[name] = current_value.merge(hash_value)
+      value
     end
     #:nocov:
   end
