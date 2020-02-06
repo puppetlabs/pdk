@@ -82,6 +82,23 @@ describe PDK::Config do
       end
     end
 
+    context 'given different setting name types' do
+      it 'uses multiple parameters for the setting name' do
+        setting_name = %w[system setting child child_setting]
+        expect(config.get(*setting_name)).to eq('child_setting_value')
+      end
+
+      it 'uses an Array for the setting name' do
+        setting_name = %w[system setting child child_setting]
+        expect(config.get(setting_name)).to eq('child_setting_value')
+      end
+
+      it 'uses a String for the setting name' do
+        setting_name = 'system.setting.child.child_setting'
+        expect(config.get(setting_name)).to eq('child_setting_value')
+      end
+    end
+
     it 'traverses namespaces' do
       # The analytics is a child namespace of user
       expect(config.get('user', 'analytics', 'disabled')).to eq(true)

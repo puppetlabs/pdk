@@ -66,8 +66,26 @@ module PDK
       system_config.resolve(filter).merge(user_config.resolve(filter))
     end
 
-    def get(*name)
-      return nil if name.nil? || !name.is_a?(Array) || name.empty?
+    # Returns a configuration setting by name. This name can either be a String, Array or parameters e.g. These are equivalent
+    # - PDK.config.get('user.a.b.c')
+    # - PDK.config.get(['user', 'a', 'b', 'c'])
+    # - PDK.config.get('user', 'a', 'b', 'c')
+    # @return [PDK::Config::Namespace, Object, nil] The value of the configuration setting. Returns nil if it does no exist
+    def get(root, *keys)
+      return nil if root.nil? || root.empty?
+
+      if keys.empty?
+        if root.is_a?(Array)
+          name = root
+        elsif root.is_a?(String)
+          name = split_key_string(root)
+        else
+          return nil
+        end
+      else
+        name = [root].concat(keys)
+      end
+
       case name[0]
       when 'user'
         traverse_object(user_config, *name[1..-1])
@@ -81,8 +99,8 @@ module PDK
     # Gets a named setting using precedence from the user and system levels
     # Note that name must NOT include user or system prefix
     def pdk_setting(*name)
-      value = get(*['user'].concat(name))
-      value.nil? ? get(*['system'].concat(name)) : value
+      value = get(['user'].concat(name))
+      value.nil? ? get(['system'].concat(name)) : value
     end
 
     def self.bolt_analytics_config
@@ -187,6 +205,16 @@ module PDK
       else
         traverse_object(value, *names)
       end
+    end
+    #:nocov:
+
+    #:nocov: This is a private method and is tested elsewhere
+    # Takes a string representation of a setting and splits into its constituent setting parts e.g.
+    # 'user.a.b.c' becomes ['user', 'a', 'b', 'c']
+    # @return [Array[String]] The string split into each setting name as an array
+    def split_key_string(key)
+      raise ArgumentError, _('Expected a String but got \'%{klass}\'') % { klass: key.class } unless key.is_a?(String)
+      key.split('.')
     end
     #:nocov:
   end
