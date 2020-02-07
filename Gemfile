@@ -8,20 +8,29 @@ if RUBY_VERSION < '2.3.0'
   gem 'cri', '>= 2.10.1', '< 2.11.0'
   gem 'nokogiri', '1.7.2'
 else
-  gem 'nokogiri', '~> 1.10.4' # rubocop:disable Bundler/DuplicatedGem
+  gem 'nokogiri', '~> 1.10.4'
 end
 
 group :development do
   gem 'activesupport', '4.2.9'
   gem 'github_changelog_generator', '~> 1.14'
-  gem 'pry-byebug', '~> 3.4'
-  if RUBY_VERSION < '2.2.2'
+  if RUBY_VERSION < '2.2.0'
+    # pry-byebug >= 3.5.0 requires ruby 2.2.0 or newer
+    gem 'pry-byebug', '~> 3.4.0'
     # byebug >= 9.1.0 requires ruby 2.2.0 or newer
     gem 'byebug', '~> 9.0.6'
     # required for github_changelog_generator
     gem 'rack', '~> 1.0'
+  elsif RUBY_VERSION < '2.4.0'
+    # pry-byebug >= 3.8.0 requires ruby 2.4.0 or newer
+    gem 'pry-byebug', '~> 3.7.0'
+    # byebug >= 11.1.0 requires ruby 2.4.0 or newer
+    gem 'byebug', '~> 11.0.1'
+  else
+    gem 'pry-byebug', '~> 3.4'
   end
-  gem 'ruby-prof'
+  # ruby-prof >= 1.0 requires Ruby 2.4.0 or newer
+  gem 'ruby-prof' if RUBY_VERSION >= '2.4.0'
   gem 'yard'
 end
 
