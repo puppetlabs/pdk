@@ -149,6 +149,10 @@ Style/SymbolArray:
 Layout/EndOfLine:
   EnforcedStyle: lf
 
+# The duplicate gem detection in Gemfile is broken for if-else statements
+Bundler/DuplicatedGem:
+  Enabled: false
+
 PDK/FileFilePredicate:
   Exclude:
     - lib/pdk/util/filesystem.rb
