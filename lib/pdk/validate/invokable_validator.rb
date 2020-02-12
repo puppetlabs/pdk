@@ -2,6 +2,11 @@ require 'pdk'
 
 module PDK
   module Validate
+    # A base class for file based validators.
+    # This class provides base methods and helpers to help determine the file targets to validate against.
+    # Acutal validator implementation should inherit from other child abstract classes e.g. ExternalCommandValdiator
+    # @see PDK::Validate::Validator
+    # @abstract
     class InvokableValidator < Validator
       # Controls how many times the validator is invoked.
       #
@@ -14,14 +19,17 @@ module PDK
         :once
       end
 
-      # @return [Array[String], String] An array, or a string, of glob patterns to use to find targets
+      # An array, or a string, of glob patterns to use to find targets
+      # @return [Array[String], String]
       # @abstract
       def pattern; end
 
-      # @return [Array[String], String] An array, or a string, of glob patterns to use to ignore targets
+      # An array, or a string, of glob patterns to use to ignore targets
+      # @return [Array[String], String, Nil]
       # @abstract
       def pattern_ignore; end
 
+      # @see PDK::Validate::Validator.prepare_invoke!
       def prepare_invoke!
         return if @prepared
         super
@@ -90,16 +98,20 @@ module PDK
         [matched, skipped, invalid]
       end
 
+      # Whether the target parsing ignores "dotfiles" (e.g. .gitignore or .pdkignore) which are considered hidden files in POSIX
+      # @return [Boolean]
       # @abstract
       def ignore_dotfiles?
         true
       end
 
+      # @see PDK::Validate::Validator.spinner_text
       # @abstract
       def spinner_text
         _('Running %{name} validator ...') % { name: name }
       end
 
+      # @see PDK::Validate::Validator.spinner
       def spinner
         return nil unless spinners_enabled?
         return @spinner unless @spinner.nil?
@@ -108,6 +120,9 @@ module PDK
         @spinner = TTY::Spinner.new("[:spinner] #{spinner_text}", PDK::CLI::Util.spinner_opts_for_platform)
       end
 
+      # Process any targets that were skipped by the validator and add the events to the validation report
+      # @param report [PDK::Report] The report to add the events to
+      # @param skipped [Array[String]] The list of skipped targets
       def process_skipped(report, skipped = [])
         skipped.each do |skipped_target|
           PDK.logger.debug(_('%{validator}: Skipped \'%{target}\'. Target does not contain any files to validate (%{pattern}).') % { validator: name, target: skipped_target, pattern: pattern })
@@ -121,6 +136,9 @@ module PDK
         end
       end
 
+      # Process any targets that were invalid by the validator and add the events to the validation report
+      # @param report [PDK::Report] The report to add the events to
+      # @param invalid [Array[String]] The list of invalid targets
       def process_invalid(report, invalid = [])
         invalid.each do |invalid_target|
           PDK.logger.debug(_('%{validator}: Skipped \'%{target}\'. Target file not found.') % { validator: name, target: invalid_target })
@@ -147,6 +165,8 @@ module PDK
 
       private
 
+      # Helper method to collate the default ignored paths
+      # @return [PathSpec] Paths to ignore
       def ignore_pathspec
         require 'pdk/module'
 

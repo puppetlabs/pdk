@@ -34,7 +34,7 @@ describe PDK::CLI::Exec::Command do
         command.add_spinner('message')
       end
 
-      it { expect(command.instance_variable_get(:@spinner)).to be_a TTY::Spinner }
+      it { expect(command.spinner).to be_a TTY::Spinner }
     end
 
     context 'with --debug' do
@@ -43,7 +43,7 @@ describe PDK::CLI::Exec::Command do
         command.add_spinner('message')
       end
 
-      it { expect(command.instance_variable_get(:@spinner)).to be_nil }
+      it { expect(command.spinner).to be_nil }
     end
 
     context 'when run non-interactive' do
@@ -52,7 +52,7 @@ describe PDK::CLI::Exec::Command do
         command.add_spinner('message')
       end
 
-      it { expect(command.instance_variable_get(:@spinner)).to be_nil }
+      it { expect(command.spinner).to be_nil }
     end
   end
 
@@ -66,7 +66,7 @@ describe PDK::CLI::Exec::Command do
         command.register_spinner(spinner)
       end
 
-      it { expect(command.instance_variable_get(:@spinner)).to eq spinner }
+      it { expect(command.spinner).to eq spinner }
     end
 
     context 'with --debug' do
@@ -75,7 +75,7 @@ describe PDK::CLI::Exec::Command do
         command.register_spinner(spinner)
       end
 
-      it { expect(command.instance_variable_get(:@spinner)).to be_nil }
+      it { expect(command.spinner).to be_nil }
     end
 
     context 'when run non-interactive' do
@@ -84,7 +84,7 @@ describe PDK::CLI::Exec::Command do
         command.register_spinner(spinner)
       end
 
-      it { expect(command.instance_variable_get(:@spinner)).to be_nil }
+      it { expect(command.spinner).to be_nil }
     end
   end
 

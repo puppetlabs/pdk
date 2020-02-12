@@ -2,40 +2,100 @@ require 'pdk'
 
 module PDK
   module Validate
-    # A validator that runs external commands within a Ruby Bundled environment
+    # An abstract validator that runs external commands within a Ruby Bundled environment
     # e.g. `puppet-lint`, or `puppet validate`
+    #
+    # At a a minimum child classes should implment the `name`, `cmd`, `pattern` and `parse_output` methods
+    #
+    # An example concrete implementation could look like:
+    #
+    # module PDK
+    #   module Validate
+    #     module Ruby
+    #       class RubyRubocopValidator < ExternalCommandValidator
+    #         def name
+    #           'rubocop'
+    #         end
+    #
+    #         def cmd
+    #           'rubocop'
+    #         end
+    #
+    #         def pattern
+    #           '**/**.rb'
+    #         end
+    #
+    #         def parse_options(targets)
+    #           ['--format', 'json']
+    #         end
+    #
+    #         def parse_output(report, result, _targets)
+    #    ... ruby code ...
+    #           report.add_event(
+    #             line:     offense['location']['line'],
+    #             column:   offense['location']['column'],
+    #             message:  offense['message'],
+    #             severity: offense['corrected'] ? 'corrected' : offense['severity'],
+    #             test:     offense['cop_name'],
+    #             state:    :failure,
+    #           )
+    #         end
+    #       end
+    #     end
+    #   end
+    # end
+    #
     # @see PDK::Validate::InvokableValidator
     class ExternalCommandValidator < InvokableValidator
       # @return Array[PDK::CLI::Exec::Command] This is a private implementation attribute used for unit testing
       # @api private
       attr_reader :commands
 
+      # @see PDK::Validate::Validator.spinner
       def spinner
         # The validator has sub-commands with their own spinners.
         nil
       end
 
+      # Calculates the text of the spinner based on the target list
+      # @return [String]
       # @abstract
       def spinner_text_for_targets(targets); end
 
+      # The name of the command to be run for validation
+      # @return [String]
       # @abstract
       def cmd; end
 
+      # The full path to the command (cmd)
+      # Can be overridden in child classes to a non-default path
+      # @return [String]
       # @api private
       def cmd_path
         File.join(PDK::Util.module_root, 'bin', cmd)
       end
 
-      # @return Array[String] An array of command line arguments to pass to the command for validation
+      # An array of command line arguments to pass to the command for validation
+      # @return Array[String]
       # @abstract
       def parse_options(_targets)
         []
       end
 
+      # Parses the output from the command and appends formatted events to the report.
+      # This is called for each command, which is a group of targets
+      #
+      # @param report [PDK::Report] The report to add events to
+      # @param result [Hash[Symbol => Object]] The result of validation command process
+      # @param targets [Array[String]] The targets for this command result
       # @api private
+      # @see PDK::CLI::Exec::Command.execute!
       # @abstract
       def parse_output(_report, _result, _targets); end
 
+      # Prepares for invokation by parsing targets and creating the needed commands.
+      # @api private
+      # @see PDK::Validate::Validator.prepare_invoke!
       def prepare_invoke!
         return if @prepared
         super
@@ -85,6 +145,8 @@ module PDK
         nil
       end
 
+      # Invokes the prepared commands as an ExecGroup
+      # @see PDK::Validate::Validator.invoke
       def invoke(report)
         prepare_invoke!
 

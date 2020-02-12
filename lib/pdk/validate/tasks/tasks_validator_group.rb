@@ -9,7 +9,10 @@ module PDK
         end
 
         def validators
-          [TasksNameValidator, TasksMetadataLintValidator].freeze
+          [
+            TasksNameValidator,
+            TasksMetadataLintValidator,
+          ].freeze
         end
       end
     end

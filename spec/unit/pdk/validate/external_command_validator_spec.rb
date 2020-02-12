@@ -82,9 +82,7 @@ describe PDK::Validate::ExternalCommandValidator do
         validator.prepare_invoke!
 
         expect(validator.commands.count).to eq(1)
-        # TODO: This isn't the best, but spinners aren't surfaced in the class
-        spinner = validator.commands[0][:command].instance_variable_get(:@spinner)
-        expect(spinner).to be_nil
+        expect(validator.commands[0][:command].spinner).to be_nil
       end
     end
 

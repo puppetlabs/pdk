@@ -9,7 +9,11 @@ module PDK
         end
 
         def validators
-          [PuppetSyntaxValidator, PuppetLintValidator, PuppetEPPValidator].freeze
+          [
+            PuppetSyntaxValidator,
+            PuppetLintValidator,
+            PuppetEPPValidator,
+          ].freeze
         end
       end
     end

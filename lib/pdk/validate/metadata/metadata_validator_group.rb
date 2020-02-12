@@ -9,7 +9,10 @@ module PDK
         end
 
         def validators
-          [MetadataSyntaxValidator, MetadataJSONLintValidator].freeze
+          [
+            MetadataSyntaxValidator,
+            MetadataJSONLintValidator,
+          ].freeze
         end
       end
     end
