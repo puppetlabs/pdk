@@ -1,4 +1,7 @@
-sudo: false
+---
+os:
+  - linux
+dist: xenial
 language: ruby
 bundler_args: "--without development"
 script:
@@ -15,7 +18,7 @@ before_install:
       gem install bundler --no-document;
     fi
 cache: bundler
-matrix:
+jobs:
   include:
     - rvm: 2.4.3
       env: CHECK=rubocop
@@ -35,7 +38,10 @@ matrix:
       env: CHECK=spec
     - rvm: 2.1.9
       env: CHECK=spec BUNDLER_VERSION=1.17.3
-    - rvm: 2.4.3
+    # concurrent-ruby 1.1.6 has a strange thread timing issue under Ruby 2.4 and the
+    # spec/unit/pdk/analytics/util_spec.rb file. It doesn't occur on Appveyor (Windows)
+    # or the regular rspec under Ruby 2.4 testing. So just use Ruby 2.5 instead.
+    - rvm: 2.5
       env: CHECK=test_pdk_as_library
 branches:
   only:
