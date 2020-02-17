@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'pdk/validate/internal_ruby_validator'
 
 describe PDK::Validate::InternalRubyValidator do
-  let(:validator) { described_class.new(validator_options) }
+  let(:validator) { described_class.new(validator_context, validator_options) }
+  let(:validator_context) { nil }
   let(:validator_options) { {} }
   let(:targets) { [] }
   let(:skipped_targets) { [] }

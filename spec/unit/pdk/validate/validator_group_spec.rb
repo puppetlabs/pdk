@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'pdk/validate/validator_group'
 
 describe PDK::Validate::ValidatorGroup do
-  let(:validator_group) { described_class.new(validator_options) }
+  let(:validator_group) { described_class.new(validator_context, validator_options) }
+  let(:validator_context) { nil }
   let(:validator_options) { {} }
 
   describe '.spinner_text' do
@@ -129,6 +130,12 @@ describe PDK::Validate::ValidatorGroup do
     it 'returns instances of the classes in validators' do
       validator_group.validator_instances.each_with_index do |item, index|
         expect(item).to be_a(validator_group.validators[index])
+      end
+    end
+
+    it 'passes through the context' do
+      validator_group.validator_instances.each_with_index do |item, _|
+        expect(item.context).to be(validator_group.context)
       end
     end
 

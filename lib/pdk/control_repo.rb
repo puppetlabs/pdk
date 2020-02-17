@@ -4,6 +4,16 @@ module PDK
   module ControlRepo
     CONTROL_REPO_FILES = %w[environment.conf Puppetfile].freeze
 
+    DEFAULT_IGNORED = [
+      '/pkg/',
+      '~*',
+      '/coverage',
+      # Strictly speaking this isn't default but if people have tricked older PDK into thinking that a
+      # Control Repo is a module, they may have recursive symlinks in spec/fixtures/modules
+      '/spec/fixtures/modules/',
+      '/vendor/',
+    ].freeze
+
     # Returns path to the root of the Control Repo being worked on.
     #
     # An environment.conf is required for a PDK compatible Control Repo,
@@ -46,5 +56,14 @@ module PDK
       CONTROL_REPO_FILES.any? { |file| PDK::Util::Filesystem.file?(File.join(path, file)) }
     end
     module_function :control_repo_root?
+
+    def default_ignored_pathspec(ignore_dotfiles = true)
+      require 'pathspec'
+
+      PathSpec.new(DEFAULT_IGNORED).tap do |ps|
+        ps.add('.*') if ignore_dotfiles
+      end
+    end
+    module_function :default_ignored_pathspec
   end
 end

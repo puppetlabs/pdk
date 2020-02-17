@@ -2,8 +2,9 @@ require 'spec_helper'
 require 'pdk/validate/metadata/metadata_syntax_validator'
 
 describe PDK::Validate::Metadata::MetadataSyntaxValidator do
-  subject(:validator) { described_class.new(targets: targets.map { |r| r[:name] }) }
+  subject(:validator) { described_class.new(validator_context, targets: targets.map { |r| r[:name] }) }
 
+  let(:validator_context) { nil }
   let(:targets) { [] }
 
   describe '.pattern' do

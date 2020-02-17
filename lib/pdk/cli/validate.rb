@@ -19,6 +19,9 @@ module PDK::CLI
     flag nil, :parallel, _('Run validations in parallel.')
 
     run do |opts, args, _cmd|
+      # Write the context information to the debug log
+      PDK.context.to_debug_log
+
       if args == ['help']
         PDK::CLI.run(['validate', '--help'])
         exit 0
@@ -102,7 +105,7 @@ module PDK::CLI
 
       PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
-      exit_code, report = PDK::Validate.invoke_validators_by_name(validators_to_run, opts.fetch(:parallel, false), options)
+      exit_code, report = PDK::Validate.invoke_validators_by_name(PDK.context, validators_to_run, opts.fetch(:parallel, false), options)
 
       report_formats.each do |format|
         report.send(format[:method], format[:target])

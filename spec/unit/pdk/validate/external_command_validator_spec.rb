@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'pdk/validate/external_command_validator'
 
 describe PDK::Validate::ExternalCommandValidator do
-  let(:validator) { described_class.new(validator_options) }
+  let(:validator) { described_class.new(validator_context, validator_options) }
+  let(:validator_context) { nil }
   let(:validator_options) { {} }
   let(:targets) { [] }
   let(:skipped_targets) { [] }

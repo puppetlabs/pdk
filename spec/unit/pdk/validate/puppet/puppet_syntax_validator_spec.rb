@@ -2,8 +2,9 @@ require 'spec_helper'
 require 'pdk/validate/puppet/puppet_syntax_validator'
 
 describe PDK::Validate::Puppet::PuppetSyntaxValidator do
-  subject(:validator) { described_class.new(options) }
+  subject(:validator) { described_class.new(validator_context, options) }
 
+  let(:validator_context) { nil }
   let(:options) { {} }
   let(:tmpdir) { File.join('/', 'tmp', 'puppet-parser-validate') }
 
