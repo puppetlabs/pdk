@@ -10,6 +10,10 @@ module PDK
       # @return Hash[Object => Object]
       attr_reader :options
 
+      # The PDK context which the validator will be within.
+      # @return [PDK::Context::AbstractContext] or a subclass PDK::Context::AbstractContext
+      attr_reader :context
+
       # Whether the validator is prepared to be invoked.
       # This should only be used for testing
       #
@@ -20,10 +24,18 @@ module PDK
 
       # Creates a new Validator
       #
+      # @param context [PDK::Context::AbstractContext] Optional context which specifies where the validation will take place.
+      #                Passing nil will use a None context (PDK::Context::None)
       # @param options [Hash] Optional configuration for the Validator
       # @option options :parent_validator [PDK::Validate::Validator] The parent validator for this validator.
       #   Typically used by ValidatorGroup to create trees of Validators for invocation.
-      def initialize(options = {})
+      def initialize(context = nil, options = {})
+        if context.nil?
+          @context = PDK::Context::None.new(nil)
+        else
+          raise ArgumentError, _('Expected PDK::Context::AbstractContext but got \'%{klass}\' for context') % { klass: context.class } unless context.is_a?(PDK::Context::AbstractContext)
+          @context = context
+        end
         @options = options.dup.freeze
         @prepared = false
       end

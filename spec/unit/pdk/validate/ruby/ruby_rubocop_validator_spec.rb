@@ -18,8 +18,9 @@ shared_examples_for 'it sets the common rubocop options' do
 end
 
 describe PDK::Validate::Ruby::RubyRubocopValidator do
-  subject(:validator) { described_class.new(options) }
+  subject(:validator) { described_class.new(validator_context, options) }
 
+  let(:validator_context) { nil }
   let(:options) { {} }
 
   it 'defines the ExternalCommandValidator attributes' do

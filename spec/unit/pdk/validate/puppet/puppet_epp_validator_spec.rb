@@ -2,8 +2,9 @@ require 'spec_helper'
 require 'pdk/validate/puppet/puppet_epp_validator'
 
 describe PDK::Validate::Puppet::PuppetEPPValidator do
-  subject(:validator) { described_class.new(options) }
+  subject(:validator) { described_class.new(validator_context, options) }
 
+  let(:validator_context) { nil }
   let(:options) { {} }
   let(:tmpdir) { File.join('/', 'tmp', 'puppet-epp-validate') }
 

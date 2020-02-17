@@ -16,8 +16,9 @@ shared_examples_for 'it sets the common puppet-lint options' do
 end
 
 describe PDK::Validate::Puppet::PuppetLintValidator do
-  subject(:validator) { described_class.new(options) }
+  subject(:validator) { described_class.new(validator_context, options) }
 
+  let(:validator_context) { nil }
   let(:options) { {} }
 
   it 'defines the base validator attributes' do

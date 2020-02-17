@@ -19,6 +19,13 @@ module PDK
         :once
       end
 
+      # Whether this Validator can be invoked in this context. By default any Validator can work in any Context, except ::None
+      # @return [Boolean]
+      # @abstract
+      def valid_in_context?
+        !context.is_a?(PDK::Context::None)
+      end
+
       # An array, or a string, of glob patterns to use to find targets
       # @return [Array[String], String]
       # @abstract
@@ -57,11 +64,13 @@ module PDK
         # targets. For example, using rubocop with no targets, will allow rubocop to determine the
         # target list using it's .rubocop.yml file
         return [[], [], []] if requested_targets.empty? && allow_empty_targets?
-        # If no targets are specified, then we will run validations from the
-        # base module directory.
-        targets = requested_targets.empty? ? [PDK::Util.module_root] : requested_targets
-
+        # If no targets are specified, then we will run validations from the base context directory.
+        targets = requested_targets.empty? ? [context.root_path] : requested_targets
         targets.map! { |r| r.gsub(File::ALT_SEPARATOR, File::SEPARATOR) } if File::ALT_SEPARATOR
+
+        # If this validator is not valid in this context then skip all of the targets
+        return [[], targets, []] unless valid_in_context?
+
         skipped = []
         invalid = []
         matched = targets.map { |target|
@@ -69,11 +78,11 @@ module PDK
             target
           else
             if PDK::Util::Filesystem.directory?(target) # rubocop:disable Style/IfInsideElse
-              target_root = PDK::Util.module_root
+              target_root = context.root_path
               pattern_glob = Array(pattern).map { |p| PDK::Util::Filesystem.glob(File.join(target_root, p), File::FNM_DOTMATCH) }
               target_list = pattern_glob.flatten
                                         .select { |glob| PDK::Util::Filesystem.fnmatch(File.join(PDK::Util::Filesystem.expand_path(PDK::Util.canonical_path(target)), '*'), glob, File::FNM_DOTMATCH) }
-                                        .map { |glob| Pathname.new(glob).relative_path_from(Pathname.new(PDK::Util.module_root)).to_s }
+                                        .map { |glob| Pathname.new(glob).relative_path_from(Pathname.new(context.root_path)).to_s }
 
               ignore_list = ignore_pathspec
               target_list = target_list.reject { |file| ignore_list.match(file) }
@@ -168,9 +177,17 @@ module PDK
       # Helper method to collate the default ignored paths
       # @return [PathSpec] Paths to ignore
       def ignore_pathspec
-        require 'pdk/module'
-
-        ignore_pathspec = PDK::Module.default_ignored_pathspec(ignore_dotfiles?)
+        ignore_pathspec = if context.is_a?(PDK::Context::Module)
+                            require 'pdk/module'
+                            PDK::Module.default_ignored_pathspec(ignore_dotfiles?)
+                          elsif context.is_a?(PDK::Context::ControlRepo)
+                            require 'pdk/control_repo'
+                            PDK::ControlRepo.default_ignored_pathspec(ignore_dotfiles?)
+                          else
+                            PathSpec.new.tap do |ps|
+                              ps.add('.*') if ignore_dotfiles?
+                            end
+                          end
 
         unless pattern_ignore.nil?
           Array(pattern_ignore).each do |pattern|

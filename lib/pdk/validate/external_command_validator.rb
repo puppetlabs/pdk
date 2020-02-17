@@ -72,7 +72,7 @@ module PDK
       # @return [String]
       # @api private
       def cmd_path
-        File.join(PDK::Util.module_root, 'bin', cmd)
+        File.join(context.root_path, 'bin', cmd)
       end
 
       # An array of command line arguments to pass to the command for validation

@@ -96,7 +96,7 @@ module PDK
       # @return Array[PDK::Validator::Validator]
       # @api private
       def validator_instances
-        @validator_instances ||= validators.map { |klass| klass.new(options.merge(parent_validator: self)) }
+        @validator_instances ||= validators.map { |klass| klass.new(context, options.merge(parent_validator: self)) }
       end
     end
   end

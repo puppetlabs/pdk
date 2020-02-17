@@ -47,8 +47,9 @@ describe PDK::Validate do
   end
 
   describe '#invoke_validators_by_name' do
-    subject(:invokation_result) { described_class.invoke_validators_by_name(validators_to_run, parallel, validation_options) }
+    subject(:invokation_result) { described_class.invoke_validators_by_name(pdk_context, validators_to_run, parallel, validation_options) }
 
+    let(:pdk_context) { PDK::Context::None.new(nil) }
     let(:parallel) { false }
     let(:validation_options) { {} }
     let(:mock_hash) do
