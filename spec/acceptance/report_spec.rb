@@ -47,7 +47,11 @@ class report { }
         its(:stdout) { is_expected.to have_no_output }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
-        its(:stderr) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented}) }
+        its(:stderr) do
+          # Due to spinners writing at arbitrary cursor locations, we can't depend on the text
+          # being at a the beginning of a line.
+          is_expected.to match(%r{warning:.*#{Regexp.escape(init_pp)}.*class not documented})
+        end
 
         describe file('stderr') do
           it { is_expected.not_to exist }

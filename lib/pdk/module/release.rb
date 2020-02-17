@@ -105,20 +105,14 @@ module PDK
 
         PDK::CLI::Util.module_version_check
 
-        report = PDK::Report.new
         puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
         PDK::Util::PuppetVersion.fetch_puppet_dev if opts[:'puppet-dev']
         PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
 
-        opts = opts.merge(puppet_env[:gemset])
-
         PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
-        validators = PDK::Validate.validators
-        validators.each do |validator|
-          validator_exit_code = validator.invoke(report, opts.dup)
-          raise PDK::CLI::ExitWithError, _('An error occured during validation') unless validator_exit_code.zero?
-        end
+        validator_exit_code, = PDK::Validate.invoke_validators_by_name(PDK::Validate.validator_names, false, options)
+        raise PDK::CLI::ExitWithError, _('An error occured during validation') unless validator_exit_code.zero?
       end
 
       def run_documentation(_opts)

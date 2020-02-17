@@ -247,9 +247,10 @@ class foo {
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.not_to eq(0) }
+        # Note that these stderr tests are a little fragile due to execution order
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
-        its(:stderr) { is_expected.not_to match(lint_spinner_text) }
+        its(:stderr) { is_expected.to match(lint_spinner_text) }
 
         its(:stdout) { is_expected.to match(%r{Error:.*This Name has no effect}i) }
         its(:stdout) { is_expected.to match(%r{Error:.*This Type-Name has no effect}i) }

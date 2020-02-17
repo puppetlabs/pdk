@@ -10,6 +10,14 @@ module PDK
         attr_accessor :environment
         attr_writer :exec_group
 
+        # The spinner for this command.
+        # This should only be used for testing
+        #
+        # @return [TTY::Spinner, nil]
+        #
+        # @api private
+        attr_reader :spinner
+
         TEMPFILE_MODE = File::RDWR | File::BINARY | File::CREAT | File::TRUNC
 
         def initialize(*argv)
@@ -71,6 +79,11 @@ module PDK
           @environment.merge!(additional_env)
         end
 
+        # @return [Hash[Symbol => Object]] The result from executing the command
+        #   :stdout => String : The result of STDOUT
+        #   :stderr => String : The result of STDERR
+        #   :exit_code => Integer : The exit code from the command
+        #   :duration => Float : Number seconds it took to execute
         def execute!
           # Start spinning if configured.
           @spinner.auto_spin if @spinner

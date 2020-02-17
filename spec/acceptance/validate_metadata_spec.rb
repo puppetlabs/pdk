@@ -84,7 +84,7 @@ describe 'pdk validate metadata', module_command: true do
 
       describe command('pdk validate metadata --format junit broken.json') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.not_to match(metadata_syntax_spinner) }
+        its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
 
         its(:stdout) do
           is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]').with_attributes(
@@ -111,7 +111,7 @@ describe 'pdk validate metadata', module_command: true do
 
         describe command('pdk validate metadata --format junit broken.json') do
           its(:exit_status) { is_expected.to eq(0) }
-          its(:stderr) { is_expected.not_to match(metadata_syntax_spinner) }
+          its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
 
           its(:stdout) do
             is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
