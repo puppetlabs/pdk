@@ -14,6 +14,7 @@ module PDK
         end
 
         def pattern
+          #TODO: Wrong in Control Repo.  Needs to be modulepath specific
           'tasks/**/*'
         end
 

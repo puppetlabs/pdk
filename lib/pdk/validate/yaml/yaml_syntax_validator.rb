@@ -17,10 +17,17 @@ module PDK
         def pattern
           [
             '**/*.yaml',
-            '*.yaml',
             '**/*.yml',
-            '*.yml',
-          ]
+          ].tap do |pat|
+            if context.is_a?(PDK::Context::ControlRepo)
+              pat.concat([
+                '**/*.eyaml',
+                '**/*.eyml',
+              ])
+            else
+              pat
+            end
+          end
         end
 
         def spinner_text

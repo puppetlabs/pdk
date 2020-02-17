@@ -17,7 +17,11 @@ module PDK
         end
 
         def pattern
-          '**/**.rb'
+          if context.is_a?(PDK::Context::ControlRepo)
+            ['Puppetfile', '**/**.rb']
+          else
+            '**/**.rb'
+          end
         end
 
         def spinner_text_for_targets(_targets)

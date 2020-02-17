@@ -33,10 +33,12 @@ module PDK
         end
 
         def pattern
+          #TODO: Wrong in Control Repo.  Needs to be modulepath specific
           '**/*.pp'
         end
 
         def pattern_ignore
+          #TODO: Wrong in Control Repo
           '/plans/**/*.pp'
         end
 

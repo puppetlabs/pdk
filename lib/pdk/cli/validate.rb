@@ -37,12 +37,12 @@ module PDK::CLI
 
       PDK::CLI::Util.validate_puppet_version_opts(opts)
 
-      PDK::CLI::Util.ensure_in_module!(
-        message:   _('Code validation can only be run from inside a valid module directory'),
-        log_level: :info,
-      )
+      # PDK::CLI::Util.ensure_in_module!(
+      #   message:   _('Code validation can only be run from inside a valid module directory'),
+      #   log_level: :info,
+      # )
 
-      PDK::CLI::Util.module_version_check
+      PDK::CLI::Util.module_version_check if PDK.context.is_a?(PDK::Context::Module)
 
       targets = []
       validators_to_run = nil
@@ -95,15 +95,16 @@ module PDK::CLI
       options = targets.empty? ? {} : { targets: targets }
       options[:auto_correct] = true if opts[:'auto-correct']
 
-      # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
-      puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
-      PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
+      #TODO: Can we skip this if there are no external command validators?
+      #TODO: Add Gemfile if one doesn't exist an we're in a Control Repo
+      # # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
+      # puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
+      # PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
 
-      options.merge!(puppet_env[:gemset])
+      # options.merge!(puppet_env[:gemset])
 
-      require 'pdk/util/bundler'
-
-      PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
+      # require 'pdk/util/bundler'
+      # PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
       exit_code, report = PDK::Validate.invoke_validators_by_name(PDK.context, validators_to_run, opts.fetch(:parallel, false), options)
 

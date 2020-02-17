@@ -36,10 +36,6 @@ module PDK
           '**/*.epp'
         end
 
-        def pattern_ignore
-          ''
-        end
-
         def spinner_text_for_targets(_targets)
           _('Checking Puppet EPP syntax (%{pattern}).') % { pattern: pattern }
         end
