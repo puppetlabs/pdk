@@ -43,8 +43,9 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
   end
 
   describe '.pattern' do
-    it 'only matches metadata.json files' do
-      expect(validator.pattern).to eq('metadata.json')
+    it 'only contextually matches metadata.json files' do
+      expect(validator).to receive(:contextual_pattern).with('metadata.json') # rubocop:disable RSpec/SubjectStub This is fine
+      validator.pattern
     end
   end
 

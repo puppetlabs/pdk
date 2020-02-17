@@ -11,12 +11,12 @@ module PDK
         end
 
         def pattern
-          'tasks/*.json'
+          contextual_pattern('tasks/*.json')
         end
 
         def spinner_text
           _('Checking task metadata style (%{pattern}).') % {
-            pattern: pattern,
+            pattern: pattern.join(' '),
           }
         end
 

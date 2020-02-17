@@ -180,8 +180,10 @@ describe PDK::CLI::Util do
   end
 
   describe '.puppet_from_opts_or_env' do
-    subject(:puppet_env) { described_class.puppet_from_opts_or_env(options) }
+    subject(:puppet_env) { described_class.puppet_from_opts_or_env(options, logging_disabled, context) }
 
+    let(:context) { nil }
+    let(:logging_disabled) { false }
     let(:version_result) do
       { ruby_version: ruby_version, gem_version: Gem::Version.new(puppet_version) }
     end
@@ -282,29 +284,46 @@ describe PDK::CLI::Util do
     context 'when neither puppet-version nor pe-version has been set' do
       let(:options) { {} }
 
-      context 'and a puppet version can be found in the module metadata' do
+      context 'in a Module Context' do
+        let(:context) { PDK::Context::Module.new(nil, nil) }
+
+        context 'and a puppet version can be found in the module metadata' do
+          let(:ruby_version) { '2.4.3' }
+          let(:puppet_version) { '5.3.0' }
+
+          before(:each) do
+            allow(PDK::Util::PuppetVersion).to receive(:from_module_metadata).and_return(version_result)
+          end
+
+          it 'does not search for the latest available puppet version' do
+            expect(PDK::Util::PuppetVersion).not_to receive(:latest_available)
+            expect { puppet_env }.not_to raise_error
+          end
+
+          it_behaves_like 'it returns a puppet environment'
+        end
+
+        context 'and there is no puppet version in the module metadata' do
+          let(:ruby_version) { '2.4.3' }
+          let(:puppet_version) { '5.5.1' }
+
+          before(:each) do
+            allow(PDK::Util::PuppetVersion).to receive(:from_module_metadata).and_return(nil)
+            allow(PDK::Util::PuppetVersion).to receive(:latest_available).and_return(version_result)
+          end
+
+          it_behaves_like 'it returns a puppet environment'
+        end
+      end
+
+      context 'in a Control Repo Context' do
+        let(:context) { PDK::Context::ControlRepo.new(nil, nil) }
+
         let(:ruby_version) { '2.4.3' }
         let(:puppet_version) { '5.3.0' }
 
         before(:each) do
-          allow(PDK::Util::PuppetVersion).to receive(:from_module_metadata).and_return(version_result)
-        end
-
-        it 'does not search for the latest available puppet version' do
-          expect(PDK::Util::PuppetVersion).not_to receive(:latest_available)
-          expect { puppet_env }.not_to raise_error
-        end
-
-        it_behaves_like 'it returns a puppet environment'
-      end
-
-      context 'and there is no puppet version in the module metadata' do
-        let(:ruby_version) { '2.4.3' }
-        let(:puppet_version) { '5.5.1' }
-
-        before(:each) do
-          allow(PDK::Util::PuppetVersion).to receive(:from_module_metadata).and_return(nil)
-          allow(PDK::Util::PuppetVersion).to receive(:latest_available).and_return(version_result)
+          expect(PDK::Util::PuppetVersion).to receive(:latest_available).and_return(version_result)
         end
 
         it_behaves_like 'it returns a puppet environment'

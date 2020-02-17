@@ -22,8 +22,9 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
   end
 
   describe '.pattern' do
-    it 'only matches embedded puppet templates' do
-      expect(validator.pattern).to eq('**/*.epp')
+    it 'only contextually matches embedded puppet templates' do
+      expect(validator).to receive(:contextual_pattern).with('**/*.epp') # rubocop:disable RSpec/SubjectStub This is fine
+      validator.pattern
     end
   end
 

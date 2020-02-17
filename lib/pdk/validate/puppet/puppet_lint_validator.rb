@@ -13,11 +13,11 @@ module PDK
         end
 
         def pattern
-          '**/*.pp'
+          contextual_pattern('**/*.pp')
         end
 
         def spinner_text_for_targets(_targets)
-          _('Checking Puppet manifest style (%{pattern}).') % { pattern: pattern }
+          _('Checking Puppet manifest style (%{pattern}).') % { pattern: pattern.join(' ') }
         end
 
         def parse_options(targets)

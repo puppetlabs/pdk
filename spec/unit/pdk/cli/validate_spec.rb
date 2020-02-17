@@ -8,13 +8,15 @@ describe 'Running `pdk validate` in a module' do
   let(:report) { instance_double('PDK::Report').as_null_object }
   let(:ruby_version) { '2.4.3' }
   let(:puppet_version) { '5.4.0' }
+  let(:module_path) { '/path/to/testmodule' }
+  let(:context) { PDK::Context::Module.new(module_path, module_path) }
 
   before(:each) do
     allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: ruby_version, gemset: { puppet: puppet_version })
     allow(PDK::Util::RubyVersion).to receive(:use)
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(hash_including(:puppet))
 
-    allow(PDK::Util).to receive(:module_root).and_return('/path/to/testmodule')
+    allow(PDK).to receive(:context).and_return(context)
     allow(PDK::Util).to receive(:module_pdk_version).and_return(PDK::VERSION)
 
     allow(PDK::Validate).to receive(:invoke_validators_by_name).and_return([0, report])

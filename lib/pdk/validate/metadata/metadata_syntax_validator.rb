@@ -9,7 +9,7 @@ module PDK
         end
 
         def pattern
-          ['metadata.json', 'tasks/*.json']
+          contextual_pattern(['metadata.json', 'tasks/*.json'])
         end
 
         def spinner_text

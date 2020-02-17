@@ -42,6 +42,20 @@ describe PDK::Validate::ExternalCommandValidator do
     it 'returns a String' do
       expect(validator.cmd_path).to be_a(String)
     end
+
+    context 'when the context has no bin path or Gemfile' do
+      before(:each) do
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(%r{#{validator_context.root_path}}).and_return(false)
+        allow_any_instance_of(PDK::Util::Bundler::BundleHelper).to receive(:gemfile).and_return(nil) # rubocop:disable RSpec/AnyInstance BundleHelper needs a refactor
+      end
+
+      it 'uses alternate_bin_paths' do
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(%r{/fakepath/bin}).and_return(true)
+        expect(validator).to receive(:alternate_bin_paths).and_return(['/fakepath/bin'])
+
+        expect(validator.cmd_path).to eq('/fakepath/bin/command')
+      end
+    end
   end
 
   describe '.parse_options' do

@@ -2,7 +2,12 @@ require 'spec_helper'
 require 'pdk/validate/invokable_validator'
 
 describe PDK::Validate::InvokableValidator do
-  let(:validator) { described_class.new(validator_context, validator_options) }
+  class PublicInvokableValidator < PDK::Validate::InvokableValidator
+    # Expose protected/private methods for testing.
+    public :contextual_pattern
+  end
+
+  let(:validator) { PublicInvokableValidator.new(validator_context, validator_options) }
   let(:validator_options) { {} }
   let(:context_root) { File.join('path', 'to', 'test', 'module') }
   let(:validator_context) { PDK::Context::Module.new(context_root, context_root) }
@@ -387,6 +392,31 @@ describe PDK::Validate::InvokableValidator do
 
       expect(report.events[validator_name][0].file).to eq(targets[0])
       expect(report.events[validator_name][1].file).to eq(targets[1])
+    end
+  end
+
+  describe '.contextual_pattern' do
+    subject(:context_pattern) { validator.contextual_pattern(pattern_for_a_module) }
+
+    let(:pattern_for_a_module) { '*.pp' }
+
+    context 'given a Module context' do
+      it 'returns the same module pattern' do
+        expect(context_pattern).to eq([pattern_for_a_module])
+      end
+
+      it 'accepts an array for the pattern' do
+        expect(validator.contextual_pattern([pattern_for_a_module])).to eq([pattern_for_a_module])
+      end
+    end
+
+    context 'given a ControlRepo context' do
+      let(:context_root) { File.join(FIXTURES_DIR, 'control_repo') }
+      let(:validator_context) { PDK::Context::ControlRepo.new(context_root, context_root) }
+
+      it 'returns the module pattern for each modulepath on disk' do
+        expect(context_pattern).to eq(["site/*/#{pattern_for_a_module}"])
+      end
     end
   end
 

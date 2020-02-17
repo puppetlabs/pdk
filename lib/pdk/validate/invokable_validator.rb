@@ -172,6 +172,20 @@ module PDK
         false
       end
 
+      protected
+
+      # Takes the pattern used in a module context and transforms it depending on the
+      # context e.g. A Control Repo will use the module pattern in each module path
+      #
+      # @param [Array, String] The pattern when used in the module root. Does not start with '/'
+      #
+      # @return [Array[String]]
+      def contextual_pattern(module_pattern)
+        module_pattern = [module_pattern] unless module_pattern.is_a?(Array)
+        return module_pattern unless context.is_a?(PDK::Context::ControlRepo)
+        context.actualized_module_paths.map { |mod_path| module_pattern.map { |pat_path| mod_path + '/*/' + pat_path } }.flatten
+      end
+
       private
 
       # Helper method to collate the default ignored paths

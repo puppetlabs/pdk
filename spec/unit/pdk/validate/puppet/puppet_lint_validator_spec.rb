@@ -30,8 +30,9 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
   end
 
   describe '.pattern' do
-    it 'only matches puppet manifests' do
-      expect(validator.pattern).to eq('**/*.pp')
+    it 'only contextually matches puppet manifests' do
+      expect(validator).to receive(:contextual_pattern).with('**/*.pp') # rubocop:disable RSpec/SubjectStub This is fine
+      validator.pattern
     end
   end
 

@@ -8,8 +8,9 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
   let(:targets) { [] }
 
   describe '.pattern' do
-    it 'only matches metadata JSON files' do
-      expect(validator.pattern).to eq(['metadata.json', 'tasks/*.json'])
+    it 'only contextually matches metadata JSON files' do
+      expect(validator).to receive(:contextual_pattern).with(['metadata.json', 'tasks/*.json']) # rubocop:disable RSpec/SubjectStub This is fine
+      validator.pattern
     end
   end
 

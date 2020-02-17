@@ -32,8 +32,19 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
   end
 
   describe '.pattern' do
-    it 'only matches ruby files' do
-      expect(validator.pattern).to eq('**/**.rb')
+    context 'in a Puppet Module' do
+      it 'only matches ruby files' do
+        expect(validator.pattern).to eq('**/**.rb')
+      end
+    end
+
+    context 'in a Control Repo' do
+      let(:context_root) { File.join(FIXTURES_DIR, 'control_repo') }
+      let(:validator_context) { PDK::Context::ControlRepo.new(context_root, context_root) }
+
+      it 'only matches ruby files and Pupeptfile' do
+        expect(validator.pattern).to eq(['Puppetfile', '**/**.rb'])
+      end
     end
   end
 

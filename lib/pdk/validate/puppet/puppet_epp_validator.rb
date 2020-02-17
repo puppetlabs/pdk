@@ -33,15 +33,11 @@ module PDK
         end
 
         def pattern
-          '**/*.epp'
-        end
-
-        def pattern_ignore
-          ''
+          contextual_pattern('**/*.epp')
         end
 
         def spinner_text_for_targets(_targets)
-          _('Checking Puppet EPP syntax (%{pattern}).') % { pattern: pattern }
+          _('Checking Puppet EPP syntax (%{pattern}).') % { pattern: pattern.join(' ') }
         end
 
         def parse_options(targets)

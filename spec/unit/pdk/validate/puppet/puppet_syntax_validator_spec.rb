@@ -22,14 +22,16 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
   end
 
   describe '.pattern' do
-    it 'only matches puppet manifests' do
-      expect(validator.pattern).to eq('**/*.pp')
+    it 'only contextually matches puppet manifests' do
+      expect(validator).to receive(:contextual_pattern).with('**/*.pp') # rubocop:disable RSpec/SubjectStub This is fine
+      validator.pattern
     end
   end
 
   describe '.pattern_ignore' do
-    it 'does not match plan files' do
-      expect(validator.pattern_ignore).to eq('/plans/**/*.pp')
+    it 'does not contextually matches plan files' do
+      expect(validator).to receive(:contextual_pattern).with('plans/**/*.pp') # rubocop:disable RSpec/SubjectStub This is fine
+      validator.pattern_ignore
     end
   end
 
