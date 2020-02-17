@@ -5,6 +5,7 @@ module PDK
   autoload :AnswerFile, 'pdk/answer_file'
   autoload :Bolt, 'pdk/bolt'
   autoload :Config, 'pdk/config'
+  autoload :Context, 'pdk/context'
   autoload :ControlRepo, 'pdk/control_repo'
   autoload :Generate, 'pdk/generate'
   autoload :Logger, 'pdk/logger'
@@ -52,6 +53,10 @@ module PDK
 
   def self.config
     @config ||= PDK::Config.new
+  end
+
+  def self.context
+    @context ||= PDK::Context.create(Dir.pwd)
   end
 
   def self.analytics
