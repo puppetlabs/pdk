@@ -14,7 +14,9 @@ describe PDK do
     it { is_expected.to be_an_instance_of(PDK::Config) }
 
     it 'is memoised' do
-      expect(logger).to eq(described_class.logger)
+      object1 = PDK.config # rubocop:disable RSpec/DescribedClass have to use the explicit form due to rspec caching
+      object2 = PDK.config # rubocop:disable RSpec/DescribedClass have to use the explicit form due to rspec caching
+      expect(object2).to be(object1)
     end
   end
 end
