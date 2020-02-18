@@ -44,7 +44,7 @@ module PDK
         @spinner = TTY::Spinner::Multi.new("[:spinner] #{spinner_text}", PDK::CLI::Util.spinner_opts_for_platform)
 
         # Register the child spinners
-        validator_instances.each do |instance|
+        child_validators.each do |instance|
           next if instance.spinner.nil?
           @spinner.register(instance.spinner)
         end
@@ -64,7 +64,7 @@ module PDK
         spinner
 
         # Prepare child validators
-        validator_instances.each { |instance| instance.prepare_invoke! }
+        child_validators.each { |instance| instance.prepare_invoke! }
         nil
       end
 
@@ -82,7 +82,7 @@ module PDK
         prepare_invoke!
         start_spinner
 
-        validator_instances.each do |instance|
+        child_validators.each do |instance|
           exit_code = instance.invoke(report)
           break if exit_code != 0
         end
@@ -92,11 +92,11 @@ module PDK
         exit_code
       end
 
-      # The instanitated PDK::Validator::Validator classes from the `validators` array
+      # The instantiated PDK::Validator::Validator classes from the `validators` array
       # @return Array[PDK::Validator::Validator]
-      # @api private
-      def validator_instances
-        @validator_instances ||= validators.map { |klass| klass.new(options.merge(parent_validator: self)) }
+      # @see PDK::Validate::Validator.child_validators
+      def child_validators
+        @child_validators ||= validators.map { |klass| klass.new(options.merge(parent_validator: self)) }
       end
     end
   end

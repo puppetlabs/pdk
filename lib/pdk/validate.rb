@@ -57,10 +57,23 @@ module PDK
       ].map { |klass| [klass.new.name, klass] }.to_h.freeze
     end
 
-    def self.invoke_validators_by_name(names, parallel = false, options = {})
-      instances = names.select { |name| validator_names.include?(name) }
-                       .map { |name| validator_hash[name].new(options) }
-                       .each { |instance| instance.prepare_invoke! }
+    # Creates instances of Validators by name
+    # @param options [Array[String]] Array of validator names to instantiate
+    # @param options [Hash] Options to pass to the validators
+    # @return Array[PDK::Validate::Validator] An array of validator objects
+    def self.instantiate_validators_by_name(names, options = {})
+      names.select { |name| validator_names.include?(name) }
+           .map { |name| validator_hash[name].new(options) }
+    end
+
+    # Invokes instances of Validators
+    # @param instances Array[PDK::Validate::Validator] An array of validator objects to invoke
+    # @param parallel [Boolean] Whether to run the validators in parallel or serial
+    # @param options [Hash] Options to pass to the validator executor
+    # @return [Integer] The aggregated exitcode of all the validators
+    # @return [PDK::Report] The aggregatd report from running all the validators
+    def self.invoke_validators(instances, parallel = false, options = {})
+      instances.each { |instance| instance.prepare_invoke! }
       report = PDK::Report.new
 
       # Nothing to validate then nothing to do.
@@ -80,6 +93,21 @@ module PDK
       end
 
       [exec_group.exit_code, report]
+    end
+
+    # Helper method to instantiate and invoke validators by name
+    # @param options [Array[String]] Array of validator names to invoke
+    # @param parallel [Boolean] Whether to run the validators in parallel or serial
+    # @param options [Hash] Options to pass to the validators
+    # @return [Integer] The aggregated exitcode of all the validators
+    # @return [PDK::Report] The aggregatd report from running all the validators
+    # @see PDK::Validate.invoke_validators
+    def self.invoke_validators_by_name(names, parallel = false, options = {})
+      invoke_validators(
+        instantiate_validators_by_name(names, options),
+        parallel,
+        options,
+      )
     end
 
     class ParseOutputError < StandardError; end

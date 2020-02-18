@@ -31,7 +31,7 @@ describe PDK::Validate::ValidatorGroup do
 
         # This is a little convulted. The TTY Multi Spinner is Enumerable, so the first item
         # is the parent spinner, and subsequent items and registered child spinners
-        expect(obj.entries[1]).to eq(validator_group.validator_instances.first.spinner)
+        expect(obj.entries[1]).to eq(validator_group.child_validators.first.spinner)
       end
     end
 
@@ -52,7 +52,7 @@ describe PDK::Validate::ValidatorGroup do
     end
 
     it 'calls prepare_invoke! for each validator in the group' do
-      expect(validator_group.validator_instances).to all(receive(:prepare_invoke!).and_call_original)
+      expect(validator_group.child_validators).to all(receive(:prepare_invoke!).and_call_original)
       validator_group.prepare_invoke!
     end
   end
@@ -80,7 +80,7 @@ describe PDK::Validate::ValidatorGroup do
     end
 
     it 'calls invoke of each validator in the group' do
-      expect(validator_group.validator_instances).to all(receive(:invoke).with(report).and_call_original)
+      expect(validator_group.child_validators).to all(receive(:invoke).with(report).and_call_original)
       validator_group.invoke(report)
     end
 
@@ -105,11 +105,11 @@ describe PDK::Validate::ValidatorGroup do
       end
 
       it 'does not call invoke once a validator has failed' do
-        expect(validator_group.validator_instances[0]).to receive(:invoke).and_call_original
+        expect(validator_group.child_validators[0]).to receive(:invoke).and_call_original
         # The second validator fails
-        expect(validator_group.validator_instances[1]).to receive(:invoke).and_call_original
+        expect(validator_group.child_validators[1]).to receive(:invoke).and_call_original
         # The third validator also fails but should never be called
-        expect(validator_group.validator_instances[2]).not_to receive(:invoke)
+        expect(validator_group.child_validators[2]).not_to receive(:invoke)
 
         validator_group.invoke(report)
       end
@@ -121,22 +121,22 @@ describe PDK::Validate::ValidatorGroup do
     end
   end
 
-  describe '.validator_instances' do
+  describe '.child_validators' do
     before(:each) do
       allow(validator_group).to receive(:validators).and_return([MockSuccessValidator, PDK::Validate::Validator])
     end
 
     it 'returns instances of the classes in validators' do
-      validator_group.validator_instances.each_with_index do |item, index|
+      validator_group.child_validators.each_with_index do |item, index|
         expect(item).to be_a(validator_group.validators[index])
       end
     end
 
     it 'returns the same object in mulitple calls' do
       # Get the object_ids for the first call
-      object_ids = validator_group.validator_instances.map(&:object_id)
+      object_ids = validator_group.child_validators.map(&:object_id)
       # Compare the object_ids on the second call
-      expect(validator_group.validator_instances.map(&:object_id)).to eq(object_ids)
+      expect(validator_group.child_validators.map(&:object_id)).to eq(object_ids)
     end
   end
 end

@@ -92,17 +92,28 @@ module PDK::CLI
       options = targets.empty? ? {} : { targets: targets }
       options[:auto_correct] = true if opts[:'auto-correct']
 
-      # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
-      puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
-      PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
+      # Instantiate all of the validators
+      validator_instances = PDK::Validate.instantiate_validators_by_name(validators_to_run, options)
 
-      options.merge!(puppet_env[:gemset])
+      # How many of them external commands
+      num_external_commands = validator_instances.reduce(0) do |sum, validator|
+        sum + validator.resolve_validator_tree.select { |item| item.is_a?(PDK::Validate::ExternalCommandValidator) }.count
+      end
 
-      require 'pdk/util/bundler'
+      # External commands need a valid bundle environment
+      if num_external_commands > 0
+        # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
+        puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
+        PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
 
-      PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
+        options.merge!(puppet_env[:gemset])
 
-      exit_code, report = PDK::Validate.invoke_validators_by_name(validators_to_run, opts.fetch(:parallel, false), options)
+        require 'pdk/util/bundler'
+
+        PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
+      end
+
+      exit_code, report = PDK::Validate.invoke_validators(validator_instances, opts.fetch(:parallel, false), options)
 
       report_formats.each do |format|
         report.send(format[:method], format[:target])

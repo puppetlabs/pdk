@@ -94,6 +94,26 @@ module PDK
         prepare_invoke!
         0
       end
+
+      # Returns this validator and recursively any child validator instances
+      #
+      # @return [Array[PDK::Validate::Validator]]
+      # @abstract
+      def resolve_validator_tree(include_self = true)
+        return [self] if child_validators.empty?
+
+        resolved = include_self ? [self] : []
+        child_validators.each { |child| resolved.concat(child.resolve_validator_tree(false)) }
+        resolved
+      end
+
+      # Returns any child validator instances
+      #
+      # @return [Array[PDK::Validate::Validator]]
+      # @abstract
+      def child_validators
+        []
+      end
     end
   end
 end
