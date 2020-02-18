@@ -2,6 +2,8 @@ require 'pdk'
 
 module PDK
   class Config
+    autoload :IniFile, 'pdk/config/ini_file'
+    autoload :IniFileSetting, 'pdk/config/ini_file_setting'
     autoload :JSON, 'pdk/config/json'
     autoload :JSONSchemaNamespace, 'pdk/config/json_schema_namespace'
     autoload :JSONSchemaSetting, 'pdk/config/json_schema_setting'

@@ -48,7 +48,7 @@ module PDK
       #
       # @return [nil]
       def setting(key, &block)
-        @settings[key.to_s] ||= PDK::Config::Setting.new(key.to_s, self)
+        @settings[key.to_s] ||= default_setting_class.new(key.to_s, self)
         @settings[key.to_s].instance_eval(&block) if block_given?
       end
 
@@ -207,6 +207,16 @@ module PDK
 
       private
 
+      # Returns the object class to create settings with. Subclasses may override this to use specific setting classes
+      #
+      # @return [Class[PDK::Config::Setting]]
+      #
+      # @abstract
+      # @private
+      def default_setting_class
+        PDK::Config::Setting
+      end
+
       # Determines whether a setting name should be resolved using the filter
       #  Returns true when filter is nil.
       #  Returns true if the filter is exactly the same name as the setting.
@@ -253,7 +263,7 @@ module PDK
         # Need to use `@settings` and `@mounts` here to stop recursive calls
         return unless @mounts[key.to_s].nil?
         return unless @settings[key.to_s].nil?
-        @settings[key.to_s] = PDK::Config::Setting.new(key.to_s, self, initial_value)
+        @settings[key.to_s] = default_setting_class.new(key.to_s, self, initial_value)
       end
 
       # Set the value of the named key.
