@@ -1,0 +1,9 @@
+{
+  "name": "testfixture-valid",
+  "version": "0.1.0",
+  "author": "testfixture",
+  "summary": "Skeleton module test fixture",
+  "license": "Apache-2.0",
+  "source": "http://localhost",
+  "dependencies": []
+}

@@ -257,16 +257,18 @@ module PDK
     module_function :targets_relative_to_pwd
 
     # TO-DO: Refactor replacement of lib/pdk/module/build.rb:metadata to use this function instead
-    def module_metadata
+    # @param module_path [String] The path to the root of the module. Default is determine the module root automatically
+    def module_metadata(module_path = nil)
       require 'pdk/module/metadata'
-
-      PDK::Module::Metadata.from_file(File.join(module_root, 'metadata.json')).data
+      module_path ||= module_root
+      PDK::Module::Metadata.from_file(File.join(module_path, 'metadata.json')).data
     end
     module_function :module_metadata
 
     # TO-DO: Refactor replacement of lib/pdk/module/build.rb:module_pdk_compatible? to use this function instead
-    def module_pdk_compatible?
-      ['pdk-version', 'template-url'].any? { |key| module_metadata.key?(key) }
+    # @param module_path [String] The path to the root of the module. Default is determine the module root automatically
+    def module_pdk_compatible?(module_path = nil)
+      ['pdk-version', 'template-url'].any? { |key| module_metadata(module_path).key?(key) }
     end
     module_function :module_pdk_compatible?
 
