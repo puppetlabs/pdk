@@ -146,6 +146,15 @@ module PDK
     end
     module_function :configdir
 
+    def system_configdir
+      return @system_configdir unless @system_configdir.nil?
+      return @system_configdir = File.join('opt', 'puppetlabs', 'pdk', 'config') unless Gem.win_platform?
+
+      return @system_configdir = File.join(PDK::Util::Env['ProgramData'], 'PuppetLabs', 'PDK') unless PDK::Util::Env['ProgramData'].nil?
+      @system_configdir = File.join(PDK::Util::Env['AllUsersProfile'], 'PuppetLabs', 'PDK')
+    end
+    module_function :system_configdir
+
     # Returns path to the root of the module being worked on.
     #
     # @return [String, nil] Fully qualified base path to module, or nil if
@@ -274,5 +283,24 @@ module PDK
       nil
     end
     module_function :module_pdk_version
+
+    # Does a deep copy instead of a shallow copy of an object.
+    #
+    # @param object [Object] The object to duplicate
+    #
+    # @return [Object] duplicate of the original object
+    #   the current working dir does not appear to be within a module.
+    def deep_duplicate(object)
+      if object.is_a?(Array)
+        object.map { |item| deep_duplicate(item) }
+      elsif object.is_a?(Hash)
+        hash = object.dup
+        hash.each_pair { |key, value| hash[key] = deep_duplicate(value) }
+        hash
+      else
+        object
+      end
+    end
+    module_function :deep_duplicate
   end
 end

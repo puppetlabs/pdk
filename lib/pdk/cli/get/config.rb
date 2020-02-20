@@ -1,12 +1,10 @@
 module PDK::CLI
-  @config_get_cmd = @config_cmd.define_command do
-    name 'get'
-    usage _('config get [name]')
-    summary _('(Deprecated) Retrieve the configuration for <name>. If not specified, retrieve all configuration settings')
+  @get_config_cmd = @get_cmd.define_command do
+    name 'config'
+    usage _('config [name]')
+    summary _('Retrieve the configuration for <name>. If not specified, retrieve all configuration settings')
 
     run do |_opts, args, _cmd|
-      PDK.logger.warn _('The \'pdk config get\' command is deprecated, please use \'pdk get config\' instead.')
-
       item_name = args[0]
       resolved_config = PDK.config.resolve(item_name)
       # If the user wanted to know a setting but it doesn't exist, raise an error

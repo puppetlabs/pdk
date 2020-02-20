@@ -161,6 +161,7 @@ module PDK::CLI
   require 'pdk/cli/build'
   require 'pdk/cli/config'
   require 'pdk/cli/convert'
+  require 'pdk/cli/get'
   require 'pdk/cli/new'
   require 'pdk/cli/test'
   require 'pdk/cli/update'
