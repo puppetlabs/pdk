@@ -132,6 +132,16 @@ module PDK
       nil
     end
 
+    # Yields a configuration setting value by name, using scope precedence rules. If no scopes are passed, then all scopes are queried using the default precedence rules
+    # @setting_name [String, Array[String]] The setting name to retrieve without the leading scope name e.g. Use 'setting' instead of 'system.setting'
+    # @scopes [Nil, Array[String]] The list of scopes, in order, to query in turn for the setting_name. Invalid or missing scopes are ignored.
+    # @yield [PDK::Config::Namespace, Object] The value of the configuration setting. Does not yield if the setting does not exist or is nil
+    def with_scoped_value(setting_name, scopes = nil)
+      raise ArgumentError, _('must be passed a block') unless block_given?
+      value = get_within_scopes(setting_name, scopes)
+      yield value unless value.nil?
+    end
+
     def self.bolt_analytics_config
       file = PDK::Util::Filesystem.expand_path('~/.puppetlabs/bolt/analytics.yaml')
       PDK::Config::YAML.new(file: file)

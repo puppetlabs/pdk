@@ -140,8 +140,8 @@ module PDK
         defaults = PDK::Module::Metadata::DEFAULTS.dup
 
         defaults['name'] = "#{opts[:username]}-#{opts[:module_name]}" unless opts[:module_name].nil?
-        defaults['author'] = PDK.config.get_within_scopes('module_defaults.author') unless PDK.config.get_within_scopes('module_defaults.author').nil?
-        defaults['license'] = PDK.config.get_within_scopes('module_defaults.license') unless PDK.config.get_within_scopes('module_defaults.license').nil?
+        PDK.config.with_scoped_value('module_defaults.author') { |val| defaults['author'] = val }
+        PDK.config.with_scoped_value('module_defaults.license') { |val| defaults['license'] = val }
         defaults['license'] = opts[:license] if opts.key?(:license)
 
         metadata = PDK::Module::Metadata.new(defaults)

@@ -247,6 +247,25 @@ describe PDK::Config do
     end
   end
 
+  describe '.with_scoped_value' do
+    let(:scopes) { nil }
+    let(:setting_name) { 'name' }
+    let(:setting_value) { 'user' }
+    let(:user_config_content) { "{\"#{setting_name}\":\"#{setting_value}\"}" }
+
+    it 'yields the value if it exists' do
+      expect { |val| config.with_scoped_value(setting_name, scopes, &val) }.to yield_with_args(setting_value)
+    end
+
+    it 'does not yield if the setting does not exist' do
+      expect { |val| config.with_scoped_value('missing', scopes, &val) }.not_to yield_control
+    end
+
+    it 'raises if no block is passed' do
+      expect { config.with_scoped_value(setting_name, scopes) }.to raise_error(ArgumentError)
+    end
+  end
+
   describe 'user.analytics.disabled' do
     context 'set' do
       it 'can be set to true' do
