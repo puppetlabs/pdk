@@ -34,6 +34,7 @@ module PDK
         @persistent_defaults = persistent_defaults
         @mounts = {}
         @loaded_from_file = false
+        @read_only = false
 
         instance_eval(&block) if block_given?
       end
@@ -206,6 +207,14 @@ module PDK
         child_namespace? && file.nil?
       end
 
+      # Disables the namespace, and child namespaces, from writing changes to disk.
+      # Typically this is only needed for unit testing.
+      # @api private
+      def read_only!
+        @read_only = true
+        @mounts.each { |_, child| child.read_only! }
+      end
+
       private
 
       # Returns the object class to create settings with. Subclasses may override this to use specific setting classes
@@ -292,7 +301,7 @@ module PDK
         return if filename.nil?
         return unless PDK::Util::Filesystem.file?(filename)
 
-        PDK::Util::Filesystem.read_file(file)
+        PDK::Util::Filesystem.read_file(filename)
       rescue Errno::ENOENT => e
         raise PDK::Config::LoadError, e.message
       rescue Errno::EACCES
@@ -313,7 +322,7 @@ module PDK
       #
       # @return [nil]
       def save_data
-        return if file.nil?
+        return if file.nil? || @read_only
 
         PDK::Util::Filesystem.mkdir_p(File.dirname(file))
 

@@ -5,20 +5,6 @@ require 'tty/test_prompt'
 require 'pdk/generate/module'
 require 'addressable'
 
-shared_context 'blank answer file' do
-  let(:temp_answer_file) { Tempfile.new('pdk-test-answers') }
-
-  before(:each) do
-    PDK.answer_file = temp_answer_file.path
-    allow(PDK::Util::Filesystem).to receive(:write_file).with(temp_answer_file.path, anything)
-  end
-
-  after(:each) do
-    temp_answer_file.close
-    temp_answer_file.unlink
-  end
-end
-
 shared_context 'allow summary to be printed to stdout' do
   before(:each) do
     allow($stdout).to receive(:puts).with(a_string_matching(%r{\A-+\Z}))
@@ -40,6 +26,7 @@ shared_context 'mock template dir' do
     allow(test_template_path).to receive(:+).with(anything).and_return(test_template_path)
     allow(test_template_path).to receive(:dirname).and_return(test_template_path)
     allow(test_template_path).to receive(:relative?).and_return(true)
+    # TODO: This is overkill. e.g. this breaks using 'require 'pry'; binding.pry'.
     allow(Pathname).to receive(:new).with(anything).and_return(test_template_path)
     allow(PDK::Util::Filesystem).to receive(:write_file)
       .with(test_template_path, anything)
@@ -48,8 +35,6 @@ shared_context 'mock template dir' do
 end
 
 shared_context 'mock metadata.json' do
-  let(:metadata_json) { StringIO.new }
-
   before(:each) do
     allow(PDK::Util::Filesystem).to receive(:write_file)
       .with(a_string_matching(%r{metadata\.json\Z}), anything)
@@ -57,6 +42,8 @@ shared_context 'mock metadata.json' do
 end
 
 describe PDK::Generate::Module do
+  include_context 'mock configuration'
+
   describe '.invoke' do
     let(:target_dir) { PDK::Util::Filesystem.expand_path('/path/to/target/module') }
     let(:invoke_opts) do
@@ -85,7 +72,6 @@ describe PDK::Generate::Module do
     end
 
     context 'when the target module directory does not exist' do
-      include_context 'blank answer file'
       include_context 'mock template dir'
       include_context 'mock metadata.json'
 
@@ -101,6 +87,8 @@ describe PDK::Generate::Module do
         allow(PDK::Util::Filesystem).to receive(:write_file).with(%r{pdk-test-writable}, anything) { raise Errno::EACCES unless target_parent_writeable }
         allow(PDK::Util::Filesystem).to receive(:rm_f).with(%r{pdk-test-writable})
         allow(test_template_dir).to receive(:render).and_yield('test_file_path', 'test_file_content', :manage)
+        allow(PDK::Util).to receive(:module_root).and_return(nil)
+        allow(PDK::Util).to receive(:package_install?).and_return(false)
       end
 
       context 'when the parent directory of the target is not writable' do
@@ -236,28 +224,24 @@ describe PDK::Generate::Module do
         end
 
         it 'takes precedence over the template-url answer' do
-          PDK.answers.update!('template-url' => 'answer-template')
+          PDK.config.user['module_defaults']['template-url'] = 'answer-template'
           expect(PDK::Module::TemplateDir).to receive(:with).with(Addressable::URI.parse('cli-template#master'), anything, anything).and_yield(test_template_dir)
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
 
         it 'saves the template-url and template-ref to the answer file if it is not the default template' do
-          expect(PDK.answers).to receive(:update!).with('template-url' => Addressable::URI.parse('cli-template#master'))
-
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+          expect(PDK.config.user['module_defaults']['template-url']).to eq(Addressable::URI.parse('cli-template#master').to_s)
         end
 
         it 'saves the template-url and template-ref to the answer file if it is not the default ref' do
-          expect(PDK.answers).to receive(:update!).with('template-url' => "#{default_template_url}#1.2.3")
-
           described_class.invoke(invoke_opts.merge(:'template-url' => default_template_url, :'template-ref' => '1.2.3'))
+          expect(PDK.config.user['module_defaults']['template-url']).to eq("#{default_template_url}#1.2.3")
         end
 
         it 'clears the saved template-url answer if it is the default template' do
-          expect(PDK.answers).to receive(:update!).with('template-url' => nil).and_call_original
-
           described_class.invoke(invoke_opts.merge(:'template-url' => default_template_url))
-          expect(PDK.answers['template-url']).to eq(nil)
+          expect(PDK.config.user['module_defaults']['template-url']).to eq(nil)
         end
       end
 
@@ -269,7 +253,7 @@ describe PDK::Generate::Module do
 
         context 'and a template-url answer exists' do
           it 'uses the template-url from the answer file to generate the module' do
-            PDK.answers.update!('template-url' => 'answer-template')
+            PDK.config.user['module_defaults']['template-url'] = 'answer-template'
             expect(PDK::Module::TemplateDir).to receive(:with).with(Addressable::URI.parse('answer-template'), anything, anything).and_yield(test_template_dir)
             expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
             expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
@@ -288,9 +272,10 @@ describe PDK::Generate::Module do
             it 'uses the vendored template url' do
               template_uri = "file:///tmp/package/cache/pdk-templates.git##{PDK::Util::TemplateURI.default_template_ref}"
               expect(PDK::Module::TemplateDir).to receive(:with).with(Addressable::URI.parse(template_uri), anything, anything).and_yield(test_template_dir)
-              expect(PDK.answers).not_to receive(:update!).with(:'template-url' => anything)
+              before = PDK.config.user['module_defaults']['template-url']
 
               described_class.invoke(invoke_opts)
+              expect(PDK.config.user['module_defaults']['template-url']).to eq(before)
             end
           end
 
@@ -301,9 +286,10 @@ describe PDK::Generate::Module do
 
             it 'uses the default template to generate the module' do
               expect(PDK::Module::TemplateDir).to receive(:with).with(any_args).and_yield(test_template_dir)
-              expect(PDK.answers).not_to receive(:update!).with(:'template-url' => anything)
+              before = PDK.config.user['module_defaults']['template-url']
 
               described_class.invoke(invoke_opts)
+              expect(PDK.config.user['module_defaults']['template-url']).to eq(before)
             end
           end
         end
@@ -312,8 +298,6 @@ describe PDK::Generate::Module do
   end
 
   describe '.module_interview' do
-    include_context 'blank answer file'
-
     subject(:interview_metadata) do
       metadata = PDK::Module::Metadata.new
       metadata.update!(default_metadata)
@@ -323,7 +307,7 @@ describe PDK::Generate::Module do
 
     subject(:answers) do
       interview_metadata
-      PDK.answers
+      PDK.config.user['module_defaults']
     end
 
     let(:module_name) { 'bar' }
@@ -339,6 +323,7 @@ describe PDK::Generate::Module do
       allow($stdout).to receive(:puts).with(a_string_matching(%r{manually updating the metadata.json file}m))
       allow($stdout).to receive(:puts).with(a_string_matching(%r{ask you \d+ questions}))
       allow($stdout).to receive(:puts).with(no_args)
+      allow(PDK::Util::Filesystem).to receive(:file?).with('metadata.json').and_return(false)
     end
 
     context 'when only interviewing for specific missing fields' do
@@ -405,10 +390,6 @@ describe PDK::Generate::Module do
             'tickets.foo.com/whopper/bar',
             'yes',
           ]
-        end
-
-        before(:each) do
-          allow(PDK::Util::Filesystem).to receive(:file?).with('metadata.json').and_return(false)
         end
 
         it 'populates the Metadata object based on user input' do
@@ -700,8 +681,6 @@ describe PDK::Generate::Module do
   end
 
   describe '.prepare_metadata' do
-    include_context 'blank answer file'
-
     subject(:metadata) { described_class.prepare_metadata(options) }
 
     before(:each) do
@@ -744,11 +723,9 @@ describe PDK::Generate::Module do
       before(:each) do
         allow(described_class).to receive(:module_interview).with(any_args)
 
-        PDK.answers.update!(
-          'forge_username' => 'testuser123',
-          'license'        => 'MIT',
-          'author'         => 'Test User',
-        )
+        PDK.config.user['module_defaults']['forge_username'] = 'testuser123'
+        PDK.config.user['module_defaults']['license'] = 'MIT'
+        PDK.config.user['module_defaults']['author'] = 'Test User'
       end
 
       it 'uses the saved forge_username answer' do

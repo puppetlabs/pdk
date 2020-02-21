@@ -20,11 +20,12 @@ describe PDK::Generate::PuppetObject do
   let(:module_dir) { '/tmp/test_module' }
   let(:metadata_path) { File.join(module_dir, 'metadata.json') }
 
+  include_context 'mock configuration'
+
   before(:each) do
     stub_const('PDK::Generate::PuppetObject::OBJECT_TYPE', object_type)
     allow(PDK::Util).to receive(:package_install?).and_return(false)
     allow(PDK::Util).to receive(:module_root).and_return(module_dir)
-    allow(PDK).to receive(:answers).and_return({})
   end
 
   describe '#spec_only?' do

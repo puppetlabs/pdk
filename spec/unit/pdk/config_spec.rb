@@ -6,11 +6,8 @@ require 'pdk/config'
 describe PDK::Config do
   subject(:config) { described_class.new }
 
-  let(:answer_file_content) { '{}' }
-  let(:user_config_content) { '{}' }
-  let(:system_config_content) { '{}' }
-  let(:analytics_config_content) { nil }
-  let(:bolt_analytics_content) { nil }
+  include_context 'mock configuration'
+
   let(:bolt_analytics_path) { '~/.puppetlabs/bolt/analytics.yaml' }
 
   def mock_file(path, content)
@@ -20,15 +17,8 @@ describe PDK::Config do
   end
 
   before(:each) do
-    allow(PDK::Util::Filesystem).to receive(:file?).with(anything).and_return(false)
     # Allow the JSON Schema documents to actually be read. Rspec matchers are LIFO
     allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original
-    allow(PDK::Util).to receive(:configdir).and_return(File.join('path', 'to', 'configdir'))
-    mock_file(PDK.answers.answer_file_path, answer_file_content)
-    mock_file(described_class.analytics_config_path, analytics_config_content)
-    mock_file(described_class.user_config_path, user_config_content)
-    mock_file(described_class.system_config_path, system_config_content)
-    mock_file(bolt_analytics_path, bolt_analytics_content) if bolt_analytics_content
   end
 
   describe '.system_config' do
@@ -254,6 +244,25 @@ describe PDK::Config do
       let(:scopes) { %w[system user] }
 
       it_behaves_like 'a setting resolver', nil, 'user', 'system', 'system'
+    end
+  end
+
+  describe '.with_scoped_value' do
+    let(:scopes) { nil }
+    let(:setting_name) { 'name' }
+    let(:setting_value) { 'user' }
+    let(:user_config_content) { "{\"#{setting_name}\":\"#{setting_value}\"}" }
+
+    it 'yields the value if it exists' do
+      expect { |val| config.with_scoped_value(setting_name, scopes, &val) }.to yield_with_args(setting_value)
+    end
+
+    it 'does not yield if the setting does not exist' do
+      expect { |val| config.with_scoped_value('missing', scopes, &val) }.not_to yield_control
+    end
+
+    it 'raises if no block is passed' do
+      expect { config.with_scoped_value(setting_name, scopes) }.to raise_error(ArgumentError)
     end
   end
 
