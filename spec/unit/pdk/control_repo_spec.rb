@@ -117,4 +117,26 @@ describe PDK::ControlRepo do
       described_class.control_repo_root?
     end
   end
+
+  describe 'environment_conf_as_config' do
+    subject(:config) { described_class.environment_conf_as_config(path) }
+
+    let(:path) { File.join(FIXTURES_DIR, 'control_repo') }
+
+    it 'returns a PDK::Config::IniFile object' do
+      expect(config).to be_a(PDK::Config::IniFile)
+    end
+
+    context 'with a nil path' do
+      let(:path) { File.join(FIXTURES_DIR, 'control_repo') }
+
+      it 'has a modulepath default setting' do
+        expect(config['modulepath']).not_to be_nil
+      end
+
+      it 'has a manifest default setting' do
+        expect(config['manifest']).not_to be_nil
+      end
+    end
+  end
 end

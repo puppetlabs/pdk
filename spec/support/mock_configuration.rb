@@ -10,6 +10,7 @@ RSpec.shared_context 'mock configuration' do
     PDK::Config.new.tap do |item|
       item.user_config.read_only!
       item.system_config.read_only!
+      item.project_config.read_only!
     end
   end
 
@@ -18,6 +19,7 @@ RSpec.shared_context 'mock configuration' do
     allow(PDK).to receive(:config).and_return(new_config)
 
     # Mock any configuration file read/writes
+    # Note - That we don't yet know what the project config filename/path will be so it's not mockable.
     [
       { file: PDK::AnswerFile.default_answer_file_path, content: default_answer_file_content },
       { file: PDK::Config.system_answers_path, content: system_answers_content },

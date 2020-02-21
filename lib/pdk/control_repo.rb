@@ -46,5 +46,26 @@ module PDK
       CONTROL_REPO_FILES.any? { |file| PDK::Util::Filesystem.file?(File.join(path, file)) }
     end
     module_function :control_repo_root?
+
+    # Returns a PDK::Config::Namespace for the specified environment.conf file.
+    # Note there is no validation of the path.
+    #
+    # @param path [String] The path to the environment.conf file
+    #
+    # @return [PDK::Config::IniFile] The configuration file
+    def environment_conf_as_config(path)
+      PDK::Config::IniFile.new('environment', file: path) do
+        setting :modulepath do
+          # As per https://puppet.com/docs/puppet/latest/config_file_environment.html#allowed-settings
+          default_to { 'modules:$basemodulepath' }
+        end
+
+        setting :manifest do
+          # As per https://puppet.com/docs/puppet/latest/config_file_environment.html#allowed-settings
+          default_to { 'manifests/' }
+        end
+      end
+    end
+    module_function :environment_conf_as_config
   end
 end
