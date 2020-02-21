@@ -16,7 +16,7 @@ module PDK
       current = PDK::Util::Filesystem.expand_path(context_path)
       until !PDK::Util::Filesystem.directory?(current) || current == previous
         # Control Repo detection
-        return PDK::Context::ControlRepo.new(current, context_path) if PDK::ControlRepo.control_repo_root?(current)
+        return PDK::Context::ControlRepo.new(current, context_path) if PDK.feature_flag?('controlrepo') && PDK::ControlRepo.control_repo_root?(current)
 
         # Puppet Module detection
         metadata_file = File.join(current, 'metadata.json')

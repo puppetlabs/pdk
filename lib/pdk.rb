@@ -47,7 +47,9 @@ module PDK
   end
 
   def self.available_feature_flags
-    @available_feature_flags ||= %w[].freeze
+    @available_feature_flags ||= %w[
+      controlrepo
+    ].freeze
   end
 
   def self.requested_feature_flags
