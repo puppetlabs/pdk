@@ -103,7 +103,7 @@ module PDK
               next
             end
           end
-        }.compact.flatten
+        }.compact.flatten.uniq
         [matched, skipped, invalid]
       end
 

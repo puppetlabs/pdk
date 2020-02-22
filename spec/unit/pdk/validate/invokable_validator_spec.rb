@@ -177,6 +177,37 @@ describe PDK::Validate::InvokableValidator do
       it_behaves_like 'a parsed target list in an invalid context'
     end
 
+    context 'when given specific targets with duplicated pattern' do
+      let(:single_pattern) { '**/**.pp' }
+      let(:pattern) { [single_pattern, single_pattern, single_pattern, single_pattern] }
+
+      let(:targets) { ['target1.pp', 'target2/'] }
+      let(:glob_pattern) { File.join(context_root, single_pattern) }
+      let(:targets2) { [File.join('target2', 'target.pp')] }
+      let(:globbed_target2) { targets2.map { |target| File.join(context_root, target) } }
+
+      before(:each) do
+        allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_target2)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('target1.pp').and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:directory?).with('target2/').and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with('target1.pp').and_return(true)
+
+        targets.map do |t|
+          allow(PDK::Util::Filesystem).to receive(:expand_path).with(t).and_return(File.join(context_root, t))
+        end
+
+        Array[validator.pattern].flatten.map do |p|
+          allow(PDK::Util::Filesystem).to receive(:expand_path).with(p).and_return(File.join(context_root, p))
+        end
+      end
+
+      it 'returns the unique targets' do
+        expect(target_files[0]).to eq(targets2) # This only has the target once.
+        expect(target_files[1]).to eq(['target1.pp'])
+        expect(target_files[2]).to be_empty
+      end
+    end
+
     context 'when given specific targets which are not in the glob_pattern' do
       let(:pattern) { ['metadata.json', 'tasks/*.json'] }
       let(:targets) { ['target1.pp', 'target2/'] }
