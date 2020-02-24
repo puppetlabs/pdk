@@ -252,7 +252,7 @@ describe 'PDK::CLI convert' do
 
         it 'clears the saved template-url answer' do
           run
-          expect(PDK.config.user['module_defaults']['template-url']).to be_nil
+          expect(PDK.config.get(%w[user module_defaults template-url])).to be_nil
         end
 
         it 'submits the command to analytics' do

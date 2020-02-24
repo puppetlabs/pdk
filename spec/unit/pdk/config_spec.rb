@@ -27,12 +27,6 @@ describe PDK::Config do
     end
   end
 
-  describe '.user' do
-    it 'is an alias for user_config' do
-      expect(config.user).to be(config.user_config)
-    end
-  end
-
   describe '.user_config' do
     it 'returns a PDK::Config::Namespace' do
       expect(config.user_config).to be_a(PDK::Config::Namespace)
@@ -359,12 +353,12 @@ describe PDK::Config do
 
     it 'takes a String for the setting name' do
       config.set('user.foo.whizz', value)
-      expect(config.user['foo']['whizz']).to eq(value)
+      expect(config.get('user.foo.whizz')).to eq(value)
     end
 
     it 'takes an Array for the setting name' do
       config.set(%w[user foo whizz], value)
-      expect(config.user['foo']['whizz']).to eq(value)
+      expect(config.get(%w[user foo whizz])).to eq(value)
     end
 
     context 'given a root name that does not exist' do
@@ -400,7 +394,7 @@ describe PDK::Config do
       it 'can be accessed via a normal hash syntax' do
         config.set(setting, value)
 
-        expect(config.user['bar']['baz']['setting']).to eq(value)
+        expect(config.get(%w[user bar baz setting])).to eq(value)
       end
 
       it 'saves to the root file' do
@@ -423,8 +417,8 @@ describe PDK::Config do
       it 'can be accessed via a normal hash syntax' do
         config.set(setting, value)
 
-        expect(config.user['foo']['bar']).to eq('baz' => { 'setting' => value })
-        expect(config.user['foo']['bar']['baz']['setting']).to eq(value)
+        expect(config.get(%w[user foo bar])).to eq('baz' => { 'setting' => value })
+        expect(config.get(%w[user foo bar baz setting])).to eq(value)
       end
 
       it_behaves_like 'a new setting file', "{\n  \"bar\": {\n    \"baz\": {\n      \"setting\": \"mock_value\"\n    }\n  }\n}"
@@ -436,14 +430,14 @@ describe PDK::Config do
 
       it 'can be accessed via a normal hash syntax' do
         # The old setting should exist
-        expect(config.user['foo']['bar']).to eq('existing_setting' => 'exists')
+        expect(config.get(%w[user foo bar])).to eq('existing_setting' => 'exists')
 
         config.set(setting, value)
 
         # Should still contain the old setting
-        expect(config.user['foo']['bar']).to eq('baz' => { 'setting' => 'mock_value' }, 'existing_setting' => 'exists')
+        expect(config.get(%w[user foo bar])).to eq('baz' => { 'setting' => 'mock_value' }, 'existing_setting' => 'exists')
         # Should contain the new setting
-        expect(config.user['foo']['bar']['baz']['setting']).to eq(value)
+        expect(config.get(%w[user foo bar baz setting])).to eq(value)
       end
 
       it_behaves_like 'a new setting file', "{\n  \"bar\": {\n    \"existing_setting\": \"exists\",\n    \"baz\": {\n      \"setting\": \"mock_value\"\n    }\n  }\n}"
@@ -456,7 +450,7 @@ describe PDK::Config do
       context 'without forcing the change' do
         it 'raises an error' do
           # The old setting should exist
-          expect(config.user['foo']['bar']).to eq([])
+          expect(config.get(%w[user foo bar])).to eq([])
 
           expect { config.set(setting, value) }.to raise_error(ArgumentError)
         end
@@ -467,12 +461,12 @@ describe PDK::Config do
 
         it 'uses the new setting' do
           # The old setting should exist
-          expect(config.user['foo']['bar']).to eq([])
+          expect(config.get(%w[user foo bar])).to eq([])
 
           config.set(setting, value, set_options)
 
           # Should contain only new setting
-          expect(config.user['foo']['bar']['baz']['setting']).to eq(value)
+          expect(config.get(%w[user foo bar baz setting])).to eq(value)
         end
 
         it_behaves_like 'a new setting file', "{\n  \"bar\": {\n    \"baz\": {\n      \"setting\": \"mock_value\"\n    }\n  }\n}"
@@ -486,7 +480,7 @@ describe PDK::Config do
       context 'without forcing the change' do
         it 'appends the new value' do
           config.set(setting, value, set_options)
-          expect(config.user['foo']['bar']).to eq(['abc', 'def', value])
+          expect(config.get(%w[user foo bar])).to eq(['abc', 'def', value])
         end
 
         it_behaves_like 'a new setting file', "{\n  \"bar\": [\n    \"abc\",\n    \"def\",\n    \"mock_value\"\n  ]\n}"
@@ -497,7 +491,7 @@ describe PDK::Config do
 
         it 'uses the new value' do
           config.set(setting, value, set_options)
-          expect(config.user['foo']['bar']).to eq(value)
+          expect(config.get(%w[user foo bar])).to eq(value)
         end
 
         it_behaves_like 'a new setting file', "{\n  \"bar\": \"mock_value\"\n}"
@@ -512,7 +506,7 @@ describe PDK::Config do
         it 'does not append the new value' do
           expect(PDK::Util::Filesystem).not_to receive(:write_file).with(PDK::Util::Filesystem.expand_path(foo_file), anything)
           config.set(setting, value, set_options)
-          expect(config.user['foo']['bar']).to eq(['abc', value])
+          expect(config.get(%w[user foo bar])).to eq(['abc', value])
         end
       end
 
@@ -521,7 +515,7 @@ describe PDK::Config do
 
         it 'uses the new value' do
           config.set(setting, value, set_options)
-          expect(config.user['foo']['bar']).to eq(value)
+          expect(config.get(%w[user foo bar])).to eq(value)
         end
 
         it_behaves_like 'a new setting file', "{\n  \"bar\": \"mock_value\"\n}"
@@ -679,7 +673,7 @@ describe PDK::Config do
 
       it 'sets user.analytics.disabled to false' do
         described_class.analytics_config_interview!
-        expect(PDK.config.user_config['analytics']['disabled']).to be_falsey
+        expect(PDK.config.get(%w[user analytics disabled])).to be_falsey
       end
     end
 
@@ -688,7 +682,7 @@ describe PDK::Config do
 
       it 'sets user.analytics.disabled to true' do
         described_class.analytics_config_interview!
-        expect(PDK.config.user_config['analytics']['disabled']).to be_truthy
+        expect(PDK.config.get(%w[user analytics disabled])).to be_truthy
       end
     end
 
@@ -697,7 +691,7 @@ describe PDK::Config do
 
       it 'sets user.analytics.disabled to false' do
         described_class.analytics_config_interview!
-        expect(PDK.config.user_config['analytics']['disabled']).to be_falsey
+        expect(PDK.config.get(%w[user analytics disabled])).to be_falsey
       end
     end
 
@@ -706,7 +700,7 @@ describe PDK::Config do
 
       it 'sets user.analytics.disabled to true' do
         described_class.analytics_config_interview!
-        expect(PDK.config.user_config['analytics']['disabled']).to be_truthy
+        expect(PDK.config.get(%w[user analytics disabled])).to be_truthy
       end
     end
   end

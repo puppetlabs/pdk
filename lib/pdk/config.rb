@@ -33,14 +33,6 @@ module PDK
       }.merge(options)
     end
 
-    # The user configuration settings.
-    # @deprecated This method is only provided as a courtesy until the `pdk set config` CLI and associated changes in this class, are completed.
-    #             Any read-only operations should be using `.get` or `.get_within_scopes`
-    # @return [PDK::Config::Namespace]
-    def user
-      user_config
-    end
-
     # The system level configuration settings.
     # @return [PDK::Config::Namespace]
     # @api private
@@ -269,9 +261,9 @@ module PDK
 
       if answers.nil?
         PDK.logger.info _('No answer given, opting out of analytics collection.')
-        PDK.config.user['analytics']['disabled'] = true
+        PDK.config.set(%w[user analytics disabled], true)
       else
-        PDK.config.user['analytics']['disabled'] = !answers['enabled']
+        PDK.config.set(%w[user analytics disabled], !answers['enabled'])
       end
 
       PDK.logger.info(text: post_message, wrap: true)
