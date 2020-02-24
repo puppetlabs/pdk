@@ -25,7 +25,7 @@ module PDK
         end
 
         def pattern
-          'metadata.json'
+          contextual_pattern('metadata.json')
         end
 
         def parse_options(targets)

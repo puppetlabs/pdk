@@ -129,13 +129,14 @@ module PDK
       end
       module_function :check_for_deprecated_puppet
 
-      # @param opts [Hash] - the pdk options ot use, defaults to empty hash
+      # @param opts [Hash] - the pdk options to use, defaults to empty hash
       # @option opts [String] :'puppet-dev' Use the puppet development version, default to PDK_PUPPET_DEV env
       # @option opts [String] :'puppet-version' Puppet version to use, default to PDK_PUPPET_VERSION env
       # @option opts [String] :'pe-version' PE Puppet version to use, default to PDK_PE_VERSION env
       # @param logging_disabled [Boolean] - disable logging of PDK info
+      # @param context [PDK::Context::AbstractContext] - The context the PDK is running in
       # @return [Hash] - return hash of { gemset: <>, ruby_version: 2.x.x }
-      def puppet_from_opts_or_env(opts, logging_disabled = false)
+      def puppet_from_opts_or_env(opts, logging_disabled = false, context = PDK.context)
         opts ||= {}
         use_puppet_dev = opts.fetch(:'puppet-dev', PDK::Util::Env['PDK_PUPPET_DEV'])
         desired_puppet_version = opts.fetch(:'puppet-version', PDK::Util::Env['PDK_PUPPET_VERSION'])
@@ -150,8 +151,10 @@ module PDK
               PDK::Util::PuppetVersion.find_gem_for(desired_puppet_version)
             elsif desired_pe_version
               PDK::Util::PuppetVersion.from_pe_version(desired_pe_version)
-            else
+            elsif context.is_a?(PDK::Context::Module)
               PDK::Util::PuppetVersion.from_module_metadata || PDK::Util::PuppetVersion.latest_available
+            else
+              PDK::Util::PuppetVersion.latest_available
             end
         rescue ArgumentError => e
           raise PDK::CLI::ExitWithError, e.message

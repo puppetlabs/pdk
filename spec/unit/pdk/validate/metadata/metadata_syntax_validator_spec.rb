@@ -2,13 +2,15 @@ require 'spec_helper'
 require 'pdk/validate/metadata/metadata_syntax_validator'
 
 describe PDK::Validate::Metadata::MetadataSyntaxValidator do
-  subject(:validator) { described_class.new(targets: targets.map { |r| r[:name] }) }
+  subject(:validator) { described_class.new(validator_context, targets: targets.map { |r| r[:name] }) }
 
+  let(:validator_context) { PDK::Context::Module.new(EMPTY_MODULE_ROOT, EMPTY_MODULE_ROOT) }
   let(:targets) { [] }
 
   describe '.pattern' do
-    it 'only matches metadata JSON files' do
-      expect(validator.pattern).to eq(['metadata.json', 'tasks/*.json'])
+    it 'only contextually matches metadata JSON files' do
+      expect(validator).to receive(:contextual_pattern).with(['metadata.json', 'tasks/*.json']) # rubocop:disable RSpec/SubjectStub This is fine
+      validator.pattern
     end
   end
 

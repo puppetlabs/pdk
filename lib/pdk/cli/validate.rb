@@ -19,6 +19,9 @@ module PDK::CLI
     flag nil, :parallel, _('Run validations in parallel.')
 
     run do |opts, args, _cmd|
+      # Write the context information to the debug log
+      PDK.context.to_debug_log
+
       if args == ['help']
         PDK::CLI.run(['validate', '--help'])
         exit 0
@@ -33,13 +36,16 @@ module PDK::CLI
       end
 
       PDK::CLI::Util.validate_puppet_version_opts(opts)
+      unless PDK.feature_flag?('controlrepo') || PDK.context.is_a?(PDK::Context::Module)
+        raise PDK::CLI::ExitWithError.new(_('Code validation can only be run from inside a valid module directory'), log_level: :error)
+      end
 
-      PDK::CLI::Util.ensure_in_module!(
-        message:   _('Code validation can only be run from inside a valid module directory'),
-        log_level: :info,
-      )
+      PDK::CLI::Util.module_version_check if PDK.context.is_a?(PDK::Context::Module)
 
-      PDK::CLI::Util.module_version_check
+      # Set the ruby version we're going to use early. Must be set before the validators are created.
+      # Note that this is a bit of code-smell and should be fixed
+      puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
+      PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
 
       targets = []
       validators_to_run = nil
@@ -91,18 +97,14 @@ module PDK::CLI
 
       options = targets.empty? ? {} : { targets: targets }
       options[:auto_correct] = true if opts[:'auto-correct']
-
-      # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
-      puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
-      PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
-
       options.merge!(puppet_env[:gemset])
 
+      # Ensure that the bundled gems are up to date and correct Ruby is activated before running any validations.
+      # Note that if no Gemfile exists, then ensure_bundle! will log a debug message and exit gracefully
       require 'pdk/util/bundler'
-
       PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
-      exit_code, report = PDK::Validate.invoke_validators_by_name(validators_to_run, opts.fetch(:parallel, false), options)
+      exit_code, report = PDK::Validate.invoke_validators_by_name(PDK.context, validators_to_run, opts.fetch(:parallel, false), options)
 
       report_formats.each do |format|
         report.send(format[:method], format[:target])

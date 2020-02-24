@@ -3,11 +3,14 @@ require 'pdk/cli'
 
 describe 'pdk console' do
   let(:console_cmd) { PDK::CLI.instance_variable_get(:@console_cmd) }
+  let(:module_path) { '/path/to/testmodule' }
+  let(:context) { PDK::Context::Module.new(module_path, module_path) }
 
   before(:each) do
     allow_any_instance_of(PDK::Util::Bundler::BundleHelper).to receive(:gemfile_lock).and_return(File.join(FIXTURES_DIR, 'module_gemfile_lockfile'))
     allow(Bundler).to receive(:default_lockfile).and_return(File.join(FIXTURES_DIR, 'module_gemfile_lockfile'))
     allow(PDK::CLI::Util).to receive(:module_version_check).and_return(true)
+    allow(PDK).to receive(:context).and_return(context)
   end
 
   shared_context 'with a mocked rubygems response' do

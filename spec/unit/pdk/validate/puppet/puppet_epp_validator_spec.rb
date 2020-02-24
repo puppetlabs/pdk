@@ -2,8 +2,9 @@ require 'spec_helper'
 require 'pdk/validate/puppet/puppet_epp_validator'
 
 describe PDK::Validate::Puppet::PuppetEPPValidator do
-  subject(:validator) { described_class.new(options) }
+  subject(:validator) { described_class.new(validator_context, options) }
 
+  let(:validator_context) { nil }
   let(:options) { {} }
   let(:tmpdir) { File.join('/', 'tmp', 'puppet-epp-validate') }
 
@@ -21,8 +22,9 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
   end
 
   describe '.pattern' do
-    it 'only matches embedded puppet templates' do
-      expect(validator.pattern).to eq('**/*.epp')
+    it 'only contextually matches embedded puppet templates' do
+      expect(validator).to receive(:contextual_pattern).with('**/*.epp') # rubocop:disable RSpec/SubjectStub This is fine
+      validator.pattern
     end
   end
 

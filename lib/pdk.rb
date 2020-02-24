@@ -46,6 +46,21 @@ module PDK
     @context ||= PDK::Context.create(Dir.pwd)
   end
 
+  def self.available_feature_flags
+    @available_feature_flags ||= %w[
+      controlrepo
+    ].freeze
+  end
+
+  def self.requested_feature_flags
+    @requested_feature_flags ||= (PDK::Util::Env['PDK_FEATURE_FLAGS'] || '').split(',').map { |flag| flag.strip }
+  end
+
+  def self.feature_flag?(flagname)
+    return false unless available_feature_flags.include?(flagname)
+    requested_feature_flags.include?(flagname)
+  end
+
   def self.analytics
     @analytics ||= PDK::Analytics.build_client(
       logger:        PDK.logger,

@@ -57,9 +57,9 @@ module PDK
       ].map { |klass| [klass.new.name, klass] }.to_h.freeze
     end
 
-    def self.invoke_validators_by_name(names, parallel = false, options = {})
+    def self.invoke_validators_by_name(context, names, parallel = false, options = {})
       instances = names.select { |name| validator_names.include?(name) }
-                       .map { |name| validator_hash[name].new(options) }
+                       .map { |name| validator_hash[name].new(context, options) }
                        .each { |instance| instance.prepare_invoke! }
       report = PDK::Report.new
 

@@ -67,12 +67,35 @@ module PDK
       # @abstract
       def cmd; end
 
+      # Alternate paths which the command (cmd) may exist in. Typically other ruby gem caches,
+      # or packaged installation bin directories.
+      # @return [Array[String]]
+      # @api private
+      def alternate_bin_paths
+        [
+          PDK::Util::RubyVersion.bin_path,
+          File.join(PDK::Util::RubyVersion.gem_home, 'bin'),
+          PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path_raw| File.join(gem_path_raw, 'bin') },
+          PDK::Util.package_install? ? File.join(PDK::Util.pdk_package_basedir, 'bin') : nil,
+        ].flatten.compact
+      end
+
       # The full path to the command (cmd)
       # Can be overridden in child classes to a non-default path
       # @return [String]
       # @api private
       def cmd_path
-        File.join(PDK::Util.module_root, 'bin', cmd)
+        return @cmd_path unless @cmd_path.nil?
+        @cmd_path = File.join(context.root_path, 'bin', cmd)
+        # Return the path to the command if it exists on disk, or we have a gemfile (i.e. Bundled install)
+        # The Bundle may be created after the prepare_invoke so if the file doesn't exist, it may not be an error
+        return @cmd_path if PDK::Util::Filesystem.exist?(@cmd_path) || !PDK::Util::Bundler::BundleHelper.new.gemfile.nil?
+        # But if there is no Gemfile AND cmd doesn't exist in the default path, we need to go searching...
+        @cmd_path = alternate_bin_paths.map { |alternate_path| File.join(alternate_path, cmd) }
+                                       .find { |path| PDK::Util::Filesystem.exist?(path) }
+        return @cmd_path unless @cmd_path.nil?
+        # If we can't find it anywhere, just let the OS find it
+        @cmd_path = cmd
       end
 
       # An array of command line arguments to pass to the command for validation
@@ -156,7 +179,8 @@ module PDK
         # Nothing to execute so return success
         return 0 if @commands.empty?
 
-        PDK::Util::Bundler.ensure_binstubs!(cmd)
+        # If there's no Gemfile, then we can't ensure the binstubs are correct
+        PDK::Util::Bundler.ensure_binstubs!(cmd) unless PDK::Util::Bundler::BundleHelper.new.gemfile.nil?
 
         exec_group = PDK::CLI::ExecGroup.create(name, { parallel: false }, options)
 

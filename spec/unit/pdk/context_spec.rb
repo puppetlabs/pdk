@@ -36,7 +36,11 @@ describe PDK::Context do
 
     def expect_a_module_context(context, context_path, module_root, has_parent = false)
       expect(context).to be_a(PDK::Context::Module)
-      expect(context.context_path).to eq(context_path)
+      if context_path.nil?
+        expect(context.context_path).not_to be_nil
+      else
+        expect(context.context_path).to eq(context_path) unless context_path.nil?
+      end
       expect(context.root_path).to eq(module_root)
       if has_parent
         expect(context.parent_context).not_to be_a(PDK::Context::None)
@@ -132,25 +136,53 @@ describe PDK::Context do
         context 'in the root of the control repo' do
           let(:context_path) { control_repo_fixture_root }
 
-          it 'returns a Control Repo Context at the root' do
-            expect_a_controlrepo_context(context, context_path, control_repo_fixture_root)
+          it 'returns a None Context' do
+            expect_a_none_context(context, context_path)
           end
         end
 
         context 'in a non-module path of the control repo' do
           let(:context_path) { File.join(control_repo_fixture_root, 'data') }
 
-          it 'returns a Control Repo Context at the root' do
-            expect_a_controlrepo_context(context, context_path, control_repo_fixture_root)
+          it 'returns a None Context' do
+            expect_a_none_context(context, context_path)
           end
         end
 
         context 'in a module path of the control repo' do
           let(:context_path) { File.join(module_dir, 'manifests') }
 
-          it 'returns a Module Context in a Control Repo Context' do
-            expect_a_module_context(context, context_path, module_dir, true)
-            expect_a_controlrepo_context(context.parent_context, nil, control_repo_fixture_root)
+          it 'returns a Module Context ' do
+            expect_a_module_context(context, context_path, module_dir)
+          end
+        end
+
+        context 'and has the controlrepo feature flag' do
+          before(:each) { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
+
+          context 'in the root of the control repo' do
+            let(:context_path) { control_repo_fixture_root }
+
+            it 'returns a Control Repo Context at the root' do
+              expect_a_controlrepo_context(context, context_path, control_repo_fixture_root)
+            end
+          end
+
+          context 'in a non-module path of the control repo' do
+            let(:context_path) { File.join(control_repo_fixture_root, 'data') }
+
+            it 'returns a Control Repo Context at the root' do
+              expect_a_controlrepo_context(context, context_path, control_repo_fixture_root)
+            end
+          end
+
+          context 'in a module path of the control repo' do
+            let(:context_path) { File.join(module_dir, 'manifests') }
+
+            it 'returns a Module Context in a Control Repo Context' do
+              expect_a_module_context(context, context_path, module_dir, true)
+              expect_a_controlrepo_context(context.parent_context, nil, control_repo_fixture_root)
+            end
           end
         end
       end
@@ -176,25 +208,54 @@ describe PDK::Context do
         context 'in the root of the control repo' do
           let(:context_path) { control_repo_fixture_root }
 
-          it 'returns a Control Repo Context at the root' do
-            expect_a_controlrepo_context(context, context_path, control_repo_fixture_root)
+          it 'returns a Module Context ' do
+            expect_a_module_context(context, context_path, control_repo_fixture_root)
           end
         end
 
         context 'in a non-module path of the control repo' do
           let(:context_path) { File.join(control_repo_fixture_root, 'data') }
 
-          it 'returns a Control Repo Context at the root' do
-            expect_a_controlrepo_context(context, context_path, control_repo_fixture_root)
+          it 'returns a Module Context ' do
+            expect_a_module_context(context, context_path, control_repo_fixture_root)
           end
         end
 
         context 'in a module path of the control repo' do
           let(:context_path) { File.join(module_dir, 'manifests') }
 
-          it 'returns a Module Context in a Control Repo Context' do
+          it 'returns a Module Context in a Module Context' do
             expect_a_module_context(context, context_path, module_dir, true)
-            expect_a_controlrepo_context(context.parent_context, nil, control_repo_fixture_root)
+            expect_a_module_context(context.parent_context, nil, control_repo_fixture_root)
+          end
+        end
+
+        context 'and has the controlrepo feature flag' do
+          before(:each) { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
+
+          context 'in the root of the control repo' do
+            let(:context_path) { control_repo_fixture_root }
+
+            it 'returns a Control Repo Context at the root' do
+              expect_a_controlrepo_context(context, context_path, control_repo_fixture_root)
+            end
+          end
+
+          context 'in a non-module path of the control repo' do
+            let(:context_path) { File.join(control_repo_fixture_root, 'data') }
+
+            it 'returns a Control Repo Context at the root' do
+              expect_a_controlrepo_context(context, context_path, control_repo_fixture_root)
+            end
+          end
+
+          context 'in a module path of the control repo' do
+            let(:context_path) { File.join(module_dir, 'manifests') }
+
+            it 'returns a Module Context in a Control Repo Context' do
+              expect_a_module_context(context, context_path, module_dir, true)
+              expect_a_controlrepo_context(context.parent_context, nil, control_repo_fixture_root)
+            end
           end
         end
       end

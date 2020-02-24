@@ -2,8 +2,9 @@ require 'spec_helper'
 require 'pdk/validate/validator'
 
 describe PDK::Validate::Validator do
-  subject(:validator) { described_class.new(validator_options) }
+  subject(:validator) { described_class.new(validator_context, validator_options) }
 
+  let(:validator_context) { nil }
   let(:validator_options) { {} }
   let(:mock_spinner) do
     require 'pdk/cli/util/spinner'
@@ -20,7 +21,19 @@ describe PDK::Validate::Validator do
     let(:validator_options) { { 'abc' => :foo } }
 
     it 'remembers the options' do
+      expect(validator.context).to be_a(PDK::Context::None)
+    end
+
+    it 'defaults to None context' do
       expect(validator.options).to eq(validator_options)
+    end
+
+    context 'with a real context' do
+      let(:validator_context) { PDK::Context::Module.new(nil, nil) }
+
+      it 'remembers the context' do
+        expect(validator.context).to be(validator_context)
+      end
     end
   end
 

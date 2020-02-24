@@ -14,12 +14,12 @@ module PDK
         end
 
         def pattern
-          'tasks/**/*'
+          contextual_pattern('tasks/**/*')
         end
 
         def spinner_text
           _('Checking task names (%{pattern}).') % {
-            pattern: pattern,
+            pattern: pattern.join(' '),
           }
         end
 

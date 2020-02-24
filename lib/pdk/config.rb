@@ -79,6 +79,17 @@ module PDK
             end
           end
         end
+
+        # Display the feature flags
+        mount :pdk_feature_flags, PDK::Config::Namespace.new('pdk_feature_flags') do
+          setting 'available' do
+            default_to { PDK.available_feature_flags }
+          end
+
+          setting 'requested' do
+            default_to { PDK.requested_feature_flags }
+          end
+        end
       end
     end
 

@@ -18,8 +18,9 @@ shared_examples_for 'it sets the common rubocop options' do
 end
 
 describe PDK::Validate::Ruby::RubyRubocopValidator do
-  subject(:validator) { described_class.new(options) }
+  subject(:validator) { described_class.new(validator_context, options) }
 
+  let(:validator_context) { nil }
   let(:options) { {} }
 
   it 'defines the ExternalCommandValidator attributes' do
@@ -31,8 +32,19 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
   end
 
   describe '.pattern' do
-    it 'only matches ruby files' do
-      expect(validator.pattern).to eq('**/**.rb')
+    context 'in a Puppet Module' do
+      it 'only matches ruby files' do
+        expect(validator.pattern).to eq('**/**.rb')
+      end
+    end
+
+    context 'in a Control Repo' do
+      let(:context_root) { File.join(FIXTURES_DIR, 'control_repo') }
+      let(:validator_context) { PDK::Context::ControlRepo.new(context_root, context_root) }
+
+      it 'only matches ruby files and Pupeptfile' do
+        expect(validator.pattern).to eq(['Puppetfile', '**/**.rb'])
+      end
     end
   end
 

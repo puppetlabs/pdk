@@ -16,8 +16,9 @@ shared_examples_for 'it sets the common puppet-lint options' do
 end
 
 describe PDK::Validate::Puppet::PuppetLintValidator do
-  subject(:validator) { described_class.new(options) }
+  subject(:validator) { described_class.new(validator_context, options) }
 
+  let(:validator_context) { nil }
   let(:options) { {} }
 
   it 'defines the base validator attributes' do
@@ -29,8 +30,9 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
   end
 
   describe '.pattern' do
-    it 'only matches puppet manifests' do
-      expect(validator.pattern).to eq('**/*.pp')
+    it 'only contextually matches puppet manifests' do
+      expect(validator).to receive(:contextual_pattern).with('**/*.pp') # rubocop:disable RSpec/SubjectStub This is fine
+      validator.pattern
     end
   end
 

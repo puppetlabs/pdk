@@ -2,7 +2,8 @@ require 'spec_helper'
 require 'pdk/validate/external_command_validator'
 
 describe PDK::Validate::ExternalCommandValidator do
-  let(:validator) { described_class.new(validator_options) }
+  let(:validator) { described_class.new(validator_context, validator_options) }
+  let(:validator_context) { PDK::Context::Module.new(EMPTY_MODULE_ROOT, EMPTY_MODULE_ROOT) }
   let(:validator_options) { {} }
   let(:targets) { [] }
   let(:skipped_targets) { [] }
@@ -35,12 +36,25 @@ describe PDK::Validate::ExternalCommandValidator do
 
   describe '.cmd_path' do
     before(:each) do
-      allow(PDK::Util).to receive(:module_root).and_return('/does/not/exist')
       allow(validator).to receive(:cmd).and_return('command')
     end
 
     it 'returns a String' do
       expect(validator.cmd_path).to be_a(String)
+    end
+
+    context 'when the context has no bin path or Gemfile' do
+      before(:each) do
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(%r{#{validator_context.root_path}}).and_return(false)
+        allow_any_instance_of(PDK::Util::Bundler::BundleHelper).to receive(:gemfile).and_return(nil) # rubocop:disable RSpec/AnyInstance BundleHelper needs a refactor
+      end
+
+      it 'uses alternate_bin_paths' do
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(%r{/fakepath/bin}).and_return(true)
+        expect(validator).to receive(:alternate_bin_paths).and_return(['/fakepath/bin'])
+
+        expect(validator.cmd_path).to eq('/fakepath/bin/command')
+      end
     end
   end
 
@@ -59,8 +73,6 @@ describe PDK::Validate::ExternalCommandValidator do
   describe '.prepare_invoke!' do
     before(:each) do
       allow(validator).to receive(:cmd).and_return('mock_cmd')
-      allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
-      allow(PDK::Util::RubyVersion).to receive(:bin_path).and_return('bin/ruby/path')
     end
 
     it 'calls parse_targets only once' do
@@ -195,7 +207,6 @@ describe PDK::Validate::ExternalCommandValidator do
     let(:invalid_targets) { ['invalid'] }
 
     before(:each) do
-      allow(PDK::Util).to receive(:module_root).and_return('/does/not/exist')
       allow(validator).to receive(:cmd).and_return('command')
     end
 
