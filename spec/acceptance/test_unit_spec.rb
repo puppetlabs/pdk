@@ -211,6 +211,77 @@ describe 'pdk test unit', module_command: true do
       end
     end
 
+    context 'with unbalanced json in the test descriptions' do
+      before(:all) do
+        FileUtils.mkdir_p(File.join('spec', 'unit'))
+        File.open(File.join('spec', 'unit', 'unbalanced_json_spec.rb'), 'w') do |f|
+          f.puts <<-EOF
+            RSpec.describe "broken-junit" do
+              let(:large_nested_hash) do
+                {
+                  single_one: 'single_one',
+                  single_two: 'single_two',
+                  single_three: 'single_three',
+                  single_four: 'single_four',
+                  single_five: 'single_five',
+                  nested: {
+                    nested_one: 'nested_one',
+                    nested_two: 'nested_two',
+                    nested_three: 'nested_three',
+                    nested_four: 'nested_four',
+                    nested_five: 'nested_five',
+                  },
+                }
+              end
+
+              subject do
+                large_nested_hash
+              end
+
+              it { is_expected.to be_a Hash }
+              it { is_expected.to eq large_nested_hash }
+            end
+          EOF
+        end
+      end
+
+      after(:all) do
+        FileUtils.rm_rf(File.join('spec', 'unit'))
+        FileUtils.rm('report.xml')
+        FileUtils.rm('report-parallel.xml')
+      end
+
+      describe command('pdk test unit --format junit:report.xml') do
+        its(:exit_status) { is_expected.to eq(0) }
+
+        describe file('report.xml') do
+          its(:content) { is_expected.to contain_valid_junit_xml }
+
+          its(:content) do
+            is_expected.to have_junit_testsuite('rspec').with_attributes(
+              'failures' => eq(0),
+              'tests'    => eq(2),
+            )
+          end
+        end
+      end
+
+      describe command('pdk test unit --parallel --format junit:report-parallel.xml') do
+        its(:exit_status) { is_expected.to eq(0) }
+
+        describe file('report-parallel.xml') do
+          its(:content) { is_expected.to contain_valid_junit_xml }
+
+          its(:content) do
+            is_expected.to have_junit_testsuite('rspec').with_attributes(
+              'failures' => eq(0),
+              'tests'    => eq(2),
+            )
+          end
+        end
+      end
+    end
+
     context 'when there is a problem setting up the fixtures' do
       before(:all) do
         File.open('.fixtures.yml', 'w') do |f|

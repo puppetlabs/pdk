@@ -225,7 +225,7 @@ module PDK
 
       json_result = break_on_first ? nil : []
 
-      text.scan(%r{\{(?:[^{}]|(?:\g<0>))*\}?}x) do |str|
+      text.split("\n").select { |r| r.start_with?('{') && r.end_with?('}') }.each do |str|
         begin
           if break_on_first
             json_result = JSON.parse(str)
