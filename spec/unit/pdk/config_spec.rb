@@ -39,6 +39,30 @@ describe PDK::Config do
     end
   end
 
+  describe '.project_config' do
+    it 'returns a PDK::Config::Namespace' do
+      expect(config.project_config).to be_a(PDK::Config::Namespace)
+    end
+
+    context 'Given a Control Repo context' do
+      subject(:config) { described_class.new('context' => repo_context) }
+
+      let(:repo_path) { File.join(FIXTURES_DIR, 'control_repo') }
+      let(:repo_context) { PDK::Context::ControlRepo.new(repo_path, repo_path) }
+
+      before(:each) do
+        # Allow anything in the fixtures dir to actually be read
+        allow(PDK::Util::Filesystem).to receive(:file?).with(%r{#{FIXTURES_DIR}}).and_call_original
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{#{FIXTURES_DIR}}).and_call_original
+      end
+
+      it 'has environment settings' do
+        # The modulepath has a default setting so it will always exist
+        expect(config.get('project.environment.modulepath')).not_to be_nil
+      end
+    end
+  end
+
   describe '.resolve' do
     subject(:resolve) { config.resolve(filter) }
 

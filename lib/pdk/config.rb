@@ -14,12 +14,13 @@ module PDK
     autoload :YAML, 'pdk/config/yaml'
 
     # Create a new instance of the PDK Configuration
-    # @param options [Hash[String => String]] Optional hash to override configuration options
-    # @option options [String] 'system.path'                 Path to the system PDK configuration file
-    # @option options [String] 'system.module_defaults.path' Path to the system module answers PDK configuration file
-    # @option options [String] 'user.path'                   Path to the user PDK configuration file
-    # @option options [String] 'user.module_defaults.path'   Path to the user module answers PDK configuration file
-    # @option options [String] 'user.analytics.path'         Path to the user analytics PDK configuration file
+    # @param options [Hash[String => Object]] Optional hash to override configuration options
+    # @option options [String]                        'system.path'                 Path to the system PDK configuration file
+    # @option options [String]                        'system.module_defaults.path' Path to the system module answers PDK configuration file
+    # @option options [String]                        'user.path'                   Path to the user PDK configuration file
+    # @option options [String]                        'user.module_defaults.path'   Path to the user module answers PDK configuration file
+    # @option options [String]                        'user.analytics.path'         Path to the user analytics PDK configuration file
+    # @option options [PDK::Context::AbstractContext] 'context'                     The context that the configuration should be created in
     def initialize(options = nil)
       options = {} if options.nil?
       @config_options = {
@@ -28,6 +29,7 @@ module PDK
         'user.path'                   => PDK::Config.user_config_path,
         'user.module_defaults.path'   => PDK::AnswerFile.default_answer_file_path,
         'user.analytics.path'         => PDK::Config.analytics_config_path,
+        'context'                     => PDK.context,
       }.merge(options)
     end
 
@@ -80,12 +82,26 @@ module PDK
       end
     end
 
+    # The project level configuration settings.
+    # @return [PDK::Config::Namespace]
+    # @api private
+    def project_config
+      context = @config_options['context']
+      @project ||= PDK::Config::Namespace.new('project') do
+        if context.is_a?(PDK::Context::ControlRepo)
+          mount :environment, PDK::ControlRepo.environment_conf_as_config(File.join(context.root_path, 'environment.conf'))
+        end
+      end
+    end
+
     # Resolves *all* filtered settings from all namespaces
     #
     # @param filter [String] Only resolve setting names which match the filter. See PDK::Config::Namespace.be_resolved? for matching rules
     # @return [Hash{String => Object}] All resolved settings for example {'user.module_defaults.author' => 'johndoe'}
     def resolve(filter = nil)
-      system_config.resolve(filter).merge(user_config.resolve(filter))
+      all_scopes.values.reverse.reduce({}) do |result, method_name|
+        result.merge(send(method_name).resolve(filter))
+      end
     end
 
     # Returns a configuration setting by name. This name can either be a String, Array or parameters e.g. These are equivalent
@@ -264,8 +280,9 @@ module PDK
     def all_scopes
       # Note - Order is important. This dictates the resolution precedence order (topmost is processed first)
       {
-        'user'   => :user_config,
-        'system' => :system_config,
+        'project' => :project_config,
+        'user'    => :user_config,
+        'system'  => :system_config,
       }.freeze
     end
     #:nocov:
