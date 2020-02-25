@@ -195,4 +195,32 @@ describe PDK::Util::ChangelogGenerator do
       end
     end
   end
+
+  describe '.github_changelog_generator_available!' do
+    subject(:method) { described_class.github_changelog_generator_available! }
+
+    let(:dummy_spec) { gem_present ? [Gem::Specification.new] : [] }
+
+    before(:each) do
+      allow(::Bundler.rubygems).to receive(:find_name).and_call_original
+      allow(::Bundler.rubygems).to receive(:find_name)
+        .with('github_changelog_generator').and_return(dummy_spec)
+    end
+
+    context 'when the gem is available to Bundler' do
+      let(:gem_present) { true }
+
+      it 'does not raise an error' do
+        expect { method }.not_to raise_error
+      end
+    end
+
+    context 'when the gem is not available to Bundler' do
+      let(:gem_present) { false }
+
+      it 'raises an error' do
+        expect { method }.to raise_error(PDK::CLI::ExitWithError, %r{not installed})
+      end
+    end
+  end
 end

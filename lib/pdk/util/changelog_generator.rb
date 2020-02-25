@@ -5,11 +5,16 @@ module PDK
     module ChangelogGenerator
       # Taken from the version regex in https://forgeapi.puppet.com/schemas/module.json
       VERSION_REGEX = %r{^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$}
+      GEM = 'github_changelog_generator'.freeze
 
       # Raises if the github_changelog_generator is not available
       def self.github_changelog_generator_available!
         require 'bundler'
-        raise PDK::CLI::ExitWithError, _('Unable to generate the changelog as the github_changelog_generator gem is not installed') unless Bundler.rubygems.find_name('github_changelog_generator').any?
+        return if ::Bundler.rubygems.find_name(GEM).any?
+
+        raise PDK::CLI::ExitWithError, _(
+          'Unable to generate the changelog as the %{gem} gem is not installed',
+        ) % { gem: GEM }
       end
 
       # Runs the Changelog Generator gem (in the module's context) to automatically create a CHANGLELOG.MD file
