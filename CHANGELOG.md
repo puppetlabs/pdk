@@ -4,6 +4,30 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.17.0](https://github.com/puppetlabs/pdk/tree/v1.17.0) (2020-02-27)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.16.0...v1.17.0)
+
+**Implemented enhancements:**
+
+- \(PDK-1618\)\(PDK-1613\)\(PDK-1616\) Add Control Repo support to Validators [\#858](https://github.com/puppetlabs/pdk/pull/858) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1614\) Add project.environment settings [\#857](https://github.com/puppetlabs/pdk/pull/857) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1615\) Add Ini File configuration support [\#856](https://github.com/puppetlabs/pdk/pull/856) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1612\) Add PDK::Context and context detection [\#853](https://github.com/puppetlabs/pdk/pull/853) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1607\)\(PDK-1608\) Implement system-level settings for PDK configuration [\#841](https://github.com/puppetlabs/pdk/pull/841) ([glennsarti](https://github.com/glennsarti))
+
+**Fixed bugs:**
+
+- Unable to automatically generate the changelog [\#855](https://github.com/puppetlabs/pdk/issues/855)
+- 'pdk new module' bundler error with PDK-1.16 on macOS 10.14 [\#845](https://github.com/puppetlabs/pdk/issues/845)
+
+**Merged pull requests:**
+
+- \(\#855\) Use correct namespace for external Bundler call [\#860](https://github.com/puppetlabs/pdk/pull/860) ([rodjek](https://github.com/rodjek))
+- \(maint\) Use Ruby 2.5 on Travis for PDK as a library tests [\#849](https://github.com/puppetlabs/pdk/pull/849) ([glennsarti](https://github.com/glennsarti))
+- \(maint\) Update for Ruby 2.3 and JSON Schema tests [\#847](https://github.com/puppetlabs/pdk/pull/847) ([glennsarti](https://github.com/glennsarti))
+- \(maint\) Add basic tests for running PDK unprivileged [\#846](https://github.com/puppetlabs/pdk/pull/846) ([rodjek](https://github.com/rodjek))
+- \(PDK-1592\) Refactor PDK validators to be more singular purpose [\#831](https://github.com/puppetlabs/pdk/pull/831) ([glennsarti](https://github.com/glennsarti))
+
 ## [v1.16.0](https://github.com/puppetlabs/pdk/tree/v1.16.0) (2020-02-05)
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.15.0...v1.16.0)
 

@@ -6,11 +6,11 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.15.0-30-g4c79619\n"
+"Project-Id-Version: puppet development kit v1.16.0-46-ga0df432\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2020-02-05 12:17+1100\n"
-"PO-Revision-Date: 2020-02-05 12:17+1100\n"
+"POT-Creation-Date: 2020-02-27 10:49+1100\n"
+"PO-Revision-Date: 2020-02-27 10:49+1100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -21,26 +21,6 @@ msgstr ""
 
 #: ../lib/pdk/analytics/client/google_analytics.rb:45 ../lib/pdk/analytics/client/google_analytics.rb:60
 msgid "Unknown analytics key '%{key}'"
-msgstr ""
-
-#: ../lib/pdk/answer_file.rb:41
-msgid "Answer file can be updated only with a Hash"
-msgstr ""
-
-#: ../lib/pdk/answer_file.rb:68
-msgid "Unable to open '%{file}' for reading"
-msgstr ""
-
-#: ../lib/pdk/answer_file.rb:77
-msgid "Answer file '%{path}' did not contain a valid set of answers, recreating it"
-msgstr ""
-
-#: ../lib/pdk/answer_file.rb:83
-msgid "Answer file '%{path}' did not contain valid JSON, recreating it"
-msgstr ""
-
-#: ../lib/pdk/answer_file.rb:97
-msgid "Unable to write '%{file}': %{msg}"
 msgstr ""
 
 #: ../lib/pdk/cli.rb:56
@@ -101,10 +81,6 @@ msgstr ""
 
 #: ../lib/pdk/cli.rb:150
 msgid "Enable debug output."
-msgstr ""
-
-#: ../lib/pdk/cli.rb:154
-msgid "Path to an answer file."
 msgstr ""
 
 #: ../lib/pdk/cli/build.rb:4
@@ -182,7 +158,11 @@ msgid "config [subcommand] [options]"
 msgstr ""
 
 #: ../lib/pdk/cli/config.rb:5
-msgid "Configure the Puppet Development Kit."
+msgid "(Deprecated) Configure the Puppet Development Kit."
+msgstr ""
+
+#: ../lib/pdk/cli/config.rb:9
+msgid "The 'pdk config' command is deprecated, please use 'pdk get config' and 'pdk set config' instead."
 msgstr ""
 
 #: ../lib/pdk/cli/config/get.rb:4
@@ -190,18 +170,22 @@ msgid "config get [name]"
 msgstr ""
 
 #: ../lib/pdk/cli/config/get.rb:5
-msgid "Retrieve the configuration for <name>. If not specified, retrieve all configuration settings"
+msgid "(Deprecated) Retrieve the configuration for <name>. If not specified, retrieve all configuration settings"
 msgstr ""
 
-#: ../lib/pdk/cli/config/get.rb:12
+#: ../lib/pdk/cli/config/get.rb:8
+msgid "The 'pdk config get' command is deprecated, please use 'pdk get config' instead."
+msgstr ""
+
+#: ../lib/pdk/cli/config/get.rb:14 ../lib/pdk/cli/get/config.rb:12
 msgid "Configuration item '%{name}' does not exist"
 msgstr ""
 
-#: ../lib/pdk/cli/config/get.rb:17
+#: ../lib/pdk/cli/config/get.rb:19 ../lib/pdk/cli/get/config.rb:17
 msgid "%{value}"
 msgstr ""
 
-#: ../lib/pdk/cli/config/get.rb:21
+#: ../lib/pdk/cli/config/get.rb:23 ../lib/pdk/cli/get/config.rb:21
 msgid "%{name}=%{value}"
 msgstr ""
 
@@ -293,43 +277,43 @@ msgstr ""
 msgid "Using '%{vendored_bin}' from PDK package."
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:42
+#: ../lib/pdk/cli/exec/command.rb:50
 msgid "Expected execution context to be :system or :module but got '%{context}'."
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:88 ../lib/pdk/cli/exec/interactive_command.rb:46
+#: ../lib/pdk/cli/exec/command.rb:101 ../lib/pdk/cli/exec/interactive_command.rb:46
 msgid "Current working directory is not part of a module. (No metadata.json was found.)"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:115
+#: ../lib/pdk/cli/exec/command.rb:128
 msgid "STDOUT: %{output}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:118
+#: ../lib/pdk/cli/exec/command.rb:131
 msgid "STDERR: %{output}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:132
+#: ../lib/pdk/cli/exec/command.rb:145
 msgid "PUPPET_GEM_VERSION is not supported by PDK. Use the --puppet-version option on your PDK command or set the PDK_PUPPET_VERSION environment variable instead"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:141
+#: ../lib/pdk/cli/exec/command.rb:154
 msgid "%{varname} is not supported by PDK."
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:212
+#: ../lib/pdk/cli/exec/command.rb:225
 msgid "Executing '%{command}'"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:215 ../lib/pdk/cli/exec/interactive_command.rb:78
+#: ../lib/pdk/cli/exec/command.rb:228 ../lib/pdk/cli/exec/interactive_command.rb:78
 msgid "Command environment:"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:226
+#: ../lib/pdk/cli/exec/command.rb:239
 msgid "Failed to execute '%{command}': %{message}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:242
+#: ../lib/pdk/cli/exec/command.rb:255
 msgid "Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})"
 msgstr ""
 
@@ -347,8 +331,24 @@ msgid ""
 "                              %{duration_in_seconds}s; exit code: %{exit_code})"
 msgstr ""
 
-#: ../lib/pdk/cli/exec_group.rb:30
+#: ../lib/pdk/cli/exec_group.rb:41
 msgid "No block registered"
+msgstr ""
+
+#: ../lib/pdk/cli/get.rb:4
+msgid "get [subcommand] [options]"
+msgstr ""
+
+#: ../lib/pdk/cli/get.rb:5
+msgid "Retrieve information about the PDK or current project."
+msgstr ""
+
+#: ../lib/pdk/cli/get/config.rb:4
+msgid "config [name]"
+msgstr ""
+
+#: ../lib/pdk/cli/get/config.rb:5
+msgid "Retrieve the configuration for <name>. If not specified, retrieve all configuration settings"
 msgstr ""
 
 #: ../lib/pdk/cli/module.rb:4
@@ -779,23 +779,23 @@ msgstr ""
 msgid "Support for Puppet versions older than %{version} is deprecated and will be removed in a future version of PDK."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:162
+#: ../lib/pdk/cli/util.rb:165
 msgid "Using Ruby %{version}"
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:176
+#: ../lib/pdk/cli/util.rb:179
 msgid "Using %{gem} %{version}"
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:207 ../lib/pdk/cli/util.rb:219
+#: ../lib/pdk/cli/util.rb:210 ../lib/pdk/cli/util.rb:222
 msgid "You cannot specify a %{first} and %{second} at the same time."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:255
+#: ../lib/pdk/cli/util.rb:258
 msgid "--template-ref requires --template-url to also be specified."
 msgstr ""
 
-#: ../lib/pdk/cli/util.rb:259
+#: ../lib/pdk/cli/util.rb:262
 msgid "--template-url may not be used to specify paths containing #'s."
 msgstr ""
 
@@ -852,45 +852,61 @@ msgstr ""
 msgid "Run validations in parallel."
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:35
+#: ../lib/pdk/cli/validate.rb:34
 msgid "Available validators: %{validator_names}"
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:42
+#: ../lib/pdk/cli/validate.rb:40
 msgid "Code validation can only be run from inside a valid module directory"
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:58
+#: ../lib/pdk/cli/validate.rb:61
 msgid "Unknown validator '%{v}'. Available validators: %{validators}."
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:68 ../lib/pdk/cli/validate.rb:72
+#: ../lib/pdk/cli/validate.rb:71 ../lib/pdk/cli/validate.rb:75
 msgid "Running all available validators..."
 msgstr ""
 
-#: ../lib/pdk/cli/validate.rb:111
-msgid "Validating module using %{num_of_threads} threads"
+#: ../lib/pdk/config.rb:146
+msgid "Expected an Array but got '%{klass}' for scopes"
 msgstr ""
 
-#: ../lib/pdk/config.rb:53
+#: ../lib/pdk/config.rb:147
+msgid "Expected an Array or String but got '%{klass}' for setting_name"
+msgstr ""
+
+#: ../lib/pdk/config.rb:167 ../lib/pdk/config/setting.rb:113
+msgid "must be passed a block"
+msgstr ""
+
+#: ../lib/pdk/config.rb:176
 msgid "Unable to load %{file}: %{message}"
 msgstr ""
 
-#: ../lib/pdk/config.rb:86
+#: ../lib/pdk/config.rb:217
 msgid ""
 "PDK collects anonymous usage information to help us understand how it is being used and make decisions on how to improve it. You can find out more about what data we collect and how it is used in the PDK documentation at %{url}.\n"
 msgstr ""
 
-#: ../lib/pdk/config.rb:92
+#: ../lib/pdk/config.rb:223
 msgid "You can opt in or out of the usage data collection at any time by editing the analytics configuration file at %{path} and changing the '%{key}' value."
 msgstr ""
 
-#: ../lib/pdk/config.rb:104
+#: ../lib/pdk/config.rb:235
 msgid "Do you consent to the collection of anonymous PDK usage information?"
 msgstr ""
 
-#: ../lib/pdk/config.rb:118
+#: ../lib/pdk/config.rb:249
 msgid "No answer given, opting out of analytics collection."
+msgstr ""
+
+#: ../lib/pdk/config.rb:282
+msgid "Expected a String but got '%{klass}'"
+msgstr ""
+
+#: ../lib/pdk/config/ini_file_setting.rb:23 ../lib/pdk/config/ini_file_setting.rb:31
+msgid "The setting %{key} may only be a String or Integer, not %{class}"
 msgstr ""
 
 #: ../lib/pdk/config/json_schema_namespace.rb:102
@@ -905,7 +921,7 @@ msgstr ""
 msgid "Unable to open %{file} for reading. JSON Error: %{msg}"
 msgstr ""
 
-#: ../lib/pdk/config/json_schema_setting.rb:27 ../lib/pdk/config/setting.rb:98
+#: ../lib/pdk/config/json_schema_setting.rb:27 ../lib/pdk/config/setting.rb:99
 msgid "%{key} %{message}"
 msgstr ""
 
@@ -913,36 +929,32 @@ msgstr ""
 msgid "The configuration file %{filename} is not valid: %{message}"
 msgstr ""
 
-#: ../lib/pdk/config/namespace.rb:67
+#: ../lib/pdk/config/namespace.rb:68
 msgid "Only PDK::Config::Namespace objects can be mounted into a namespace"
 msgstr ""
 
-#: ../lib/pdk/config/namespace.rb:139
+#: ../lib/pdk/config/namespace.rb:141
 msgid "Namespace mounts can not be set a value"
 msgstr ""
 
-#: ../lib/pdk/config/namespace.rb:288
+#: ../lib/pdk/config/namespace.rb:308
 msgid "Unable to open %{file} for reading"
 msgstr ""
 
-#: ../lib/pdk/config/namespace.rb:311
+#: ../lib/pdk/config/namespace.rb:331
 msgid "Unable to open %{file} for writing"
 msgstr ""
 
-#: ../lib/pdk/config/setting.rb:79
+#: ../lib/pdk/config/setting.rb:80
 msgid "`validator` must be a Hash"
 msgstr ""
 
-#: ../lib/pdk/config/setting.rb:80
+#: ../lib/pdk/config/setting.rb:81
 msgid "the :proc key must contain a Proc"
 msgstr ""
 
-#: ../lib/pdk/config/setting.rb:81
+#: ../lib/pdk/config/setting.rb:82
 msgid "the :message key must contain a String"
-msgstr ""
-
-#: ../lib/pdk/config/setting.rb:112
-msgid "must be passed a block"
 msgstr ""
 
 #: ../lib/pdk/config/validator.rb:16
@@ -959,6 +971,18 @@ msgstr ""
 
 #: ../lib/pdk/config/yaml.rb:26 ../lib/pdk/config/yaml_with_schema.rb:44
 msgid "Unsupported class in %{file}: %{error}"
+msgstr ""
+
+#: ../lib/pdk/context/control_repo.rb:47
+msgid "a Control Repository context"
+msgstr ""
+
+#: ../lib/pdk/context/module.rb:23
+msgid "a Puppet Module context"
+msgstr ""
+
+#: ../lib/pdk/context/none.rb:11
+msgid "an unknown context"
 msgstr ""
 
 #: ../lib/pdk/generate/module.rb:10
@@ -1353,47 +1377,47 @@ msgstr ""
 msgid "Updating version to %{module_version}"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:120
+#: ../lib/pdk/module/release.rb:115
 msgid "An error occured during validation"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:125
+#: ../lib/pdk/module/release.rb:119
 msgid "Updating documentation using puppet strings"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:129
+#: ../lib/pdk/module/release.rb:123
 msgid "An error occured generating the module documentation: %{stdout}"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:134
+#: ../lib/pdk/module/release.rb:128
 msgid "Running dependency checks"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:140
+#: ../lib/pdk/module/release.rb:134
 msgid "An error occured checking the module dependencies: %{stdout}"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:150
+#: ../lib/pdk/module/release.rb:144
 msgid "Module tarball %{tarball_path} does not exist"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:156
+#: ../lib/pdk/module/release.rb:150
 msgid "Uploading tarball to puppet forge..."
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:172
+#: ../lib/pdk/module/release.rb:166
 msgid "Error uploading to Puppet Forge: %{result}"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:173
+#: ../lib/pdk/module/release.rb:167
 msgid "Publish to Forge was successful"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:178
+#: ../lib/pdk/module/release.rb:172
 msgid "Missing forge-upload-url option"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:179
+#: ../lib/pdk/module/release.rb:173
 msgid "Missing forge-token option"
 msgstr ""
 
@@ -1651,33 +1675,37 @@ msgstr ""
 msgid "Unable to install missing Gemfile dependencies."
 msgstr ""
 
-#: ../lib/pdk/util/bundler.rb:220
+#: ../lib/pdk/util/bundler.rb:213
+msgid "Unable to install requested binstubs as the Gemfile is missing"
+msgstr ""
+
+#: ../lib/pdk/util/bundler.rb:221
 msgid ""
 "Failed to generate binstubs for '%{gems}':\n"
 "%{output}"
 msgstr ""
 
-#: ../lib/pdk/util/bundler.rb:221
+#: ../lib/pdk/util/bundler.rb:222
 msgid "Unable to install requested binstubs."
 msgstr ""
 
-#: ../lib/pdk/util/changelog_generator.rb:12
-msgid "Unable to generate the changelog as the github_changelog_generator gem is not installed"
+#: ../lib/pdk/util/changelog_generator.rb:15
+msgid "Unable to generate the changelog as the %{gem} gem is not installed"
 msgstr ""
 
-#: ../lib/pdk/util/changelog_generator.rb:25
+#: ../lib/pdk/util/changelog_generator.rb:30
 msgid "Error generating changelog: %{stdout}"
 msgstr ""
 
-#: ../lib/pdk/util/changelog_generator.rb:29
+#: ../lib/pdk/util/changelog_generator.rb:34
 msgid "The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details"
 msgstr ""
 
-#: ../lib/pdk/util/changelog_generator.rb:38
+#: ../lib/pdk/util/changelog_generator.rb:43
 msgid "Invalid version string %{version}"
 msgstr ""
 
-#: ../lib/pdk/util/changelog_generator.rb:40
+#: ../lib/pdk/util/changelog_generator.rb:45
 msgid "Determing the target version from '%{file}'"
 msgstr ""
 
@@ -1773,27 +1801,27 @@ msgstr ""
 msgid "%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}"
 msgstr ""
 
-#: ../lib/pdk/util/template_uri.rb:232
+#: ../lib/pdk/util/template_uri.rb:233
 msgid "--template-url"
 msgstr ""
 
-#: ../lib/pdk/util/template_uri.rb:233
+#: ../lib/pdk/util/template_uri.rb:234
 msgid "metadata.json"
 msgstr ""
 
-#: ../lib/pdk/util/template_uri.rb:234
+#: ../lib/pdk/util/template_uri.rb:235
 msgid "PDK answers"
 msgstr ""
 
-#: ../lib/pdk/util/template_uri.rb:235
+#: ../lib/pdk/util/template_uri.rb:236
 msgid "default"
 msgstr ""
 
-#: ../lib/pdk/util/template_uri.rb:259
+#: ../lib/pdk/util/template_uri.rb:260
 msgid "Unable to find a valid module template to use."
 msgstr ""
 
-#: ../lib/pdk/util/template_uri.rb:283
+#: ../lib/pdk/util/template_uri.rb:284
 msgid "Unable to find a valid template at %{uri}"
 msgstr ""
 
@@ -1841,90 +1869,98 @@ msgstr ""
 msgid "Failed to set environment variaible: %{name}"
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:105
-msgid "Invoking %{cmd}"
+#: ../lib/pdk/validate.rb:71
+msgid "Validating module using %{num_of_threads} threads"
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:110
+#: ../lib/pdk/validate/invokable_validator.rb:120
+msgid "Running %{name} validator ..."
+msgstr ""
+
+#: ../lib/pdk/validate/invokable_validator.rb:137
 msgid "%{validator}: Skipped '%{target}'. Target does not contain any files to validate (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:114
+#: ../lib/pdk/validate/invokable_validator.rb:141
 msgid "Target does not contain any files to validate (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:123
+#: ../lib/pdk/validate/invokable_validator.rb:153
 msgid "%{validator}: Skipped '%{target}'. Target file not found."
 msgstr ""
 
-#: ../lib/pdk/validate/base_validator.rb:127
+#: ../lib/pdk/validate/invokable_validator.rb:157
 msgid "File does not exist."
 msgstr ""
 
-#: ../lib/pdk/validate/metadata/metadata_json_lint.rb:19
+#: ../lib/pdk/validate/metadata/metadata_json_lint_validator.rb:22
 msgid "Checking module metadata style (%{targets})."
 msgstr ""
 
-#: ../lib/pdk/validate/metadata/metadata_json_lint.rb:36
-msgid "More than 1 target provided to PDK::Validate::MetadataJSONLint."
+#: ../lib/pdk/validate/metadata/metadata_json_lint_validator.rb:39
+msgid "More than 1 target provided to PDK::Validate::MetadataJSONLintValidator."
 msgstr ""
 
-#: ../lib/pdk/validate/metadata/metadata_syntax.rb:15
-msgid "Checking metadata syntax (%{targets})."
+#: ../lib/pdk/validate/metadata/metadata_syntax_validator.rb:16
+msgid "Checking metadata syntax (%{patterns})."
 msgstr ""
 
-#: ../lib/pdk/validate/metadata/metadata_syntax.rb:71 ../lib/pdk/validate/tasks/metadata_lint.rb:81 ../lib/pdk/validate/yaml/syntax.rb:76
+#: ../lib/pdk/validate/metadata/metadata_syntax_validator.rb:43 ../lib/pdk/validate/tasks/tasks_metadata_lint_validator.rb:42 ../lib/pdk/validate/yaml/yaml_syntax_validator.rb:50
 msgid "Could not be read."
 msgstr ""
 
-#: ../lib/pdk/validate/puppet/puppet_epp.rb:43
+#: ../lib/pdk/validate/puppet/puppet_epp_validator.rb:40
 msgid "Checking Puppet EPP syntax (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/puppet/puppet_lint.rb:19
+#: ../lib/pdk/validate/puppet/puppet_lint_validator.rb:20
 msgid "Checking Puppet manifest style (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/puppet/puppet_syntax.rb:43
+#: ../lib/pdk/validate/puppet/puppet_syntax_validator.rb:44
 msgid "Checking Puppet manifest syntax (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/ruby/rubocop.rb:21
+#: ../lib/pdk/validate/ruby/ruby_rubocop_validator.rb:28
 msgid "Checking Ruby code style (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/tasks/metadata_lint.rb:18
-msgid "Checking task metadata style (%{targets})."
+#: ../lib/pdk/validate/tasks/tasks_metadata_lint_validator.rb:18
+msgid "Checking task metadata style (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/tasks/metadata_lint.rb:58
+#: ../lib/pdk/validate/tasks/tasks_metadata_lint_validator.rb:32
 msgid "Failed to parse Task Metadata Schema file."
 msgstr ""
 
-#: ../lib/pdk/validate/tasks/metadata_lint.rb:96
+#: ../lib/pdk/validate/tasks/tasks_metadata_lint_validator.rb:57
 msgid "Unable to validate Task Metadata. %{error}."
 msgstr ""
 
-#: ../lib/pdk/validate/tasks/name.rb:7
+#: ../lib/pdk/validate/tasks/tasks_name_validator.rb:7
 msgid "Invalid task name. Task names must start with a lowercase letter and can only contain lowercase letters, numbers, and underscores."
 msgstr ""
 
-#: ../lib/pdk/validate/tasks/name.rb:21
-msgid "Checking task names (%{targets})."
+#: ../lib/pdk/validate/tasks/tasks_name_validator.rb:21
+msgid "Checking task names (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/yaml/syntax.rb:24
-msgid "Checking YAML syntax (%{targets})."
+#: ../lib/pdk/validate/validator.rb:36
+msgid "Expected PDK::Context::AbstractContext but got '%{klass}' for context"
 msgstr ""
 
-#: ../lib/pdk/validate/yaml/syntax.rb:65
-msgid "Validating yaml content of %{parsed_targets}"
+#: ../lib/pdk/validate/validator_group.rb:35
+msgid "Running %{name} validators ..."
 msgstr ""
 
-#: ../lib/pdk/validate/yaml/syntax.rb:99
+#: ../lib/pdk/validate/yaml/yaml_syntax_validator.rb:36
+msgid "Checking YAML syntax (%{patterns})."
+msgstr ""
+
+#: ../lib/pdk/validate/yaml/yaml_syntax_validator.rb:73
 msgid "%{problem} %{context}"
 msgstr ""
 
-#: ../lib/pdk/validate/yaml/syntax.rb:111
+#: ../lib/pdk/validate/yaml/yaml_syntax_validator.rb:85
 msgid "Unsupported class: %{message}"
 msgstr ""
