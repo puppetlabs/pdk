@@ -349,7 +349,7 @@ describe PDK::Util do
       end
 
       it 'returns a path inside the system opt directory' do
-        is_expected.to eq(File.join('opt', 'puppetlabs', 'pdk', 'config'))
+        is_expected.to match(%r{\A/opt/})
       end
     end
   end
