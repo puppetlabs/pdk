@@ -148,7 +148,7 @@ module PDK
 
     def system_configdir
       return @system_configdir unless @system_configdir.nil?
-      return @system_configdir = File.join('opt', 'puppetlabs', 'pdk', 'config') unless Gem.win_platform?
+      return @system_configdir = File.join(File::SEPARATOR, 'opt', 'puppetlabs', 'pdk', 'config') unless Gem.win_platform?
 
       return @system_configdir = File.join(PDK::Util::Env['ProgramData'], 'PuppetLabs', 'PDK') unless PDK::Util::Env['ProgramData'].nil?
       @system_configdir = File.join(PDK::Util::Env['AllUsersProfile'], 'PuppetLabs', 'PDK')
