@@ -18,7 +18,7 @@ gem 'beaker-rspec', '= 6.2.4'
 gem 'beaker-vmpooler', '= 1.3.3'
 gem 'i18n', '= 1.4.0' # pin for Ruby 2.1 support
 gem 'nokogiri', '~> 1.10.8'
-gem 'rake', '= 12.3.2'
+gem 'rake', '~> 12.3', '>= 12.3.3'
 
 # net-ping has a implicit dependency on win32-security
 if File::ALT_SEPARATOR
