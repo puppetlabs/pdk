@@ -18,6 +18,21 @@ class MockSuccessValidator < PDK::Validate::Validator
   end
 end
 
+# A mock validator which is not valid in any context
+class MockNoContextValidator < PDK::Validate::Validator
+  def name
+    'mocknocontext'
+  end
+
+  def valid_in_context?
+    false
+  end
+
+  def invoke(_report)
+    raise 'The MockNoContextValidator should never be invoked'
+  end
+end
+
 # A mock validator which has a single failure
 class MockFailedValidator < PDK::Validate::Validator
   def name

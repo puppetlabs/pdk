@@ -19,9 +19,8 @@ module PDK
         :once
       end
 
-      # Whether this Validator can be invoked in this context. By default any Validator can work in any Context, except ::None
-      # @return [Boolean]
-      # @abstract
+      # Whether this Validator can be invoked in this context. By default any InvokableValidator can work in any Context, except ::None
+      # @see PDK::Validate::Validator
       def valid_in_context?
         !context.is_a?(PDK::Context::None)
       end
