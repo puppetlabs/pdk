@@ -14,6 +14,7 @@ module PDK
     autoload :Env, 'pdk/util/env'
     autoload :Filesystem, 'pdk/util/filesystem'
     autoload :Git, 'pdk/util/git'
+    autoload :JSONFinder, 'pdk/util/json_finder'
     autoload :PuppetStrings, 'pdk/util/puppet_strings'
     autoload :PuppetVersion, 'pdk/util/puppet_version'
     autoload :RubyVersion, 'pdk/util/ruby_version'
@@ -196,7 +197,7 @@ module PDK
     # @return [Hash, nil] subset of text as Hash of first valid JSON found, or nil if no valid
     #   JSON found in the text
     def find_first_json_in(text)
-      find_valid_json_in(text)
+      find_all_json_in(text).first
     end
     module_function :find_first_json_in
 
@@ -206,41 +207,9 @@ module PDK
     # @return [Array<Hash>] subset of text as Array of all JSON object found, empty Array if none are found
     #   JSON found in the text
     def find_all_json_in(text)
-      find_valid_json_in(text, break_on_first: false)
+      PDK::Util::JSONFinder.new(text).objects
     end
     module_function :find_all_json_in
-
-    # Iterate through possible JSON documents until we find one that is valid.
-    #
-    # @param [String] text the text in which to find a JSON document
-    # @param [Hash] opts options
-    # @option opts [Boolean] :break_on_first Whether or not to break after valid JSON is found, defaults to true
-    #
-    # @return [Hash, Array<Hash>, nil] subset of text as Hash of first valid JSON found, array of all valid JSON found, or nil if no valid
-    #   JSON found in the text
-    #
-    # @private
-    def find_valid_json_in(text, opts = {})
-      break_on_first = opts.key?(:break_on_first) ? opts[:break_on_first] : true
-
-      json_result = break_on_first ? nil : []
-
-      text.split("\n").select { |r| r.start_with?('{') && r.end_with?('}') }.each do |str|
-        begin
-          if break_on_first
-            json_result = JSON.parse(str)
-            break
-          else
-            json_result.push(JSON.parse(str))
-          end
-        rescue JSON::ParserError
-          next
-        end
-      end
-
-      json_result
-    end
-    module_function :find_valid_json_in
 
     # Returns the targets' paths relative to the working directory
     #

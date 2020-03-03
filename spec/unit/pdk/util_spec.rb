@@ -486,6 +486,12 @@ describe PDK::Util do
       expect(described_class.find_first_json_in(text)).to be_nil
     end
 
+    it 'returns nil for an unbalanced invalid JSON object' do
+      text = 'foo{{bar}'
+
+      expect(described_class.find_first_json_in(text)).to be_nil
+    end
+
     it 'returns nil for no JSON in a string' do
       text = 'foosomethingbar'
 
