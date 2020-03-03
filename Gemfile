@@ -8,7 +8,7 @@ if RUBY_VERSION < '2.3.0'
   gem 'cri', '>= 2.10.1', '< 2.11.0'
   gem 'nokogiri', '1.7.2'
 else
-  gem 'nokogiri', '~> 1.10.4'
+  gem 'nokogiri', '~> 1.10.8'
 end
 
 group :development do
@@ -45,7 +45,7 @@ group :test do
   gem 'parallel', '= 1.13.0'
   gem 'parallel_tests', '~> 2.24.0'
   gem 'parser', '~> 2.5.1.2'
-  gem 'rake', '~> 10.0'
+  gem 'rake', '~> 12.3', '>= 12.3.3'
   gem 'rspec', '~> 3.0'
   gem 'rspec-xsd'
   gem 'rubocop', '~> 0.57.2'
