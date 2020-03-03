@@ -8,6 +8,11 @@ module PDK
     autoload :Validator, 'pdk/validate/validator'
     autoload :ValidatorGroup, 'pdk/validate/validator_group'
 
+    module ControlRepo
+      autoload :EnvironmentConfValidator, 'pdk/validate/control_repo/environment_conf_validator'
+      autoload :ControlRepoValidatorGroup, 'pdk/validate/control_repo/control_repo_validator_group'
+    end
+
     module Metadata
       autoload :MetadataJSONLintValidator, 'pdk/validate/metadata/metadata_json_lint_validator'
       autoload :MetadataSyntaxValidator, 'pdk/validate/metadata/metadata_syntax_validator'
@@ -47,8 +52,9 @@ module PDK
 
     # @api private
     def self.validator_hash
-      # TODO: This isn't the most performant... But with only 5 items, it's fine
+      # TODO: This isn't the most performant... But with only 6 items, it's fine
       @validator_hash ||= [
+        ControlRepo::ControlRepoValidatorGroup,
         Metadata::MetadataValidatorGroup,
         Puppet::PuppetValidatorGroup,
         Ruby::RubyValidatorGroup,
