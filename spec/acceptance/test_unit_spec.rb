@@ -4,6 +4,16 @@ require 'fileutils'
 describe 'pdk test unit', module_command: true do
   include_context 'with a fake TTY'
 
+  shared_context 'with spec file' do |filename, content|
+    around(:all) do |example|
+      path = File.join('spec', 'unit', filename)
+      FileUtils.mkdir_p(File.dirname(path))
+      File.open(path, 'w') { |f| f.puts content }
+      example.run
+      FileUtils.rm_f(path)
+    end
+  end
+
   context 'when run inside of a module' do
     include_context 'in a new module', 'unit_test_module_new'
 
@@ -26,29 +36,20 @@ describe 'pdk test unit', module_command: true do
     end
 
     context 'with passing tests' do
-      before(:all) do
-        FileUtils.mkdir_p(File.join('spec', 'unit'))
-        # FIXME: facterversion pin and facterdb issues
-        File.open(File.join('spec', 'unit', 'passing_spec.rb'), 'w') do |f|
-          f.puts <<-EOF
-            require 'spec_helper'
+      # FIXME: facterversion pin and facterdb issues
+      include_context 'with spec file', 'passing_spec.rb', <<-EOF
+        require 'spec_helper'
 
-            RSpec.describe 'passing test' do
-              on_supported_os(:facterversion => '2.4.6').each do |os, facts|
-                context "On OS \#{os}" do
-                  it 'should pass' do
-                    expect(true).to eq(true)
-                  end
-                end
+        RSpec.describe 'passing test' do
+          on_supported_os(:facterversion => '2.4.6').each do |os, facts|
+            context "On OS \#{os}" do
+              it 'should pass' do
+                expect(true).to eq(true)
               end
             end
-          EOF
+          end
         end
-      end
-
-      after(:all) do
-        FileUtils.rm_rf(File.join('spec', 'unit'))
-      end
+      EOF
 
       describe command('pdk test unit --list') do
         its(:exit_status) { is_expected.to eq 0 }
@@ -69,24 +70,15 @@ describe 'pdk test unit', module_command: true do
     end
 
     context 'with failing tests' do
-      before(:all) do
-        FileUtils.mkdir_p(File.join('spec', 'unit'))
-        File.open(File.join('spec', 'unit', 'failing_spec.rb'), 'w') do |f|
-          f.puts <<-EOF
-            require 'spec_helper'
+      include_context 'with spec file', 'failing_spec.rb', <<-EOF
+        require 'spec_helper'
 
-            RSpec.describe 'failing test' do
-              it 'should pass' do
-                expect(false).to eq(true)
-              end
-            end
-          EOF
+        RSpec.describe 'failing test' do
+          it 'should pass' do
+            expect(false).to eq(true)
+          end
         end
-      end
-
-      after(:all) do
-        FileUtils.rm_rf(File.join('spec', 'unit'))
-      end
+      EOF
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
@@ -96,25 +88,16 @@ describe 'pdk test unit', module_command: true do
     end
 
     context 'with pending tests' do
-      before(:all) do
-        FileUtils.mkdir_p(File.join('spec', 'unit'))
-        File.open(File.join('spec', 'unit', 'pending_spec.rb'), 'w') do |f|
-          f.puts <<-EOF
-            require 'spec_helper'
+      include_context 'with spec file', 'pending_spec.rb', <<-EOF
+        require 'spec_helper'
 
-            RSpec.describe 'pending test' do
-              it 'should pass' do
-                pending
-                expect(false).to eq(true)
-              end
-            end
-          EOF
+        RSpec.describe 'pending test' do
+          it 'should pass' do
+            pending
+            expect(false).to eq(true)
+          end
         end
-      end
-
-      after(:all) do
-        FileUtils.rm_rf(File.join('spec', 'unit'))
-      end
+      EOF
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.to eq(0) }
@@ -123,29 +106,19 @@ describe 'pdk test unit', module_command: true do
     end
 
     context 'with syntax errors' do
-      before(:all) do
-        FileUtils.mkdir_p(File.join('spec', 'unit'))
-        spec_file = File.join(File.join('spec', 'unit', 'syntax_spec.rb'))
-        File.open(spec_file, 'w') do |f|
-          f.puts <<-EOF
-            require 'spec_helper'
+      include_context 'with spec file', 'syntax_spec.rb', <<-EOF
+        require 'spec_helper'
 
-            RSpec.describe 'syntax error' do
-              on_supported_os.each do |os, facts|
-                context "On OS \#{os}" # THIS LINE IS BAD
-                  it 'should return a blank instance' do
-                    Hash.new.should == {}
-                  end
-                end
+        RSpec.describe 'syntax error' do
+          on_supported_os.each do |os, facts|
+            context "On OS \#{os}" # THIS LINE IS BAD
+              it 'should return a blank instance' do
+                Hash.new.should == {}
               end
             end
-          EOF
+          end
         end
-      end
-
-      after(:all) do
-        FileUtils.rm_rf(File.join('spec', 'unit'))
-      end
+      EOF
 
       describe command('pdk test unit --list') do
         its(:exit_status) { is_expected.not_to eq(0) }
@@ -160,44 +133,33 @@ describe 'pdk test unit', module_command: true do
     end
 
     context 'with multiple files with passing tests' do
-      before(:all) do
-        FileUtils.mkdir_p(File.join('spec', 'unit'))
-        # FIXME: facterversion pin and facterdb issues
-        File.open(File.join('spec', 'unit', 'passing_one_spec.rb'), 'w') do |f|
-          f.puts <<-EOF
-            require 'spec_helper'
+      # FIXME: facterversion pin and facterdb issues
+      include_context 'with spec file', 'passing_one_spec.rb', <<-EOF
+        require 'spec_helper'
 
-            RSpec.describe 'passing test' do
-              on_supported_os(:facterversion => '2.4.6').each do |os, facts|
-                context "On OS \#{os}" do
-                  it 'should pass' do
-                    expect(true).to eq(true)
-                  end
-                end
+        RSpec.describe 'passing test' do
+          on_supported_os(:facterversion => '2.4.6').each do |os, facts|
+            context "On OS \#{os}" do
+              it 'should pass' do
+                expect(true).to eq(true)
               end
             end
-          EOF
+          end
         end
-        File.open(File.join('spec', 'unit', 'passing_two_spec.rb'), 'w') do |f|
-          f.puts <<-EOF
-            require 'spec_helper'
+      EOF
+      include_context 'with spec file', 'passing_two_spec.rb', <<-EOF
+        require 'spec_helper'
 
-            RSpec.describe 'passing test' do
-              on_supported_os(:facterversion => '2.4.6').each do |os, facts|
-                context "On OS \#{os}" do
-                  it 'should pass' do
-                    expect(true).to eq(true)
-                  end
-                end
+        RSpec.describe 'passing test' do
+          on_supported_os(:facterversion => '2.4.6').each do |os, facts|
+            context "On OS \#{os}" do
+              it 'should pass' do
+                expect(true).to eq(true)
               end
             end
-          EOF
+          end
         end
-      end
-
-      after(:all) do
-        FileUtils.rm_rf(File.join('spec', 'unit'))
-      end
+      EOF
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.to eq(0) }
@@ -212,41 +174,35 @@ describe 'pdk test unit', module_command: true do
     end
 
     context 'with unbalanced json in the test descriptions' do
-      before(:all) do
-        FileUtils.mkdir_p(File.join('spec', 'unit'))
-        File.open(File.join('spec', 'unit', 'unbalanced_json_spec.rb'), 'w') do |f|
-          f.puts <<-EOF
-            RSpec.describe "broken-junit" do
-              let(:large_nested_hash) do
-                {
-                  single_one: 'single_one',
-                  single_two: 'single_two',
-                  single_three: 'single_three',
-                  single_four: 'single_four',
-                  single_five: 'single_five',
-                  nested: {
-                    nested_one: 'nested_one',
-                    nested_two: 'nested_two',
-                    nested_three: 'nested_three',
-                    nested_four: 'nested_four',
-                    nested_five: 'nested_five',
-                  },
-                }
-              end
+      include_context 'with spec file', 'unbalanced_json_spec.rb', <<-EOF
+        RSpec.describe "broken-junit" do
+          let(:large_nested_hash) do
+            {
+              single_one: 'single_one',
+              single_two: 'single_two',
+              single_three: 'single_three',
+              single_four: 'single_four',
+              single_five: 'single_five',
+              nested: {
+                nested_one: 'nested_one',
+                nested_two: 'nested_two',
+                nested_three: 'nested_three',
+                nested_four: 'nested_four',
+                nested_five: 'nested_five',
+              },
+            }
+          end
 
-              subject do
-                large_nested_hash
-              end
+          subject do
+            large_nested_hash
+          end
 
-              it { is_expected.to be_a Hash }
-              it { is_expected.to eq large_nested_hash }
-            end
-          EOF
+          it { is_expected.to be_a Hash }
+          it { is_expected.to eq large_nested_hash }
         end
-      end
+      EOF
 
       after(:all) do
-        FileUtils.rm_rf(File.join('spec', 'unit'))
         FileUtils.rm('report.xml')
         FileUtils.rm('report-parallel.xml')
       end
