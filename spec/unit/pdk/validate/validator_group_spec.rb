@@ -124,7 +124,13 @@ describe PDK::Validate::ValidatorGroup do
 
   describe '.validator_instances' do
     before(:each) do
-      allow(validator_group).to receive(:validators).and_return([MockSuccessValidator, PDK::Validate::Validator])
+      allow(validator_group).to receive(:validators).and_return(
+        [
+          MockSuccessValidator,
+          PDK::Validate::Validator,
+          MockNoContextValidator,
+        ],
+      )
     end
 
     it 'returns instances of the classes in validators' do
@@ -144,6 +150,12 @@ describe PDK::Validate::ValidatorGroup do
       object_ids = validator_group.validator_instances.map(&:object_id)
       # Compare the object_ids on the second call
       expect(validator_group.validator_instances.map(&:object_id)).to eq(object_ids)
+    end
+
+    it 'only returns validators which are allowed in the PDK context' do
+      validator_group.validator_instances.each do |item|
+        expect(item).not_to be_a(MockNoContextValidator)
+      end
     end
   end
 end

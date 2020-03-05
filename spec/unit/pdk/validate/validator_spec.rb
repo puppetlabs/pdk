@@ -37,6 +37,10 @@ describe PDK::Validate::Validator do
     end
   end
 
+  it 'has a valid_in_context? as a boolean' do
+    expect(validator.valid_in_context?).to be(true).or be(false)
+  end
+
   it 'has a spinner_text of nil' do
     expect(validator.spinner_text).to be_nil
   end

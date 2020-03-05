@@ -97,6 +97,7 @@ module PDK
       # @api private
       def validator_instances
         @validator_instances ||= validators.map { |klass| klass.new(context, options.merge(parent_validator: self)) }
+                                           .select { |instance| instance.valid_in_context? }
       end
     end
   end

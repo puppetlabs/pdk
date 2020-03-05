@@ -40,6 +40,13 @@ module PDK
         @prepared = false
       end
 
+      # Whether this Validator can be invoked in this context. By default any Validator can work in any Context
+      # @return [Boolean]
+      # @abstract
+      def valid_in_context?
+        true
+      end
+
       # Returns the text used for the spinner to display to the user while invoking
       #
       # @return [String]

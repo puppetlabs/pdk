@@ -66,6 +66,7 @@ module PDK
     def self.invoke_validators_by_name(context, names, parallel = false, options = {})
       instances = names.select { |name| validator_names.include?(name) }
                        .map { |name| validator_hash[name].new(context, options) }
+                       .select { |instance| instance.valid_in_context? }
                        .each { |instance| instance.prepare_invoke! }
       report = PDK::Report.new
 

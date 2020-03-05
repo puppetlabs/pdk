@@ -54,8 +54,9 @@ describe PDK::Validate do
     let(:validation_options) { {} }
     let(:mock_hash) do
       {
-        'mocksuccess' => MockSuccessValidator,
-        'mockfailed'  => MockFailedValidator,
+        'mocksuccess'   => MockSuccessValidator,
+        'mockfailed'    => MockFailedValidator,
+        'mocknocontext' => MockNoContextValidator,
       }
     end
 
@@ -95,6 +96,14 @@ describe PDK::Validate do
 
     context 'with only unknown validations' do
       let(:validators_to_run) { %w[unknown whodis] }
+
+      it_behaves_like 'a successful result', 0
+    end
+
+    context 'with only invalid in context validations' do
+      # The MockNoContextValidator will raise an error it is invoked. However, because
+      # it should be filtered out, it should never be invoked and therefore never raise.
+      let(:validators_to_run) { %w[mocknocontext] }
 
       it_behaves_like 'a successful result', 0
     end
