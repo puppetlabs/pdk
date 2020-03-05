@@ -165,6 +165,7 @@ module PDK::CLI
   require 'pdk/cli/module'
   require 'pdk/cli/console'
   require 'pdk/cli/release'
+  require 'pdk/cli/remove'
 
   @base_cmd.add_command Cri::Command.new_basic_help
 end
