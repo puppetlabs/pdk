@@ -8,15 +8,22 @@ module PDK
     autoload :Validator, 'pdk/validate/validator'
     autoload :ValidatorGroup, 'pdk/validate/validator_group'
 
+    module ControlRepo
+      autoload :ControlRepoValidatorGroup, 'pdk/validate/control_repo/control_repo_validator_group'
+      autoload :EnvironmentConfValidator, 'pdk/validate/control_repo/environment_conf_validator'
+    end
+
     module Metadata
       autoload :MetadataJSONLintValidator, 'pdk/validate/metadata/metadata_json_lint_validator'
       autoload :MetadataSyntaxValidator, 'pdk/validate/metadata/metadata_syntax_validator'
       autoload :MetadataValidatorGroup, 'pdk/validate/metadata/metadata_validator_group'
     end
 
-    module YAML
-      autoload :YAMLSyntaxValidator, 'pdk/validate/yaml/yaml_syntax_validator'
-      autoload :YAMLValidatorGroup, 'pdk/validate/yaml/yaml_validator_group'
+    module Puppet
+      autoload :PuppetEPPValidator, 'pdk/validate/puppet/puppet_epp_validator'
+      autoload :PuppetLintValidator, 'pdk/validate/puppet/puppet_lint_validator'
+      autoload :PuppetSyntaxValidator, 'pdk/validate/puppet/puppet_syntax_validator'
+      autoload :PuppetValidatorGroup, 'pdk/validate/puppet/puppet_validator_group'
     end
 
     module Ruby
@@ -25,16 +32,14 @@ module PDK
     end
 
     module Tasks
-      autoload :TasksNameValidator, 'pdk/validate/tasks/tasks_name_validator'
       autoload :TasksMetadataLintValidator, 'pdk/validate/tasks/tasks_metadata_lint_validator'
+      autoload :TasksNameValidator, 'pdk/validate/tasks/tasks_name_validator'
       autoload :TasksValidatorGroup, 'pdk/validate/tasks/tasks_validator_group'
     end
 
-    module Puppet
-      autoload :PuppetEPPValidator, 'pdk/validate/puppet/puppet_epp_validator'
-      autoload :PuppetLintValidator, 'pdk/validate/puppet/puppet_lint_validator'
-      autoload :PuppetSyntaxValidator, 'pdk/validate/puppet/puppet_syntax_validator'
-      autoload :PuppetValidatorGroup, 'pdk/validate/puppet/puppet_validator_group'
+    module YAML
+      autoload :YAMLSyntaxValidator, 'pdk/validate/yaml/yaml_syntax_validator'
+      autoload :YAMLValidatorGroup, 'pdk/validate/yaml/yaml_validator_group'
     end
 
     def self.validators
@@ -47,8 +52,9 @@ module PDK
 
     # @api private
     def self.validator_hash
-      # TODO: This isn't the most performant... But with only 5 items, it's fine
+      # TODO: This isn't the most performant... But with only 6 items, it's fine
       @validator_hash ||= [
+        ControlRepo::ControlRepoValidatorGroup,
         Metadata::MetadataValidatorGroup,
         Puppet::PuppetValidatorGroup,
         Ruby::RubyValidatorGroup,
