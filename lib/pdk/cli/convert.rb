@@ -31,7 +31,7 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, _('You can not specify --template-url and --default-template.') if opts[:'template-url']
 
         opts[:'template-url'] = PDK::Util::TemplateURI.default_template_addressable_uri.to_s
-        PDK.config.user['module_defaults']['template-url'] = nil
+        PDK.config.set(%w[user module_defaults template-url], nil)
       end
 
       PDK::CLI::Util.validate_template_opts(opts)

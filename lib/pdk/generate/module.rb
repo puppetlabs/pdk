@@ -82,11 +82,11 @@ module PDK
           # If the user specifies our default template url via the command
           # line, remove the saved template-url answer so that the template_uri
           # resolution can find new default URLs in the future.
-          PDK.config.user['module_defaults']['template-url'] = nil if opts.key?(:'template-url')
+          PDK.config.set(%w[user module_defaults template-url], nil) if opts.key?(:'template-url')
         else
           # Save the template-url answers if the module was generated using a
           # template/reference other than ours.
-          PDK.config.user['module_defaults']['template-url'] = template_uri.metadata_format
+          PDK.config.set(%w[user module_defaults template-url], template_uri.metadata_format)
         end
 
         begin
@@ -342,9 +342,9 @@ module PDK
         end
 
         require 'pdk/answer_file'
-        PDK.config.user['module_defaults']['forge_username'] = opts[:username] unless opts[:username].nil?
-        PDK.config.user['module_defaults']['author'] = answers['author'] unless answers['author'].nil?
-        PDK.config.user['module_defaults']['license'] = answers['license'] unless answers['license'].nil?
+        PDK.config.set(%w[user module_defaults forge_username], opts[:username]) unless opts[:username].nil?
+        PDK.config.set(%w[user module_defaults author], answers['author']) unless answers['author'].nil?
+        PDK.config.set(%w[user module_defaults license], answers['license']) unless answers['license'].nil?
       end
     end
   end

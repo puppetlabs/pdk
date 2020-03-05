@@ -10,7 +10,7 @@ describe PDK::Util::TemplateURI do
   include_context 'mock configuration'
 
   before(:each) do
-    PDK.config.user['module_defaults']['template-url'] = nil
+    PDK.config.set(%w[user module_defaults template-url], nil)
     allow(PDK::Util).to receive(:module_root).and_return(nil)
     allow(PDK::Util).to receive(:package_install?).and_return(false)
   end
@@ -116,7 +116,7 @@ describe PDK::Util::TemplateURI do
 
         context 'and there are only answers' do
           before :each do
-            PDK.config.user['module_defaults']['template-url'] = 'answer-templates'
+            PDK.config.set(%w[user module_defaults template-url], 'answer-templates')
             allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(module_root, 'metadata.json')).and_return(false)
           end
 
@@ -138,7 +138,7 @@ describe PDK::Util::TemplateURI do
 
         context 'and there are metadata and answers' do
           before :each do
-            PDK.config.user['module_defaults']['template-url'] = 'answer-templates'
+            PDK.config.set(%w[user module_defaults template-url], 'answer-templates')
           end
 
           it 'returns the metadata template' do
@@ -152,7 +152,7 @@ describe PDK::Util::TemplateURI do
 
       context 'when there are metadata and answers' do
         before :each do
-          PDK.config.user['module_defaults']['template-url'] = 'answer-templates'
+          PDK.config.set(%w[user module_defaults template-url], 'answer-templates')
           allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(PDK::Util.module_root, 'metadata.json')).and_return(true)
           allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(PDK::Util.module_root, 'metadata.json')).and_return(mock_metadata)
         end
@@ -445,7 +445,7 @@ describe PDK::Util::TemplateURI do
 
     context 'when the answers file has saved template-url value' do
       before(:each) do
-        PDK.config.user['module_defaults']['template-url'] = answers_template_url
+        PDK.config.set(%w[user module_defaults template-url], answers_template_url)
       end
 
       context 'that is the deprecated pdk-module-template' do
@@ -475,7 +475,7 @@ describe PDK::Util::TemplateURI do
 
     context 'when the answers file has no saved template-url value' do
       before(:each) do
-        PDK.config.user['module_defaults']['template-url'] = nil
+        PDK.config.set(%w[user module_defaults template-url], nil)
       end
 
       it 'does not include a PDK answers template option' do
