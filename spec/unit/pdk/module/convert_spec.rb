@@ -104,7 +104,10 @@ describe PDK::Module::Convert do
       allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content], template_files[:status])
       allow(update_manager).to receive(:changes).and_return(changes)
       allow(update_manager).to receive(:changed?).with('Gemfile').and_return(false)
+      allow(update_manager).to receive(:unlink_file).with('Gemfile.lock')
+      allow(update_manager).to receive(:unlink_file).with(File.join('.bundle', 'config'))
       allow(PDK::Util::Filesystem).to receive(:write_file).with('convert_report.txt', anything)
+      allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
     end
 
     after(:each, after_hook: true) do
@@ -183,7 +186,6 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:changed?).with('Gemfile').and_return(true)
         allow(update_manager).to receive(:remove_file).with(anything)
         allow(update_manager).to receive(:unlink_file).with(anything)
-        allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
         allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
       end
 
