@@ -7,6 +7,7 @@ module PDK
     autoload :Provider, 'pdk/generate/provider'
     autoload :PuppetClass, 'pdk/generate/puppet_class'
     autoload :PuppetObject, 'pdk/generate/puppet_object'
+    autoload :ResourceAPIObject, 'pdk/generate/resource_api_object'
     autoload :Task, 'pdk/generate/task'
     autoload :Transport, 'pdk/generate/transport'
 

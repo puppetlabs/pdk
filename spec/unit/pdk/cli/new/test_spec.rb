@@ -4,6 +4,11 @@ require 'pdk/cli'
 describe 'PDK::CLI new test' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new test}m) }
 
+  before(:each) do
+    # Stop printing out the result
+    allow(PDK::CLI::Util::UpdateManagerPrinter).to receive(:print_summary)
+  end
+
   context 'when not run from inside a module' do
     include_context 'run outside module'
 
@@ -85,7 +90,7 @@ describe 'PDK::CLI new test' do
         end
 
         it 'generates a unit test for the class' do
-          expect(PDK::Generate::PuppetClass).to receive(:new).with(root_dir, 'my_module::test_class', include(spec_only: true)).and_return(generator)
+          expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'my_module::test_class', include(spec_only: true)).and_return(generator)
           expect(generator).to receive(:run)
         end
 
@@ -107,7 +112,7 @@ describe 'PDK::CLI new test' do
         end
 
         it 'generates a unit test for the class' do
-          expect(PDK::Generate::PuppetClass).to receive(:new).with(root_dir, 'my_module::test_class', include(spec_only: true)).and_return(generator)
+          expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'my_module::test_class', include(spec_only: true)).and_return(generator)
           expect(generator).to receive(:run)
         end
 

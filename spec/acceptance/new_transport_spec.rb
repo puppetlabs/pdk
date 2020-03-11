@@ -25,9 +25,12 @@ SYNC
       end
 
       describe command('pdk new transport test_transport') do
-        its(:stderr) { is_expected.to match(%r{creating .* from template}i) }
-        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{#{File.join('lib', 'puppet', 'transport')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('lib', 'puppet', 'transport', 'schema', 'test_transport.rb')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('lib', 'puppet', 'util', 'network_device', 'test_transport', 'device.rb')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'unit', 'puppet', 'transport', 'test_transport_spec.rb')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'unit', 'puppet', 'transport', 'schema', 'test_transport_spec.rb')}}) }
+        its(:stderr) { is_expected.to have_no_output }
         its(:exit_status) { is_expected.to eq(0) }
 
         describe file(File.join('lib', 'puppet', 'transport')) do

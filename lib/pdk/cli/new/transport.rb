@@ -20,7 +20,8 @@ module PDK::CLI
 
       require 'pdk/generate/transport'
 
-      PDK::Generate::Transport.new(PDK::Util.module_root, transport_name, opts).run
+      updates = PDK::Generate::Transport.new(PDK.context, transport_name, opts).run
+      PDK::CLI::Util::UpdateManagerPrinter.print_summary(updates, tense: :past)
     end
   end
 end

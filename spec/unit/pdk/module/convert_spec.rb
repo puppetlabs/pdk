@@ -3,6 +3,7 @@ require 'pdk/module/convert'
 
 describe PDK::Module::Convert do
   let(:module_root) { File.join('path', 'to', 'module') }
+  let(:pdk_context) { PDK::Context::Module.new(module_root, module_root) }
 
   def module_path(relative_path)
     File.join(module_root, relative_path)
@@ -81,12 +82,10 @@ describe PDK::Module::Convert do
   end
 
   describe '.new', after_hook: true do
-    require 'pdk/module/template_dir/base'
-
     let(:instance) { described_class.new(module_root, options) }
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
-    let(:template_dir) { instance_double(PDK::Module::TemplateDir::Base, metadata: {}) }
+    let(:template_dir) { instance_double(PDK::Template::TemplateDir, metadata: {}) }
     let(:metadata) { instance_double(PDK::Module::Metadata, data: {}) }
     let(:template_files) { { path: 'a/path/to/file', content: 'file contents', status: :manage } }
     let(:added_files) { Set.new }
@@ -98,10 +97,9 @@ describe PDK::Module::Convert do
 
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
       allow(instance).to receive(:update_metadata).with(any_args).and_return(metadata)
-      allow(PDK::Module::TemplateDir).to receive(:with).with(anything, anything, anything).and_yield(template_dir)
+      allow(PDK::Template).to receive(:with).with(anything, anything).and_yield(template_dir)
       allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
-      allow(template_dir).to receive(:module_metadata=)
-      allow(template_dir).to receive(:render).and_yield(template_files[:path], template_files[:content], template_files[:status])
+      allow(template_dir).to receive(:render_new_module).and_yield(template_files[:path], template_files[:content], template_files[:status])
       allow(update_manager).to receive(:changes).and_return(changes)
       allow(update_manager).to receive(:changed?).with('Gemfile').and_return(false)
       allow(update_manager).to receive(:unlink_file).with('Gemfile.lock')
@@ -116,7 +114,7 @@ describe PDK::Module::Convert do
 
     context 'when an error is raised from TemplateDir', after_hook: false do
       before(:each) do
-        allow(PDK::Module::TemplateDir).to receive(:with)
+        allow(PDK::Template).to receive(:with)
           .with(any_args).and_raise(ArgumentError, 'The specified template is not a directory')
       end
 
@@ -132,10 +130,8 @@ describe PDK::Module::Convert do
 
       before(:each) do
         allow(update_manager).to receive(:changes?).and_return(false)
-        allow(template_dir).to receive(:render)
-        allow(PDK::Module::TemplateDir).to receive(:files_in_template).and_return({})
-
-        allow(update_manager).to receive(:add_file).with(module_path('/metadata.json'), anything)
+        expect(template_dir).to receive(:render_new_module).with(anything).and_return(nil)
+        allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
       end
 
       it 'returns without syncing the changes' do
@@ -144,6 +140,11 @@ describe PDK::Module::Convert do
 
       context 'and it is to add tests' do
         let(:options) { { :'add-tests' => true } }
+
+        before(:each) do
+          # Don't test output here
+          allow($stdout).to receive(:puts).with(anything)
+        end
 
         context 'and there are tests to add' do
           before(:each) do
@@ -180,8 +181,8 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['Gemfile'])
 
-        allow(update_manager).to receive(:add_file).with(module_path('/metadata.json'), anything)
-        allow(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
+        allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
+        allow(update_manager).to receive(:modify_file).with(module_path(template_files[:path]), template_files[:content])
         allow($stdout).to receive(:puts).with(%r{1 files modified})
         allow(update_manager).to receive(:changed?).with('Gemfile').and_return(true)
         allow(update_manager).to receive(:remove_file).with(anything)
@@ -221,7 +222,7 @@ describe PDK::Module::Convert do
         allow($stdout).to receive(:puts).with(['some/file'])
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
-        allow(update_manager).to receive(:modify_file).with(template_files[:path], template_files[:content])
+        allow(update_manager).to receive(:modify_file).with(module_path(template_files[:path]), template_files[:content])
         allow($stdout).to receive(:puts).with(%r{1 files modified})
         allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
       end
@@ -667,14 +668,15 @@ describe PDK::Module::Convert do
   describe '#missing_tests?' do
     subject { instance.missing_tests? }
 
+    let(:instance) { described_class.new(module_root) }
+    let(:metadata) { { 'name' => 'myuser-mymodule' } }
+
     before(:each) do
       allow(PDK::Util::PuppetStrings).to receive(:all_objects).and_return(objects)
       allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util).to receive(:module_metadata).and_return(metadata)
+      allow(PDK).to receive(:context).and_return(pdk_context)
     end
-
-    let(:instance) { described_class.new(module_root) }
-    let(:metadata) { { 'name' => 'myuser-mymodule' } }
 
     context 'when there are no objects' do
       let(:objects) { [] }
@@ -695,9 +697,7 @@ describe PDK::Module::Convert do
 
       context 'when the spec file exists' do
         before(:each) do
-          instance.test_generators.each do |gen|
-            allow(PDK::Util::Filesystem).to receive(:exist?).with(gen.target_spec_path).and_return(true)
-          end
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(File.join(module_root, 'spec/classes/foo_spec.rb')).and_return(true)
         end
 
         it { is_expected.to be_falsey }
@@ -705,9 +705,7 @@ describe PDK::Module::Convert do
 
       context 'when the spec file does not exist' do
         before(:each) do
-          instance.test_generators.each do |gen|
-            allow(PDK::Util::Filesystem).to receive(:exist?).with(gen.target_spec_path).and_return(false)
-          end
+          allow(PDK::Util::Filesystem).to receive(:exist?).with(File.join(module_root, 'spec/classes/foo_spec.rb')).and_return(false)
         end
 
         it { is_expected.to be_truthy }
@@ -720,7 +718,10 @@ describe PDK::Module::Convert do
 
     let(:generators) do
       [
-        instance_double(PDK::Generate::PuppetClass),
+        instance_double(
+          PDK::Generate::PuppetClass,
+          template_files: {},
+        ),
       ]
     end
 
@@ -736,7 +737,7 @@ describe PDK::Module::Convert do
       end
 
       it 'runs the generators' do
-        expect(generators).to all(receive(:run))
+        expect(generators).to all(receive(:stage_changes))
 
         instance.add_tests!
       end
@@ -751,7 +752,7 @@ describe PDK::Module::Convert do
 
       it 'does not run the generators' do
         generators.each do |g|
-          expect(g).not_to receive(:run)
+          expect(g).not_to receive(:stage_changes)
         end
 
         instance.add_tests!

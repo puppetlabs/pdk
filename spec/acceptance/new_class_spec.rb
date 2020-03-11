@@ -25,9 +25,10 @@ describe 'pdk new class', module_command: true do
     context 'when creating the main class' do
       describe command('pdk new class new_class') do
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
-        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{Files added}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('manifests', 'init.pp')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'classes', 'new_class_spec.rb')}}) }
+        its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a class',
                         name: 'new_class',
@@ -39,9 +40,10 @@ describe 'pdk new class', module_command: true do
     context 'when creating an ancillary class' do
       describe command('pdk new class new_class::bar') do
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
-        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{Files added}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('manifests', 'bar.pp')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'classes', 'bar_spec.rb')}}) }
+        its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a class',
                         name:     'new_class::bar',
@@ -53,9 +55,10 @@ describe 'pdk new class', module_command: true do
     context 'when creating a deeply nested class' do
       describe command('pdk new class new_class::bar::baz') do
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stderr) { is_expected.to match(%r{Creating .* from template}) }
-        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{Files added}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('manifests', 'bar', 'baz.pp')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'classes', 'bar', 'baz_spec.rb')}}) }
+        its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a class',
                         name:     'new_class::bar::baz',

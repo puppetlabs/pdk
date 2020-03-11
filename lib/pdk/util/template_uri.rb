@@ -192,7 +192,6 @@ module PDK
       #   directory, and :allow_fallback contains a Boolean that specifies if
       #   the lookup process should proceed to the next template directory if
       #   the template file is not in this template directory.
-      #
       def self.templates(opts)
         require 'pdk/answer_file'
         require 'pdk/util'
@@ -261,21 +260,20 @@ module PDK
         found_template[:uri]
       end
 
-      def self.valid_template?(template)
+      def self.valid_template?(template, context = PDK.context)
         require 'addressable'
 
         return false if template.nil? || !template.is_a?(Hash)
         return false if template[:uri].nil? || !template[:uri].is_a?(Addressable::URI)
 
         return true if PDK::Util::Git.repo?(bare_uri(template[:uri]))
-
         path = human_readable(template[:uri].path)
         if PDK::Util::Filesystem.directory?(path)
           # We know that it's not a git repository, but it's a valid path on disk
           begin
-            PDK::Module::TemplateDir.validate_module_template!(path)
-            return true
-          rescue ArgumentError
+            renderer = PDK::Template::Renderer.instance(path, template[:uri], context)
+            return !renderer.nil?
+          rescue StandardError
             nil
           end
         end

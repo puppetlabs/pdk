@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/generate/defined_type'
 
 describe PDK::Generate::DefinedType do
-  subject(:generator) { described_class.new(module_dir, given_name, options) }
+  subject(:generator) { described_class.new(context, given_name, options) }
 
   subject(:target_object_path) { generator.target_object_path }
 
@@ -10,6 +10,7 @@ describe PDK::Generate::DefinedType do
 
   subject(:template_data) { generator.template_data }
 
+  let(:context) { PDK::Context::Module.new(module_dir, module_dir) }
   let(:module_name) { 'test_module' }
   let(:module_dir) { '/tmp/test_module' }
   let(:options) { {} }
@@ -27,55 +28,75 @@ describe PDK::Generate::DefinedType do
   end
 
   shared_examples 'it generates a spec file' do
-    it 'writes the spec file into spec/defines/' do
-      expect(target_spec_path).to eq(expected_spec_path)
+    it 'writes the spec file into the correct location' do
+      expect(generator.template_files).to include('defined_type_spec.erb' => expected_spec_path)
+    end
+  end
+
+  describe '#template_files' do
+    let(:given_name) { module_name }
+
+    context 'when spec_only is true' do
+      let(:options) { { spec_only: true } }
+
+      it 'only returns spec files' do
+        expect(generator.template_files.keys).to eq(['defined_type_spec.erb'])
+      end
+    end
+
+    context 'when spec_only is false' do
+      let(:options) { { spec_only: false } }
+
+      it 'only returns all files' do
+        expect(generator.template_files.keys).to eq(['defined_type_spec.erb', 'defined_type.erb'])
+      end
     end
   end
 
   context 'when the defined type name is the same as the module name' do
     let(:given_name) { module_name }
-    let(:expected_object_path) { File.join(module_dir, 'manifests', 'init.pp') }
-    let(:expected_spec_path) { File.join(module_dir, 'spec', 'defines', "#{expected_name}_spec.rb") }
+    let(:expected_object_path) { File.join('manifests', 'init.pp') }
+    let(:expected_spec_path) { File.join('spec', 'defines', "#{expected_name}_spec.rb") }
 
     it_behaves_like 'it generates the template data'
     it_behaves_like 'it generates a spec file'
 
     it 'writes the defined type to manifests/init.pp' do
-      expect(target_object_path).to eq(expected_object_path)
+      expect(generator.template_files).to include('defined_type.erb' => expected_object_path)
     end
   end
 
   context 'when the defined type name is in the module namespace' do
     let(:given_name) { "#{module_name}::test_define" }
-    let(:expected_object_path) { File.join(module_dir, 'manifests', 'test_define.pp') }
-    let(:expected_spec_path) { File.join(module_dir, 'spec', 'defines', 'test_define_spec.rb') }
+    let(:expected_object_path) { File.join('manifests', 'test_define.pp') }
+    let(:expected_spec_path) { File.join('spec', 'defines', 'test_define_spec.rb') }
 
     it_behaves_like 'it generates the template data'
     it_behaves_like 'it generates a spec file'
 
     it 'writes the defined type to manifests/test_define.pp' do
-      expect(target_object_path).to eq(expected_object_path)
+      expect(generator.template_files).to include('defined_type.erb' => expected_object_path)
     end
   end
 
   context 'when the defined type is deeply nested in the module namespace' do
     let(:given_name) { "#{module_name}::something::else::test_define" }
-    let(:expected_object_path) { File.join(module_dir, 'manifests', 'something', 'else', 'test_define.pp') }
-    let(:expected_spec_path) { File.join(module_dir, 'spec', 'defines', 'something', 'else', 'test_define_spec.rb') }
+    let(:expected_object_path) { File.join('manifests', 'something', 'else', 'test_define.pp') }
+    let(:expected_spec_path) { File.join('spec', 'defines', 'something', 'else', 'test_define_spec.rb') }
 
     it_behaves_like 'it generates the template data'
     it_behaves_like 'it generates a spec file'
 
     it 'writes the defined type to manifests/something/else/test_define.pp' do
-      expect(target_object_path).to eq(expected_object_path)
+      expect(generator.template_files).to include('defined_type.erb' => expected_object_path)
     end
   end
 
   context 'when the defined type name is outside the module namespace' do
     let(:given_name) { 'test_define' }
     let(:expected_name) { [module_name, given_name].join('::') }
-    let(:expected_object_path) { File.join(module_dir, 'manifests', 'test_define.pp') }
-    let(:expected_spec_path) { File.join(module_dir, 'spec', 'defines', 'test_define_spec.rb') }
+    let(:expected_object_path) { File.join('manifests', 'test_define.pp') }
+    let(:expected_spec_path) { File.join('spec', 'defines', 'test_define_spec.rb') }
 
     it 'prepends the module name to the defined type name' do
       expect(generator.object_name).to eq(expected_name)
@@ -85,7 +106,7 @@ describe PDK::Generate::DefinedType do
     it_behaves_like 'it generates a spec file'
 
     it 'writes the defined type to manifests/test_define.pp' do
-      expect(target_object_path).to eq(expected_object_path)
+      expect(generator.template_files).to include('defined_type.erb' => expected_object_path)
     end
   end
 end

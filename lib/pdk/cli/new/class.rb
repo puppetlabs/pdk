@@ -25,7 +25,8 @@ module PDK::CLI
 
       PDK::CLI::Util.analytics_screen_view('new_class', opts)
 
-      PDK::Generate::PuppetClass.new(PDK::Util.module_root, class_name, opts).run
+      updates = PDK::Generate::PuppetClass.new(PDK.context, class_name, opts).run
+      PDK::CLI::Util::UpdateManagerPrinter.print_summary(updates, tense: :past)
     end
   end
 end

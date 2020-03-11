@@ -25,9 +25,10 @@ describe 'pdk new defined_type', module_command: true do
     context 'when creating a defined type with same name as the module' do
       describe command('pdk new defined_type new_define') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{creating .* from template}i) }
-        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{Files added}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('manifests', 'init.pp')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'defines', 'new_define_spec.rb')}}) }
+        its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a defined type',
                         name:     'new_define',
@@ -39,9 +40,10 @@ describe 'pdk new defined_type', module_command: true do
     context 'when creating an ancillary defined type' do
       describe command('pdk new defined_type ancillary') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{creating .* from template}i) }
-        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{Files added}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('manifests', 'ancillary.pp')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'defines', 'ancillary_spec.rb')}}) }
+        its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a defined type',
                         name:     'new_define::ancillary',
@@ -53,9 +55,10 @@ describe 'pdk new defined_type', module_command: true do
     context 'when creating a deeply nested defined type' do
       describe command('pdk new defined_type new_define::foo::bar::baz') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{creating .* from template}i) }
-        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{Files added}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('manifests', 'foo', 'bar', 'baz.pp')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'defines', 'foo', 'bar', 'baz_spec.rb')}}) }
+        its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a defined type',
                         name:     'new_define::foo::bar::baz',

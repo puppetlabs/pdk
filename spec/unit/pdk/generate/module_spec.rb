@@ -15,13 +15,13 @@ shared_context 'allow summary to be printed to stdout' do
 end
 
 shared_context 'mock template dir' do
-  require 'pdk/module/template_dir/base'
-
-  let(:test_template_dir) { instance_double(PDK::Module::TemplateDir::Base, metadata: {}) }
   let(:test_template_path) { instance_double(Pathname, mkpath: true, to_path: '/a/path') }
+  let(:template_dir) { PDK::Template::TemplateDir.new(nil, nil, pdk_context, renderer) }
+  let(:renderer) { instance_double('PDK::Template::Renderer::AbstractRenderer') }
 
   before(:each) do
-    allow(PDK::Module::TemplateDir).to receive(:with).with(anything, anything, anything).and_yield(test_template_dir)
+    allow(PDK::Template).to receive(:with).with(anything, anything).and_yield(template_dir)
+    allow(renderer).to receive(:render).and_yield(*yielded_file)
 
     allow(test_template_path).to receive(:+).with(anything).and_return(test_template_path)
     allow(test_template_path).to receive(:dirname).and_return(test_template_path)
@@ -43,6 +43,7 @@ end
 
 describe PDK::Generate::Module do
   include_context 'mock configuration'
+  let(:pdk_context) { PDK::Context::None.new(nil) }
 
   describe '.invoke' do
     let(:target_dir) { PDK::Util::Filesystem.expand_path('/path/to/target/module') }
@@ -77,6 +78,7 @@ describe PDK::Generate::Module do
 
       let(:temp_target_dir) { '/path/to/temp/dir' }
       let(:target_parent_writeable) { true }
+      let(:yielded_file) { ['test_file_path', 'test_file_content', :manage] }
 
       before(:each) do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(target_dir).and_return(false)
@@ -86,7 +88,6 @@ describe PDK::Generate::Module do
         allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
         allow(PDK::Util::Filesystem).to receive(:write_file).with(%r{pdk-test-writable}, anything) { raise Errno::EACCES unless target_parent_writeable }
         allow(PDK::Util::Filesystem).to receive(:rm_f).with(%r{pdk-test-writable})
-        allow(test_template_dir).to receive(:render).and_yield('test_file_path', 'test_file_content', :manage)
         allow(PDK::Util).to receive(:module_root).and_return(nil)
         allow(PDK::Util).to receive(:package_install?).and_return(false)
       end
@@ -111,10 +112,7 @@ describe PDK::Generate::Module do
 
       context 'when the module template contains template files' do
         let(:content) { 'test_file_content' }
-
-        before(:each) do
-          allow(test_template_dir).to receive(:render).and_yield('test_file_path', content, :manage)
-        end
+        let(:yielded_file) { ['test_file_path', content, :manage] }
 
         it 'writes the rendered files from the template to the temporary directory' do
           allow(PDK::Util::Filesystem).to receive(:write_file)
@@ -126,14 +124,10 @@ describe PDK::Generate::Module do
 
       context 'when the module template contains unmanaged template files' do
         let(:content) { 'test_file_content' }
-
-        before(:each) do
-          allow(test_template_dir).to receive(:render).and_yield('test_file_path', content, :unmanage)
-        end
+        let(:yielded_file) { ['test_file_path', content, :unmanage] }
 
         it 'writes the rendered files from the template to the temporary directory' do
-          expect(PDK::Util::Filesystem).to receive(:write_file)
-            .with(test_template_path, content)
+          expect(PDK::Util::Filesystem).not_to receive(:write_file).with(test_template_path, content)
 
           described_class.invoke(invoke_opts)
         end
@@ -141,10 +135,7 @@ describe PDK::Generate::Module do
 
       context 'when the module template contains files with delete option set' do
         let(:content) { 'test_file_content' }
-
-        before(:each) do
-          allow(test_template_dir).to receive(:render).and_yield('test_file_path', content, :delete)
-        end
+        let(:yielded_file) { ['test_file_path', content, :delete] }
 
         it 'does not writes the deleted files from the template to the temporary directory' do
           expect(PDK::Util::Filesystem).not_to receive(:write_file)
@@ -163,7 +154,7 @@ describe PDK::Generate::Module do
         end
 
         before(:each) do
-          allow(test_template_dir).to receive(:metadata).and_return(template_metadata)
+          allow(template_dir).to receive(:metadata).and_return(template_metadata)
         end
 
         it 'includes details about the template in the generated metadata.json' do
@@ -216,7 +207,7 @@ describe PDK::Generate::Module do
         end
 
         it 'uses that template to generate the module' do
-          expect(PDK::Module::TemplateDir).to receive(:with).with(Addressable::URI.parse('cli-template#master'), anything, anything).and_yield(test_template_dir)
+          expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('cli-template#master'), anything).and_yield(template_dir)
           expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
           expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
 
@@ -225,7 +216,7 @@ describe PDK::Generate::Module do
 
         it 'takes precedence over the template-url answer' do
           PDK.config.set(%w[user module_defaults template-url], 'answer-template')
-          expect(PDK::Module::TemplateDir).to receive(:with).with(Addressable::URI.parse('cli-template#master'), anything, anything).and_yield(test_template_dir)
+          expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('cli-template#master'), anything).and_yield(template_dir)
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
 
@@ -254,7 +245,7 @@ describe PDK::Generate::Module do
         context 'and a template-url answer exists' do
           it 'uses the template-url from the answer file to generate the module' do
             PDK.config.set(%w[user module_defaults template-url], 'answer-template')
-            expect(PDK::Module::TemplateDir).to receive(:with).with(Addressable::URI.parse('answer-template'), anything, anything).and_yield(test_template_dir)
+            expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('answer-template'), anything).and_yield(template_dir)
             expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
             expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
 
@@ -271,7 +262,7 @@ describe PDK::Generate::Module do
 
             it 'uses the vendored template url' do
               template_uri = "file:///tmp/package/cache/pdk-templates.git##{PDK::Util::TemplateURI.default_template_ref}"
-              expect(PDK::Module::TemplateDir).to receive(:with).with(Addressable::URI.parse(template_uri), anything, anything).and_yield(test_template_dir)
+              expect(PDK::Template).to receive(:with).with(Addressable::URI.parse(template_uri), anything).and_yield(template_dir)
               before = PDK.config.get(%w[user module_defaults template-url])
 
               described_class.invoke(invoke_opts)
@@ -285,7 +276,7 @@ describe PDK::Generate::Module do
             end
 
             it 'uses the default template to generate the module' do
-              expect(PDK::Module::TemplateDir).to receive(:with).with(any_args).and_yield(test_template_dir)
+              expect(PDK::Template).to receive(:with).with(any_args).and_yield(template_dir)
               before = PDK.config.get(%w[user module_defaults template-url])
 
               described_class.invoke(invoke_opts)

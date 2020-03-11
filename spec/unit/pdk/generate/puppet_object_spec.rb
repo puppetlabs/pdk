@@ -13,8 +13,9 @@ shared_context :with_puppet_object_module_metadata do
 end
 
 describe PDK::Generate::PuppetObject do
-  let(:templated_object) { described_class.new(module_dir, 'test_module::test_object', options) }
+  let(:templated_object) { described_class.new(pdk_context, 'test_module::test_object', options) }
 
+  let(:pdk_context) { PDK::Context::Module.new(module_dir, module_dir) }
   let(:object_type) { :something }
   let(:options) { {} }
   let(:module_dir) { '/tmp/test_module' }
@@ -50,26 +51,26 @@ describe PDK::Generate::PuppetObject do
     end
   end
 
+  describe '#friendly_name' do
+    it 'needs to be implemented by the subclass' do
+      expect {
+        templated_object.friendly_name
+      }.to raise_error(NotImplementedError)
+    end
+  end
+
+  describe '#template_files' do
+    it 'needs to be implemented by the subclass' do
+      expect {
+        templated_object.template_files
+      }.to raise_error(NotImplementedError)
+    end
+  end
+
   describe '#template_data' do
     it 'needs to be implemented by the subclass' do
       expect {
         templated_object.template_data
-      }.to raise_error(NotImplementedError)
-    end
-  end
-
-  describe '#target_object_path' do
-    it 'needs to be implemented by the subclass' do
-      expect {
-        templated_object.target_object_path
-      }.to raise_error(NotImplementedError)
-    end
-  end
-
-  describe '#target_spec_path' do
-    it 'needs to be implemented by the subclass' do
-      expect {
-        templated_object.target_spec_path
       }.to raise_error(NotImplementedError)
     end
   end
@@ -96,147 +97,74 @@ describe PDK::Generate::PuppetObject do
     end
   end
 
-  describe '#render_file' do
-    include_context :with_puppet_object_module_metadata
+  describe '#templates' do
+    let(:options) { { 'something' => 'setting' } }
 
-    let(:dest_path) { '/path/to/file/to/be/written' }
-    let(:dest_dir) { File.dirname(dest_path) }
-    let(:template_path) { '/path/to/file/template' }
-    let(:template_data) { { some: 'data', that: 'the', template: 'needs' } }
-    let(:template_content) { 'rendered file content' }
-    let(:template_file) { instance_double(PDK::TemplateFile, render: template_content) }
-    let(:rendered_file) { StringIO.new }
-
-    before(:each) do
-      allow(logger).to receive(:info).with(a_string_matching(%r{creating '#{dest_path}' from template}i))
-      allow(PDK::TemplateFile).to receive(:new).with(template_path, template_data).and_return(template_file)
-      allow(PDK::Util::Filesystem).to receive(:write_file).with(dest_path, anything)
-    end
-
-    it 'creates the parent directories for the destination path if needed' do
-      expect(PDK::Util::Filesystem).to receive(:mkdir_p).with(dest_dir)
-      templated_object.render_file(dest_path, template_path, template_data)
-    end
-
-    it 'writes the rendered file content to the destination file' do
-      allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(dest_dir)
-      expect(PDK::Util::Filesystem).to receive(:write_file)
-        .with(dest_path, template_content)
-
-      templated_object.render_file(dest_path, template_path, template_data)
-    end
-
-    context 'when it fails to create the parent directories' do
-      before(:each) do
-        allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(dest_dir).and_raise(SystemCallError, 'some message')
-      end
-
-      it 'raises a FatalError' do
-        expect {
-          templated_object.render_file(dest_path, template_path, template_data)
-        }.to raise_error(PDK::CLI::FatalError, %r{unable to create directory '.+':.+some message}i)
-      end
-    end
-
-    context 'when it fails to write the destination file' do
-      before(:each) do
-        allow(PDK::Util::Filesystem).to receive(:write_file)
-          .with(dest_path, anything).and_raise(SystemCallError, 'some message')
-        allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(dest_dir)
-      end
-
-      it 'raises a FatalError' do
-        expect {
-          templated_object.render_file(dest_path, template_path, template_data)
-        }.to raise_error(PDK::CLI::FatalError, %r{unable to write to file '.+':.+some message}i)
-      end
+    it 'passes throught the objects to TemplateURI' do
+      expect(PDK::Util::TemplateURI).to receive(:templates).with(options)
+      templated_object.templates
     end
   end
 
   describe '#with_templates' do
-    include_context :with_puppet_object_module_metadata
+    let(:uri1_template_dir) { PDK::Template::TemplateDir.new(nil, nil, nil, missing_renderer) }
 
-    require 'pdk/module/template_dir/base'
+    let(:expected1_template_dir) { PDK::Template::TemplateDir.new(nil, nil, nil, found_renderer) }
 
-    let(:default_templatedir) { instance_double('PDK::Module::TemplateDir::Base', 'default') }
-    let(:default_object_paths) { { object: 'default_object_path', spec: 'default_spec_path' } }
-    let(:configs_hash) { {} }
-    let(:cli_templatedir) { instance_double('PDK::Module::TemplateDir::Base', 'CLI') }
-    let(:cli_object_paths) { { object: 'cli_object_path', spec: 'cli_spec_path' } }
-    let(:metadata_templatedir) { instance_double('PDK::Module::TemplateDir::Base', 'metadata') }
-    let(:metadata_object_paths) { { object: 'metadata_object_path', spec: 'metadata_spec_path' } }
+    let(:missing_renderer) do
+      instance_double(
+        'PDK::Template::Renderer::AbstractRenderer',
+        :'has_single_item?' => false,
+      )
+    end
+
+    let(:found_renderer) do
+      instance_double(
+        'PDK::Template::Renderer::AbstractRenderer',
+        :'has_single_item?' => true,
+      )
+    end
+
+    RSpec::Matchers.define :uri_of do |expected|
+      match do |actual|
+        actual.uri.to_s == expected
+      end
+    end
 
     before(:each) do
-      allow(default_templatedir).to receive(:object_template_for).with(object_type).and_return(default_object_paths)
-      allow(default_templatedir).to receive(:object_config).and_return(configs_hash)
-      allow(cli_templatedir).to receive(:object_config).and_return(configs_hash)
-      allow(metadata_templatedir).to receive(:object_config).and_return(configs_hash)
-      allow(PDK::Module::TemplateDir).to receive(:with).with(any_args).and_yield(default_templatedir)
-      allow(PDK::Util).to receive(:development_mode?).and_return(true)
+      # Mock required PuppetObject methods
+      allow(templated_object).to receive(:friendly_name).and_return('spec_object')
+      allow(templated_object).to receive(:template_files).and_return('source' => 'target')
+      allow(templated_object).to receive(:templates).and_return(templates)
+
+      allow(PDK::Template).to receive(:with) # An unknown uri will not yield
+      allow(PDK::Template).to receive(:with).with(uri_of('expected1'), pdk_context).and_yield(expected1_template_dir)
+      allow(PDK::Template).to receive(:with).with(uri_of('uri1'), pdk_context).and_yield(uri1_template_dir)
     end
 
-    context 'when a template-url is provided on the CLI' do
-      let(:options) { { :'template-url' => '/some/path' } }
-
-      before(:each) do
-        allow(PDK::Module::TemplateDir).to receive(:with).with(Addressable::URI.parse('/some/path#master')).and_yield(cli_templatedir)
+    context 'when fallback is allowed' do
+      let(:templates) do
+        [
+          { uri: 'uri1', allow_fallback: true },
+          { uri: 'expected1', allow_fallback: true },
+        ]
       end
 
-      context 'and a template for the object type exists' do
-        before(:each) do
-          allow(cli_templatedir).to receive(:object_template_for).with(object_type).and_return(cli_object_paths)
-        end
-
-        it 'yields the path to the object templates from the template dir specified in the CLI' do
-          expect { |b| templated_object.with_templates(&b) }.to yield_with_args(cli_object_paths, {})
-        end
-      end
-
-      context 'and a template for the object type does not exist' do
-        before(:each) do
-          allow(cli_templatedir).to receive(:object_template_for).with(object_type).and_return(nil)
-        end
-
-        it 'raises a fatal error' do
-          expect { |b| templated_object.with_templates(&b) }.to raise_error(PDK::CLI::FatalError, %r{Unable to find})
-        end
+      it 'yields the first available template directory' do
+        expect { |b| templated_object.with_templates(&b) }.to yield_with_args(expected1_template_dir)
       end
     end
 
-    context 'when a template-url is not provided on the CLI' do
-      context 'and a template-url is found in the module metadata' do
-        let(:module_metadata) { '{"name": "testuser-test_module", "template-url": "/some/other/path"}' }
-
-        before(:each) do
-          allow(PDK::Module::TemplateDir).to receive(:with).with(Addressable::URI.parse('/some/other/path')).and_yield(metadata_templatedir)
-        end
-
-        context 'and a template for the object type exists' do
-          before(:each) do
-            allow(metadata_templatedir).to receive(:object_template_for).with(object_type).and_return(metadata_object_paths)
-          end
-
-          it 'yields the path to the object templates from the template dir specified in the metadata' do
-            expect { |b| templated_object.with_templates(&b) }.to yield_with_args(metadata_object_paths, {})
-          end
-        end
-
-        context 'and a template for the object type does not exist' do
-          before(:each) do
-            allow(metadata_templatedir).to receive(:object_template_for).with(object_type).and_return(nil)
-          end
-
-          it 'falls back to the paths from the default template dir' do
-            expect(default_templatedir).to receive(:object_template_for).with(object_type)
-            templated_object.with_templates {}
-          end
-        end
+    context 'when fallback is disabled' do
+      let(:templates) do
+        [
+          { uri: 'uri1', allow_fallback: false },
+          { uri: 'expected1', allow_fallback: true },
+        ]
       end
 
-      context 'and a template-url is not found in the module metadata' do
-        it 'yields the path to the object templates from the default template dir' do
-          expect { |b| templated_object.with_templates(&b) }.to yield_with_args(default_object_paths, {})
-        end
+      it 'raises a fatal error' do
+        expect { |b| templated_object.with_templates(&b) }.to raise_error(PDK::CLI::FatalError, %r{Unable to find})
       end
     end
   end
@@ -244,169 +172,84 @@ describe PDK::Generate::PuppetObject do
   describe '#can_run?' do
     subject { templated_object.can_run? }
 
-    include_context :with_puppet_object_module_metadata
+    context 'when check_preconditions raises an error' do
+      before(:each) do
+        expect(templated_object).to receive(:check_preconditions).and_raise('Mock Error')
+      end
 
-    let(:target_object_path) { '/tmp/test_module/object_file' }
-    let(:target_spec_path) { '/tmp/test_module/spec_file' }
-    let(:target_object_exists) { false }
-    let(:target_spec_exists) { false }
-
-    before(:each) do
-      allow(PDK::Util::Filesystem).to receive(:exist?).with(target_object_path).and_return(target_object_exists)
-      allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(target_spec_exists)
-      allow(templated_object).to receive(:target_object_path).and_return(target_object_path)
-      allow(templated_object).to receive(:target_spec_path).and_return(target_spec_path)
+      it { is_expected.to be_falsey }
     end
 
-    context 'when :spec_only => false' do
-      let(:options) { { spec_only: false } }
-
-      context 'and the target object exists' do
-        let(:target_object_exists) { true }
-
-        it { is_expected.to be_falsey }
+    context 'when check_preconditions does not raise an error' do
+      before(:each) do
+        expect(templated_object).to receive(:check_preconditions).and_return(nil)
       end
 
-      context 'and the target spec exists' do
-        let(:target_spec_exists) { true }
-
-        it { is_expected.to be_falsey }
-      end
-
-      context 'and both target object and spec exist' do
-        let(:target_object_exists) { true }
-        let(:target_spec_exists) { true }
-
-        it { is_expected.to be_falsey }
-      end
-
-      context 'and neither target object nor spec exist' do
-        it { is_expected.to be_truthy }
-      end
-    end
-
-    context 'when :spec_only => true' do
-      let(:options) { { spec_only: true } }
-
-      context 'and the target object exists' do
-        let(:target_object_exists) { true }
-
-        it { is_expected.to be_truthy }
-      end
-
-      context 'and the target spec exists' do
-        let(:target_spec_exists) { true }
-
-        it { is_expected.to be_falsey }
-      end
-
-      context 'and both target object and spec exist' do
-        let(:target_object_exists) { true }
-        let(:target_spec_exists) { true }
-
-        it { is_expected.to be_falsey }
-      end
-
-      context 'and neither target object nor spec exist' do
-        it { is_expected.to be_truthy }
-      end
+      it { is_expected.to be_truthy }
     end
   end
 
   describe '#run' do
+    it 'calls sync_changes! on stage_changes' do
+      update_manager = PDK::Module::UpdateManager.new
+      expect(templated_object).to receive(:stage_changes).and_return(update_manager)
+      expect(update_manager).to receive(:sync_changes!)
+      templated_object.run
+    end
+  end
+
+  describe '#stage_changes' do
     include_context :with_puppet_object_module_metadata
 
-    let(:target_object_path) { '/tmp/test_module/object_file' }
-    let(:target_spec_path) { '/tmp/test_module/spec_file' }
+    let(:source_file) { '/tmp/test_module/object_file' }
+    let(:target_file) { 'object_file' }
+    let(:absolute_target_file) { File.join(module_dir, target_file) }
+
+    let(:template_files) { { source_file => target_file } }
+    let(:non_template_files) { {} }
+    let(:update_manager) { PDK::Module::UpdateManager.new }
+    let(:null_renderer) { PDK::Template::Renderer::AbstractRenderer.new(nil, nil, pdk_context) }
+    let(:template_dir) { PDK::Template::TemplateDir.new(nil, nil, pdk_context, null_renderer) }
 
     before(:each) do
-      allow(templated_object).to receive(:target_object_path).and_return(target_object_path)
-      allow(templated_object).to receive(:target_spec_path).and_return(target_spec_path)
+      # Mock required PuppetObject methods
+      allow(templated_object).to receive(:template_files).and_return(template_files)
       allow(templated_object).to receive(:template_data).and_return({})
+      allow(templated_object).to receive(:friendly_name).and_return('spec_object')
+      allow(templated_object).to receive(:non_template_files).and_return(non_template_files)
+      # Mock external objects
+      allow(templated_object).to receive(:update_manager_instance).and_return(update_manager)
+      allow(templated_object).to receive(:with_templates).and_yield(template_dir)
+      # Mock rendering of the template file
+      allow(template_dir).to receive(:render_single_item).and_return('mock response')
     end
 
     context 'when the target files do not exist' do
-      let(:object_template) { '/tmp/test_template/object.erb' }
-      let(:spec_template) { '/tmp/test_template/spec.erb' }
-
       before(:each) do
-        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_object_path).and_return(false)
-        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(absolute_target_file).and_return(false)
       end
 
       it 'renders the object file' do
-        expect(templated_object).to receive(:with_templates).and_yield({ object: object_template }, {})
-        expect(templated_object).to receive(:render_file).with(target_object_path, object_template, configs: {})
-        templated_object.run
-      end
-
-      it 'renders the spec file if a template for it was found' do
-        expect(templated_object).to receive(:with_templates).and_yield({ object: object_template, spec: spec_template }, {})
-        expect(templated_object).to receive(:render_file).with(target_object_path, object_template, configs: {})
-        expect(templated_object).to receive(:render_file).with(target_spec_path, spec_template, configs: {})
-        templated_object.run
+        expect(templated_object.stage_changes(update_manager).changes?).to be_truthy
       end
     end
 
     context 'when the target object file exists' do
       before(:each) do
-        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(false)
-        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_object_path).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(absolute_target_file).and_return(true)
       end
 
       it 'raises an error' do
-        expect { templated_object.run }.to raise_error(PDK::CLI::ExitWithError, %r{'#{target_object_path}' already exists})
+        expect { templated_object.stage_changes(update_manager) }.to raise_error(PDK::CLI::ExitWithError, %r{'#{absolute_target_file}' already exists})
       end
     end
 
-    context 'when the target spec file exists' do
-      before(:each) do
-        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_object_path).and_return(false)
-        allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(true)
-      end
+    context 'when there are non templated files to add' do
+      let(:template_files) { {} }
+      let(:non_template_files) { { 'additional_file' => 'additional content' } }
 
-      it 'raises an error' do
-        expect { templated_object.run }.to raise_error(PDK::CLI::ExitWithError, %r{'#{target_spec_path}' already exists})
-      end
-    end
-
-    context 'when only generating specs' do
-      let(:options) { { spec_only: true } }
-
-      context 'when the target spec file exists' do
-        before(:each) do
-          allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(true)
-        end
-
-        it 'raises an error' do
-          msg = %r{unable to generate unit test; '#{target_spec_path}' already exists}i
-          expect {
-            templated_object.run
-          }.to raise_error(PDK::CLI::ExitWithError, msg)
-        end
-      end
-
-      context 'when the target spec file does not exist' do
-        let(:object_template) { '/tmp/test_template/object.erb' }
-        let(:spec_template) { '/tmp/test_template/spec.erb' }
-
-        before(:each) do
-          allow(PDK::Util::Filesystem).to receive(:exist?).with(target_spec_path).and_return(false)
-          allow(templated_object).to receive(:with_templates).and_yield({ object: object_template, spec: spec_template }, {})
-        end
-
-        after(:each) do
-          templated_object.run
-        end
-
-        it 'renders the spec file' do
-          expect(templated_object).to receive(:render_file).with(target_spec_path, spec_template, anything)
-        end
-
-        it 'does not attempt to render the object' do
-          allow(templated_object).to receive(:render_file).with(target_spec_path, anything, anything)
-          expect(templated_object).not_to receive(:render_file).with(target_object_path, anything, anything)
-        end
+      it 'renders the object file' do
+        expect(templated_object.stage_changes(update_manager).changes?).to be_truthy
       end
     end
   end

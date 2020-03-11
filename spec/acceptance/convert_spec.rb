@@ -244,8 +244,8 @@ describe 'pdk convert', module_command: true do
 
       describe command("#{pdk_convert_base} --force --skip-interview --add-tests") do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{#{Regexp.escape(class_path)}}m) }
-        its(:stderr) { is_expected.to match(%r{#{Regexp.escape(define_path)}}m) }
+        its(:stdout) { is_expected.to match(%r{#{Regexp.escape(class_path)}}m) }
+        its(:stdout) { is_expected.to match(%r{#{Regexp.escape(define_path)}}m) }
 
         describe file(class_path) do
           it { is_expected.to be_file }

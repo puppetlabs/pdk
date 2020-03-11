@@ -25,9 +25,11 @@ SYNC
       end
 
       describe command('pdk new provider test_provider') do
-        its(:stderr) { is_expected.to match(%r{creating .* from template}i) }
-        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stdout) { is_expected.to have_no_output }
+        its(:stdout) { is_expected.to match(%r{#{File.join('lib', 'puppet', 'type', 'test_provider.rb')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('lib', 'puppet', 'provider', 'test_provider', 'test_provider.rb')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'unit', 'puppet', 'provider', 'test_provider', 'test_provider_spec.rb')}}) }
+        its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'unit', 'puppet', 'type', 'test_provider_spec.rb')}}) }
+        its(:stderr) { is_expected.to have_no_output }
         its(:exit_status) { is_expected.to eq(0) }
 
         describe file(File.join('lib', 'puppet', 'type')) do

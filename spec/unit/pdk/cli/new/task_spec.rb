@@ -6,6 +6,8 @@ describe 'PDK::CLI new task' do
 
   before(:each) do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
+    # Stop printing out the result
+    allow(PDK::CLI::Util::UpdateManagerPrinter).to receive(:print_summary)
   end
 
   shared_examples 'it exits non-zero and prints the help text' do
@@ -69,7 +71,7 @@ describe 'PDK::CLI new task' do
       let(:generator_opts) { {} }
 
       before(:each) do
-        allow(generator).to receive(:new).with(module_root, 'test_task', hash_including(generator_opts)).and_return(generator_double)
+        allow(generator).to receive(:new).with(anything, 'test_task', hash_including(generator_opts)).and_return(generator_double)
       end
 
       it 'generates the task' do

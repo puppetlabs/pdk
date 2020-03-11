@@ -26,6 +26,7 @@ module PDK
         unless update_manager.changes?
           if adding_tests?
             add_tests!
+            print_result 'Convert completed'
           else
             require 'pdk/report'
 
@@ -85,37 +86,59 @@ module PDK
       end
 
       def missing_tests?
-        test_generators.any? { |gen| gen.can_run? }
+        !available_test_generators.empty?
       end
 
-      def test_generators
+      def available_test_generators
+        # Only select generators which can run and have no pre-existing files
+        test_generators.select do |gen|
+          if gen.can_run?
+            gen.template_files.none? { |_, dst_path| PDK::Util::Filesystem.exist?(File.join(gen.context.root_path, dst_path)) }
+          else
+            false
+          end
+        end
+      end
+
+      def test_generators(context = PDK.context)
         return @test_generators unless @test_generators.nil?
         require 'pdk/util/puppet_strings'
 
         test_gens = PDK::Util::PuppetStrings.all_objects.map do |generator, objects|
           (objects || []).map do |obj|
-            generator.new(module_dir, obj['name'], spec_only: true)
+            generator.new(context, obj['name'], spec_only: true)
           end
         end
 
         @test_generators = test_gens.flatten
       end
 
+      def stage_tests!(manager)
+        available_test_generators.each do |gen|
+          gen.stage_changes(manager)
+        end
+        manager
+      end
+
       def add_tests!
-        test_generators.each do |gen|
-          gen.run if gen.can_run?
+        update_manager.clear!
+        stage_tests!(update_manager)
+
+        if update_manager.changes?
+          update_manager.sync_changes!
+          print_summary
+        else
+          PDK::Report.default_target.puts(_('No test changes required.'))
         end
       end
 
-      def stage_changes!
+      def stage_changes!(context = PDK.context)
         require 'pdk/util/filesystem'
 
         metadata_path = File.join(module_dir, 'metadata.json')
 
-        PDK::Module::TemplateDir.with(template_uri, nil, true) do |templates|
-          new_metadata = update_metadata(metadata_path, templates.metadata)
-          templates.module_metadata = new_metadata.data unless new_metadata.nil?
-
+        PDK::Template.with(template_uri, context) do |template_dir|
+          new_metadata = update_metadata(metadata_path, template_dir.metadata)
           if options[:noop] && new_metadata.nil?
             update_manager.add_file(metadata_path, '')
           elsif PDK::Util::Filesystem.file?(metadata_path)
@@ -124,7 +147,9 @@ module PDK
             update_manager.add_file(metadata_path, new_metadata.to_json)
           end
 
-          templates.render do |relative_file_path, file_content, file_status|
+          # new_metadata == nil when creating a new module but with --noop@
+          module_name = new_metadata.nil? ? 'new-module' : new_metadata.data['name']
+          template_dir.render_new_module(module_name) do |relative_file_path, file_content, file_status|
             absolute_file_path = File.join(module_dir, relative_file_path)
             case file_status
             when :unmanage
