@@ -27,29 +27,6 @@ describe PDK::Module::Update do
     end
   end
 
-  shared_context 'requires bundle install' do
-    context 'if the Gemfile is updated' do
-      before(:each) do
-        allow(instance).to receive(:needs_bundle_update?).and_return(true)
-        allow(instance.update_manager).to receive(:remove_file)
-        allow(instance.update_manager).to receive(:unlink_file)
-        allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
-      end
-
-      it 'removes the existing Gemfile.lock' do
-        expect(instance.update_manager).to receive(:unlink_file).with('Gemfile.lock')
-      end
-
-      it 'removes the bundler project config' do
-        expect(instance.update_manager).to receive(:unlink_file).with(File.join('.bundle', 'config'))
-      end
-
-      it 'triggers a bundle install' do
-        expect(PDK::Util::Bundler).to receive(:ensure_bundle!)
-      end
-    end
-  end
-
   describe '#pinned_to_puppetlabs_template_tag?' do
     subject { instance.pinned_to_puppetlabs_template_tag? }
 
@@ -173,6 +150,9 @@ describe PDK::Module::Update do
       allow(PDK::Util::Git).to receive(:tag?).with(String, String).and_return(true)
       allow(instance.update_manager).to receive(:sync_changes!)
       allow(instance.update_manager).to receive(:changes?).and_return(changes)
+      allow(instance.update_manager).to receive(:unlink_file).with('Gemfile.lock')
+      allow(instance.update_manager).to receive(:unlink_file).with(File.join('.bundle', 'config'))
+      allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
     end
 
     after(:each) do
@@ -252,8 +232,6 @@ describe PDK::Module::Update do
         it 'syncs the pending changes' do
           expect(instance.update_manager).to receive(:sync_changes!)
         end
-
-        include_context 'requires bundle install'
       end
 
       context 'without force' do
@@ -273,8 +251,6 @@ describe PDK::Module::Update do
           it 'prints the result' do
             expect(instance).to receive(:print_result)
           end
-
-          include_context 'requires bundle install'
         end
 
         context 'if the user chooses not to continue' do

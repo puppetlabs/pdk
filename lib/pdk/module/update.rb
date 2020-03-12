@@ -33,19 +33,15 @@ module PDK
           return unless PDK::CLI::Util.prompt_for_yes(message)
         end
 
-        # Remove these files straight away as these changes are not something that the user needs to review.
-        if needs_bundle_update?
-          update_manager.unlink_file('Gemfile.lock')
-          update_manager.unlink_file(File.join('.bundle', 'config'))
-        end
+        # Remove these files straight away as these changes are not something
+        # that the user needs to review.
+        update_manager.unlink_file('Gemfile.lock')
+        update_manager.unlink_file(File.join('.bundle', 'config'))
 
         update_manager.sync_changes!
 
-        if needs_bundle_update?
-          require 'pdk/util/bundler'
-
-          PDK::Util::Bundler.ensure_bundle!
-        end
+        require 'pdk/util/bundler'
+        PDK::Util::Bundler.ensure_bundle!
 
         print_result 'Update completed'
       end
