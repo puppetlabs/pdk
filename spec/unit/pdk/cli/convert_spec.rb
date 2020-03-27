@@ -5,17 +5,19 @@ describe 'PDK::CLI convert' do
   include_context 'mock configuration'
 
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk convert}m) }
+  let(:pdk_context) { PDK::Context::Module.new(module_root, module_root) }
   let(:module_root) { '/path/to/test/module' }
 
   before(:each) do
     allow(PDK::Util).to receive(:package_install?).and_return(false)
+    allow(PDK).to receive(:context).and_return(pdk_context)
   end
 
   context 'when not run from inside a module' do
     include_context 'run outside module'
 
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
+      expect(logger).to receive(:error).with(a_string_matching(%r{can only be run from inside a valid module directory}))
 
       expect { PDK::CLI.run(%w[convert]) }.to exit_nonzero
     end
@@ -24,6 +26,54 @@ describe 'PDK::CLI convert' do
       expect(analytics).not_to receive(:screen_view)
 
       expect { PDK::CLI.run(%w[convert]) }.to exit_nonzero
+    end
+  end
+
+  context 'when run inside a nested module-looking directories' do
+    # It is possible in a control repo to have a metadata.json in the root, but want to convert a module
+    # inside one of the module directories e.g.
+    #
+    #  control-repo
+    #    +- metadata.json
+    #    |
+    #    +- site
+    #         +- profile        (Current Directory)  <---- Want to convert from here
+    #              +- manifests
+    #                 ....
+    #
+    around(:each) do |example|
+      # We need the real methods here
+      # rubocop:disable PDK/FileUtilsMkdirP
+      # rubocop:disable PDK/FileUtilsRMRF
+      require 'tmpdir'
+      current_dir = Dir.pwd
+      spec_dir = Dir.mktmpdir('pdk_convert')
+      Dir.chdir(spec_dir)
+      # Create the control repo
+      FileUtils.mkdir_p(File.join('site', 'profile', 'manifests'))
+      File.write('metadata.json', '{}')
+      Dir.chdir(File.join('site', 'profile'))
+
+      example.run
+
+      Dir.chdir(current_dir)
+      FileUtils.rm_rf(spec_dir)
+      # rubocop:enable PDK/FileUtilsMkdirP
+      # rubocop:enable PDK/FileUtilsRMRF
+    end
+
+    before(:each) do
+      # Undo some of the mock_configuration mocking
+      allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
+      # Reset cached information
+      PDK.instance_variable_set(:@context, nil)
+      allow(PDK).to receive(:context).and_call_original
+    end
+
+    it 'uses the nested module directory' do
+      expect(PDK::Module::Convert).to receive(:invoke).with(Dir.pwd, anything)
+
+      expect { PDK::CLI.run(%w[convert]) }.not_to raise_error(StandardError)
     end
   end
 

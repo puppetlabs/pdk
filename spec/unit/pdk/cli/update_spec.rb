@@ -17,7 +17,7 @@ describe 'PDK::CLI update' do
     include_context 'run outside module'
 
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
+      expect(logger).to receive(:error).with(a_string_matching(%r{can only be run from inside a valid module directory}))
 
       expect { PDK::CLI.run(%w[update]) }.to exit_nonzero
     end
@@ -29,8 +29,78 @@ describe 'PDK::CLI update' do
     end
   end
 
-  context 'when run from inside a module' do
+  context 'when run inside a nested module-looking directories' do
+    # It is possible in a control repo to have a metadata.json in the root, but want to update a module
+    # inside one of the module directories e.g.
+    #
+    #  control-repo
+    #    +- metadata.json
+    #    |
+    #    +- site
+    #         +- profile        (Current Directory)  <---- Want to update from here
+    #              +- manifests
+    #                 ....
+    #
+    around(:each) do |example|
+      # We need the real methods here
+      # rubocop:disable PDK/FileUtilsMkdirP
+      # rubocop:disable PDK/FileUtilsRMRF
+      require 'tmpdir'
+      spec_dir = Dir.mktmpdir('pdk_update')
+      # Create the control repo
+      FileUtils.mkdir_p(File.join(spec_dir, 'site', 'profile', 'manifests'))
+      File.write(
+        File.join(spec_dir, 'metadata.json'),
+        <<-EOT
+        {
+          "name": "spec-foo",
+          "version": "0.1.0",
+          "author": "spec",
+          "summary": "",
+          "license": "Apache-2.0",
+          "source": "",
+          "dependencies": [],
+          "operatingsystem_support": [],
+          "requirements": [
+            {
+              "name": "puppet",
+              "version_requirement": ">= 4.10.0 < 7.0.0"
+            }
+          ],
+          "pdk-version": "99.99.0",
+          "template-url": "https://github.com/puppetlabs/pdk-templates#master",
+          "template-ref": "tags/99.99.0"
+        }
+        EOT
+      )
+      Dir.chdir(File.join(spec_dir, 'site', 'profile')) { example.run }
+      FileUtils.rm_rf(spec_dir)
+      # rubocop:enable PDK/FileUtilsMkdirP
+      # rubocop:enable PDK/FileUtilsRMRF
+    end
+
     before(:each) do
+      # Undo some of the mock_configuration mocking
+      allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
+      # Ensure the the module update never actually happens
+      allow(PDK::Module::Update).to receive(:new).with(module_root, anything).and_return(updater)
+      # Reset cached information
+      PDK.instance_variable_set(:@context, nil)
+      allow(PDK).to receive(:context).and_call_original
+    end
+
+    it 'uses the nested module directory' do
+      expect(PDK::Module::Update).to receive(:new).with(Dir.pwd, anything).and_return(updater)
+
+      expect { PDK::CLI.run(%w[update --force]) }.not_to raise_error(StandardError)
+    end
+  end
+
+  context 'when run from inside a module' do
+    let(:pdk_context) { PDK::Context::Module.new(module_root, module_root) }
+
+    before(:each) do
+      allow(PDK).to receive(:context).and_return(pdk_context)
       allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
       allow(PDK::Util).to receive(:module_pdk_version).and_return(module_pdk_version)

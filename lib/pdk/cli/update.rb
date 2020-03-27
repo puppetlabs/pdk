@@ -10,14 +10,12 @@ module PDK::CLI
     PDK::CLI.template_ref_option(self)
 
     run do |opts, _args, _cmd|
-      require 'pdk/cli/util'
-      require 'pdk/util'
-      require 'pdk/module/update'
+      # Write the context information to the debug log
+      PDK.context.to_debug_log
 
-      PDK::CLI::Util.ensure_in_module!(
-        message:   _('`pdk update` can only be run from inside a valid module directory.'),
-        log_level: :info,
-      )
+      unless PDK.context.is_a?(PDK::Context::Module)
+        raise PDK::CLI::ExitWithError, _('`pdk update` can only be run from inside a valid module directory.')
+      end
 
       raise PDK::CLI::ExitWithError, _('This module does not appear to be PDK compatible. To make the module compatible with PDK, run `pdk convert`.') unless PDK::Util.module_pdk_compatible?
 
@@ -46,7 +44,7 @@ module PDK::CLI
 
       PDK::CLI::Util.analytics_screen_view('update', opts)
 
-      updater = PDK::Module::Update.new(PDK::Util.module_root, opts)
+      updater = PDK::Module::Update.new(PDK.context.root_path, opts)
 
       if updater.pinned_to_puppetlabs_template_tag?
         PDK.logger.info _(
