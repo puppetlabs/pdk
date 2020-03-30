@@ -89,6 +89,11 @@ module PDK
         setup
 
         tests = options[:tests]
+        # Due to how rake handles paths in the command line options, any backslashed path (Windows platforms) needs to be converted
+        # to forward slash. We can't use File.expand_path as the files aren't guaranteed to be on-disk
+        #
+        # Ref - https://github.com/puppetlabs/pdk/issues/828
+        tests.tr!('\\', '/') unless tests.nil?
 
         environment = { 'CI_SPEC_OPTIONS' => '--format j' }
         environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]

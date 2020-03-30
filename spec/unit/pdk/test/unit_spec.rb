@@ -465,6 +465,15 @@ describe PDK::Test::Unit do
         exit_code = described_class.invoke(report, tests: 'a_test_spec.rb')
         expect(exit_code).to eq(-1)
       end
+
+      context 'with Windows paths' do
+        it 'uses forward slashes to invoke rake' do
+          expect(described_class).to receive(:parse_output).once
+          expect(described_class).to receive(:rake).with(%r{path/a_test_spec.rb}, anything, anything).and_call_original
+          exit_code = described_class.invoke(report, tests: 'path\\a_test_spec.rb')
+          expect(exit_code).to eq(-1)
+        end
+      end
     end
   end
   # rubocop:enable RSpec/AnyInstance
