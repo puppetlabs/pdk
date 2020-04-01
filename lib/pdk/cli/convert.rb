@@ -14,14 +14,12 @@ module PDK::CLI
     flag nil, :'default-template', _('Convert the module to use the default PDK template.')
 
     run do |opts, _args, _cmd|
-      require 'pdk/module/convert'
-      require 'pdk/cli/util'
+      # Write the context information to the debug log
+      PDK.context.to_debug_log
 
-      PDK::CLI::Util.ensure_in_module!(
-        check_module_layout: true,
-        message:             _('`pdk convert` can only be run from inside a valid module directory.'),
-        log_level:           :info,
-      )
+      unless PDK.context.is_a?(PDK::Context::Module)
+        raise PDK::CLI::ExitWithError, _('`pdk convert` can only be run from inside a valid module directory.')
+      end
 
       if opts[:noop] && opts[:force]
         raise PDK::CLI::ExitWithError, _('You can not specify --noop and --force when converting a module')
@@ -48,7 +46,7 @@ module PDK::CLI
         opts[:'full-interview'] = false
       end
 
-      PDK::Module::Convert.invoke(PDK::Util.module_root, opts)
+      PDK::Module::Convert.invoke(PDK.context.root_path, opts)
     end
   end
 end
