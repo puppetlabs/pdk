@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'pdk/template_file'
+require 'pdk/template/renderer/v1/template_file'
 
-describe PDK::TemplateFile do
+describe PDK::Template::Renderer::V1::TemplateFile do
   subject(:template_file) { described_class.new(template_path, data) }
 
   let(:data) { { configs: { 'test' => 'value' }, some: 'value' } }
@@ -17,12 +17,10 @@ describe PDK::TemplateFile do
     end
 
     context 'when :template_dir has been passed in the data hash' do
-      require 'pdk/module/template_dir/base'
-
       let(:data) do
         {
           configs: { 'test' => 'value' },
-          template_dir: instance_double(PDK::Module::TemplateDir::Base),
+          template_dir: instance_double(PDK::Template::Renderer::V1::LegacyTemplateDir),
         }
       end
 

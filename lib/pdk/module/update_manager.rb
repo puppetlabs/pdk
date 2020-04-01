@@ -75,6 +75,13 @@ module PDK
           changes[:modified].key?(path)
       end
 
+      def clear!
+        @modified_files.clear
+        @added_files.clear
+        @removed_files.clear
+        nil
+      end
+
       # Apply any pending changes stored in the UpdateManager to the module.
       #
       # @raise (see #calculate_diffs)

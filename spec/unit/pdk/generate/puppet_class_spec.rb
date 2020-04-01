@@ -3,13 +3,14 @@ require 'pdk/generate/puppet_class'
 
 shared_examples 'it generates class template data' do
   it 'includes the class name in the template data' do
-    expect(templated_class.template_data).to eq(name: expected_class_name)
+    expect(generator.template_data).to eq(name: expected_class_name)
   end
 end
 
 describe PDK::Generate::PuppetClass do
-  subject(:templated_class) { described_class.new(module_dir, given_class_name, options) }
+  subject(:generator) { described_class.new(context, given_class_name, options) }
 
+  let(:context) { PDK::Context::Module.new(module_dir, module_dir) }
   let(:module_name) { 'test_module' }
   let(:module_dir) { '/tmp/test_module' }
   let(:options) { {} }
@@ -20,68 +21,80 @@ describe PDK::Generate::PuppetClass do
     allow(PDK::Util).to receive(:module_metadata).and_return(test_metadata)
   end
 
-  context 'when the class name is the same as the module name' do
+  shared_examples 'it generates an object file' do
+    it 'writes the object file into the correct location' do
+      expect(generator.template_files).to include('class.erb' => expected_object_path)
+    end
+  end
+
+  shared_examples 'it generates a spec file' do
+    it 'writes the spec file into the correct location' do
+      expect(generator.template_files).to include('class_spec.erb' => expected_spec_path)
+    end
+  end
+
+  describe '#template_files' do
     let(:given_class_name) { module_name }
 
-    it_behaves_like 'it generates class template data'
+    context 'when spec_only is true' do
+      let(:options) { { spec_only: true } }
 
-    it 'writes the class to init.pp' do
-      expect(templated_class.target_object_path).to eq(File.join(module_dir, 'manifests', 'init.pp'))
+      it 'only returns spec files' do
+        expect(generator.template_files.keys).to eq(['class_spec.erb'])
+      end
     end
 
-    it 'writes the spec file into the classes directory' do
-      expect(templated_class.target_spec_path).to eq(File.join(module_dir, 'spec', 'classes', "#{expected_class_name}_spec.rb"))
+    context 'when spec_only is false' do
+      let(:options) { { spec_only: false } }
+
+      it 'only returns all files' do
+        expect(generator.template_files.keys).to eq(['class_spec.erb', 'class.erb'])
+      end
     end
+  end
+
+  context 'when the class name is the same as the module name' do
+    let(:given_class_name) { module_name }
+    let(:expected_spec_path) { File.join('spec', 'classes', "#{expected_class_name}_spec.rb") }
+    let(:expected_object_path) { File.join('manifests', 'init.pp') }
+
+    include_examples 'it generates class template data'
+    include_examples 'it generates an object file'
+    include_examples 'it generates a spec file'
   end
 
   context 'when the class name is in the module namespace' do
     let(:given_class_name) { "#{module_name}::test_class" }
+    let(:expected_spec_path) { File.join('spec', 'classes', 'test_class_spec.rb') }
+    let(:expected_object_path) { File.join('manifests', 'test_class.pp') }
 
-    it_behaves_like 'it generates class template data'
-
-    it 'writes the class to a file matching the class name' do
-      expect(templated_class.target_object_path).to eq(File.join(module_dir, 'manifests', 'test_class.pp'))
-    end
-
-    it 'writes the spec file into the classes directory' do
-      expect(templated_class.target_spec_path).to eq(File.join(module_dir, 'spec', 'classes', 'test_class_spec.rb'))
-    end
+    include_examples 'it generates class template data'
+    include_examples 'it generates an object file'
+    include_examples 'it generates a spec file'
   end
 
   context 'when the class name is deeply nested in the module namespace' do
     let(:given_class_name) { "#{module_name}::something::else::test_class" }
+    let(:expected_spec_path) { File.join('spec', 'classes', 'something', 'else', 'test_class_spec.rb') }
+    let(:expected_object_path) { File.join('manifests', 'something', 'else', 'test_class.pp') }
 
-    it 'includes the class name in the template data' do
-      expect(templated_class.template_data).to eq(name: expected_class_name)
-    end
-
-    it 'writes the class to a file matching the class name' do
-      expect(templated_class.target_object_path).to eq(File.join(module_dir, 'manifests', 'something', 'else', 'test_class.pp'))
-    end
-
-    it 'writes the spec file into the classes directory' do
-      expect(templated_class.target_spec_path).to eq(File.join(module_dir, 'spec', 'classes', 'something', 'else', 'test_class_spec.rb'))
-    end
+    include_examples 'it generates class template data'
+    include_examples 'it generates an object file'
+    include_examples 'it generates a spec file'
   end
 
   context 'when the class name is outside the module namespace' do
     let(:given_class_name) { 'test_class' }
     let(:expected_class_name) { "#{module_name}::#{given_class_name}" }
+    let(:expected_spec_path) { File.join('spec', 'classes', "#{given_class_name}_spec.rb") }
+    let(:expected_object_path) { File.join('manifests', "#{given_class_name}.pp") }
 
-    it 'includes the class name in the template data' do
-      expect(templated_class.template_data).to eq(name: expected_class_name)
-    end
+    include_examples 'it generates class template data'
+    include_examples 'it generates an object file'
+    include_examples 'it generates a spec file'
 
     it 'prepends the module name to the class name' do
-      expect(templated_class.object_name).to eq(expected_class_name)
-    end
-
-    it 'uses the class name as file name' do
-      expect(templated_class.target_object_path).to eq(File.join(module_dir, 'manifests', "#{given_class_name}.pp"))
-    end
-
-    it 'writes the spec file into the classes directory' do
-      expect(templated_class.target_spec_path).to eq(File.join(module_dir, 'spec', 'classes', "#{given_class_name}_spec.rb"))
+      expect(generator.object_name).to eq(expected_class_name)
     end
   end
 end

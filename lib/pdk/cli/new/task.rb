@@ -27,7 +27,8 @@ module PDK::CLI
 
       PDK::CLI::Util.analytics_screen_view('new_task', opts)
 
-      PDK::Generate::Task.new(PDK::Util.module_root, task_name, opts).run
+      updates = PDK::Generate::Task.new(PDK.context, task_name, opts).run
+      PDK::CLI::Util::UpdateManagerPrinter.print_summary(updates, tense: :past)
     end
   end
 end

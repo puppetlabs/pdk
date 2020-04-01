@@ -11,7 +11,7 @@ module PDK
   autoload :Logger, 'pdk/logger'
   autoload :Module, 'pdk/module'
   autoload :Report, 'pdk/report'
-  autoload :TemplateFile, 'pdk/template_file'
+  autoload :Template, 'pdk/template'
   autoload :TEMPLATE_REF, 'pdk/version'
   autoload :Util, 'pdk/util'
   autoload :Validate, 'pdk/validate'

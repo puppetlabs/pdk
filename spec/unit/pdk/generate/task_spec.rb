@@ -2,47 +2,60 @@ require 'spec_helper'
 require 'pdk/generate/task'
 
 describe PDK::Generate::Task do
-  subject(:generator) { described_class.new(module_dir, given_name, options) }
+  subject(:generator) { instance }
 
-  subject(:target_object_path) { generator.target_object_path }
-
-  subject(:template_data) { generator.template_data }
-
+  let(:instance) { described_class.new(context, given_name, options) }
+  let(:context) { PDK::Context::Module.new(module_dir, module_dir) }
   let(:module_name) { 'test_module' }
   let(:module_dir) { '/tmp/test_module' }
   let(:options) { {} }
   let(:expected_name) { given_name }
 
   before(:each) do
-    test_metadata = { 'name' => module_name }
-    allow(PDK::Util).to receive(:module_metadata).and_return(test_metadata)
+    allow(instance).to receive(:module_name).and_return(module_name)
   end
 
-  describe '#target_object_path' do
-    subject { generator.target_object_path }
-
-    context 'when the task name is the same as the module name' do
-      let(:given_name) { module_name }
-
-      it { is_expected.to eq(File.join(module_dir, 'tasks', 'init.sh')) }
-    end
-
-    context 'when the task name is different to the module name' do
-      let(:given_name) { 'test_task' }
-
-      it { is_expected.to eq(File.join(module_dir, 'tasks', "#{given_name}.sh")) }
+  shared_examples 'it generates an object file' do
+    it 'writes the object file into the correct location' do
+      expect(generator.template_files).to include('task.erb' => expected_object_path)
     end
   end
 
-  describe '#target_spec_path' do
-    subject { generator.target_spec_path }
+  describe '#template_files' do
+    let(:given_name) { module_name }
 
+    context 'when spec_only is true' do
+      let(:options) { { spec_only: true } }
+
+      it 'only returns spec files' do
+        expect(generator.template_files.keys).to eq([])
+      end
+    end
+
+    context 'when spec_only is false' do
+      let(:options) { { spec_only: false } }
+
+      it 'only returns all files' do
+        expect(generator.template_files.keys).to eq(['task.erb'])
+      end
+    end
+  end
+
+  context 'when the task name is the same as the module name' do
+    let(:given_name) { module_name }
+    let(:expected_object_path) { File.join('tasks', 'init.sh') }
+
+    include_examples 'it generates an object file'
+  end
+
+  context 'when the task name is different to the module name' do
     let(:given_name) { 'test_task' }
+    let(:expected_object_path) { File.join('tasks', "#{given_name}.sh") }
 
-    it { is_expected.to be_nil }
+    include_examples 'it generates an object file'
   end
 
-  describe '#check_if_task_already_exists' do
+  describe '#check_preconditions' do
     let(:given_name) { 'test_task' }
     let(:task_files) { [] }
 
@@ -52,7 +65,7 @@ describe PDK::Generate::Task do
 
     context 'when no files exist for the task' do
       it 'does not raise an error' do
-        expect { generator.check_if_task_already_exists }.not_to raise_error
+        expect { generator.check_preconditions }.not_to raise_error
       end
     end
 
@@ -60,7 +73,7 @@ describe PDK::Generate::Task do
       let(:task_files) { [File.join(module_dir, 'tasks', "#{given_name}.md")] }
 
       it 'does not raise an error' do
-        expect { generator.check_if_task_already_exists }.not_to raise_error
+        expect { generator.check_preconditions }.not_to raise_error
       end
     end
 
@@ -68,7 +81,7 @@ describe PDK::Generate::Task do
       let(:task_files) { [File.join(module_dir, 'tasks', "#{given_name}.conf")] }
 
       it 'does not raise an error' do
-        expect { generator.check_if_task_already_exists }.not_to raise_error
+        expect { generator.check_preconditions }.not_to raise_error
       end
     end
 
@@ -77,17 +90,18 @@ describe PDK::Generate::Task do
 
       it 'raises ExitWithError' do
         expect {
-          generator.check_if_task_already_exists
+          generator.check_preconditions
         }.to raise_error(PDK::CLI::ExitWithError, %r{a task named '#{given_name}' already exists}i)
       end
     end
   end
 
-  describe '#write_task_metadata' do
+  describe '#non_template_files' do
     let(:given_name) { 'test_task' }
-    let(:metadata_file) { File.join(module_dir, 'tasks', "#{given_name}.json") }
 
     context 'when no description is provided in the options' do
+      let(:options) { {} }
+
       it 'writes the metadata with a sample description' do
         expected_content = {
           'puppet_task_version' => 1,
@@ -96,17 +110,14 @@ describe PDK::Generate::Task do
           'parameters'          => {},
         }
 
-        expect(PDK::Util::Filesystem).to receive(:write_file)
-          .with(metadata_file, satisfy { |content| JSON.parse(content) == expected_content })
-
-        generator.write_task_metadata
+        expect(generator.non_template_files).to include('tasks/test_task.json' => JSON.pretty_generate(expected_content))
       end
     end
 
     context 'when a description is provided in the options' do
       let(:options) { { description: 'This is a test task' } }
 
-      it 'writes the metadata with the provided description' do
+      it 'writes the metadata with a sample description' do
         expected_content = {
           'puppet_task_version' => 1,
           'supports_noop'       => false,
@@ -114,10 +125,7 @@ describe PDK::Generate::Task do
           'parameters'          => {},
         }
 
-        expect(PDK::Util::Filesystem).to receive(:write_file)
-          .with(metadata_file, satisfy { |content| JSON.parse(content) == expected_content })
-
-        generator.write_task_metadata
+        expect(generator.non_template_files).to include('tasks/test_task.json' => JSON.pretty_generate(expected_content))
       end
     end
   end

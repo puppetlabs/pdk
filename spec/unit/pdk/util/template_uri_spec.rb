@@ -581,6 +581,7 @@ describe PDK::Util::TemplateURI do
           end
 
           def allow_template_dir(root, valid)
+            # Note this are Template V1 directories. V2, and so on, may have different requirements
             allow(PDK::Util::Filesystem).to receive(:directory?).with("#{root}/moduleroot").and_return(valid)
             allow(PDK::Util::Filesystem).to receive(:directory?).with("#{root}/moduleroot_init").and_return(valid)
           end
@@ -593,7 +594,6 @@ describe PDK::Util::TemplateURI do
             context 'that contains a valid template' do
               before(:each) do
                 allow_template_dir('/path/to/a/template', true)
-                allow(PDK::Module::TemplateDir).to receive(:with).with('/path/to/a/template').and_yield
               end
 
               it { is_expected.to be_truthy }
@@ -602,7 +602,6 @@ describe PDK::Util::TemplateURI do
             context 'that does not contain a valid template' do
               before(:each) do
                 allow_template_dir('/path/to/a/template', false)
-                allow(PDK::Module::TemplateDir).to receive(:with).with('/path/to/a/template').and_raise(ArgumentError)
               end
 
               it { is_expected.to be_falsey }

@@ -243,4 +243,19 @@ describe PDK::Module::UpdateManager do
       end
     end
   end
+
+  describe '#clear!' do
+    before(:each) do
+      update_manager.add_file(dummy_file, 'content')
+      update_manager.modify_file(dummy_file, 'content')
+      update_manager.remove_file(dummy_file)
+      allow(update_manager).to receive(:calculate_diffs).and_return(nil) # rubocop:disable RSpec/SubjectStub This is fine.
+    end
+
+    it 'clears all pending changes' do
+      expect(update_manager.changes?).to be true
+      update_manager.clear!
+      expect(update_manager.changes?).to be false
+    end
+  end
 end

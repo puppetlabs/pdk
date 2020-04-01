@@ -4,6 +4,11 @@ require 'pdk/cli'
 describe 'PDK::CLI new class' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new class}m) }
 
+  before(:each) do
+    # Stop printing out the result
+    allow(PDK::CLI::Util::UpdateManagerPrinter).to receive(:print_summary)
+  end
+
   context 'when not run from inside a module' do
     include_context 'run outside module'
 
@@ -73,7 +78,7 @@ describe 'PDK::CLI new class' do
       end
 
       it 'generates the class' do
-        expect(PDK::Generate::PuppetClass).to receive(:new).with(root_dir, 'test_class', instance_of(Hash)).and_return(generator)
+        expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'test_class', instance_of(Hash)).and_return(generator)
         expect(generator).to receive(:run)
       end
 

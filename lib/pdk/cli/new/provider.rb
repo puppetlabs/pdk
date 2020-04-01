@@ -22,7 +22,8 @@ module PDK::CLI
 
       require 'pdk/generate/provider'
 
-      PDK::Generate::Provider.new(PDK::Util.module_root, provider_name, opts).run
+      updates = PDK::Generate::Provider.new(PDK.context, provider_name, opts).run
+      PDK::CLI::Util::UpdateManagerPrinter.print_summary(updates, tense: :past)
     end
   end
 end

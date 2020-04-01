@@ -40,7 +40,8 @@ module PDK::CLI
 
         PDK::CLI::Util.analytics_screen_view('new_test', opts)
 
-        generator.new(PDK::Util.module_root, obj['name'], opts.merge(spec_only: true)).run
+        updates = generator.new(PDK.context, obj['name'], opts.merge(spec_only: true)).run
+        PDK::CLI::Util::UpdateManagerPrinter.print_summary(updates, tense: :past)
       rescue PDK::Util::PuppetStrings::NoObjectError
         raise PDK::CLI::ExitWithError, _('Unable to find anything called "%{object}" to generate unit tests for.') % { object: object_name }
       rescue PDK::Util::PuppetStrings::NoGeneratorError => e

@@ -8,6 +8,7 @@ module PDK
       autoload :OptionValidator, 'pdk/cli/util/option_validator'
       autoload :Interview, 'pdk/cli/util/interview'
       autoload :Spinner, 'pdk/cli/util/spinner'
+      autoload :UpdateManagerPrinter, 'pdk/cli/util/update_manager_printer'
 
       # Ensures the calling code is being run from inside a module directory.
       #

@@ -58,17 +58,18 @@ module PDK
         end
 
         begin
-          PDK::Module::TemplateDir.with(template_uri, metadata.data, true) do |templates|
-            templates.render do |file_path, file_content, file_status|
-              next if file_status == :delete
-              file = Pathname.new(temp_target_dir) + file_path
+          context = PDK::Context::None.new(temp_target_dir)
+          PDK::Template.with(template_uri, context) do |template_dir|
+            template_dir.render_new_module(metadata.data['name'], metadata.data) do |relative_file_path, file_content, file_status|
+              next if [:delete, :unmanage].include?(file_status)
+              file = Pathname.new(temp_target_dir) + relative_file_path
               file.dirname.mkpath
               PDK::Util::Filesystem.write_file(file, file_content)
             end
 
             # Add information about the template used to generate the module to the
             # metadata (for a future update command).
-            metadata.update!(templates.metadata)
+            metadata.update!(template_dir.metadata)
 
             metadata.write!(File.join(temp_target_dir, 'metadata.json'))
           end

@@ -92,12 +92,12 @@ module PDK
         require 'pdk/generate'
 
         generators = PDK::Generate.generators.select do |gen|
-          gen.respond_to?(:puppet_strings_type) && !gen.puppet_strings_type.nil?
+          gen.const_defined?(:PUPPET_STRINGS_TYPE) && !gen::PUPPET_STRINGS_TYPE.nil?
         end
 
         known_objects = generate_hash
 
-        generators.map { |gen| [gen, known_objects[gen.puppet_strings_type]] }.reject do |_, obj|
+        generators.map { |gen| [gen, known_objects[gen::PUPPET_STRINGS_TYPE]] }.reject do |_, obj|
           obj.nil? || obj.empty?
         end
       end
@@ -117,7 +117,7 @@ module PDK
         require 'pdk/generate'
 
         PDK::Generate.generators.find do |gen|
-          gen.respond_to?(:puppet_strings_type) && gen.puppet_strings_type == type
+          gen.const_defined?(:PUPPET_STRINGS_TYPE) && gen::PUPPET_STRINGS_TYPE == type
         end
       end
     end

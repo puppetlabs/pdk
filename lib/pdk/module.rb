@@ -4,7 +4,6 @@ module PDK
     autoload :Convert, 'pdk/module/convert'
     autoload :Metadata, 'pdk/module/metadata'
     autoload :Release, 'pdk/module/release'
-    autoload :TemplateDir, 'pdk/module/template_dir'
     autoload :UpdateManager, 'pdk/module/update_manager'
     autoload :Update, 'pdk/module/update'
 

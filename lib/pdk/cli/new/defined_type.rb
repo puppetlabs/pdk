@@ -25,7 +25,8 @@ module PDK::CLI
 
       require 'pdk/generate/defined_type'
 
-      PDK::Generate::DefinedType.new(PDK::Util.module_root, defined_type_name, opts).run
+      updates = PDK::Generate::DefinedType.new(PDK.context, defined_type_name, opts).run
+      PDK::CLI::Util::UpdateManagerPrinter.print_summary(updates, tense: :past)
     end
   end
 end

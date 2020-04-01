@@ -33,13 +33,15 @@ module PDK
     # Abstract class which all PDK Contexts will subclass from.
     # @abstract
     class AbstractContext
-      # The root of this context, for example the module root when inside a module. This is different from context_path
+      # The root of this context, for example the module root when inside a module. This can be different from context_path
       # For example a Module context_path could be /path/to/module/manifests/ but the root_path will be /path/to/module as
-      # that is the root of the Module context
-      # @return [String, Nil]
-      attr_reader :root_path
+      # that is the root of the Module context. Defaults to the context_path if not set.
+      # @return [String]
+      def root_path
+        @root_path || @context_path
+      end
 
-      # The path used to create this context, for example the current working directory. This is different from root_path
+      # The path used to create this context, for example the current working directory. This can be different from root_path
       # For example a Module context_path could be /path/to/module/manifests/ but the root_path will be /path/to/module as
       # that is the root of the Module context
       # @return [String]
@@ -48,6 +50,7 @@ module PDK
       # @param context_path [String] The path where this context was created from e.g. Dir.pwd
       def initialize(context_path)
         @context_path = context_path
+        @root_path = nil
       end
 
       # Whether the current context is compatible with the PDK e.g. in a Module context, whether it has the correct metadata.json content
