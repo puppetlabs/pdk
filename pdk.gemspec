@@ -23,7 +23,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'childprocess', '~> 0.7.1'
   spec.add_runtime_dependency 'cri', '~> 2.10'
   spec.add_runtime_dependency 'diff-lcs', '1.3'
-  spec.add_runtime_dependency 'ffi', '~> 1.9.0'
+  spec.add_runtime_dependency 'ffi', '>= 1.9.25', '< 2.0.0'
   spec.add_runtime_dependency 'gettext-setup', '~> 0.24'
   spec.add_runtime_dependency 'hitimes', '1.3.0'
   spec.add_runtime_dependency 'json-schema', '2.8.0'

@@ -6,6 +6,7 @@ gemspec
 if RUBY_VERSION < '2.3.0'
   # avoid newer versions that do not support ruby 2.1 anymore
   gem 'cri', '>= 2.10.1', '< 2.11.0'
+  gem 'ffi', '1.9.25'
   gem 'nokogiri', '1.7.2'
 else
   gem 'nokogiri', '~> 1.10.8'
