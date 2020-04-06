@@ -111,7 +111,7 @@ module PDK
 
         PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
-        validator_exit_code, = PDK::Validate.invoke_validators_by_name(PDK::Validate.validator_names, false, options)
+        validator_exit_code, = PDK::Validate.invoke_validators_by_name(PDK.context, PDK::Validate.validator_names, false, options)
         raise PDK::CLI::ExitWithError, _('An error occured during validation') unless validator_exit_code.zero?
       end
 
