@@ -4,7 +4,38 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.18.0](https://github.com/puppetlabs/pdk/tree/v1.18.0) (2020-05-12)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.17.0...v1.18.0)
+
+**Implemented enhancements:**
+
+- \(PDK-1109\) Add pdk remove config [\#870](https://github.com/puppetlabs/pdk/pull/870) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1632\) Only show validators that are available in the given PDK Context [\#867](https://github.com/puppetlabs/pdk/pull/867) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1615\) Add validator for environment.conf [\#866](https://github.com/puppetlabs/pdk/pull/866) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1108\) Add pdk set config command [\#859](https://github.com/puppetlabs/pdk/pull/859) ([glennsarti](https://github.com/glennsarti))
+
+**Fixed bugs:**
+
+- Warning from libhoney when running unit test with PDK 1.17 [\#875](https://github.com/puppetlabs/pdk/issues/875)
+- 'pdk convert' of a module that's inside a control repo adds boilerplate to the control repo [\#874](https://github.com/puppetlabs/pdk/issues/874)
+- GemNotFound error for public\_suffix-3.1.1 when using --add-tests [\#869](https://github.com/puppetlabs/pdk/issues/869)
+- Scrollback of failed rspec tests in VS code is extremely limited [\#829](https://github.com/puppetlabs/pdk/issues/829)
+- Running individual rspec tests on Windows requires escaping the path [\#828](https://github.com/puppetlabs/pdk/issues/828)
+- Generated descriptions for certain test comparisons break JUnit output [\#821](https://github.com/puppetlabs/pdk/issues/821)
+- Fix PDK release command module validation [\#880](https://github.com/puppetlabs/pdk/pull/880) ([carabasdaniel](https://github.com/carabasdaniel))
+- \(GH-828\) Munge backslash in rake paths for unit tests [\#878](https://github.com/puppetlabs/pdk/pull/878) ([glennsarti](https://github.com/glennsarti))
+- \(GH-874\) Use PDK Context root for PDK Convert and Update [\#877](https://github.com/puppetlabs/pdk/pull/877) ([glennsarti](https://github.com/glennsarti))
+- \(\#869\) Ensure bundle update on convert/update [\#871](https://github.com/puppetlabs/pdk/pull/871) ([rodjek](https://github.com/rodjek))
+- \(\#821\) Allow for unbalanced JSON fragments in RSpec output [\#822](https://github.com/puppetlabs/pdk/pull/822) ([scotje](https://github.com/scotje))
+
+**Merged pull requests:**
+
+- \(MAINT\) Bump nokogiri and rake for security advisories [\#865](https://github.com/puppetlabs/pdk/pull/865) ([scotje](https://github.com/scotje))
+- \(FIXUP\) Make system config path absolute instead of relative on POSIX hosts [\#862](https://github.com/puppetlabs/pdk/pull/862) ([scotje](https://github.com/scotje))
+
 ## [v1.17.0](https://github.com/puppetlabs/pdk/tree/v1.17.0) (2020-02-27)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.16.0...v1.17.0)
 
 **Implemented enhancements:**
@@ -29,6 +60,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1592\) Refactor PDK validators to be more singular purpose [\#831](https://github.com/puppetlabs/pdk/pull/831) ([glennsarti](https://github.com/glennsarti))
 
 ## [v1.16.0](https://github.com/puppetlabs/pdk/tree/v1.16.0) (2020-02-05)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.15.0...v1.16.0)
 
 **Implemented enhancements:**
@@ -53,6 +85,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(MAINT\) Refactor how gem\_path to bundler is calculated [\#745](https://github.com/puppetlabs/pdk/pull/745) ([scotje](https://github.com/scotje))
 
 ## [v1.15.0](https://github.com/puppetlabs/pdk/tree/v1.15.0) (2019-12-13)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.14.1...v1.15.0)
 
 **Implemented enhancements:**
@@ -80,6 +113,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1523\) Refactor filesystem operations to use PDK::Util::Filesystem [\#799](https://github.com/puppetlabs/pdk/pull/799) ([rodjek](https://github.com/rodjek))
 
 ## [v1.14.1](https://github.com/puppetlabs/pdk/tree/v1.14.1) (2019-11-01)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.14.0...v1.14.1)
 
 **Fixed bugs:**
@@ -111,6 +145,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(\#770\) Add missing require to PDK::Module::Metadata.from\_file [\#771](https://github.com/puppetlabs/pdk/pull/771) ([hajee](https://github.com/hajee))
 
 ## [v1.14.0](https://github.com/puppetlabs/pdk/tree/v1.14.0) (2019-10-09)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.13.0...v1.14.0)
 
 **Implemented enhancements:**
@@ -136,6 +171,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(MAINT\) Bump version to 1.14.0.pre [\#741](https://github.com/puppetlabs/pdk/pull/741) ([scotje](https://github.com/scotje))
 
 ## [v1.13.0](https://github.com/puppetlabs/pdk/tree/v1.13.0) (2019-08-29)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.12.0...v1.13.0)
 
 **Implemented enhancements:**
@@ -153,7 +189,6 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Windows MSI installer fails with PDK 1.12.0 [\#721](https://github.com/puppetlabs/pdk/issues/721)
 - Handle deleted template files for new module [\#725](https://github.com/puppetlabs/pdk/pull/725) ([seanmil](https://github.com/seanmil))
 - \(GH-722\) Do not emit nil targets for validators against a directory [\#724](https://github.com/puppetlabs/pdk/pull/724) ([glennsarti](https://github.com/glennsarti))
-- \(maint\) avoid interfering with local ruby configs [\#86](https://github.com/puppetlabs/pdk/pull/86) ([DavidS](https://github.com/DavidS))
 
 **Merged pull requests:**
 
@@ -169,6 +204,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1432\) Autogenerate PowerShell modules from code [\#701](https://github.com/puppetlabs/pdk/pull/701) ([glennsarti](https://github.com/glennsarti))
 
 ## [v1.12.0](https://github.com/puppetlabs/pdk/tree/v1.12.0) (2019-07-31)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.11.1...v1.12.0)
 
 **Implemented enhancements:**
@@ -202,6 +238,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1333\) command\_spec rake task [\#644](https://github.com/puppetlabs/pdk/pull/644) ([rodjek](https://github.com/rodjek))
 
 ## [v1.11.1](https://github.com/puppetlabs/pdk/tree/v1.11.1) (2019-07-01)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.11.0...v1.11.1)
 
 **Closed issues:**
@@ -216,6 +253,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1409\) Bump PDK version to 1.11.1.pre [\#688](https://github.com/puppetlabs/pdk/pull/688) ([rodjek](https://github.com/rodjek))
 
 ## [v1.11.0](https://github.com/puppetlabs/pdk/tree/v1.11.0) (2019-06-27)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.10.0...v1.11.0)
 
 **Fixed bugs:**
@@ -265,6 +303,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1193\) Saves packaged template-url in metadata as a keyword [\#639](https://github.com/puppetlabs/pdk/pull/639) ([bmjen](https://github.com/bmjen))
 
 ## [v1.10.0](https://github.com/puppetlabs/pdk/tree/v1.10.0) (2019-04-02)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.9.1...v1.10.0)
 
 **Implemented enhancements:**
@@ -290,6 +329,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1298\) acceptance:local test suite optimisation [\#633](https://github.com/puppetlabs/pdk/pull/633) ([rodjek](https://github.com/rodjek))
 
 ## [v1.9.1](https://github.com/puppetlabs/pdk/tree/v1.9.1) (2019-03-01)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.9.0...v1.9.1)
 
 **Fixed bugs:**
@@ -307,6 +347,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1260\) Bump to 1.10.0.pre for new dev work [\#621](https://github.com/puppetlabs/pdk/pull/621) ([bmjen](https://github.com/bmjen))
 
 ## [v1.9.0](https://github.com/puppetlabs/pdk/tree/v1.9.0) (2019-01-29)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.8.0...v1.9.0)
 
 **Implemented enhancements:**
@@ -338,6 +379,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1001\) Chdir before execing git rather than "git -C" [\#602](https://github.com/puppetlabs/pdk/pull/602) ([rodjek](https://github.com/rodjek))
 
 ## [v1.8.0](https://github.com/puppetlabs/pdk/tree/v1.8.0) (2018-11-28)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.7.1...v1.8.0)
 
 **Implemented enhancements:**
@@ -375,6 +417,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) Bump version for dev [\#577](https://github.com/puppetlabs/pdk/pull/577) ([bmjen](https://github.com/bmjen))
 
 ## [v1.7.1](https://github.com/puppetlabs/pdk/tree/v1.7.1) (2018-10-05)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.7.0...v1.7.1)
 
 **Implemented enhancements:**
@@ -396,6 +439,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Bump version to 1.8.0.pre [\#564](https://github.com/puppetlabs/pdk/pull/564) ([bmjen](https://github.com/bmjen))
 
 ## [v1.7.0](https://github.com/puppetlabs/pdk/tree/v1.7.0) (2018-08-15)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.6.1...v1.7.0)
 
 **Implemented enhancements:**
@@ -414,6 +458,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1077\) Expand the package acceptance test suite [\#554](https://github.com/puppetlabs/pdk/pull/554) ([rodjek](https://github.com/rodjek))
 
 ## [v1.6.1](https://github.com/puppetlabs/pdk/tree/v1.6.1) (2018-07-25)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.6.0...v1.6.1)
 
 **Implemented enhancements:**
@@ -452,6 +497,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) Bump version for next dev cycle [\#529](https://github.com/puppetlabs/pdk/pull/529) ([bmjen](https://github.com/bmjen))
 
 ## [v1.6.0](https://github.com/puppetlabs/pdk/tree/v1.6.0) (2018-06-21)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.5.0...v1.6.0)
 
 **Implemented enhancements:**
@@ -490,6 +536,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Convert package acceptance tests over to beaker-rspec & serverspec [\#495](https://github.com/puppetlabs/pdk/pull/495) ([rodjek](https://github.com/rodjek))
 
 ## [v1.5.0](https://github.com/puppetlabs/pdk/tree/v1.5.0) (2018-04-30)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.4.1...v1.5.0)
 
 **Implemented enhancements:**
@@ -544,6 +591,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) Fixup remaining ruby 2.4.3 issues [\#454](https://github.com/puppetlabs/pdk/pull/454) ([bmjen](https://github.com/bmjen))
 
 ## [v1.4.1](https://github.com/puppetlabs/pdk/tree/v1.4.1) (2018-02-26)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.4.0...v1.4.1)
 
 **Fixed bugs:**
@@ -563,6 +611,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Release 1.4.1 [\#435](https://github.com/puppetlabs/pdk/pull/435) ([bmjen](https://github.com/bmjen))
 
 ## [v1.4.0](https://github.com/puppetlabs/pdk/tree/v1.4.0) (2018-02-21)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.2...v1.4.0)
 
 **Implemented enhancements:**
@@ -606,6 +655,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-575\) Run puppet parser validate with an dummy empty puppet.conf [\#402](https://github.com/puppetlabs/pdk/pull/402) ([rodjek](https://github.com/rodjek))
 
 ## [v1.3.2](https://github.com/puppetlabs/pdk/tree/v1.3.2) (2018-01-17)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.1...v1.3.2)
 
 **Closed issues:**
@@ -622,6 +672,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-739\) Fall back to default template if necessary [\#400](https://github.com/puppetlabs/pdk/pull/400) ([rodjek](https://github.com/rodjek))
 
 ## [v1.3.1](https://github.com/puppetlabs/pdk/tree/v1.3.1) (2017-12-20)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.3.0...v1.3.1)
 
 **Fixed bugs:**
@@ -633,6 +684,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Release Prep for 1.3.1 Hotfix [\#398](https://github.com/puppetlabs/pdk/pull/398) ([HelenCampbell](https://github.com/HelenCampbell))
 
 ## [v1.3.0](https://github.com/puppetlabs/pdk/tree/v1.3.0) (2017-12-15)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.2.1...v1.3.0)
 
 **Implemented enhancements:**
@@ -694,6 +746,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-621\) Implement a skeleton `pdk convert` command [\#335](https://github.com/puppetlabs/pdk/pull/335) ([rodjek](https://github.com/rodjek))
 
 ## [v1.2.1](https://github.com/puppetlabs/pdk/tree/v1.2.1) (2017-10-26)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.2.0...v1.2.1)
 
 **Fixed bugs:**
@@ -718,6 +771,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Fix link to PDK docs [\#317](https://github.com/puppetlabs/pdk/pull/317) ([turbodog](https://github.com/turbodog))
 
 ## [v1.2.0](https://github.com/puppetlabs/pdk/tree/v1.2.0) (2017-10-06)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.1.0...v1.2.0)
 
 **Implemented enhancements:**
@@ -748,6 +802,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-468\) Adding parameters field to task metadata [\#300](https://github.com/puppetlabs/pdk/pull/300) ([bmjen](https://github.com/bmjen))
 
 ## [v1.1.0](https://github.com/puppetlabs/pdk/tree/v1.1.0) (2017-09-13)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.0.1...v1.1.0)
 
 **Implemented enhancements:**
@@ -792,6 +847,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) Updates version to 1.1.0.pre [\#264](https://github.com/puppetlabs/pdk/pull/264) ([bmjen](https://github.com/bmjen))
 
 ## [v1.0.1](https://github.com/puppetlabs/pdk/tree/v1.0.1) (2017-08-17)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.0.0...v1.0.1)
 
 **Fixed bugs:**
@@ -806,6 +862,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Formatting fix [\#258](https://github.com/puppetlabs/pdk/pull/258) ([turbodog](https://github.com/turbodog))
 
 ## [v1.0.0](https://github.com/puppetlabs/pdk/tree/v1.0.0) (2017-08-15)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.6.0...v1.0.0)
 
 **Implemented enhancements:**
@@ -840,6 +897,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) add license auditing to travis [\#205](https://github.com/puppetlabs/pdk/pull/205) ([DavidS](https://github.com/DavidS))
 
 ## [v0.6.0](https://github.com/puppetlabs/pdk/tree/v0.6.0) (2017-08-08)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.5.0...v0.6.0)
 
 **Implemented enhancements:**
@@ -903,6 +961,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) Move contributor's notes to separate file [\#181](https://github.com/puppetlabs/pdk/pull/181) ([DavidS](https://github.com/DavidS))
 
 ## [v0.5.0](https://github.com/puppetlabs/pdk/tree/v0.5.0) (2017-07-20)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.4...v0.5.0)
 
 **Implemented enhancements:**
@@ -922,6 +981,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) Finish PDK::Validate::\* unit tests [\#139](https://github.com/puppetlabs/pdk/pull/139) ([rodjek](https://github.com/rodjek))
 
 ## [v0.4.4](https://github.com/puppetlabs/pdk/tree/v0.4.4) (2017-07-18)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.3...v0.4.4)
 
 **Fixed bugs:**
@@ -943,6 +1003,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) fix `new module` description in README [\#169](https://github.com/puppetlabs/pdk/pull/169) ([DavidS](https://github.com/DavidS))
 
 ## [v0.4.3](https://github.com/puppetlabs/pdk/tree/v0.4.3) (2017-07-17)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.2...v0.4.3)
 
 **Fixed bugs:**
@@ -955,6 +1016,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(MAINT\) Re-bump version to 0.5.0.pre [\#163](https://github.com/puppetlabs/pdk/pull/163) ([scotje](https://github.com/scotje))
 
 ## [v0.4.2](https://github.com/puppetlabs/pdk/tree/v0.4.2) (2017-07-17)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.1...v0.4.2)
 
 **Fixed bugs:**
@@ -970,6 +1032,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) Bumps version for next dev cycle. [\#152](https://github.com/puppetlabs/pdk/pull/152) ([bmjen](https://github.com/bmjen))
 
 ## [v0.4.1](https://github.com/puppetlabs/pdk/tree/v0.4.1) (2017-07-14)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.4.0...v0.4.1)
 
 **Fixed bugs:**
@@ -981,6 +1044,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Release prep 0.4.1 [\#155](https://github.com/puppetlabs/pdk/pull/155) ([scotje](https://github.com/scotje))
 
 ## [v0.4.0](https://github.com/puppetlabs/pdk/tree/v0.4.0) (2017-07-14)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.3.0...v0.4.0)
 
 **Implemented enhancements:**
@@ -1016,6 +1080,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(idea\) More expressive RSpec matchers for JUnit XML content [\#117](https://github.com/puppetlabs/pdk/pull/117) ([rodjek](https://github.com/rodjek))
 
 ## [v0.3.0](https://github.com/puppetlabs/pdk/tree/v0.3.0) (2017-06-29)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.2.0...v0.3.0)
 
 **Implemented enhancements:**
@@ -1053,6 +1118,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(SDK-256\) Acceptance tests for metadata validator behavior and output [\#99](https://github.com/puppetlabs/pdk/pull/99) ([rodjek](https://github.com/rodjek))
 
 ## [v0.2.0](https://github.com/puppetlabs/pdk/tree/v0.2.0) (2017-06-21)
+
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v0.1.0...v0.2.0)
 
 **Implemented enhancements:**
@@ -1103,6 +1169,9 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Relax data type validation to warn when non-standard types used [\#59](https://github.com/puppetlabs/pdk/pull/59) ([rodjek](https://github.com/rodjek))
 
 ## [v0.1.0](https://github.com/puppetlabs/pdk/tree/v0.1.0) (2017-06-05)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/2be9329bed4715c888f273814b99f2cf37ee9341...v0.1.0)
+
 **Implemented enhancements:**
 
 - \(maint\) update Contributing section [\#56](https://github.com/puppetlabs/pdk/pull/56) ([DavidS](https://github.com/DavidS))
@@ -1157,4 +1226,4 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 
 
-\* *This Change Log was automatically generated by [github_changelog_generator](https://github.com/skywinder/Github-Changelog-Generator)*
+\* *This Changelog was automatically generated by [github_changelog_generator](https://github.com/github-changelog-generator/github-changelog-generator)*
