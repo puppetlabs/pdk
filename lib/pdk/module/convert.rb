@@ -149,7 +149,9 @@ module PDK
 
           # new_metadata == nil when creating a new module but with --noop@
           module_name = new_metadata.nil? ? 'new-module' : new_metadata.data['name']
-          template_dir.render_new_module(module_name) do |relative_file_path, file_content, file_status|
+          metadata_for_render = new_metadata.nil? ? {} : new_metadata.data
+
+          template_dir.render_new_module(module_name, metadata_for_render) do |relative_file_path, file_content, file_status|
             absolute_file_path = File.join(module_dir, relative_file_path)
             case file_status
             when :unmanage

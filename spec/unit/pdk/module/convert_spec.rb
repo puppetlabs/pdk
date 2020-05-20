@@ -130,7 +130,7 @@ describe PDK::Module::Convert do
 
       before(:each) do
         allow(update_manager).to receive(:changes?).and_return(false)
-        expect(template_dir).to receive(:render_new_module).with(anything).and_return(nil)
+        expect(template_dir).to receive(:render_new_module).and_return(nil)
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
       end
 
@@ -496,9 +496,9 @@ describe PDK::Module::Convert do
         allow(PDK::Util::Git).to receive(:repo?).with(PDK::Util::TemplateURI.default_template_uri.metadata_format).and_return(true)
       end
 
-      let(:default_uri) { "#{PDK::Util::TemplateURI.default_template_uri}##{PDK::Util::TemplateURI.default_template_ref}" }
-
-      it { is_expected.to eq(PDK::Util::TemplateURI.new(default_uri)) }
+      it do
+        is_expected.to eq(PDK::Util::TemplateURI.new(options))
+      end
     end
   end
 
