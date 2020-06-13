@@ -87,14 +87,7 @@ For example: `pdk set config --type boolean user.analytics.disabled false`
 |`<value>`|Required. The value to set for the specified key.|One or more valid values for the specified `<key>`.|No default. One or more values are required.|
 |`–-add`|Treats a user-defined configuration key as a multi-value key.|None.|This option treats the value as a list of values.|
 |`--force`|Runs the command, making literal changes without prompting for confirmation.|None.|By default, prompts are enabled.|
-|`--type` | `--as <typename>`|Specifies what type the value should be. Useful if the type cannot be inferred from the `<key>`.|Accepts values common to JSON and YAML:-   `number`: Treats the value as a number, such as `1`, `1.0`, `-1.0`.
--   `boolean`: Treats value as a Boolean, such as `true`, `TRUE`, `False`,
-    `yes`, `no`.
--   `array`: Treats value as an array element. If given no value, treats value
-    as an empty array.
--   `string`: The default type for any value.
-
-|By default, if the type cannot be inferred, values are treated as strings.|
+|`--type`, `--as <typename>`|Specifies what type the value should be. Useful if the type cannot be inferred from the `<key>`.|Accepts values common to JSON and YAML:<ul><li>`number`: Treats the value as a number, such as `1`, `1.0`, `-1.0`.</li><li>`boolean`: Treats value as a Boolean, such as `true`, `TRUE`, `False`,`yes`, `no`.</li><li>`array`: Treats value as an array element. If given no value, treats value as an empty array.</li><li>`string`: The default type for any value.</li></ul>|By default, if the type cannot be inferred, values are treated as strings.|
 
 ## `pdk convert` command
 
@@ -122,29 +115,13 @@ module](pdk_converting_modules.md#convert-a-module) topic.
 |Option|Description|Value|Default|
 |------|-----------|-----|-------|
 |`--add-tests`|Adds basic unit test templates for existing classes and defined types that do not have any tests.|None.|If not specified, unit test templates are not added.|
-|`--default-template`|Converts a module to the default PDK template.
-
-|None.|If not specified, converts to default template unless you have specified
-a custom template.| |`--force`|Runs the command, making changes without
-prompting for confirmation. This option manipulates files and is potentially
-destructive. Always back up your work before using this option.|None.|If not
-specified, the command prompts for confirmation.| |`--full-interview`|Include
-interview questions related to publishing on the Forge to create module
-metadata.|None.|If not specified, asks only basic module metadata questions.|
-|`--noop`|Runs the command in a no operation or "no-op" mode. This shows what
-changes PDK will make without actually executing the changes.|None.|If not
-specified, the command makes the requested changes.| |`--skip-interview`|Skip
-interview questions and use default values to create module metadata.|None.|If
-not specified, asks basic module metadata questions.|
-|`--template-ref=<VALUE>`|Specifies the reference to use for the specified
-template for this module. This option is valid only if you have specified a
-template with the `--template-url` option.|A template branch name, tag name, or
-commit SHA for the specified template.|If you have specified a custom template,
-or if you installed PDK as a gem, this option defaults to "master". Otherwise,
-defaults to the defaults to the currently installed PDK version.|
-|`--template-url=<GIT_URL>`|Specifies a template to use for this module.|A valid
-Git URL or a path to a local template.|A valid Git URL or a path to a local
-template.|
+|`--default-template`|Converts a module to the default PDK template.|None.|If not specified, converts to default template unless you have specified a custom template.|
+|`--force`|Runs the command, making changes without prompting for confirmation. This option manipulates files and is potentially destructive. Always back up your work before using this option.|None.|If not specified, the command prompts for confirmation.|
+|`--full-interview`|Include interview questions related to publishing on the Forge to create module metadata.|None.|If not specified, asks only basic module metadata questions.|
+|`--noop`|Runs the command in a no operation or "no-op" mode. This shows what changes PDK will make without actually executing the changes.|None.|If not specified, the command makes the requested changes.|
+|`--skip-interview`|Skip interview questions and use default values to create module metadata.|None.|If not specified, asks basic module metadata questions.|
+|`--template-ref=<VALUE>`|Specifies the reference to use for the specified template for this module. This option is valid only if you have specified a template with the `--template-url` option.|A template branch name, tag name, or commit SHA for the specified template.|If you have specified a custom template, or if you installed PDK as a gem, this option defaults to "master". Otherwise, defaults to the defaults to the currently installed PDK version.|
+|`--template-url=<GIT_URL>`|Specifies a template to use for this module.|A valid Git URL or a path to a local template.|A valid Git URL or a path to a local template.|
 
 ## `pdk new class` command
 
@@ -401,33 +378,13 @@ topic.
 |Argument|Description|Value|Default|
 |--------|-----------|-----|-------|
 |`--clean-fixtures`, `-c`|Cleans test fixtures, removing them from the directory and downloading them again the next time you run `pdk test unit`.|None.|If not specified, does not clean test fixtures.|
-|`--format=<FORMAT>[:<TARGET_FILE>]`|Specifies the format of the output. Optionally, you can specify a target file for the given output format, such as `--format=junit:report.xml` . You can specify multiple `--format` options if each has a distinct output target. To output to standard output or standard error, specify `stdout` or `stderr` as the target value.|-   `junit` (JUnit XML)
-
--   `text` (plain text)
-
-
-|If not specified, does not output to a file, but displays errors in the
-terminal.| |`--list`|Displays a list of unit tests and their descriptions. Using
-this option lists the tests without running them.|No value. Optional `--verbose`
-or `-v` flag displays more information.|No default.| |`--pe-version`|Specifies
-the Puppet Enterprise (PE) version to run unit tests against.|A string
-indicating the PE version to test against, such as "2017.3.5" or "2018.1".|If
-not specified, tests against the most recent compatible Puppet version included
-in the PDK package.| |`--puppet-dev`|When specified, PDK runs unit tests against
-the current Puppet source from GitHub. To use this option, you must have network
-access to https://github.com. You cannot specify `--puppet-dev` together with
-the `--puppet-version=` or `--pe-version=` options.|None.|If not specified, PDK
-runs unit tests against default values or those specified by `--puppet` version
-or `--pe-version`.| |`--puppet-version`|Specifies the Puppet gem version to run
-unit tests against.|A string indicating the Puppet version to test against, such
-as "5.4.2" or "5.5".|If not specified, tests against the most recent compatible
-Puppet version included in the PDK package.| |`--tests=<TEST_LIST>`|A
-comma-separated list of tests to run. Use this during development to pinpoint a
-single failing test.|See the `--list` output for available values.|No default.|
-|`--verbose`|When specified, PDK outputs a single line description for each test
-as the test is executed. This option uses the RSpec `documentation` format. For
-more information, see [RSpec Core
-2.5](https://relishapp.com/rspec/rspec-core/v/2-5/docs/command-line/format-option#documentation-format).|None.|None.|
+|`--format=<FORMAT>[:<TARGET_FILE>]`|Specifies the format of the output. Optionally, you can specify a target file for the given output format, such as `--format=junit:report.xml` . You can specify multiple `--format` options if each has a distinct output target. To output to standard output or standard error, specify `stdout` or `stderr` as the target value.|<ul><li>`junit` (JUnit XML)</li><li>`text` (plain text)</li></ul>|If not specified, does not output to a file, but displays errors in the terminal.|
+|`--list`|Displays a list of unit tests and their descriptions. Using this option lists the tests without running them.|No value. Optional `--verbose` or `-v` flag displays more information.|No default.|
+|`--pe-version`|Specifies the Puppet Enterprise (PE) version to run unit tests against.|A string indicating the PE version to test against, such as "2017.3.5" or "2018.1".|If not specified, tests against the most recent compatible Puppet version included in the PDK package.|
+|`--puppet-dev`|When specified, PDK runs unit tests against the current Puppet source from GitHub. To use this option, you must have network access to https://github.com. You cannot specify `--puppet-dev` together with the `--puppet-version=` or `--pe-version=` options.|None.|If not specified, PDK runs unit tests against default values or those specified by `--puppet` version or `--pe-version`.|
+|`--puppet-version`|Specifies the Puppet gem version to run unit tests against.|A string indicating the Puppet version to test against, such as "5.4.2" or "5.5".|If not specified, tests against the most recent compatible Puppet version included in the PDK package.|
+|`--tests=<TEST_LIST>`|A comma-separated list of tests to run. Use this during development to pinpoint a single failing test.|See the `--list` output for available values.|No default.|
+|`--verbose`|When specified, PDK outputs a single line description for each test as the test is executed. This option uses the RSpec `documentation` format. For more information, see [RSpec Core 2.5](https://relishapp.com/rspec/rspec-core/v/2-5/docs/command-line/format-option#documentation-format).|None.|None.|
 
 ## `pdk update` command
 
@@ -484,33 +441,11 @@ topic.
 |Argument|Description|Values|Default|
 |--------|-----------|------|-------|
 |`--auto-correct, -a`|Automatically corrects some common code style problems.|None.|Off.|
-|`--format=<FORMAT>[:<TARGET_FILE>]`|Specifies the format of the output. Optionally, you can specify a target file for the given output format, such as `--format=junit:report.xml` . You can specify multiple `--format` options if each has a distinct output target. To output to standard output or standard error, specify `stdout` or `stderr` as the target value.|-   `junit` (JUnit XML)
-
--   `text` (plain text)
-
-
-|No default.| |`--list`|Displays a list of available validations and their
-descriptions. Using this option lists the tests without running them.|None.|No
-default.| |`--parallel`|Runs all validations simultaneously, using multiple
-threads.|None.|If not specified, validations are run in succession on a single
-thread.| |`--pe-version`|Specifies the  Puppet Enterprise (PE) version to run
-validations against.|A string indicating the PE version to validate against,
-such as "2017.3.5" or "2018.1".|If not specified, validates against the most
-recent compatible Puppet version included in the PDK package.|
-|`--puppet-dev`|When specified, PDK validates against the current Puppet source
-from GitHub. To use this option, you must have network access to
-https://github.com. You cannot specify `--puppet-dev` together with the
-`--puppet-version=` or `--pe-version=` options.|None.|If not specified, PDK
-validates against default values or those specified by `--puppet` version or
-`--pe-version`.| |`--puppet-version`|Specifies the Puppet gem version to run
-validations against.|A string indicating the Puppet version to validate against,
-such as "5.4.2" or "5.5".|If not specified, validates against the most recent
-compatible Puppet version included in the PDK package.| |`<TARGETS>`|A list of
-directories or individual files to validate. Validations which are not
-applicable to individual files will be skipped for those files.|A
-space-separated list of directories or files.|Validates all available
-directories and files.| |`<VALIDATIONS>`|A comma-separated list of validations
-to run or `all` for all validations. In PowerShell, this list must be enclosed
-in single quotes, such as `pdk validate 'puppet,metadata'`|See the
-`--list`output for a list of available validations.|`all`|
-
+|`--format=<FORMAT>[:<TARGET_FILE>]`|Specifies the format of the output. Optionally, you can specify a target file for the given output format, such as `--format=junit:report.xml` . You can specify multiple `--format` options if each has a distinct output target. To output to standard output or standard error, specify `stdout` or `stderr` as the target value.|<ul><li>`junit` (JUnit XML)</li><li>`text` (plain text)</li></ul>|No default.|
+|`--list`|Displays a list of available validations and their descriptions. Using this option lists the tests without running them.|None.|No default.|
+|`--parallel`|Runs all validations simultaneously, using multiple threads.|None.|If not specified, validations are run in succession on a single thread.|
+|`--pe-version`|Specifies the  Puppet Enterprise (PE) version to run validations against.|A string indicating the PE version to validate against, such as "2017.3.5" or "2018.1".|If not specified, validates against the most recent compatible Puppet version included in the PDK package.|
+|`--puppet-dev`|When specified, PDK validates against the current Puppet source from GitHub. To use this option, you must have network access to https://github.com. You cannot specify `--puppet-dev` together with the `--puppet-version=` or `--pe-version=` options.|None.|If not specified, PDK validates against default values or those specified by `--puppet` version or `--pe-version`.|
+|`--puppet-version`|Specifies the Puppet gem version to run validations against.|A string indicating the Puppet version to validate against, such as "5.4.2" or "5.5".|If not specified, validates against the most recent compatible Puppet version included in the PDK package.|
+|`<TARGETS>`|A list of directories or individual files to validate. Validations which are not applicable to individual files will be skipped for those files.|A space-separated list of directories or files.|Validates all available directories and files.|
+|`<VALIDATIONS>`|A comma-separated list of validations to run or `all` for all validations. In PowerShell, this list must be enclosed in single quotes, such as `pdk validate 'puppet,metadata'`|See the `--list`output for a list of available validations.|`all`|
