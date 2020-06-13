@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
+<map id="pdkmap" title="PDK">
+  <topicref href="pdk.md" format="markdown"/>
+  <topicref href="pdk_overview.md" format="markdown"/>
+  <topicref href="pdk_release_notes.md" format="markdown">
+    <topicref href="release_notes_pdk.md" format="markdown"/>
+    <topicref href="pdk_known_issues.md" format="markdown"/>
+  </topicref>
+  <topicref href="pdk_install.md" format="markdown"/>
+  <topicref href="pdk_upgrading.md" format="markdown"/>
+  <topicref href="pdk_creating_modules.md" format="markdown"/>
+  <topicref href="pdk_converting_modules.md" format="markdown"/>
+  <topicref href="customizing_module_config.md" format="markdown"/>
+  <topicref href="pdk_testing.md" format="markdown"/>
+  <topicref href="pdk_building_module_packages.md" format="markdown"/>
+  <topicref href="pdk_reference.md" format="markdown"/>
+  <topicref href="pdk_troubleshooting.md" format="markdown"/>
+</map>
