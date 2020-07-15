@@ -93,7 +93,7 @@ module PDK
         # to forward slash. We can't use File.expand_path as the files aren't guaranteed to be on-disk
         #
         # Ref - https://github.com/puppetlabs/pdk/issues/828
-        tests.tr!('\\', '/') unless tests.nil?
+        tests = tests.tr('\\', '/') unless tests.nil?
 
         environment = { 'CI_SPEC_OPTIONS' => '--format j' }
         environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]
