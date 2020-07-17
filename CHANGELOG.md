@@ -4,6 +4,15 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v1.18.1](https://github.com/puppetlabs/pdk/tree/v1.18.1) (2020-07-16)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.18.0...v1.18.1)
+
+**Fixed bugs:**
+
+- Don't attempt to modify a frozen string when parsing '--tests' paths [\#891](https://github.com/puppetlabs/pdk/pull/891) ([natemccurdy](https://github.com/natemccurdy))
+- \(PDK-1653\) Ensure template have access to metadata during update/convert [\#883](https://github.com/puppetlabs/pdk/pull/883) ([scotje](https://github.com/scotje))
+
 ## [v1.18.0](https://github.com/puppetlabs/pdk/tree/v1.18.0) (2020-05-12)
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.17.0...v1.18.0)
