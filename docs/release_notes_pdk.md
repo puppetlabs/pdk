@@ -2,6 +2,18 @@
 
 New features, enhancements, and resolved issues for the PDK 1.x release series.
 
+## PDK 1.18.1
+
+### Resolved issues
+
+#### Ensure template have access to metadata during update/convert
+During an `update` or `convert` it was possible for the module metadata config
+to be empty, due to the templates not having access. [PDK-1653](https://tickets.puppetlabs.com/browse/PDK-1653)
+
+#### Don't attempt to modify a frozen string when parsing `--tests` paths
+Fixes an issue that caused an error to be thrown when running `pdk test unit` and
+specifying a path to a test using `--tests`. [#891](https://github.com/puppetlabs/pdk/pull/891)
+
 ## PDK 1.18
 
 ### New features and enhancements
