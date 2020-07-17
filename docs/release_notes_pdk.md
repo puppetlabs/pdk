@@ -2,18 +2,6 @@
 
 New features, enhancements, and resolved issues for the PDK 1.x release series.
 
-## PDK 1.18.1
-
-### Resolved issues
-
-#### Ensure templates have access to metadata during an `update` or `convert`
-Because templates didn't have access to metadata, it was possible for the module metadata config
-to be empty during an `update` or `convert`. [PDK-1653](https://tickets.puppetlabs.com/browse/PDK-1653)
-
-#### Don't attempt to modify a frozen string when parsing `--tests` paths
-Fixes an issue that caused an error to be thrown when running `pdk test unit` and
-specifying a path to a test using `--tests`. [#891](https://github.com/puppetlabs/pdk/pull/891)
-
 ## PDK 1.18
 
 ### New features and enhancements
@@ -80,6 +68,16 @@ release fixes this issue so that RSpec accepts the paths without escaping.
 
 PDK now permits unbalanced JSON fragments in RSpec output.
 [PDK-1640](https://tickets.puppetlabs.com/browse/PDK-1640)
+
+### PDK 1.18.1
+
+#### Ensure templates have access to metadata during an `update` or `convert`
+Because templates didn't have access to metadata, it was possible for the module metadata config
+to be empty during an `update` or `convert`. [PDK-1653](https://tickets.puppetlabs.com/browse/PDK-1653)
+
+#### Don't attempt to modify a frozen string when parsing `--tests` paths
+Fixes an issue that caused an error to be thrown when running `pdk test unit` and
+specifying a path to a test using `--tests`. [#891](https://github.com/puppetlabs/pdk/pull/891)
 
 ## PDK 1.17
 
