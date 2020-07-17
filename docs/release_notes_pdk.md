@@ -6,9 +6,9 @@ New features, enhancements, and resolved issues for the PDK 1.x release series.
 
 ### Resolved issues
 
-#### Ensure template have access to metadata during update/convert
-During an `update` or `convert` it was possible for the module metadata config
-to be empty, due to the templates not having access. [PDK-1653](https://tickets.puppetlabs.com/browse/PDK-1653)
+#### Ensure templates have access to metadata during an `update` or `convert`
+Because templates didn't have access to metadata, it was possible for the module metadata config
+to be empty during an `update` or `convert`. [PDK-1653](https://tickets.puppetlabs.com/browse/PDK-1653)
 
 #### Don't attempt to modify a frozen string when parsing `--tests` paths
 Fixes an issue that caused an error to be thrown when running `pdk test unit` and
@@ -1596,5 +1596,4 @@ This is the first major release of Puppet Development Kit (PDK).
 -   Validates Ruby style and syntax.
 
 -   Runs RSpec unit tests on modules and classes.
-
 
