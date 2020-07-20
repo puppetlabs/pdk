@@ -5,7 +5,10 @@ require 'pdk/cli/errors'
 
 module TTY
   autoload :Prompt, 'tty/prompt'
-  autoload :TestPrompt, 'tty/test_prompt'
+
+  class Prompt
+    autoload :Test, 'tty/prompt/test'
+  end
 end
 
 class Cri::Command::CriExitException

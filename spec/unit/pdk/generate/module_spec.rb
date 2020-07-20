@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'tempfile'
 require 'stringio'
-require 'tty/test_prompt'
+require 'tty/prompt/test'
 require 'pdk/generate/module'
 require 'addressable'
 
@@ -306,7 +306,7 @@ describe PDK::Generate::Module do
     let(:options) { { module_name: module_name } }
 
     before(:each) do
-      prompt = TTY::TestPrompt.new
+      prompt = TTY::Prompt::Test.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
       prompt.input << responses.join("\r") + "\r"
       prompt.input.rewind
@@ -648,25 +648,18 @@ describe PDK::Generate::Module do
           'source'       => '',
           'project_page' => nil,
           'issues_url'   => nil,
-          'operatingsystem_support' => [
-            {
-              'operatingsystem'        => 'Debian',
-              'operatingsystemrelease' => ['9'],
-            },
-            {
-              'operatingsystem'        => 'Ubuntu',
-              'operatingsystemrelease' => ['18.04'],
-            },
-            {
-              'operatingsystem'        => 'windows',
-              'operatingsystemrelease' => %w[2019 10],
-            },
-            {
-              'operatingsystem'        => 'Solaris',
-              'operatingsystemrelease' => ['11'],
-            },
-          ],
         )
+
+        expect(interview_metadata['operatingsystem_support']).not_to be_nil
+
+        [
+          { 'operatingsystem' => 'Debian', 'operatingsystemrelease' => ['9'] },
+          { 'operatingsystem' => 'Ubuntu', 'operatingsystemrelease' => ['18.04'] },
+          { 'operatingsystem' => 'windows', 'operatingsystemrelease' => %w[2019 10] },
+          { 'operatingsystem' => 'Solaris', 'operatingsystemrelease' => ['11'] },
+        ].each do |expected_os|
+          expect(interview_metadata['operatingsystem_support']).to include(expected_os)
+        end
       end
     end
   end
