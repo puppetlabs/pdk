@@ -86,7 +86,7 @@ RSpec.configure do |c|
   c.root = File.dirname(__FILE__)
 end
 
-# Add method to StringIO needed for TTY::TestPrompt to work on tty-prompt >=
+# Add method to StringIO needed for TTY::Prompt::Test to work on tty-prompt >=
 # 0.19 (see https://github.com/piotrmurach/tty-prompt/issues/104)
 class StringIO
   def wait_readable(*)

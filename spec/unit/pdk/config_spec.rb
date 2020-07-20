@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'securerandom'
-require 'tty/test_prompt'
+require 'tty/prompt/test'
 require 'pdk/config'
 
 describe PDK::Config do
@@ -658,7 +658,7 @@ describe PDK::Config do
 
   describe '.analytics_config_interview!' do
     before(:each) do
-      prompt = TTY::TestPrompt.new
+      prompt = TTY::Prompt::Test.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
       prompt.input << responses.join("\r") + "\r"
       prompt.input.rewind
