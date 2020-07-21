@@ -34,7 +34,7 @@ compatibility, see the table below.
 |Red Hat Enterprise Linux (RHEL)|6, 7,8|x86_64|RPM| 
 |Scientific Linux|6, 7|x86_64|RPM|
 |SUSE Linux Enterprise Server|11, 12|x86_64|N/A|
-|Ubuntu|16.04, 18.04|x86_64|DEB| 
+|Ubuntu|16.04, 18.04, 20.04|x86_64|DEB| 
 |Windows (Consumer OS)|7, 8.1, 10|x86_64|MSI|
 |Windows (Server OS)|2008r2, 2012, 2012r2, 2012r2Core, and 2016|x86_64|MSI|
 
@@ -165,6 +165,15 @@ Install PDK with the Apt package manager.
         wget https://apt.puppet.com/puppet-tools-release-bionic.deb
         sudo dpkg -i puppet-tools-release-bionic.deb
         sudo apt-get update 
+        sudo apt-get install pdk
+        ```
+
+    -   Ubuntu 20.04
+
+        ```
+        wget https://apt.puppet.com/puppet-tools-release-focal.deb
+        sudo dpkg -i puppet-tools-release-focal.deb
+        sudo apt-get update
         sudo apt-get install pdk
         ```
 
