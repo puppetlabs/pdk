@@ -1,3 +1,2 @@
 # Default owners.
-*       @puppetlabs/pdk
-/docs/  @puppetlabs/pdk @hestonhoffman
+* @puppetlabs/pdk
