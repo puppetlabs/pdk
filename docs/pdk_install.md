@@ -31,10 +31,10 @@ compatibility, see the table below.
 |Fedora|28, 29, 30|x86_64|RPM|
 |macOS|10.11, 10.12, 10.13, 10.14|x86_64|DPKG|
 |Oracle Linux|6, 7, 8|x86_64|RPM|
-|Red Hat Enterprise Linux (RHEL)|6, 7,8|x86_64|RPM| 
+|Red Hat Enterprise Linux (RHEL)|6, 7,8|x86_64|RPM|
 |Scientific Linux|6, 7|x86_64|RPM|
 |SUSE Linux Enterprise Server|11, 12|x86_64|N/A|
-|Ubuntu|16.04, 18.04, 20.04|x86_64|DEB| 
+|Ubuntu|16.04, 18.04, 20.04|x86_64|DEB|
 |Windows (Consumer OS)|7, 8.1, 10|x86_64|MSI|
 |Windows (Server OS)|2008r2, 2012, 2012r2, 2012r2Core, and 2016|x86_64|MSI|
 
@@ -59,7 +59,7 @@ Install PDK with the YUM package manager.
 
         ```
         sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-el-6.noarch.rpm
-        sudo yum install pdk            
+        sudo yum install pdk
         ```
 
     -   RHEL 7
@@ -128,7 +128,7 @@ Install PDK with the Apt package manager.
         ```
         wget https://apt.puppet.com/puppet-tools-release-jessie.deb
         sudo dpkg -i puppet-tools-release-jessie.deb
-        sudo apt-get update 
+        sudo apt-get update
         sudo apt-get install pdk
         ```
 
@@ -137,7 +137,7 @@ Install PDK with the Apt package manager.
         ```
         wget https://apt.puppet.com/puppet-tools-release-stretch.deb
         sudo dpkg -i puppet-tools-release-stretch.deb
-        sudo apt-get update 
+        sudo apt-get update
         sudo apt-get install pdk
         ```
 
@@ -146,7 +146,7 @@ Install PDK with the Apt package manager.
         ```
         wget https://apt.puppet.com/puppet-tools-release-trusty.deb
         sudo dpkg -i puppet-tools-release-trusty.deb
-        sudo apt-get update 
+        sudo apt-get update
         sudo apt-get install pdk
         ```
 
@@ -155,7 +155,7 @@ Install PDK with the Apt package manager.
         ```
         wget https://apt.puppet.com/puppet-tools-release-xenial.deb
         sudo dpkg -i puppet-tools-release-xenial.deb
-        sudo apt-get update 
+        sudo apt-get update
         sudo apt-get install pdk
         ```
 
@@ -164,7 +164,7 @@ Install PDK with the Apt package manager.
         ```
         wget https://apt.puppet.com/puppet-tools-release-bionic.deb
         sudo dpkg -i puppet-tools-release-bionic.deb
-        sudo apt-get update 
+        sudo apt-get update
         sudo apt-get install pdk
         ```
 
@@ -211,7 +211,7 @@ migrating your PDK installation to the Puppet Homebrew cask.
 1.  Install PDK by running `brew cask install puppetlabs/puppet/pdk`
 
 2.  Open a terminal to re-source your shell profile and make PDK available to
-    your PATH. 
+    your PATH.
 
 
 #### What to do next:
@@ -415,4 +415,3 @@ configuration:
 You can also opt out of analytics by setting the environment variable
 `PDK_DISABLE_ANALYTICS=true`. This is useful if you are using PDK in your CI
 system.
-
