@@ -105,7 +105,7 @@ describe PDK::Module::Metadata do
           'operatingsystem_support' => [
             {
               'operatingsystem'        => 'Debian',
-              'operatingsystemrelease' => ['8'],
+              'operatingsystemrelease' => ['10'],
             },
           ],
           'requirements' => [
@@ -153,7 +153,7 @@ describe PDK::Module::Metadata do
           'operatingsystem_support' => [
             {
               'operatingsystem'        => 'Debian',
-              'operatingsystemrelease' => ['8'],
+              'operatingsystemrelease' => ['10'],
             },
           ],
           'requirements' => [
