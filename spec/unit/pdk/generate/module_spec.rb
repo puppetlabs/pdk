@@ -412,7 +412,7 @@ describe PDK::Generate::Module do
               },
               {
                 'operatingsystem'        => 'Debian',
-                'operatingsystemrelease' => ['9'],
+                'operatingsystemrelease' => ['10'],
               },
               {
                 'operatingsystem'        => 'Ubuntu',
@@ -653,7 +653,7 @@ describe PDK::Generate::Module do
         expect(interview_metadata['operatingsystem_support']).not_to be_nil
 
         [
-          { 'operatingsystem' => 'Debian', 'operatingsystemrelease' => ['9'] },
+          { 'operatingsystem' => 'Debian', 'operatingsystemrelease' => ['10'] },
           { 'operatingsystem' => 'Ubuntu', 'operatingsystemrelease' => ['18.04'] },
           { 'operatingsystem' => 'windows', 'operatingsystemrelease' => %w[2019 10] },
           { 'operatingsystem' => 'Solaris', 'operatingsystemrelease' => ['11'] },

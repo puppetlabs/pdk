@@ -27,7 +27,7 @@ compatibility, see the table below.
 |Operating system|Versions|Arch|Package type|
 |----------------|--------|----|------------|
 |CentOS|6, 7, 8|x86_64|RPM|
-|Debian|8, 9, 10|x86_64|DEB|
+|Debian|9, 10|x86_64|DEB|
 |Fedora|28, 29, 30|x86_64|RPM|
 |macOS|10.11, 10.12, 10.13, 10.14|x86_64|DPKG|
 |Oracle Linux|6, 7, 8|x86_64|RPM|
@@ -123,20 +123,20 @@ Install PDK with the Apt package manager.
 1.  Download and install the software and its dependencies. Use the commands
     appropriate to your system.
 
-    -   Debian 8
-
-        ```
-        wget https://apt.puppet.com/puppet-tools-release-jessie.deb
-        sudo dpkg -i puppet-tools-release-jessie.deb
-        sudo apt-get update
-        sudo apt-get install pdk
-        ```
-
     -   Debian 9
 
         ```
         wget https://apt.puppet.com/puppet-tools-release-stretch.deb
         sudo dpkg -i puppet-tools-release-stretch.deb
+        sudo apt-get update
+        sudo apt-get install pdk
+        ```
+
+    -   Debian 10
+
+        ```
+        wget https://apt.puppet.com/puppet-tools-release-buster.deb
+        sudo dpkg -i puppet-tools-release-buster.deb
         sudo apt-get update
         sudo apt-get install pdk
         ```
