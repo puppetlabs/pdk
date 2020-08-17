@@ -25,7 +25,8 @@ class report { }
 
         describe file('report.txt') do
           it { is_expected.to exist }
-          its(:content) { is_expected.to match %r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented} }
+          # pdk (WARNING): puppet-lint: class not documented (manifests/init.pp:1:1)
+          its(:content) { is_expected.to match %r{\(warning\):.*class not documented.*\(#{Regexp.escape(init_pp)}.*\)}i }
         end
       end
 
@@ -34,7 +35,7 @@ class report { }
         its(:exit_status) { is_expected.to eq(0) }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
-        its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented}) }
+        its(:stdout) { is_expected.to match(%r{\(warning\):.*class not documented.*\(#{Regexp.escape(init_pp)}.*\)}i) }
 
         describe file('stdout') do
           it { is_expected.not_to exist }
@@ -50,7 +51,7 @@ class report { }
         its(:stderr) do
           # Due to spinners writing at arbitrary cursor locations, we can't depend on the text
           # being at a the beginning of a line.
-          is_expected.to match(%r{warning:.*#{Regexp.escape(init_pp)}.*class not documented})
+          is_expected.to match(%r{\(warning\):.*class not documented.*\(#{Regexp.escape(init_pp)}.*\)}i)
         end
 
         describe file('stderr') do
@@ -64,7 +65,7 @@ class report { }
         its(:exit_status) { is_expected.to eq(0) }
         its(:stderr) { is_expected.to match(%r{using ruby \d+\.\d+\.\d+}i) }
         its(:stderr) { is_expected.to match(%r{using puppet \d+\.\d+\.\d+}i) }
-        its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.*class not documented}) }
+        its(:stdout) { is_expected.to match(%r{\(warning\):.*class not documented.*\(#{Regexp.escape(init_pp)}.*\)}i) }
       end
     end
   end

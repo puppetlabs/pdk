@@ -21,7 +21,7 @@ describe 'pdk validate ruby', module_command: true do
 
       describe command('pdk validate ruby') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(%r{#{Regexp.escape(spec_violation_rb)}.*useless assignment}i) }
+        its(:stdout) { is_expected.to match(%r{useless assignment.*\(#{Regexp.escape(spec_violation_rb)}.*\)}i) }
         its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
       end
 
@@ -97,7 +97,7 @@ describe 'pdk validate ruby', module_command: true do
 
       describe command('pdk validate ruby --auto-correct') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{^corrected:.*test\.rb.*space inside (\{|\}) missing}i) }
+        its(:stdout) { is_expected.to match(%r{\(corrected\):.*space inside (\{|\}) missing.*\(test\.rb.*\)}i) }
       end
 
       describe command('pdk validate ruby') do

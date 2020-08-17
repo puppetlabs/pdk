@@ -85,9 +85,9 @@ class validate_all {
         its(:stderr) { is_expected.to match(%r{Checking metadata syntax}i) }
         its(:stderr) { is_expected.to match(%r{Checking module metadata style}i) }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
-        its(:stdout) { is_expected.to match(%r{Error:.*This Name has no effect}i) }
-        its(:stdout) { is_expected.to match(%r{Error:.*This Type-Name has no effect}i) }
-        its(:stdout) { is_expected.to match(%r{Error:.*Language validation logged 2 errors. Giving up}i) }
+        its(:stdout) { is_expected.to match(%r{\(error\):.*This Name has no effect}i) }
+        its(:stdout) { is_expected.to match(%r{\(error\):.*This Type-Name has no effect}i) }
+        its(:stdout) { is_expected.to match(%r{\(error\):.*Language validation logged 2 errors}i) }
         its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
       end
     end
