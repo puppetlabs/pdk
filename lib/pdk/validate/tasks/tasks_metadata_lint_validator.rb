@@ -49,7 +49,7 @@ module PDK
             # Need to set the JSON Parser and State Generator to the Native one to be
             # compatible with the multi_json adapter.
             JSON.parser = JSON::Ext::Parser if defined?(JSON::Ext::Parser)
-            JSON.generator = JSON::Ext::Generator
+            JSON.generator = JSON::Ext::Generator if defined?(JSON::Ext::Generator)
 
             begin
               errors = JSON::Validator.fully_validate(schema_file, PDK::Util::Filesystem.read_file(target)) || []
