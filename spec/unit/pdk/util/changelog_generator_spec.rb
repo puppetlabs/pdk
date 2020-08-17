@@ -199,16 +199,19 @@ describe PDK::Util::ChangelogGenerator do
   describe '.github_changelog_generator_available!' do
     subject(:method) { described_class.github_changelog_generator_available! }
 
-    let(:dummy_spec) { gem_present ? [Gem::Specification.new] : [] }
+    let(:command) { double(PDK::CLI::Exec::InteractiveCommand, :context= => nil) } # rubocop:disable RSpec/VerifiedDoubles
 
     before(:each) do
-      allow(::Bundler.rubygems).to receive(:find_name).and_call_original
-      allow(::Bundler.rubygems).to receive(:find_name)
-        .with('github_changelog_generator').and_return(dummy_spec)
+      expect(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
     end
 
     context 'when the gem is available to Bundler' do
-      let(:gem_present) { true }
+      let(:command_stdout) { '/path/to/gems/github_changelog_generator-1.15.2' }
+      let(:command_exit_code) { 0 }
+
+      before(:each) do
+        expect(command).to receive(:execute!).and_return(stdout: command_stdout, exit_code: command_exit_code)
+      end
 
       it 'does not raise an error' do
         expect { method }.not_to raise_error
@@ -216,10 +219,15 @@ describe PDK::Util::ChangelogGenerator do
     end
 
     context 'when the gem is not available to Bundler' do
-      let(:gem_present) { false }
+      let(:command_stderr) { 'Could not find gem \'github_changelog_generator\'.' }
+      let(:command_exit_code) { 7 }
+
+      before(:each) do
+        expect(command).to receive(:execute!).and_return(stderr: command_stderr, exit_code: command_exit_code)
+      end
 
       it 'raises an error' do
-        expect { method }.to raise_error(PDK::CLI::ExitWithError, %r{not installed})
+        expect { method }.to raise_error(PDK::CLI::ExitWithError, %r{not included})
       end
     end
   end
