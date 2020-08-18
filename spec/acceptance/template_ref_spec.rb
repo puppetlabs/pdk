@@ -14,7 +14,7 @@ describe 'Specifying a template-ref' do
       'pdk', 'new', 'module', 'foo',
       '--skip-interview',
       '--template-url', 'https://github.com/puppetlabs/pdk-templates',
-      '--template-ref', '1.7.0'
+      '--template-ref', '1.9.0'
     ]
 
     around(:each) do |example|
@@ -33,7 +33,7 @@ describe 'Specifying a template-ref' do
       describe file('foo/metadata.json') do
         it { is_expected.to be_file }
         its(:content_as_json) do
-          is_expected.to include('template-ref' => match(%r{1\.7\.0}))
+          is_expected.to include('template-ref' => match(%r{1\.9\.0}))
         end
       end
     end
@@ -41,12 +41,12 @@ describe 'Specifying a template-ref' do
     context 'and then updating the module to a specific ref' do
       before(:all) { Dir.chdir('foo') }
 
-      describe command('pdk update --template-ref 1.8.0 --force') do
+      describe command('pdk update --template-ref 1.10.0 --force') do
         its(:exit_status) { is_expected.to eq(0) }
 
         describe file('metadata.json') do
           its(:content_as_json) do
-            is_expected.to include('template-ref' => match(%r{1\.8\.0}))
+            is_expected.to include('template-ref' => match(%r{1\.10\.0}))
           end
         end
       end
