@@ -86,7 +86,12 @@ module PDK
               ignore_list = ignore_pathspec
               target_list = target_list.reject { |file| ignore_list.match(file) }
 
-              skipped << target if target_list.flatten.empty?
+              if target_list.flatten.empty?
+                PDK.logger.info(_('Validator \'%{validator}\' skipped for \'%{target}\'. No files matching \'%{pattern}\' found to validate.') % { validator: name, target: target, pattern: pattern })
+
+                skipped << target
+              end
+
               target_list
             elsif PDK::Util::Filesystem.file?(target)
               if Array(pattern).include? target

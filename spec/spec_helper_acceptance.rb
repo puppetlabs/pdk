@@ -88,7 +88,12 @@ RSpec.configure do |c|
     analytics_config.unlink
   end
 
-  c.after(:each) do
+  c.after(:each) do |e|
+    # Dump stderr into error message to help with debugging if test failed
+    if e.exception
+      e.exception.message << "\nDumping stderr output:\n\n#{subject.stderr}\n" if subject.stderr != ''
+    end
+
     # recover bundle environment from serverspec munging
     bundler_env.keys.each do |k|
       ENV[k] = bundler_env[k]

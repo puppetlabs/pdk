@@ -53,7 +53,7 @@ describe PDK::Module::Metadata do
       allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_json_path).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_json_path).and_return('{"foo": }')
 
-      expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, %r{Invalid JSON.*unexpected token})
+      expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, %r{Invalid JSON})
     end
   end
 

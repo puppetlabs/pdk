@@ -104,7 +104,7 @@ module PDK
           if event.rspec_puppet_coverage?
             coverage_report = event.to_text
           else
-            report << event.to_text unless event.pass?
+            report << event.to_text unless event.pass? || event.skipped?
           end
         end
       end
@@ -113,8 +113,8 @@ module PDK
 
       if target.is_a?(String)
         PDK::Util::Filesystem.write_file(target, report.join("\n"))
-      else
-        target << report.join("\n")
+      elsif !report.empty?
+        target << report.join("\n") << "\n"
       end
     end
   end

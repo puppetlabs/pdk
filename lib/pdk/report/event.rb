@@ -111,8 +111,8 @@ module PDK
         location = nil if location.empty?
 
         # TODO: maybe add trace
-        header = [severity, source, location, message].compact.join(': ')
         if source == 'rspec'
+          header = [severity, source, location, message].compact.join(': ')
           result = [header, "  #{test}"]
           context = context_lines
           unless context.nil?
@@ -123,7 +123,13 @@ module PDK
 
           result.compact.join("\n")
         else
-          header
+          output = ['pdk']
+          output << "(#{severity.upcase}):" unless severity.nil?
+          output << "#{source}:" unless source.nil?
+          output << message unless message.nil?
+          output << "(#{location})" unless location.nil?
+
+          output.join(' ')
         end
       end
 

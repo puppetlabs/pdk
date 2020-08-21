@@ -449,8 +449,8 @@ describe PDK::Report::Event do
         }
       end
 
-      it 'includes the severity at the front' do
-        expect(text_event).to match(%r{\Aok:})
+      it 'includes the upcased severity' do
+        expect(text_event).to match(%r{\(OK\):})
       end
     end
 
@@ -473,8 +473,8 @@ describe PDK::Report::Event do
         }
       end
 
-      it 'includes the message at the end of the string' do
-        expect(text_event).to match(%r{testfile\.rb: test message\Z})
+      it 'includes the message' do
+        expect(text_event).to include('test message')
       end
 
       context 'and a severity is provided' do
@@ -485,8 +485,8 @@ describe PDK::Report::Event do
           }
         end
 
-        it 'includes the severity before the file' do
-          expect(text_event).to match(%r{\Acritical: test-validator: testfile\.rb: test message\Z})
+        it 'includes the severity before the message' do
+          expect(text_event).to match(%r{\(CRITICAL\):.*test message})
         end
       end
     end

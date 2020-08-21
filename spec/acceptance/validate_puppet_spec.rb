@@ -20,7 +20,7 @@ describe 'pdk validate puppet', module_command: true do
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.not_to match(syntax_spinner_text) }
         its(:stderr) { is_expected.not_to match(lint_spinner_text) }
-        its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
+        its(:stderr) { is_expected.to match(%r{no files matching.*found to validate}i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -51,7 +51,7 @@ class foo {
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
-        its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
+        its(:stderr) { is_expected.to match(%r{no files matching.*found to validate}i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -86,8 +86,8 @@ class foo {
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
 
-        its(:stdout) { is_expected.to match(%r{Warning:.*Unrecognized escape sequence \'\\\[\'}i) }
-        its(:stdout) { is_expected.to match(%r{Warning:.*Unrecognized escape sequence \'\\\]\'}i) }
+        its(:stdout) { is_expected.to match(%r{\(warning\):.*Unrecognized escape sequence \'\\\[\'}i) }
+        its(:stdout) { is_expected.to match(%r{\(warning\):.*Unrecognized escape sequence \'\\\]\'}i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -153,7 +153,7 @@ class foo {
 
       describe command('pdk validate puppet manifests\test') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(File.join('manifests', 'test', 'test.pp'))}.+class not documented}i) }
+        its(:stdout) { is_expected.to match(%r{\(warning\):.*class not documented.*\(#{Regexp.escape(File.join('manifests', 'test', 'test.pp'))}.+\)}i) }
       end
     end
 
@@ -173,7 +173,7 @@ class foo {
 
       describe command('pdk validate puppet') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
+        its(:stderr) { is_expected.to match(%r{no files matching.*found to validate}i) }
       end
     end
 
@@ -190,7 +190,7 @@ class foo {
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{^warning:.*#{Regexp.escape(init_pp)}.+class not documented}i) }
+        its(:stdout) { is_expected.to match(%r{\(warning\):.*class not documented.*\(#{Regexp.escape(init_pp)}.+\)}i) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
@@ -252,9 +252,9 @@ class foo {
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
 
-        its(:stdout) { is_expected.to match(%r{Error:.*This Name has no effect}i) }
-        its(:stdout) { is_expected.to match(%r{Error:.*This Type-Name has no effect}i) }
-        its(:stdout) { is_expected.to match(%r{Error:.*Language validation logged 2 errors. Giving up}i) }
+        its(:stdout) { is_expected.to match(%r{\(error\):.*This Name has no effect}i) }
+        its(:stdout) { is_expected.to match(%r{\(error\):.*This Type-Name has no effect}i) }
+        its(:stdout) { is_expected.to match(%r{\(error\):.*Language validation logged 2 errors}i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -303,7 +303,7 @@ class foo {
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(%r{#{Regexp.escape(example_pp)}.+autoload module layout}i) }
+        its(:stdout) { is_expected.to match(%r{autoload module layout.*\(#{Regexp.escape(example_pp)}.+\)}i) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
@@ -343,7 +343,6 @@ class foo {
 
         describe command("pdk validate puppet --format text:stdout --format junit:report.xml #{clean_pp}") do
           its(:exit_status) { is_expected.to eq(0) }
-          its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
           its(:stderr) { is_expected.not_to match(epp_spinner_text) }
           its(:stderr) { is_expected.to match(syntax_spinner_text) }
           its(:stderr) { is_expected.to match(lint_spinner_text) }
@@ -446,12 +445,12 @@ class foo {
 
       describe command('pdk validate puppet --auto-correct') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{^corrected:.*#{Regexp.escape(example_pp)}.*double quoted string}) }
+        its(:stdout) { is_expected.to match(%r{\(corrected\):.*double quoted string.*\(#{Regexp.escape(example_pp)}.*\)}i) }
       end
 
       describe command('pdk validate puppet') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{Target does not contain any files to validate}) }
+        its(:stderr) { is_expected.to match(%r{no files matching.*found to validate}i) }
       end
     end
   end
