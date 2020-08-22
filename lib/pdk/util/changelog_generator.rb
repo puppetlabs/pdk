@@ -9,11 +9,15 @@ module PDK
 
       # Raises if the github_changelog_generator is not available
       def self.github_changelog_generator_available!
-        require 'bundler'
-        return if ::Bundler.rubygems.find_name(GEM).any?
+        check_command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, 'show', 'github_changelog_generator')
+        check_command.context = :module
+
+        result = check_command.execute!
+
+        return if result[:exit_code].zero?
 
         raise PDK::CLI::ExitWithError, _(
-          'Unable to generate the changelog as the %{gem} gem is not installed',
+          'Unable to generate the changelog as the %{gem} gem is not included in this module\'s Gemfile',
         ) % { gem: GEM }
       end
 
