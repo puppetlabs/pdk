@@ -210,7 +210,7 @@ module PDK
       end
 
       def forge_token
-        options[:'forge-token']
+        options[:'forge-token'] || ENV['PUPPET_FORGE_TOKEN']
       end
 
       def forge_upload_url
