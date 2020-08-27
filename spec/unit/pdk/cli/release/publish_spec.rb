@@ -3,10 +3,12 @@ require 'pdk/cli'
 
 describe 'PDK::CLI release publish' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk release publish}m) }
-  let(:cli_args) { %w[release publish] }
+  let(:base_cli_args) { %w[release publish] }
 
   context 'when not run from inside a module' do
     include_context 'run outside module'
+
+    let(:cli_args) { base_cli_args }
 
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
@@ -37,6 +39,8 @@ describe 'PDK::CLI release publish' do
         forge_ready?: true,
       )
     end
+
+    let(:cli_args) { base_cli_args << '--forge-token=cli123' }
 
     before(:each) do
       allow(PDK::CLI::Util).to receive(:ensure_in_module!).and_return(nil)
@@ -76,6 +80,44 @@ describe 'PDK::CLI release publish' do
       expect(PDK::Module::Release).to receive(:new).with(Object, hash_including(force: true))
 
       expect { PDK::CLI.run(cli_args) }.not_to raise_error
+    end
+
+    context 'when not passed a forge-token on the command line' do
+      let(:cli_args) { base_cli_args }
+
+      it 'exits with an error' do
+        expect(logger).to receive(:error).with(a_string_matching(%r{must supply a forge api token}i))
+
+        expect { PDK::CLI.run(cli_args) }.to exit_nonzero
+      end
+
+      context 'when passed a forge-token via PDK_FORGE_TOKEN' do
+        before(:each) do
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(true)
+          allow(PDK::Util::Env).to receive(:[]).with('PDK_FORGE_TOKEN').and_return('env123')
+        end
+
+        it 'uses forge-token from environment' do
+          expect(PDK::Module::Release).to receive(:new).with(Object, hash_including(:'forge-token' => 'env123'))
+
+          expect { PDK::CLI.run(cli_args) }.not_to raise_error
+        end
+      end
+    end
+
+    context 'when passed a forge-token on both the command line and via PDK_FORGE_TOKEN' do
+      let(:cli_args) { base_cli_args << '--forge-token=cli123' }
+
+      before(:each) do
+        allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(true)
+        allow(PDK::Util::Env).to receive(:[]).with('PDK_FORGE_TOKEN').and_return('env123')
+      end
+
+      it 'value from command line takes precedence' do
+        expect(PDK::Module::Release).to receive(:new).with(Object, hash_including(:'forge-token' => 'cli123'))
+
+        expect { PDK::CLI.run(cli_args) }.not_to raise_error
+      end
     end
   end
 end

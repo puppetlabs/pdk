@@ -11,7 +11,7 @@ module PDK::CLI
     option nil, :'forge-upload-url', _('Set forge upload url path.'),
            argument: :required, default: 'https://forgeapi.puppetlabs.com/v3/releases'
 
-    option nil, :'forge-token', _('Set Forge API token or use env variable PUPPET_FORGE_TOKEN.'), argument: :required, default: ENV['PUPPET_FORGE_TOKEN']
+    option nil, :'forge-token', _('Set Forge API token (you may also set via environment variable PDK_FORGE_TOKEN)'), argument: :required
 
     run do |opts, _args, cmd|
       # Make sure build is being run in a valid module directory with a metadata.json
@@ -27,6 +27,16 @@ module PDK::CLI
       opts[:'skip-build'] = true
       opts[:'skip-versionset'] = true
       opts[:force] = true unless PDK::CLI::Util.interactive?
+      opts[:'forge-token'] ||= PDK::Util::Env['PDK_FORGE_TOKEN']
+
+      if opts[:'forge-token'].nil? || opts[:'forge-token'].empty?
+        PDK.logger.error _(
+          'You must supply a Forge API token either via `--forge-token` option ' \
+          'or PDK_FORGE_TOKEN environment variable.',
+        )
+
+        exit 1
+      end
 
       Release.prepare_publish_interview(TTY::Prompt.new(help_color: :cyan), opts) unless opts[:force]
 
