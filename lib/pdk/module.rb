@@ -15,6 +15,7 @@ module PDK
       '/REVISION',
       '/spec/fixtures/modules/',
       '/vendor/',
+      '.DS_Store',
     ].freeze
 
     def default_ignored_pathspec(ignore_dotfiles = true)
