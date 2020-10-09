@@ -29,7 +29,7 @@ describe PDK::Template::Fetcher::Git do
   end
 
   describe '.fetch!' do
-    let(:ref) { 'master' }
+    let(:ref) { 'main' }
     let(:full_ref) { '123456789abcdef' }
 
     before(:each) do

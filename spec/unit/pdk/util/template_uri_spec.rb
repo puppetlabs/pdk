@@ -161,7 +161,7 @@ describe PDK::Util::TemplateURI do
           let(:opts_or_uri) { { :'template-url' => 'cli-templates' } }
 
           it 'returns the specified template' do
-            expect(template_uri.to_s).to eq('cli-templates#master')
+            expect(template_uri.to_s).to eq('cli-templates#main')
           end
         end
 
@@ -170,7 +170,7 @@ describe PDK::Util::TemplateURI do
 
           it 'returns the specified template' do
             allow(Gem).to receive(:win_platform?).and_return(true)
-            expect(template_uri.to_s).to eq('C:\\cli-templates#master')
+            expect(template_uri.to_s).to eq('C:\\cli-templates#main')
           end
         end
 
@@ -323,8 +323,8 @@ describe PDK::Util::TemplateURI do
       context 'in development mode' do
         let(:development_mode) { true }
 
-        it 'returns master' do
-          is_expected.to eq('master')
+        it 'returns main' do
+          is_expected.to eq('main')
         end
       end
 
@@ -332,7 +332,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { false }
 
         it 'returns master' do
-          is_expected.to eq('master')
+          is_expected.to eq('main')
         end
       end
     end
@@ -352,7 +352,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { true }
 
         it 'returns master' do
-          is_expected.to eq('master')
+          is_expected.to eq('main')
         end
       end
     end
@@ -372,7 +372,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { true }
 
         it 'returns master' do
-          is_expected.to eq('master')
+          is_expected.to eq('main')
         end
       end
     end
@@ -503,8 +503,8 @@ describe PDK::Util::TemplateURI do
       end
 
       context 'that is a pdk-default keyword' do
-        let(:metadata_url) { 'pdk-default#master' }
-        let(:expected_uri) { described_class.default_template_addressable_uri.tap { |obj| obj.fragment = 'master' } }
+        let(:metadata_url) { 'pdk-default#main' }
+        let(:expected_uri) { described_class.default_template_addressable_uri.tap { |obj| obj.fragment = 'main' } }
 
         it 'converts the keyword to the default template' do
           is_expected.to include(
@@ -658,9 +658,9 @@ describe PDK::Util::TemplateURI do
       end
 
       context 'and using the packaged windows template' do
-        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['windows']}#master" }
+        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['windows']}#main" }
 
-        it { is_expected.to eq('pdk-default#master') }
+        it { is_expected.to eq('pdk-default#main') }
       end
 
       context 'and using the packaged linux template' do
@@ -682,9 +682,9 @@ describe PDK::Util::TemplateURI do
       end
 
       context 'and using the packaged windows template' do
-        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['windows']}#master" }
+        let(:url) { "#{described_class::LEGACY_PACKAGED_TEMPLATE_PATHS['windows']}#main" }
 
-        it { is_expected.to eq('https://github.com/puppetlabs/pdk-templates#master') }
+        it { is_expected.to eq('https://github.com/puppetlabs/pdk-templates#main') }
       end
 
       context 'and using the packaged linux template' do

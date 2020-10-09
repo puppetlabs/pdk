@@ -343,7 +343,7 @@ describe PDK::Module::Update do
       before(:each) do
         allow(PDK::Util).to receive(:default_template_ref).and_return('master')
         allow(PDK::Util::Git).to receive(:ls_remote)
-          .with(template_url, 'master')
+          .with(template_url, 'main')
           .and_return('3cdd84e8f0aae30bf40d15556482fc8752899312')
       end
 
@@ -351,7 +351,7 @@ describe PDK::Module::Update do
       let(:template_ref) { 'master-0-g07678c8' }
 
       it 'returns the branch name and the commit SHA' do
-        is_expected.to eq('master@3cdd84e')
+        is_expected.to eq('main@3cdd84e')
       end
     end
   end
