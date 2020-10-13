@@ -85,7 +85,7 @@ module PDK
       private
 
       def latest_template?
-        [PDK::TEMPLATE_REF, 'master'].include?(template_uri.uri_fragment)
+        [PDK::TEMPLATE_REF, 'master', 'main'].include?(template_uri.uri_fragment)
       end
 
       def current_template_version

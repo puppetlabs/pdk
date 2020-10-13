@@ -207,7 +207,7 @@ describe PDK::Generate::Module do
         end
 
         it 'uses that template to generate the module' do
-          expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('cli-template#master'), anything).and_yield(template_dir)
+          expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('cli-template#main'), anything).and_yield(template_dir)
           expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
           expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
 
@@ -216,13 +216,13 @@ describe PDK::Generate::Module do
 
         it 'takes precedence over the template-url answer' do
           PDK.config.set(%w[user module_defaults template-url], 'answer-template')
-          expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('cli-template#master'), anything).and_yield(template_dir)
+          expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('cli-template#main'), anything).and_yield(template_dir)
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
         end
 
         it 'saves the template-url and template-ref to the answer file if it is not the default template' do
           described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
-          expect(PDK.config.get(%w[user module_defaults template-url])).to eq(Addressable::URI.parse('cli-template#master').to_s)
+          expect(PDK.config.get(%w[user module_defaults template-url])).to eq(Addressable::URI.parse('cli-template#main').to_s)
         end
 
         it 'saves the template-url and template-ref to the answer file if it is not the default ref' do

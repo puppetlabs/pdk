@@ -241,11 +241,11 @@ module PDK
         require 'pdk/util'
         require 'pdk/version'
 
-        return 'master' if PDK::Util.development_mode?
+        return 'main' if PDK::Util.development_mode?
         return PDK::TEMPLATE_REF if uri.nil?
 
         uri = new(uri) unless uri.is_a?(self)
-        uri.default? ? PDK::TEMPLATE_REF : 'master'
+        uri.default? ? PDK::TEMPLATE_REF : 'main'
       end
 
       # @returns Addressable::URI

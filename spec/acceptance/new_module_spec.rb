@@ -22,7 +22,7 @@ describe 'pdk new module' do
         its(:content_as_json) do
           is_expected.to include(
             'name' => match(%r{-new_module}),
-            'template-ref' => match(%r{(master-)|(^(tags/)?(\d+)\.(\d+)\.(\d+))}),
+            'template-ref' => match(%r{(main-)|(^(tags/)?(\d+)\.(\d+)\.(\d+))}),
             'operatingsystem_support' => include(
               'operatingsystem' => 'Debian',
               'operatingsystemrelease' => ['10'],

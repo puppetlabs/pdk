@@ -169,7 +169,7 @@ describe 'pdk convert', module_command: true do
       # Note - The following file(...) tests can not be run in isolation and require the above
       # `its(:exit_status)` to have run first.
       describe file('metadata.json') do
-        its(:content_as_json) { is_expected.to include('template-url' => "#{template_repo}#master") }
+        its(:content_as_json) { is_expected.to include('template-url' => "#{template_repo}#main") }
       end
 
       describe file(File.join('..', 'non_default_template_answers.json')) do
