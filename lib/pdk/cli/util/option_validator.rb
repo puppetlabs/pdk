@@ -8,6 +8,11 @@ module PDK
           (list =~ %r{^[\w\-]+(?:,[\w\-]+)+$}) ? true : false
         end
 
+        # @return [Boolean] true if the fact name is valid
+        def self.valid_fact_name?(name)
+          name.length > 1
+        end
+
         def self.enum(val, valid_entries, _options = {})
           vals = val.is_a?(Array) ? val : [val]
           invalid_entries = vals.reject { |e| valid_entries.include?(e) }
