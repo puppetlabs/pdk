@@ -12,7 +12,7 @@ describe 'Updating an existing module' do
   modules.each do |mod|
     context "when updating #{mod}" do
       metadata = JSON.parse(open("https://raw.githubusercontent.com/#{mod}/master/metadata.json").read)
-      metadata['template-url'] = 'pdk-default#master'
+      metadata['template-url'] = 'pdk-default#main'
       repo_dir = File.join(home_dir, metadata['name'])
 
       describe command("#{git_bin} clone https://github.com/#{mod} #{repo_dir}") do

@@ -4,9 +4,7 @@ describe 'Test puppet & ruby version selection' do
   module_name = 'version_selection'
   test_cases = [
     { envvar: 'PDK_PUPPET_VERSION', version: '5.5.0', expected_puppet: '5.5', expected_ruby: '2.4' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '4.10.10', expected_puppet: '4.10', expected_ruby: '2.1.9' },
     { envvar: 'PDK_PE_VERSION', version: '2017.3', expected_puppet: '5.3', expected_ruby: '2.4' },
-    { envvar: 'PDK_PE_VERSION', version: '2017.2', expected_puppet: '4.10', expected_ruby: '2.1.9' },
   ]
 
   before(:all) do
