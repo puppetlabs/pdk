@@ -17,22 +17,27 @@ describe 'C100321 - Generate a module and validate it (i.e. ensure bundle instal
   end
 
   context 'when validating the module' do
-    describe command('pdk validate') do
-      let(:cwd) { module_name }
+    context 'with puppet 6.x' do
+      puppet_version = '6.x'
+      let(:ruby_version) { ruby_for_puppet(puppet_version) }
 
-      its(:exit_status) { is_expected.to eq(0) }
-    end
+      describe command("pdk validate --puppet-version=#{puppet_version}") do
+        let(:cwd) { module_name }
 
-    describe file(File.join(module_name, 'Gemfile.lock')) do
-      it { is_expected.to be_file }
+        its(:exit_status) { is_expected.to eq(0) }
+      end
 
-      describe 'the content of the file' do
-        subject { super().content.gsub(%r{^DEPENDENCIES.+?\n\n}m, '') }
+      describe file(File.join(module_name, 'Gemfile.lock')) do
+        it { is_expected.to be_file }
 
-        it 'is identical to the vendored lockfile' do
-          vendored_lockfile = File.join(install_dir, 'share', 'cache', "Gemfile-#{latest_ruby}.lock")
+        describe 'the content of the file' do
+          subject { super().content.gsub(%r{^DEPENDENCIES.+?\n\n}m, '') }
 
-          is_expected.to eq(file(vendored_lockfile).content.gsub(%r{^DEPENDENCIES.+?\n\n}m, ''))
+          it 'is identical to the vendored lockfile' do
+            vendored_lockfile = File.join(install_dir, 'share', 'cache', "Gemfile-#{ruby_version}.lock")
+
+            is_expected.to eq(file(vendored_lockfile).content.gsub(%r{^DEPENDENCIES.+?\n\n}m, ''))
+          end
         end
       end
     end
