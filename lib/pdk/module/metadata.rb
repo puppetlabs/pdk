@@ -54,6 +54,10 @@ module PDK
           'operatingsystem'        => 'windows',
           'operatingsystemrelease' => %w[2019 10],
         },
+        'AIX' => {
+          'operatingsystem'        => 'AIX',
+          'operatingsystemrelease' => %w[6.1 7.1 7.2],
+        },
       }.freeze
 
       DEFAULT_OPERATING_SYSTEMS = [
