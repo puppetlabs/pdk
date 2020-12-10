@@ -11,7 +11,7 @@ def location_for(place, fake_version = nil)
 end
 
 gem 'beaker', *location_for(ENV['BEAKER_VERSION'] || '= 4.10.0')
-gem 'beaker-abs', *location_for(ENV['BEAKER_ABS_VERSION'] || '~> 0.6.0')
+gem 'beaker-abs', *location_for(ENV['BEAKER_ABS_VERSION'] || '~> 0.7.0')
 gem 'beaker-hostgenerator', *location_for(ENV['BEAKER_HOSTGENERATOR_VERSION'] || '= 1.2.6')
 gem 'beaker-puppet', '= 1.18.5'
 gem 'beaker-rspec', '= 6.2.4'
