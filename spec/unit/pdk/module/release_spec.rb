@@ -345,6 +345,7 @@ describe PDK::Module::Release do
       let(:http_response) { Net::HTTPUnauthorized.new(nil, nil, nil) }
 
       it 'raises' do
+        allow(http_response).to receive(:body)
         expect { instance.run_publish({}, tarball_path) }.to raise_error(PDK::CLI::ExitWithError)
       end
     end
