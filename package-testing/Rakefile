@@ -69,7 +69,8 @@ namespace :acceptance do
 
     puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
 
-    cli = BeakerHostGenerator::CLI.new(["#{test_target}{type=foss}", '--disable-default-role'])
+
+    cli = BeakerHostGenerator::CLI.new(["#{test_target}{type=foss}", '--disable-default-role', '--hypervisor', 'abs'])
 
     File.open('acceptance_hosts.yml', 'w') do |hosts_file|
       hosts_file.print(cli.execute)
