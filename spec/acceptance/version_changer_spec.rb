@@ -56,6 +56,8 @@ class version_select {
         FileUtils.mkdir_p(File.join('spec', 'classes'))
         File.open(File.join('spec', 'classes', 'version_select_spec.rb'), 'w') do |f|
           f.puts <<-TESTFILE
+# frozen_string_literal: true
+
 require 'spec_helper'
 
 describe 'version_select' do
