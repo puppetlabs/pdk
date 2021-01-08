@@ -17,7 +17,7 @@ module PDK
 
       PE_VERSIONS_URL = 'https://forgeapi.puppet.com/private/versions/pe'.freeze
       DEFAULT_PUPPET_DEV_URL = 'https://github.com/puppetlabs/puppet'.freeze
-      DEFAULT_PUPPET_DEV_BRANCH = 'master'.freeze
+      DEFAULT_PUPPET_DEV_BRANCH = 'main'.freeze
 
       def puppet_dev_env
         require 'pdk/util/ruby_version'
@@ -80,7 +80,7 @@ module PDK
         end
 
         # Reset local repo to latest
-        reset_result = PDK::Util::Git.git('-C', puppet_dev_path, 'reset', '--hard', 'origin/master')
+        reset_result = PDK::Util::Git.git('-C', puppet_dev_path, 'reset', '--hard', "origin/#{DEFAULT_PUPPET_DEV_BRANCH}")
 
         @puppet_dev_fetched = true
         return if reset_result[:exit_code].zero?
