@@ -20,19 +20,18 @@ before_install:
 cache: bundler
 jobs:
   include:
-    - rvm: 2.4.3
+    - rvm: 2.5
       env: CHECK=rubocop
-    # Make sure that the we still work with an older Bundler version
-    - rvm: 2.4.3
-      env: CHECK=acceptance:smoke BUNDLER_VERSION=2.0.2
-    - rvm: 2.4.3
+    - rvm: 2.5
+      env: CHECK=acceptance:smoke
+    - rvm: 2.5
       env: CHECK=acceptance:local_parallel
-    - rvm: 2.4.3
+    - rvm: 2.5
       env: CHECK=spec:coverage
-    - rvm: 2.4.3
+    - rvm: 2.5
       env: CHECK=license_finder
       bundler_args: "--with development" # license_finder requires all gems installed. Also can't use an empty string so just include any bundler group
-    - rvm: 2.5
+    - rvm: 2.4
       env: CHECK=spec
     - rvm: 2.3
       env: CHECK=spec
