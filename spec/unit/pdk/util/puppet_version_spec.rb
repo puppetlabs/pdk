@@ -555,8 +555,8 @@ describe PDK::Util::PuppetVersion do
     let(:metadata) { PDK::Module::Metadata.new }
 
     context 'with default metadata' do
-      it 'searches for a Puppet gem >= 4.10.0 < 7.0.0' do
-        requirement = Gem::Requirement.create(['>= 4.10.0', '< 7.0.0'])
+      it 'searches for a Puppet gem >= 4.10.0 < 8.0.0' do
+        requirement = Gem::Requirement.create(['>= 4.10.0', '< 8.0.0'])
         expect(described_class.instance).to receive(:find_gem).with(requirement)
 
         described_class.from_module_metadata(metadata)
