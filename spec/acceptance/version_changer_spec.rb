@@ -21,7 +21,7 @@ describe 'puppet version selection' do
       end
     end
 
-    %w[5.5.0 4.10.10].each do |puppet_version|
+    %w[6.19.1 5.5.22].each do |puppet_version|
       describe command("pdk validate --puppet-version #{puppet_version}") do
         its(:exit_status) { is_expected.to eq(0) }
       end
@@ -32,7 +32,7 @@ describe 'puppet version selection' do
       end
     end
 
-    { '2017.3.1' => '5.3.2', '2017.2.5' => '4.10.9' }.each do |pe_version, puppet_version|
+    { '2018.1.18' => '5.5.22' }.each do |pe_version, puppet_version|
       describe command("pdk validate --pe-version #{pe_version}") do
         its(:exit_status) { is_expected.to eq(0) }
       end
