@@ -211,7 +211,7 @@ describe PDK::Util::PuppetVersion do
         before(:each) do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(fetch_results)
-          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/master').and_return(exit_code: 0)
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/main').and_return(exit_code: 0)
         end
 
         it 'exits cleanly' do
@@ -231,7 +231,7 @@ describe PDK::Util::PuppetVersion do
         before(:each) do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(exit_code: 0)
-          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/master').and_return(reset_results)
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/main').and_return(reset_results)
         end
 
         it 'raises an error' do
@@ -255,7 +255,7 @@ describe PDK::Util::PuppetVersion do
         before(:each) do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(exit_code: 0)
-          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/master').and_return(reset_results)
+          allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/main').and_return(reset_results)
         end
 
         it 'exits cleanly' do
@@ -555,8 +555,8 @@ describe PDK::Util::PuppetVersion do
     let(:metadata) { PDK::Module::Metadata.new }
 
     context 'with default metadata' do
-      it 'searches for a Puppet gem >= 4.10.0 < 7.0.0' do
-        requirement = Gem::Requirement.create(['>= 4.10.0', '< 7.0.0'])
+      it 'searches for a Puppet gem >= 4.10.0 < 8.0.0' do
+        requirement = Gem::Requirement.create(['>= 4.10.0', '< 8.0.0'])
         expect(described_class.instance).to receive(:find_gem).with(requirement)
 
         described_class.from_module_metadata(metadata)

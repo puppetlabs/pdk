@@ -11,6 +11,7 @@ describe 'pdk validate ruby', module_command: true do
 
       before(:all) do
         File.open(spec_violation_rb, 'w') do |f|
+          f.puts "# frozen_string_literal: true\n\n"
           f.puts 'f = %(x y z)'
         end
       end
@@ -41,6 +42,7 @@ describe 'pdk validate ruby', module_command: true do
         before(:all) do
           FileUtils.mkdir_p(File.dirname(another_violation_rb))
           File.open(another_violation_rb, 'w') do |f|
+            f.puts "# frozen_string_literal: true\n\n"
             f.puts "puts {:foo => 'bar'}.inspect"
           end
         end
@@ -87,6 +89,7 @@ describe 'pdk validate ruby', module_command: true do
     context 'when auto-correcting violations' do
       before(:all) do
         File.open('test.rb', 'w') do |f|
+          f.puts "# frozen_string_literal: true\n\n"
           f.puts "puts({'a' => 'b'}.inspect)"
         end
       end
@@ -111,6 +114,7 @@ describe 'pdk validate ruby', module_command: true do
         FileUtils.mkdir_p(File.join('spec', 'unit'))
         (1..5000).each do |num|
           File.open(File.join('spec', 'unit', "test#{num}.rb"), 'w') do |f|
+            f.puts "# frozen_string_literal: true\n\n"
             f.puts "puts({ 'a' => 'b' }.inspect)"
           end
         end
