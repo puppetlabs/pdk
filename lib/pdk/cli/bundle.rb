@@ -38,6 +38,10 @@ EOF
       command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, *args).tap do |c|
         c.context = :pwd
         c.update_environment(gemfile_env)
+        # while all other commands should exclude system_tests to avoid support for unsupported gems,
+        # the bundle sub-command specifically should not take that liberty as it is an experimental
+        # and unsupported outlet for this kind of work.
+        c.environment.delete('BUNDLE_WITHOUT')
       end
 
       result = command.execute!

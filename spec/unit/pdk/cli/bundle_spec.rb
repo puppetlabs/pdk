@@ -17,6 +17,7 @@ describe 'Running `pdk bundle`' do
         PDK::CLI::Exec::InteractiveCommand,
         :context=           => true,
         :update_environment => true,
+        :environment        => {},
         :execute!           => command_result,
       )
       allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new)

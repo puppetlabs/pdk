@@ -226,7 +226,8 @@ module PDK
         end
 
         def self.gemfile_env(gem_overrides)
-          gemfile_env = {}
+          # in default mode, never install gems from the system_tests group, as the PDK doesn't officially supports them
+          gemfile_env = { 'BUNDLE_WITHOUT' => 'system_tests' }
 
           return gemfile_env unless gem_overrides.respond_to?(:each)
 

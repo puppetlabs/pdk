@@ -543,7 +543,7 @@ RSpec.describe PDK::Util::Bundler do
         it 'does not update the command environment' do
           cmd_double = allow_command([bundle_regex, 'lock', %r{--lockfile}, '--update'], exit_code: 0)
 
-          expect(cmd_double).to receive(:update_environment).with({})
+          expect(cmd_double).to receive(:update_environment).with('BUNDLE_WITHOUT' => 'system_tests')
 
           instance.update_lock!(with: overrides)
         end
