@@ -69,7 +69,7 @@ build: off
 
 branches:
   only:
-    - master
+    - main
 
 before_test:
   - bundle --version
