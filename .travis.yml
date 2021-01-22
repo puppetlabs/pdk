@@ -45,7 +45,7 @@ jobs:
       env: CHECK=test_pdk_as_library
 branches:
   only:
-    - master
+    - main
 notifications:
   slack:
     secure: MuY1la+q15aW2I6DlSwUmtCuqXUarkVa6UQcFTQc6qCY361l6j7zmMiELhO5mhiveQBvoC3TQfaGXftyTaOkA/5X4kRmJOBUmmROHeqe0dbcdyaUzO9mwf+W6+1T7IOb54NA7ojymVQpq8QdK8gAroN5HE9ysIfEJwsG7ur/9iO5BfhyHaWk6xZ6FJmlrzTeNfBdu7qEWdkUIhrdZo1l3mNdtrE1xL5sO0LHnGF4LWl9hYWPz0HWpY1S0ITeARKBFd2rUtm+EIvePjfsLHnw4/aoRkdtlWJizSsl7V8VKpchrDofuWLqS4qQwNjhoTpvjVCqPYyWerbVITqAZr/pEkwJkH0KQpl+BOJH63pK2VEu3zyDDGrgcorNWZxNrq8tTZLT5Lw4OBVX3nidFZYN/rzG2/HEM8X37pyI0bGqRjb/uEDgxipSq1qZWOOm5MIgDOrvzkCg5A/phYqTwvI+cE82hSYDuCFztuTyXH6oaECz5AP4/snAOaUTV9TrT7JH0AWIqp9Vzu42osysMmCvkGU83IQFtQpD40sLZLf//obEy9yEWZP041Ektoz3CVxCteqWm5wgaR1ZJqOWU0zL7V1DeFhG3dCiIBvR7iUQvpQKlUKxADEphxxRZc+Gx2Et1nRhxLmj46l/aVGqZBfIhLClA8eox3esXAL6HHVwdWA=
