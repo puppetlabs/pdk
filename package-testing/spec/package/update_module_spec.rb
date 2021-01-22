@@ -11,7 +11,7 @@ modules = [
 describe 'Updating an existing module' do
   modules.each do |mod|
     context "when updating #{mod}" do
-      metadata = JSON.parse(open("https://raw.githubusercontent.com/#{mod}/master/metadata.json").read)
+      metadata = JSON.parse(open("https://raw.githubusercontent.com/#{mod}/main/metadata.json").read)
       metadata['template-url'] = 'pdk-default#main'
       repo_dir = File.join(home_dir, metadata['name'])
 
@@ -24,7 +24,7 @@ describe 'Updating an existing module' do
           module_dir = File.join(home_dir(true), metadata['name'])
           create_remote_file(get_working_node, File.join(module_dir, 'metadata.json'), metadata.to_json)
 
-          sync_yaml = YAML.safe_load(open("https://raw.githubusercontent.com/#{mod}/master/.sync.yml").read)
+          sync_yaml = YAML.safe_load(open("https://raw.githubusercontent.com/#{mod}/main/.sync.yml").read)
 
           sync_yaml['Gemfile'].each_key do |gem_type|
             next unless sync_yaml['Gemfile'][gem_type].respond_to?(:each_key)
