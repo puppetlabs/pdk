@@ -46,6 +46,7 @@ module PDK
 
           !(string =~ %r{\A([a-z][a-z0-9_]*)(::[a-z][a-z0-9_]*)*\Z}).nil?
         end
+        singleton_class.send(:alias_method, :valid_function_name?, :valid_namespace?)
 
         singleton_class.send(:alias_method, :valid_class_name?, :valid_namespace?)
         singleton_class.send(:alias_method, :valid_defined_type_name?, :valid_namespace?)
