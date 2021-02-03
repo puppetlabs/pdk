@@ -31,7 +31,8 @@ describe 'Generate a module for unit testing' do
   end
 
   context 'when unit testing in parallel' do
-    describe command('pdk test unit --parallel') do
+    # Parallel tests gem is currently broken on Windows.
+    describe command('pdk test unit --parallel'), unless: windows_node? do
       let(:cwd) { module_name }
 
       its(:exit_status) { is_expected.to eq(0) }
