@@ -21,25 +21,29 @@ describe 'puppet version selection' do
       end
     end
 
-    %w[6.19.1 5.5.22].each do |puppet_version|
-      describe command("pdk validate --puppet-version #{puppet_version}") do
-        its(:exit_status) { is_expected.to eq(0) }
-      end
+    %w[7.3.0 6.19.1].each do |puppet_version|
+      context "when requesting --puppet-version #{puppet_version}" do
+        describe command("pdk validate --puppet-version #{puppet_version}") do
+          its(:exit_status) { is_expected.to eq(0) }
+        end
 
-      describe file('Gemfile.lock') do
-        it { is_expected.to exist }
-        its(:content) { is_expected.to match(%r{^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)}im) }
+        describe file('Gemfile.lock') do
+          it { is_expected.to exist }
+          its(:content) { is_expected.to match(%r{^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)}im) }
+        end
       end
     end
 
-    { '2018.1.18' => '5.5.22' }.each do |pe_version, puppet_version|
-      describe command("pdk validate --pe-version #{pe_version}") do
-        its(:exit_status) { is_expected.to eq(0) }
-      end
+    { '2019.8.4' => '6.19.1' }.each do |pe_version, puppet_version|
+      context "when requesting --pe-version #{pe_version}" do
+        describe command("pdk validate --pe-version #{pe_version}") do
+          its(:exit_status) { is_expected.to eq(0) }
+        end
 
-      describe file('Gemfile.lock') do
-        it { is_expected.to exist }
-        its(:content) { is_expected.to match(%r{^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)}im) }
+        describe file('Gemfile.lock') do
+          it { is_expected.to exist }
+          its(:content) { is_expected.to match(%r{^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)}im) }
+        end
       end
     end
 
