@@ -15,7 +15,7 @@ before_install:
       rvm @global do gem uninstall bundler --executables --force;
       rvm @global do gem install bundler -v $BUNDLER_VERSION;
     else
-      gem install bundler --no-document;
+      gem install bundler --no-document -v '2.2.7';
     fi
 cache: bundler
 jobs:
