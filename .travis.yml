@@ -33,14 +33,11 @@ jobs:
       bundler_args: "--with development" # license_finder requires all gems installed. Also can't use an empty string so just include any bundler group
     - rvm: 2.4
       env: CHECK=spec
-    - rvm: 2.3
-      env: CHECK=spec
-    - rvm: 2.1.9
-      env: CHECK=spec BUNDLER_VERSION=1.17.3
-    # concurrent-ruby 1.1.6 has a strange thread timing issue under Ruby 2.4 and the
-    # spec/unit/pdk/analytics/util_spec.rb file. It doesn't occur on Appveyor (Windows)
-    # or the regular rspec under Ruby 2.4 testing. So just use Ruby 2.5 instead.
     - rvm: 2.5
+      env: CHECK=spec
+    - rvm: 2.7
+      env: CHECK=spec
+    - rvm: 2.7
       env: CHECK=test_pdk_as_library
 branches:
   only:
