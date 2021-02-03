@@ -163,7 +163,7 @@ module PDK
           http.request(request)
         end
 
-        raise PDK::CLI::ExitWithError, _('Error uploading to Puppet Forge: %{result}') % { result: response } unless response.is_a?(Net::HTTPSuccess)
+        raise PDK::CLI::ExitWithError, _('Error uploading to Puppet Forge: %{result}') % { result: response.body } unless response.is_a?(Net::HTTPSuccess)
         PDK.logger.info _('Publish to Forge was successful')
       end
 
