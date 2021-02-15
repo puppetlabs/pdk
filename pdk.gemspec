@@ -36,7 +36,7 @@ Gem::Specification.new do |spec|
 
   # Analytics dependencies
   spec.add_runtime_dependency 'concurrent-ruby', '~> 1.1.5'
-  spec.add_runtime_dependency 'facter', '~> 2.5.1'
+  spec.add_runtime_dependency 'facter', '>= 2.5.1', '< 5.0.0'
   spec.add_runtime_dependency 'httpclient', '~> 2.8.3'
 
   # Used in the pdk-templates
