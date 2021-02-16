@@ -9,8 +9,8 @@ describe PDK::Generate::Transport do
   let(:options) { {} }
   let(:given_name) { 'test_transport' }
 
-  it 'inherits from ResourceAPIObject' do
-    expect(generator).to be_a(PDK::Generate::ResourceAPIObject)
+  it 'inherits from PuppetObject' do
+    expect(generator).to be_a(PDK::Generate::PuppetObject)
   end
 
   describe '#template_files' do
