@@ -81,7 +81,7 @@ module PDK
           OPERATING_SYSTEMS[os_name]
         }.flatten,
         'requirements' => [
-          { 'name' => 'puppet', 'version_requirement' => '>= 4.10.0 < 8.0.0' },
+          { 'name' => 'puppet', 'version_requirement' => '>= 6.21.0 < 8.0.0' },
         ],
       }.freeze
 
