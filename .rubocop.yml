@@ -1,10 +1,12 @@
 require:
+  - rubocop-performance
   - rubocop-rspec
   - ./ext/rubocop.rb
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.1.9
+  TargetRubyVersion: 2.4
+  SuggestExtensions: false
   Exclude:
     # binstubs, and other utilities
     - bin/**/*
@@ -15,9 +17,9 @@ AllCops:
     - package-testing/vendor/**/.*
     - tmp/**/*
 
-Layout/IndentHeredoc:
-  Description: The `squiggly` style would be preferable, but is only available from ruby 2.3. We'll enable this when we can.
-  Enabled: False
+Style/FrozenStringLiteralComment:
+  Description: disabled to avoid churn of frozen StringMethods
+  Enabled: false
 
 # Metrics, excludes complexity and sizing metrics for now, as ruby's defaults are very strict
 Metrics/AbcSize:
@@ -35,7 +37,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Enabled: False
 
-Metrics/LineLength:
+Layout/LineLength:
   Description: People have wide screens, use them.
   Max: 200
 
@@ -88,10 +90,6 @@ Style/AsciiComments:
 Style/BlockDelimiters:
   Description: Prefer braces for chaining. Mostly an aesthetical choice. Better to be consistent then.
   EnforcedStyle: braces_for_chaining
-
-Style/ClassAndModuleChildren:
-  Description: Compact style reduces the required amount of indentation.
-  EnforcedStyle: compact
 
 Style/EmptyElse:
   Description: Enforce against empty else clauses, but allow `nil` for clarity.
