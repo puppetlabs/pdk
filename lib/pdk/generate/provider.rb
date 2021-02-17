@@ -2,7 +2,7 @@ require 'pdk'
 
 module PDK
   module Generate
-    class Provider < ResourceAPIObject
+    class Provider < PuppetObject
       def friendly_name
         'Resource API Provider'.freeze
       end

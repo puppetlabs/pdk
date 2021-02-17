@@ -2,7 +2,7 @@ require 'pdk'
 
 module PDK
   module Generate
-    class Transport < ResourceAPIObject
+    class Transport < PuppetObject
       def friendly_name
         'Resource API Transport'.freeze
       end
