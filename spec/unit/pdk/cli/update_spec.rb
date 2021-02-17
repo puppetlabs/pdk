@@ -64,7 +64,7 @@ describe 'PDK::CLI update' do
           "requirements": [
             {
               "name": "puppet",
-              "version_requirement": ">= 4.10.0 < 7.0.0"
+              "version_requirement": ">= 6.21.0 < 7.0.0"
             }
           ],
           "pdk-version": "99.99.0",
