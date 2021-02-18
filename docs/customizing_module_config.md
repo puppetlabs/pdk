@@ -46,7 +46,7 @@ configuration of that file. For example:
 
 -   To see a complete updated list of `sync.yml` settings, see the
     [`pdk-template`
-    README](https://github.com/puppetlabs/pdk-templates/blob/master/README.md).
+    README](https://github.com/puppetlabs/pdk-templates/blob/main/README.md).
 
 
 For example, this `.sync.yml` file removes the `appveyor.yml` file from the

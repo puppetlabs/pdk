@@ -55,8 +55,7 @@ module PDK
         uri = URI.parse(url)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
-        # TODO: Get rid of this, possible workaround:
-        # https://github.com/glennsarti/dev-tools/blob/master/RubyCerts.ps1
+        # TODO: Get rid of this
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Gem.win_platform?
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)

@@ -18,7 +18,7 @@ describe 'pdk build', module_command: true do
       'requirements'            => [{ 'name' => 'puppet', 'version_requirement' => '> 6.21.0 < 7.0.0' }],
       'pdk-version'             => '1.2.3',
       'template-url'            => 'https://github.com/puppetlabs/pdk-templates',
-      'template-ref'            => 'heads/master-0-g1234abc',
+      'template-ref'            => 'heads/main-0-g1234abc',
     }
 
     context 'when the module has complete metadata' do

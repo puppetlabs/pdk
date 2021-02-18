@@ -68,7 +68,7 @@ describe 'PDK::CLI update' do
             }
           ],
           "pdk-version": "99.99.0",
-          "template-url": "https://github.com/puppetlabs/pdk-templates#master",
+          "template-url": "https://github.com/puppetlabs/pdk-templates#main",
           "template-ref": "tags/99.99.0"
         }
         EOT

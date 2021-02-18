@@ -29,7 +29,7 @@ PS> cd ..\testmodule
 
 # 4. Run the pdk binstub
 PS> ruby.exe bin\pdk --version
-1.10.0.pre (heads/master-g3e22a80)
+1.10.0.pre (heads/main-g3e22a80)
 ```
 
 # Running tests
@@ -66,7 +66,7 @@ Environment Variable | Usage
 # Release Process
 
 1. Bump the version in `lib/pdk/version.rb`.
-1. In a clean checkout of master, run `bundle exec rake changelog`.
+1. In a clean checkout of main, run `bundle exec rake changelog`.
 1. Edit PR titles and tags, until `bundle exec rake changelog` output makes sense.
 1. Run `bundle exec rake gettext:pot` to update the translations.
 1. Commit and PR the changes.

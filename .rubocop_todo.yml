@@ -45,8 +45,6 @@ Naming/HeredocDelimiterNaming:
   Description: Use descriptive heredoc delimiters.
   StyleGuide: "#heredoc-delimiters"
   Enabled: false
-  Blacklist:
-  - !ruby/regexp /(^|\s)(EO[A-Z]{1}|END)(\s|$)/
 
 Naming/MemoizedInstanceVariableName:
   Description: Memoized method name should match memo instance variable name.

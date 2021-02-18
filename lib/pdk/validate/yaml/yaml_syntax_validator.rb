@@ -4,7 +4,7 @@ module PDK
   module Validate
     module YAML
       class YAMLSyntaxValidator < InternalRubyValidator
-        YAML_WHITELISTED_CLASSES = [Symbol].freeze
+        YAML_ALLOWLISTED_CLASSES = [Symbol].freeze
 
         def ignore_dotfiles
           false
@@ -53,7 +53,7 @@ module PDK
           end
 
           begin
-            ::YAML.safe_load(PDK::Util::Filesystem.read_file(target), YAML_WHITELISTED_CLASSES, [], true)
+            ::YAML.safe_load(PDK::Util::Filesystem.read_file(target), YAML_ALLOWLISTED_CLASSES, [], true)
 
             report.add_event(
               file:     target,

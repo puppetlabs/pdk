@@ -331,7 +331,7 @@ describe PDK::Util::TemplateURI do
       context 'not in development mode' do
         let(:development_mode) { false }
 
-        it 'returns master' do
+        it 'returns main' do
           is_expected.to eq('main')
         end
       end
@@ -351,7 +351,7 @@ describe PDK::Util::TemplateURI do
       context 'in development mode' do
         let(:development_mode) { true }
 
-        it 'returns master' do
+        it 'returns main' do
           is_expected.to eq('main')
         end
       end
@@ -371,7 +371,7 @@ describe PDK::Util::TemplateURI do
       context 'in development mode' do
         let(:development_mode) { true }
 
-        it 'returns master' do
+        it 'returns main' do
           is_expected.to eq('main')
         end
       end
