@@ -12,10 +12,10 @@
   PrivateData       = @{
     PSData = @{
       # Tags = @()
-      LicenseUri = 'https://github.com/puppetlabs/pdk/blob/master/LICENSE'
+      LicenseUri = 'https://github.com/puppetlabs/pdk/blob/main/LICENSE'
       ProjectUri = 'https://github.com/puppetlabs/pdk'
       # IconUri = ''
-      ReleaseNotes = 'https://github.com/puppetlabs/pdk/blob/master/CHANGELOG.md'
+      ReleaseNotes = 'https://github.com/puppetlabs/pdk/blob/main/CHANGELOG.md'
     }
   }
 }

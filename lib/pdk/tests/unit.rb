@@ -139,7 +139,7 @@ module PDK
 
         example_results = {
           # Only possibilities are passed, failed, pending:
-          # https://github.com/rspec/rspec-core/blob/master/lib/rspec/core/example.rb#L548
+          # https://github.com/rspec/rspec-core/blob/main/lib/rspec/core/example.rb#L548
           'passed' => [],
           'failed' => [],
           'pending' => [],

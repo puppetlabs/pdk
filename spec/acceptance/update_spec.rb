@@ -24,7 +24,7 @@ describe 'pdk update', module_command: true do
     context 'that is not up to date' do
       before(:all) do
         metadata = JSON.parse(File.read('metadata.json'))
-        metadata['template-ref'] = 'heads/master-0-g1234567'
+        metadata['template-ref'] = 'heads/main-0-g1234567'
 
         File.open('metadata.json', 'w') do |f|
           f.puts metadata.to_json

@@ -26,13 +26,13 @@ module PDK
       #
       # file:///c:/foo (git clone location)
       # c:/foo (shell paths)
-      # file:///c:/foo#master (only for metadata)
-      # c:/foo#master (only for metadata)
+      # file:///c:/foo#main (only for metadata)
+      # c:/foo#main (only for metadata)
       #
       # non output formats:
       #
       # /c:/foo (internal use only)
-      # /c:/foo#master (internal use only)
+      # /c:/foo#main (internal use only)
       #
       def initialize(opts_or_uri)
         require 'addressable'

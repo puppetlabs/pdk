@@ -120,7 +120,7 @@ module](pdk_converting_modules.md#convert-a-module) topic.
 |`--full-interview`|Include interview questions related to publishing on the Forge to create module metadata.|None.|If not specified, asks only basic module metadata questions.|
 |`--noop`|Runs the command in a no operation or "no-op" mode. This shows what changes PDK will make without actually executing the changes.|None.|If not specified, the command makes the requested changes.|
 |`--skip-interview`|Skip interview questions and use default values to create module metadata.|None.|If not specified, asks basic module metadata questions.|
-|`--template-ref=<VALUE>`|Specifies the reference to use for the specified template for this module. This option is valid only if you have specified a template with the `--template-url` option.|A template branch name, tag name, or commit SHA for the specified template.|If you have specified a custom template, or if you installed PDK as a gem, this option defaults to "master". Otherwise, defaults to the defaults to the currently installed PDK version.|
+|`--template-ref=<VALUE>`|Specifies the reference to use for the specified template for this module. This option is valid only if you have specified a template with the `--template-url` option.|A template branch name, tag name, or commit SHA for the specified template.|If you have specified a custom template, or if you installed PDK as a gem, this option defaults to "main". Otherwise, defaults to the defaults to the currently installed PDK version.|
 |`--template-url=<GIT_URL>`|Specifies a template to use for this module.|A valid Git URL or a path to a local template.|A valid Git URL or a path to a local template.|
 
 ## `pdk new class` command
@@ -196,7 +196,7 @@ topic.
 |`--license=<IDENTIFIER>`|Specifies the license for this module is written under.|See the [SPDX](https://spdx.org) License List for a list of open source licenses, or use `proprietary`.|`Apache-2.0`|
 |`--skip-interview`|Skip interview questions and use default values to create module metadata.|None.|If not specified, PDK asks basic module metadata questions.|
 |`<TARGET_DIR>`|Specifies the directory that the new module will be created in.|A valid directory path.|Creates a directory with the given `module_name` inside the current directory.|
-|`--template-ref=<VALUE>`|Specifies the reference to use for the specified template for this module. This option is valid only if you have specified a template with the `--template-url` option.|A template branch name, tag name, or commit SHA for the specified template.|If you have specified a custom template, or if you installed PDK as a gem, this option defaults to "master". Otherwise, defaults to the defaults to the currently installed PDK version.|
+|`--template-ref=<VALUE>`|Specifies the reference to use for the specified template for this module. This option is valid only if you have specified a template with the `--template-url` option.|A template branch name, tag name, or commit SHA for the specified template.|If you have specified a custom template, or if you installed PDK as a gem, this option defaults to "main". Otherwise, defaults to the defaults to the currently installed PDK version.|
 |`--template-url=<GIT_URL>`|Specifies a template to use for this module.|A valid Git URL or path to a local template.|If not specified, defaults to the `[pdk-template](https://github.com/puppetlabs/pdk-template)`|
 
 ## `pdk new task` command
@@ -408,7 +408,7 @@ changes](pdk_updating_modules.md). For step-by-step instructions, see the
 |--------|-----------|------|-------|
 |`--force`|Update the module without prompts. Cannot be used together with `--noop`.|None.|If not specified, PDK prompts for user input.|
 |`--noop`|Shows what changes PDK would make, but does not actually make those changes. Cannot be used together with `--force`.|None.|If not specified, PDK prompts for user input and makes changes to the module on confirmation. |
-|`--template-ref=<VALUE>`|Specifies the reference to use for the specified template for this module.|A template branch name, tag name, or commit SHA for the specified template.|If you have specified a custom template, previously updated your module to a non-default `--template-ref` value, this defaults to the value previously specified in your module metadata. Otherwise, defaults to the currently installed PDK version (on PDK native package installations) or "master" (on PDK gem installations).|
+|`--template-ref=<VALUE>`|Specifies the reference to use for the specified template for this module.|A template branch name, tag name, or commit SHA for the specified template.|If you have specified a custom template, previously updated your module to a non-default `--template-ref` value, this defaults to the value previously specified in your module metadata. Otherwise, defaults to the currently installed PDK version (on PDK native package installations) or "main" (on PDK gem installations).|
 
 ## `pdk validate` command
 

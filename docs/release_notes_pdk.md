@@ -25,7 +25,7 @@ page for more information.
 You can now set PDK to warn, and optionally autocorrect, the use of legacy
 Facter facts in your manifests. To enable this, set `disable_legacy_facts` to
 `true` in the common section of their `.sync.yml` file. See the pdk-templates
-[README](https://github.com/puppetlabs/pdk-templates/blob/master/README.md) for
+[README](https://github.com/puppetlabs/pdk-templates/blob/main/README.md) for
 detailed information. [PDK-1591](https://tickets.puppetlabs.com/browse/PDK-1591)
 
 #### Set, update, delete configuration keys from command line
@@ -170,7 +170,7 @@ but not identifying, usage information.
 
 #### `pdk module build` now rejects unprintable characters in file names
 
-To ensure that the module is compatible with all Puppet masters regardless of
+To ensure that the module is compatible with all Puppet servers regardless of
 their locale, `pdk module build` now rejects files that contain non-ASCII
 characters in their name. Issue reported by [Laura
 Macchi](https://tickets.puppetlabs.com/secure/ViewProfile.jspa?name=lmacchi).
@@ -631,10 +631,10 @@ See the curl issues
 [CVE-2019-5436](https://curl.haxx.se/docs/CVE-2019-5436.html) for details about
 these issues. [PDK-1369](https://tickets.puppetlabs.com/browse/PDK-1369)
 
-#### Default `template-ref` for custom templates is now "master"
+#### Default `template-ref` for custom templates is now "main"
 
 With PDK installed from a package, if you've specified a custom template for
-PDK, the default `template-ref` is now "master". Prior to this release, the
+PDK, the default `template-ref` is now "main". Prior to this release, the
 `template-ref` defaulted to the default version of the packaged template.
 [PDK-1354](https://tickets.puppetlabs.com/browse/PDK-1354)
 

@@ -347,7 +347,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1266\) Clear modulepath value when validating manifest syntax [\#629](https://github.com/puppetlabs/pdk/pull/629) ([rodjek](https://github.com/rodjek))
 - \(PDK-1272\) Convert user/module module names to user-module [\#626](https://github.com/puppetlabs/pdk/pull/626) ([rodjek](https://github.com/rodjek))
 - \(PDK-1276\) Skip non-file YAML validator targets [\#625](https://github.com/puppetlabs/pdk/pull/625) ([rodjek](https://github.com/rodjek))
-- \(PDK-1273\) Whitelist Ruby symbols in YAML validator [\#624](https://github.com/puppetlabs/pdk/pull/624) ([rodjek](https://github.com/rodjek))
+- \(PDK-1273\) Allowlist Ruby symbols in YAML validator [\#624](https://github.com/puppetlabs/pdk/pull/624) ([rodjek](https://github.com/rodjek))
 
 **Merged pull requests:**
 

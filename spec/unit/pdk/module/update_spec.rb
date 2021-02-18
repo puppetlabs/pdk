@@ -316,10 +316,10 @@ describe PDK::Module::Update do
     end
 
     context 'when the template-ref describes a branch commit' do
-      let(:template_ref) { 'heads/master-4-g1234abc' }
+      let(:template_ref) { 'heads/main-4-g1234abc' }
 
       it 'returns the branch name and the commit SHA' do
-        is_expected.to eq('master@1234abc')
+        is_expected.to eq('main@1234abc')
       end
     end
   end
@@ -341,14 +341,14 @@ describe PDK::Module::Update do
 
     context 'when the default_template_ref specifies a branch head' do
       before(:each) do
-        allow(PDK::Util).to receive(:default_template_ref).and_return('master')
+        allow(PDK::Util).to receive(:default_template_ref).and_return('main')
         allow(PDK::Util::Git).to receive(:ls_remote)
           .with(template_url, 'main')
           .and_return('3cdd84e8f0aae30bf40d15556482fc8752899312')
       end
 
       include_context 'with mock metadata'
-      let(:template_ref) { 'master-0-g07678c8' }
+      let(:template_ref) { 'main-0-g07678c8' }
 
       it 'returns the branch name and the commit SHA' do
         is_expected.to eq('main@3cdd84e')

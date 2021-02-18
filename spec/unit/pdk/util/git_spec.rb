@@ -120,7 +120,7 @@ describe PDK::Util::Git do
     subject { described_class.ls_remote(repo, ref) }
 
     let(:repo) { 'https://github.com/puppetlabs/pdk-templates' }
-    let(:ref) { 'master' }
+    let(:ref) { 'main' }
 
     before(:each) do
       allow(described_class).to receive(:git).with('ls-remote', '--refs', repo, ref).and_return(git_result)
@@ -150,14 +150,14 @@ describe PDK::Util::Git do
         {
           exit_code: 0,
           stdout:    [
-            "master-sha\trefs/heads/master",
-            "masterful-sha\trefs/heads/masterful",
+            "main-sha\trefs/heads/main",
+            "mainful-sha\trefs/heads/mainful",
           ].join("\n"),
         }
       end
 
       it 'returns only the SHA for the exact ref match' do
-        is_expected.to eq('master-sha')
+        is_expected.to eq('main-sha')
       end
     end
   end
