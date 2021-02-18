@@ -4,11 +4,10 @@
 environment:
   LOG_SPEC_ORDER: true
   matrix:
-    # FIXME: enable ruby 2.5 on windows once puppet and puppet-module gems have unpinned ffi
-    # - RUBY_VERSION: 25-x64
-    #   USE_MSYS: true
-    #   SUITES: "spec"
-    #   BUNDLE_JOBS: 4
+    - RUBY_VERSION: 25-x64
+      USE_MSYS: true
+      SUITES: "spec"
+      BUNDLE_JOBS: 4
     - RUBY_VERSION: 25-x64
       USE_MSYS: true
       SUITES: "acceptance:smoke"
@@ -20,14 +19,6 @@ environment:
       UPDATE_BUNDLER: true
     - RUBY_VERSION: 24-x64
       USE_MSYS: true
-      SUITES: "spec"
-      BUNDLE_JOBS: 1
-    - RUBY_VERSION: 23-x64
-      USE_CYGWIN: true
-      SUITES: "spec"
-      BUNDLE_JOBS: 1
-    - RUBY_VERSION: 21-x64
-      USE_CYGWIN: true
       SUITES: "spec"
       BUNDLE_JOBS: 1
     - RUBY_VERSION: 24-x64
