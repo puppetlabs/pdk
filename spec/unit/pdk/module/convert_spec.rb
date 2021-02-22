@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'set'
 require 'pdk/module/convert'
 
 describe PDK::Module::Convert do

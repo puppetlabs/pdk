@@ -183,6 +183,8 @@ module PDK
       end
 
       def self.merge_json_results(json_data)
+        require 'set'
+
         merged_json_result = {}
 
         # Merge messages
