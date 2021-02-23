@@ -31,8 +31,6 @@ jobs:
     - rvm: 2.5
       env: CHECK=license_finder
       bundler_args: "--with development" # license_finder requires all gems installed. Also can't use an empty string so just include any bundler group
-    - rvm: 2.4
-      env: CHECK=spec
     - rvm: 2.5
       env: CHECK=spec
     - rvm: 2.7
