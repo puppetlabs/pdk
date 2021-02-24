@@ -4,7 +4,36 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
-## [v1.18.1](https://github.com/puppetlabs/pdk/tree/v1.18.1) (2020-07-16)
+## [v2.0.0](https://github.com/puppetlabs/pdk/tree/v2.0.0) (2021-02-24)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.18.1...v2.0.0)
+
+**Implemented enhancements:**
+
+- Provide more context when forge upload fails [\#905](https://github.com/puppetlabs/pdk/issues/905)
+- \(IAC-1438\) - Removal of Inappropriate Terminology [\#945](https://github.com/puppetlabs/pdk/pull/945) ([david22swan](https://github.com/david22swan))
+- Remove pre-condition checks for RSAPI objects [\#943](https://github.com/puppetlabs/pdk/pull/943) ([DavidS](https://github.com/DavidS))
+- Update lower puppet requirements bound when creating new modules [\#942](https://github.com/puppetlabs/pdk/pull/942) ([DavidS](https://github.com/DavidS))
+- Allow Facter4 to be co-installed with PDK [\#941](https://github.com/puppetlabs/pdk/pull/941) ([GabrielNagy](https://github.com/GabrielNagy))
+- Add ability to generate functions [\#932](https://github.com/puppetlabs/pdk/pull/932) ([logicminds](https://github.com/logicminds))
+- \(GH-905\) Ensure release failure includes error message [\#929](https://github.com/puppetlabs/pdk/pull/929) ([michaeltlombardi](https://github.com/michaeltlombardi))
+- Adds AIX support when creating a new module [\#927](https://github.com/puppetlabs/pdk/pull/927) ([logicminds](https://github.com/logicminds))
+- Add ability to generate new facts [\#921](https://github.com/puppetlabs/pdk/pull/921) ([logicminds](https://github.com/logicminds))
+- Add forge token env [\#913](https://github.com/puppetlabs/pdk/pull/913) ([scotje](https://github.com/scotje))
+- \(FORGE-339\) Omit .DS\_Store files from module builds [\#910](https://github.com/puppetlabs/pdk/pull/910) ([binford2k](https://github.com/binford2k))
+- \(\#876\) Refactor text report output when validators are skipped [\#904](https://github.com/puppetlabs/pdk/pull/904) ([scotje](https://github.com/scotje))
+
+**Fixed bugs:**
+
+- puppet 7 dependency problems [\#931](https://github.com/puppetlabs/pdk/issues/931)
+- PDK download fails with 404 for macOS [\#928](https://github.com/puppetlabs/pdk/issues/928)
+- PDK does not support ruby 2.7 [\#914](https://github.com/puppetlabs/pdk/issues/914)
+- The `pdk release prep` command cannot find the github\_changelog\_generator gem [\#902](https://github.com/puppetlabs/pdk/issues/902)
+- \(PDK-1655\) pdk test unit fails when compiling spec tests on puppet 6.17 due to removal of default\_env [\#890](https://github.com/puppetlabs/pdk/issues/890)
+- Unit tests fail with can't modify frozen String \(RuntimeError\) [\#886](https://github.com/puppetlabs/pdk/issues/886)
+- `pdk validate` is missing a newline at the end, resulting in the shell prompt being printed on the same line [\#876](https://github.com/puppetlabs/pdk/issues/876)
+
+## [v1.18.1](https://github.com/puppetlabs/pdk/tree/v1.18.1) (2020-07-17)
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.18.0...v1.18.1)
 
@@ -54,6 +83,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1615\) Add Ini File configuration support [\#856](https://github.com/puppetlabs/pdk/pull/856) ([glennsarti](https://github.com/glennsarti))
 - \(PDK-1612\) Add PDK::Context and context detection [\#853](https://github.com/puppetlabs/pdk/pull/853) ([glennsarti](https://github.com/glennsarti))
 - \(PDK-1607\)\(PDK-1608\) Implement system-level settings for PDK configuration [\#841](https://github.com/puppetlabs/pdk/pull/841) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1557\) Detect Control Repositories [\#826](https://github.com/puppetlabs/pdk/pull/826) ([glennsarti](https://github.com/glennsarti))
 
 **Fixed bugs:**
 
@@ -77,8 +107,8 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1545\) Include template-ref in module generation output [\#840](https://github.com/puppetlabs/pdk/pull/840) ([rodjek](https://github.com/rodjek))
 - \(PDK-1587\) Reject paths with non-ASCII characters when building [\#832](https://github.com/puppetlabs/pdk/pull/832) ([rodjek](https://github.com/rodjek))
 - \(PDK-1588\) Increase granularity of `pdk bundle` analytics [\#827](https://github.com/puppetlabs/pdk/pull/827) ([rodjek](https://github.com/rodjek))
-- \(PDK-1557\) Detect Control Repositories [\#826](https://github.com/puppetlabs/pdk/pull/826) ([glennsarti](https://github.com/glennsarti))
 - \(PDK-1556\) Use the module root when generating objects [\#824](https://github.com/puppetlabs/pdk/pull/824) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1487\) Add --default-template flag to pdk convert [\#814](https://github.com/puppetlabs/pdk/pull/814) ([rodjek](https://github.com/rodjek))
 
 **Fixed bugs:**
 
@@ -100,7 +130,6 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 **Implemented enhancements:**
 
 - \(PDK-1488\) Inform user if updating a pinned module [\#816](https://github.com/puppetlabs/pdk/pull/816) ([rodjek](https://github.com/rodjek))
-- \(PDK-1487\) Add --default-template flag to pdk convert [\#814](https://github.com/puppetlabs/pdk/pull/814) ([rodjek](https://github.com/rodjek))
 - \(GH-808\) Implement pdk release prep and publish subcommands [\#813](https://github.com/puppetlabs/pdk/pull/813) ([glennsarti](https://github.com/glennsarti))
 - \(GH-808\) Implement pdk release subcommand [\#809](https://github.com/puppetlabs/pdk/pull/809) ([glennsarti](https://github.com/glennsarti))
 - \(PDK-1364\) Allow non-git template directories to be used [\#803](https://github.com/puppetlabs/pdk/pull/803) ([glennsarti](https://github.com/glennsarti))
@@ -244,7 +273,6 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) Update beaker in package tests [\#695](https://github.com/puppetlabs/pdk/pull/695) ([rodjek](https://github.com/rodjek))
 - Revert "Merge pull request \#666 from DavidS/fm-8081-pdk-new-transport" [\#693](https://github.com/puppetlabs/pdk/pull/693) ([DavidS](https://github.com/DavidS))
 - \(maint\) Message and string fixes [\#676](https://github.com/puppetlabs/pdk/pull/676) ([DavidS](https://github.com/DavidS))
-- \(PDK-1333\) command\_spec rake task [\#644](https://github.com/puppetlabs/pdk/pull/644) ([rodjek](https://github.com/rodjek))
 
 ## [v1.11.1](https://github.com/puppetlabs/pdk/tree/v1.11.1) (2019-07-01)
 
@@ -309,7 +337,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1335\) Add development note when on Windows [\#649](https://github.com/puppetlabs/pdk/pull/649) ([glennsarti](https://github.com/glennsarti))
 - \(maint\) Allow developers to add additional gems [\#648](https://github.com/puppetlabs/pdk/pull/648) ([glennsarti](https://github.com/glennsarti))
 - \(PDK-1167\) Validator should honor case sensitive of the file system [\#646](https://github.com/puppetlabs/pdk/pull/646) ([glennsarti](https://github.com/glennsarti))
-- \(PDK-1193\) Saves packaged template-url in metadata as a keyword [\#639](https://github.com/puppetlabs/pdk/pull/639) ([bmjen](https://github.com/bmjen))
+- \(PDK-1333\) command\_spec rake task [\#644](https://github.com/puppetlabs/pdk/pull/644) ([rodjek](https://github.com/rodjek))
 
 ## [v1.10.0](https://github.com/puppetlabs/pdk/tree/v1.10.0) (2019-04-02)
 
@@ -320,6 +348,10 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1086\) Change `pdk build --force` to warn if missing module metadata and continue [\#643](https://github.com/puppetlabs/pdk/pull/643) ([rodjek](https://github.com/rodjek))
 - \(PDK-1308\) Ensure PDK-written non-templated files have trailing newline [\#640](https://github.com/puppetlabs/pdk/pull/640) ([scotje](https://github.com/scotje))
 - \(PDK-718\) Add --template-ref argument for upstream template repo tags [\#434](https://github.com/puppetlabs/pdk/pull/434) ([hunner](https://github.com/hunner))
+
+**Fixed bugs:**
+
+- \(PDK-1266\) Clear modulepath value when validating manifest syntax [\#629](https://github.com/puppetlabs/pdk/pull/629) ([rodjek](https://github.com/rodjek))
 
 **Closed issues:**
 
@@ -333,6 +365,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1324\) Release 1.10.0 [\#650](https://github.com/puppetlabs/pdk/pull/650) ([rodjek](https://github.com/rodjek))
 - \(maint\) Fix package specs for template-ref changes [\#647](https://github.com/puppetlabs/pdk/pull/647) ([rodjek](https://github.com/rodjek))
 - \(maint\) Enforce LF line endings in Rubocop [\#645](https://github.com/puppetlabs/pdk/pull/645) ([glennsarti](https://github.com/glennsarti))
+- \(PDK-1193\) Saves packaged template-url in metadata as a keyword [\#639](https://github.com/puppetlabs/pdk/pull/639) ([bmjen](https://github.com/bmjen))
 - \(FM-7579, PDK-1236\) bump the version of CRI used [\#638](https://github.com/puppetlabs/pdk/pull/638) ([tphoney](https://github.com/tphoney))
 - \(PDK-1294\) Update version post-release [\#637](https://github.com/puppetlabs/pdk/pull/637) ([bmjen](https://github.com/bmjen))
 - \(PDK-1298\) acceptance:local test suite optimisation [\#633](https://github.com/puppetlabs/pdk/pull/633) ([rodjek](https://github.com/rodjek))
@@ -344,8 +377,6 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 **Fixed bugs:**
 
 - \(IMAGES-1037\) Make sure our paths are used [\#630](https://github.com/puppetlabs/pdk/pull/630) ([mihaibuzgau](https://github.com/mihaibuzgau))
-- \(PDK-1266\) Clear modulepath value when validating manifest syntax [\#629](https://github.com/puppetlabs/pdk/pull/629) ([rodjek](https://github.com/rodjek))
-- \(PDK-1272\) Convert user/module module names to user-module [\#626](https://github.com/puppetlabs/pdk/pull/626) ([rodjek](https://github.com/rodjek))
 - \(PDK-1276\) Skip non-file YAML validator targets [\#625](https://github.com/puppetlabs/pdk/pull/625) ([rodjek](https://github.com/rodjek))
 - \(PDK-1273\) Allowlist Ruby symbols in YAML validator [\#624](https://github.com/puppetlabs/pdk/pull/624) ([rodjek](https://github.com/rodjek))
 
@@ -354,6 +385,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(PDK-1289\) Release 1.9.1 [\#632](https://github.com/puppetlabs/pdk/pull/632) ([bmjen](https://github.com/bmjen))
 - \(maint\) Pin parallel gem to 1.13.0 [\#631](https://github.com/puppetlabs/pdk/pull/631) ([rodjek](https://github.com/rodjek))
 - \(PDK-1260\) Bump to 1.10.0.pre for new dev work [\#621](https://github.com/puppetlabs/pdk/pull/621) ([bmjen](https://github.com/bmjen))
+- \(maint\) Fix package tests to remove hardcoding [\#613](https://github.com/puppetlabs/pdk/pull/613) ([bmjen](https://github.com/bmjen))
 
 ## [v1.9.0](https://github.com/puppetlabs/pdk/tree/v1.9.0) (2019-01-29)
 
@@ -365,6 +397,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 
 **Fixed bugs:**
 
+- \(PDK-1272\) Convert user/module module names to user-module [\#626](https://github.com/puppetlabs/pdk/pull/626) ([rodjek](https://github.com/rodjek))
 - \(PDK-914\) Adjust default\_template\_url validation to accept local dirs [\#606](https://github.com/puppetlabs/pdk/pull/606) ([rodjek](https://github.com/rodjek))
 - \(PDK-1204\) pdk bundle execs in the context of the pwd [\#603](https://github.com/puppetlabs/pdk/pull/603) ([rodjek](https://github.com/rodjek))
 
@@ -380,7 +413,6 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - \(maint\) Update hitimes pin to 1.3.0 for r2.1 compat [\#617](https://github.com/puppetlabs/pdk/pull/617) ([bmjen](https://github.com/bmjen))
 - Release 1.9.0 [\#616](https://github.com/puppetlabs/pdk/pull/616) ([bmjen](https://github.com/bmjen))
 - \(MAINT\) Configure Slack notifications for Travis [\#614](https://github.com/puppetlabs/pdk/pull/614) ([scotje](https://github.com/scotje))
-- \(maint\) Fix package tests to remove hardcoding [\#613](https://github.com/puppetlabs/pdk/pull/613) ([bmjen](https://github.com/bmjen))
 - \(MAINT\) Fix package acceptance tests to pass with any Ruby 2.4.x [\#611](https://github.com/puppetlabs/pdk/pull/611) ([scotje](https://github.com/scotje))
 - \(MAINT\) Bump default packaged ruby version to 2.4.5 [\#608](https://github.com/puppetlabs/pdk/pull/608) ([scotje](https://github.com/scotje))
 - \(PDK-1202\) Pass TemplateDir object through to TemplateFile [\#605](https://github.com/puppetlabs/pdk/pull/605) ([rodjek](https://github.com/rodjek))
@@ -999,6 +1031,7 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Validate fails on existing module [\#158](https://github.com/puppetlabs/pdk/issues/158)
 - \(\#158\) \(\#166\) Resolve issue loading bundler from gem installs [\#170](https://github.com/puppetlabs/pdk/pull/170) ([scotje](https://github.com/scotje))
 - \(SDK-319\) force usage of our ruby [\#168](https://github.com/puppetlabs/pdk/pull/168) ([DavidS](https://github.com/DavidS))
+- \(FIXUP\) Add missing newlines in new module interview prompts [\#161](https://github.com/puppetlabs/pdk/pull/161) ([scotje](https://github.com/scotje))
 
 **Closed issues:**
 
@@ -1031,7 +1064,6 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 **Fixed bugs:**
 
 - Can't create module if new module fails to get login [\#157](https://github.com/puppetlabs/pdk/issues/157)
-- \(FIXUP\) Add missing newlines in new module interview prompts [\#161](https://github.com/puppetlabs/pdk/pull/161) ([scotje](https://github.com/scotje))
 - Use default username when Etc.getlogin fails [\#160](https://github.com/puppetlabs/pdk/pull/160) ([austb](https://github.com/austb))
 
 **Merged pull requests:**
