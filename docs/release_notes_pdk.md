@@ -1,7 +1,6 @@
 # PDK release notes
 
 New features, enhancements, and resolved issues for the PDK 2.x release series.
-
 ## PDK 2.0
 
 ### Backwards incompatible changes
@@ -10,17 +9,17 @@ New features, enhancements, and resolved issues for the PDK 2.x release series.
 
 The PDK gem now requires at least Ruby 2.4.0. PDK OS-native packages no longer
 include Puppet 4.x or the Ruby 2.1.9 runtime environment. If your workflow
-requires you to work with Puppet 4.x code, you may continue to use the latest
-PDK 1.x release, however support for the 1.x series may end soon.
+requires you to work with Puppet 4.x code, you can continue to use the latest
+PDK 1.x release, however support for the 1.x series might end soon.
 
 #### New default mocking framework
 
 The default mocking framework for RSpec tests has been updated to `rspec-mocks`.
 Previously `puppetlabs_spec_helper` was loading both `rspec-mocks` and `mocha`.
-This leads to confusing inconsistencies in unit tests. We have been recommending
+This leads to confusing inconsistencies in unit tests. We've been recommending
 `rspec-mocks` as the preferred library for some time. If your test suite is not
-yet ready for this step, remove the default value through setting `mock_with: ~`
-(YAML's nil value) in you `.sync.yml` to get the PDK 1.x behavior.
+yet ready for this step, remove the default value by setting `mock_with: ~`
+(YAML's nil value) in your `.sync.yml` file to get the PDK 1.x behavior.
 (https://github.com/DavidS)
 
 ### New features and enhancements
@@ -50,20 +49,20 @@ You can now set your Forge API token via the `PDK_FORGE_TOKEN` environment varia
 The default branches for PDK and the PDK templates repositories have been renamed
 to `main`, and the PDK's template-related code has been updated to reflect this
 change. If you have a module that was manually pinned to the `master` branch of the
-templates repo you may need to use `pdk convert --default-template` to switch
+templates repo you might need to use `pdk convert --default-template` to switch
 back to the default branch.
 
-Similarly, the `--puppet-dev` version selection flag will now pull from the `main`
+Similarly, the `--puppet-dev` version selection flag now pulls from the `main`
 branch of the official Puppet source code repository.
 
 #### Better error messages for `pdk release publish` failures
 
-The `pdk release publish` command will now surface the underlying Forge error messages
+The `pdk release publish` command now surfaces the underlying Forge error messages
 if the module upload step fails. (https://github.com/michaeltlombardi)
 
 ### Resolved issues
 
-#### Improved facter compatibility
+#### Improved Facter compatibility
 
 The PDK gem can now be activated alongside Facter 4.x. (https://github.com/GabrielNagy)
 
@@ -80,7 +79,7 @@ find additional instances.
 
 ### Template Changes and Fixes
 
- * To set up code for the default Ruby 2.7 behaviour, the Rubocop rule
+ * To set up code for the default Ruby 2.7 behavior, the Rubocop rule
  `Style/BracesAroundHashParameters` is now disabled by default.
  (https://github.com/alexjfisher)
 
@@ -92,17 +91,17 @@ find additional instances.
 
  * Fixed setting `strict_variables` to false. (https://github.com/cdenneen)
 
- * Updated Gitlab CI config to new schema. (https://github.com/silug)
+ * Updated GitLab CI config to new schema. (https://github.com/silug)
 
  * Updated `pdk build` to automatically exclude `.puppet-lint.rc` and `.sync.yml`.
  (https://github.com/silug)
 
  * Added an empty, commented `.sync.yml` to new modules to help folks jumpstart the
- customisation process. (https://github.com/silug)
+ customization process. (https://github.com/silug)
 
- * Made Gitlab CI global defaults overridable in jobs. (https://github.com/cdenneen)
+ * Added ability to override GitLab CI global defaults in jobs. (https://github.com/cdenneen)
 
- * Add Gitpod.io support to modules. (https://github.com/logicminds)
+ * Added Gitpod.io support to modules. (https://github.com/logicminds)
 
  * Implemented Puppet's public Litmus runners in Github Actions workflows. This provides
  immediate feedback on testing through running the full test suite against ephemeral VMs
