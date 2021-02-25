@@ -73,11 +73,6 @@ Several instances of inappropriate, harmful, or insensitive terminology have bee
 from documentation, code examples, etc. Please open an issue or pull request if you
 find additional instances.
 
-* https://github.com/puppetlabs/pdk/pull/945
-* https://github.com/puppetlabs/pdk/pull/943
-* https://github.com/puppetlabs/pdk/pull/941
-* Known issue: parallel spec testing may not work on windows https://github.com/puppetlabs/pdk/commit/05278fa31572f533e460acbd454a2f094ea3e78d
-
 ### Template Changes and Fixes
 
  * To set up code for the default Ruby 2.7 behaviour, the Rubocop rule
