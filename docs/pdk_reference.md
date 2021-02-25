@@ -168,6 +168,45 @@ type](pdk_creating_modules.md#create-a-defined-type) topic.
 |`<defined_type_name>`|Required. The name of the defined type to generate.|A defined type name beginning with a lowercase letter and including only lowercase letters, digits, and underscores.|No default.|
 |`--template-url=<GIT_URL>`|Specifies the template to use when generating this defined type.|A valid Git URL or path to a local template.|Uses the same template that was used to generate the module. If that template is not available, defaults to `[pdk-template](https://github.com/puppetlabs/pdk-template)` .|
 
+## `pdk new fact` command
+
+Generates a new custom fact with a given name using given options
+
+Usage:
+
+Within the module directory:
+
+```bash
+pdk new fact <fact_name>
+
+```
+
+For example: `pdk new fact my_fact`
+
+|Argument|Description|Value|Default|
+|--------|-----------|-----|-------|
+|`<fact_name>`|Required. The name of the fact to generate.|A fact name beginning with a lowercase letter and including only lowercase letters, digits, and underscores.|No default.|
+
+## `pdk new function` command
+
+Generates a new function with a given name using given options
+
+Usage:
+
+Within the module directory:
+
+```bash
+pdk new function [--type=<value>] <function_name>
+
+```
+
+For example: `pdk new function my_func`
+
+|Argument|Description|Value|Default|
+|--------|-----------|-----|-------|
+|`<function_name>`|Required. The name of the function to generate.|A function name beginning with a lowercase letter and including only lowercase letters, digits, and underscores.|No default.|
+|`--type=<value>`|Specifies the type of function to generate.|`native` or `v4`|`native`|
+
 ## `pdk new module` command
 
 Creates a complete module skeleton and testing templates.
