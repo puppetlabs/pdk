@@ -208,7 +208,7 @@ download and installation information.
 If you've already installed PDK with the main Homebrew cask, see the topic about
 migrating your PDK installation to the Puppet Homebrew cask.
 
-1.  Install PDK by running `brew cask install puppetlabs/puppet/pdk`
+1.  Install PDK by running `brew install --cask puppetlabs/puppet/pdk`
 
 2.  Open a terminal to re-source your shell profile and make PDK available to
     your PATH.
@@ -216,7 +216,7 @@ migrating your PDK installation to the Puppet Homebrew cask.
 
 #### What to do next:
 
-To update PDK to the most recent release, run `brew cask upgrade pdk`
+To update PDK to the most recent release, run `brew upgrade --cask pdk`
 
 ### Migrate PDK installation to the Puppet Homebrew cask
 
@@ -234,7 +234,7 @@ about installing PDK with Homebrew.
 
 #### What to do next:
 
-To update PDK to the most recent release, run `brew cask upgrade pdk`
+To update PDK to the most recent release, run `brew upgrade --cask pdk`
 
 ### Download and install the package
 
