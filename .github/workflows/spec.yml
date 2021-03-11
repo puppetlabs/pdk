@@ -1,6 +1,6 @@
 name: "Spec Tests"
 
-on: [pull_request, push]
+on: [pull_request, workflow_dispatch]
 
 jobs:
   Spec_Syntax_Coverage:
