@@ -1,0 +1,37 @@
+name: "Spec Tests"
+
+on: [pull_request, push]
+
+jobs:
+  Spec_Syntax_Coverage:
+    name: "Spec, Syntax & Coverage Tests"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    env:
+      BUNDLER_ARGS: "--without development"
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+
+    - name: Activate Ruby 2.7
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "2.7"
+        bundler-cache: true
+
+    - name: Rubocop
+      run: bundle exec rake rubocop
+
+    - name: 'Spec:Coverage'
+      run: bundle exec rake spec:coverage
+
+    - name: 'License Finder'
+      run: bundle exec rake license_finder
+
+    - name: 'Test PDK as Library'
+      run: bundle exec rake test_pdk_as_library
+
+    - name: 'Spec'
+      run: bundle exec rake spec
