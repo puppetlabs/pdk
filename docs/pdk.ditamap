@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE map PUBLIC "-//OASIS//DTD DITA Map//EN" "map.dtd">
 <map id="pdkmap" title="PDK">
+  <topicmeta>
+    <prodinfo>
+        <prodname>pdk</prodname>
+        <vrmlist>
+            <vrm version="2.x"/>
+        </vrmlist>
+    </prodinfo>
+</topicmeta>
   <topicref href="pdk.md" format="markdown"/>
   <topicref href="pdk_overview.md" format="markdown"/>
   <topicref href="pdk_release_notes.md" format="markdown">
