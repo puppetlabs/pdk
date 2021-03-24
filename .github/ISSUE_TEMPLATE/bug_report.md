@@ -1,7 +1,9 @@
 ---
 name: Bug report
 about: Create a report to help us improve the PDK
+title: ''
 labels: bug, needs-triage
+assignees: ''
 
 ---
 
