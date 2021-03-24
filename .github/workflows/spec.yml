@@ -1,0 +1,63 @@
+name: "Static, Spec & License Tests"
+
+on: [pull_request]
+
+jobs:
+  StaticAndSpecTests:
+    name: "Static & Spec Tests (Ruby ${{ matrix.ruby_version }})"
+    env:
+      BUNDLE_JOBS: 4
+      BUNDLE_WITHOUT: "development"
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby_version: ['2.5', '2.7']
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+
+    - name: "Activate Ruby ${{ matrix.ruby_version }}"
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby_version }}
+        bundler-cache: true
+
+    - name: Rubocop
+      run: bundle exec rake rubocop
+
+    - name: 'Spec:Coverage'
+      run: bundle exec rake spec:coverage
+
+    - name: 'Test PDK as Library'
+      run: bundle exec rake test_pdk_as_library
+
+    - name: 'Upload CodeCov Report'
+      uses: codecov/codecov-action@v1
+      with:
+        directory: coverage
+        fail_ci_if_error: true
+
+  LicenseFinder:
+    name: "License Finder (Ruby ${{ matrix.ruby_version }})"
+    env:
+      BUNDLE_JOBS: 4
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby_version: ['2.5', '2.7']
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+
+    - name: "Activate Ruby ${{ matrix.ruby_version }}"
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby_version }}
+        bundler-cache: true
+
+    - name: 'License Finder'
+      run: bundle exec rake license_finder 

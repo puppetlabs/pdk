@@ -14,7 +14,7 @@ group :development do
 end
 
 group :test do
-  gem 'coveralls'
+  gem 'codecov'
   gem 'json', '~> 2.2.0'
   gem 'license_finder', '~> 6.1.2'
   gem 'parallel', '= 1.13.0'
