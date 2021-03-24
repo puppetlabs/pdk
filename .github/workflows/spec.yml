@@ -1,0 +1,45 @@
+name: "Spec, Syntax & Coverage Tests"
+
+on: [pull_request, workflow_dispatch]
+
+jobs:
+  setup_matrix:
+    name: 'Setup Test Matrix'
+    runs-on: ubuntu-latest
+    outputs:
+      matrix:
+        ruby_version: ['2.5', '2.7']
+
+  Spec_Syntax_Coverage:
+    name: "Spec, Syntax & Coverage Tests (Ruby ${{ matrix.ruby_version }})"
+    needs:
+      - setup_matrix
+    strategy:
+      fail-fast: false
+      matrix: needs.setup_matrix.outputs.matrix
+    
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+
+    - name: "Activate Ruby ${{ matrix.ruby_version }}"
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby_version }}
+        bundler-cache: true
+        without: "development"
+
+    - name: Rubocop
+      run: bundle exec rake rubocop
+
+    - name: 'Spec:Coverage'
+      run: bundle exec rake spec:coverage
+
+    - name: 'License Finder'
+      run: bundle exec rake license_finder
+
+    - name: 'Test PDK as Library'
+      run: bundle exec rake test_pdk_as_library
+
+    - name: 'Spec'
+      run: bundle exec rake spec
