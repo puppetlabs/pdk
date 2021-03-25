@@ -1,6 +1,16 @@
 # Contributing
 
-We welcome error reports and patches to the PDK repository. Post questions to [puppet-users@groups.google.com](https://groups.google.com/forum/#!forum/puppet-users). Post bug reports and pull requests on GitHub at https://github.com/puppetlabs/pdk/issues.
+## Reporting Bugs
+
+We welcome error reports and patches to the PDK repository.
+If you have discovered an issue, please raise it here: https://github.com/puppetlabs/pdk/issues
+PRs to resolve issues discovered are greatly appreciated - please start a Discussion [here](https://github.com/puppetlabs/pdk/discussions) or post a question to [puppet-users@groups.google.com](https://groups.google.com/forum/#!forum/puppet-users).
+
+## Raising Feature Requests
+
+Feature requests are also welcome.
+To raise a request, please start a ['Feature Request' Discussion](https://github.com/puppetlabs/pdk/discussions/categories/feature-request).
+After there is consensus on how to proceed, a Discussion will be converted in to a Feature Issue and prioritized, accordingly.
 
 # Running from source
 
