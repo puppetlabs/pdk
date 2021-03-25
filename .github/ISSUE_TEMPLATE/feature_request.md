@@ -1,8 +1,11 @@
 ---
 name: Feature request
-about: Feature request issues should be opened on the https://github.com/puppetlabs/pdk-planning
-  repository instead of on this repo
+about: 'Feature requests should be raised as a ''Feature Request'' Discussion here:
+  https://github.com/puppetlabs/pdk/discussions/categories/feature-request '
+title: ''
+labels: ''
+assignees: ''
 
 ---
 
-**Feature request issues should be opened on the [pdk-planning](https://github.com/puppetlabs/pdk-planning) repository instead of on this repo.**
+**Feature requests should be opened as a ['Feature Request' Discussion](https://github.com/puppetlabs/pdk/discussions/categories/feature-request) in the [Discussions](https://github.com/puppetlabs/pdk/discussions) area.**
