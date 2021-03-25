@@ -7,7 +7,7 @@ jobs:
     name: "Static & Spec Tests (Ruby ${{ matrix.ruby_version }})"
     env:
       BUNDLE_JOBS: 4
-      BUNDLE_WITHOUT: "development"
+      BUNDLE_WITH: "test"
     strategy:
       fail-fast: false
       matrix:
@@ -43,6 +43,7 @@ jobs:
     name: "License Finder (Ruby ${{ matrix.ruby_version }})"
     env:
       BUNDLE_JOBS: 4
+      BUNDLE_WITHOUT: 'acceptance_ci'
     strategy:
       fail-fast: false
       matrix:

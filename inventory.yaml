@@ -1,0 +1,9 @@
+---
+version: 2
+groups:
+- name: docker_nodes
+  targets: []
+- name: ssh_nodes
+  targets: []
+- name: winrm_nodes
+  targets: []

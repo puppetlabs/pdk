@@ -1,0 +1,60 @@
+name: "Acceptance Tests"
+
+on: [pull_request]
+
+env:
+  BOLT_GEM: true
+  CI: true
+  BUNDLE_JOBS: 4
+  BUNDLE_WITH: "acceptance_ci"
+
+jobs:
+  Acceptance:
+    name: 'Acceptance Tests (Ruby ${{ matrix.ruby_version }})'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - provider: docker
+            ruby_version: 2.5
+            image: ruby:2.5
+
+    steps:
+    - name: Checkout Source
+      uses: actions/checkout@v2
+
+    - name: Activate Ruby 2.7
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: "2.7"
+        bundler-cache: true
+    
+    - name: Provision Test Environment
+      run: |
+        echo "Provisioning using ${{ matrix.provider }}: ${{ matrix.image }}"
+        bundle exec rake 'litmus:provision[${{ matrix.provider }},${{ matrix.image }}]'
+
+    - name: Checkout Source (Test Target)
+      run: |
+        echo "Cloning $GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
+        bundle exec bolt command run "git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY" --targets ssh_nodes --inventory inventory.yaml
+        echo "Fetching ${{ github.event.number }}"
+        bundle exec bolt command run "cd pdk && git fetch origin pull/${{ github.event.number }}/head:pdk_test_repo" --targets ssh_nodes --inventory inventory.yaml
+        echo "Checking out to ${{ github.event.number }}"
+        bundle exec bolt command run "cd pdk && git checkout pdk_test_repo" --targets ssh_nodes --inventory inventory.yaml
+        echo "Running bundle install in container"      
+    
+    - name: Bundle Install (Test Target)
+      run: |
+        echo "Running bundle install in container"
+        bundle exec bolt command run "cd pdk && bundle install --with acceptance" --targets ssh_nodes --inventory inventory.yaml
+
+    - name: Exec Acceptance Tests
+      run: |
+        bundle exec bolt command run 'cd pdk && CI=true bundle exec rake acceptance:local_parallel' --targets ssh_nodes --inventory inventory.yaml
+    
+    - name: Tear Down
+      if: ${{ always() }}
+      run: |
+        bundle exec rake 'litmus:tear_down'
