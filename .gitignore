@@ -3,8 +3,10 @@
 *.swp
 /.config
 /coverage/
+/inventory.yaml
 /InstalledFiles
 /pkg/
+/spec/fixtures/
 /spec/reports/
 /spec/examples.txt
 /test/tmp/
