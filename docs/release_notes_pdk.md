@@ -1,6 +1,31 @@
 # PDK release notes
 
 New features, enhancements, and resolved issues for the PDK 2.x release series.
+
+## PDK 2.1
+
+### New features and enhancements
+
+#### Add `pdk env` subcommand
+
+Adds an experimental `pdk env` subcommand. Use `pdk env` to print the environment variables that PDK is currently using (https://github.com/nkanderson).
+
+### Resolved issues
+
+#### `--verbose` option broken for `pdk new defined_type`
+
+Fixes an issue where the `--verbose` option would not work with the `pdk new defined_type` command. See [ddfreyne/cri#103](https://github.com/ddfreyne/cri/issues/103).
+
+#### PDK output scrollback in VS Code limited
+
+Resolves a scrollback issue when using PDK in the integrated terminal of VS Code by disabling ANSICON on Windows.
+
+### Template changes and fixes
+
+* Relocated the`inventory.yaml` file used by Litmus. This prevents accidental execution of acceptance tests in production systems. (https://github.com/pmcmaw)
+* Removed Win32 gems from the Gemfile. These have been included in Puppet since version 5. (https://github.com/da-ar)
+* Added Puppet 7 tests to .gitlab-ci.yml (https://github.com/silug)
+
 ## PDK 2.0
 
 ### Backwards incompatible changes
@@ -121,4 +146,3 @@ find additional instances.
 
  * Removed Puppet 5.x from default Travis and Appveyor configs.
  (https://github.com/carabasdaniel, https://github.com/cdenneen)
-
