@@ -3,7 +3,30 @@
 All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
+## [v2.1.0](https://github.com/puppetlabs/pdk/tree/v2.1.0) (2021-03-31)
 
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.0.0...v2.1.0)
+
+**Fixed bugs:**
+
+- Documentation issue for brew installs on Mac [\#963](https://github.com/puppetlabs/pdk/issues/963)
+- PDK output scrollback in VS Code is extremely limited [\#829](https://github.com/puppetlabs/pdk/issues/829)
+- --verbose option broken for `pdk new defined_type` [\#679](https://github.com/puppetlabs/pdk/issues/679)
+- getting error with "$ pdk validate" after upgraded to 1.5.0 \(private/ruby/2.4.4/lib/ruby/gems/2.4.0/gems/pdk-1.5.0/lib/pdk/validate/puppet/puppet\_syntax.rb:88:in `parse_offense': undefined method` names' for nil:NilClass \(NoMethodError\)\) [\#518](https://github.com/puppetlabs/pdk/issues/518)
+
+**Closed issues:**
+
+- \[Feature Request\] Validate CD4PE Yaml files [\#970](https://github.com/puppetlabs/pdk/issues/970)
+
+**Merged pull requests:**
+
+- \(maint\) Mark stale issues [\#1028](https://github.com/puppetlabs/pdk/pull/1028) ([jpogran](https://github.com/jpogran))
+- \(PF-2332\) Add `pdk env` subcommand [\#957](https://github.com/puppetlabs/pdk/pull/957) ([nkanderson](https://github.com/nkanderson))
+- Docs: Install on macOS with brew [\#954](https://github.com/puppetlabs/pdk/pull/954) ([rwaffen](https://github.com/rwaffen))
+- \(MAINT\) Bump version to 2.1.0.pre [\#952](https://github.com/puppetlabs/pdk/pull/952) ([scotje](https://github.com/scotje))
+- \(MAINT\) Fixup some superfluous entries in the 2.0.0 release notes [\#951](https://github.com/puppetlabs/pdk/pull/951) ([scotje](https://github.com/scotje))
+- \(Docs\) Update version number in welcome page [\#950](https://github.com/puppetlabs/pdk/pull/950) ([hestonhoffman](https://github.com/hestonhoffman))
+- \(Docs\) Release notes edits [\#949](https://github.com/puppetlabs/pdk/pull/949) ([hestonhoffman](https://github.com/hestonhoffman))
 ## [v2.0.0](https://github.com/puppetlabs/pdk/tree/v2.0.0) (2021-02-24)
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v1.18.1...v2.0.0)
@@ -58,7 +81,6 @@ See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) f
 - Warning from libhoney when running unit test with PDK 1.17 [\#875](https://github.com/puppetlabs/pdk/issues/875)
 - 'pdk convert' of a module that's inside a control repo adds boilerplate to the control repo [\#874](https://github.com/puppetlabs/pdk/issues/874)
 - GemNotFound error for public\_suffix-3.1.1 when using --add-tests [\#869](https://github.com/puppetlabs/pdk/issues/869)
-- Scrollback of failed rspec tests in VS code is extremely limited [\#829](https://github.com/puppetlabs/pdk/issues/829)
 - Running individual rspec tests on Windows requires escaping the path [\#828](https://github.com/puppetlabs/pdk/issues/828)
 - Generated descriptions for certain test comparisons break JUnit output [\#821](https://github.com/puppetlabs/pdk/issues/821)
 - Fix PDK release command module validation [\#880](https://github.com/puppetlabs/pdk/pull/880) ([carabasdaniel](https://github.com/carabasdaniel))
