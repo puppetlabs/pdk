@@ -292,11 +292,14 @@ describe PDK::Util do
     context 'when running on a POSIX host' do
       before(:each) do
         allow(Gem).to receive(:win_platform?).and_return(false)
-        allow(Dir).to receive(:home).and_return('/home/test')
+        allow(Dir).to receive(:home).with(any_args).and_return('/home/test')
+        allow(PDK::Util::Env).to receive(:fetch)
+          .with('XDG_CONFIG_HOME', '/home/test/.config')
+          .and_return('/xdg_home/test/.config')
       end
 
       it 'returns a path inside the users .config directory' do
-        is_expected.to eq(File.join('/home/test', '.config', 'pdk'))
+        is_expected.to eq('/xdg_home/test/.config/pdk')
       end
     end
   end
