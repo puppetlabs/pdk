@@ -7,13 +7,13 @@ jobs:
     name: "Static & Spec Tests (Ruby ${{ matrix.ruby_version }})"
     env:
       BUNDLE_JOBS: 4
-      BUNDLE_WITHOUT: "development"
+      BUNDLE_WITH: "test"
     strategy:
       fail-fast: false
       matrix:
         ruby_version: ['2.5', '2.7']
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout Source
       uses: actions/checkout@v2
@@ -60,4 +60,4 @@ jobs:
         bundler-cache: true
 
     - name: 'License Finder'
-      run: bundle exec rake license_finder 
+      run: bundle exec rake license_finder

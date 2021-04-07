@@ -33,6 +33,11 @@ group :acceptance do
   gem 'serverspec'
 end
 
+group :acceptance_ci do
+  gem 'puppet_litmus'
+  gem 'puppetlabs_spec_helper'
+end
+
 # Evaluate Gemfile.local and ~/.gemfile if they exist
 extra_gemfiles = [
   "#{__FILE__}.local",

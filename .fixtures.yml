@@ -1,0 +1,3 @@
+fixtures:
+  repositories:
+    provision: 'https://github.com/puppetlabs/provision.git'

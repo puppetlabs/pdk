@@ -75,3 +75,22 @@
     :why: https://github.com/puppetlabs/facter/blob/d85f088d74f60859a23e6dbae3f83d918dff504a/LICENSE
     :versions: []
     :when: 2019-04-05 00:51:23.372598896 Z
+- - :permit
+  - BSD
+  - :who: DavidS
+    :why: standard license
+    :versions: []
+    :when: 2021-03-31 08:27:14.976580116 Z
+- - :permit
+  - 2-clause BSDL
+  - :who: DavidS
+    :why: standard license
+    :versions: []
+    :when: 2021-03-31 08:27:24.951961169 Z
+- - :approve
+  - log4r
+  - :who: DavidS
+    :why: 'dug up original source on github, licensed as LGPLv3: https://github.com/colbygk/log4r/tree/40e2c2edd657a21b34f09dec7de238f348b6f428'
+    :versions:
+    - 1.1.10
+    :when: 2021-03-31 08:49:39.015791690 Z
