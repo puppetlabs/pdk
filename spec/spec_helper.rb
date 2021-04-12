@@ -18,6 +18,7 @@ if ENV['COVERAGE'] == 'yes'
     add_filter '/vendor'
     add_filter '/.vendor'
     add_filter '/docs'
+    add_filter '/lib/pdk/version.rb'
 
     # do not track gitignored files
     # this adds about 4 seconds to the coverage check
