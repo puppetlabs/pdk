@@ -1,0 +1,12 @@
+name: "Env Output"
+
+on: [workflow_dispatch]
+
+jobs:
+  EnvOutput:
+    name: 'EnvOutput'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 'echo $ENV'
+      run: env
