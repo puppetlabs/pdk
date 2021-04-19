@@ -38,21 +38,21 @@ jobs:
     - name: Checkout Source (Test Target)
       run: |
         echo "Cloning $GITHUB_SERVER_URL/$GITHUB_REPOSITORY"
-        bundle exec bolt command run "git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY" --targets ssh_nodes --inventory inventory.yaml
+        bundle exec bolt command run "git clone $GITHUB_SERVER_URL/$GITHUB_REPOSITORY" --targets ssh_nodes --inventory spec/fixtures/litmus_inventory.yaml
         echo "Fetching ${{ github.event.number }}"
-        bundle exec bolt command run "cd pdk && git fetch origin pull/${{ github.event.number }}/head:pdk_test_repo" --targets ssh_nodes --inventory inventory.yaml
+        bundle exec bolt command run "cd pdk && git fetch origin pull/${{ github.event.number }}/head:pdk_test_repo" --targets ssh_nodes --inventory spec/fixtures/litmus_inventory.yaml
         echo "Checking out to ${{ github.event.number }}"
-        bundle exec bolt command run "cd pdk && git checkout pdk_test_repo" --targets ssh_nodes --inventory inventory.yaml
+        bundle exec bolt command run "cd pdk && git checkout pdk_test_repo" --targets ssh_nodes --inventory spec/fixtures/litmus_inventory.yaml
         echo "Running bundle install in container"      
     
     - name: Bundle Install (Test Target)
       run: |
         echo "Running bundle install in container"
-        bundle exec bolt command run "cd pdk && bundle install --with acceptance" --targets ssh_nodes --inventory inventory.yaml
+        bundle exec bolt command run "cd pdk && bundle install --with acceptance" --targets ssh_nodes --inventory spec/fixtures/litmus_inventory.yaml
 
     - name: Exec Acceptance Tests
       run: |
-        bundle exec bolt command run 'cd pdk && CI=true bundle exec rake acceptance:local_parallel' --targets ssh_nodes --inventory inventory.yaml
+        bundle exec bolt command run 'cd pdk && CI=true bundle exec rake acceptance:local_parallel' --targets ssh_nodes --inventory spec/fixtures/litmus_inventory.yaml
     
     - name: Tear Down
       if: ${{ always() }}
