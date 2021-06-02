@@ -11,6 +11,9 @@ jobs:
     - uses: actions/stale@v3
       with:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
-        days-before-stale: 180
         stale-issue-message: 'This issue has been marked stale because it is open with no recent activity. The PDK Team is actively prioritizing existing bugs and new features, if this issue is still important to you please comment and we will add this to our backlog to complete.'
+        close-issue-message: 'This issue was closed because it is open with no recent activity. The PDK Team is actively prioritizing existing bugs and new features, if this issue is still important to you please comment and we will add this to our backlog to complete.'
         stale-issue-label: 'no-issue-activity'
+        days-before-stale: 180
+        days-before-close: 360
+        days-before-pr-close: -1
