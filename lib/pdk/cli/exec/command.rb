@@ -27,7 +27,7 @@ module PDK
           @argv = argv
 
           @process = ChildProcess.build(*@argv)
-          @process.leader = true
+          # @process.leader = true
 
           @stdout = Tempfile.new('stdout', mode: TEMPFILE_MODE).tap { |io| io.sync = true }
           @stderr = Tempfile.new('stderr', mode: TEMPFILE_MODE).tap { |io| io.sync = true }
