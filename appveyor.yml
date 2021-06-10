@@ -8,10 +8,12 @@ environment:
       USE_MSYS: true
       SUITES: "spec"
       BUNDLE_JOBS: 4
+      UPDATE_BUNDLER: true
     - RUBY_VERSION: 25-x64
       USE_MSYS: true
       SUITES: "acceptance:smoke"
       BUNDLE_JOBS: 4
+      UPDATE_BUNDLER: true
     - RUBY_VERSION: 25-x64
       USE_MSYS: true
       SUITES: "acceptance:local_parallel"
