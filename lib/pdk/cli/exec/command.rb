@@ -27,7 +27,17 @@ module PDK
           @argv = argv
 
           @process = ChildProcess.build(*@argv)
-          @process.leader = true
+          # https://github.com/puppetlabs/pdk/issues/1083:
+          # When @process.leader is set, childprocess will set the CREATE_BREAKAWAY_FROM_JOB
+          # and JOB_OBJECT_LIMIT_BREAKAWAY_OK flags in the Win32 API calls. This will cause
+          # issues on systems > Windows 7 / Server 2008, if the JOB_OBJECT_LIMIT_BREAKAWAY_OK
+          # flag is set and the Task Scheduler is trying to kick off a job, it can sometimes
+          # result in ACCESS_DENIED being returned by the Win32 API, depending on the permission
+          # levels / user account this user.
+          # The resolution for pdk/issues/1083 is to ensure @process.leader is not set.
+          # This will potentially cause issues on older Windows systems, in which case we may
+          # need to revisit and conditionally set this param depending on what OS we're on
+          # @process.leader = true
 
           @stdout = Tempfile.new('stdout', mode: TEMPFILE_MODE).tap { |io| io.sync = true }
           @stderr = Tempfile.new('stderr', mode: TEMPFILE_MODE).tap { |io| io.sync = true }
