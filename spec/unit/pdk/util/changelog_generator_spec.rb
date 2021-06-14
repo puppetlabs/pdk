@@ -196,6 +196,116 @@ describe PDK::Util::ChangelogGenerator do
     end
   end
 
+  describe '#latest_version' do
+    before(:each) do
+      allow(described_class).to receive(:changelog_content).and_return(changelog_content)
+    end
+
+    context 'given a badly formatted changelog' do
+      let(:changelog_content) do
+        <<-EOT
+          # Change log
+
+          All notable changes to this project will be documented in this file.
+
+          ## [v3.0.0](url_3.0)
+
+          [Full Changelog](someting)
+
+          ### Changed
+
+          - something major
+
+          ### Added
+
+          - something minor
+
+          ### Fixed
+
+          - something tiny
+
+          ## [v4.0.0](https://github.com/puppetlabs/puppetlabs-inifile/tree/v4.
+
+          ## [v2.1.0](url_2.1)
+
+          [Full Changelog](someting)
+
+          ### Changed
+
+          - something major
+
+          ### Added
+
+          - something minor
+
+          ### Fixed
+
+          - something tiny
+          EOT
+      end
+
+      it 'return the top most version' do
+        expect(described_class.latest_version).to eq('3.0.0')
+      end
+    end
+
+    context 'given an empty changelog' do
+      let(:changelog_content) { '' }
+
+      it 'returns nil' do
+        expect(described_class.latest_version).to eq(nil)
+      end
+    end
+
+    context 'given a valid changelog' do
+      let(:changelog_content) do
+        <<-EOT
+          # Change log
+
+          All notable changes to this project will be documented in this file.
+
+          ## [v4.0.0](url_4.0)
+
+          [Full Changelog](someting)
+
+          ### Changed
+
+          - something major
+
+          ### Added
+
+          - something minor
+
+          ### Fixed
+
+          - something tiny
+
+          ## [v3.1.0](https://github.com/puppetlabs/puppetlabs-inifile/tree/v3.
+
+          ## [v3.1.0](url_3.1)
+
+          [Full Changelog](someting)
+
+          ### Changed
+
+          - something major
+
+          ### Added
+
+          - something minor
+
+          ### Fixed
+
+          - something tiny
+          EOT
+      end
+
+      it 'returns the latest version' do
+        expect(described_class.latest_version).to eq('4.0.0')
+      end
+    end
+  end
+
   describe '.github_changelog_generator_available!' do
     subject(:method) { described_class.github_changelog_generator_available! }
 

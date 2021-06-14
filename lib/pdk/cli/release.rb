@@ -22,7 +22,7 @@ module PDK::CLI
     option nil, :'forge-upload-url', _('Set forge upload url path.'),
            argument: :required, default: 'https://forgeapi.puppetlabs.com/v3/releases'
 
-    option nil, :'forge-token', _('Set Forge API token.'), argument: :required, default: nil
+    option nil, :'forge-token', _('Set Forge API token.'), default: nil
 
     option nil, :version, _('Update the module to the specified version prior to release. When not specified, the new version will be computed from the Changelog where possible.'),
            argument: :required

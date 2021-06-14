@@ -65,6 +65,12 @@ module PDK
 
           # Update the changelog with the correct version
           PDK::Util::ChangelogGenerator.generate_changelog unless skip_changelog?
+
+          # Check if the versions match
+          latest_version = PDK::Util::ChangelogGenerator.latest_version
+          unless latest_version
+            raise PDK::CLI::ExitWithError, _('%{new_version} does not match %{latest_version}') % { new_version: new_version, latest_version: latest_version } if new_version != latest_version
+          end
         end
 
         run_documentation(options) unless skip_documentation?
