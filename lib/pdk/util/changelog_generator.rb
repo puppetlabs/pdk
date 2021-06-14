@@ -110,6 +110,19 @@ module PDK
         version.join('.')
       end
 
+      # Returns the top most version from the CHANGELOG file
+      def self.latest_version
+        latest = nil
+        changelog_content.each_line do |line|
+          line.strip!
+          if line.start_with?('## [')
+            latest = line[line.index('[') + 1..line.index(']') - 1].delete('v')
+            break # stops after the top version is extracted
+          end
+        end
+        latest
+      end
+
       def self.changelog_file
         # Default Changelog file is CHANGELOG.md, but also search for the .MD prefix as well.
         @changelog_file ||= ['CHANGELOG.md', 'CHANGELOG.MD'].map { |file| PDK::Util::Filesystem.expand_path(file) }.find { |path| PDK::Util::Filesystem.file?(path) }

@@ -149,6 +149,7 @@ describe PDK::Module::Release do
       let(:options) { { :'skip-publish' => true } }
 
       it 'returns a new version from Changelog Generator' do
+        expect(PDK::Util::ChangelogGenerator).to receive(:latest_version).and_return('2.0.0')
         expect(PDK::Util::ChangelogGenerator).to receive(:compute_next_version).with('1.0.0').and_return(new_version)
         expect(mock_metadata_object).to receive(:write!)
 
