@@ -22,7 +22,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'bundler', '>= 1.15.0', '< 3.0.0'
   spec.add_runtime_dependency 'childprocess', '~> 4.0.0'
   spec.add_runtime_dependency 'cri', '~> 2.10'
-  spec.add_runtime_dependency 'diff-lcs', '1.3'
+  spec.add_runtime_dependency 'diff-lcs', '>=1.4.4', '< 1.5'
   spec.add_runtime_dependency 'ffi', '>= 1.9.25', '< 2.0.0'
   spec.add_runtime_dependency 'gettext-setup', '~> 0.24'
   spec.add_runtime_dependency 'hitimes', '2.0.0'
