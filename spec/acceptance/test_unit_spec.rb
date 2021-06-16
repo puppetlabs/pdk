@@ -35,6 +35,12 @@ describe 'pdk test unit', module_command: true do
       its(:stderr) { is_expected.to match(%r{No files for parallel_spec to run against}i) }
     end
 
+    describe command('pdk test unit --parallel --format=text:test_output.txt') do
+      its(:exit_status) { is_expected.to eq(0) }
+      its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
+      its(:stderr) { is_expected.to match(%r{No files for parallel_spec to run against}i) }
+    end
+
     context 'with passing tests' do
       # FIXME: facterversion pin and facterdb issues
       include_context 'with spec file', 'passing_spec.rb', <<-EOF
