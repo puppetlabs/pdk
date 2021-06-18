@@ -40,8 +40,7 @@ module PackageHelpers
   end
 
   def install_osx_pdk_package(host)
-    version, = host.platform.split('-')[1, 2]
-    package_volume_name = "pdk-#{ENV['SUITE_VERSION']}-1.osx#{version}"
+    package_volume_name = "pdk-#{ENV['SUITE_VERSION']}"
     package_filename = "pdk-#{ENV['SUITE_VERSION']}-1-installer.pkg"
     host.generic_install_dmg(build_artifact_url(host.platform), package_volume_name, package_filename)
   end
@@ -62,11 +61,11 @@ module PackageHelpers
       url += "windows/pdk-#{ENV['SUITE_VERSION']}-x64.msi"
     when %r{osx}
       version, arch = platform.split('-')[1, 2]
-      url += "apple/#{version}/PC1/#{arch}/pdk-#{ENV['SUITE_VERSION']}-1.osx#{version}.dmg"
+      url += "osx/#{version}/puppet5/#{arch}/pdk-#{ENV['SUITE_VERSION']}-1.osx#{version}.dmg"
     else
       raise ArgumentError, "unknown platform #{platform}"
     end
-
+    puts "Build_artifact_url: #{url}"
     url
   end
 end
