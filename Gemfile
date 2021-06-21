@@ -23,8 +23,8 @@ group :test do
   gem 'rake', '~> 12.3', '>= 12.3.3'
   gem 'rspec', '~> 3.0'
   gem 'rspec-xsd'
-  gem 'rubocop', '~> 0.57.2'
-  gem 'rubocop-rspec', '~> 1.27.0'
+  gem 'rubocop', '~> 1.2'
+  gem 'rubocop-rspec', '~> 2.4.0'
   gem 'simplecov-console'
 end
 
@@ -35,7 +35,7 @@ end
 
 group :acceptance_ci do
   gem 'puppet_litmus'
-  gem 'puppetlabs_spec_helper'
+  gem 'puppetlabs_spec_helper', git: 'https://github.com/ekohl/puppetlabs_spec_helper.git', branch: 'rubocop-gha-formatter'
 end
 
 # Evaluate Gemfile.local and ~/.gemfile if they exist
