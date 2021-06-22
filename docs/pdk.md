@@ -1,4 +1,4 @@
-# Welcome to Puppet Development Kit 2.1
+# Welcome to Puppet Development Kit 2.1.1
 
 Create high-quality modules with Puppet Development Kit (PDK). PDK provides
 integrated testing tools and a command line interface to help you develop,

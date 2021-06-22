@@ -2,6 +2,41 @@
 
 New features, enhancements, and resolved issues for the PDK 2.x release series.
 
+## PDK 2.1.1
+
+### New features and enhancements
+
+#### Use latest Facter version in GHActions Spec Test Template
+
+The Github Actions `spec.yml` workflow now sets the `FACTER_GEM_VERSION` ENV var. See [puppetlabs/pdk-templates#439](https://github.com/puppetlabs/pdk-templates/pull/439).
+
+#### New parameters added in `.gitlab-ci.yml` template
+
+See [puppetlabs/pdk-templates#436](https://github.com/puppetlabs/pdk-templates/pull/436), [puppetlabs/pdk-templates#434](https://github.com/puppetlabs/pdk-templates/pull/434).
+
+#### Backtrace from spec tests cleaned up
+
+The verbosity of the backtrace from spec test failures has been scaled back to ensure the relevant info is easier to read. [puppetlabs/pdk-templates#431](https://github.com/puppetlabs/pdk-templates/pull/431).
+
+#### Added EditorConfig template
+
+See [puppetlabs/pdk-templates#428](https://github.com/puppetlabs/pdk-templates/pull/428).
+
+### Resolved issues
+
+#### Resolved issue with ACCESS_DENIED error on Win Github Actions
+
+Fixes an issue on Windows Server 2016, 2019 instances on Github Actions where child processes were unable to spawn.
+See [puppetlabs/pdk#1084](https://github.com/puppetlabs/pdk/pull/1084).
+
+#### Multiple issues resolved in `pdk release`
+
+Fix for an issue where the changelog top most version did not match the version in `metadata.json`.
+
+`pdk release` can now handle the scenario where no Forge token is provided.
+
+See [puppetlabs/pdk#1088](https://github.com/puppetlabs/pdk/pull/1088).
+
 ## PDK 2.1
 
 ### New features and enhancements
