@@ -3,20 +3,25 @@
 All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
-## [v2.1.0](https://github.com/puppetlabs/pdk/tree/v2.1.0) (2021-03-31)
 
-[Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.0.0...v2.1.0)
+## [v2.1.1](https://github.com/puppetlabs/pdk/tree/v2.1.1) (2021-06-22)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.1.0...v2.1.1)
 
 **Fixed bugs:**
 
-- Documentation issue for brew installs on Mac [\#963](https://github.com/puppetlabs/pdk/issues/963)
-- PDK output scrollback in VS Code is extremely limited [\#829](https://github.com/puppetlabs/pdk/issues/829)
-- --verbose option broken for `pdk new defined_type` [\#679](https://github.com/puppetlabs/pdk/issues/679)
-- getting error with "$ pdk validate" after upgraded to 1.5.0 \(private/ruby/2.4.4/lib/ruby/gems/2.4.0/gems/pdk-1.5.0/lib/pdk/validate/puppet/puppet\_syntax.rb:88:in `parse_offense': undefined method` names' for nil:NilClass \(NoMethodError\)\) [\#518](https://github.com/puppetlabs/pdk/issues/518)
+- \(PDK-1085\) Fail gracefully when no unit tests available [\#1096](https://github.com/puppetlabs/pdk/pull/1096) ([sanfrancrisko](https://github.com/sanfrancrisko))
+- \(GH-1090\) Verify the changelog top most version matches the metadata version [\#1088](https://github.com/puppetlabs/pdk/pull/1088) ([carabasdaniel](https://github.com/carabasdaniel))
+- \(GH-1083\) Bump childprocess to '~\> 4.0.0'; Disable @process.leader [\#1084](https://github.com/puppetlabs/pdk/pull/1084) ([sanfrancrisko](https://github.com/sanfrancrisko))
 
-**Closed issues:**
+**Merged pull requests:**
 
-- \[Feature Request\] Validate CD4PE Yaml files [\#970](https://github.com/puppetlabs/pdk/issues/970)
+- \(PDK-1041\) Use diff-lcs 1.4.4 [\#1091](https://github.com/puppetlabs/pdk/pull/1091) ([da-ar](https://github.com/da-ar))
+- Update CODEOWNERS [\#1082](https://github.com/puppetlabs/pdk/pull/1082) ([jpogran](https://github.com/jpogran))
+
+## [v2.1.0](https://github.com/puppetlabs/pdk/tree/v2.1.0) (2021-04-06)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.0.0...v2.1.0)
 
 **Merged pull requests:**
 

@@ -114,6 +114,7 @@ begin
     config.include_labels = %w[enhancement bug]
     config.user = 'puppetlabs'
     config.project = 'pdk'
+    config.issues = false
   end
 rescue LoadError
   desc 'Install github_changelog_generator to get access to automatic changelog generation'
