@@ -40,7 +40,8 @@ module PackageHelpers
   end
 
   def install_osx_pdk_package(host)
-    package_volume_name = "pdk-#{ENV['SUITE_VERSION']}"
+    version, = host.platform.split('-')[1, 2]
+    package_volume_name = "pdk-#{ENV['SUITE_VERSION']}-1.osx#{version}"
     package_filename = "pdk-#{ENV['SUITE_VERSION']}-1-installer.pkg"
     host.generic_install_dmg(build_artifact_url(host.platform), package_volume_name, package_filename)
   end
