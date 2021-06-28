@@ -125,6 +125,25 @@ send your validation output to a file in either JUnit or text format.
     command [reference](pdk_reference.md#).
 
 
+### Ignoring files during module validation
+
+There are times when certain files can be ignored when validating the contents of a Puppet module. PDK provides a configuration option to list sets of files to ignore when running any of the validators.
+
+To configure PDK to ignore a file, use `pdk set config project.validate.ignore`.
+The `project.validate.ignore` setting accepts multiple files. To add one or more files, run the command for each file or pattern you want to add.
+
+For example, to ignore a file called `example.yaml` in the folder called `config`, you would run the following command:
+
+```
+pdk set config project.validate.ignore "config/example.yaml"
+```
+
+To add a wildcard, use a valid [Git ignore pattern](http://git-scm.com/docs/gitignore):
+
+```
+pdk set config project.validate.ignore "config/*.yaml"
+```
+
 ## Unit testing modules
 
 Create and run unit tests to verify that your Puppet code compiles on supported
@@ -211,4 +230,3 @@ correctly performs the functions you expect it to.
 PDK reports what Ruby and Puppet versions it is testing against, and after tests
 are completed, test results. For a complete list of command options and usage
 information, see the PDK command [reference](pdk_reference.md#).
-

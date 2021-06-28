@@ -213,6 +213,14 @@ module PDK
           end
         end
 
+        # block will always be [] because it is intialized in config
+        ignore_files = PDK.config.get_within_scopes('validate.ignore')
+        unless ignore_files.nil? || ignore_files.empty?
+          Array(ignore_files).each do |pattern|
+            ignore_pathspec.add(pattern)
+          end
+        end
+
         ignore_pathspec
       end
     end

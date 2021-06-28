@@ -94,6 +94,12 @@ module PDK
         if context.is_a?(PDK::Context::ControlRepo)
           mount :environment, PDK::ControlRepo.environment_conf_as_config(File.join(context.root_path, 'environment.conf'))
         end
+
+        mount :validate, PDK::Config::YAML.new('validate', file: File.join(context.root_path, 'pdk.yaml'), persistent_defaults: true) do
+          setting 'ignore' do
+            default_to { [] }
+          end
+        end
       end
     end
 

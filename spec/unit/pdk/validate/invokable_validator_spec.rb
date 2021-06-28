@@ -2,6 +2,8 @@ require 'spec_helper'
 require 'pdk/validate/invokable_validator'
 
 describe PDK::Validate::InvokableValidator do
+  include_context 'mock configuration'
+
   class PublicInvokableValidator < PDK::Validate::InvokableValidator
     # Expose protected/private methods for testing.
     public :contextual_pattern
@@ -59,6 +61,7 @@ describe PDK::Validate::InvokableValidator do
 
     let(:validator_options) { { targets: targets } }
     let(:pattern) { '**/**.pp' }
+    let(:project_config_exists) { false }
 
     RSpec.shared_examples 'a parsed target list in an invalid context' do |expected_skipped_targets = nil|
       before(:each) do
@@ -81,6 +84,7 @@ describe PDK::Validate::InvokableValidator do
       allow(PDK::Util).to receive(:canonical_path).and_wrap_original do |_m, *args|
         args[0]
       end
+      allow(PDK::Util::Filesystem).to receive(:file?).with(%r{.*pdk\.yaml}).and_return(project_config_exists)
     end
 
     context 'when given no targets' do
@@ -340,6 +344,43 @@ describe PDK::Validate::InvokableValidator do
         expect(target_files[0]).to eq([File.join('manifests', 'init.pp')])
       end
     end
+
+    context 'when a project level configuration file contains a validate.ignore path' do
+      before(:each) do
+        allow(PDK::Util::Filesystem).to receive(:directory?).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
+        allow(PDK::Util::Filesystem).to receive(:expand_path).with(context_root).and_return(context_root)
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{pdk.yaml}).and_return(project_ignore_yaml)
+      end
+
+      let(:project_config_exists) { true }
+      let(:targets) { [] }
+      let(:glob_pattern) { File.join(context_root, validator.pattern) }
+      let(:files) do
+        [
+          'dodgy.yaml',
+          File.join('manifests', 'init.pp'),
+          File.join('vendor', 'bad.yaml'),
+          File.join('plans', 'foo.pp'),
+          File.join('plans', 'fine.yaml'),
+          File.join('plans', 'nested', 'thing.pp'),
+        ]
+      end
+      let(:globbed_files) { files.map { |file| File.join(context_root, file) } }
+      let(:project_ignore_yaml) do
+        <<CONTENTS
+---
+ignore:
+- "/*.yaml"
+- vendor/*.yaml
+CONTENTS
+      end
+
+      it 'does not match the ignored files' do
+        expect(target_files[0].count).to eq(4)
+        expect(target_files[0]).to eq(['manifests/init.pp', 'plans/foo.pp', 'plans/fine.yaml', 'plans/nested/thing.pp'])
+      end
+    end
   end
 
   it 'has an ignore_dotfiles? of true' do
@@ -428,6 +469,12 @@ describe PDK::Validate::InvokableValidator do
 
   describe '.contextual_pattern' do
     subject(:context_pattern) { validator.contextual_pattern(pattern_for_a_module) }
+
+    before(:each) do
+      allow(PDK::Util::Filesystem).to receive(:file?).with(%r{.*environment\.conf}).and_call_original
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{.*environment\.conf}).and_call_original
+      allow(PDK::Util::Filesystem).to receive(:file?).with(%r{.*pdk\.yaml}).and_call_original
+    end
 
     let(:pattern_for_a_module) { '*.pp' }
 
