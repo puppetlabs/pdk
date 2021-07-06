@@ -34,6 +34,15 @@ describe 'PDK::CLI release' do
       allow(PDK::Util).to receive(:exit_process).and_raise('exit_process mock should not be called')
     end
 
+    it 'calls PDK::Module::Release.new with the correct opts' do
+      expect(PDK::Module::Release).to receive(:new).with(Object, hash_including(
+                                                                   :'forge-token' => 'cli123',
+                                                                   :force => true,
+                                                                   :'forge-upload-url' => 'https://example.com',
+                                                                 ))
+      PDK::CLI.run(%w[release --forge-token=cli123 --force --forge-upload-url=https://example.com])
+    end
+
     it 'calls PDK::Module::Release.run' do
       expect(release_object).to receive(:run).and_return(nil)
 
