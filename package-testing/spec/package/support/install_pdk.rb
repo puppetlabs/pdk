@@ -62,7 +62,7 @@ module PackageHelpers
       url += "windows/pdk-#{ENV['SUITE_VERSION']}-x64.msi"
     when %r{osx}
       version, arch = platform.split('-')[1, 2]
-      url += "osx/#{version}/puppet5/#{arch}/pdk-#{ENV['SUITE_VERSION']}-1.osx#{version}.dmg"
+      url += "osx/#{version}/#{arch}/pdk-#{ENV['SUITE_VERSION']}-1.osx#{version}.dmg"
     else
       raise ArgumentError, "unknown platform #{platform}"
     end
