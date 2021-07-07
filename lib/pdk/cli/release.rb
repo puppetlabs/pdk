@@ -146,6 +146,7 @@ module PDK::CLI
         opts[:'skip-changelog'] = !answers['changelog']
         opts[:'skip-dependency'] = !answers['dependency']
         opts[:'skip-documentation'] = !answers['documentation']
+        opts[:'skip-publish'] = !answers['publish']
 
         prepare_version_interview(prompt, opts) if answers['setversion']
 
