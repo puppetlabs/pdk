@@ -18,7 +18,8 @@ describe PDK::Config do
 
   before(:each) do
     # Allow the JSON Schema documents to actually be read. Rspec matchers are LIFO
-    allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original
+    # allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original
+    allow(PDK::Util::Filesystem).to receive(:file?).with(%r{.*pdk\.yaml}).and_call_original
   end
 
   describe '.system_config' do
