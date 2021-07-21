@@ -48,7 +48,7 @@ namespace :acceptance do
       if ENV['LOCAL_PKG']
         $stderr.puts "SUITE_VERSION has not been set. Trying to determine it from the filename: '#{ENV['LOCAL_PKG']}'"
 
-        ENV['SUITE_VERSION'] = %r{^pdk[-_](\d+\.\d+\.\d+\.\d+(\.\d+\.g[a-f\d]+)?)}.match(File.basename(ENV['LOCAL_PKG']))[1]
+        ENV['SUITE_VERSION'] = %r{^pdk[-_](\d+\.\d+\.\d+\.\d+(.pre\d?)?(\.\d+\.g[a-f\d]+)?)}.match(File.basename(ENV['LOCAL_PKG'], '.dmg'))[1]
 
         unless ENV['SUITE_VERSION']
           abort "Could not find a valid SUITE_VERSION in the filename: '#{ENV['LOCAL_PKG']}'"
