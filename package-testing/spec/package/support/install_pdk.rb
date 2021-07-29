@@ -28,8 +28,13 @@ module PackageHelpers
     package = File.basename(ENV['LOCAL_PKG'])
     scp_to(host, ENV['LOCAL_PKG'], package)
 
-    if host.platform =~ %r{windows}
+    case host.platform
+    when %r{windows}
       generic_install_msi_on(host, package)
+    when %r{osx}
+      package_volume_name = "pdk-#{ENV['SUITE_VERSION']}"
+      package_filename = "pdk-#{ENV['SUITE_VERSION']}-1-installer.pkg"
+      host.generic_install_dmg(package, package_volume_name, package_filename)
     else
       host.install_local_package(package)
     end
