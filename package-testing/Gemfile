@@ -1,21 +1,24 @@
 source ENV['GEM_SOURCE'] || 'https://rubygems.org'
 
-def location_for(place, fake_version = nil)
-  if place =~ %r{^(git:[^#]*)#(.*)}
-    [fake_version, { git: Regexp.last_match(1), branch: Regexp.last_match(2), require: false }].compact
-  elsif place =~ %r{^file:\/\/(.*)}
-    ['>= 0', { path: File.expand_path(Regexp.last_match(1)), require: false }]
+def location_for(place_or_version, fake_version = nil)
+  git_url_regex = %r{\A(?<url>(https?|git)[:@][^#]*)(#(?<branch>.*))?}
+  file_url_regex = %r{\Afile:\/\/(?<path>.*)}
+
+  if place_or_version && (git_url = place_or_version.match(git_url_regex))
+    [fake_version, { git: git_url[:url], branch: git_url[:branch], require: false }].compact
+  elsif place_or_version && (file_url = place_or_version.match(file_url_regex))
+    ['>= 0', { path: File.expand_path(file_url[:path]), require: false }]
   else
-    [place, { require: false }]
+    [place_or_version, { require: false }]
   end
 end
 
-gem 'beaker', *location_for(ENV['BEAKER_VERSION'] || '= 4.10.0')
-gem 'beaker-abs', *location_for(ENV['BEAKER_ABS_VERSION'] || '~> 0.7.0')
+gem 'beaker', *location_for(ENV['BEAKER_VERSION'] || 'https://github.com/voxpupuli/beaker.git#master')
+gem 'beaker-abs', *location_for(ENV['BEAKER_ABS_VERSION'] || '~> 0.9.0')
 gem 'beaker-hostgenerator', *location_for(ENV['BEAKER_HOSTGENERATOR_VERSION'] || '= 1.5.0')
-gem 'beaker-puppet', '= 1.18.5'
-gem 'beaker-rspec', '= 6.2.4'
-gem 'beaker-vmpooler', '= 1.3.3'
+gem 'beaker-puppet', '= 1.21.0'
+gem 'beaker-rspec', '= 6.3.0'
+gem 'beaker-vmpooler', '= 1.4.0'
 gem 'i18n', '= 1.4.0' # pin for Ruby 2.1 support
 gem 'nokogiri', '~> 1.10.8'
 gem 'rake', '~> 12.3', '>= 12.3.3'

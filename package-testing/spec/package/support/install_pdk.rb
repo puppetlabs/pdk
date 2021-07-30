@@ -28,8 +28,13 @@ module PackageHelpers
     package = File.basename(ENV['LOCAL_PKG'])
     scp_to(host, ENV['LOCAL_PKG'], package)
 
-    if host.platform =~ %r{windows}
+    case host.platform
+    when %r{windows}
       generic_install_msi_on(host, package)
+    when %r{osx}
+      package_volume_name = "pdk-#{ENV['SUITE_VERSION']}"
+      package_filename = "pdk-#{ENV['SUITE_VERSION']}-1-installer.pkg"
+      host.generic_install_dmg(package, package_volume_name, package_filename)
     else
       host.install_local_package(package)
     end
@@ -62,7 +67,7 @@ module PackageHelpers
       url += "windows/pdk-#{ENV['SUITE_VERSION']}-x64.msi"
     when %r{osx}
       version, arch = platform.split('-')[1, 2]
-      url += "osx/#{version}/puppet5/#{arch}/pdk-#{ENV['SUITE_VERSION']}-1.osx#{version}.dmg"
+      url += "osx/#{version}/#{arch}/pdk-#{ENV['SUITE_VERSION']}-1.osx#{version}.dmg"
     else
       raise ArgumentError, "unknown platform #{platform}"
     end

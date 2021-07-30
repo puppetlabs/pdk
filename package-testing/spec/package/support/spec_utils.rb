@@ -15,12 +15,7 @@ module SpecUtils
     if windows_node?
       cygpath ? '/home/Administrator' : 'c:/cygwin64/home/Administrator'
     else
-      case get_working_node.platform
-      when %r{\Aosx-10\.15-}
-        '/var/root'
-      else
-        '/root'
-      end
+      get_working_node.external_copy_base
     end
   end
 
