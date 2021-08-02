@@ -1,4 +1,4 @@
-# Welcome to Puppet Development Kit 2.1.1
+# Welcome to Puppet Development Kit 2.2.0
 
 Create high-quality modules with Puppet Development Kit (PDK). PDK provides
 integrated testing tools and a command line interface to help you develop,
@@ -74,7 +74,7 @@ validate, and test modules.
                 <li>The Puppet plugin for the <a class="xref" href="https://www.jetbrains.com/help/idea/puppet.html">IntelliJ
 IDEA</a> Java IDE</li>
             </ul>
-      </p> 
+      </p>
    </td>
  </tr>
 </table>
