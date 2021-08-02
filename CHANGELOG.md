@@ -3,6 +3,17 @@
 All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
+## [v2.2.0](https://github.com/puppetlabs/pdk/tree/v2.2.0) (2021-08-02)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.1.1...v2.2.0)
+
+**Implemented enhancements:**
+
+- \(GH-1118\) Add ability to skip validating files [\#1114](https://github.com/puppetlabs/pdk/pull/1114) ([jpogran](https://github.com/jpogran))
+
+**Fixed bugs:**
+
+- \(GH-1113\) \(GH-917\) Fix forge-token handling [\#1121](https://github.com/puppetlabs/pdk/pull/1121) ([sanfrancrisko](https://github.com/sanfrancrisko))
 
 ## [v2.1.1](https://github.com/puppetlabs/pdk/tree/v2.1.1) (2021-06-22)
 
