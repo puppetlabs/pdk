@@ -27,16 +27,16 @@ compatibility, see the table below.
 |Operating system|Versions|Arch|Package type|
 |----------------|--------|----|------------|
 |CentOS|6, 7, 8|x86_64|RPM|
-|Debian|9, 10|x86_64|DEB|
-|Fedora|28, 29, 30|x86_64|RPM|
-|macOS|10.11, 10.12, 10.13, 10.14|x86_64|DPKG|
+|Debian|9, 10, 11|x86_64|DEB|
+|Fedora|30, 31, 32, 34|x86_64|RPM|
+|macOS|10.13, 10.14, 10.15, 11|x86_64|DPKG|
 |Oracle Linux|6, 7, 8|x86_64|RPM|
 |Red Hat Enterprise Linux (RHEL)|6, 7,8|x86_64|RPM|
 |Scientific Linux|6, 7|x86_64|RPM|
 |SUSE Linux Enterprise Server|11, 12|x86_64|N/A|
 |Ubuntu|16.04, 18.04, 20.04|x86_64|DEB|
 |Windows (Consumer OS)|7, 8.1, 10|x86_64|MSI|
-|Windows (Server OS)|2008r2, 2012, 2012r2, 2012r2Core, and 2016|x86_64|MSI|
+|Windows (Server OS)|2008r2, 2012, 2012r2, 2012r2Core, 2016 & 2019|x86_64|MSI|
 
 > **Tip:** On Windows, PowerShell version 2.0 or greater is supported, but we
 recommend 4.0 or greater.

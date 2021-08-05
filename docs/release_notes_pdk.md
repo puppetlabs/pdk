@@ -6,15 +6,13 @@ New features, enhancements, and resolved issues for the PDK 2.x release series.
 
 ### New features and enhancements
 
-PDK entry point is now Ruby 2.5. Up from Ruby 2.4. This change should be transparent to users as the available Ruby versions are unchanged.
+The PDK entry point is now Ruby 2.5, up from Ruby 2.4. This change should be transparent to users as the available Ruby versions are unchanged.
 
-Support added for OSX 11, Debian 11, Fedora 33/34
+Support added for OSX 11, Debian 11, Fedora 32 & 34
 
 A project level setting containing a list of ignored files or patterns for use with `pdk validate` [puppetlabs/pdk#1114](https://github.com/puppetlabs/pdk/pull/1114)
 
-
 Bump `json_pure` gem to ~> 2.5.1 on Ruby >= 2.7 [puppetlabs/pdk#1124](https://github.com/puppetlabs/pdk/pull/1124)
-
 
 ### Resolved issues
 Prevent errors when choosing not to set forge token prior to running `pdk release` [puppetlabs/pdk#1121](https://github.com/puppetlabs/pdk/pull/1121)
@@ -22,8 +20,6 @@ Prevent errors when choosing not to set forge token prior to running `pdk releas
 Set `skip_branch_with_pr` to true by default in appveyor.yml template [puppetlabs/pdk-templates#442](https://github.com/puppetlabs/pdk-templates/pull/442)
 
 Run validation steps prior to the matrix build [puppetlabs/pdk-templates#441](https://github.com/puppetlabs/pdk-templates/pull/441)
-
-
 
 ## PDK 2.1.1
 
