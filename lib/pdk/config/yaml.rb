@@ -13,7 +13,11 @@ module PDK
 
         require 'yaml'
 
-        data = ::YAML.safe_load(data, [Symbol], [], true)
+        data = if Gem::Version.new(Psych::VERSION) >= Gem::Version.new('3.1.0.pre1')
+                 ::YAML.safe_load(data, permitted_classes: [Symbol], permitted_symbols: [], aliases: true)
+               else
+                 ::YAML.safe_load(data, [Symbol], [], true)
+               end
         return if data.nil?
 
         data.each { |k, v| yield k, PDK::Config::Setting.new(k, self, v) }
