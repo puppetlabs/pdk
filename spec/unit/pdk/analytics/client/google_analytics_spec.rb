@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'securerandom'
 require 'httpclient'
 require 'concurrent/configuration'
 require 'concurrent/future'
