@@ -2,6 +2,11 @@
 
 New features, enhancements, and resolved issues for the PDK 2.x release series.
 
+## PDK 2.3.0
+### Resolved issues
+
+Fixes a compatibility issue with psych gem dependency [puppetlabs/pdk#1143](https://github.com/puppetlabs/pdk/issues/1143)
+
 ## PDK 2.2.0
 
 ### New features and enhancements
