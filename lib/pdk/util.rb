@@ -187,7 +187,8 @@ module PDK
     # @return [boolean] True if any folders from MODULE_FOLDERS are found in the current dir,
     #   false otherwise.
     def in_module_root?(path = Dir.pwd)
-      PDK::Util::MODULE_FOLDERS.any? { |dir| PDK::Util::Filesystem.directory?(File.join(path, dir)) }
+      PDK::Util::MODULE_FOLDERS.any? { |dir| PDK::Util::Filesystem.directory?(File.join(path, dir)) } ||
+        PDK::Util::Filesystem.file?(File.join(path, 'metadata.json'))
     end
     module_function :in_module_root?
 

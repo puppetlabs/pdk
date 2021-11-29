@@ -455,6 +455,11 @@ describe PDK::Util do
       end
     end
 
+    it 'detects metadata.json within the folder and determines that it is the root of a module' do
+      allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(test_path, 'metadata.json')).and_return(true)
+      expect(described_class.in_module_root?(test_path)).to eq(true)
+    end
+
     it 'uses the current directory if a directory is not specified' do
       expect(PDK::Util::Filesystem).to receive(:directory?) { |path| expect(path).to start_with(Dir.pwd) }.at_least(:once)
       described_class.in_module_root?
