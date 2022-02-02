@@ -4,6 +4,14 @@ All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
 
+## [v2.4.0](https://github.com/puppetlabs/pdk/tree/v2.4.0) (2022-02-08)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.3.0...v2.4.0)
+
+**Merged pull requests:**
+
+- Supplement `in_module_root` with check for `metadata.json` [\#1147](https://github.com/puppetlabs/pdk/pull/1154) ([da-ar](https://github.com/da-ar))
+
 ## [v2.3.0](https://github.com/puppetlabs/pdk/tree/v2.3.0) (2021-10-21)
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.2.0...v2.3.0)
