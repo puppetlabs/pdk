@@ -145,30 +145,28 @@ describe PDK::Util::RubyVersion do
     let(:gem_home) { File.join('/', 'path', 'to', 'ruby', 'gem_home') }
     let(:gem_home_pattern) { File.join(gem_home, 'specifications', '**', 'puppet*.gemspec') }
     let(:gem_path_results) do
-      {
-        File.join(gem_path, 'specifications', 'puppet-4.10.10.gemspec') => <<-'END',
-          Gem::Specification.new do |spec|
-            spec.name = 'puppet'
-            spec.version = '4.10.10'
-          end
-        END
-        File.join(gem_path, 'specifications', 'puppet-lint-1.0.0.gemspec') => <<-'END',
-          Gem::Specification.new do |spec|
-            spec.name = 'puppet-lint'
-            spec.version = '1.0.0'
-          end
-        END
-      }
+      results = {}
+      [{ name: 'puppet', version: '4.10.10' }, { name: 'puppet-lint', version: '1.0.0' }].each do |spec_info|
+        spec_path = File.join(gem_home, 'specifications', "#{spec_info[:name]}-#{spec_info[:version]}.gemspec")
+        spec_definition = Gem::Specification.new do |spec|
+          spec.name = spec_info[:name]
+          spec.version = spec_info[:version]
+        end
+        results[spec_path] = spec_definition
+      end
+      results
     end
     let(:gem_home_results) do
-      {
-        File.join(gem_home, 'specifications', 'puppet-5.3.0.gemspec') => <<-'END',
-          Gem::Specification.new do |spec|
-            spec.name = 'puppet'
-            spec.version = '5.3.0'
-          end
-        END
-      }
+      results = {}
+      [{ name: 'puppet', version: '5.3.0' }].each do |spec_info|
+        spec_path = File.join(gem_home, 'specifications', "#{spec_info[:name]}-#{spec_info[:version]}.gemspec")
+        spec_definition = Gem::Specification.new do |spec|
+          spec.name = spec_info[:name]
+          spec.version = spec_info[:version]
+        end
+        results[spec_path] = spec_definition
+      end
+      results
     end
 
     before(:each) do
@@ -177,13 +175,8 @@ describe PDK::Util::RubyVersion do
       allow(instance).to receive(:gem_home).and_return(gem_home)
       allow(PDK::Util::Filesystem).to receive(:glob).with(gem_home_pattern).and_return(gem_home_results.keys)
 
-      gem_path_results.merge(gem_home_results).each do |spec_path, spec_content|
-        # rubocop:disable PDK/FileFilePredicate Gem internal method
-        # rubocop:disable PDK/FileRead Gem internal method
-        allow(File).to receive(:file?).with(spec_path).and_return(true)
-        allow(File).to receive(:read).with(spec_path, mode: 'r:UTF-8:-').and_return(spec_content)
-        # rubocop:enable PDK/FileFilePredicate
-        # rubocop:enable PDK/FileRead
+      gem_path_results.merge(gem_home_results).each do |spec_path, spec_definition|
+        allow(Gem::Specification).to receive(:load).with(spec_path).and_return(spec_definition)
       end
     end
 

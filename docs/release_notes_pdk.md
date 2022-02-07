@@ -2,6 +2,11 @@
 
 New features, enhancements, and resolved issues for the PDK 2.x release series.
 
+## PDK 2.4.0
+### Resolved issues
+
+Ensure `in_module_root` dunction checks to see if `metadata.json` is present instead of only relying on folder names [PDK-1758](https://tickets.puppetlabs.com/browse/PDK-1758)
+
 ## PDK 2.3.0
 ### Resolved issues
 
