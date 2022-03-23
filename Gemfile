@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in pdk.gemspec
 gemspec
 
-gem 'nokogiri', '~> 1.10.8'
+gem 'nokogiri', '~> 1.13.2'
 
 group :development do
   gem 'activesupport', '4.2.9'
@@ -15,7 +15,7 @@ end
 
 group :test do
   gem 'codecov'
-  gem 'json', '~> 2.2.0'
+  gem 'json', '~> 2.3.0'
   gem 'license_finder', '~> 6.1.2'
   gem 'parallel', '= 1.13.0'
   gem 'parallel_tests', '~> 2.24.0'
