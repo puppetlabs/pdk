@@ -77,9 +77,7 @@ module PDK
         'issues_url' => nil,
         'dependencies' => [],
         'data_provider' => nil,
-        'operatingsystem_support' => DEFAULT_OPERATING_SYSTEMS.map do |os_name|
-          OPERATING_SYSTEMS[os_name]
-        end.flatten,
+        'operatingsystem_support' => DEFAULT_OPERATING_SYSTEMS.dup,
         'requirements' => [
           { 'name' => 'puppet', 'version_requirement' => '>= 7.24 < 9.0.0' }
         ]
