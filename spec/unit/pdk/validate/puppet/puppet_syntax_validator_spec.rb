@@ -30,7 +30,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
 
   describe '.pattern_ignore' do
     it 'does not contextually matches plan files' do
-      expect(validator).to receive(:contextual_pattern).with('plans/**/*.pp') # rubocop:disable RSpec/SubjectStub This is fine
+      expect(validator).to receive(:contextual_pattern).with('**/plans/**/*.pp') # rubocop:disable RSpec/SubjectStub This is fine
       validator.pattern_ignore
     end
   end
