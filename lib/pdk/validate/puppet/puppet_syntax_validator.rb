@@ -37,7 +37,7 @@ module PDK
         end
 
         def pattern_ignore
-          contextual_pattern('plans/**/*.pp')
+          contextual_pattern('**/plans/**/*.pp')
         end
 
         def spinner_text_for_targets(_targets)
