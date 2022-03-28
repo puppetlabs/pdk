@@ -382,7 +382,7 @@ CONTENTS
 
       it 'does not match the ignored files' do
         expect(target_files[0].count).to eq(4)
-        expect(target_files[0]).to eq(['manifests/init.pp', 'plans/foo.pp', 'plans/fine.yaml', 'plans/nested/thing.pp', 'nested/plans/nested/thing.pp', 'nested/nested/plans/nested/thing.pp'] )
+        expect(target_files[0]).to eq(['manifests/init.pp', 'plans/foo.pp', 'plans/fine.yaml', 'plans/nested/thing.pp', 'nested/plans/nested/thing.pp', 'nested/nested/plans/nested/thing.pp'])
       end
     end
   end
