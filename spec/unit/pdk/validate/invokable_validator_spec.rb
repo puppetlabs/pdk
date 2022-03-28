@@ -321,7 +321,7 @@ describe PDK::Validate::InvokableValidator do
 
     context 'when specifying an ignore pattern' do
       before(:each) do
-        allow(validator).to receive(:pattern_ignore).and_return('/plans/**/**.pp')
+        allow(validator).to receive(:pattern_ignore).and_return('**/plans/**/**.pp')
 
         allow(PDK::Util::Filesystem).to receive(:directory?).and_return(true)
         allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
@@ -335,6 +335,8 @@ describe PDK::Validate::InvokableValidator do
           File.join('manifests', 'init.pp'),
           File.join('plans', 'foo.pp'),
           File.join('plans', 'nested', 'thing.pp'),
+          File.join('nested', 'plans', 'nested', 'thing.pp'),
+          File.join('nested', 'nested', 'plans', 'nested', 'thing.pp'),
         ]
       end
       let(:globbed_files) { files.map { |file| File.join(context_root, file) } }
@@ -364,6 +366,8 @@ describe PDK::Validate::InvokableValidator do
           File.join('plans', 'foo.pp'),
           File.join('plans', 'fine.yaml'),
           File.join('plans', 'nested', 'thing.pp'),
+          File.join('nested', 'plans', 'nested', 'thing.pp'),
+          File.join('nested', 'nested', 'plans', 'nested', 'thing.pp'),
         ]
       end
       let(:globbed_files) { files.map { |file| File.join(context_root, file) } }
@@ -378,7 +382,7 @@ CONTENTS
 
       it 'does not match the ignored files' do
         expect(target_files[0].count).to eq(4)
-        expect(target_files[0]).to eq(['manifests/init.pp', 'plans/foo.pp', 'plans/fine.yaml', 'plans/nested/thing.pp'])
+        expect(target_files[0]).to eq(['manifests/init.pp', 'plans/foo.pp', 'plans/fine.yaml', 'plans/nested/thing.pp', 'nested/plans/nested/thing.pp', 'nested/nested/plans/nested/thing.pp'] )
       end
     end
   end
