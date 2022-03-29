@@ -3,7 +3,9 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in pdk.gemspec
 gemspec
 
-gem 'nokogiri', '~> 1.13.2'
+gem 'nokogiri', '~> 1.12.5' if RUBY_VERSION < '2.6'
+gem 'nokogiri', '~> 1.13.3' if RUBY_VERSION >= '2.6'
+
 
 group :development do
   gem 'activesupport', '4.2.9'
