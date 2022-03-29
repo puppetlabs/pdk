@@ -162,7 +162,7 @@ class foo {
         FileUtils.mkdir_p(File.join('manifests', 'dump'))
         (1..5000).each do |num|
           File.open(File.join('manifests', 'dump', "file#{num}.pp"), 'w') do |f|
-            f.puts "# file#{num}\nclass file_dump::dump::file#{num} { }"
+            f.puts "# file#{num}\nclass file_dump::dump::file#{num} {\n}"
           end
         end
       end
