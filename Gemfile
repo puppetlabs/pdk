@@ -6,7 +6,6 @@ gemspec
 gem 'nokogiri', '~> 1.12.5' if RUBY_VERSION < '2.6'
 gem 'nokogiri', '~> 1.13.3' if RUBY_VERSION >= '2.6'
 
-
 group :development do
   gem 'activesupport', '4.2.9'
   gem 'github_changelog_generator', '~> 1.14'
