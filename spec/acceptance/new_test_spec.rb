@@ -6,11 +6,11 @@ describe 'pdk new test', module_command: true do
 
     before(:all) do
       File.open(File.join('manifests', 'init.pp'), 'w') do |fd|
-        fd.puts 'class new_unit_test { }'
+        fd.puts 'class new_unit_test {}'
       end
 
       File.open(File.join('manifests', 'def_type.pp'), 'w') do |fd|
-        fd.puts 'define new_unit_test::def_type() { }'
+        fd.puts 'define new_unit_test::def_type() {}'
       end
     end
 
