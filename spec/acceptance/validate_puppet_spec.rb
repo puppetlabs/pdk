@@ -143,7 +143,7 @@ class foo {
       before(:all) do
         FileUtils.mkdir_p(File.join('manifests', 'test'))
         File.open(File.join('manifests', 'test', 'test.pp'), 'w') do |f|
-          f.puts 'class win_path::test::test { }'
+          f.puts 'class win_path::test::test {}'
         end
       end
 
@@ -162,7 +162,7 @@ class foo {
         FileUtils.mkdir_p(File.join('manifests', 'dump'))
         (1..5000).each do |num|
           File.open(File.join('manifests', 'dump', "file#{num}.pp"), 'w') do |f|
-            f.puts "# file#{num}\nclass file_dump::dump::file#{num} { }"
+            f.puts "# file#{num}\nclass file_dump::dump::file#{num} {}"
           end
         end
       end
@@ -180,7 +180,7 @@ class foo {
     context 'with a parsable file and some style warnings' do
       before(:all) do
         File.open(init_pp, 'w') do |f|
-          f.puts 'class foo { }'
+          f.puts 'class foo {}'
         end
       end
 
@@ -293,7 +293,7 @@ class foo {
       before(:all) do
         File.open(example_pp, 'w') do |f|
           f.puts '# some documentation'
-          f.puts 'class foo::bar { }'
+          f.puts 'class foo::bar {}'
         end
       end
 
@@ -333,7 +333,7 @@ class foo {
         before(:all) do
           File.open(clean_pp, 'w') do |f|
             f.puts '# some documentation'
-            f.puts 'class foo::clean { }'
+            f.puts 'class foo::clean {}'
           end
         end
 
@@ -388,7 +388,7 @@ class foo {
         before(:all) do
           FileUtils.mkdir_p(another_problem_dir)
           File.open(another_problem_pp, 'w') do |f|
-            f.puts 'class foo::bar::whoops { }'
+            f.puts 'class foo::bar::whoops {}'
           end
         end
 

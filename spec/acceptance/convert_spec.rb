@@ -198,7 +198,7 @@ describe 'pdk convert', module_command: true do
         FileUtils.mkdir_p(File.join('spec', 'classes'))
 
         File.open(File.join('manifests', 'some_class.pp'), 'wb') do |f|
-          f.puts 'class module_with_all_tests::some_class { }'
+          f.puts 'class module_with_all_tests::some_class {}'
         end
 
         File.open(File.join('spec', 'classes', 'some_class_spec.rb'), 'wb') do |f|
@@ -227,10 +227,10 @@ describe 'pdk convert', module_command: true do
         FileUtils.mkdir_p(File.join('manifests', 'namespaced'))
 
         File.open(File.join('manifests', 'some_class.pp'), 'wb') do |f|
-          f.puts 'class module_with_missing_tests::some_class { }'
+          f.puts 'class module_with_missing_tests::some_class {}'
         end
         File.open(File.join('manifests', 'namespaced', 'some_define.pp'), 'wb') do |f|
-          f.puts 'define module_with_missing_tests::namespaced::some_define() { }'
+          f.puts 'define module_with_missing_tests::namespaced::some_define() {}'
         end
       end
 

@@ -10,7 +10,7 @@ describe 'pdk validate', module_command: true do
       File.open(File.join('manifests', 'init.pp'), 'w') do |f|
         f.puts <<-EOS
 # validate_all
-class validate_all { }
+class validate_all {}
         EOS
       end
     end
@@ -101,7 +101,7 @@ class validate_all {
         File.open(File.join('manifests', 'init.pp'), 'w') do |f|
           f.puts <<-EOS.gsub(%r{^ {10}}, '')
             # pdk_in_gemfile
-            class pdk_in_gemfile { }
+            class pdk_in_gemfile {}
           EOS
         end
       end
