@@ -1,16 +1,16 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2020 Puppet, Inc.
+# Copyright (C) 2022 Puppet, Inc.
 # This file is distributed under the same license as the puppet development kit package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2022.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: puppet development kit v1.17.0-43-gfcce10d\n"
+"Project-Id-Version: puppet development kit v2.4.0-6-g0eec3ab\n"
 "\n"
 "Report-Msgid-Bugs-To: docs@puppet.com\n"
-"POT-Creation-Date: 2020-05-12 11:14-0700\n"
-"PO-Revision-Date: 2020-05-12 11:14-0700\n"
+"POT-Creation-Date: 2022-04-25 13:04+0100\n"
+"PO-Revision-Date: 2022-04-25 13:04+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -23,63 +23,63 @@ msgstr ""
 msgid "Unknown analytics key '%{key}'"
 msgstr ""
 
-#: ../lib/pdk/cli.rb:56
+#: ../lib/pdk/cli.rb:59
 msgid "Support for Ruby versions older than 2.4 will be dropped in the future PDK 2.0.0 release. We recommend updating your Ruby installation to ensure that you can continue using the latest version of PDK."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:94
+#: ../lib/pdk/cli.rb:97
 msgid "Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})"
 msgstr ""
 
-#: ../lib/pdk/cli.rb:100
+#: ../lib/pdk/cli.rb:103
 msgid "Specifies the template git branch or tag to use when creating new modules or classes."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:104
+#: ../lib/pdk/cli.rb:107
 msgid "When specified, skips interactive querying of metadata."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:108
+#: ../lib/pdk/cli.rb:111
 msgid "When specified, interactive querying of metadata will include all optional questions."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:112
+#: ../lib/pdk/cli.rb:115
 msgid "Puppet version to run tests or validations against."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:113
+#: ../lib/pdk/cli.rb:116
 msgid "Puppet Enterprise version to run tests or validations against."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:119
+#: ../lib/pdk/cli.rb:122
 msgid "When specified, PDK will validate or test against the current Puppet source from github.com. To use this option, you must have network access to https://github.com."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:124
+#: ../lib/pdk/cli.rb:127
 msgid "pdk command [options]"
 msgstr ""
 
-#: ../lib/pdk/cli.rb:125
+#: ../lib/pdk/cli.rb:128
 msgid "Puppet Development Kit"
 msgstr ""
 
-#: ../lib/pdk/cli.rb:126
+#: ../lib/pdk/cli.rb:129
 msgid "The shortest path to better modules."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:129
+#: ../lib/pdk/cli.rb:132
 msgid "Show version of pdk."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:134
+#: ../lib/pdk/cli.rb:137
 msgid "Show help for this command."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:139
+#: ../lib/pdk/cli.rb:142
 msgid "Specify desired output format. Valid formats are '%{available_formats}'. You may also specify a file to which the formatted output is sent, for example: '--format=junit:report.xml'. This option may be specified multiple times if each option specifies a distinct target file."
 msgstr ""
 
-#: ../lib/pdk/cli.rb:150
+#: ../lib/pdk/cli.rb:153
 msgid "Enable debug output."
 msgstr ""
 
@@ -103,7 +103,7 @@ msgstr ""
 msgid "`pdk build` can only be run from inside a valid module with a metadata.json."
 msgstr ""
 
-#: ../lib/pdk/cli/build.rb:33 ../lib/pdk/cli/release.rb:59
+#: ../lib/pdk/cli/build.rb:33 ../lib/pdk/cli/release.rb:60
 msgid "This module is missing the following fields in the metadata.json: %{fields}. These missing fields may affect the visibility of the module on the Forge."
 msgstr ""
 
@@ -115,15 +115,15 @@ msgstr ""
 msgid "Overwrite?"
 msgstr ""
 
-#: ../lib/pdk/cli/build.rb:52 ../lib/pdk/cli/build.rb:63 ../lib/pdk/cli/release.rb:79
+#: ../lib/pdk/cli/build.rb:52 ../lib/pdk/cli/build.rb:63 ../lib/pdk/cli/release.rb:80
 msgid "Build cancelled; exiting."
 msgstr ""
 
-#: ../lib/pdk/cli/build.rb:58 ../lib/pdk/cli/release.rb:75
+#: ../lib/pdk/cli/build.rb:58 ../lib/pdk/cli/release.rb:76
 msgid "This module is not compatible with PDK, so PDK can not validate or test this build. Unvalidated modules may have errors when uploading to the Forge. To make this module PDK compatible and use validate features, cancel the build and run `pdk convert`."
 msgstr ""
 
-#: ../lib/pdk/cli/build.rb:62 ../lib/pdk/cli/release.rb:78
+#: ../lib/pdk/cli/build.rb:62 ../lib/pdk/cli/release.rb:79
 msgid "Continue build without converting?"
 msgstr ""
 
@@ -257,6 +257,19 @@ msgstr ""
 msgid "Ignoring --full-interview and continuing with --force."
 msgstr ""
 
+#: ../lib/pdk/cli/env.rb:4
+msgid "env"
+msgstr ""
+
+#: ../lib/pdk/cli/env.rb:5
+msgid "(Experimental) Output environment variables for specific Puppet context"
+msgstr ""
+
+#: ../lib/pdk/cli/env.rb:6
+msgid ""
+"[experimental] Aids in setting a CLI context for a specified version of Puppet by outputting export commands for necessary environment variables.\n"
+msgstr ""
+
 #: ../lib/pdk/cli/errors.rb:8
 msgid "An unexpected error has occurred. Try running the command again with --debug"
 msgstr ""
@@ -277,43 +290,43 @@ msgstr ""
 msgid "Using '%{vendored_bin}' from PDK package."
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:50
+#: ../lib/pdk/cli/exec/command.rb:60
 msgid "Expected execution context to be :system or :module but got '%{context}'."
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:101 ../lib/pdk/cli/exec/interactive_command.rb:46
+#: ../lib/pdk/cli/exec/command.rb:111 ../lib/pdk/cli/exec/interactive_command.rb:46
 msgid "Current working directory is not part of a module. (No metadata.json was found.)"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:128
+#: ../lib/pdk/cli/exec/command.rb:138
 msgid "STDOUT: %{output}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:131
+#: ../lib/pdk/cli/exec/command.rb:141
 msgid "STDERR: %{output}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:145
+#: ../lib/pdk/cli/exec/command.rb:155
 msgid "PUPPET_GEM_VERSION is not supported by PDK. Use the --puppet-version option on your PDK command or set the PDK_PUPPET_VERSION environment variable instead"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:154
+#: ../lib/pdk/cli/exec/command.rb:164
 msgid "%{varname} is not supported by PDK."
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:225
+#: ../lib/pdk/cli/exec/command.rb:235
 msgid "Executing '%{command}'"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:228 ../lib/pdk/cli/exec/interactive_command.rb:78
+#: ../lib/pdk/cli/exec/command.rb:238 ../lib/pdk/cli/exec/interactive_command.rb:78
 msgid "Command environment:"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:239
+#: ../lib/pdk/cli/exec/command.rb:249
 msgid "Failed to execute '%{command}': %{message}"
 msgstr ""
 
-#: ../lib/pdk/cli/exec/command.rb:255
+#: ../lib/pdk/cli/exec/command.rb:265
 msgid "Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})"
 msgstr ""
 
@@ -433,6 +446,34 @@ msgstr ""
 
 #: ../lib/pdk/cli/new/defined_type.rb:21
 msgid "'%{name}' is not a valid defined type name"
+msgstr ""
+
+#: ../lib/pdk/cli/new/fact.rb:4
+msgid "fact [options] <name>"
+msgstr ""
+
+#: ../lib/pdk/cli/new/fact.rb:5
+msgid "Create a new custom fact named <name> using given options"
+msgstr ""
+
+#: ../lib/pdk/cli/new/fact.rb:18
+msgid "'%{name}' is not a valid fact name"
+msgstr ""
+
+#: ../lib/pdk/cli/new/function.rb:4
+msgid "function [options] <name>"
+msgstr ""
+
+#: ../lib/pdk/cli/new/function.rb:5
+msgid "Create a new function named <name> using given options"
+msgstr ""
+
+#: ../lib/pdk/cli/new/function.rb:6
+msgid "The function type, (native or v4)"
+msgstr ""
+
+#: ../lib/pdk/cli/new/function.rb:19
+msgid "'%{name}' is not a valid function name"
 msgstr ""
 
 #: ../lib/pdk/cli/new/module.rb:4
@@ -567,67 +608,67 @@ msgstr ""
 msgid "Set forge upload url path."
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:25 ../lib/pdk/cli/release/publish.rb:14
+#: ../lib/pdk/cli/release.rb:25
 msgid "Set Forge API token."
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:27 ../lib/pdk/cli/release/prep.rb:15
+#: ../lib/pdk/cli/release.rb:28 ../lib/pdk/cli/release/prep.rb:15
 msgid "Update the module to the specified version prior to release. When not specified, the new version will be computed from the Changelog where possible."
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:30
+#: ../lib/pdk/cli/release.rb:31
 msgid "Path to the built module to push to the Forge. This option can only be used when --skip-build is also used. Defaults to pkg/<module version>.tar.gz"
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:36
+#: ../lib/pdk/cli/release.rb:37
 msgid "`pdk release` can only be run from inside a valid module with a metadata.json."
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:73
+#: ../lib/pdk/cli/release.rb:74
 msgid "This module is not compatible with PDK, so PDK can not validate or test this build."
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:98
+#: ../lib/pdk/cli/release.rb:99
 msgid "Do you want to run the module validation ?"
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:105
+#: ../lib/pdk/cli/release.rb:106
 msgid "Do you want to run the automatic changelog generation ?"
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:112
+#: ../lib/pdk/cli/release.rb:113
 msgid "Do you want to set the module version ?"
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:119
+#: ../lib/pdk/cli/release.rb:120
 msgid "Do you want to run the dependency-checker on this module?"
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:126
+#: ../lib/pdk/cli/release.rb:127
 msgid "Do you want to update the documentation for this module?"
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:133
+#: ../lib/pdk/cli/release.rb:134
 msgid "Do you want to publish the module on the Puppet Forge?"
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:160
+#: ../lib/pdk/cli/release.rb:162
 msgid "Please set the module version"
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:161
+#: ../lib/pdk/cli/release.rb:163
 msgid "This value is the version that will be used in the changelog generator and building of the module."
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:164
+#: ../lib/pdk/cli/release.rb:166
 msgid "The version format should be in the format x.y.z where x represents the major version, y the minor version and z the build number."
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:178
+#: ../lib/pdk/cli/release.rb:180
 msgid "Please set the api key(authorization token) to upload on the Puppet Forge"
 msgstr ""
 
-#: ../lib/pdk/cli/release.rb:179
+#: ../lib/pdk/cli/release.rb:181
 msgid "This value is used for authentication on the Puppet Forge to upload your module tarball."
 msgstr ""
 
@@ -657,6 +698,14 @@ msgstr ""
 
 #: ../lib/pdk/cli/release/publish.rb:9
 msgid "Publish the module automatically, with no prompts."
+msgstr ""
+
+#: ../lib/pdk/cli/release/publish.rb:14
+msgid "Set Forge API token (you may also set via environment variable PDK_FORGE_TOKEN)"
+msgstr ""
+
+#: ../lib/pdk/cli/release/publish.rb:33
+msgid "You must supply a Forge API token either via `--forge-token` option or PDK_FORGE_TOKEN environment variable."
 msgstr ""
 
 #: ../lib/pdk/cli/remove.rb:4
@@ -939,7 +988,7 @@ msgstr ""
 msgid "'%{name}' is not a valid report format (%{valid})"
 msgstr ""
 
-#: ../lib/pdk/cli/util/option_validator.rb:16
+#: ../lib/pdk/cli/util/option_validator.rb:21
 msgid "Error: the following values are invalid: %{invalid_entries}"
 msgstr ""
 
@@ -988,60 +1037,60 @@ msgstr ""
 msgid "Running all available validators..."
 msgstr ""
 
-#: ../lib/pdk/config.rb:140
+#: ../lib/pdk/config.rb:146
 msgid "Expected an Array but got '%{klass}' for scopes"
 msgstr ""
 
-#: ../lib/pdk/config.rb:141
+#: ../lib/pdk/config.rb:147
 msgid "Expected an Array or String but got '%{klass}' for setting_name"
 msgstr ""
 
-#: ../lib/pdk/config.rb:161 ../lib/pdk/config/setting.rb:113
+#: ../lib/pdk/config.rb:167 ../lib/pdk/config/setting.rb:113
 msgid "must be passed a block"
 msgstr ""
 
-#: ../lib/pdk/config.rb:180
+#: ../lib/pdk/config.rb:186
 msgid "Invalid configuration names"
 msgstr ""
 
-#: ../lib/pdk/config.rb:182
+#: ../lib/pdk/config.rb:188
 msgid "Unknown configuration root '%{name}'"
 msgstr ""
 
-#: ../lib/pdk/config.rb:190
+#: ../lib/pdk/config.rb:196
 msgid "Unable to load %{file}: %{message}"
 msgstr ""
 
-#: ../lib/pdk/config.rb:231
+#: ../lib/pdk/config.rb:237
 msgid ""
 "PDK collects anonymous usage information to help us understand how it is being used and make decisions on how to improve it. You can find out more about what data we collect and how it is used in the PDK documentation at %{url}.\n"
 msgstr ""
 
-#: ../lib/pdk/config.rb:237
+#: ../lib/pdk/config.rb:243
 msgid "You can opt in or out of the usage data collection at any time by editing the analytics configuration file at %{path} and changing the '%{key}' value."
 msgstr ""
 
-#: ../lib/pdk/config.rb:249
+#: ../lib/pdk/config.rb:255
 msgid "Do you consent to the collection of anonymous PDK usage information?"
 msgstr ""
 
-#: ../lib/pdk/config.rb:263
+#: ../lib/pdk/config.rb:269
 msgid "No answer given, opting out of analytics collection."
 msgstr ""
 
-#: ../lib/pdk/config.rb:301
+#: ../lib/pdk/config.rb:307
 msgid "Expected a String but got '%{klass}'"
 msgstr ""
 
-#: ../lib/pdk/config.rb:325
+#: ../lib/pdk/config.rb:331
 msgid "Missing or invalid namespace"
 msgstr ""
 
-#: ../lib/pdk/config.rb:326
+#: ../lib/pdk/config.rb:332
 msgid "Missing a name to set"
 msgstr ""
 
-#: ../lib/pdk/config.rb:377
+#: ../lib/pdk/config.rb:383
 msgid "Unable to set '%{key}' to '%{value}' as it is not a Hash"
 msgstr ""
 
@@ -1105,11 +1154,11 @@ msgstr ""
 msgid "must be a version 4 UUID"
 msgstr ""
 
-#: ../lib/pdk/config/yaml.rb:21 ../lib/pdk/config/yaml_with_schema.rb:39
+#: ../lib/pdk/config/yaml.rb:25 ../lib/pdk/config/yaml_with_schema.rb:39
 msgid "Syntax error when loading %{file}: %{error}"
 msgstr ""
 
-#: ../lib/pdk/config/yaml.rb:26 ../lib/pdk/config/yaml_with_schema.rb:44
+#: ../lib/pdk/config/yaml.rb:30 ../lib/pdk/config/yaml_with_schema.rb:44
 msgid "Unsupported class in %{file}: %{error}"
 msgstr ""
 
@@ -1321,46 +1370,6 @@ msgstr ""
 msgid "Unable to find the %{type} template in %{url}."
 msgstr ""
 
-#: ../lib/pdk/generate/resource_api_object.rb:20
-msgid ".sync.yml not found"
-msgstr ""
-
-#: ../lib/pdk/generate/resource_api_object.rb:24
-msgid ".sync.yml contents is not a Hash"
-msgstr ""
-
-#: ../lib/pdk/generate/resource_api_object.rb:26
-msgid "Gemfile configuration not found"
-msgstr ""
-
-#: ../lib/pdk/generate/resource_api_object.rb:28
-msgid "Gemfile.optional configuration not found"
-msgstr ""
-
-#: ../lib/pdk/generate/resource_api_object.rb:30
-msgid "Gemfile.optional.:development configuration not found"
-msgstr ""
-
-#: ../lib/pdk/generate/resource_api_object.rb:32
-msgid "puppet-resource_api not found in the Gemfile config"
-msgstr ""
-
-#: ../lib/pdk/generate/resource_api_object.rb:34
-msgid "spec/spec_helper.rb configuration not found"
-msgstr ""
-
-#: ../lib/pdk/generate/resource_api_object.rb:36
-msgid "spec/spec_helper.rb.mock_with configuration not found"
-msgstr ""
-
-#: ../lib/pdk/generate/resource_api_object.rb:38
-msgid "spec/spec_helper.rb.mock_with not set to ':rspec'"
-msgstr ""
-
-#: ../lib/pdk/generate/resource_api_object.rb:46
-msgid "%{error}: Creating a %{thing_name} needs some local configuration in your module. Please follow the docs at https://puppet.com/docs/puppet/latest/create_types_and_providers_resource_api.html"
-msgstr ""
-
 #: ../lib/pdk/generate/task.rb:31
 msgid "A task named '%{name}' already exists in this module; defined in %{file}"
 msgstr ""
@@ -1405,83 +1414,83 @@ msgstr ""
 msgid "No test changes required."
 msgstr ""
 
-#: ../lib/pdk/module/convert.rb:156
+#: ../lib/pdk/module/convert.rb:158
 msgid "skipping '%{path}'"
 msgstr ""
 
-#: ../lib/pdk/module/convert.rb:195
+#: ../lib/pdk/module/convert.rb:197
 msgid "Unable to update module metadata; %{path} exists but it is not readable."
 msgstr ""
 
-#: ../lib/pdk/module/convert.rb:211
+#: ../lib/pdk/module/convert.rb:213
 msgid "Unable to update module metadata; %{path} exists but it is not a file."
 msgstr ""
 
-#: ../lib/pdk/module/convert.rb:256 ../lib/pdk/module/convert.rb:261 ../lib/pdk/module/convert.rb:267
+#: ../lib/pdk/module/convert.rb:258 ../lib/pdk/module/convert.rb:263 ../lib/pdk/module/convert.rb:269
 msgid ""
 "\n"
 "%{banner}"
 msgstr ""
 
-#: ../lib/pdk/module/convert.rb:269
+#: ../lib/pdk/module/convert.rb:271
 msgid ""
 "\n"
 "%{summary}\n"
 "\n"
 msgstr ""
 
-#: ../lib/pdk/module/convert.rb:278
+#: ../lib/pdk/module/convert.rb:280
 msgid ""
 "\n"
 "You can find a report of differences in %{path}.\n"
 "\n"
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:91
+#: ../lib/pdk/module/metadata.rb:95
 msgid "Cannot read metadata from file: no path to file was given."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:95
+#: ../lib/pdk/module/metadata.rb:99
 msgid "'%{file}' does not exist or is not a file."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:99
+#: ../lib/pdk/module/metadata.rb:103
 msgid "Unable to open '%{file}' for reading."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:106
+#: ../lib/pdk/module/metadata.rb:110
 msgid "Invalid JSON in metadata.json: %{msg}"
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:143
+#: ../lib/pdk/module/metadata.rb:147
 msgid "Module metadata does not contain any requirements."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:144
+#: ../lib/pdk/module/metadata.rb:148
 msgid "Module metadata does not contain a \"puppet\" requirement."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:145
+#: ../lib/pdk/module/metadata.rb:149
 msgid "The \"puppet\" requirement in module metadata does not specify a \"version_requirement\"."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:185
+#: ../lib/pdk/module/metadata.rb:189
 msgid "Field must be a dash-separated user name and module name."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:187
+#: ../lib/pdk/module/metadata.rb:191
 msgid "Module name must contain only alphanumeric or underscore characters."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:189
+#: ../lib/pdk/module/metadata.rb:193
 msgid "Module name must begin with a letter."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:191
+#: ../lib/pdk/module/metadata.rb:195
 msgid "Namespace must contain only alphanumeric characters."
 msgstr ""
 
-#: ../lib/pdk/module/metadata.rb:194
+#: ../lib/pdk/module/metadata.rb:198
 msgid "Invalid 'name' field in metadata.json: %{err}"
 msgstr ""
 
@@ -1513,47 +1522,51 @@ msgstr ""
 msgid "Updating version to %{module_version}"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:115
+#: ../lib/pdk/module/release.rb:72
+msgid "%{new_version} does not match %{latest_version}"
+msgstr ""
+
+#: ../lib/pdk/module/release.rb:121
 msgid "An error occured during validation"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:119
+#: ../lib/pdk/module/release.rb:125
 msgid "Updating documentation using puppet strings"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:123
+#: ../lib/pdk/module/release.rb:129
 msgid "An error occured generating the module documentation: %{stdout}"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:128
+#: ../lib/pdk/module/release.rb:134
 msgid "Running dependency checks"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:134
+#: ../lib/pdk/module/release.rb:140
 msgid "An error occured checking the module dependencies: %{stdout}"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:144
+#: ../lib/pdk/module/release.rb:150
 msgid "Module tarball %{tarball_path} does not exist"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:150
+#: ../lib/pdk/module/release.rb:156
 msgid "Uploading tarball to puppet forge..."
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:166
+#: ../lib/pdk/module/release.rb:172
 msgid "Error uploading to Puppet Forge: %{result}"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:167
+#: ../lib/pdk/module/release.rb:173
 msgid "Publish to Forge was successful"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:172
+#: ../lib/pdk/module/release.rb:178
 msgid "Missing forge-upload-url option"
 msgstr ""
 
-#: ../lib/pdk/module/release.rb:173
+#: ../lib/pdk/module/release.rb:179
 msgid "Missing forge-token option"
 msgstr ""
 
@@ -1593,47 +1606,47 @@ msgstr ""
 msgid "You do not have permission to write to '%{path}'"
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:192
+#: ../lib/pdk/report/event.rb:198
 msgid "File not specified."
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:196
+#: ../lib/pdk/report/event.rb:202
 msgid "File must be a String."
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:232
+#: ../lib/pdk/report/event.rb:238
 msgid "State not specified."
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:237
+#: ../lib/pdk/report/event.rb:243
 msgid "State must be a Symbol, not %{type}"
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:242
+#: ../lib/pdk/report/event.rb:248
 msgid "Invalid state %{state}. Valid states are: %{valid}."
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:261
+#: ../lib/pdk/report/event.rb:267
 msgid "Source not specified."
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:282
+#: ../lib/pdk/report/event.rb:288
 msgid "Line must be an Integer or a String representation of an Integer."
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:286
+#: ../lib/pdk/report/event.rb:292
 msgid "The line number can contain only the digits 0-9."
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:307
+#: ../lib/pdk/report/event.rb:313
 msgid "Column must be an Integer or a String representation of an Integer."
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:311
+#: ../lib/pdk/report/event.rb:317
 msgid "The column number can contain only the digits 0-9."
 msgstr ""
 
-#: ../lib/pdk/report/event.rb:329
+#: ../lib/pdk/report/event.rb:335
 msgid "Trace must be an Array of stack trace lines."
 msgstr ""
 
@@ -1712,11 +1725,11 @@ msgid "Failed to prepare to run the unit tests."
 msgstr ""
 
 #: ../lib/pdk/tests/unit.rb:100
-msgid "Running unit tests in parallel."
+msgid "Running unit tests."
 msgstr ""
 
 #: ../lib/pdk/tests/unit.rb:100
-msgid "Running unit tests."
+msgid "Running unit tests in parallel."
 msgstr ""
 
 #: ../lib/pdk/tests/unit.rb:125
@@ -1727,15 +1740,15 @@ msgstr ""
 msgid "Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending."
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:231
+#: ../lib/pdk/tests/unit.rb:233
 msgid "Finding unit tests."
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:234
+#: ../lib/pdk/tests/unit.rb:236
 msgid "Failed to find valid JSON in output from rspec: %{output}"
 msgstr ""
 
-#: ../lib/pdk/tests/unit.rb:239
+#: ../lib/pdk/tests/unit.rb:241
 msgid "Unable to enumerate examples. rspec reported: %{message}"
 msgstr ""
 
@@ -1805,23 +1818,23 @@ msgstr ""
 msgid "Unable to install requested binstubs."
 msgstr ""
 
-#: ../lib/pdk/util/changelog_generator.rb:15
-msgid "Unable to generate the changelog as the %{gem} gem is not installed"
-msgstr ""
-
-#: ../lib/pdk/util/changelog_generator.rb:30
-msgid "Error generating changelog: %{stdout}"
+#: ../lib/pdk/util/changelog_generator.rb:19
+msgid "Unable to generate the changelog as the %{gem} gem is not included in this module's Gemfile"
 msgstr ""
 
 #: ../lib/pdk/util/changelog_generator.rb:34
+msgid "Error generating changelog: %{stdout}"
+msgstr ""
+
+#: ../lib/pdk/util/changelog_generator.rb:38
 msgid "The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details"
 msgstr ""
 
-#: ../lib/pdk/util/changelog_generator.rb:43
+#: ../lib/pdk/util/changelog_generator.rb:47
 msgid "Invalid version string %{version}"
 msgstr ""
 
-#: ../lib/pdk/util/changelog_generator.rb:45
+#: ../lib/pdk/util/changelog_generator.rb:49
 msgid "Determing the target version from '%{file}'"
 msgstr ""
 
@@ -1945,11 +1958,11 @@ msgstr ""
 msgid "%{file_name} was not found in the cache, downloading it from %{url}."
 msgstr ""
 
-#: ../lib/pdk/util/vendored_file.rb:65
+#: ../lib/pdk/util/vendored_file.rb:64
 msgid "Unable to download %{url}. %{code}: %{message}."
 msgstr ""
 
-#: ../lib/pdk/util/vendored_file.rb:74
+#: ../lib/pdk/util/vendored_file.rb:73
 msgid "Unable to download %{url}. Check internet connectivity and try again. %{error}"
 msgstr ""
 
@@ -2009,23 +2022,27 @@ msgstr ""
 msgid "environment_timeout is set to '%{timeout}' but should be 0, 'unlimited' or not set."
 msgstr ""
 
-#: ../lib/pdk/validate/invokable_validator.rb:119
+#: ../lib/pdk/validate/invokable_validator.rb:90
+msgid "Validator '%{validator}' skipped for '%{target}'. No files matching '%{pattern}' found to validate."
+msgstr ""
+
+#: ../lib/pdk/validate/invokable_validator.rb:124
 msgid "Running %{name} validator ..."
 msgstr ""
 
-#: ../lib/pdk/validate/invokable_validator.rb:136
+#: ../lib/pdk/validate/invokable_validator.rb:141
 msgid "%{validator}: Skipped '%{target}'. Target does not contain any files to validate (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/invokable_validator.rb:140
+#: ../lib/pdk/validate/invokable_validator.rb:145
 msgid "Target does not contain any files to validate (%{pattern})."
 msgstr ""
 
-#: ../lib/pdk/validate/invokable_validator.rb:152
+#: ../lib/pdk/validate/invokable_validator.rb:157
 msgid "%{validator}: Skipped '%{target}'. Target file not found."
 msgstr ""
 
-#: ../lib/pdk/validate/invokable_validator.rb:156
+#: ../lib/pdk/validate/invokable_validator.rb:161
 msgid "File does not exist."
 msgstr ""
 
