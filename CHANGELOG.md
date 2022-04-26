@@ -3,6 +3,13 @@
 All changes to this repo will be documented in this file.
 See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.
 
+## [v2.5.0](https://github.com/puppetlabs/pdk/tree/v2.4.0) (2022-04-25)
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.4.0...v2.5.0)
+
+**Merged pull requests:**
+
+- Fixing puppet-syntax errors [#1169](https://github.com/puppetlabs/pdk/pull/1169) ([chelnak](https://github.com/chalnak))
 
 ## [v2.4.0](https://github.com/puppetlabs/pdk/tree/v2.4.0) (2022-02-08)
 

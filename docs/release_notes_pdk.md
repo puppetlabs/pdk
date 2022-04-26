@@ -2,6 +2,12 @@
 
 New features, enhancements, and resolved issues for the PDK 2.x release series.
 
+## PDK 2.5.0
+
+### New features and enhancements
+
+Support added for SUSE Enterprise Linux 15
+
 ## PDK 2.4.0
 ### Resolved issues
 
