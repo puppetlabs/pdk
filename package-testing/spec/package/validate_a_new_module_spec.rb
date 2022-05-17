@@ -17,8 +17,8 @@ describe 'C100321 - Generate a module and validate it (i.e. ensure bundle instal
   end
 
   context 'when validating the module' do
-    context 'with puppet 6.x' do
-      puppet_version = '6.x'
+    context 'with puppet 7.x' do
+      puppet_version = '7.x'
       let(:ruby_version) { ruby_for_puppet(puppet_version) }
 
       describe command("pdk validate --puppet-version=#{puppet_version}") do
