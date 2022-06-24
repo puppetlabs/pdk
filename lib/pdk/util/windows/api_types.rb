@@ -26,7 +26,7 @@ module PDK::Util::Windows::APITypes
     def read_wide_string(char_length, dst_encoding = Encoding::UTF_8, encode_options = {})
       # char_length is number of wide chars (typically excluding NULLs), *not* bytes
       str = get_bytes(0, char_length * 2).force_encoding('UTF-16LE')
-      str.encode(dst_encoding, str.encoding, encode_options)
+      str.encode(dst_encoding, str.encoding, **encode_options)
     rescue StandardError => e
       PDK.logger.debug _('Unable to convert value %{string} to encoding %{encoding} due to %{error}') % {
         string:   str.dump,
