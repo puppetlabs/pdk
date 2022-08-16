@@ -178,7 +178,7 @@ module PDK
 
           resolved_env.merge!(@environment.dup)
 
-          resolved_env['BUNDLE_IGNORE_CONFIG'] = '1'
+          resolved_env['BUNDLE_IGNORE_CONFIG'] = (ENV['PDK_BUNDLE_IGNORE_CONFIG'] || '1')
 
           if [:module, :pwd].include?(context)
             require 'pdk/util'
