@@ -129,7 +129,6 @@ writing, validating, and testing Puppet code. 
 |`./manifests`|Directory containing module manifests, each of which defines one class or defined type. PDK creates manifests when you create new classes or defined types with `pdk` commands.|
 |`metadata.json`|File containing metadata for the module.|
 |`.pdkignore`|File listing module files that PDK should ignore when building a module package for upload to the Forge.|
-|`.pmtignore`|File listing module files that the `puppet module` command should ignore.|
 |`Rakefile`|File containing configuration for the Ruby infrastructure. Used in CI and for backwards compatibility.|
 |`README.md`|File containing a README template for your module.|
 |`.rspec`|File containing the default configuration for RSpec.|
