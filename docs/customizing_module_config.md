@@ -29,7 +29,7 @@ created it with PDK or you are converting it to PDK. To customize a new module,
 first create the module with PDK, and then apply any changes you want to the
 template.
 
-To customize the default template, create a `.sync.yml` file in your module.
+To customize the default template, update the `.sync.yml` file in your module.
 This file must be in the top directory of the module and must be in a valid YAML
 format. When you convert or update a module, PDK reads the `.sync.yml` file and
 applies those changes to the relevant files.

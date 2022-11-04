@@ -120,6 +120,7 @@ writing, validating, and testing Puppet code. 
 |Module directory|Directory with the same name as the module. Contains all of the module's files and directories.|
 |`appveyor.yml`|File containing configuration for Appveyor CI integration.|
 |`CHANGELOG.md`|File in which you can document notable changes to this project.|
+|`.devcontainer`|File describing how a container should be configured to test this module.|
 |`./files`|Directory containing static files, which managed nodes can download.|
 |`.fixtures.yml`|File specifying where test dependencies are loaded from.|
 |`Gemfile`|File describing Ruby gem dependencies.|
@@ -129,7 +130,7 @@ writing, validating, and testing Puppet code. 
 |`./manifests`|Directory containing module manifests, each of which defines one class or defined type. PDK creates manifests when you create new classes or defined types with `pdk` commands.|
 |`metadata.json`|File containing metadata for the module.|
 |`.pdkignore`|File listing module files that PDK should ignore when building a module package for upload to the Forge.|
-|`.pmtignore`|File listing module files that the `puppet module` command should ignore.|
+|`puppet-lint.rc`|File containing configuration for puppet-lint.|
 |`Rakefile`|File containing configuration for the Ruby infrastructure. Used in CI and for backwards compatibility.|
 |`README.md`|File containing a README template for your module.|
 |`.rspec`|File containing the default configuration for RSpec.|
@@ -138,10 +139,13 @@ writing, validating, and testing Puppet code. 
 |`spec/default_facts.yml`|File specifying facts that are available to all tests.|
 |`spec/spec_helper.rb`|Helper code to set up preconditions for unit tests.|
 |`./spec/classes`|Directory containing testing templates for any classes you create with the `pdk new class` command.|
+|`.sync.yml`|File to customize the PDK template in use.|
 |`./tasks`|Directory containing task files and task metadata files for any tasks you create with the `pdk new task`command.|
 |`./templates`|Directory containing any ERB or EPP templates. Required when building a module to upload to the Forge.|
 |`.travis.yml`|File containing configuration for cloud-based testing on Linux and Mac OS X. See the [travis-ci](http://travis-ci.org/) docs for more information.|
+|`.vscode`|Directory containing configuration for Visual Studio code.|
 |`.yardopts`|File containing the default configuration for Puppet Strings.|
+
 
 ## Create a class
 
