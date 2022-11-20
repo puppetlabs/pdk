@@ -4,9 +4,9 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'activesupport', '4.2.9'
-  gem 'github_changelog_generator', '~> 1.14'
-  gem 'pry-byebug', '~> 3.4'
+  gem 'activesupport', '7.0.4'
+  gem 'github_changelog_generator', '~> 1.15.2'
+  gem 'pry-byebug', '~> 3.10.1'
   gem 'ruby-prof'
   gem 'yard'
 end
