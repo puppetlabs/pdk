@@ -57,7 +57,7 @@ module PDK
 
         def context=(new_context)
           unless [:system, :module, :pwd].include?(new_context)
-            raise ArgumentError, _("Expected execution context to be :system or :module but got '%{context}'.") % { context: new_context }
+            raise ArgumentError, "Expected execution context to be :system or :module but got '%{context}'." % { context: new_context }
           end
 
           @context = new_context
@@ -108,7 +108,7 @@ module PDK
             unless mod_root
               @spinner.error if @spinner
 
-              raise PDK::CLI::FatalError, _('Current working directory is not part of a module. (No metadata.json was found.)')
+              raise PDK::CLI::FatalError, 'Current working directory is not part of a module. (No metadata.json was found.)'
             end
 
             if Dir.pwd == mod_root || context == :pwd
@@ -135,10 +135,10 @@ module PDK
             duration: @duration,
           }
 
-          PDK.logger.debug _('STDOUT: %{output}') % {
+          PDK.logger.debug 'STDOUT: %{output}' % {
             output: process_data[:stdout].empty? ? 'N/A' : "\n#{process_data[:stdout]}",
           }
-          PDK.logger.debug _('STDERR: %{output}') % {
+          PDK.logger.debug 'STDERR: %{output}' % {
             output: process_data[:stderr].empty? ? 'N/A' : "\n#{process_data[:stderr]}",
           }
 
@@ -152,16 +152,15 @@ module PDK
 
         def warn_on_legacy_env_vars!
           if PDK::Util::Env['PUPPET_GEM_VERSION']
-            PDK.logger.warn_once _(
+            PDK.logger.warn_once _
               'PUPPET_GEM_VERSION is not supported by PDK. ' \
               'Use the --puppet-version option on your PDK command ' \
-              'or set the PDK_PUPPET_VERSION environment variable instead',
-            )
+              'or set the PDK_PUPPET_VERSION environment variable instead'
           end
 
           %w[FACTER HIERA].each do |gem|
             if PDK::Util::Env["#{gem}_GEM_VERSION"]
-              PDK.logger.warn_once _('%{varname} is not supported by PDK.') % { varname: "#{gem}_GEM_VERSION" }
+              PDK.logger.warn_once '%{varname} is not supported by PDK.' % { varname: "#{gem}_GEM_VERSION" }
             end
           end
         end
@@ -232,10 +231,10 @@ module PDK
         def run_process!
           command_string = argv.join(' ')
 
-          PDK.logger.debug(_("Executing '%{command}'") % { command: command_string })
+          PDK.logger.debug("Executing '%{command}'" % { command: command_string })
 
           if context == :module
-            PDK.logger.debug(_('Command environment:'))
+            PDK.logger.debug('Command environment:')
             @process.environment.each do |var, val|
               PDK.logger.debug("  #{var}: #{val}")
             end
@@ -246,7 +245,7 @@ module PDK
           begin
             @process.start
           rescue ChildProcess::LaunchError => e
-            raise PDK::CLI::FatalError, _("Failed to execute '%{command}': %{message}") % { command: command_string, message: e.message }
+            raise PDK::CLI::FatalError, "Failed to execute '%{command}': %{message}" % { command: command_string, message: e.message }
           end
 
           if timeout
@@ -262,7 +261,7 @@ module PDK
 
           @duration = Time.now - start_time
 
-          PDK.logger.debug(_("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})") %
+          PDK.logger.debug("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})" %
             { command: command_string, duration_in_seconds: @duration, exit_code: @process.exit_code })
         end
 

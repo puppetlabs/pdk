@@ -5,7 +5,7 @@ module PDK
     class FatalError < StandardError
       attr_reader :exit_code
 
-      def initialize(msg = _('An unexpected error has occurred. Try running the command again with --debug'), opts = {})
+      def initialize(msg = 'An unexpected error has occurred. Try running the command again with --debug', opts = {})
         @exit_code = opts.fetch(:exit_code, 1)
         super(msg)
       end

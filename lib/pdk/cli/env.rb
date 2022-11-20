@@ -1,12 +1,11 @@
 module PDK::CLI
   @env_cmd = @base_cmd.define_command do
     name 'env'
-    usage _('env')
-    summary _('(Experimental) Output environment variables for specific Puppet context')
-    description _(<<-EOF
+    usage 'env'
+    summary '(Experimental) Output environment variables for specific Puppet context'
+    description <<-EOF
 [experimental] Aids in setting a CLI context for a specified version of Puppet by outputting export commands for necessary environment variables.
 EOF
-                 )
 
     PDK::CLI.puppet_version_options(self)
     PDK::CLI.puppet_dev_option(self)

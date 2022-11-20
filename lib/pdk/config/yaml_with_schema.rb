@@ -20,7 +20,7 @@ module PDK
           # Ensure the parsed document is actually valid
           validate_document!(@raw_data)
         rescue ::JSON::Schema::ValidationError => e
-          raise PDK::Config::LoadError, _('The configuration file %{filename} is not valid: %{message}') % {
+          raise PDK::Config::LoadError, 'The configuration file %{filename} is not valid: %{message}' % {
             filename: filename,
             message:  e.message,
           }
@@ -36,12 +36,12 @@ module PDK
         # we're left with the settings that we don't manage.
         self.unmanaged_settings = @raw_data.reject { |k, _| schema_property_names.include?(k) }
       rescue Psych::SyntaxError => e
-        raise PDK::Config::LoadError, _('Syntax error when loading %{file}: %{error}') % {
+        raise PDK::Config::LoadError, 'Syntax error when loading %{file}: %{error}' % {
           file:  filename,
           error: "#{e.problem} #{e.context}",
         }
       rescue Psych::DisallowedClass => e
-        raise PDK::Config::LoadError, _('Unsupported class in %{file}: %{error}') % {
+        raise PDK::Config::LoadError, 'Unsupported class in %{file}: %{error}' % {
           file:  filename,
           error: e.message,
         }

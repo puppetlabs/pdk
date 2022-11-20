@@ -47,7 +47,7 @@ module PDK
           Timeout::Error,
         ]
 
-        PDK.logger.debug _('%{file_name} was not found in the cache, downloading it from %{url}.') % {
+        PDK.logger.debug '%{file_name} was not found in the cache, downloading it from %{url}.' % {
           file_name: file_name,
           url:       url,
         }
@@ -61,7 +61,7 @@ module PDK
         response = http.request(request)
 
         unless response.code == '200'
-          raise DownloadError, _('Unable to download %{url}. %{code}: %{message}.') % {
+          raise DownloadError, 'Unable to download %{url}. %{code}: %{message}.' % {
             url:     url,
             code:    response.code,
             message: response.message,
@@ -70,7 +70,7 @@ module PDK
 
         response.body
       rescue *http_errors => e
-        raise DownloadError, _('Unable to download %{url}. Check internet connectivity and try again. %{error}') % {
+        raise DownloadError, 'Unable to download %{url}. Check internet connectivity and try again. %{error}' % {
           url: url,
           error: e,
         }

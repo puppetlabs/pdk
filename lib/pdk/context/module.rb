@@ -20,7 +20,7 @@ module PDK
       #:nocov:
       # @see PDK::Context::AbstractContext.display_name
       def display_name
-        _('a Puppet Module context')
+        'a Puppet Module context'
       end
       #:nocov:
     end

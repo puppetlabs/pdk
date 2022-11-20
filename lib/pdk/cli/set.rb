@@ -1,8 +1,8 @@
 module PDK::CLI
   @set_cmd = @base_cmd.define_command do
     name 'set'
-    usage _('set [subcommand] [options]')
-    summary _('Set or update information about the PDK or current project.')
+    usage 'set [subcommand] [options]'
+    summary 'Set or update information about the PDK or current project.'
     default_subcommand 'help'
 
     run do |_opts, args, _cmd|

@@ -93,7 +93,7 @@ module PDK
               begin
                 YAML.safe_load(PDK::Util::Filesystem.read_file(loc), [], [], true)
               rescue Psych::SyntaxError => e
-                PDK.logger.warn _("'%{file}' is not a valid YAML file: %{problem} %{context} at line %{line} column %{column}") % {
+                PDK.logger.warn "'%{file}' is not a valid YAML file: %{problem} %{context} at line %{line} column %{column}" % {
                   file:    loc,
                   problem: e.problem,
                   context: e.context,

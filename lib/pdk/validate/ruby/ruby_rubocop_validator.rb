@@ -25,7 +25,7 @@ module PDK
         end
 
         def spinner_text_for_targets(_targets)
-          _('Checking Ruby code style (%{pattern}).') % { pattern: pattern }
+          'Checking Ruby code style (%{pattern}).' % { pattern: pattern }
         end
 
         def parse_options(targets)

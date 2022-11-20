@@ -69,7 +69,7 @@ module PDK
               return PDK::Util::Filesystem.read_file(@template_file)
             end
 
-            raise ArgumentError, _("'%{template}' is not a readable file") % { template: @template_file }
+            raise ArgumentError, "'%{template}' is not a readable file" % { template: @template_file }
           end
 
           # Renders the content of the template file as an ERB template.
@@ -80,6 +80,8 @@ module PDK
           #
           # @api private
           def render_erb
+            require 'erb'
+
             renderer = ERB.new(template_content, nil, '-')
             renderer.filename = @template_file
             renderer.result(binding)

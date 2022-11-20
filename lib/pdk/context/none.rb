@@ -8,7 +8,7 @@ module PDK
       #:nocov:
       # @see PDK::Context::AbstractContext.display_name
       def display_name
-        _('an unknown context')
+        'an unknown context'
       end
       #:nocov:
 

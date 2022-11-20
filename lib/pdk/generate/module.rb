@@ -7,15 +7,13 @@ module PDK
         require 'pdk/cli/util/option_validator'
 
         unless PDK::CLI::Util::OptionValidator.valid_module_name?(opts[:module_name])
-          error_msg = _(
-            "'%{module_name}' is not a valid module name.\n" \
-            'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.',
-          ) % { module_name: opts[:module_name] }
+          error_msg = "'%{module_name}' is not a valid module name.\n" \
+            'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.' % { module_name: opts[:module_name] }
           raise PDK::CLI::ExitWithError, error_msg
         end
 
         target_dir = PDK::Util::Filesystem.expand_path(opts[:target_dir])
-        raise PDK::CLI::ExitWithError, _("The destination directory '%{dir}' already exists") % { dir: target_dir } if PDK::Util::Filesystem.exist?(target_dir)
+        raise PDK::CLI::ExitWithError, "The destination directory '%{dir}' already exists" % { dir: target_dir } if PDK::Util::Filesystem.exist?(target_dir)
       end
 
       def self.invoke(opts = {})
@@ -35,7 +33,7 @@ module PDK
           PDK::Util::Filesystem.write_file(test_file, 'This file was created by the Puppet Development Kit to test if this folder was writable, you can safely remove this file.')
           PDK::Util::Filesystem.rm_f(test_file)
         rescue Errno::EACCES
-          raise PDK::CLI::FatalError, _("You do not have permission to write to '%{parent_dir}'") % {
+          raise PDK::CLI::FatalError, "You do not have permission to write to '%{parent_dir}'" % {
             parent_dir: parent_dir,
           }
         end
@@ -47,14 +45,12 @@ module PDK
         template_uri = PDK::Util::TemplateURI.new(opts)
 
         if template_uri.default? && template_uri.default_ref?
-          PDK.logger.info _('Using the default template-url and template-ref.')
+          PDK.logger.info 'Using the default template-url and template-ref.'
         else
-          PDK.logger.info _(
-            "Using the %{method} template-url and template-ref '%{template_uri}'." % {
-              method: opts.key?(:'template-url') ? _('specified') : _('saved'),
+          PDK.logger.info "Using the %{method} template-url and template-ref '%{template_uri}'." % {
+              method: opts.key?(:'template-url') ? 'specified' : 'saved',
               template_uri: template_uri.metadata_format,
-            },
-          )
+            }
         end
 
         begin
@@ -99,16 +95,14 @@ module PDK
               end
             end
 
-            PDK.logger.info _("Module '%{name}' generated at path '%{path}'.") % {
+            PDK.logger.info "Module '%{name}' generated at path '%{path}'." % {
               name: opts[:module_name],
               path: target_dir,
             }
-            PDK.logger.info _(
-              "In your module directory, add classes with the 'pdk new class' command.",
-            )
+            PDK.logger.info "In your module directory, add classes with the 'pdk new class' command."
           end
         rescue Errno::EACCES => e
-          raise PDK::CLI::FatalError, _("Failed to move '%{source}' to '%{target}': %{message}") % {
+          raise PDK::CLI::FatalError, "Failed to move '%{source}' to '%{target}': %{message}" % {
             source:  temp_target_dir,
             target:  target_dir,
             message: e.message,
@@ -124,7 +118,7 @@ module PDK
         login_clean = 'username' if login_clean.empty?
 
         if login_clean != login
-          PDK.logger.debug _('Your username is not a valid Forge username. Proceeding with the username %{username}. You can fix this later in metadata.json.') % {
+          PDK.logger.debug 'Your username is not a valid Forge username. Proceeding with the username %{username}. You can fix this later in metadata.json.' % {
             username: login_clean,
           }
         end
@@ -162,7 +156,7 @@ module PDK
           begin
             PDK::Util::Filesystem.mkdir_p(dir)
           rescue SystemCallError => e
-            raise PDK::CLI::FatalError, _("Unable to create directory '%{dir}': %{message}") % {
+            raise PDK::CLI::FatalError, "Unable to create directory '%{dir}': %{message}" % {
               dir:     dir,
               message: e.message,
             }
@@ -177,49 +171,49 @@ module PDK
         questions = [
           {
             name:             'module_name',
-            question:         _('If you have a name for your module, add it here.'),
-            help:             _('This is the name that will be associated with your module, it should be relevant to the modules content.'),
+            question:         'If you have a name for your module, add it here.',
+            help:             'This is the name that will be associated with your module, it should be relevant to the modules content.',
             required:         true,
             validate_pattern: %r{\A[a-z][a-z0-9_]*\Z}i,
-            validate_message: _('Module names must begin with a lowercase letter and can only include lowercase letters, numbers, and underscores.'),
+            validate_message: 'Module names must begin with a lowercase letter and can only include lowercase letters, numbers, and underscores.',
           },
           {
             name:             'forge_username',
-            question:         _('If you have a Puppet Forge username, add it here.'),
-            help:             _('We can use this to upload your module to the Forge when it\'s complete.'),
+            question:         'If you have a Puppet Forge username, add it here.',
+            help:             'We can use this to upload your module to the Forge when it\'s complete.',
             required:         true,
             validate_pattern: %r{\A[a-z0-9]+\Z}i,
-            validate_message: _('Forge usernames can only contain lowercase letters and numbers'),
+            validate_message: 'Forge usernames can only contain lowercase letters and numbers',
             default:          opts[:username],
           },
           {
             name:             'version',
-            question:         _('What version is this module?'),
-            help:             _('Puppet uses Semantic Versioning (semver.org) to version modules.'),
+            question:         'What version is this module?',
+            help:             'Puppet uses Semantic Versioning (semver.org) to version modules.',
             required:         true,
-            validate_pattern: %r{\A[0-9]+\.[0-9]+\.[0-9]+},
-            validate_message: _('Semantic Version numbers must be in the form MAJOR.MINOR.PATCH'),
+            validate_pattern: %r{\A[0-9]+\.[0-9]+\.[0-9]+}i,
+            validate_message: 'Semantic Version numbers must be in the form MAJOR.MINOR.PATCH',
             default:          metadata.data['version'],
             forge_only:       true,
           },
           {
             name:     'author',
-            question: _('Who wrote this module?'),
-            help:     _('This is used to credit the module\'s author.'),
+            question: 'Who wrote this module?',
+            help:     'This is used to credit the module\'s author.',
             required: true,
             default:  metadata.data['author'],
           },
           {
             name:     'license',
-            question: _('What license does this module code fall under?'),
-            help:     _('This should be an identifier from https://spdx.org/licenses/. Common values are "Apache-2.0", "MIT", or "proprietary".'),
+            question: 'What license does this module code fall under?',
+            help:     'This should be an identifier from https://spdx.org/licenses/. Common values are "Apache-2.0", "MIT", or "proprietary".',
             required: true,
             default:  metadata.data['license'],
           },
           {
             name:     'operatingsystem_support',
-            question: _('What operating systems does this module support?'),
-            help:     _('Use the up and down keys to move between the choices, space to select and enter to continue.'),
+            question: 'What operating systems does this module support?',
+            help:     'Use the up and down keys to move between the choices, space to select and enter to continue.',
             required: true,
             type:     :multi_select,
             choices:  PDK::Module::Metadata::OPERATING_SYSTEMS,
@@ -230,31 +224,31 @@ module PDK
           },
           {
             name:       'summary',
-            question:   _('Summarize the purpose of this module in a single sentence.'),
-            help:       _('This helps other Puppet users understand what the module does.'),
+            question:   'Summarize the purpose of this module in a single sentence.',
+            help:       'This helps other Puppet users understand what the module does.',
             required:   true,
             default:    metadata.data['summary'],
             forge_only: true,
           },
           {
             name:       'source',
-            question:   _('If there is a source code repository for this module, enter the URL here.'),
-            help:       _('Skip this if no repository exists yet. You can update this later in the metadata.json.'),
+            question:   'If there is a source code repository for this module, enter the URL here.',
+            help:       'Skip this if no repository exists yet. You can update this later in the metadata.json.',
             required:   true,
             default:    metadata.data['source'],
             forge_only: true,
           },
           {
             name:       'project_page',
-            question:   _('If there is a URL where others can learn more about this module, enter it here.'),
-            help:       _('Optional. You can update this later in the metadata.json.'),
+            question:   'If there is a URL where others can learn more about this module, enter it here.',
+            help:       'Optional. You can update this later in the metadata.json.',
             default:    metadata.data['project_page'],
             forge_only: true,
           },
           {
             name:       'issues_url',
-            question:   _('If there is a public issue tracker for this module, enter its URL here.'),
-            help:       _('Optional. You can update this later in the metadata.json.'),
+            question:   'If there is a public issue tracker for this module, enter its URL here.',
+            help:       'Optional. You can update this later in the metadata.json.',
             default:    metadata.data['issues_url'],
             forge_only: true,
           },
@@ -281,31 +275,25 @@ module PDK
         interview.add_questions(questions)
 
         if PDK::Util::Filesystem.file?('metadata.json')
-          puts _(
-            "\nWe need to update the metadata.json file for this module, so we\'re going to ask you %{count} " \
-            "questions.\n",
-          ) % {
+          puts "\nWe need to update the metadata.json file for this module, so we\'re going to ask you %{count} " \
+            "questions.\n" % {
             count: interview.num_questions,
           }
         else
-          puts _(
-            "\nWe need to create the metadata.json file for this module, so we\'re going to ask you %{count} " \
-            "questions.\n",
-          ) % {
+          puts "\nWe need to create the metadata.json file for this module, so we\'re going to ask you %{count} " \
+            "questions.\n" % {
             count: interview.num_questions,
           }
         end
 
-        puts _(
-          'If the question is not applicable to this module, accept the default option ' \
+        puts 'If the question is not applicable to this module, accept the default option ' \
           'shown after each question. You can modify any answers at any time by manually updating ' \
-          "the metadata.json file.\n\n",
-        )
+          "the metadata.json file.\n\n"
 
         answers = interview.run
 
         if answers.nil?
-          PDK.logger.info _('No answers given, interview cancelled.')
+          PDK.logger.info 'No answers given, interview cancelled.'
           exit 0
         end
 
@@ -331,13 +319,13 @@ module PDK
           require 'pdk/cli/util'
 
           continue = PDK::CLI::Util.prompt_for_yes(
-            _('Metadata will be generated based on this information, continue?'),
+            'Metadata will be generated based on this information, continue?',
             prompt:         prompt,
-            cancel_message: _('Interview cancelled; exiting.'),
+            cancel_message: 'Interview cancelled; exiting.',
           )
 
           unless continue
-            PDK.logger.info _('Process cancelled; exiting.')
+            PDK.logger.info 'Process cancelled; exiting.'
             exit 0
           end
         end

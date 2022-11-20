@@ -21,7 +21,7 @@ module PDK
             template_file = single_item_path(relative_file_path)
             return nil unless PDK::Util::Filesystem.file?(template_file) && PDK::Util::Filesystem.readable?(template_file)
 
-            PDK.logger.debug(_("Rendering '%{template}'...") % { template: template_file })
+            PDK.logger.debug("Rendering '%{template}'..." % { template: template_file })
             new_template_file(template_file, template_data_hash).render
           end
 
@@ -71,7 +71,7 @@ module PDK
 
             files_in_template(dirs).each do |template_file, template_loc|
               template_file = template_file.to_s
-              PDK.logger.debug(_("Rendering '%{template}'...") % { template: template_file })
+              PDK.logger.debug("Rendering '%{template}'..." % { template: template_file })
               dest_path = template_file.sub(%r{\.erb\Z}, '')
               config = legacy_template_dir.config_for(dest_path)
 
@@ -89,10 +89,8 @@ module PDK
                 begin
                   dest_content = new_template_file(File.join(template_loc, template_file), configs: config, template_dir: legacy_template_dir).render
                 rescue => error
-                  error_msg = _(
-                    "Failed to render template '%{template}'\n" \
-                    '%{exception}: %{message}',
-                  ) % { template: template_file, exception: error.class, message: error.message }
+                  error_msg = "Failed to render template '%{template}'\n" \
+                    '%{exception}: %{message}' % { template: template_file, exception: error.class, message: error.message }
                   raise PDK::CLI::FatalError, error_msg
                 end
               end
@@ -113,7 +111,7 @@ module PDK
             temp_paths = []
             dirlocs = []
             dirs.each do |dir|
-              raise ArgumentError, _("The directory '%{dir}' doesn't exist") % { dir: dir } unless PDK::Util::Filesystem.directory?(dir)
+              raise ArgumentError, "The directory '%{dir}' doesn't exist" % { dir: dir } unless PDK::Util::Filesystem.directory?(dir)
               temp_paths += PDK::Util::Filesystem.glob(File.join(dir, *glob_suffix), File::FNM_DOTMATCH).select do |template_path|
                 if PDK::Util::Filesystem.file?(template_path) && !PDK::Util::Filesystem.symlink?(template_path)
                   dirlocs << dir

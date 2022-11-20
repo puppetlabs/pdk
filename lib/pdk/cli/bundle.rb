@@ -1,13 +1,12 @@
 module PDK::CLI
   @bundle_cmd = @base_cmd.define_command do
     name 'bundle'
-    usage _('bundle [bundler_options]')
-    summary _('(Experimental) Command pass-through to bundler')
-    description _(<<-EOF
+    usage 'bundle [bundler_options]'
+    summary '(Experimental) Command pass-through to bundler'
+    description <<-EOF
 [experimental] For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.
 Careless use of this command can lead to errors that pdk can't help recover from.
 EOF
-                 )
     skip_option_parsing
 
     run do |_opts, args, _cmd|
@@ -15,7 +14,7 @@ EOF
       require 'pdk/util/bundler'
 
       PDK::CLI::Util.ensure_in_module!(
-        message: _('`pdk bundle` can only be run from inside a valid module directory.'),
+        message: '`pdk bundle` can only be run from inside a valid module directory.',
       )
 
       PDK::CLI::Util.validate_puppet_version_opts({})

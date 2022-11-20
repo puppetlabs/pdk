@@ -33,7 +33,7 @@ module PDK
       def self.ensure_bin_present!(bin_path, bin_name)
         require 'tty-which'
 
-        message = _('Unable to find `%{name}`. Check that it is installed and try again.') % {
+        message = 'Unable to find `%{name}`. Check that it is installed and try again.' % {
           name: bin_name,
         }
 
@@ -59,7 +59,7 @@ module PDK
         require 'pdk/util'
 
         unless PDK::Util.package_install?
-          PDK.logger.debug(_("PDK package installation not found. Trying '%{fallback}' from the system PATH instead.") % {
+          PDK.logger.debug("PDK package installation not found. Trying '%{fallback}' from the system PATH instead." % {
             fallback: fallback,
           })
           return fallback
@@ -69,14 +69,14 @@ module PDK
 
         require 'pdk/util/filesystem'
         unless PDK::Util::Filesystem.exist?(vendored_bin_full_path)
-          PDK.logger.debug(_("Could not find '%{vendored_bin}' in PDK package. Trying '%{fallback}' from the system PATH instead.") % {
+          PDK.logger.debug("Could not find '%{vendored_bin}' in PDK package. Trying '%{fallback}' from the system PATH instead." % {
             fallback: fallback,
             vendored_bin: vendored_bin_full_path,
           })
           return fallback
         end
 
-        PDK.logger.debug(_("Using '%{vendored_bin}' from PDK package.") % { vendored_bin: vendored_bin_full_path })
+        PDK.logger.debug"Using '%{vendored_bin}' from PDK package." % { vendored_bin: vendored_bin_full_path }
         vendored_bin_full_path
       end
     end

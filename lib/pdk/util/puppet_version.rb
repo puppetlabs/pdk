@@ -38,7 +38,7 @@ module PDK
         latest = find_gem(Gem::Requirement.create('>= 0'))
 
         if latest.nil?
-          raise ArgumentError, _('Unable to find a Puppet gem in current Ruby environment or from Rubygems.org.')
+          raise ArgumentError, 'Unable to find a Puppet gem in current Ruby environment or from Rubygems.org.'
         end
 
         latest
@@ -67,7 +67,7 @@ module PDK
 
           PDK.logger.error clone_result[:stdout]
           PDK.logger.error clone_result[:stderr]
-          raise PDK::CLI::FatalError, _("Unable to clone git repository from '%{repo}'.") % { repo: DEFAULT_PUPPET_DEV_URL }
+          raise PDK::CLI::FatalError, "Unable to clone git repository from '%{repo}'." % { repo: DEFAULT_PUPPET_DEV_URL }
         end
 
         # Fetch Updates from remote repository
@@ -76,7 +76,7 @@ module PDK
         unless fetch_result[:exit_code].zero?
           PDK.logger.error fetch_result[:stdout]
           PDK.logger.error fetch_result[:stderr]
-          raise PDK::CLI::FatalError, _("Unable to fetch from git remote at '%{repo}'.") % { repo: DEFAULT_PUPPET_DEV_URL }
+          raise PDK::CLI::FatalError, "Unable to fetch from git remote at '%{repo}'." % { repo: DEFAULT_PUPPET_DEV_URL }
         end
 
         # Reset local repo to latest
@@ -87,7 +87,7 @@ module PDK
 
         PDK.logger.error reset_result[:stdout]
         PDK.logger.error reset_result[:stderr]
-        raise PDK::CLI::FatalError, _("Unable to update git repository at '%{cachedir}'.") % { repo: puppet_dev_path }
+        raise PDK::CLI::FatalError, "Unable to update git repository at '%{cachedir}'." % { repo: puppet_dev_path }
       end
 
       def find_gem_for(version_str)
@@ -108,14 +108,14 @@ module PDK
         latest_available_gem = find_gem(latest_requirement)
 
         if latest_available_gem.nil?
-          raise ArgumentError, _('Unable to find a Puppet gem matching %{requirement}.') % {
+          raise ArgumentError, 'Unable to find a Puppet gem matching %{requirement}.' % {
             requirement: latest_requirement,
           }
         end
 
         # Only issue this warning if they requested an exact version that isn't available.
         if version.segments.length == 3
-          PDK.logger.warn(_('Puppet %{requested_version} is not available, activating %{found_version} instead.') % {
+          PDK.logger.warn('Puppet %{requested_version} is not available, activating %{found_version} instead.' % {
             requested_version: version_str,
             found_version:     latest_available_gem[:gem_version].version,
           })
@@ -132,12 +132,12 @@ module PDK
         end
 
         if gem_version.nil?
-          raise ArgumentError, _('Unable to map Puppet Enterprise version %{pe_version} to a Puppet version.') % {
+          raise ArgumentError, 'Unable to map Puppet Enterprise version %{pe_version} to a Puppet version.' % {
             pe_version: version_str,
           }
         end
 
-        PDK.logger.info _('Puppet Enterprise %{pe_version} maps to Puppet %{puppet_version}.') % {
+        PDK.logger.info 'Puppet Enterprise %{pe_version} maps to Puppet %{puppet_version}.' % {
           pe_version:     version_str,
           puppet_version: gem_version[:gem_version],
         }
@@ -153,7 +153,7 @@ module PDK
           metadata_file = PDK::Util.find_upwards('metadata.json')
 
           unless metadata_file
-            PDK.logger.warn _('Unable to determine Puppet version for module: no metadata.json present in module.')
+            PDK.logger.warn 'Unable to determine Puppet version for module: no metadata.json present in module.'
             return
           end
 
@@ -179,7 +179,7 @@ module PDK
       def parse_specified_version(version_str)
         Gem::Version.new(version_str)
       rescue ArgumentError
-        raise ArgumentError, _('%{version} is not a valid version number.') % {
+        raise ArgumentError, '%{version} is not a valid version number.' % {
           version: version_str,
         }
       end
@@ -215,7 +215,7 @@ module PDK
       rescue PDK::Util::VendoredFile::DownloadError => e
         raise PDK::CLI::FatalError, e.message
       rescue JSON::ParserError
-        raise PDK::CLI::FatalError, _('Failed to parse Puppet Enterprise version map file.')
+        raise PDK::CLI::FatalError, 'Failed to parse Puppet Enterprise version map file.'
       end
 
       def requirement_from_forge_range(range_str)

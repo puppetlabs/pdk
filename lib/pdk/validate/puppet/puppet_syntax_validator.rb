@@ -41,7 +41,7 @@ module PDK
         end
 
         def spinner_text_for_targets(_targets)
-          _('Checking Puppet manifest syntax (%{pattern}).') % { pattern: pattern.join(' ') }
+          'Checking Puppet manifest syntax (%{pattern}).' % { pattern: pattern.join(' ') }
         end
 
         def parse_options(targets)

@@ -22,7 +22,7 @@ module PDK
 
         command = PDK::CLI::Exec::Command.new(*argv).tap do |c|
           c.context = :module
-          c.add_spinner(_('Examining module contents'))
+          c.add_spinner('Examining module contents')
         end
 
         command.execute!
@@ -44,7 +44,7 @@ module PDK
         JSON.parse(result[:stdout])
       rescue JSON::ParserError => e
         PDK.logger.debug(e)
-        raise RunError, _('Unable to parse puppet-strings output')
+        raise RunError, 'Unable to parse puppet-strings output'
       end
 
       # Searches the puppet-strings result to find the definition of the named

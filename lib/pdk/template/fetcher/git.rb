@@ -22,7 +22,7 @@ module PDK
           # We don't do a checkout of local-path repos. There are lots of edge
           # cases or user un-expectations.
           if PDK::Util::Git.work_tree?(uri.shell_path)
-            PDK.logger.warn _("Repository '%{repo}' has a work-tree; skipping git reset.") % {
+            PDK.logger.warn "Repository '%{repo}' has a work-tree; skipping git reset." % {
               repo: uri.shell_path,
             }
             @path = uri.shell_path
@@ -49,7 +49,7 @@ module PDK
           unless clone_result[:exit_code].zero?
             PDK.logger.error clone_result[:stdout]
             PDK.logger.error clone_result[:stderr]
-            raise PDK::CLI::FatalError, _("Unable to clone git repository at '%{repo}' into '%{dest}'.") % { repo: origin_repo, dest: temp_dir }
+            raise PDK::CLI::FatalError, "Unable to clone git repository at '%{repo}' into '%{dest}'." % { repo: origin_repo, dest: temp_dir }
           end
           @path = PDK::Util.canonical_path(temp_dir)
 
@@ -63,10 +63,10 @@ module PDK
 
               PDK.logger.error reset_result[:stdout]
               PDK.logger.error reset_result[:stderr]
-              raise PDK::CLI::FatalError, _("Unable to checkout '%{ref}' of git repository at '%{path}'.") % { ref: git_ref, path: temp_dir }
+              raise PDK::CLI::FatalError, "Unable to checkout '%{ref}' of git repository at '%{path}'." % { ref: git_ref, path: temp_dir }
             end
           else
-            PDK.logger.warn _("Uncommitted changes found when attempting to checkout '%{ref}' of git repository at '%{path}'; skipping git reset.") % { ref: git_ref, path: temp_dir }
+            PDK.logger.warn "Uncommitted changes found when attempting to checkout '%{ref}' of git repository at '%{path}'; skipping git reset." % { ref: git_ref, path: temp_dir }
             @metadata['template-ref'] = describe_path_and_ref(temp_dir)
           end
         end

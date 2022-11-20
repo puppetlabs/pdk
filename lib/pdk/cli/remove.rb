@@ -1,8 +1,8 @@
 module PDK::CLI
   @remove_cmd = @base_cmd.define_command do
     name 'remove'
-    usage _('remove [subcommand] [options]')
-    summary _('Remove or delete information about the PDK or current project.')
+    usage 'remove [subcommand] [options]'
+    summary 'Remove or delete information about the PDK or current project.'
     default_subcommand 'help'
 
     run do |_opts, args, _cmd|

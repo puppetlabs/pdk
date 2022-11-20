@@ -5,8 +5,8 @@ module PDK
   module Util
     module Filesystem
       def write_file(path, content)
-        raise ArgumentError, _('content must be a String') unless content.is_a?(String)
-        raise ArgumentError, _('path must be a String or Pathname') unless path.is_a?(String) || path.respond_to?(:to_path)
+        raise ArgumentError, 'content must be a String' unless content.is_a?(String)
+        raise ArgumentError, 'path must be a String or Pathname' unless path.is_a?(String) || path.respond_to?(:to_path)
 
         # Harmonize newlines across platforms.
         content = content.encode(universal_newline: true)

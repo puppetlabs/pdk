@@ -13,7 +13,7 @@ module PDK
         end
 
         def spinner_text
-          _('Checking metadata syntax (%{patterns}).') % {
+          'Checking metadata syntax (%{patterns}).' % {
             patterns: pattern.join(' '),
           }
         end
@@ -40,7 +40,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: _('Could not be read.'),
+              message: 'Could not be read.',
             )
             return 1
           end

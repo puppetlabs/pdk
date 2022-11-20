@@ -1,8 +1,8 @@
 module PDK::CLI
   @new_provider_cmd = @new_cmd.define_command do
     name 'provider'
-    usage _('provider [options] <name>')
-    summary _('[experimental] Create a new ruby provider named <name> using given options')
+    usage 'provider [options] <name>'
+    summary '[experimental] Create a new ruby provider named <name> using given options'
 
     run do |opts, args, _cmd|
       PDK::CLI::Util.ensure_in_module!
@@ -15,7 +15,7 @@ module PDK::CLI
       end
 
       unless Util::OptionValidator.valid_provider_name?(provider_name)
-        raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid provider name") % { name: provider_name }
+        raise PDK::CLI::ExitWithError, "'%{name}' is not a valid provider name" % { name: provider_name }
       end
 
       PDK::CLI::Util.analytics_screen_view('new_provider', opts)

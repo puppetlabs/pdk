@@ -5,7 +5,7 @@ module PDK
     module Util
       class OptionNormalizer
         def self.comma_separated_list_to_array(list, _options = {})
-          raise _('Error: expected comma separated list') unless OptionValidator.comma_separated_list?(list)
+          raise 'Error: expected comma separated list' unless OptionValidator.comma_separated_list?(list)
           list.split(',').compact
         end
 
@@ -31,7 +31,7 @@ module PDK
             begin
               OptionValidator.enum(format, PDK::Report.formats)
             rescue ArgumentError
-              raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid report format (%{valid})") % {
+              raise PDK::CLI::ExitWithError, "'%{name}' is not a valid report format (%{valid})" % {
                 name:  format,
                 valid: PDK::Report.formats.join(', '),
               }

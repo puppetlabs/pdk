@@ -49,22 +49,21 @@ module PDK::CLI
     end
   end
 
-  def self.deprecated_runtime?
-    Gem::Version.new(RbConfig::CONFIG['ruby_version']) < Gem::Version.new('2.4.0')
-  end
+  # def self.deprecated_runtime?
+  #   Gem::Version.new(RbConfig::CONFIG['ruby_version']) < Gem::Version.new('2.4.0')
+  # end
 
   def self.run(args)
-    if deprecated_runtime?
-      PDK.logger.info(
-        text: _(
-          'Support for Ruby versions older than 2.4 will be dropped in the ' \
-          'future PDK 2.0.0 release. We recommend updating your Ruby ' \
-          'installation to ensure that you can continue using the latest ' \
-          'version of PDK.',
-        ),
-        wrap: true,
-      )
-    end
+    # if deprecated_runtime?
+    #   PDK.logger.info(
+    #     text:
+    #       'Support for Ruby versions older than 2.4 will be dropped in the ' \
+    #       'future PDK 2.0.0 release. We recommend updating your Ruby ' \
+    #       'installation to ensure that you can continue using the latest ' \
+    #       'version of PDK.',F
+    #     wrap: true,
+    #   )
+    # end
 
     @args = args
     PDK::Config.analytics_config_interview! unless PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK::Config.analytics_config_exist?
@@ -94,63 +93,62 @@ module PDK::CLI
   def self.template_url_option(dsl)
     require 'pdk/util/template_uri'
 
-    desc = _('Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})') % { default_url: PDK::Util::TemplateURI.default_template_uri }
+    desc = 'Specifies the URL to the template to use when creating new modules or classes. (default: %{default_url})' % { default_url: PDK::Util::TemplateURI.default_template_uri }
 
     dsl.option nil, 'template-url', desc, argument: :required
   end
 
   def self.template_ref_option(dsl)
-    dsl.option nil, 'template-ref', _('Specifies the template git branch or tag to use when creating new modules or classes.'), argument: :required
+    dsl.option nil, 'template-ref', 'Specifies the template git branch or tag to use when creating new modules or classes.', argument: :required
   end
 
   def self.skip_interview_option(dsl)
-    dsl.option nil, 'skip-interview', _('When specified, skips interactive querying of metadata.')
+    dsl.option nil, 'skip-interview', 'When specified, skips interactive querying of metadata.'
   end
 
   def self.full_interview_option(dsl)
-    dsl.option nil, 'full-interview', _('When specified, interactive querying of metadata will include all optional questions.')
+    dsl.option nil, 'full-interview', 'When specified, interactive querying of metadata will include all optional questions.'
   end
 
   def self.puppet_version_options(dsl)
-    dsl.option nil, 'puppet-version', _('Puppet version to run tests or validations against.'), argument: :required
-    dsl.option nil, 'pe-version', _('Puppet Enterprise version to run tests or validations against.'), argument: :required
+    dsl.option nil, 'puppet-version', 'Puppet version to run tests or validations against.', argument: :required
+    dsl.option nil, 'pe-version', 'Puppet Enterprise version to run tests or validations against.', argument: :required
   end
 
   def self.puppet_dev_option(dsl)
     dsl.option nil,
                'puppet-dev',
-               _('When specified, PDK will validate or test against the current Puppet source from github.com. To use this option, you must have network access to https://github.com.')
+               'When specified, PDK will validate or test against the current Puppet source from github.com. To use this option, you must have network access to https://github.com.'
   end
 
   @base_cmd = Cri::Command.define do
     name 'pdk'
-    usage _('pdk command [options]')
-    summary _('Puppet Development Kit')
-    description _('The shortest path to better modules.')
+    usage 'pdk command [options]'
+    summary 'Puppet Development Kit'
+    description 'The shortest path to better modules.'
     default_subcommand 'help'
 
-    flag nil, :version, _('Show version of pdk.') do |_, _|
+    flag nil, :version, 'Show version of pdk.' do |_, _|
       puts PDK::Util::Version.version_string
       exit 0
     end
 
-    flag :h, :help, _('Show help for this command.') do |_, c|
+    flag :h, :help, 'Show help for this command.' do |_, c|
       puts c.help
       exit 0
     end
 
-    format_desc = _(
-      "Specify desired output format. Valid formats are '%{available_formats}'. " \
+    format_desc = 
+      "Specify desired output format. Valid formats are '#{PDK::Report.formats.join("', '")}'. " \
       'You may also specify a file to which the formatted output is sent, ' \
       "for example: '--format=junit:report.xml'. This option may be specified " \
-      'multiple times if each option specifies a distinct target file.',
-    ) % { available_formats: PDK::Report.formats.join("', '") }
+      'multiple times if each option specifies a distinct target file.'
 
     option :f, :format, format_desc, argument: :required, multiple: true do |values|
       PDK::CLI::Util::OptionNormalizer.report_formats(values.compact)
     end
 
-    flag :d, :debug, _('Enable debug output.') do |_, _|
+    flag :d, :debug, 'Enable debug output.' do |_, _|
       PDK.logger.enable_debug_output
     end
   end

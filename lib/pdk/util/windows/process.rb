@@ -11,10 +11,9 @@ module PDK::Util::Windows::Process
     contains_unicode_replacement = ->(string) do
       return false unless string.include?("\uFFFD")
 
-      PDK.logger.warning _(
+      PDK.logger.warning 
         'Discarding environment variable %{string} which contains invalid ' \
-        'bytes',
-      ) % { string: string }
+        'bytes' % { string: string }
       true
     end
 
@@ -29,24 +28,24 @@ module PDK::Util::Windows::Process
   ensure
     if env_ptr && !env_ptr.null?
       if FreeEnvironmentStringsW(env_ptr) == PDK::Util::Windows::WIN32_FALSE
-        PDK.logger.debug _('FreeEnvironmentStringsW memory leak')
+        PDK.logger.debug 'FreeEnvironmentStringsW memory leak'
       end
     end
   end
   module_function :environment_hash
 
   def set_environment_variable(name, val)
-    raise ArgumentError, _('Environment variable name must not be nil or empty') if name.nil? || name.empty?
+    raise ArgumentError, 'Environment variable name must not be nil or empty' if name.nil? || name.empty?
 
     FFI::MemoryPointer.from_string_to_wide_string(name) do |name_ptr|
       if val.nil?
         if SetEnvironmentVariableW(name_ptr, FFI::MemoryPointer::NULL) == PDK::Util::Windows::WIN32_FALSE
-          raise _('Failed to remove environment variable: %{name}') % { name: name }
+          raise 'Failed to remove environment variable: %{name}' % { name: name }
         end
       else
         FFI::MemoryPointer.from_string_to_wide_string(val) do |val_ptr|
           if SetEnvironmentVariableW(name_ptr, val_ptr) == PDK::Util::Windows::WIN32_FALSE
-            raise _('Failed to set environment variaible: %{name}') % { name: name }
+            raise 'Failed to set environment variaible: %{name}' % { name: name }
           end
         end
       end
