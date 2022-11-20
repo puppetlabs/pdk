@@ -126,10 +126,8 @@ module PDK
           PDK::Util::Filesystem.cp(path, dest_path, preserve: true)
         end
       rescue ArgumentError => e
-        raise PDK::CLI::ExitWithError, _(
-          '%{message} Rename the file or exclude it from the package ' \
-          'by adding it to the .pdkignore file in your module.',
-        ) % { message: e.message }
+        raise PDK::CLI::ExitWithError, '%{message} Rename the file or exclude it from the package ' \
+                                       'by adding it to the .pdkignore file in your module.' % { message: e.message }
       end
 
       # Check if the given path matches one of the patterns listed in the
@@ -156,7 +154,7 @@ module PDK
         symlink_path = Pathname.new(path)
         module_path = Pathname.new(module_dir)
 
-        PDK.logger.warn _('Symlinks in modules are not supported and will not be included in the package. Please investigate symlink %{from} -> %{to}.') % {
+        PDK.logger.warn 'Symlinks in modules are not supported and will not be included in the package. Please investigate symlink %{from} -> %{to}.' % {
           from: symlink_path.relative_path_from(module_path),
           to:   symlink_path.realpath.relative_path_from(module_path),
         }
@@ -183,7 +181,7 @@ module PDK
       # @return [nil]
       def validate_ustar_path!(path)
         if path.bytesize > 256
-          raise ArgumentError, _("The path '%{path}' is longer than 256 bytes.") % {
+          raise ArgumentError, "The path '%{path}' is longer than 256 bytes." % {
             path: path,
           }
         end
@@ -207,11 +205,10 @@ module PDK
 
         return unless path.bytesize > 100 || prefix.bytesize > 155
 
-        raise ArgumentError, _(
-          "'%{path}' could not be split at a directory separator into two " \
-          'parts, the first having a maximum length of 155 bytes and the ' \
-          'second having a maximum length of 100 bytes.',
-        ) % { path: path }
+        raise ArgumentError,
+              "'%{path}' could not be split at a directory separator into two " \
+              'parts, the first having a maximum length of 155 bytes and the ' \
+              'second having a maximum length of 100 bytes.' % { path: path }
       end
 
       # Checks if the path contains any non-ASCII characters.
@@ -229,10 +226,8 @@ module PDK
       def validate_path_encoding!(path)
         return unless path =~ %r{[^\x00-\x7F]}
 
-        raise ArgumentError, _(
-          "'%{path}' can only include ASCII characters in its path or " \
-          'filename in order to be compatible with a wide range of hosts.',
-        ) % { path: path }
+        raise ArgumentError, "'%{path}' can only include ASCII characters in its path or " \
+                             'filename in order to be compatible with a wide range of hosts.' % { path: path }
       end
 
       # Creates a gzip compressed tarball of the build directory.
@@ -263,7 +258,7 @@ module PDK
               entry_meta[:mode] = orig_mode | min_mode
 
               if entry_meta[:mode] != orig_mode
-                PDK.logger.debug(_('Updated permissions of packaged \'%{entry}\' to %{new_mode}') % {
+                PDK.logger.debug('Updated permissions of packaged \'%{entry}\' to %{new_mode}' % {
                   entry: entry,
                   new_mode: (entry_meta[:mode] & 0o7777).to_s(8),
                 })

@@ -1,9 +1,9 @@
 module PDK::CLI
   @new_function_cmd = @new_cmd.define_command do
     name 'function'
-    usage _('function [options] <name>')
-    summary _('Create a new function named <name> using given options')
-    option :t, :type, _('The function type, (native or v4)'), argument: :required, default: 'native'
+    usage 'function [options] <name>'
+    summary 'Create a new function named <name> using given options'
+    option :t, :type, 'The function type, (native or v4)', argument: :required, default: 'native'
 
     run do |opts, args, _cmd|
       PDK::CLI::Util.ensure_in_module!
@@ -16,7 +16,7 @@ module PDK::CLI
       end
 
       unless Util::OptionValidator.valid_function_name?(function_name)
-        raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid function name") % { name: function_name }
+        raise PDK::CLI::ExitWithError, "'%{name}' is not a valid function name" % { name: function_name }
       end
 
       PDK::CLI::Util.analytics_screen_view('new_function', opts)

@@ -34,7 +34,7 @@ module PDK
           if versions.key?(version)
             @active_ruby_version = version
           else
-            raise ArgumentError, _('Unknown Ruby version "%{ruby_version}"') % {
+            raise ArgumentError, 'Unknown Ruby version "%{ruby_version}"' % {
               ruby_version: version,
             }
           end

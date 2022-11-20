@@ -24,7 +24,7 @@ module PDK
           # ... add validate it
           namespace.validate_document!(new_document)
         rescue ::JSON::Schema::ValidationError => e
-          raise ArgumentError, _('%{key} %{message}') % {
+          raise ArgumentError, '%{key} %{message}' % {
             key:     qualified_name,
             message: e.message,
           }

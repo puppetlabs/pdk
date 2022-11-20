@@ -1,8 +1,8 @@
 module PDK::CLI
   @get_cmd = @base_cmd.define_command do
     name 'get'
-    usage _('get [subcommand] [options]')
-    summary _('Retrieve information about the PDK or current project.')
+    usage 'get [subcommand] [options]'
+    summary 'Retrieve information about the PDK or current project.'
     default_subcommand 'help'
 
     run do |_opts, args, _cmd|

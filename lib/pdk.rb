@@ -1,5 +1,3 @@
-require 'pdk/i18n'
-
 module PDK
   autoload :Analytics, 'pdk/analytics'
   autoload :AnswerFile, 'pdk/answer_file'

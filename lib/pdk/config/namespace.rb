@@ -65,7 +65,7 @@ module PDK
       #
       # @return [self] the mounted namespace.
       def mount(key, obj, &block)
-        raise ArgumentError, _('Only PDK::Config::Namespace objects can be mounted into a namespace') unless obj.is_a?(PDK::Config::Namespace)
+        raise ArgumentError, 'Only PDK::Config::Namespace objects can be mounted into a namespace' unless obj.is_a?(PDK::Config::Namespace)
         obj.parent = self
         obj.name = key.to_s
         obj.instance_eval(&block) if block_given?
@@ -138,7 +138,7 @@ module PDK
       # @return [nil]
       def []=(key, value)
         # You can't set the value of a mount
-        raise ArgumentError, _('Namespace mounts can not be set a value') unless @mounts[key.to_s].nil?
+        raise ArgumentError, 'Namespace mounts can not be set a value' unless @mounts[key.to_s].nil?
         set_volatile_value(key, value)
         # Persist the change
         save_data
@@ -305,7 +305,7 @@ module PDK
       rescue Errno::ENOENT => e
         raise PDK::Config::LoadError, e.message
       rescue Errno::EACCES
-        raise PDK::Config::LoadError, _('Unable to open %{file} for reading') % {
+        raise PDK::Config::LoadError, 'Unable to open %{file} for reading' % {
           file: filename,
         }
       end
@@ -328,7 +328,7 @@ module PDK
 
         PDK::Util::Filesystem.write_file(file, serialize_data(to_h))
       rescue Errno::EACCES
-        raise PDK::Config::LoadError, _('Unable to open %{file} for writing') % {
+        raise PDK::Config::LoadError, 'Unable to open %{file} for writing' % {
           file: file,
         }
       rescue SystemCallError => e

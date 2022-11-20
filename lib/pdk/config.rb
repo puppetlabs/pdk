@@ -143,8 +143,8 @@ module PDK
     # @scopes [Nil, Array[String]] The list of scopes, in order, to query in turn for the setting_name. Invalid or missing scopes are ignored.
     # @return [PDK::Config::Namespace, Object, nil] The value of the configuration setting. Returns nil if it does no exist
     def get_within_scopes(setting_name, scopes = nil)
-      raise ArgumentError, _('Expected an Array but got \'%{klass}\' for scopes') % { klass: scopes.class } unless scopes.nil? || scopes.is_a?(Array)
-      raise ArgumentError, _('Expected an Array or String but got \'%{klass}\' for setting_name') % { klass: setting_name.class } unless setting_name.is_a?(Array) || setting_name.is_a?(String)
+      raise ArgumentError, 'Expected an Array but got \'%{klass}\' for scopes' % { klass: scopes.class } unless scopes.nil? || scopes.is_a?(Array)
+      raise ArgumentError, 'Expected an Array or String but got \'%{klass}\' for setting_name' % { klass: setting_name.class } unless setting_name.is_a?(Array) || setting_name.is_a?(String)
 
       setting_arr = setting_name.is_a?(String) ? split_key_string(setting_name) : setting_name
       all_scope_names = all_scopes.keys
@@ -164,7 +164,7 @@ module PDK
     # @scopes [Nil, Array[String]] The list of scopes, in order, to query in turn for the setting_name. Invalid or missing scopes are ignored.
     # @yield [PDK::Config::Namespace, Object] The value of the configuration setting. Does not yield if the setting does not exist or is nil
     def with_scoped_value(setting_name, scopes = nil)
-      raise ArgumentError, _('must be passed a block') unless block_given?
+      raise ArgumentError, 'must be passed a block' unless block_given?
       value = get_within_scopes(setting_name, scopes)
       yield value unless value.nil?
     end
@@ -183,9 +183,9 @@ module PDK
       }.merge(options)
 
       names = key.is_a?(String) ? split_key_string(key) : key
-      raise ArgumentError, _('Invalid configuration names') if names.nil? || !names.is_a?(Array) || names.empty?
+      raise ArgumentError, 'Invalid configuration names' if names.nil? || !names.is_a?(Array) || names.empty?
       scope_name = names[0]
-      raise ArgumentError, _("Unknown configuration root '%{name}'") % { name: scope_name } if all_scopes[scope_name].nil?
+      raise ArgumentError, "Unknown configuration root '%{name}'" % { name: scope_name } if all_scopes[scope_name].nil?
       deep_set_object(value, options[:force], send(all_scopes[scope_name]), *names[1..-1])
     end
 
@@ -193,7 +193,7 @@ module PDK
       file = PDK::Util::Filesystem.expand_path('~/.puppetlabs/bolt/analytics.yaml')
       PDK::Config::YAML.new(file: file)
     rescue PDK::Config::LoadError => e
-      PDK.logger.debug _('Unable to load %{file}: %{message}') % {
+      PDK.logger.debug 'Unable to load %{file}: %{message}' % {
         file:    file,
         message: e.message,
       }
@@ -234,25 +234,23 @@ module PDK
 
       return unless PDK::CLI::Util.interactive?
 
-      pre_message = _(
+      pre_message =
         'PDK collects anonymous usage information to help us understand how ' \
         'it is being used and make decisions on how to improve it. You can ' \
         'find out more about what data we collect and how it is used in the ' \
-        "PDK documentation at %{url}.\n",
-      ) % { url: 'https://puppet.com/docs/pdk/latest/pdk_install.html' }
-      post_message = _(
+        "PDK documentation at %{url}.\n" % { url: 'https://puppet.com/docs/pdk/latest/pdk_install.html' }
+      post_message =
         'You can opt in or out of the usage data collection at any time by ' \
         'editing the analytics configuration file at %{path} and changing ' \
-        "the '%{key}' value.",
-      ) % {
-        path: PDK::Config.analytics_config_path,
+        "the '%{key}' value." % {
+          path: PDK::Config.analytics_config_path,
         key:  'disabled',
-      }
+        }
 
       questions = [
         {
           name:     'enabled',
-          question: _('Do you consent to the collection of anonymous PDK usage information?'),
+          question: 'Do you consent to the collection of anonymous PDK usage information?',
           type:     :yes,
         },
       ]
@@ -266,7 +264,7 @@ module PDK
       answers = interview.run
 
       if answers.nil?
-        PDK.logger.info _('No answer given, opting out of analytics collection.')
+        PDK.logger.info 'No answer given, opting out of analytics collection.'
         PDK.config.set(%w[user analytics disabled], true)
       else
         PDK.config.set(%w[user analytics disabled], !answers['enabled'])
@@ -304,7 +302,7 @@ module PDK
     # 'user.a.b.c' becomes ['user', 'a', 'b', 'c']
     # @return [Array[String]] The string split into each setting name as an array
     def split_key_string(key)
-      raise ArgumentError, _('Expected a String but got \'%{klass}\'') % { klass: key.class } unless key.is_a?(String)
+      raise ArgumentError, 'Expected a String but got \'%{klass}\'' % { klass: key.class } unless key.is_a?(String)
       key.split('.')
     end
     #:nocov:
@@ -328,8 +326,8 @@ module PDK
     #
     # Creating any missing parent hashes during the traversal
     def deep_set_object(value, force, namespace, *names)
-      raise ArgumentError, _('Missing or invalid namespace') unless namespace.is_a?(PDK::Config::Namespace)
-      raise ArgumentError, _('Missing a name to set') if names.nil? || names.empty?
+      raise ArgumentError, 'Missing or invalid namespace' unless namespace.is_a?(PDK::Config::Namespace)
+      raise ArgumentError, 'Missing a name to set' if names.nil? || names.empty?
 
       name = names.shift
       current_value = namespace[name]
@@ -380,7 +378,7 @@ module PDK
         return value
       end
 
-      raise ArgumentError, _("Unable to set '%{key}' to '%{value}' as it is not a Hash") % { key: namespace.name + '.' + name, value: hash_value } unless current_value.is_a?(Hash)
+      raise ArgumentError, "Unable to set '%{key}' to '%{value}' as it is not a Hash" % { key: namespace.name + '.' + name, value: hash_value } unless current_value.is_a?(Hash)
 
       namespace[name] = current_value.merge(hash_value)
       value

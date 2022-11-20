@@ -1,8 +1,8 @@
 module PDK::CLI
   @new_fact_cmd = @new_cmd.define_command do
     name 'fact'
-    usage _('fact [options] <name>')
-    summary _('Create a new custom fact named <name> using given options')
+    usage 'fact [options] <name>'
+    summary 'Create a new custom fact named <name> using given options'
 
     run do |opts, args, _cmd|
       PDK::CLI::Util.ensure_in_module!
@@ -15,7 +15,7 @@ module PDK::CLI
       end
 
       unless Util::OptionValidator.valid_fact_name?(fact_name)
-        raise PDK::CLI::ExitWithError, _("'%{name}' is not a valid fact name") % { name: fact_name }
+        raise PDK::CLI::ExitWithError, "'%{name}' is not a valid fact name" % { name: fact_name }
       end
 
       PDK::CLI::Util.analytics_screen_view('new_fact', opts)

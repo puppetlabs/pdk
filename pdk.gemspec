@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = 'A CLI to facilitate easy, unified development workflows for Puppet modules.'
   spec.homepage    = 'https://github.com/puppetlabs/pdk'
 
-  spec.files         = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*', 'exe/**/*', 'locales/**/*']
+  spec.files         = Dir['CHANGELOG.md', 'README.md', 'LICENSE', 'lib/**/*', 'exe/**/*']
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
@@ -24,7 +24,6 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'cri', '~> 2.10'
   spec.add_runtime_dependency 'diff-lcs', '>=1.4.4', '< 1.5'
   spec.add_runtime_dependency 'ffi', '>= 1.9.25', '< 2.0.0'
-  spec.add_runtime_dependency 'gettext-setup', '~> 0.24'
   spec.add_runtime_dependency 'hitimes', '2.0.0'
   spec.add_runtime_dependency 'json-schema', '2.8.0'
   spec.add_runtime_dependency 'json_pure', '~> 2.1.0' if RUBY_VERSION < '2.7'

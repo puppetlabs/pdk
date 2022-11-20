@@ -3,6 +3,7 @@ require 'securerandom'
 require 'httpclient'
 require 'concurrent/configuration'
 require 'concurrent/future'
+require 'locale'
 require 'pdk/analytics/client/google_analytics'
 
 describe PDK::Analytics::Client::GoogleAnalytics do

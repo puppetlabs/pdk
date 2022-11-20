@@ -12,12 +12,12 @@ module PDK
         gem_overrides ||= { puppet: nil, hiera: nil, facter: nil }
 
         if already_bundled?(bundle.gemfile, gem_overrides)
-          PDK.logger.debug(_('Bundler managed gems already up to date.'))
+          PDK.logger.debug('Bundler managed gems already up to date.')
           return
         end
 
         unless bundle.gemfile?
-          PDK.logger.debug(_("No Gemfile found in '%{cwd}'. Skipping bundler management.") % { cwd: Dir.pwd })
+          PDK.logger.debug("No Gemfile found in '%{cwd}'. Skipping bundler management." % { cwd: Dir.pwd })
           return
         end
 
@@ -93,7 +93,7 @@ module PDK
         end
 
         def installed?(gem_overrides = {})
-          PDK.logger.debug(_('Checking for missing Gemfile dependencies.'))
+          PDK.logger.debug('Checking for missing Gemfile dependencies.')
 
           argv = ['check', "--gemfile=#{gemfile}", '--dry-run']
 
@@ -123,25 +123,25 @@ module PDK
             end
 
             unless vendored_gemfile_lock
-              raise PDK::CLI::FatalError, _('Vendored Gemfile.lock (%{source}) not found.') % {
+              raise PDK::CLI::FatalError, 'Vendored Gemfile.lock (%{source}) not found.' % {
                 source: vendored_gemfile_lock,
               }
             end
 
-            PDK.logger.debug(_('Using vendored Gemfile.lock from %{source}.') % { source: vendored_gemfile_lock })
+            PDK.logger.debug('Using vendored Gemfile.lock from %{source}.' % { source: vendored_gemfile_lock })
             PDK::Util::Filesystem.cp(vendored_gemfile_lock, File.join(PDK::Util.module_root, 'Gemfile.lock'))
           else
             argv = ['lock']
 
             cmd = bundle_command(*argv).tap do |c|
-              c.add_spinner(_('Resolving default Gemfile dependencies.'))
+              c.add_spinner('Resolving default Gemfile dependencies.')
             end
 
             result = cmd.execute!
 
             unless result[:exit_code].zero?
               PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n")) unless PDK.logger.debug?
-              raise PDK::CLI::FatalError, _('Unable to resolve default Gemfile dependencies.')
+              raise PDK::CLI::FatalError, 'Unable to resolve default Gemfile dependencies.'
             end
 
             # After initial lockfile generation, re-resolve json gem to built-in
@@ -154,7 +154,7 @@ module PDK
         end
 
         def update_lock!(options = {})
-          PDK.logger.debug(_('Updating Gemfile dependencies.'))
+          PDK.logger.debug('Updating Gemfile dependencies.')
 
           argv = ['lock', "--lockfile=#{gemfile_lock}", '--update']
 
@@ -182,7 +182,7 @@ module PDK
 
           unless result[:exit_code].zero?
             PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n")) unless PDK.logger.debug?
-            raise PDK::CLI::FatalError, _('Unable to resolve Gemfile dependencies.')
+            raise PDK::CLI::FatalError, 'Unable to resolve Gemfile dependencies.'
           end
 
           true
@@ -195,7 +195,7 @@ module PDK
           argv << '-j4' unless Gem.win_platform? && Gem::Version.new(PDK::Util::RubyVersion.active_ruby_version) < Gem::Version.new('2.3.5')
 
           cmd = bundle_command(*argv).tap do |c|
-            c.add_spinner(_('Installing missing Gemfile dependencies.'))
+            c.add_spinner('Installing missing Gemfile dependencies.')
             c.update_environment(gemfile_env(gem_overrides)) unless gem_overrides.empty?
           end
 
@@ -203,14 +203,14 @@ module PDK
 
           unless result[:exit_code].zero?
             PDK.logger.fatal(result.values_at(:stdout, :stderr).join("\n")) unless PDK.logger.debug?
-            raise PDK::CLI::FatalError, _('Unable to install missing Gemfile dependencies.')
+            raise PDK::CLI::FatalError, 'Unable to install missing Gemfile dependencies.'
           end
 
           true
         end
 
         def binstubs!(gems)
-          raise PDK::CLI::FatalError, _('Unable to install requested binstubs as the Gemfile is missing') if gemfile.nil?
+          raise PDK::CLI::FatalError, 'Unable to install requested binstubs as the Gemfile is missing' if gemfile.nil?
           binstub_dir = File.join(File.dirname(gemfile), 'bin')
           return true if gems.all? { |gem| PDK::Util::Filesystem.file?(File.join(binstub_dir, gem)) }
 
@@ -218,8 +218,8 @@ module PDK
           result = cmd.execute!
 
           unless result[:exit_code].zero?
-            PDK.logger.fatal(_("Failed to generate binstubs for '%{gems}':\n%{output}") % { gems: gems.join(' '), output: result.values_at(:stdout, :stderr).join("\n") }) unless PDK.logger.debug?
-            raise PDK::CLI::FatalError, _('Unable to install requested binstubs.')
+            PDK.logger.fatal("Failed to generate binstubs for '%{gems}':\n%{output}" % { gems: gems.join(' '), output: result.values_at(:stdout, :stderr).join("\n") }) unless PDK.logger.debug?
+            raise PDK::CLI::FatalError, 'Unable to install requested binstubs.'
           end
 
           true

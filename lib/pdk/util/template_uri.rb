@@ -48,7 +48,7 @@ module PDK
                      Addressable::URI.parse(opts_or_uri)
                    end
                  rescue Addressable::URI::InvalidURIError
-                   raise PDK::CLI::FatalError, _('PDK::Util::TemplateURI attempted initialization with a non-uri string: {string}') % { string: opts_or_uri }
+                   raise PDK::CLI::FatalError, 'PDK::Util::TemplateURI attempted initialization with a non-uri string: {string}' % { string: opts_or_uri }
                  end
                elsif opts_or_uri.is_a?(Addressable::URI)
                  opts_or_uri.dup
@@ -178,7 +178,7 @@ module PDK
         return url unless Pathname.new(url).relative? && scp_url
 
         uri = Addressable::URI.new(scheme: 'ssh', user: scp_url[:user], host: scp_url[:host], path: scp_url[:path])
-        PDK.logger.warn _('%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}') % {
+        PDK.logger.warn '%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}' % {
           scp_uri: url,
           rfc_uri: uri.to_s,
         }
@@ -229,10 +229,10 @@ module PDK
         default_uri.fragment = default_template_ref(default_template_uri)
 
         ary = []
-        ary << { type: _('--template-url'), uri: explicit_uri, allow_fallback: false } if explicit_url
-        ary << { type: _('metadata.json'), uri: metadata_uri, allow_fallback: true } if metadata_uri
-        ary << { type: _('PDK answers'), uri: answers_uri, allow_fallback: true } if answers_uri
-        ary << { type: _('default'), uri: default_uri, allow_fallback: false }
+        ary << { type: '--template-url', uri: explicit_uri, allow_fallback: false } if explicit_url
+        ary << { type: 'metadata.json', uri: metadata_uri, allow_fallback: true } if metadata_uri
+        ary << { type: 'PDK answers', uri: answers_uri, allow_fallback: true } if answers_uri
+        ary << { type: 'default', uri: default_uri, allow_fallback: false }
         ary
       end
 
@@ -256,7 +256,7 @@ module PDK
         # 4. Leave updating answers/metadata to other code
         found_template = templates_array.find { |t| valid_template?(t) }
 
-        raise PDK::CLI::FatalError, _('Unable to find a valid module template to use.') if found_template.nil?
+        raise PDK::CLI::FatalError, 'Unable to find a valid module template to use.' if found_template.nil?
         found_template[:uri]
       end
 
@@ -279,7 +279,7 @@ module PDK
         end
 
         unless template[:allow_fallback]
-          raise PDK::CLI::FatalError, _('Unable to find a valid template at %{uri}') % {
+          raise PDK::CLI::FatalError, 'Unable to find a valid template at %{uri}' % {
             uri: template[:uri].to_s,
           }
         end

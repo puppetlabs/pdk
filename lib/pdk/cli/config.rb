@@ -1,12 +1,12 @@
 module PDK::CLI
   @config_cmd = @base_cmd.define_command do
     name 'config'
-    usage _('config [subcommand] [options]')
-    summary _('(Deprecated) Configure the Puppet Development Kit.')
+    usage 'config [subcommand] [options]'
+    summary '(Deprecated) Configure the Puppet Development Kit.'
     default_subcommand 'help'
 
     run do |_opts, args, _cmd|
-      PDK.logger.warn _('The \'pdk config\' command is deprecated, please use \'pdk get config\' and \'pdk set config\' instead.')
+      PDK.logger.warn 'The \'pdk config\' command is deprecated, please use \'pdk get config\' and \'pdk set config\' instead.'
 
       if args == ['help']
         PDK::CLI.run(%w[config --help])

@@ -1,22 +1,20 @@
 module PDK::CLI
   @validate_cmd = @base_cmd.define_command do
     name 'validate'
-    usage _('validate [validators] [options] [targets]')
-    summary _('Run static analysis tests.')
-    description _(
-      "Run metadata, YAML, Puppet, Ruby, or Tasks validation.\n\n" \
-      '[validators] is an optional comma-separated list of validators to use. ' \
-      'If not specified, all validators are used. ' \
-      "Note that when using PowerShell, the list of validators must be enclosed in single quotes.\n\n" \
-      '[targets] is an optional space-separated list of files or directories to be validated. ' \
-      'If not specified, validators are run against all applicable files in the module.',
-    )
+    usage 'validate [validators] [options] [targets]'
+    summary 'Run static analysis tests.'
+    description "Run metadata, YAML, Puppet, Ruby, or Tasks validation.\n\n" \
+                '[validators] is an optional comma-separated list of validators to use. ' \
+                'If not specified, all validators are used. ' \
+                "Note that when using PowerShell, the list of validators must be enclosed in single quotes.\n\n" \
+                '[targets] is an optional space-separated list of files or directories to be validated. ' \
+                'If not specified, validators are run against all applicable files in the module.'
 
     PDK::CLI.puppet_version_options(self)
     PDK::CLI.puppet_dev_option(self)
-    flag nil, :list, _('List all available validators.')
-    flag :a, 'auto-correct', _('Automatically correct problems where possible.')
-    flag nil, :parallel, _('Run validations in parallel.')
+    flag nil, :list, 'List all available validators.'
+    flag :a, 'auto-correct', 'Automatically correct problems where possible.'
+    flag nil, :parallel, 'Run validations in parallel.'
 
     run do |opts, args, _cmd|
       # Write the context information to the debug log
@@ -31,13 +29,13 @@ module PDK::CLI
 
       if opts[:list]
         PDK::CLI::Util.analytics_screen_view('validate', opts)
-        PDK.logger.info(_('Available validators: %{validator_names}') % { validator_names: PDK::Validate.validator_names.join(', ') })
+        PDK.logger.info('Available validators: %{validator_names}' % { validator_names: PDK::Validate.validator_names.join(', ') })
         exit 0
       end
 
       PDK::CLI::Util.validate_puppet_version_opts(opts)
       unless PDK.feature_flag?('controlrepo') || PDK.context.is_a?(PDK::Context::Module)
-        raise PDK::CLI::ExitWithError.new(_('Code validation can only be run from inside a valid module directory'), log_level: :error)
+        raise PDK::CLI::ExitWithError.new('Code validation can only be run from inside a valid module directory', log_level: :error)
       end
 
       PDK::CLI::Util.module_version_check if PDK.context.is_a?(PDK::Context::Module)
@@ -58,7 +56,7 @@ module PDK::CLI
 
           vals.reject { |v| PDK::Validate.validator_names.include?(v) }
               .each do |v|
-            PDK.logger.warn(_("Unknown validator '%{v}'. Available validators: %{validators}.") % { v: v, validators: PDK::Validate.validator_names.join(', ') })
+            PDK.logger.warn("Unknown validator '%{v}'. Available validators: %{validators}." % { v: v, validators: PDK::Validate.validator_names.join(', ') })
           end
         else
           # This is a single item. Check if it's a known validator, or otherwise treat it as a target.
@@ -68,11 +66,11 @@ module PDK::CLI
           else
             targets = [args[0]]
             # We now know that no validators were passed, so let the user know we're using all of them by default.
-            PDK.logger.info(_('Running all available validators...'))
+            PDK.logger.info('Running all available validators...')
           end
         end
       else
-        PDK.logger.info(_('Running all available validators...'))
+        PDK.logger.info('Running all available validators...')
       end
       validators_to_run = PDK::Validate.validator_names if validators_to_run.nil?
 
