@@ -1,4 +1,6 @@
-# pdk [![Build Status](https://travis-ci.org/puppetlabs/pdk.svg?branch=main)](https://travis-ci.org/puppetlabs/pdk) [![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/x70e2fqllbaootpd?svg=true)](https://ci.appveyor.com/project/puppetlabs/pdk) [![Coverage Status](https://coveralls.io/repos/github/puppetlabs/pdk/badge.svg?branch=main)](https://coveralls.io/github/puppetlabs/pdk?branch=main)
+# pdk
+
+[![ci](https://github.com/puppetlabs/pdk/actions/workflows/ci.yml/badge.svg)](https://github.com/puppetlabs/pdk/actions/workflows/ci.yml) [![Gem Version](https://badge.fury.io/rb/pdk.svg)](https://badge.fury.io/rb/pdk)
 
 * [Installation](#installation)
 * [Basic usage](#basic-usage)

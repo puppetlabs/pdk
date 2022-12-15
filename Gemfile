@@ -3,8 +3,6 @@ source 'https://rubygems.org'
 # Specify your gem's dependencies in pdk.gemspec
 gemspec
 
-gem 'nokogiri', '~> 1.10.8'
-
 group :development do
   gem 'activesupport', '4.2.9'
   gem 'github_changelog_generator', '~> 1.14'
@@ -22,7 +20,6 @@ group :test do
   gem 'parser', '~> 2.7.1'
   gem 'rake', '~> 12.3', '>= 12.3.3'
   gem 'rspec', '~> 3.0'
-  gem 'rspec-xsd'
   gem 'rubocop', '~> 0.57.2'
   gem 'rubocop-rspec', '~> 1.27.0'
   gem 'simplecov-console'
@@ -30,6 +27,7 @@ end
 
 group :acceptance do
   gem 'minitar-cli'
+  gem 'rspec-xsd'
   gem 'serverspec'
 end
 
