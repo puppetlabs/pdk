@@ -1,6 +1,10 @@
-name: "Acceptance Tests"
+name: "acceptance"
 
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
 
 env:
   BOLT_GEM: true
@@ -11,7 +15,7 @@ env:
 jobs:
   Acceptance:
     name: 'Acceptance Tests (Ruby ${{ matrix.ruby_version }})'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -29,7 +33,7 @@ jobs:
       with:
         ruby-version: "2.7"
         bundler-cache: true
-    
+
     - name: Provision Test Environment
       run: |
         echo "Provisioning using ${{ matrix.provider }}: ${{ matrix.image }}"
@@ -43,8 +47,8 @@ jobs:
         bundle exec bolt command run "cd pdk && git fetch origin pull/${{ github.event.number }}/head:pdk_test_repo" --targets ssh_nodes --inventory spec/fixtures/litmus_inventory.yaml
         echo "Checking out to ${{ github.event.number }}"
         bundle exec bolt command run "cd pdk && git checkout pdk_test_repo" --targets ssh_nodes --inventory spec/fixtures/litmus_inventory.yaml
-        echo "Running bundle install in container"      
-    
+        echo "Running bundle install in container"
+
     - name: Bundle Install (Test Target)
       run: |
         echo "Running bundle install in container"
@@ -53,7 +57,7 @@ jobs:
     - name: Exec Acceptance Tests
       run: |
         bundle exec bolt command run 'cd pdk && CI=true bundle exec rake acceptance:local_parallel' --targets ssh_nodes --inventory spec/fixtures/litmus_inventory.yaml
-    
+
     - name: Tear Down
       if: ${{ always() }}
       run: |

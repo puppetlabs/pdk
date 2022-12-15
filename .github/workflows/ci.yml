@@ -1,0 +1,49 @@
+name: "ci"
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  spec:
+    name: "spec"
+    runs-on: "ubuntu-20.04"
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby_version: ['2.5', '2.7']
+
+    steps:
+
+      - name: "checkout"
+        uses: "actions/checkout@v3"
+
+      - name: "setup ruby"
+        uses: "ruby/setup-ruby@v1"
+        with:
+          ruby-version: ${{ matrix.ruby_version }}
+          bundler-cache: true
+        env:
+          BUNDLE_WITH: "test"
+
+      - name: "bundle environment"
+        run: |
+          echo ::group::bundler environment
+          bundle env
+          echo ::endgroup::
+
+      - name: "license check"
+        run: bundle exec rake license_finder
+
+      - name: "rubocop"
+        run: |
+          bundle exec rubocop
+
+      - name: "spec"
+        run: |
+          bundle exec rake spec
