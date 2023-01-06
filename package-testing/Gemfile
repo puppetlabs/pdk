@@ -13,11 +13,11 @@ def location_for(place_or_version, fake_version = nil)
   end
 end
 
-gem 'beaker', *location_for(ENV['BEAKER_VERSION'] || 'https://github.com/voxpupuli/beaker.git#master')
-gem 'beaker-abs', *location_for(ENV['BEAKER_ABS_VERSION'] || '~> 0.9.0')
-gem 'beaker-hostgenerator', *location_for(ENV['BEAKER_HOSTGENERATOR_VERSION'] || '= 1.5.0')
-gem 'beaker-puppet', '= 1.21.0'
-gem 'beaker-rspec', '= 6.3.0'
+gem 'beaker', '~> 4.38'
+gem 'beaker-abs', '~> 0.11.0'
+gem 'beaker-hostgenerator', '~> 1.18.0'
+gem 'beaker-puppet', '= 1.29.0'
+gem 'beaker-rspec', '= 7.1.0'
 gem 'beaker-vmpooler', '= 1.4.0'
 gem 'i18n', '= 1.4.0' # pin for Ruby 2.1 support
 gem 'nokogiri', '~> 1.10.8'
