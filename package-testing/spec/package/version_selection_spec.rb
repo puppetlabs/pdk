@@ -6,12 +6,11 @@ describe 'Test puppet & ruby version selection' do
     { envvar: 'PDK_PUPPET_VERSION', version: '5.5.0', expected_puppet: '5.5', expected_ruby: '2.4' },
     { envvar: 'PDK_PUPPET_VERSION', version: '6.21.0', expected_puppet: '6.21', expected_ruby: '2.5.9' },
     { envvar: 'PDK_PUPPET_VERSION', version: '6.23.0', expected_puppet: '6.23', expected_ruby: '2.5.9' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.4.1', expected_puppet: '7.4', expected_ruby: '2.7.6' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.8.0', expected_puppet: '7.8', expected_ruby: '2.7.6' },
+    { envvar: 'PDK_PUPPET_VERSION', version: '7.18.0', expected_puppet: '7.18', expected_ruby: '2.7.6' },
+    { envvar: 'PDK_PUPPET_VERSION', version: '7.20.0', expected_puppet: '7.20', expected_ruby: '2.7.6' },
     { envvar: 'PDK_PE_VERSION', version: '2018.1', expected_puppet: '5.5', expected_ruby: '2.4' },
     { envvar: 'PDK_PE_VERSION', version: '2019.8.7', expected_puppet: '6.23', expected_ruby: '2.5.9' },
-    { envvar: 'PDK_PE_VERSION', version: '2021.1', expected_puppet: '7.6', expected_ruby: '2.7.6' },
-    { envvar: 'PDK_PE_VERSION', version: '2021.2', expected_puppet: '7.8', expected_ruby: '2.7.6' },
+    { envvar: 'PDK_PE_VERSION', version: '2021.7.1', expected_puppet: '7.20', expected_ruby: '2.7.6' },
   ]
 
   before(:all) do
