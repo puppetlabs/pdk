@@ -17,8 +17,10 @@ PDK includes the following tools:
 
 |Tool|Description|Owned by Puppet|
 |----|-----------|---------------|
+|facterdb|A gem that contains facts for Operating Systems.| N |
 |metadata-json-lint|Validates and lints `metadata.json` files in modules against Puppet module metadata style guidelines.| N |
 |pdk|Tool to generate and test modules and module content, such as classes, from the command line.| Y |
+|puppet-debugger|Provides a REPL based debugger console.| N |
 |puppet-lint|Checks your Puppet code against the recommendations in the Puppet language style guide.| Y |
 |puppet-syntax|Checks for correct syntax in Puppet manifests, templates, and Hiera YAML.| N |
 |puppetlabs_spec_helper|Provides classes, methods, and Rake tasks to help with spec testing Puppet code.| Y |
