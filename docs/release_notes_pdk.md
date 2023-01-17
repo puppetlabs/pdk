@@ -2,6 +2,26 @@
 
 New features, enhancements, and resolved issues for the PDK 2.x release series.
 
+## PDK 2.6.0
+
+### New features and enhancements
+
+* Ruby 2.7.6 has been updated to 2.7.7 to address [CVE-2021-33621](https://www.ruby-lang.org/en/news/2022/11/22/http-response-splitting-in-cgi-cve-2021-33621/).
+* PDK Templates have been updated to 2.7.1.
+* Support for Fedora 36 has been added.
+
+## Resolved issues
+
+* The vendored puppet-lint plugins have been updated to their latest compatible versions. This resolves an issue where a conflict between puppet-lint and the sytax validator would occur when using the auto fix feature of `pdk validate`.
+* The vendored facterdb version has been updated. This brings in more supported facts for testing your Puppet code.
+* PDK will no longer attempt to install missing dependencies when creating new modules with the default template.
+
+### Deprecations
+
+* Package support for Fedora 32 and 34 has been removed.
+* Puppet 5 and Ruby 2.4 support has been removed.
+* Nokogiri and it's dependencies have been removed from the packages.
+
 ## PDK 2.5.0
 
 ### New features and enhancements
