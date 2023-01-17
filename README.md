@@ -15,16 +15,17 @@ PDK includes testing tools, a complete module skeleton, and command line tools t
 
 PDK includes the following tools:
 
-Tool   | Description
-----------------|-------------------------
-metadata-json-lint | Validates and lints `metadata.json` files in modules against  Puppet's module metadatastyle guidelines.
-pdk | Command line tool for generating and testing modules
-puppet-lint | Checks your Puppet code against the recommendations in the Puppet Language style guide.
-puppet-syntax | Checks for correct syntax in Puppet manifests, templates, and Hiera YAML.
-puppetlabs_spec_helper | Provides classes, methods, and Rake tasks to help with spec testing Puppet code.
-rspec-puppet | Tests the behavior of Puppet when it compiles your manifests into a catalog of Puppet resources.
-rspec-puppet-facts | Adds support for running rspec-puppet tests against the facts for your supported operating systems.
-puppet-debugger | Provides a REPL based debugger console.
+|Tool|Description|Owned by Puppet|
+|----|-----------|---------------|
+|facterdb|A gem that contains facts for Operating Systems.| N |
+|metadata-json-lint|Validates and lints `metadata.json` files in modules against Puppet module metadata style guidelines.| N |
+|pdk|Tool to generate and test modules and module content, such as classes, from the command line.| Y |
+|puppet-debugger|Provides a REPL based debugger console.| N |
+|puppet-lint|Checks your Puppet code against the recommendations in the Puppet language style guide.| Y |
+|puppet-syntax|Checks for correct syntax in Puppet manifests, templates, and Hiera YAML.| N |
+|puppetlabs_spec_helper|Provides classes, methods, and Rake tasks to help with spec testing Puppet code.| Y |
+|rspec-puppet|Tests the behavior of Puppet when it compiles your manifests into a catalog of Puppet resources.| Y |
+|rspec-puppet-facts|Adds support for running `rspec-puppet` tests against the facts for your supported operating systems.| N |
 
 
 ## Installation
