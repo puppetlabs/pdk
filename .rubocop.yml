@@ -4,7 +4,8 @@ require:
 inherit_from: .rubocop_todo.yml
 
 AllCops:
-  TargetRubyVersion: 2.1.9
+  TargetRubyVersion: 2.7
+  NewCops: enable
   Exclude:
     # binstubs, and other utilities
     - bin/**/*
@@ -15,7 +16,7 @@ AllCops:
     - package-testing/vendor/**/.*
     - tmp/**/*
 
-Layout/IndentHeredoc:
+Layout/HeredocIndentation:
   Description: The `squiggly` style would be preferable, but is only available from ruby 2.3. We'll enable this when we can.
   Enabled: False
 
@@ -35,7 +36,7 @@ Metrics/ClassLength:
 Metrics/CyclomaticComplexity:
   Enabled: False
 
-Metrics/LineLength:
+Layout/LineLength:
   Description: People have wide screens, use them.
   Max: 200
 
