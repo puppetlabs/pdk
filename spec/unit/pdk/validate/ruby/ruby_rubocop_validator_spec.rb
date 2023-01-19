@@ -93,7 +93,9 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
         cop_name:    cop_name,
         corrected?:  corrected,
         line:        line,
+        last_line:   line,
         real_column: column,
+        last_column: column,
         location:    OpenStruct.new(length: 0),
       )
     end
