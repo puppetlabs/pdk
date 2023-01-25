@@ -1,6 +1,27 @@
 # PDK known issues
 
-Known issues in the PDK 1.x release series.
+## PDK 2.6.1
+
+When using selecting Puppet versions PDK, you may encounter an `uninitialized constant` error if the target version is below 6.29 for Puppet 6 or 7.22 for Puppet 7.
+
+This is caused by an incompatible version of concurrent-ruby that is downloaded when PDK processes the selected Puppet version.
+
+To mitigate this issue, we recommend selecting only the latest puppet versions when using `--puppet-version`.
+
+For example:
+
+### Puppet 6
+
+```
+pdk validate --puppet-version 6.29
+```
+
+### Puppet 7
+
+```
+pdk validate --puppet-version 7.22
+```
+In scenarios where `--pe-version` is used, it is recommended that `--puppet-version` is used instead, with the correct target as described above.
 
 ## PDK 1.15.0 is incompatible with Bundler 2.1.0 and later
 
