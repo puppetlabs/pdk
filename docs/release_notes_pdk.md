@@ -2,6 +2,17 @@
 
 New features, enhancements, and resolved issues for the PDK 2.x release series.
 
+## PDK 2.6.1
+
+### New features and enhancements
+
+* A Ubuntu 22.04 compatible packages has been added.
+* An OSX 12 compatible package has been added.
+
+### Resolved issues
+
+* Versions 6.29 and 7.22 of the Puppet gem have been added to the packages. The two new gem releases resolve an issue where an incompatible version of `concurrent-ruby` may be dowloaded when creating a new module or running `pdk validate`.
+
 ## PDK 2.6.0
 
 ### New features and enhancements
