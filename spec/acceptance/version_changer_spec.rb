@@ -21,7 +21,7 @@ describe 'puppet version selection' do
       end
     end
 
-    %w[7.3.0 6.19.1].each do |puppet_version|
+    %w[7.22.0 6.29.0].each do |puppet_version|
       context "when requesting --puppet-version #{puppet_version}" do
         describe command("pdk validate --puppet-version #{puppet_version}") do
           its(:exit_status) { is_expected.to eq(0) }
@@ -34,13 +34,16 @@ describe 'puppet version selection' do
       end
     end
 
-    { '2019.8.4' => '6.19.1' }.each do |pe_version, puppet_version|
-      context "when requesting --pe-version #{pe_version}" do
+    # PE mapping test have been marked as pending due to an issue with concurrent-ruby versions in
+    # older Puppet gems. This is being tracked and will be resolved in a future version.
+    { '2021.7.1' => '7.20.0' }.each do |pe_version, puppet_version|
+      xcontext "when requesting --pe-version #{pe_version}" do
         describe command("pdk validate --pe-version #{pe_version}") do
           its(:exit_status) { is_expected.to eq(0) }
         end
 
         describe file('Gemfile.lock') do
+          its(:exit_status) { is_expected.to eq(0) }
           it { is_expected.to exist }
           its(:content) { is_expected.to match(%r{^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)}im) }
         end
