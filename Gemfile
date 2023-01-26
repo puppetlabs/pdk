@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'activesupport', '4.2.9'
   gem 'github_changelog_generator', '~> 1.14'
   gem 'pry-byebug', '~> 3.4'
   gem 'ruby-prof'
@@ -13,7 +12,6 @@ end
 
 group :test do
   gem 'codecov'
-  gem 'json', '~> 2.2.0'
   gem 'license_finder', '~> 6.1.2'
   gem 'parallel', '= 1.13.0'
   gem 'parallel_tests', '~> 2.24.0'
