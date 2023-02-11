@@ -83,3 +83,4 @@ Gemfile.local
 
 # generated artifacts from rake tasks
 /output
+modules
