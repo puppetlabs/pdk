@@ -23,6 +23,7 @@ module PDK
       autoload :PuppetEPPValidator, 'pdk/validate/puppet/puppet_epp_validator'
       autoload :PuppetLintValidator, 'pdk/validate/puppet/puppet_lint_validator'
       autoload :PuppetSyntaxValidator, 'pdk/validate/puppet/puppet_syntax_validator'
+      autoload :PuppetPlanSyntaxValidator, 'pdk/validate/puppet/puppet_plan_syntax_validator'
       autoload :PuppetValidatorGroup, 'pdk/validate/puppet/puppet_validator_group'
     end
 
