@@ -2,6 +2,20 @@
 
 ## PDK 2.6.1
 
+### Running autocorrect on puppet-lint top_scope_facts
+
+Currently there is an issue with a third party app that the pdk currently pulls in. When using the autocorrect functionality, it introduces issues in the codebase. 
+
+In order to avoid running into this particular issue we recommend adding the following to your `.sync.yaml` file and then run a `pdk update`:
+
+```
+Rakefile:
+  extra_disabled_lint_checks:
+    - top_scope_facts
+```
+
+### `uninitialized constant` error
+
 When using selecting Puppet versions PDK, you may encounter an `uninitialized constant` error if the target version is below 6.29 for Puppet 6 or 7.22 for Puppet 7.
 
 This is caused by an incompatible version of concurrent-ruby that is downloaded when PDK processes the selected Puppet version.
@@ -10,13 +24,13 @@ To mitigate this issue, we recommend selecting only the latest puppet versions w
 
 For example:
 
-### Puppet 6
+#### Puppet 6
 
 ```
 pdk validate --puppet-version 6.29
 ```
 
-### Puppet 7
+#### Puppet 7
 
 ```
 pdk validate --puppet-version 7.22
