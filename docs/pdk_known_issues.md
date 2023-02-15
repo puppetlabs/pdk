@@ -4,7 +4,7 @@
 
 ### Running autocorrect on puppet-lint top_scope_facts
 
-Currently there is an issue with a third party app that the pdk currently pulls in. When using the autocorrect functionality, it introduces issues in the codebase. 
+Currently there is an issue with a third party plugin that the pdk currently pulls in called puppet-lint-top_scope_facts-check. When using the autocorrect functionality, it introduces issues in the codebase. 
 
 In order to avoid running into this particular issue we recommend adding the following to your `.sync.yaml` file and then run a `pdk update`:
 
