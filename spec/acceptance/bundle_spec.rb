@@ -1,5 +1,4 @@
 require 'spec_helper_acceptance'
-require 'open3'
 
 class IO
   def expects(expected)
@@ -39,19 +38,32 @@ describe 'pdk bundle' do
       its(:stdout) { is_expected.to match(%r{## Environment}) }
     end
 
+    # This test has been scoped to only execute when the following conditions are true
+    # * We are not on a windows platform
+    # * The current active ruby version is lower than 2.7
+    # As of today, it does not seem possible (within reason) to properly send data to the processes write stream when running on ruby 2.7.
+    # This causes an issue where the tests will hang indefinitely when we try to retrieve output (r.gets) from
+    # the process because there is nothing there to retrieve.
+    # After a short discussion internally we decided to scope this test especially as this feature may change in the PDK
+    # in coming releases.
     context 'when running an interactive command' do
-      it 'works interactively' do
+      it 'works interactively', if: !Gem.win_platform? && Gem::Version.new(PDK::Util::RubyVersion.active_ruby_version) < Gem::Version.new('2.7.0') do
         command = 'pdk bundle exec irb -f --echo --prompt simple'
-        prompt = %r{>> \Z}m
-        exit_command = "exit\n"
 
-        Open3.popen2e(command) do |stdin, stdouterr, _|
-          stdouterr.expects(prompt) { |_| stdin.syswrite "require 'date'\n" }
-          stdouterr.expects(prompt) { |_| stdin.syswrite "Date.today.year\n" }
-          stdouterr.expects(prompt) do |output|
-            expect(output).to match(%r{=> #{Date.today.year}}m)
-            stdin.syswrite exit_command
-          end
+        require 'pty'
+        PTY.spawn(command) do |r, w, _pid|
+          # Test that the startup message is displayed
+          startup_message = r.gets
+          expect(startup_message).to match(%r{pdk \(INFO\): Using Ruby}im)
+          r.gets
+
+          # Issue a command and consume the output
+          w.puts 'puts __dir__'
+          r.gets
+
+          # Test that the output is displayed
+          dir = r.gets
+          expect(dir).to match(%r{bundle}im)
         end
       end
     end
@@ -85,13 +97,7 @@ describe 'pdk bundle' do
 
       describe command('pdk bundle env') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        if ENV['APPVEYOR'] || ENV['CI']
-          # TODO: This is very strange that Appveyor emits the error on STDOUT instead of STDERR
-          # For moment switch the expectation based on the APPVEYOR environment variable
-          its(:stdout) { is_expected.to match(%r{error parsing `gemfile`}i) }
-        else
-          its(:stderr) { is_expected.to match(%r{error parsing `gemfile`}i) }
-        end
+        its(:stderr) { is_expected.to match(%r{error parsing `gemfile`}i) }
       end
     end
   end

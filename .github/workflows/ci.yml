@@ -7,43 +7,41 @@ on:
   pull_request:
     branches:
       - "main"
+  schedule:
+    - cron: "0 0 * * *"
   workflow_dispatch:
 
 jobs:
+
   spec:
-    name: "spec"
-    runs-on: "ubuntu-20.04"
     strategy:
       fail-fast: false
       matrix:
-        ruby_version: ['2.5', '2.7']
+        ruby_version:
+          - '2.5'
+          - '2.7'
+    name: "spec (ruby ${{ matrix.ruby_version }})"
+    uses: "puppetlabs/cat-github-actions/.github/workflows/gem_ci.yml@main"
+    secrets: "inherit"
+    with:
+      ruby_version: ${{ matrix.ruby_version }}
 
-    steps:
+  acceptance:
+    needs: "spec"
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - "ubuntu-latest"
+          - "windows-2019"
+        ruby_version:
+          - "2.5"
+          - "2.7"
+    name: "acceptance (ruby ${{ matrix.ruby_version }} | ${{ matrix.os }})"
+    uses: "puppetlabs/cat-github-actions/.github/workflows/gem_acceptance.yml@main"
+    secrets: "inherit"
+    with:
+      ruby_version: ${{ matrix.ruby_version }}
+      rake_task: 'acceptance:local_parallel'
+      runs_on: ${{ matrix.os }}
 
-      - name: "checkout"
-        uses: "actions/checkout@v3"
-
-      - name: "setup ruby"
-        uses: "ruby/setup-ruby@v1"
-        with:
-          ruby-version: ${{ matrix.ruby_version }}
-          bundler-cache: true
-        env:
-          BUNDLE_WITH: "test"
-
-      - name: "bundle environment"
-        run: |
-          echo ::group::bundler environment
-          bundle env
-          echo ::endgroup::
-
-      - name: "license check"
-        run: bundle exec rake license_finder
-
-      - name: "rubocop"
-        run: |
-          bundle exec rubocop
-
-      - name: "spec"
-        run: |
-          bundle exec rake spec

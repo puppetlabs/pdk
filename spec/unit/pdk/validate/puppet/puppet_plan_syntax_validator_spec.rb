@@ -30,7 +30,7 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
 
   describe '.pattern_ignore' do
     it 'ignores nothing' do
-      expect(validator).not_to receive(:contextual_pattern)
+      expect(validator).not_to receive(:contextual_pattern) # rubocop:disable RSpec/SubjectStub This is fine
       validator.pattern_ignore
     end
   end

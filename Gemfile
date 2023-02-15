@@ -15,11 +15,11 @@ group :test do
   gem 'license_finder', '~> 6.1.2'
   gem 'parallel', '= 1.13.0'
   gem 'parallel_tests', '~> 2.24.0'
-  gem 'parser', '~> 2.7.1'
   gem 'rake', '~> 12.3', '>= 12.3.3'
   gem 'rspec', '~> 3.0'
-  gem 'rubocop', '~> 0.57.2'
-  gem 'rubocop-rspec', '~> 1.27.0'
+  gem 'rubocop', '~> 1.28.0', require: false
+  gem 'rubocop-rspec', '~> 2.0.1', require: false
+  gem 'rubocop-performance', '~> 1.9.1', require: false
   gem 'simplecov-console'
 end
 

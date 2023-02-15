@@ -81,7 +81,7 @@ describe PDK::Config::Namespace do
       end
 
       it 'saves default values to disk' do
-        expect(config).to receive(:save_data).once # rubocop:disable RSpec/SubjectStub This is an expectation, not a stub
+        expect(config).to receive(:save_data).once # This is an expectation, not a stub
         expect(config[:spec_test]).to eq('spec_default')
       end
     end
