@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.4.0' # rubocop:disable Gemspec/RequiredRubyVersion
+  spec.required_ruby_version = '>= 2.5.9' # rubocop:disable Gemspec/RequiredRubyVersion
 
   spec.add_runtime_dependency 'bundler', '>= 2.3.0', '< 3.0.0'
   spec.add_runtime_dependency 'childprocess', '~> 4.1.0'
@@ -41,4 +41,3 @@ Gem::Specification.new do |spec|
   # Used in the pdk-templates
   spec.add_runtime_dependency 'deep_merge', '~> 1.2.2'
 end
-

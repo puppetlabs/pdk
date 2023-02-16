@@ -4,18 +4,20 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'github_changelog_generator', '~> 1.14'
-  gem 'pry-byebug', '~> 3.4'
+  gem 'github_changelog_generator', '~> 1.15.2'
   gem 'ruby-prof'
   gem 'yard'
+
+  gem 'pry'
+  gem 'pry-stack_explorer'
+  gem 'fuubar'
 end
 
 group :test do
   gem 'codecov'
-  gem 'license_finder', '~> 6.1.2'
-  gem 'parallel', '= 1.13.0'
-  gem 'parallel_tests', '~> 2.24.0'
-  gem 'rake', '~> 12.3', '>= 12.3.3'
+  gem 'parallel'
+  gem 'parallel_tests'
+  gem 'rake'
   gem 'rspec', '~> 3.0'
   gem 'rubocop', '~> 1.28.0', require: false
   gem 'rubocop-rspec', '~> 2.0.1', require: false
@@ -30,7 +32,6 @@ group :acceptance do
 end
 
 group :acceptance_ci do
-  gem 'puppet_litmus'
   gem 'puppetlabs_spec_helper'
 end
 
