@@ -3,20 +3,20 @@ require 'pdk/cli/release'
 module PDK::CLI
   @release_publish_cmd = @release_cmd.define_command do
     name 'publish'
-    usage _('publish [options] <tarball>')
-    summary _('(Experimental) Publishes the module <tarball> to the Forge.')
+    usage 'publish [options] <tarball>'
+    summary '(Experimental) Publishes the module <tarball> to the Forge.'
 
-    flag nil, :force,                _('Publish the module automatically, with no prompts.')
+    flag nil, :force,                'Publish the module automatically, with no prompts.'
 
-    option nil, :'forge-upload-url', _('Set forge upload url path.'),
+    option nil, :'forge-upload-url', 'Set forge upload url path.',
            argument: :required, default: 'https://forgeapi.puppetlabs.com/v3/releases'
 
-    option nil, :'forge-token', _('Set Forge API token (you may also set via environment variable PDK_FORGE_TOKEN)'), argument: :required
+    option nil, :'forge-token', 'Set Forge API token (you may also set via environment variable PDK_FORGE_TOKEN)', argument: :required
 
     run do |opts, _args, cmd|
       # Make sure build is being run in a valid module directory with a metadata.json
       PDK::CLI::Util.ensure_in_module!(
-        message:   _("`pdk release #{cmd.name}` can only be run from inside a valid module with a metadata.json."),
+        message:   "`pdk release #{cmd.name}` can only be run from inside a valid module with a metadata.json.",
         log_level: :info,
       )
 
@@ -30,11 +30,7 @@ module PDK::CLI
       opts[:'forge-token'] ||= PDK::Util::Env['PDK_FORGE_TOKEN']
 
       if opts[:'forge-token'].nil? || opts[:'forge-token'].empty?
-        PDK.logger.error _(
-          'You must supply a Forge API token either via `--forge-token` option ' \
-          'or PDK_FORGE_TOKEN environment variable.',
-        )
-
+        PDK.logger.error 'You must supply a Forge API token either via `--forge-token` option or PDK_FORGE_TOKEN environment variable.'
         exit 1
       end
 

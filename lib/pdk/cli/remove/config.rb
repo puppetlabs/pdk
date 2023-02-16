@@ -8,17 +8,17 @@ module PDK::CLI
 
         force = opts[:force] || false
 
-        raise PDK::CLI::ExitWithError, _('Configuration name is required') if item_name.nil?
+        raise PDK::CLI::ExitWithError, 'Configuration name is required' if item_name.nil?
 
         current_value = PDK.config.get(item_name)
-        raise PDK::CLI::ExitWithError, _("The configuration item '%{name}' can not be removed.") % { name: item_name } if current_value.is_a?(PDK::Config::Namespace)
+        raise PDK::CLI::ExitWithError, "The configuration item '%{name}' can not be removed." % { name: item_name } if current_value.is_a?(PDK::Config::Namespace)
         if current_value.nil?
-          PDK.logger.info(_("Could not remove '%{name}' as it has not been set") % { name: item_name })
+          PDK.logger.info("Could not remove '%{name}' as it has not been set" % { name: item_name })
           return 0
         end
 
-        PDK.logger.info(_("Ignoring the item value '%{value}' as --force has been set") % { value: item_value }) if current_value.is_a?(Array) && !item_value.nil? && force
-        PDK.logger.info(_('Ignoring --force as the setting is not multi-valued')) if !current_value.is_a?(Array) && force
+        PDK.logger.info("Ignoring the item value '%{value}' as --force has been set" % { value: item_value }) if current_value.is_a?(Array) && !item_value.nil? && force
+        PDK.logger.info('Ignoring --force as the setting is not multi-valued') if !current_value.is_a?(Array) && force
 
         # FIXME: It'd be nice to shortcircuit deleting default values.  This causes the configuration file
         # to be saved, even though nothing actually changes
@@ -31,9 +31,9 @@ module PDK::CLI
           new_value = item_value.nil? ? [] : current_value.reject { |item| item.to_s == item_value }
           if current_value.count == new_value.count
             if item_value.nil?
-              PDK.logger.info(_("Could not remove '%{name}' as it is already empty") % { name: item_name })
+              PDK.logger.info("Could not remove '%{name}' as it is already empty" % { name: item_name })
             else
-              PDK.logger.info(_("Could not remove '%{value}' from '%{name}' as it has not been set") % { value: item_value, name: item_name })
+              PDK.logger.info("Could not remove '%{value}' from '%{name}' as it has not been set" % { value: item_value, name: item_name })
             end
             return 0
           end
@@ -49,18 +49,18 @@ module PDK::CLI
           # Arrays have a special output format. If item_value is nil then the user wanted to empty/clear
           # the array otherwise they just wanted to remove a single entry.
           if item_value.nil?
-            PDK.logger.info(_("Cleared '%{name}' which had a value of '%{from}'") % { name: item_name, from: current_value })
+            PDK.logger.info("Cleared '%{name}' which had a value of '%{from}'" % { name: item_name, from: current_value })
           else
-            PDK.logger.info(_("Removed '%{value}' from '%{name}'") % { value: item_value, name: item_name })
+            PDK.logger.info("Removed '%{value}' from '%{name}'" % { value: item_value, name: item_name })
           end
         elsif !new_value.nil?
-          PDK.logger.info(_("Could not remove '%{name}' as it using a default value of '%{to}'") % { name: item_name, to: new_value })
+          PDK.logger.info("Could not remove '%{name}' as it using a default value of '%{to}'" % { name: item_name, to: new_value })
         else
-          PDK.logger.info(_("Removed '%{name}' which had a value of '%{from}'") % { name: item_name, from: current_value })
+          PDK.logger.info("Removed '%{name}' which had a value of '%{from}'" % { name: item_name, from: current_value })
         end
 
         # Same output as `get config`
-        $stdout.puts _('%{name}=%{value}') % { name: item_name, value: new_value }
+        $stdout.puts '%{name}=%{value}' % { name: item_name, value: new_value }
         0
       end
     end
@@ -68,10 +68,10 @@ module PDK::CLI
 
   @remove_config_cmd = @remove_cmd.define_command do
     name 'config'
-    usage _('config [name] [value]')
-    summary _('Remove or delete the configuration for <name>')
+    usage 'config [name] [value]'
+    summary 'Remove or delete the configuration for <name>'
 
-    option :f, :force, _('Force multi-value configuration settings to be removed instead of emptied.'), argument: :forbidden
+    option :f, :force, 'Force multi-value configuration settings to be removed instead of emptied.', argument: :forbidden
 
     run do |opts, args, _cmd|
       exit PDK::CLI::Remove::Config.run(opts, args)

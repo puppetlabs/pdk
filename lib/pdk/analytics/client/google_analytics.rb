@@ -42,7 +42,7 @@ module PDK
 
         def screen_view(screen, **kwargs)
           custom_dimensions = walk_keys(kwargs) do |k|
-            CUSTOM_DIMENSIONS[k] || raise(_("Unknown analytics key '%{key}'") % { key: k })
+            CUSTOM_DIMENSIONS[k] || raise("Unknown analytics key '%{key}'" % { key: k })
           end
 
           screen_view_params = {
@@ -57,7 +57,7 @@ module PDK
 
         def event(category, action, label: nil, value: nil, **kwargs)
           custom_dimensions = walk_keys(kwargs) do |k|
-            CUSTOM_DIMENSIONS[k] || raise(_("Unknown analytics key '%{key}'") % { key: k })
+            CUSTOM_DIMENSIONS[k] || raise("Unknown analytics key '%{key}'" % { key: k })
           end
 
           event_params = {
@@ -92,6 +92,8 @@ module PDK
         # These parameters have terrible names. See this page for complete documentation:
         # https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters
         def base_params
+          require 'locale'
+
           {
             v:    PROTOCOL_VERSION,
             # Client ID

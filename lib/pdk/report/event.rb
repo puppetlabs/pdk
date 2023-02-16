@@ -195,11 +195,11 @@ module PDK
       #   a String.
       def sanitise_file(value)
         if value.nil? || (value.is_a?(String) && value.empty?)
-          raise ArgumentError, _('File not specified.')
+          raise ArgumentError, 'File not specified.'
         end
 
         unless value.is_a?(String)
-          raise ArgumentError, _('File must be a String.')
+          raise ArgumentError, 'File must be a String.'
         end
 
         require 'pathname'
@@ -235,17 +235,17 @@ module PDK
       #   a String or Symbol representation of a valid state.
       def sanitise_state(value)
         if value.nil? || (value.is_a?(String) && value.empty?)
-          raise ArgumentError, _('State not specified.')
+          raise ArgumentError, 'State not specified.'
         end
 
         value = value.to_sym if value.is_a?(String)
         unless value.is_a?(Symbol)
-          raise ArgumentError, _('State must be a Symbol, not %{type}') % { type: value.class }
+          raise ArgumentError, 'State must be a Symbol, not %{type}' % { type: value.class }
         end
 
         valid_states = [:passed, :error, :failure, :skipped]
         unless valid_states.include?(value)
-          raise ArgumentError, _('Invalid state %{state}. Valid states are: %{valid}.') % {
+          raise ArgumentError, 'Invalid state %{state}. Valid states are: %{valid}.' % {
             state: value.inspect,
             valid: valid_states.map(&:inspect).join(', '),
           }
@@ -264,7 +264,7 @@ module PDK
       # @raise [ArgumentError] if the value is nil or an empty String.
       def sanitise_source(value)
         if value.nil? || (value.is_a?(String) && value.empty?)
-          raise ArgumentError, _('Source not specified.')
+          raise ArgumentError, 'Source not specified.'
         end
 
         value.to_s
@@ -285,11 +285,11 @@ module PDK
         end
 
         unless valid_types.include?(value.class)
-          raise ArgumentError, _('Line must be an Integer or a String representation of an Integer.')
+          raise ArgumentError, 'Line must be an Integer or a String representation of an Integer.'
         end
 
         if value.is_a?(String) && value !~ %r{\A[0-9]+\Z}
-          raise ArgumentError, _('The line number can contain only the digits 0-9.')
+          raise ArgumentError, 'The line number can contain only the digits 0-9.'
         end
 
         value.to_i
@@ -310,11 +310,11 @@ module PDK
         end
 
         unless valid_types.include?(value.class)
-          raise ArgumentError, _('Column must be an Integer or a String representation of an Integer.')
+          raise ArgumentError, 'Column must be an Integer or a String representation of an Integer.'
         end
 
         if value.is_a?(String) && value !~ %r{\A[0-9]+\Z}
-          raise ArgumentError, _('The column number can contain only the digits 0-9.')
+          raise ArgumentError, 'The column number can contain only the digits 0-9.'
         end
 
         value.to_i
@@ -332,7 +332,7 @@ module PDK
         valid_types = [Array]
 
         unless valid_types.include?(value.class)
-          raise ArgumentError, _('Trace must be an Array of stack trace lines.')
+          raise ArgumentError, 'Trace must be an Array of stack trace lines.'
         end
 
         # Drop any stacktrace lines that include '/gems/' in the path or

@@ -28,7 +28,7 @@ module PDK
       def check_preconditions
         super
 
-        error = _("A task named '%{name}' already exists in this module; defined in %{file}")
+        error = "A task named '%{name}' already exists in this module; defined in %{file}"
         allowed_extensions = %w[.md .conf]
 
         PDK::Util::Filesystem.glob(File.join(context.root_path, 'tasks', task_name + '.*')).each do |file|

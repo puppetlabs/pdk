@@ -92,22 +92,22 @@ module PDK
 
       def self.from_file(metadata_json_path)
         if metadata_json_path.nil?
-          raise ArgumentError, _('Cannot read metadata from file: no path to file was given.')
+          raise ArgumentError, 'Cannot read metadata from file: no path to file was given.'
         end
 
         unless PDK::Util::Filesystem.file?(metadata_json_path)
-          raise ArgumentError, _("'%{file}' does not exist or is not a file.") % { file: metadata_json_path }
+          raise ArgumentError, "'%{file}' does not exist or is not a file." % { file: metadata_json_path }
         end
 
         unless PDK::Util::Filesystem.readable?(metadata_json_path)
-          raise ArgumentError, _("Unable to open '%{file}' for reading.") % { file: metadata_json_path }
+          raise ArgumentError, "Unable to open '%{file}' for reading." % { file: metadata_json_path }
         end
 
         require 'json'
         begin
           data = JSON.parse(PDK::Util::Filesystem.read_file(metadata_json_path))
         rescue JSON::JSONError => e
-          raise ArgumentError, _('Invalid JSON in metadata.json: %{msg}') % { msg: e.message }
+          raise ArgumentError, 'Invalid JSON in metadata.json: %{msg}' % { msg: e.message }
         end
 
         require 'pdk/util'
@@ -144,9 +144,9 @@ module PDK
 
       def validate_puppet_version_requirement!
         msgs = {
-          no_reqs:       _('Module metadata does not contain any requirements.'),
-          no_puppet_req: _('Module metadata does not contain a "puppet" requirement.'),
-          no_puppet_ver: _('The "puppet" requirement in module metadata does not specify a "version_requirement".'),
+          no_reqs:       'Module metadata does not contain any requirements.',
+          no_puppet_req: 'Module metadata does not contain a "puppet" requirement.',
+          no_puppet_ver: 'The "puppet" requirement in module metadata does not specify a "version_requirement".',
         }
 
         raise ArgumentError, msgs[:no_reqs] unless @data.key?('requirements')
@@ -186,16 +186,16 @@ module PDK
 
         err = case modname
               when nil, '', :namespace_missing
-                _('Field must be a dash-separated user name and module name.')
+                'Field must be a dash-separated user name and module name.'
               when %r{[^a-z0-9_]}i
-                _('Module name must contain only alphanumeric or underscore characters.')
+                'Module name must contain only alphanumeric or underscore characters.'
               when %r{^[^a-z]}i
-                _('Module name must begin with a letter.')
+                'Module name must begin with a letter.'
               else
-                _('Namespace must contain only alphanumeric characters.')
+                'Namespace must contain only alphanumeric characters.'
               end
 
-        raise ArgumentError, _("Invalid 'name' field in metadata.json: %{err}") % { err: err }
+        raise ArgumentError, "Invalid 'name' field in metadata.json: %{err}" % { err: err }
       end
     end
   end

@@ -38,7 +38,7 @@ module PDK
       #
       # @api private
       def register(&_block)
-        raise PDK::CLI::FatalError, _('No block registered') unless block_given?
+        raise PDK::CLI::FatalError, 'No block registered' unless block_given?
       end
 
       # The return code of running all registered blocks
@@ -88,8 +88,6 @@ module PDK
         # and only starts on the call to exit_code
         # e.g. max_threads = No. of CPUs
         @threads << Thread.new do
-          GettextSetup.initialize(File.absolute_path('../../../locales', File.dirname(__FILE__)))
-          GettextSetup.negotiate_locale!(GettextSetup.candidate_locales)
           @exit_codes << yield
         end
       end

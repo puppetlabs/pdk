@@ -1,8 +1,8 @@
 module PDK::CLI
   @module_generate_cmd = @module_cmd.define_command do
     name 'generate'
-    usage _('generate [options] <module_name>')
-    summary _('This command is now \'pdk new module\'.')
+    usage 'generate [options] <module_name>'
+    summary 'This command is now \'pdk new module\'.'
 
     PDK::CLI.template_url_option(self)
     PDK::CLI.template_ref_option(self)
@@ -21,7 +21,7 @@ module PDK::CLI
 
       PDK::CLI::Util.validate_template_opts(opts)
 
-      PDK.logger.info(_("New modules are created using the 'pdk new module' command."))
+      PDK.logger.info("New modules are created using the 'pdk new module' command.")
       prompt = TTY::Prompt.new(help_color: :cyan)
       redirect = PDK::CLI::Util::CommandRedirector.new(prompt)
       redirect.target_command('pdk new module')
@@ -37,7 +37,7 @@ module PDK::CLI
         end
         opts[:target_dir] = opts[:module_name]
 
-        PDK.logger.info(_('Creating new module: %{modname}') % { modname: module_name })
+        PDK.logger.info('Creating new module: %{modname}' % { modname: module_name })
         PDK::Generate::Module.invoke(opts)
       else
         exit 1

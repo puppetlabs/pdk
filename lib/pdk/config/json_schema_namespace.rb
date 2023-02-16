@@ -99,7 +99,7 @@ module PDK
       #
       # @private
       def create_missing_setting(key, _initial_value = nil)
-        raise ArgumentError, _("Setting '#{key}' does not exist'")
+        raise ArgumentError, "Setting '#{key}' does not exist'"
       end
 
       # Create a valid, but empty schema
@@ -120,7 +120,7 @@ module PDK
 
         return @document_schema if @schema_file.nil?
         unless PDK::Util::Filesystem.file?(@schema_file)
-          raise PDK::Config::LoadError, _('Unable to open %{file} for reading. File does not exist') % {
+          raise PDK::Config::LoadError, 'Unable to open %{file} for reading. File does not exist' % {
             file: @schema_file,
           }
         end
@@ -132,7 +132,7 @@ module PDK
         )
         @document_schema = schema_reader.read(Addressable::URI.convert_path(@schema_file))
       rescue ::JSON::Schema::JsonParseError => e
-        raise PDK::Config::LoadError, _('Unable to open %{file} for reading. JSON Error: %{msg}') % {
+        raise PDK::Config::LoadError, 'Unable to open %{file} for reading. JSON Error: %{msg}' % {
           file: @schema_file,
           msg: e.message,
         }

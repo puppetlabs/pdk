@@ -35,7 +35,7 @@ module PDK
       # @raise [ArgumentError] If no block is given to this method.
       # @return [void]
       def self.with(uri, options = {})
-        raise ArgumentError, _('%{class_name}.with must be passed a block.') % { class_name: name } unless block_given?
+        raise ArgumentError, '%{class_name}.with must be passed a block.' % { class_name: name } unless block_given?
         fetcher = instance(uri, options)
 
         begin

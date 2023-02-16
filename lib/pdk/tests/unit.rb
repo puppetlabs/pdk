@@ -61,23 +61,23 @@ module PDK
       end
 
       def self.tear_down
-        result = rake('spec_clean', _('Cleaning up after running unit tests.'))
+        result = rake('spec_clean', 'Cleaning up after running unit tests.')
 
         return if result[:exit_code].zero?
 
-        PDK.logger.error(_('The spec_clean rake task failed with the following error(s):'))
-        print_failure(result, _('Failed to clean up after running unit tests'))
+        PDK.logger.error('The spec_clean rake task failed with the following error(s):')
+        print_failure(result, 'Failed to clean up after running unit tests')
       end
 
       def self.setup
-        result = rake('spec_prep', _('Preparing to run the unit tests.'))
+        result = rake('spec_prep', 'Preparing to run the unit tests.')
 
         return if result[:exit_code].zero?
 
         tear_down
 
-        PDK.logger.error(_('The spec_prep rake task failed with the following error(s):'))
-        print_failure(result, _('Failed to prepare to run the unit tests.'))
+        PDK.logger.error('The spec_prep rake task failed with the following error(s):')
+        print_failure(result, 'Failed to prepare to run the unit tests.')
       end
 
       def self.invoke(report, options = {})
@@ -97,7 +97,7 @@ module PDK
 
         environment = { 'CI_SPEC_OPTIONS' => '--format j' }
         environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]
-        spinner_msg = options[:parallel] ? _('Running unit tests in parallel.') : _('Running unit tests.')
+        spinner_msg = options[:parallel] ? 'Running unit tests in parallel.' : 'Running unit tests.'
 
         if options[:interactive]
           environment['CI_SPEC_OPTIONS'] = if options[:verbose]
@@ -122,7 +122,7 @@ module PDK
           result[:exit_code] = 0
         end
 
-        raise PDK::CLI::FatalError, _('Unit test output did not contain a valid JSON result: %{output}') % { output: result[:stdout] } if json_result.nil? || json_result.empty?
+        raise PDK::CLI::FatalError, 'Unit test output did not contain a valid JSON result: %{output}' % { output: result[:stdout] } if json_result.nil? || json_result.empty?
 
         json_result = merge_json_results(json_result) if options[:parallel]
 
@@ -174,7 +174,7 @@ module PDK
         return unless json_data['summary']
 
         # TODO: standardize summary output
-        $stderr.puts '  ' << _('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.') % {
+        $stderr.puts '  ' << 'Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.' % {
           total: json_data['summary']['example_count'],
           duration: duration,
           failures: json_data['summary']['failure_count'],
@@ -230,15 +230,15 @@ module PDK
         environment = {}
         environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]
 
-        output = rake('spec_list_json', _('Finding unit tests.'), environment)
+        output = rake('spec_list_json', 'Finding unit tests.', environment)
 
         rspec_json = PDK::Util.find_first_json_in(output[:stdout])
-        raise PDK::CLI::FatalError, _('Failed to find valid JSON in output from rspec: %{output}' % { output: output[:stdout] }) unless rspec_json
+        raise PDK::CLI::FatalError, 'Failed to find valid JSON in output from rspec: %{output}' % { output: output[:stdout] } unless rspec_json
         if rspec_json['examples'].empty?
           rspec_message = rspec_json['messages'][0]
           return [] if rspec_message == 'No examples found.'
 
-          raise PDK::CLI::FatalError, _('Unable to enumerate examples. rspec reported: %{message}' % { message: rspec_message })
+          raise PDK::CLI::FatalError, 'Unable to enumerate examples. rspec reported: %{message}' % { message: rspec_message }
         else
           examples = []
           rspec_json['examples'].each do |example|

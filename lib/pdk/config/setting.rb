@@ -77,9 +77,9 @@ module PDK
       #
       # @return [nil]
       def validate(validator)
-        raise ArgumentError, _('`validator` must be a Hash') unless validator.is_a?(Hash)
-        raise ArgumentError, _('the :proc key must contain a Proc') unless validator.key?(:proc) && validator[:proc].is_a?(Proc)
-        raise ArgumentError, _('the :message key must contain a String') unless validator.key?(:message) && validator[:message].is_a?(String)
+        raise ArgumentError, '`validator` must be a Hash' unless validator.is_a?(Hash)
+        raise ArgumentError, 'the :proc key must contain a Proc' unless validator.key?(:proc) && validator[:proc].is_a?(Proc)
+        raise ArgumentError, 'the :message key must contain a String' unless validator.key?(:message) && validator[:message].is_a?(String)
 
         @validators << validator
       end
@@ -96,7 +96,7 @@ module PDK
         @validators.each do |validator|
           next if validator[:proc].call(value)
 
-          raise ArgumentError, _('%{key} %{message}') % {
+          raise ArgumentError, '%{key} %{message}' % {
             key:     qualified_name,
             message: validator[:message],
           }
@@ -110,7 +110,7 @@ module PDK
       #
       # @return [nil]
       def default_to(&block)
-        raise ArgumentError, _('must be passed a block') unless block_given?
+        raise ArgumentError, 'must be passed a block' unless block_given?
         @default_to = block
       end
 

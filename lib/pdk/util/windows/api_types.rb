@@ -28,7 +28,7 @@ module PDK::Util::Windows::APITypes
       str = get_bytes(0, char_length * 2).force_encoding('UTF-16LE')
       str.encode(dst_encoding, str.encoding, **encode_options)
     rescue StandardError => e
-      PDK.logger.debug _('Unable to convert value %{string} to encoding %{encoding} due to %{error}') % {
+      PDK.logger.debug 'Unable to convert value %{string} to encoding %{encoding} due to %{error}' % {
         string:   str.dump,
         encoding: dst_encoding,
         error:    e.inspect,
@@ -38,9 +38,8 @@ module PDK::Util::Windows::APITypes
 
     def read_arbitrary_wide_string_up_to(max_char_length = 512, null_terminator = :single_null, encode_options = {})
       unless [:single_null, :double_null].include?(null_terminator)
-        raise ArgumentError, _(
-          'Unable to read wide strings with %{null_terminator} terminal nulls',
-        ) % { null_terminator: null_terminator }
+        raise ArgumentError,
+              'Unable to read wide strings with %{null_terminator} terminal nulls' % { null_terminator: null_terminator }
       end
 
       terminator_width = (null_terminator == :single_null) ? 1 : 2

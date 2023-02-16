@@ -11,13 +11,13 @@ module PDK
         stage_changes!
 
         if current_version == new_version
-          PDK.logger.debug _('This module is already up to date with version %{version} of the template.') % {
+          PDK.logger.debug 'This module is already up to date with version %{version} of the template.' % {
             version: new_version,
           }
         end
 
         unless update_manager.changes?
-          PDK::Report.default_target.puts(_('No changes required.'))
+          PDK::Report.default_target.puts('No changes required.')
           return
         end
 
@@ -29,7 +29,7 @@ module PDK
         return if noop?
 
         unless force?
-          message = _('Do you want to continue and make these changes to your module?')
+          message = 'Do you want to continue and make these changes to your module?'
           return unless PDK::CLI::Util.prompt_for_yes(message)
         end
 
@@ -114,9 +114,9 @@ module PDK
 
       def update_message
         format_string = if template_uri.default?
-                          _('Updating %{module_name} using the default template, from %{current_version} to %{new_version}')
+                          'Updating %{module_name} using the default template, from %{current_version} to %{new_version}'
                         else
-                          _('Updating %{module_name} using the template at %{template_url}, from %{current_version} to %{new_version}')
+                          'Updating %{module_name} using the template at %{template_url}, from %{current_version} to %{new_version}'
                         end
 
         format_string % {

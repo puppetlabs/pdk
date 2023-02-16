@@ -44,7 +44,7 @@ module PDK
       #:nocov:
       # @see PDK::Context::AbstractContext.display_name
       def display_name
-        _('a Control Repository context')
+        'a Control Repository context'
       end
       #:nocov:
 

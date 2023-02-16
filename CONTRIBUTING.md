@@ -78,7 +78,6 @@ Environment Variable | Usage
 1. Bump the version in `lib/pdk/version.rb`.
 1. In a clean checkout of main, run `bundle exec rake changelog`.
 1. Edit PR titles and tags, until `bundle exec rake changelog` output makes sense.
-1. Run `bundle exec rake gettext:pot` to update the translations.
 1. Commit and PR the changes.
 1. When the PR is merged, get a clean checkout of the merged commit, and run `bundle exec rake release[upstream]` (where "upstream" is your local name of the puppetlabs remote)
 1. Profit!

@@ -33,7 +33,7 @@ module PDK
         end
 
         def spinner_text
-          _('Checking YAML syntax (%{patterns}).') % {
+          'Checking YAML syntax (%{patterns}).' % {
             patterns: pattern.join(' '),
           }
         end
@@ -47,7 +47,7 @@ module PDK
               source:   name,
               state:    :failure,
               severity: 'error',
-              message:  _('Could not be read.'),
+              message:  'Could not be read.',
             )
             return 1
           end
@@ -70,7 +70,7 @@ module PDK
               severity: 'error',
               line:     e.line,
               column:   e.column,
-              message:  _('%{problem} %{context}') % {
+              message:  '%{problem} %{context}' % {
                 problem: e.problem,
                 context: e.context,
               },
@@ -82,7 +82,7 @@ module PDK
               source:   name,
               state:    :failure,
               severity: 'error',
-              message:  _('Unsupported class: %{message}') % {
+              message:  'Unsupported class: %{message}' % {
                 message: e.message,
               },
             )

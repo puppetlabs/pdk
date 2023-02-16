@@ -1,16 +1,16 @@
 module PDK::CLI
   @console_cmd = @base_cmd.define_command do
     name 'console'
-    usage _('console [console_options]')
-    summary _('(Experimental) Start a session of the puppet debugger console.')
+    usage 'console [console_options]'
+    summary '(Experimental) Start a session of the puppet debugger console.'
     default_subcommand 'help'
-    description _(<<-EOF
+    description <<-EOF
 The pdk console runs a interactive session of the puppet debugger tool to test out snippets of code, run
 language evaluations, datatype prototyping and much more.  A virtual playground for your puppet code!
 For usage details see the puppet debugger docs at https://docs.puppet-debugger.com.
 
 EOF
-                 )
+
     PDK::CLI.puppet_version_options(self)
     PDK::CLI.puppet_dev_option(self)
     # we have to skip option parsing because it is expected the user
@@ -23,7 +23,7 @@ EOF
       require 'pdk/util'
 
       PDK::CLI::Util.ensure_in_module!(
-        message: _('Console can only be run from inside a valid module directory'),
+        message: 'Console can only be run from inside a valid module directory',
         log_level: :fatal,
       )
 
@@ -78,7 +78,7 @@ EOF
       lock_file = ::Bundler::LockfileParser.new(::Bundler.read_file(lock_file_path))
       !lock_file.specs.find { |spec| spec.name.eql?(gem_name) }.nil?
     rescue ::Bundler::GemfileNotFound => e
-      PDK.logger.debug _(e.message)
+      PDK.logger.debug e.message
       false
     end
 
@@ -86,7 +86,7 @@ EOF
       existing_path = base_module_path.split(':').find do |path|
         PDK::Util::Filesystem.directory?(path) && Dir.entries(path).length > 2
       end
-      PDK.logger.warn _('Module fixtures not found, please run pdk bundle exec rake spec_prep.') unless existing_path
+      PDK.logger.warn 'Module fixtures not found, please run pdk bundle exec rake spec_prep.' unless existing_path
     end
 
     # @return [Array] - array of split options [{:"puppet-version"=>"6.9.0"}, ['--loglevel=debug']]

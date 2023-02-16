@@ -16,21 +16,21 @@ module PDK
 
         # TODO: Currently the release process can ONLY be run if the working directory IS the module root. However, in the future
         # this WILL change, so we have the API arguments for it, but only accept `nil` for the first parameter
-        raise PDK::CLI::ExitWithError, _('Running the release process outside of the working directory is not supported') unless module_path.nil?
+        raise PDK::CLI::ExitWithError, 'Running the release process outside of the working directory is not supported' unless module_path.nil?
 
         if module_path.nil?
           module_path = PDK::Util.module_root
-          raise PDK::CLI::ExitWithError, _('The module release process requires a valid module path') % { module_path: module_path } if module_path.nil?
+          raise PDK::CLI::ExitWithError, 'The module release process requires a valid module path' % { module_path: module_path } if module_path.nil?
         end
-        raise PDK::CLI::ExitWithError, _('%{module_path} is not a valid module') % { module_path: module_path } unless PDK::Util.in_module_root?(module_path)
+        raise PDK::CLI::ExitWithError, '%{module_path} is not a valid module' % { module_path: module_path } unless PDK::Util.in_module_root?(module_path)
         @module_path = module_path
       end
 
       def run
         # Pre-release checks
         unless force?
-          raise PDK::CLI::ExitWithError, _('The module is not PDK compatible') if requires_pdk_compatibility? && !pdk_compatible?
-          raise PDK::CLI::ExitWithError, _('The module is not Forge compatible') if requires_forge_compatibility? && !forge_compatible?
+          raise PDK::CLI::ExitWithError, 'The module is not PDK compatible' if requires_pdk_compatibility? && !pdk_compatible?
+          raise PDK::CLI::ExitWithError, 'The module is not Forge compatible' if requires_forge_compatibility? && !forge_compatible?
         end
 
         # Note that these checks are duplicated in the run_publish method, however it's a much better
@@ -40,7 +40,7 @@ module PDK
 
         run_validations(options) unless skip_validation?
 
-        PDK.logger.info _('Releasing %{module_name} - from version %{module_version}') % {
+        PDK.logger.info 'Releasing %{module_name} - from version %{module_version}' % {
           module_name:    module_metadata.data['name'],
           module_version: module_metadata.data['version'],
         }
@@ -55,7 +55,7 @@ module PDK
         new_version = module_metadata.data['version'] if new_version.nil?
 
         if new_version != module_metadata.data['version']
-          PDK.logger.info _('Updating version to %{module_version}') % {
+          PDK.logger.info 'Updating version to %{module_version}' % {
             module_version: new_version,
           }
 
@@ -69,7 +69,7 @@ module PDK
           # Check if the versions match
           latest_version = PDK::Util::ChangelogGenerator.latest_version
           unless latest_version
-            raise PDK::CLI::ExitWithError, _('%{new_version} does not match %{latest_version}') % { new_version: new_version, latest_version: latest_version } if new_version != latest_version
+            raise PDK::CLI::ExitWithError, '%{new_version} does not match %{latest_version}' % { new_version: new_version, latest_version: latest_version } if new_version != latest_version
           end
         end
 
@@ -118,26 +118,26 @@ module PDK
         PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
 
         validator_exit_code, = PDK::Validate.invoke_validators_by_name(PDK.context, PDK::Validate.validator_names, false, options)
-        raise PDK::CLI::ExitWithError, _('An error occured during validation') unless validator_exit_code.zero?
+        raise PDK::CLI::ExitWithError, 'An error occured during validation' unless validator_exit_code.zero?
       end
 
       def run_documentation(_opts)
-        PDK.logger.info _('Updating documentation using puppet strings')
+        PDK.logger.info 'Updating documentation using puppet strings'
         docs_command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, 'exec', 'puppet', 'strings', 'generate', '--format', 'markdown', '--out', 'REFERENCE.md')
         docs_command.context = :module
         result = docs_command.execute!
-        raise PDK::CLI::ExitWithError, _('An error occured generating the module documentation: %{stdout}') % { stdout: result[:stdout] } unless result[:exit_code].zero?
+        raise PDK::CLI::ExitWithError, 'An error occured generating the module documentation: %{stdout}' % { stdout: result[:stdout] } unless result[:exit_code].zero?
       end
 
       def run_dependency_checker(_opts)
         # run dependency-checker and output dependent modules list
-        PDK.logger.info _('Running dependency checks')
+        PDK.logger.info 'Running dependency checks'
 
         dep_command = PDK::CLI::Exec::Command.new('dependency-checker', 'metadata.json')
         dep_command.context = :module
         result = dep_command.execute!
 
-        raise PDK::CLI::ExitWithError, _('An error occured checking the module dependencies: %{stdout}') % { stdout: result[:stdout] } unless result[:exit_code].zero?
+        raise PDK::CLI::ExitWithError, 'An error occured checking the module dependencies: %{stdout}' % { stdout: result[:stdout] } unless result[:exit_code].zero?
       end
 
       # @return [String] Path to the built tarball
@@ -147,13 +147,13 @@ module PDK
 
       def run_publish(_opts, tarball_path)
         validate_publish_options!
-        raise PDK::CLI::ExitWithError, _('Module tarball %{tarball_path} does not exist') % { tarball_path: tarball_path } unless PDK::Util::Filesystem.file?(tarball_path)
+        raise PDK::CLI::ExitWithError, 'Module tarball %{tarball_path} does not exist' % { tarball_path: tarball_path } unless PDK::Util::Filesystem.file?(tarball_path)
 
         # TODO: Replace this code when the upload functionality is added to the forge ruby gem
         require 'base64'
         file_data = Base64.encode64(PDK::Util::Filesystem.read_file(tarball_path, open_args: 'rb'))
 
-        PDK.logger.info _('Uploading tarball to puppet forge...')
+        PDK.logger.info 'Uploading tarball to puppet forge...'
         uri = URI(forge_upload_url)
         require 'net/http'
         request = Net::HTTP::Post.new(uri.path)
@@ -169,14 +169,14 @@ module PDK
           http.request(request)
         end
 
-        raise PDK::CLI::ExitWithError, _('Error uploading to Puppet Forge: %{result}') % { result: response.body } unless response.is_a?(Net::HTTPSuccess)
-        PDK.logger.info _('Publish to Forge was successful')
+        raise PDK::CLI::ExitWithError, 'Error uploading to Puppet Forge: %{result}' % { result: response.body } unless response.is_a?(Net::HTTPSuccess)
+        PDK.logger.info 'Publish to Forge was successful'
       end
 
       def validate_publish_options!
         return if skip_publish?
-        raise PDK::CLI::ExitWithError, _('Missing forge-upload-url option') unless forge_upload_url
-        raise PDK::CLI::ExitWithError, _('Missing forge-token option') unless forge_token
+        raise PDK::CLI::ExitWithError, 'Missing forge-upload-url option' unless forge_upload_url
+        raise PDK::CLI::ExitWithError, 'Missing forge-token option' unless forge_token
       end
 
       def force?

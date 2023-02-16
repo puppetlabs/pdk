@@ -4,10 +4,6 @@ require 'puppetlabs_spec_helper/tasks/fixtures' if Bundler.rubygems.find_name('p
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
-gettext_spec = Gem::Specification.find_by_name 'gettext-setup'
-load "#{gettext_spec.gem_dir}/lib/tasks/gettext.rake"
-GettextSetup.initialize(File.absolute_path('locales', File.dirname(__FILE__)))
-
 build_defs_file = 'ext/build_defaults.yaml'
 if File.exist?(build_defs_file)
   begin
@@ -84,24 +80,6 @@ task(:binstubs) do
 end
 
 task default: :spec
-
-namespace :gettext do
-  desc 'Remove obsolete messages from translations'
-  task(:clean_obsolete, [:language]) do |_task, args|
-    file_name = File.join(File.dirname(__FILE__), 'locales', args[:language], 'pdk.po')
-    success = system("msgattrib --no-obsolete #{file_name} -o #{file_name}")
-
-    puts "Updated #{file_name}" if success
-  end
-
-  desc 'Remove fuzzy messages from translations (should only be used by translators of this language)'
-  task(:clean_fuzzy, [:language]) do |_task, args|
-    file_name = File.join(File.dirname(__FILE__), 'locales', args[:language], 'pdk.po')
-    success = system("msgattrib --clear-fuzzy #{file_name} -o #{file_name}")
-
-    puts "Updated #{file_name}" if success
-  end
-end
 
 begin
   require 'github_changelog_generator/task'

@@ -4,10 +4,7 @@ module PDK
   module Validate
     module Tasks
       class TasksNameValidator < InternalRubyValidator
-        INVALID_TASK_MSG = _(
-          'Invalid task name. Task names must start with a lowercase letter ' \
-          'and can only contain lowercase letters, numbers, and underscores.',
-        )
+        INVALID_TASK_MSG = 'Invalid task name. Task names must start with a lowercase letter and can only contain lowercase letters, numbers, and underscores.'.freeze
 
         def name
           'task-name'
@@ -18,7 +15,7 @@ module PDK
         end
 
         def spinner_text
-          _('Checking task names (%{pattern}).') % {
+          'Checking task names (%{pattern}).' % {
             pattern: pattern.join(' '),
           }
         end
