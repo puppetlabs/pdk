@@ -9,7 +9,7 @@ module PDK
 
       # Raises if the github_changelog_generator is not available
       def self.github_changelog_generator_available!
-        check_command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, 'show', 'github_changelog_generator')
+        check_command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, 'info', 'github_changelog_generator')
         check_command.context = :module
 
         result = check_command.execute!
