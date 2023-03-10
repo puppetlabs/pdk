@@ -1,4 +1,5 @@
 require 'pdk'
+require 'json'
 
 module PDK
   module Util
