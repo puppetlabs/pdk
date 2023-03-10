@@ -61,10 +61,7 @@ module PDK
                                       # PDK::Util::PuppetVersion.find_gem_for('5.5.10')[:ruby_version]
                                       #
                                       # For using the latest puppet gem:
-                                      # PDK::Util::PuppetVersion.latest_available[:ruby_version]
-                                      #
-                                      # Temporarily lock to Ruby 2.5.x as default until 2.7.x ecosystem is sorted
-                                      versions.keys.detect { |v| v =~ %r{^2\.5} }
+                                      PDK::Util::PuppetVersion.latest_available[:ruby_version]
                                     else
                                       # TODO: may not be a safe assumption that highest available version should be default
                                       # WARNING Do NOT use PDK::Util::PuppetVersion.*** methods as it can recurse into this
