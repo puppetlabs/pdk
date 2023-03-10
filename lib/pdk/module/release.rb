@@ -1,4 +1,5 @@
 require 'pdk'
+require 'uri'
 
 module PDK
   module Module
