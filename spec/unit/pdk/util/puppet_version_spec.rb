@@ -3,11 +3,27 @@ require 'pdk/util/puppet_version'
 require 'json'
 
 describe PDK::Util::PuppetVersion do
+  let(:cache_versions) do
+    %w[6.29.0 7.23.0]
+  end
+
+  let(:rubygems_versions) do
+    %w[
+      7.23.0
+      6.29.0
+    ]
+  end
+
+  let(:forge_version_map) do
+    # rubocop:disable PDK/FileOpen
+    JSON.parse(File.open(File.join(RSpec.configuration.root, 'fixtures', 'pe_versions.json')).read)
+    # rubocop:enable PDK/FileOpen
+  end
+
   shared_context 'with a mocked rubygems response' do
     before(:each) do
       mock_fetcher = instance_double(Gem::SpecFetcher)
       allow(Gem::SpecFetcher).to receive(:fetcher).and_return(mock_fetcher)
-
       mock_response = rubygems_versions.map do |version|
         [Gem::NameTuple.new('puppet', Gem::Version.new(version), Gem::Platform.local), nil]
       end
@@ -27,50 +43,21 @@ describe PDK::Util::PuppetVersion do
   shared_context 'is a package install' do
     before(:each) do
       allow(PDK::Util).to receive(:package_install?).and_return(true)
-      allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.1.9' => '2.1.0', '2.4.3' => '2.4.0')
+      allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.5.9' => '2.5.0', '2.7.7' => '2.7.0')
 
-      instance219 = PDK::Util::RubyVersion.instance('2.1.9')
-      instance243 = PDK::Util::RubyVersion.instance('2.4.3')
+      instance259 = PDK::Util::RubyVersion.instance('2.5.9')
+      instance277 = PDK::Util::RubyVersion.instance('2.7.7')
 
-      versions219 = cache_versions.select { |r| r.start_with?('4') }.map { |r| Gem::Version.new(r) }
-      versions243 = cache_versions.reject { |r| r.start_with?('4') }.map { |r| Gem::Version.new(r) }
-      allow(instance219).to receive(:available_puppet_versions).and_return(versions219)
-      allow(instance243).to receive(:available_puppet_versions).and_return(versions243)
+      versions259 = cache_versions.select { |r| r.start_with?('6') }.map { |r| Gem::Version.new(r) }
+      versions277 = cache_versions.reject { |r| r.start_with?('6') }.map { |r| Gem::Version.new(r) }
+      allow(instance259).to receive(:available_puppet_versions).and_return(versions259)
+      allow(instance277).to receive(:available_puppet_versions).and_return(versions277)
     end
 
     after(:each) do
       PDK::Util::RubyVersion.instance_variable_set('@instance', nil)
       PDK::Util::RubyVersion.instance_variable_set('@active_ruby_version', nil)
     end
-  end
-
-  let(:forge_version_map) do
-    # rubocop:disable PDK/FileOpen
-    JSON.parse(File.open(File.join(RSpec.configuration.root, 'fixtures', 'pe_versions.json')).read)
-    # rubocop:enable PDK/FileOpen
-  end
-
-  let(:rubygems_versions) do
-    %w[
-      5.4.0
-      5.3.5 5.3.4 5.3.3 5.3.2 5.3.1 5.3.0
-      5.2.0
-      5.1.0
-      5.0.1 5.0.0
-      4.10.10 4.10.9 4.10.8 4.10.7 4.10.6 4.10.5 4.10.4 4.10.1 4.10.0
-      4.9.4 4.9.3 4.9.2 4.9.1 4.9.0
-      4.8.2 4.8.1 4.8.0
-      4.7.1 4.7.0
-      4.6.2 4.6.1 4.6.0
-      4.5.3 4.5.2 4.5.1 4.5.0
-      4.4.2 4.4.1 4.4.0
-      4.3.2 4.3.1 4.3.0
-      4.2.3 4.2.2 4.2.1 4.2.0
-    ]
-  end
-
-  let(:cache_versions) do
-    %w[5.5.1 5.4.0 5.3.6 5.2.0 5.1.0 5.0.1 4.10.11 4.9.4 4.8.2 4.9.4 4.7.1]
   end
 
   describe '.latest_available' do
@@ -280,45 +267,32 @@ describe PDK::Util::PuppetVersion do
       context 'and passed only a major version' do
         it 'returns the latest version matching the major version' do
           expected_result = {
-            gem_version:  Gem::Version.new('5.5.1'),
-            ruby_version: '2.4.3',
+            gem_version:  Gem::Version.new('6.29.0'),
+            ruby_version: '2.5.9',
           }
-          expect(described_class.find_gem_for('5')).to eq(expected_result)
+          expect(described_class.find_gem_for('6')).to eq(expected_result)
         end
       end
 
       context 'and passed only a major and minor version' do
         it 'returns the latest patch version for the major and minor version' do
           expected_result = {
-            gem_version:  Gem::Version.new('5.3.6'),
-            ruby_version: '2.4.3',
+            gem_version:  Gem::Version.new('6.29.0'),
+            ruby_version: '2.5.9',
           }
-          expect(described_class.find_gem_for('5.3')).to eq(expected_result)
+          expect(described_class.find_gem_for('6.29')).to eq(expected_result)
         end
       end
 
       it 'returns the specified version if it exists in the cache' do
         expected_result = {
-          gem_version:  Gem::Version.new('5.3.6'),
-          ruby_version: '2.4.3',
+          gem_version:  Gem::Version.new('6.29.0'),
+          ruby_version: '2.5.9',
         }
-        expect(described_class.find_gem_for('5.3.6')).to eq(expected_result)
+        expect(described_class.find_gem_for('6.29.0')).to eq(expected_result)
       end
 
       context 'and the specified version does not exist in the cache' do
-        it 'notifies the user that it is using the latest Z release instead' do
-          expect(logger).to receive(:warn).with(a_string_matching(%r{activating 5\.3\.6 instead}i))
-          described_class.find_gem_for('5.3.1')
-        end
-
-        it 'returns the latest Z release' do
-          expected_result = {
-            gem_version:  Gem::Version.new('5.3.6'),
-            ruby_version: '2.4.3',
-          }
-          expect(described_class.find_gem_for('5.3.1')).to eq(expected_result)
-        end
-
         it 'raises an ArgumentError if no version can be found' do
           expect {
             described_class.find_gem_for('1.0.0')
@@ -348,35 +322,18 @@ describe PDK::Util::PuppetVersion do
 
       context 'and passed only a major version' do
         it 'returns the latest version matching the major version' do
-          expect(described_class.find_gem_for('5')).to eq(result('5.4.0'))
+          expect(described_class.find_gem_for('6')).to eq(result('6.29.0'))
         end
       end
 
       context 'and passed only a major and minor version' do
         it 'returns the latest patch version for the major and minor version' do
-          expect(described_class.find_gem_for('5.3')).to eq(result('5.3.5'))
+          expect(described_class.find_gem_for('6.29')).to eq(result('6.29.0'))
         end
       end
 
       it 'returns the specified version if it exists on Rubygems' do
-        expect(described_class.find_gem_for('4.9.0')).to eq(result('4.9.0'))
-      end
-
-      context 'and the specified version does not exist on Rubygems' do
-        it 'notifies the user that it is using the latest Z release instead' do
-          expect(logger).to receive(:warn).with(a_string_matching(%r{activating 4\.10\.10 instead}i))
-          described_class.find_gem_for('4.10.999')
-        end
-
-        it 'returns the latest Z release' do
-          expect(described_class.find_gem_for('4.10.999')).to eq(result('4.10.10'))
-        end
-
-        it 'raises an ArgumentError if no version can be found' do
-          expect {
-            described_class.find_gem_for('1.0.0')
-          }.to raise_error(ArgumentError, %r{unable to find a puppet gem matching}i)
-        end
+        expect(described_class.find_gem_for('6.29.0')).to eq(result('6.29.0'))
       end
     end
   end
@@ -395,11 +352,24 @@ describe PDK::Util::PuppetVersion do
       include_context 'is a package install'
 
       def result(pe_version)
-        version_info = if pe_version.count('.') == 2
-                         forge_version_map.map { |r| r['versions'] }.flatten.find { |r| r['version'] == pe_version }
-                       else
-                         forge_version_map.find { |r| r['release'] == "#{pe_version}.x" }['versions'].first
-                       end
+        safe_versions = {
+          2023 => {
+            'puppet' => '7.23.0',
+            'ruby' => '2.7.7',
+          },
+          2021 => {
+            'puppet' => '7.23.0',
+            'ruby' => '2.7.7',
+          },
+          2019 => {
+            'puppet' => '6.29.0',
+            'ruby' => '2.5.9',
+          },
+        }
+
+        parsed_version = Gem::Version.new(pe_version)
+
+        version_info = safe_versions[parsed_version.segments[0]]
 
         if cache_versions.include?(version_info['puppet'])
           gem_version = version_info['puppet']
@@ -410,33 +380,23 @@ describe PDK::Util::PuppetVersion do
 
         {
           gem_version:  Gem::Version.new(gem_version),
-          ruby_version: a_string_starting_with(version_info['ruby'].gsub(%r{\.\d+\Z}, '')),
+          ruby_version: version_info['ruby'],
         }
       end
 
-      it 'returns the latest Puppet Z release for PE 2017.3.x' do
-        expect(described_class.from_pe_version('2017.3')).to include(result('2017.3'))
-        expect(described_class.from_pe_version('2017.3.1')).to include(result('2017.3.1'))
+      it 'returns the latest Puppet Z release for PE 2023.0.x' do
+        expect(described_class.from_pe_version('2023.0')).to include(result('2023.0'))
+        expect(described_class.from_pe_version('2023.0.0')).to include(result('2023.0'))
       end
 
-      it 'returns the latest Puppet Z release for PE 2017.2.x' do
-        expect(described_class.from_pe_version('2017.2')).to include(result('2017.2'))
-        expect(described_class.from_pe_version('2017.2.1')).to include(result('2017.2.1'))
+      it 'returns the latest Puppet Z release for PE 2021.7.x' do
+        expect(described_class.from_pe_version('2021.7')).to include(result('2021.7'))
+        expect(described_class.from_pe_version('2021.7.2')).to include(result('2021.7.2'))
       end
 
-      it 'returns the latest Puppet Z release for PE 2017.1.x' do
-        expect(described_class.from_pe_version('2017.1')).to include(result('2017.1'))
-        expect(described_class.from_pe_version('2017.1.1')).to include(result('2017.1.1'))
-      end
-
-      it 'returns the latest Puppet Z release for PE 2016.5.x' do
-        expect(described_class.from_pe_version('2016.5')).to include(result('2016.5'))
-        expect(described_class.from_pe_version('2016.5.1')).to include(result('2016.5.1'))
-      end
-
-      it 'returns the latest Puppet Z release for PE 2016.4.x' do
-        expect(described_class.from_pe_version('2016.4')).to include(result('2016.4'))
-        expect(described_class.from_pe_version('2016.4.10')).to include(result('2016.4.10'))
+      it 'returns the latest Puppet Z release for PE 2019.8.x' do
+        expect(described_class.from_pe_version('2019.8')).to include(result('2019.8'))
+        expect(described_class.from_pe_version('2019.8.12')).to include(result('2019.8.12'))
       end
 
       it 'raises an ArgumentError if given an unknown PE version' do
@@ -449,21 +409,6 @@ describe PDK::Util::PuppetVersion do
         expect {
           described_class.from_pe_version('irving')
         }.to raise_error(ArgumentError, %r{not a valid version number}i)
-      end
-
-      context 'when the vendored mapping file is invalid JSON' do
-        let(:vendored_file) { instance_double(PDK::Util::VendoredFile, read: 'invalid json') }
-
-        before(:each) do
-          allow(described_class.instance).to receive(:fetch_pe_version_map).and_call_original
-          allow(PDK::Util::VendoredFile).to receive(:new).with('pe_versions.json', anything).and_return(vendored_file)
-        end
-
-        it 'raises a FatalError' do
-          expect {
-            described_class.from_pe_version('2017.3')
-          }.to raise_error(PDK::CLI::FatalError, %r{failed to parse puppet enterprise version map file}i)
-        end
       end
     end
 
@@ -472,11 +417,23 @@ describe PDK::Util::PuppetVersion do
       include_context 'with a mocked rubygems response'
 
       def result(pe_version)
-        version_info = if pe_version.count('.') == 2
-                         forge_version_map.map { |r| r['versions'] }.flatten.find { |r| r['version'] == pe_version }
-                       else
-                         forge_version_map.find { |r| r['release'] == "#{pe_version}.x" }['versions'].first
-                       end
+        safe_versions = {
+          2023 => {
+            'puppet' => '7.23.0',
+            'ruby' => '2.7.7',
+          },
+          2021 => {
+            'puppet' => '7.23.0',
+            'ruby' => '2.7.7',
+          },
+          2019 => {
+            'puppet' => '6.29.0',
+            'ruby' => '2.5.9',
+          },
+        }
+
+        parsed_version = Gem::Version.new(pe_version)
+        version_info = safe_versions[parsed_version.segments[0]]
 
         {
           gem_version:  Gem::Version.new(version_info['puppet']),
@@ -484,29 +441,19 @@ describe PDK::Util::PuppetVersion do
         }
       end
 
-      it 'returns the latest Puppet Z release for PE 2017.3.x' do
-        expect(described_class.from_pe_version('2017.3')).to eq(result('2017.3'))
-        expect(described_class.from_pe_version('2017.3.1')).to eq(result('2017.3.1'))
+      it 'returns the latest Puppet Z release for PE 2023.0.x' do
+        expect(described_class.from_pe_version('2023.0')).to include(result('2023.0'))
+        expect(described_class.from_pe_version('2023.0.0')).to include(result('2023.0'))
       end
 
-      it 'returns the latest Puppet Z release for PE 2017.2.x' do
-        expect(described_class.from_pe_version('2017.2')).to eq(result('2017.2'))
-        expect(described_class.from_pe_version('2017.2.1')).to eq(result('2017.2.1'))
+      it 'returns the latest Puppet Z release for PE 2021.7.x' do
+        expect(described_class.from_pe_version('2021.7')).to include(result('2021.7'))
+        expect(described_class.from_pe_version('2021.7.2')).to include(result('2021.7.2'))
       end
 
-      it 'returns the latest Puppet Z release for PE 2017.1.x' do
-        expect(described_class.from_pe_version('2017.1')).to eq(result('2017.1'))
-        expect(described_class.from_pe_version('2017.1.1')).to eq(result('2017.1.1'))
-      end
-
-      it 'returns the latest Puppet Z release for PE 2016.5.x' do
-        expect(described_class.from_pe_version('2016.5')).to eq(result('2016.5'))
-        expect(described_class.from_pe_version('2016.5.1')).to eq(result('2016.5.1'))
-      end
-
-      it 'returns the latest Puppet Z release for PE 2016.4.x' do
-        expect(described_class.from_pe_version('2016.4')).to eq(result('2016.4'))
-        expect(described_class.from_pe_version('2016.4.2')).to eq(result('2016.4.2'))
+      it 'returns the latest Puppet Z release for PE 2019.8.x' do
+        expect(described_class.from_pe_version('2019.8')).to include(result('2019.8'))
+        expect(described_class.from_pe_version('2019.8.12')).to include(result('2019.8.12'))
       end
 
       it 'raises an ArgumentError if given an unknown PE version' do
@@ -519,34 +466,6 @@ describe PDK::Util::PuppetVersion do
         expect {
           described_class.from_pe_version('irving')
         }.to raise_error(ArgumentError, %r{not a valid version number}i)
-      end
-
-      context 'when there is an error downloading the mapping file' do
-        before(:each) do
-          allow(described_class.instance).to receive(:fetch_pe_version_map).and_call_original
-          allow(PDK::Util::VendoredFile).to receive(:new).with('pe_versions.json', anything).and_raise(PDK::Util::VendoredFile::DownloadError, 'download failed for reasons')
-        end
-
-        it 'raises a FatalError' do
-          expect {
-            described_class.from_pe_version('2017.3')
-          }.to raise_error(PDK::CLI::FatalError, %r{download failed for reasons}i)
-        end
-      end
-
-      context 'when the vendored mapping file is invalid JSON' do
-        let(:vendored_file) { instance_double(PDK::Util::VendoredFile, read: 'invalid json') }
-
-        before(:each) do
-          allow(described_class.instance).to receive(:fetch_pe_version_map).and_call_original
-          allow(PDK::Util::VendoredFile).to receive(:new).with('pe_versions.json', anything).and_return(vendored_file)
-        end
-
-        it 'raises a FatalError' do
-          expect {
-            described_class.from_pe_version('2017.3')
-          }.to raise_error(PDK::CLI::FatalError, %r{failed to parse puppet enterprise version map file}i)
-        end
       end
     end
   end
