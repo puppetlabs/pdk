@@ -3,13 +3,12 @@ require 'spec_helper_package'
 describe 'Test puppet & ruby version selection' do
   module_name = 'version_selection'
   test_cases = [
-    { envvar: 'PDK_PUPPET_VERSION', version: '6.21.0', expected_puppet: '6.21', expected_ruby: '2.5.9' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '6.23.0', expected_puppet: '6.23', expected_ruby: '2.5.9' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.18.0', expected_puppet: '7.18', expected_ruby: '2.7.7' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.20.0', expected_puppet: '7.20', expected_ruby: '2.7.7' },
-    { envvar: 'PDK_PE_VERSION', version: '2019.8.7', expected_puppet: '6.23', expected_ruby: '2.5.9' },
-    { envvar: 'PDK_PE_VERSION', version: '2021.7.0', expected_puppet: '7.20', expected_ruby: '2.7.7' },
-    { envvar: 'PDK_PE_VERSION', version: '2021.7.1', expected_puppet: '7.20', expected_ruby: '2.7.7' },
+    { envvar: 'PDK_PUPPET_VERSION', version: '6.29.0', expected_puppet: '6.29', expected_ruby: '2.5.9' },
+    { envvar: 'PDK_PUPPET_VERSION', version: '7.23.0', expected_puppet: '7.23', expected_ruby: '2.7.7' },
+    # PE should now map to the latest Puppet version relative to the PE version
+    { envvar: 'PDK_PE_VERSION', version: '2019.8.7', expected_puppet: '6.29', expected_ruby: '2.5.9' },
+    { envvar: 'PDK_PE_VERSION', version: '2021.7.0', expected_puppet: '7.23', expected_ruby: '2.7.7' },
+    { envvar: 'PDK_PE_VERSION', version: '2021.7.1', expected_puppet: '7.23', expected_ruby: '2.7.7' },
   ]
 
   before(:all) do
