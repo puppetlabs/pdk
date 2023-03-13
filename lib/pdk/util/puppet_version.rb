@@ -1,5 +1,6 @@
 require 'pdk'
 require 'json'
+require 'forwardable'
 
 module PDK
   module Util
@@ -105,7 +106,6 @@ module PDK
         requirement_string = version.approximate_recommendation
         requirement_string += '.0' unless version.segments.length == 1
         latest_requirement = Gem::Requirement.create(requirement_string)
-
         latest_available_gem = find_gem(latest_requirement)
 
         if latest_available_gem.nil?
@@ -128,10 +128,16 @@ module PDK
       def from_pe_version(version_str)
         version = parse_specified_version(version_str)
 
-        gem_version = pe_version_map.find do |version_map|
-          version_map[:requirement].satisfied_by?(version)
-        end
+        # Due to the issue with concurrent ruby in older puppet gems
+        # we are locking the pe to puppet version mapping to the latest
+        # puppet version that is compatible with the pe version.
+        safe_versions = {
+          2023 => '7.23.0',
+          2021 => '7.23.0',
+          2019 => '6.29.0',
+        }
 
+        gem_version = safe_versions[version.segments[0]]
         if gem_version.nil?
           raise ArgumentError, 'Unable to map Puppet Enterprise version %{pe_version} to a Puppet version.' % {
             pe_version: version_str,
@@ -140,10 +146,10 @@ module PDK
 
         PDK.logger.info 'Puppet Enterprise %{pe_version} maps to Puppet %{puppet_version}.' % {
           pe_version:     version_str,
-          puppet_version: gem_version[:gem_version],
+          puppet_version: gem_version,
         }
 
-        find_gem_for(gem_version[:gem_version])
+        find_gem_for(gem_version)
       end
 
       def from_module_metadata(metadata = nil)
