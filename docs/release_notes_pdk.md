@@ -1,12 +1,37 @@
 # PDK release notes
 
-New features, enhancements, and resolved issues for the PDK 2.x release series.
+New features, enhancements, and resolved issues for PDK.
+
+## PDK 2.7.0
+
+### New features and enhancements
+
+* A RedHat 9 compatible package has been added.
+* A new Puppet validator for Bolt plans has been added by communit member jay7x.
+* PDK Templates have been updated to 2.7.2.
+* Puppet 7.23 has been added to the packages.
+* Ruby 2.7.7 is now the default runtime used by packaged versions of PDK.
+* The minimum ruby requirement has been raised to 2.5.9./op
+
+### Resolved issues
+
+* Selecting a Puppet Enterprise version with `PDK_PE_VERSION` will resolve the latest puppet gem relative to the PE release.
+* The vendored puppet-lint plugins have been updated to their latest compatible versions. This resolves an issue that top scope facts to be formatted incorrectly.
+* Deprecation warnings for `bundle show` will no longer be displayed when using the `release` command.
+
+
+### Deprecations
+
+* PDK no longer ships with OSX 10.15 packages.
+* Legacy i18n support has been removed.
+
+For more more details, please feel free to check out our [project changelog](https://github.com/puppetlabs/pdk/releases/tag/v2.7.0).
 
 ## PDK 2.6.1
 
 ### New features and enhancements
 
-* A Ubuntu 22.04 compatible packages has been added.
+* A Ubuntu 22.04 compatible package has been added.
 * An OSX 12 compatible package has been added.
 
 ### Resolved issues
