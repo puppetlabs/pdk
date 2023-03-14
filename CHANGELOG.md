@@ -5,7 +5,25 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v2.6.1](https://github.com/puppetlabs/pdk/tree/v2.6.1) - 2023-01-25
+## [v2.7.0](https://github.com/puppetlabs/pdk/tree/v2.7.0) - 2023-03-14
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.6.1...v2.7.0)
+
+### Added
+
+- (CONT-694) Bump PDK Template Version [#1216](https://github.com/puppetlabs/pdk/pull/1216) ([chelnak](https://github.com/chelnak))
+- (CONT-370) Remove i18n support [#1211](https://github.com/puppetlabs/pdk/pull/1211) ([chelnak](https://github.com/chelnak))
+- Add Puppet validator for plans [#1207](https://github.com/puppetlabs/pdk/pull/1207) ([jay7x](https://github.com/jay7x))
+
+### Fixed
+
+- (CONT-722) Patch pe to puppet mapping [#1221](https://github.com/puppetlabs/pdk/pull/1221) ([chelnak](https://github.com/chelnak))
+- (GH-1210) Require uri [#1220](https://github.com/puppetlabs/pdk/pull/1220) ([chelnak](https://github.com/chelnak))
+- (CONT-720) Fix default version selection [#1219](https://github.com/puppetlabs/pdk/pull/1219) ([chelnak](https://github.com/chelnak))
+- (CONT-719) Require JSON gem [#1218](https://github.com/puppetlabs/pdk/pull/1218) ([chelnak](https://github.com/chelnak))
+- (CONT-669) Use bundle info command [#1215](https://github.com/puppetlabs/pdk/pull/1215) ([chelnak](https://github.com/chelnak))
+
+## [v2.6.1](https://github.com/puppetlabs/pdk/tree/v2.6.1) - 2023-01-26
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.6.0...v2.6.1)
 
