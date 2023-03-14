@@ -5,7 +5,7 @@
     <prodinfo>
         <prodname>pdk</prodname>
         <vrmlist>
-            <vrm version="latest"/>
+            <vrm version="2.x"/>
         </vrmlist>
     </prodinfo>
 </topicmeta>
