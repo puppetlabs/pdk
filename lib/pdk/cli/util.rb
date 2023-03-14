@@ -296,7 +296,7 @@ module PDK
         env_vars = PDK::Util::Env.select { |k, _| k.start_with?('PDK_') && !ignored_env_vars.include?(k) }.map { |k, v| "#{k}=#{v}" }
         dimensions[:env_vars] = env_vars.join(',') unless env_vars.empty?
 
-        PDK.analytics.screen_view(screen_name, dimensions)
+        PDK.analytics.screen_view(screen_name, **dimensions)
       end
       module_function :analytics_screen_view
     end
