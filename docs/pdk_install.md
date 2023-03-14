@@ -10,36 +10,28 @@ By default, PDK installs to the following locations:
 -   On Windows systems: `C:\Program Files\Puppet Labs\DevelopmentKit`
 
 
-PDK uses Puppet 4 and later. Modules created with PDK work with all Puppet and
-Ruby version combinations currently under maintenance. See [open source
-Puppet](https://puppet.com/docs/puppet/5.5/about_agent.html) and [Puppet
-Enterprise](https://puppet.com/docs/pe/2017.3/overview/getting_support_for_pe.html#supported-puppet-enterprise-versions)
-lifecycle pages for details.
+PDK uses Puppet 6 and 7.
+Modules created with PDK work with all Puppet and Ruby version combinations currently under maintenance.
+See [open source Puppet](https://puppet.com/docs/puppet/latest/about_agent.html) and
+[Puppet Enterprise](https://www.puppet.com/docs/pe/2023.0/getting_support_for_pe.html#getting_support_for_pe) lifecycle pages for details.
 
-PDK functions, such as creating classes, testing, and validation, are supported
-only on modules created or converted with PDK.
+PDK functions, such as creating classes, testing, and validation, are supported only on modules created or converted with PDK.
 
 ## Supported operating systems
 
-PDK is compatible with *nix, Windows, and macOS systems. For detailed version
-compatibility, see the table below.
+PDK is compatible with *nix, Windows, and macOS systems. For detailed version compatibility, see the table below.
 
 |Operating system|Versions|Arch|Package type|
 |----------------|--------|----|------------|
-|CentOS|6, 7, 8|x86_64|RPM|
 |Debian|9, 10, 11|x86_64|DEB|
-|Fedora|30, 31, 32, 34|x86_64|RPM|
-|macOS|10.13, 10.14, 10.15, 11|x86_64|DPKG|
-|Oracle Linux|6, 7, 8|x86_64|RPM|
+|Fedora|36|x86_64|RPM|
+|OSX|11, 12|x86_64|DPKG|
 |Red Hat Enterprise Linux (RHEL)|6, 7,8|x86_64|RPM|
-|Scientific Linux|6, 7|x86_64|RPM|
-|SUSE Linux Enterprise Server|11, 12|x86_64|N/A|
-|Ubuntu|16.04, 18.04, 20.04|x86_64|DEB|
-|Windows (Consumer OS)|7, 8.1, 10|x86_64|MSI|
-|Windows (Server OS)|2008r2, 2012, 2012r2, 2012r2Core, 2016 & 2019|x86_64|MSI|
-
-> **Tip:** On Windows, PowerShell version 2.0 or greater is supported, but we
-recommend 4.0 or greater.
+|Scientific Linux|6, 7, 8,9|x86_64|RPM|
+|SUSE Linux Enterprise Server|12, 15|x86_64|N/A|
+|Ubuntu|18.04, 20.04, 22.04|x86_64|DEB|
+|Windows (Consumer OS)|10, 11|x86_64|MSI|
+|Windows (Server OS)|2016, 2019, 2022|x86_64|MSI|
 
 ## Install PDK on Linux
 
@@ -76,36 +68,28 @@ Install PDK with the YUM package manager.
         sudo yum install pdk
         ```
 
-    -   SUSE Linux Enterprise Server 12
+    -   RHEL 9
 
         ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-sles-12.noarch.rpm
+        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-el-9.noarch.rpm
+        sudo yum install pdk
+        ```
+
+    -   SUSE Linux Enterprise Server 15
+
+        ```
+        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-sles-15.noarch.rpm
         sudo zypper install pdk
         ```
 
-    -   Fedora 28
-
-        ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-fedora-28.noarch.rpm
-        sudo dnf install pdk
-        ```
-
-    -   Fedora 29
-
-        ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-fedora-29.noarch.rpm
-        sudo dnf install pdk
-        ```
-
-    -   Fedora 30
+    -   Fedora 36
 
         ```
         sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-fedora-30.noarch.rpm
                 sudo dnf install pdk
         ```
 
-2.  Open a terminal to re-source your shell profile and make PDK available to
-    your PATH.
+2.  Open a terminal to re-source your shell profile and make PDK available to your PATH.
 
 
 #### What to do next:
@@ -141,20 +125,11 @@ Install PDK with the Apt package manager.
         sudo apt-get install pdk
         ```
 
-    -   Ubuntu 14.04
+    -   Debian 11
 
         ```
-        wget https://apt.puppet.com/puppet-tools-release-trusty.deb
-        sudo dpkg -i puppet-tools-release-trusty.deb
-        sudo apt-get update
-        sudo apt-get install pdk
-        ```
-
-    -   Ubuntu 16.04
-
-        ```
-        wget https://apt.puppet.com/puppet-tools-release-xenial.deb
-        sudo dpkg -i puppet-tools-release-xenial.deb
+        wget https://apt.puppet.com/puppet-tools-release-bullseye.deb
+        sudo dpkg -i puppet-tools-release-bullseye.deb
         sudo apt-get update
         sudo apt-get install pdk
         ```
@@ -176,6 +151,16 @@ Install PDK with the Apt package manager.
         sudo apt-get update
         sudo apt-get install pdk
         ```
+
+    -   Ubuntu 22.04
+
+        ```
+        wget https://apt.puppet.com/puppet-tools-release-jammy.deb
+        sudo dpkg -i puppet-tools-release-jammy.deb
+        sudo apt-get update
+        sudo apt-get install pdk
+        ```
+
 
 2.  Open a terminal to re-source your shell profile and make PDK available to
     your PATH.
@@ -275,8 +260,7 @@ instructions.
 **Result:**
 
 On PowerShell 4.0 or later, PDK loads automatically and `pdk` commands are
-available to the prompt. On PowerShell 2.0 or 3.0, you'll need to add the
-PowerShell module to your profile.
+available to the prompt.
 
 > **Tip:** If you encounter execution policy restriction errors when you try to
 run `pdk` commands, see [troubleshooting](pdk_troubleshooting.md) for help.
@@ -301,31 +285,10 @@ Download and install the PDK package for Windows systems.
 **Result:**
 
 On PowerShell 4.0 or later, PDK loads automatically and `pdk` commands are
-available to the prompt. On PowerShell 2.0 or 3.0, you'll need to add the
-PowerShell module to your profile.
+available to the prompt.
 
 > **Tip:** If you encounter execution policy restriction errors when you try to
 run `pdk` commands, see [troubleshooting](pdk_troubleshooting.md) for help.
-
-### Add the PDK module to PowerShell
-
-PowerShell versions 2.0 and 3.0 cannot automatically discover and load the PDK
-module, so you'll need to add it manually.
-
-To allow PowerShell to load PDK, add the module to your PowerShell profile.
-
-1.  Add the following line to your PowerShell profile:
-
-    ```
-    `Import-Module -Name "$($env:ProgramFiles)\WindowsPowerShell\Modules\PuppetDevelopmentKit"`
-    ```
-
-2.  Close and re-open the PowerShell window to re-source your profile.
-
-
-**Result:**
-
-PDK will now automatically load every time you open PowerShell.
 
 ## Setting up PDK behind a proxy
 
