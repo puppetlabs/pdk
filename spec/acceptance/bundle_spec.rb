@@ -5,7 +5,7 @@ class IO
     combined_output = ''
 
     loop do
-      rs, = IO.select([self], [], [], 10)
+      rs, = wait_readable(10)
 
       next if rs.nil?
       next unless (r = rs[0])
