@@ -10,7 +10,6 @@ module PDK::CLI
     skip_option_parsing
 
     run do |_opts, args, _cmd|
-      require 'pdk/cli/exec/interactive_command'
       require 'pdk/util/bundler'
 
       PDK::CLI::Util.ensure_in_module!(
