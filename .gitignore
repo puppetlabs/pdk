@@ -84,3 +84,7 @@ Gemfile.local
 # generated artifacts from rake tasks
 /output
 modules
+
+# TEMP
+/.rubocop.yml
+/.rubocop_todo.yml

@@ -19,9 +19,9 @@ group :test do
   gem 'parallel_tests'
   gem 'rake'
   gem 'rspec', '~> 3.0'
-  gem 'rubocop', '~> 1.28.0', require: false
-  gem 'rubocop-performance', '~> 1.9.1', require: false
-  gem 'rubocop-rspec', '~> 2.0.1', require: false
+  gem 'rubocop', '~> 1.48', require: false
+  gem 'rubocop-performance', '~> 1.16', require: false
+  gem 'rubocop-rspec', '~> 2.19', require: false
   gem 'simplecov-console'
 end
 
