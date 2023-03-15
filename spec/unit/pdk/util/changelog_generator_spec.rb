@@ -241,7 +241,7 @@ describe PDK::Util::ChangelogGenerator do
           ### Fixed
 
           - something tiny
-          EOT
+        EOT
       end
 
       it 'return the top most version' do
@@ -297,7 +297,7 @@ describe PDK::Util::ChangelogGenerator do
           ### Fixed
 
           - something tiny
-          EOT
+        EOT
       end
 
       it 'returns the latest version' do

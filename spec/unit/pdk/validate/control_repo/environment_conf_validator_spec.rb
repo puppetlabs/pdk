@@ -83,7 +83,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                    manifest=foo
                    config_version=foo
                    environment_timeout=0
-                   EOT
+          EOT
         }
       end
 
@@ -111,7 +111,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
 
                    [invalid_section]
                    invalid=true
-                   EOT
+          EOT
         }
       end
 

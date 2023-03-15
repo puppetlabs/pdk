@@ -6,7 +6,7 @@ module PDK::CLI
     description <<-EOF
 [experimental] For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.
 Careless use of this command can lead to errors that pdk can't help recover from.
-EOF
+    EOF
     skip_option_parsing
 
     run do |_opts, args, _cmd|

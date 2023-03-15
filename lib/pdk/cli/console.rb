@@ -9,7 +9,7 @@ The pdk console runs a interactive session of the puppet debugger tool to test o
 language evaluations, datatype prototyping and much more.  A virtual playground for your puppet code!
 For usage details see the puppet debugger docs at https://docs.puppet-debugger.com.
 
-EOF
+    EOF
 
     PDK::CLI.puppet_version_options(self)
     PDK::CLI.puppet_dev_option(self)
@@ -63,7 +63,7 @@ Gemfile:
       - gem: #{gem_name}
         version: \"#{version}\"
 
-EOF
+      EOF
                       )
     end
 
