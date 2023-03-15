@@ -8,9 +8,9 @@ group :development do
   gem 'ruby-prof'
   gem 'yard'
 
+  gem 'fuubar'
   gem 'pry'
   gem 'pry-stack_explorer'
-  gem 'fuubar'
 end
 
 group :test do
@@ -20,8 +20,8 @@ group :test do
   gem 'rake'
   gem 'rspec', '~> 3.0'
   gem 'rubocop', '~> 1.28.0', require: false
-  gem 'rubocop-rspec', '~> 2.0.1', require: false
   gem 'rubocop-performance', '~> 1.9.1', require: false
+  gem 'rubocop-rspec', '~> 2.0.1', require: false
   gem 'simplecov-console'
 end
 
@@ -43,6 +43,6 @@ extra_gemfiles = [
 
 extra_gemfiles.each do |gemfile|
   if File.file?(gemfile) && File.readable?(gemfile)
-    eval(File.read(gemfile), binding) # rubocop:disable Security/Eval
+    eval(File.read(gemfile), binding)
   end
 end
