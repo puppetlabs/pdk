@@ -13,6 +13,7 @@ module PDK
       # @return [PDK::Template::Fetcher::AbstractTemplateFetcher] An instance of a class which implements the AbstractFetcher class
       def self.instance(uri, options = {})
         return Git.new(uri, options) if Git.fetchable?(uri, options)
+
         Local.new(uri, options)
       end
 
@@ -36,6 +37,7 @@ module PDK
       # @return [void]
       def self.with(uri, options = {})
         raise ArgumentError, '%{class_name}.with must be passed a block.' % { class_name: name } unless block_given?
+
         fetcher = instance(uri, options)
 
         begin

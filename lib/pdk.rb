@@ -35,6 +35,7 @@ module PDK
 
   def self.config
     return @config unless @config.nil?
+
     options = {}
     options['user.module_defaults.path'] = PDK::Util::Env['PDK_ANSWER_FILE'] unless PDK::Util::Env['PDK_ANSWER_FILE'].nil?
     @config = PDK::Config.new(options)
@@ -56,6 +57,7 @@ module PDK
 
   def self.feature_flag?(flagname)
     return false unless available_feature_flags.include?(flagname)
+
     requested_feature_flags.include?(flagname)
   end
 

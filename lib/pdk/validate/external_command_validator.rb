@@ -86,14 +86,17 @@ module PDK
       # @api private
       def cmd_path
         return @cmd_path unless @cmd_path.nil?
+
         @cmd_path = File.join(context.root_path, 'bin', cmd)
         # Return the path to the command if it exists on disk, or we have a gemfile (i.e. Bundled install)
         # The Bundle may be created after the prepare_invoke so if the file doesn't exist, it may not be an error
         return @cmd_path if PDK::Util::Filesystem.exist?(@cmd_path) || !PDK::Util::Bundler::BundleHelper.new.gemfile.nil?
+
         # But if there is no Gemfile AND cmd doesn't exist in the default path, we need to go searching...
         @cmd_path = alternate_bin_paths.map { |alternate_path| File.join(alternate_path, cmd) }
                                        .find { |path| PDK::Util::Filesystem.exist?(path) }
         return @cmd_path unless @cmd_path.nil?
+
         # If we can't find it anywhere, just let the OS find it
         @cmd_path = cmd
       end
@@ -121,6 +124,7 @@ module PDK
       # @see PDK::Validate::Validator.prepare_invoke!
       def prepare_invoke!
         return if @prepared
+
         super
 
         @targets, @skipped, @invalid = parse_targets
@@ -144,6 +148,7 @@ module PDK
         @commands = []
         target_groups.each do |invokation_targets|
           next if invokation_targets.empty? && !allow_empty_targets?
+
           cmd_argv = parse_options(invokation_targets).unshift(cmd_path).compact
           cmd_argv.unshift(File.join(PDK::Util::RubyVersion.bin_path, 'ruby.exe'), '-W0') if Gem.win_platform?
 

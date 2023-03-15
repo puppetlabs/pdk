@@ -100,6 +100,7 @@ module PDK
 
       def test_generators(context = PDK.context)
         return @test_generators unless @test_generators.nil?
+
         require 'pdk/util/puppet_strings'
 
         test_gens = PDK::Util::PuppetStrings.all_objects.map do |generator, objects|

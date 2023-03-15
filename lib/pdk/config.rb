@@ -165,6 +165,7 @@ module PDK
     # @yield [PDK::Config::Namespace, Object] The value of the configuration setting. Does not yield if the setting does not exist or is nil
     def with_scoped_value(setting_name, scopes = nil)
       raise ArgumentError, 'must be passed a block' unless block_given?
+
       value = get_within_scopes(setting_name, scopes)
       yield value unless value.nil?
     end
@@ -184,8 +185,10 @@ module PDK
 
       names = key.is_a?(String) ? split_key_string(key) : key
       raise ArgumentError, 'Invalid configuration names' if names.nil? || !names.is_a?(Array) || names.empty?
+
       scope_name = names[0]
       raise ArgumentError, "Unknown configuration root '%{name}'" % { name: scope_name } if all_scopes[scope_name].nil?
+
       deep_set_object(value, options[:force], send(all_scopes[scope_name]), *names[1..-1])
     end
 
@@ -289,6 +292,7 @@ module PDK
       value = object[name]
       if names.empty?
         return value if value.is_a?(PDK::Config::Namespace)
+
         # Duplicate arrays and hashes so that they are isolated from changes being made
         (value.is_a?(Hash) || value.is_a?(Array)) ? value.dup : value
       else
@@ -303,6 +307,7 @@ module PDK
     # @return [Array[String]] The string split into each setting name as an array
     def split_key_string(key)
       raise ArgumentError, 'Expected a String but got \'%{klass}\'' % { klass: key.class } unless key.is_a?(String)
+
       key.split('.')
     end
     #:nocov:

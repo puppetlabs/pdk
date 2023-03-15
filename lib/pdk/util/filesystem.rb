@@ -22,6 +22,7 @@ module PDK
         File.read(file, open_args: Array(open_args))
       rescue => e
         raise e unless nil_on_error
+
         nil
       end
       module_function :read_file

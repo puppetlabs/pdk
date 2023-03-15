@@ -30,6 +30,7 @@ module PDK
     def warn_once(*args)
       hash = args.inspect.hash
       return if (@sent_messages[::Logger::WARN] ||= {}).key?(hash)
+
       @sent_messages[::Logger::WARN][hash] = true
       warn(*args)
     end

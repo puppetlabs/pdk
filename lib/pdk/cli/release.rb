@@ -170,6 +170,7 @@ module PDK::CLI
 
     def self.prepare_publish_interview(prompt, opts)
       return if opts[:'forge-token']
+
       questions = [
         {
           name:             'apikey',

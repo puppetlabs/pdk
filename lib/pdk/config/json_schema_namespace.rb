@@ -58,6 +58,7 @@ module PDK
       # @return [String[]]
       def schema_property_names
         return [] if schema['properties'].nil?
+
         schema['properties'].keys
       end
 
@@ -119,6 +120,7 @@ module PDK
         @document_schema = create_empty_schema
 
         return @document_schema if @schema_file.nil?
+
         unless PDK::Util::Filesystem.file?(@schema_file)
           raise PDK::Config::LoadError, 'Unable to open %{file} for reading. File does not exist' % {
             file: @schema_file,

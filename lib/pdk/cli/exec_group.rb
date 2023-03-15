@@ -95,6 +95,7 @@ module PDK
       def exit_code
         @threads.each(&:join)
         return 0 if @exit_codes.empty?
+
         @exit_codes.max
       end
     end

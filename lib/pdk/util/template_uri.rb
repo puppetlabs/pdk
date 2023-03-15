@@ -257,6 +257,7 @@ module PDK
         found_template = templates_array.find { |t| valid_template?(t) }
 
         raise PDK::CLI::FatalError, 'Unable to find a valid module template to use.' if found_template.nil?
+
         found_template[:uri]
       end
 
@@ -267,6 +268,7 @@ module PDK
         return false if template[:uri].nil? || !template[:uri].is_a?(Addressable::URI)
 
         return true if PDK::Util::Git.repo?(bare_uri(template[:uri]))
+
         path = human_readable(template[:uri].path)
         if PDK::Util::Filesystem.directory?(path)
           # We know that it's not a git repository, but it's a valid path on disk

@@ -38,6 +38,7 @@ module PDK
       # @see PDK::Validate::Validator.prepare_invoke!
       def prepare_invoke!
         return if @prepared
+
         super
 
         # Register the spinner
@@ -63,6 +64,7 @@ module PDK
         # targets. For example, using rubocop with no targets, will allow rubocop to determine the
         # target list using it's .rubocop.yml file
         return [[], [], []] if requested_targets.empty? && allow_empty_targets?
+
         # If no targets are specified, then we will run validations from the base context directory.
         targets = requested_targets.empty? ? [context.root_path] : requested_targets
         targets.map! { |r| r.gsub(File::ALT_SEPARATOR, File::SEPARATOR) } if File::ALT_SEPARATOR
@@ -128,6 +130,7 @@ module PDK
       def spinner
         return nil unless spinners_enabled?
         return @spinner unless @spinner.nil?
+
         require 'pdk/cli/util/spinner'
 
         @spinner = TTY::Spinner.new("[:spinner] #{spinner_text}", PDK::CLI::Util.spinner_opts_for_platform)
@@ -187,6 +190,7 @@ module PDK
       def contextual_pattern(module_pattern)
         module_pattern = [module_pattern] unless module_pattern.is_a?(Array)
         return module_pattern unless context.is_a?(PDK::Context::ControlRepo)
+
         context.actualized_module_paths.map { |mod_path| module_pattern.map { |pat_path| mod_path + '/*/' + pat_path } }.flatten
       end
 

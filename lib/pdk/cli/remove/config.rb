@@ -12,6 +12,7 @@ module PDK::CLI
 
         current_value = PDK.config.get(item_name)
         raise PDK::CLI::ExitWithError, "The configuration item '%{name}' can not be removed." % { name: item_name } if current_value.is_a?(PDK::Config::Namespace)
+
         if current_value.nil?
           PDK.logger.info("Could not remove '%{name}' as it has not been set" % { name: item_name })
           return 0

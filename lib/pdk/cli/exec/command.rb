@@ -67,6 +67,7 @@ module PDK
           require 'pdk/cli/util'
 
           return unless PDK::CLI::Util.interactive?
+
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
@@ -77,6 +78,7 @@ module PDK
           require 'pdk/cli/util'
 
           return unless PDK::CLI::Util.interactive?
+
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 

@@ -8,6 +8,7 @@ module PDK
     class YAMLWithSchema < JSONSchemaNamespace
       def parse_file(filename)
         raise unless block_given?
+
         data = load_data(filename)
         data = '' if data.nil?
         require 'yaml'

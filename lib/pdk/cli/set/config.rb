@@ -18,6 +18,7 @@ module PDK::CLI
         # Short circuit string conversions as it's trivial
         if normalized_name == 'string'
           raise PDK::CLI::ExitWithError, 'An error occured converting \'%{value}\' into a %{type_name}' % { value: value.nil? ? 'nil' : value, type_name: type_name } unless value.is_a?(String)
+
           return value
         end
 
@@ -39,6 +40,7 @@ module PDK::CLI
 
       def self.convert_to_array(value)
         return [] if value.nil?
+
         value.is_a?(Array) ? value : [value]
       end
       private_class_method :convert_to_array

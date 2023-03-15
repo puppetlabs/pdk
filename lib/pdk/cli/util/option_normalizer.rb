@@ -6,6 +6,7 @@ module PDK
       class OptionNormalizer
         def self.comma_separated_list_to_array(list, _options = {})
           raise 'Error: expected comma separated list' unless OptionValidator.comma_separated_list?(list)
+
           list.split(',').compact
         end
 

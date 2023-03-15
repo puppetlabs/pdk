@@ -13,6 +13,7 @@ module PDK
           'provider_type_spec.erb' => File.join('spec', 'unit', 'puppet', 'type', object_name) + '_spec.rb',
         }
         return files if spec_only?
+
         files.merge(
           'provider.erb' => File.join('lib', 'puppet', 'provider', object_name, object_name) + '.rb',
           'provider_type.erb' => File.join('lib', 'puppet', 'type', object_name) + '.rb',

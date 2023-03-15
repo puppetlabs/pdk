@@ -34,6 +34,7 @@ module PDK
           @context = PDK::Context::None.new(nil)
         else
           raise ArgumentError, 'Expected PDK::Context::AbstractContext but got \'%{klass}\' for context' % { klass: context.class } unless context.is_a?(PDK::Context::AbstractContext)
+
           @context = context
         end
         @options = options.dup.freeze
@@ -84,6 +85,7 @@ module PDK
       # @api private
       def stop_spinner(success)
         return if spinner.nil?
+
         success ? spinner.success : spinner.error
         nil
       end

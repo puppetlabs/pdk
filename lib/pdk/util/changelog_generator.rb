@@ -34,6 +34,7 @@ module PDK
         output = changelog_content
 
         raise PDK::CLI::ExitWithError, 'The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details' % { changelog_file: changelog_file } if output =~ %r{UNCATEGORIZED PRS; GO LABEL THEM} # rubocop:disable Metrics/LineLength
+
         output
       end
 
@@ -43,6 +44,7 @@ module PDK
       # @return [String] The new version. May be the same as the current version if there are no notable changes
       def self.compute_next_version(current_version)
         raise PDK::CLI::ExitWithError, 'Invalid version string %{version}' % { version: current_version } unless current_version =~ VERSION_REGEX
+
         version = Gem::Version.create(current_version).segments
         PDK.logger.info 'Determing the target version from \'%{file}\'' % { file: changelog_file }
 
@@ -83,6 +85,7 @@ module PDK
           if line.start_with?('[')
             # We're leaving the latest changes so we can break
             break if in_changelog_entry
+
             in_changelog_entry = true
           end
           if in_changelog_entry && line.start_with?('##')
@@ -128,6 +131,7 @@ module PDK
 
       def self.changelog_content
         return '' if changelog_file.nil?
+
         PDK::Util::Filesystem.read_file(changelog_file, open_args: 'rb:utf-8')
       end
     end

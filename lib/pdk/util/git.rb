@@ -67,6 +67,7 @@ module PDK
       def self.repo?(maybe_repo)
         result = cached_git_query(maybe_repo, :repo?)
         return result unless result.nil?
+
         result = if PDK::Util::Filesystem.directory?(maybe_repo)
                    # Use boolean shortcircuiting here. The mostly likely type of git repo
                    # is a "normal" repo with a working tree. Bare repos do not have work tree
@@ -90,6 +91,7 @@ module PDK
 
       def self.work_tree?(path)
         return false unless PDK::Util::Filesystem.directory?(path)
+
         result = cached_git_query(path, :work_tree?)
         return result unless result.nil?
 
@@ -124,6 +126,7 @@ module PDK
         matching_refs = output[:stdout].split(%r{\r?\n}).map { |r| r.split("\t") }
         matching_ref = matching_refs.find { |_sha, remote_ref| remote_ref == "refs/tags/#{ref}" || remote_ref == "refs/remotes/origin/#{ref}" || remote_ref == "refs/heads/#{ref}" }
         raise PDK::CLI::ExitWithError, 'Unable to find a branch or tag named "%{ref}" in %{repo}' % { ref: ref, repo: repo } if matching_ref.nil?
+
         matching_ref.first
       end
 
@@ -131,6 +134,7 @@ module PDK
         args = ['--git-dir', path, 'describe', '--all', '--long', '--always', ref].compact
         result = git(*args)
         raise PDK::Util::GitError, args, result unless result[:exit_code].zero?
+
         result[:stdout].strip
       end
 
@@ -156,6 +160,7 @@ module PDK
           @git_repo_cache = {}
         end
         return nil if @git_repo_cache[repo].nil?
+
         @git_repo_cache[repo][query]
       end
       private_class_method :cached_git_query

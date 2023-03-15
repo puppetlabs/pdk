@@ -191,6 +191,7 @@ module PDK
         message_set = Set.new
         json_data.each do |json|
           next unless json['messages']
+
           message_set |= json['messages']
         end
         merged_json_result['messages'] = message_set.to_a
@@ -199,6 +200,7 @@ module PDK
         all_examples = []
         json_data.each do |json|
           next unless json['examples']
+
           all_examples.concat json['examples']
         end
         merged_json_result['examples'] = all_examples
@@ -211,6 +213,7 @@ module PDK
         }
         json_data.each do |json|
           next unless json['summary']
+
           summary_hash['example_count'] += json['summary']['example_count']
           summary_hash['failure_count'] += json['summary']['failure_count']
           summary_hash['pending_count'] += json['summary']['pending_count']
@@ -234,6 +237,7 @@ module PDK
 
         rspec_json = PDK::Util.find_first_json_in(output[:stdout])
         raise PDK::CLI::FatalError, 'Failed to find valid JSON in output from rspec: %{output}' % { output: output[:stdout] } unless rspec_json
+
         if rspec_json['examples'].empty?
           rspec_message = rspec_json['messages'][0]
           return [] if rspec_message == 'No examples found.'

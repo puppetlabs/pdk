@@ -12,6 +12,7 @@ module PDK
     #
     def bolt_project_root?(path = Dir.pwd)
       return true if File.basename(path) == 'Boltdir' && PDK::Util::Filesystem.directory?(path)
+
       PDK::Util::Filesystem.file?(File.join(path, 'bolt.yaml'))
     end
     module_function :bolt_project_root?

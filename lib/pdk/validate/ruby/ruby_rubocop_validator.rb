@@ -51,6 +51,7 @@ module PDK
 
           json_data['files'].each do |file_info|
             next unless file_info.key?('offenses')
+
             result = {
               file: file_info['path'],
               source: 'rubocop',

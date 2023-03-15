@@ -57,6 +57,7 @@ module PDK
       until !PDK::Util::Filesystem.directory?(current) || current == previous
         filename = File.join(current, target)
         return filename if PDK::Util::Filesystem.file?(filename)
+
         previous = current
         current = PDK::Util::Filesystem.expand_path('..', current)
       end
@@ -87,6 +88,7 @@ module PDK
         unless PDK::Util::Filesystem.exist?(path)
           raise PDK::CLI::FatalError, "Cannot resolve a full path to '%{path}', as it does not currently exist." % { path: path }
         end
+
         PDK::Util::Windows::File.get_long_pathname(path)
       else
         PDK::Util::Filesystem.expand_path(path)
@@ -115,6 +117,7 @@ module PDK
 
     def pdk_package_basedir
       raise PDK::CLI::FatalError, 'Package basedir requested for non-package install.' unless package_install?
+
       require 'pdk/util/version'
 
       File.dirname(PDK::Util::Version.version_file)
@@ -152,6 +155,7 @@ module PDK
       return @system_configdir = File.join(File::SEPARATOR, 'opt', 'puppetlabs', 'pdk', 'config') unless Gem.win_platform?
 
       return @system_configdir = File.join(PDK::Util::Env['ProgramData'], 'PuppetLabs', 'PDK') unless PDK::Util::Env['ProgramData'].nil?
+
       @system_configdir = File.join(PDK::Util::Env['AllUsersProfile'], 'PuppetLabs', 'PDK')
     end
     module_function :system_configdir

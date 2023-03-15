@@ -8,6 +8,7 @@ module PDK
     class YAML < Namespace
       def parse_file(filename)
         raise unless block_given?
+
         data = load_data(filename)
         return if data.nil? || data.empty?
 

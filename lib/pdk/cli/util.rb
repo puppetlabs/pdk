@@ -35,6 +35,7 @@ module PDK
         }
 
         return windows_opts if Gem.win_platform?
+
         {}
       end
       module_function :spinner_opts_for_platform
@@ -259,6 +260,7 @@ module PDK
         end
 
         return unless opts[:'template-url'] && opts[:'template-url'].include?('#')
+
         raise PDK::CLI::ExitWithError, '--template-url may not be used to specify paths containing #\'s.'
       end
       module_function :validate_template_opts

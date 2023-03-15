@@ -8,6 +8,7 @@ module PDK
       # @see PDK::Config::Namespace.parse_file
       def parse_file(filename)
         raise unless block_given?
+
         data = load_data(filename)
         return if data.nil? || data.empty?
 

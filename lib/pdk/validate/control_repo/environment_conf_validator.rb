@@ -44,6 +44,7 @@ module PDK
               # Remove the 'environment.' setting_name prefix
               setting_name = setting_name.slice(12..-1)
               next if ALLOWED_SETTINGS.include?(setting_name)
+
               # A hash indicates that the ini file has a section in it.
               message = if setting_value.is_a?(Hash)
                           "Invalid section '%{name}'" % { name: setting_name }
@@ -74,6 +75,7 @@ module PDK
             end
 
             return 1 unless is_valid
+
             report.add_event(
               file:     target,
               source:   name,

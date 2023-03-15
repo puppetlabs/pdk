@@ -82,6 +82,7 @@ module PDK
           PDK.logger.debug("Detected #{current.display_name} at #{current.root_path.nil? ? current.context_path : current.root_path}")
           current = current.parent_context
           break if current.nil?
+
           depth += 1
           # Circuit breaker in case there are circular references
           break if depth > 20

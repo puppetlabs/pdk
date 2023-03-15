@@ -21,6 +21,7 @@ module PDK
         def [](key)
           env_hash.each do |item, value|
             next unless key.casecmp(item).zero?
+
             return value
           end
           nil

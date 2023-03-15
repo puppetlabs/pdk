@@ -66,6 +66,7 @@ module PDK
       # @return [self] the mounted namespace.
       def mount(key, obj, &block)
         raise ArgumentError, 'Only PDK::Config::Namespace objects can be mounted into a namespace' unless obj.is_a?(PDK::Config::Namespace)
+
         obj.parent = self
         obj.name = key.to_s
         obj.instance_eval(&block) if block_given?
@@ -98,9 +99,11 @@ module PDK
         # Check if it's a setting, otherwise nil
         return nil if settings[key.to_s].nil?
         return settings[key.to_s].value unless settings[key.to_s].value.nil?
+
         # Duplicate arrays and hashes so that they are isolated from changes being made
         default_value = PDK::Util.deep_duplicate(settings[key.to_s].default)
         return default_value if default_value.nil? || !@persistent_defaults
+
         # Persist the default value
         settings[key.to_s].value = default_value
         save_data
@@ -125,6 +128,7 @@ module PDK
         return @mounts[key.to_s] unless @mounts[key.to_s].nil?
         # Check if it's a setting, otherwise default_value
         return default_value if settings[key.to_s].nil?
+
         # Check if has a value, otherwise default_value
         settings[key.to_s].value.nil? ? default_value : settings[key.to_s].value
       end
@@ -139,6 +143,7 @@ module PDK
       def []=(key, value)
         # You can't set the value of a mount
         raise ArgumentError, 'Namespace mounts can not be set a value' unless @mounts[key.to_s].nil?
+
         set_volatile_value(key, value)
         # Persist the change
         save_data
@@ -239,6 +244,7 @@ module PDK
       def be_resolved?(name, filter = nil)
         return true if filter.nil? # If we're not filtering, this value should always be resolved
         return true if name == filter # If it's exactly the same name then it should be resolved
+
         name.start_with?(filter + '.') # If name is a subkey of the filter then it should be resolved
       end
 
@@ -273,6 +279,7 @@ module PDK
         # Need to use `@settings` and `@mounts` here to stop recursive calls
         return unless @mounts[key.to_s].nil?
         return unless @settings[key.to_s].nil?
+
         @settings[key.to_s] = default_setting_class.new(key.to_s, self, initial_value)
       end
 
@@ -286,6 +293,7 @@ module PDK
       def set_volatile_value(key, value)
         # Need to use `settings` here to force the backing file to be loaded
         return create_missing_setting(key, value) if settings[key.to_s].nil?
+
         # Need to use `@settings` here to stop recursive calls from []=
         @settings[key.to_s].value = value
       end
@@ -340,8 +348,10 @@ module PDK
       # @return [Hash<String => PDK::Config::Setting>] the contents of the namespace.
       def settings
         return @settings if @loaded_from_file
+
         @loaded_from_file = true
         return @settings if file.nil?
+
         parse_file(file) do |key, parsed_setting|
           # Create a settings chain if a setting already exists
           parsed_setting.previous_setting = @settings[key] unless @settings[key].nil?

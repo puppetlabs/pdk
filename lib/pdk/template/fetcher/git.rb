@@ -14,6 +14,7 @@ module PDK
         # @see PDK::Template::Fetcher::AbstractTemplateFetcher.fetch!
         def fetch!
           return if fetched
+
           super
 
           # Default metadata for all git fetching methods

@@ -27,6 +27,7 @@ module PDK
           File.join('functions', 'function_spec.erb') => File.join('spec', 'functions', *func_name_parts) + '_spec.rb',
         }
         return files if spec_only?
+
         func_name_parts = object_name.split('::')[1..-1]
         template_file = File.join('functions', "#{options[:type]}_function.erb")
 

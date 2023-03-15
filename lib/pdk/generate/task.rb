@@ -9,6 +9,7 @@ module PDK
 
       def template_files
         return {} if spec_only?
+
         {
           'task.erb' => File.join('tasks', task_name + '.sh'),
         }

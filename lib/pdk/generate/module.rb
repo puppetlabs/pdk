@@ -58,6 +58,7 @@ module PDK
           PDK::Template.with(template_uri, context) do |template_dir|
             template_dir.render_new_module(metadata.data['name'], metadata.data) do |relative_file_path, file_content, file_status|
               next if [:delete, :unmanage].include?(file_status)
+
               file = Pathname.new(temp_target_dir) + relative_file_path
               file.dirname.mkpath
               PDK::Util::Filesystem.write_file(file, file_content)

@@ -40,6 +40,7 @@ module PDK
         end
 
         return [] if @objects.nil?
+
         @objects = @objects.compact
       end
 

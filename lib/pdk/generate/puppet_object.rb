@@ -22,6 +22,7 @@ module PDK
       # @param options [Hash{Symbol => Object}]
       def initialize(context, object_name, options)
         raise ArgumentError, 'Expected PDK::Context::AbstractContext but got \'%{klass}\' for context' % { klass: context.class } unless context.is_a?(PDK::Context::AbstractContext)
+
         @context = context
         @options = options
         @object_name = object_name

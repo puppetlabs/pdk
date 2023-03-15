@@ -8,6 +8,7 @@ module PDK
       # @see PDK::Config::Setting.initialize
       def initialize(_name, namespace, _initial_value)
         raise 'The JSONSchemaSetting object can only be created within the JSONSchemaNamespace' unless namespace.is_a?(PDK::Config::JSONSchemaNamespace)
+
         super
       end
 

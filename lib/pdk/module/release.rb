@@ -24,6 +24,7 @@ module PDK
           raise PDK::CLI::ExitWithError, 'The module release process requires a valid module path' % { module_path: module_path } if module_path.nil?
         end
         raise PDK::CLI::ExitWithError, '%{module_path} is not a valid module' % { module_path: module_path } unless PDK::Util.in_module_root?(module_path)
+
         @module_path = module_path
       end
 
@@ -102,6 +103,7 @@ module PDK
 
       def default_package_filename
         return @default_tarball_filename unless @default_tarball_filename.nil?
+
         builder = PDK::Module::Build.new(module_dir: module_path)
         @default_tarball_filename = builder.package_file
       end
@@ -171,6 +173,7 @@ module PDK
         end
 
         raise PDK::CLI::ExitWithError, 'Error uploading to Puppet Forge: %{result}' % { result: response.body } unless response.is_a?(Net::HTTPSuccess)
+
         PDK.logger.info 'Publish to Forge was successful'
       end
 

@@ -15,6 +15,7 @@ module PDK
       # @see PDK::Config::Namespace.parse_file
       def parse_file(filename)
         raise unless block_given?
+
         data = load_data(filename)
         return if data.nil? || data.empty?
 
@@ -39,11 +40,13 @@ module PDK
         lines = ''
         data.each do |name, value|
           next if value.nil?
+
           if value.is_a?(Hash)
             # Hashes are an INI section
             lines += "\n[#{name}]\n"
             value.each do |child_name, child_value|
               next if child_value.nil?
+
               lines += "#{child_name} = #{munge_serialized_value(child_value)}\n"
             end
           else

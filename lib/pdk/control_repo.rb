@@ -42,6 +42,7 @@ module PDK
                nil
              end
       return path if path.nil? || !strict_check
+
       PDK::Bolt.bolt_project_root?(path) ? nil : path
     end
     module_function :find_control_repo_root

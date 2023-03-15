@@ -15,6 +15,7 @@ module PDK
           'transport_type_spec.erb' => File.join('spec', 'unit', 'puppet', 'transport', 'schema', object_name) + '_spec.rb',
         }
         return files if spec_only?
+
         files.merge(
           'transport.erb' => File.join('lib', 'puppet', 'transport', object_name) + '.rb',
           'transport_device.erb'    => File.join('lib', 'puppet', 'util', 'network_device', object_name, 'device.rb'),

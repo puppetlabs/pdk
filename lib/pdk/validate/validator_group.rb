@@ -39,6 +39,7 @@ module PDK
       def spinner
         return nil unless spinners_enabled?
         return @spinner unless @spinner.nil?
+
         require 'pdk/cli/util/spinner'
 
         @spinner = TTY::Spinner::Multi.new("[:spinner] #{spinner_text}", PDK::CLI::Util.spinner_opts_for_platform)
@@ -46,6 +47,7 @@ module PDK
         # Register the child spinners
         validator_instances.each do |instance|
           next if instance.spinner.nil?
+
           @spinner.register(instance.spinner)
         end
 
@@ -58,6 +60,7 @@ module PDK
       # @see PDK::Validate::Validator.prepare_invoke!
       def prepare_invoke!
         return if @prepared
+
         super
 
         # Force the spinner to be registered etc.

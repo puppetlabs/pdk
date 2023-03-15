@@ -81,6 +81,7 @@ module PDK
 
         def gemfile_lock
           return if gemfile.nil?
+
           @gemfile_lock ||= File.join(File.dirname(gemfile), 'Gemfile.lock')
         end
 
@@ -211,6 +212,7 @@ module PDK
 
         def binstubs!(gems)
           raise PDK::CLI::FatalError, 'Unable to install requested binstubs as the Gemfile is missing' if gemfile.nil?
+
           binstub_dir = File.join(File.dirname(gemfile), 'bin')
           return true if gems.all? { |gem| PDK::Util::Filesystem.file?(File.join(binstub_dir, gem)) }
 

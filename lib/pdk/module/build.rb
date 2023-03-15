@@ -196,6 +196,7 @@ module PDK
           loop do
             nxt = parts.pop || ''
             break if newpath.bytesize + 1 + nxt.bytesize >= 100
+
             newpath = File.join(nxt, newpath)
           end
 
