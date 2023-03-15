@@ -33,10 +33,10 @@ module PDK
           @scanner.getch until @scanner.peek(1) == '{' || @scanner.eos?
 
           (@objects ||= []) << begin
-                                 JSON.parse(read_object(true) || '')
-                               rescue JSON::ParserError
-                                 nil
-                               end
+            JSON.parse(read_object(true) || '')
+          rescue JSON::ParserError
+            nil
+          end
         end
 
         return [] if @objects.nil?
