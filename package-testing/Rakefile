@@ -9,8 +9,8 @@ namespace :acceptance do
 
     unless ENV['SHA'] || ENV['LOCAL_PKG']
       abort "SHA or LOCAL_PKG must be set:\n" \
-        "  SHA: git sha or tag of a pdk package build available on the server\n" \
-        '  LOCAL_PKG: path to a locally built package to use for testing'
+            "  SHA: git sha or tag of a pdk package build available on the server\n" \
+            '  LOCAL_PKG: path to a locally built package to use for testing'
     end
 
     if ENV['SHA'] && ENV['LOCAL_PKG']
