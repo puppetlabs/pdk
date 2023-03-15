@@ -19,7 +19,7 @@ module PDK
     end
 
     module Git
-      GIT_QUERY_CACHE_TTL ||= 10
+      GIT_QUERY_CACHE_TTL = 10
 
       def self.git_bindir
         @git_dir ||= File.join('private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
