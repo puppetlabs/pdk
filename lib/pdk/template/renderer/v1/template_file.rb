@@ -82,7 +82,7 @@ module PDK
           def render_erb
             require 'erb'
 
-            renderer = ERB.new(template_content, nil, '-')
+            renderer = ERB.new(template_content, trim_mode: '-')
             renderer.filename = @template_file
             renderer.result(binding)
           end
