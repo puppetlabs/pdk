@@ -174,12 +174,12 @@ module PDK
         return unless json_data['summary']
 
         # TODO: standardize summary output
-        $stderr.puts '  ' << 'Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.' % {
+        $stderr.puts '  ' << ('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.' % {
           total: json_data['summary']['example_count'],
           duration: duration,
           failures: json_data['summary']['failure_count'],
           pending: json_data['summary']['pending_count'],
-        }
+        })
       end
 
       def self.merge_json_results(json_data)

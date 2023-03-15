@@ -661,7 +661,7 @@ describe PDK::Config do
     before(:each) do
       prompt = TTY::Prompt::Test.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
-      prompt.input << responses.join("\r") + "\r"
+      prompt.input << (responses.join("\r") + "\r")
       prompt.input.rewind
 
       allow(PDK::CLI::Util).to receive(:interactive?).and_return(true)
