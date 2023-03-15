@@ -40,4 +40,5 @@ Gem::Specification.new do |spec|
 
   # Used in the pdk-templates
   spec.add_runtime_dependency 'deep_merge', '~> 1.2.2'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end
