@@ -37,15 +37,15 @@ describe 'PDK::CLI build' do
     let(:command_opts) { [] }
     let(:mock_metadata) do
       {
-        'name'    => 'testuser-testmodule',
+        'name' => 'testuser-testmodule',
         'version' => '2.3.4',
       }
     end
     let(:mock_metadata_obj) do
       instance_double(
         PDK::Module::Metadata,
-        data:                 mock_metadata,
-        forge_ready?:         true,
+        data: mock_metadata,
+        forge_ready?: true,
         interview_for_forge!: true,
       )
     end
@@ -53,10 +53,10 @@ describe 'PDK::CLI build' do
     let(:mock_builder) do
       instance_double(
         PDK::Module::Build,
-        build:                   true,
-        module_pdk_compatible?:  true,
+        build: true,
+        module_pdk_compatible?: true,
         package_already_exists?: false,
-        package_file:            package_path,
+        package_file: package_path,
       )
     end
 

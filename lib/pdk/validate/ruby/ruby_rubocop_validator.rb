@@ -63,12 +63,12 @@ module PDK
               file_info['offenses'].each do |offense|
                 report.add_event(
                   result.merge(
-                    line:     offense['location']['line'],
-                    column:   offense['location']['column'],
-                    message:  offense['message'],
+                    line: offense['location']['line'],
+                    column: offense['location']['column'],
+                    message: offense['message'],
                     severity: offense['corrected'] ? 'corrected' : offense['severity'],
-                    test:     offense['cop_name'],
-                    state:    :failure,
+                    test: offense['cop_name'],
+                    state: :failure,
                   ),
                 )
               end

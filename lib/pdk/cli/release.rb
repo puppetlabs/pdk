@@ -34,7 +34,7 @@ module PDK::CLI
     run do |opts, _args, _cmd|
       # Make sure build is being run in a valid module directory with a metadata.json
       PDK::CLI::Util.ensure_in_module!(
-        message:   '`pdk release` can only be run from inside a valid module with a metadata.json.',
+        message: '`pdk release` can only be run from inside a valid module with a metadata.json.',
         log_level: :info,
       )
 
@@ -91,44 +91,44 @@ module PDK::CLI
 
       unless opts[:'skip-validation']
         questions << {
-          name:     'validation',
+          name: 'validation',
           question: 'Do you want to run the module validation ?',
-          type:     :yes,
+          type: :yes,
         }
       end
       unless opts[:'skip-changelog']
         questions << {
-          name:     'changelog',
+          name: 'changelog',
           question: 'Do you want to run the automatic changelog generation ?',
-          type:     :yes,
+          type: :yes,
         }
       end
       unless opts[:version]
         questions << {
-          name:     'setversion',
+          name: 'setversion',
           question: 'Do you want to set the module version ?',
-          type:     :yes,
+          type: :yes,
         }
       end
       unless opts[:'skip-dependency']
         questions << {
-          name:     'dependency',
+          name: 'dependency',
           question: 'Do you want to run the dependency-checker on this module?',
-          type:     :yes,
+          type: :yes,
         }
       end
       unless opts[:'skip-documentation']
         questions << {
-          name:     'documentation',
+          name: 'documentation',
           question: 'Do you want to update the documentation for this module?',
-          type:     :yes,
+          type: :yes,
         }
       end
       unless opts[:'skip-publish']
         questions << {
-          name:     'publish',
+          name: 'publish',
           question: 'Do you want to publish the module on the Puppet Forge?',
-          type:     :yes,
+          type: :yes,
         }
       end
 
@@ -154,10 +154,10 @@ module PDK::CLI
     def self.prepare_version_interview(prompt, opts)
       questions = [
         {
-          name:             'version',
-          question:         'Please set the module version',
-          help:             'This value is the version that will be used in the changelog generator and building of the module.',
-          required:         true,
+          name: 'version',
+          question: 'Please set the module version',
+          help: 'This value is the version that will be used in the changelog generator and building of the module.',
+          required: true,
           validate_pattern: %r{(\*|\d+(\.\d+){0,2}(\.\*)?)$}i,
           validate_message: 'The version format should be in the format x.y.z where x represents the major version, y the minor version and z the build number.',
         },
@@ -173,10 +173,10 @@ module PDK::CLI
 
       questions = [
         {
-          name:             'apikey',
-          question:         'Please set the api key(authorization token) to upload on the Puppet Forge',
-          help:             'This value is used for authentication on the Puppet Forge to upload your module tarball.',
-          required:         true,
+          name: 'apikey',
+          question: 'Please set the api key(authorization token) to upload on the Puppet Forge',
+          help: 'This value is used for authentication on the Puppet Forge to upload your module tarball.',
+          required: true,
         },
       ]
       interview = PDK::CLI::Util::Interview.new(prompt)

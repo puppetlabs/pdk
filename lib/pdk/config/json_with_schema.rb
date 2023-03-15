@@ -22,7 +22,7 @@ module PDK
         rescue ::JSON::Schema::ValidationError => e
           raise PDK::Config::LoadError, 'The configuration file %{filename} is not valid: %{message}' % {
             filename: filename,
-            message:  e.message,
+            message: e.message,
           }
         end
 

@@ -26,7 +26,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
   it 'defines the ExternalCommandValidator attributes' do
     expect(validator).to have_attributes(
       name: 'rubocop',
-      cmd:  'rubocop',
+      cmd: 'rubocop',
     )
     expect(validator.spinner_text_for_targets(nil)).to match(%r{ruby code style}i)
   end
@@ -88,15 +88,15 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
 
     def mock_offense(severity, message, cop_name, corrected, line, column)
       OpenStruct.new(
-        severity:    OpenStruct.new(name: severity),
-        message:     message,
-        cop_name:    cop_name,
-        corrected?:  corrected,
-        line:        line,
-        last_line:   line,
+        severity: OpenStruct.new(name: severity),
+        message: message,
+        cop_name: cop_name,
+        corrected?: corrected,
+        line: line,
+        last_line: line,
         real_column: column,
         last_column: column,
-        location:    OpenStruct.new(length: 0),
+        location: OpenStruct.new(length: 0),
       )
     end
 
@@ -125,9 +125,9 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
 
       it 'adds a passing event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     test_file,
-          source:   validator.name,
-          state:    :passed,
+          file: test_file,
+          source: validator.name,
+          state: :passed,
           severity: :ok,
         )
 
@@ -148,14 +148,14 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     test_file,
-          source:   validator.name,
-          state:    :failure,
+          file: test_file,
+          source: validator.name,
+          state: :failure,
           severity: 'error',
-          message:  'test message',
-          line:     1,
-          column:   2,
-          test:     'Test/Cop',
+          message: 'test message',
+          line: 1,
+          column: 2,
+          test: 'Test/Cop',
         )
 
         parse_output
@@ -170,14 +170,14 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
 
         it 'changes the severity of the event to "corrected"' do
           expect(report).to receive(:add_event).with(
-            file:     test_file,
-            source:   validator.name,
-            state:    :failure,
+            file: test_file,
+            source: validator.name,
+            state: :failure,
             severity: 'corrected',
-            message:  'test message',
-            line:     1,
-            column:   2,
-            test:     'Test/Cop',
+            message: 'test message',
+            line: 1,
+            column: 2,
+            test: 'Test/Cop',
           )
 
           parse_output
@@ -189,7 +189,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       let(:test_files) do
         {
           File.join('spec', 'spec_helper.rb') => [],
-          File.join('lib', 'fail.rb')         => [
+          File.join('lib', 'fail.rb') => [
             mock_offense('error', 'correctable error', 'Test/Cop', true, 1, 2),
             mock_offense('warning', 'uncorrectable thing', 'Test/Cop2', false, 3, 4),
           ],
@@ -205,9 +205,9 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
 
       it 'adds a passing event to the report for the file with no offenses' do
         expect(report).to receive(:add_event).with(
-          file:     File.join('spec', 'spec_helper.rb'),
-          source:   validator.name,
-          state:    :passed,
+          file: File.join('spec', 'spec_helper.rb'),
+          source: validator.name,
+          state: :passed,
           severity: :ok,
         )
 
@@ -216,14 +216,14 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
 
       it 'adds a corrected failure event to the report for the file with offenses' do
         expect(report).to receive(:add_event).with(
-          file:     File.join('lib', 'fail.rb'),
-          source:   validator.name,
-          state:    :failure,
+          file: File.join('lib', 'fail.rb'),
+          source: validator.name,
+          state: :failure,
           severity: 'corrected',
-          message:  'correctable error',
-          line:     1,
-          column:   2,
-          test:     'Test/Cop',
+          message: 'correctable error',
+          line: 1,
+          column: 2,
+          test: 'Test/Cop',
         )
 
         parse_output
@@ -231,14 +231,14 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
 
       it 'adds a failure event to the report for the file with offenses' do
         expect(report).to receive(:add_event).with(
-          file:     File.join('lib', 'fail.rb'),
-          source:   validator.name,
-          state:    :failure,
+          file: File.join('lib', 'fail.rb'),
+          source: validator.name,
+          state: :failure,
           severity: 'warning',
-          message:  'uncorrectable thing',
-          line:     3,
-          column:   4,
-          test:     'Test/Cop2',
+          message: 'uncorrectable thing',
+          line: 3,
+          column: 4,
+          test: 'Test/Cop2',
         )
 
         parse_output

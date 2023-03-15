@@ -143,11 +143,11 @@ module PDK
         skipped.each do |skipped_target|
           PDK.logger.debug('%{validator}: Skipped \'%{target}\'. Target does not contain any files to validate (%{pattern}).' % { validator: name, target: skipped_target, pattern: pattern })
           report.add_event(
-            file:     skipped_target,
-            source:   name,
-            message:  'Target does not contain any files to validate (%{pattern}).' % { pattern: pattern },
+            file: skipped_target,
+            source: name,
+            message: 'Target does not contain any files to validate (%{pattern}).' % { pattern: pattern },
             severity: :info,
-            state:    :skipped,
+            state: :skipped,
           )
         end
       end
@@ -159,11 +159,11 @@ module PDK
         invalid.each do |invalid_target|
           PDK.logger.debug('%{validator}: Skipped \'%{target}\'. Target file not found.' % { validator: name, target: invalid_target })
           report.add_event(
-            file:     invalid_target,
-            source:   name,
-            message:  'File does not exist.',
+            file: invalid_target,
+            source: name,
+            message: 'File does not exist.',
             severity: :error,
-            state:    :error,
+            state: :error,
           )
         end
       end

@@ -40,7 +40,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(['validate']) }.to exit_zero
@@ -63,9 +63,9 @@ describe 'Running `pdk validate` in a module' do
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'validate',
-          cli_options:   'parallel=true',
+          cli_options: 'parallel=true',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
 
         expect { PDK::CLI.run(['validate', '--parallel']) }.to exit_zero
@@ -83,9 +83,9 @@ describe 'Running `pdk validate` in a module' do
     it 'submits the command to analytics' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
-        cli_options:   'list=true',
+        cli_options: 'list=true',
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(['validate', '--list']) }.to exit_zero
@@ -108,7 +108,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate_metadata',
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(%w[validate metadata]) }.to exit_zero
@@ -131,7 +131,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate_metadata_puppet',
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(['validate', 'puppet,metadata']) }.to exit_zero
@@ -157,7 +157,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate_puppet',
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(['validate', 'puppet,bad-val']) }.to exit_zero
@@ -182,7 +182,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate_metadata',
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(['validate', 'metadata', 'lib/', 'manifests/']) }.to exit_zero
@@ -209,7 +209,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(['validate', 'lib/', 'manifests/']) }.to exit_zero
@@ -228,7 +228,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(['validate']) }.to exit_zero
@@ -247,7 +247,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'junit',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(['validate', '--format', 'junit']) }.to exit_zero
@@ -269,7 +269,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'junit,text',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect {
@@ -310,9 +310,9 @@ describe 'Running `pdk validate` in a module' do
     it 'submits the command to analytics' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
-        cli_options:   'puppet-dev=true',
+        cli_options: 'puppet-dev=true',
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect { PDK::CLI.run(['validate', '--puppet-dev']) }.to exit_zero
@@ -405,9 +405,9 @@ describe 'Running `pdk validate` in a module' do
     it 'submits the command to analytics' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
-        cli_options:   "puppet-version=#{puppet_version}",
+        cli_options: "puppet-version=#{puppet_version}",
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect {
@@ -448,9 +448,9 @@ describe 'Running `pdk validate` in a module' do
     it 'submits the command to analytics' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
-        cli_options:   "pe-version=#{pe_version}",
+        cli_options: "pe-version=#{pe_version}",
         output_format: 'default',
-        ruby_version:  RUBY_VERSION,
+        ruby_version: RUBY_VERSION,
       )
 
       expect {

@@ -10,7 +10,7 @@ module PDK::CLI
       require 'pdk/generate/task'
 
       PDK::CLI::Util.ensure_in_module!(
-        message:   'Tasks can only be created from inside a valid module directory.',
+        message: 'Tasks can only be created from inside a valid module directory.',
         log_level: :info,
       )
 

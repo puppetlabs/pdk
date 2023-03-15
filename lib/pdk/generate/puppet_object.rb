@@ -124,7 +124,7 @@ module PDK
         absolute_file_path = File.join(context.root_path, relative_dest_path)
         if PDK::Util::Filesystem.exist?(absolute_file_path)
           raise PDK::CLI::ExitWithError, "Unable to generate %{object_type}; '%{file}' already exists." % {
-            file:        absolute_file_path,
+            file: absolute_file_path,
             object_type: spec_only? ? 'unit test' : friendly_name,
           }
         end

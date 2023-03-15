@@ -9,7 +9,7 @@ describe PDK::Util do
     instance_double(
       PDK::Module::Metadata,
       data: {
-        'pdk-version'  => pdk_version,
+        'pdk-version' => pdk_version,
         'template-url' => template_url,
         'template-ref' => template_ref,
       },

@@ -42,14 +42,14 @@ describe 'pdk validate metadata', module_command: true do
           its(:content) do
             is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
               'failures' => eq(1),
-              'tests'    => eq(1),
+              'tests' => eq(1),
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
               'classname' => 'metadata-json-lint.dependencies',
-              'name'      => 'metadata.json',
+              'name' => 'metadata.json',
             ).that_failed
           end
         end

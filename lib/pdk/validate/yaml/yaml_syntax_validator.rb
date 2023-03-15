@@ -43,11 +43,11 @@ module PDK
 
           unless PDK::Util::Filesystem.readable?(target)
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              message:  'Could not be read.',
+              message: 'Could not be read.',
             )
             return 1
           end
@@ -56,21 +56,21 @@ module PDK
             ::YAML.safe_load(PDK::Util::Filesystem.read_file(target), YAML_ALLOWLISTED_CLASSES, [], true)
 
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :passed,
+              file: target,
+              source: name,
+              state: :passed,
               severity: 'ok',
             )
             return 0
           rescue Psych::SyntaxError => e
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              line:     e.line,
-              column:   e.column,
-              message:  '%{problem} %{context}' % {
+              line: e.line,
+              column: e.column,
+              message: '%{problem} %{context}' % {
                 problem: e.problem,
                 context: e.context,
               },
@@ -78,11 +78,11 @@ module PDK
             return 1
           rescue Psych::DisallowedClass => e
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              message:  'Unsupported class: %{message}' % {
+              message: 'Unsupported class: %{message}' % {
                 message: e.message,
               },
             )

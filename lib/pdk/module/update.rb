@@ -120,10 +120,10 @@ module PDK
                         end
 
         format_string % {
-          module_name:     module_metadata.data['name'],
-          template_url:    template_uri.bare_uri,
+          module_name: module_metadata.data['name'],
+          template_url: template_uri.bare_uri,
           current_version: current_version,
-          new_version:     new_version,
+          new_version: new_version,
         }
       end
     end

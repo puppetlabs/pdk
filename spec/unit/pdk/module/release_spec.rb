@@ -62,12 +62,12 @@ describe PDK::Module::Release do
     context 'when skipping everything' do
       let(:options) do
         {
-          :'skip-validation'    => true,
-          :'skip-changelog'     => true,
+          :'skip-validation' => true,
+          :'skip-changelog' => true,
           :'skip-documentation' => true,
-          :'skip-dependency'    => true,
-          :'skip-build'         => true,
-          :'skip-publish'       => true,
+          :'skip-dependency' => true,
+          :'skip-build' => true,
+          :'skip-publish' => true,
         }
       end
 
@@ -86,9 +86,9 @@ describe PDK::Module::Release do
     context 'when skipping nothing and forcing the release' do
       let(:options) do
         {
-          :force              => true,
+          :force => true,
           :'forge-upload-url' => 'https://localhost/api',
-          :'forge-token'      => '12345',
+          :'forge-token' => '12345',
         }
       end
 

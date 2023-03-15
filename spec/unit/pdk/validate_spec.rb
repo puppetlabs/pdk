@@ -54,8 +54,8 @@ describe PDK::Validate do
     let(:validation_options) { {} }
     let(:mock_hash) do
       {
-        'mocksuccess'   => MockSuccessValidator,
-        'mockfailed'    => MockFailedValidator,
+        'mocksuccess' => MockSuccessValidator,
+        'mockfailed' => MockFailedValidator,
         'mocknocontext' => MockNoContextValidator,
       }
     end

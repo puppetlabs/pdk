@@ -3,7 +3,7 @@ require 'pdk/config/namespace'
 
 def spec_simple_validator
   {
-    proc:    ->(value) { value.match(%r{(bar|baz)}) },
+    proc: ->(value) { value.match(%r{(bar|baz)}) },
     message: 'must be bar or baz',
   }
 end

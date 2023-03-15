@@ -17,7 +17,7 @@ module PDK::CLI
 
       # Make sure build is being run in a valid module directory with a metadata.json
       PDK::CLI::Util.ensure_in_module!(
-        message:   '`pdk build` can only be run from inside a valid module with a metadata.json.',
+        message: '`pdk build` can only be run from inside a valid module with a metadata.json.',
         log_level: :info,
       )
 
@@ -63,7 +63,7 @@ module PDK::CLI
       end
 
       PDK.logger.info 'Building %{module_name} version %{module_version}' % {
-        module_name:    module_metadata.data['name'],
+        module_name: module_metadata.data['name'],
         module_version: module_metadata.data['version'],
       }
 

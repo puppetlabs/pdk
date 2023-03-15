@@ -28,11 +28,11 @@ describe PDK::Validate::Tasks::TasksNameValidator do
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target,
-          source:   'task-name',
-          state:    :failure,
+          file: target,
+          source: 'task-name',
+          state: :failure,
           severity: 'error',
-          message:  described_class::INVALID_TASK_MSG,
+          message: described_class::INVALID_TASK_MSG,
         )
       end
 
@@ -46,11 +46,11 @@ describe PDK::Validate::Tasks::TasksNameValidator do
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target,
-          source:   'task-name',
-          state:    :failure,
+          file: target,
+          source: 'task-name',
+          state: :failure,
           severity: 'error',
-          message:  described_class::INVALID_TASK_MSG,
+          message: described_class::INVALID_TASK_MSG,
         )
       end
 
@@ -64,9 +64,9 @@ describe PDK::Validate::Tasks::TasksNameValidator do
 
       it 'adds a passing event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target,
-          source:   'task-name',
-          state:    :passed,
+          file: target,
+          source: 'task-name',
+          state: :passed,
           severity: 'ok',
         )
       end

@@ -99,9 +99,9 @@ describe 'PDK::CLI new test' do
 
           expect(analytics).to receive(:screen_view).with(
             'new_test',
-            cli_options:   'unit=true',
+            cli_options: 'unit=true',
             output_format: 'default',
-            ruby_version:  RUBY_VERSION,
+            ruby_version: RUBY_VERSION,
           )
         end
       end
@@ -121,9 +121,9 @@ describe 'PDK::CLI new test' do
 
           expect(analytics).to receive(:screen_view).with(
             'new_test',
-            cli_options:   'unit=true',
+            cli_options: 'unit=true',
             output_format: 'default',
-            ruby_version:  RUBY_VERSION,
+            ruby_version: RUBY_VERSION,
           )
         end
       end

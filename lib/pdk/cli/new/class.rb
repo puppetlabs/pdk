@@ -8,7 +8,7 @@ module PDK::CLI
       require 'pdk/generate/puppet_class'
 
       PDK::CLI::Util.ensure_in_module!(
-        message:   'Classes can only be created from inside a valid module directory.',
+        message: 'Classes can only be created from inside a valid module directory.',
         log_level: :info,
       )
 

@@ -87,7 +87,7 @@ describe PDK::Util::TemplateURI do
         instance_double(
           PDK::Module::Metadata,
           data: {
-            'pdk-version'  => pdk_version,
+            'pdk-version' => pdk_version,
             'template-url' => template_url,
             'template-ref' => template_ref,
           },
@@ -392,10 +392,10 @@ describe PDK::Util::TemplateURI do
         it 'parses into an Addressable::URI without port set' do
           expect(cli_template_uri).to have_attributes(
             scheme: 'ssh',
-            user:   'git',
-            host:   'github.com',
-            port:   nil,
-            path:   '/1234/repo.git',
+            user: 'git',
+            host: 'github.com',
+            port: nil,
+            path: '/1234/repo.git',
           )
         end
       end
@@ -406,10 +406,10 @@ describe PDK::Util::TemplateURI do
         it 'parses into an Addressable::URI with port set' do
           expect(cli_template_uri).to have_attributes(
             scheme: 'ssh',
-            user:   'git',
-            host:   'github.com',
-            port:   1234,
-            path:   '/user/repo.git',
+            user: 'git',
+            host: 'github.com',
+            port: 1234,
+            path: '/user/repo.git',
           )
         end
       end
@@ -420,10 +420,10 @@ describe PDK::Util::TemplateURI do
         it 'parses into an Addressable::URI without port set' do
           expect(cli_template_uri).to have_attributes(
             scheme: 'ssh',
-            user:   'git',
-            host:   'github.com',
-            port:   nil,
-            path:   '/user/repo.git',
+            user: 'git',
+            host: 'github.com',
+            port: nil,
+            path: '/user/repo.git',
           )
         end
       end
@@ -434,10 +434,10 @@ describe PDK::Util::TemplateURI do
         it 'parses the numeric part as part of the path' do
           expect(cli_template_uri).to have_attributes(
             scheme: 'ssh',
-            user:   'git',
-            host:   'github.com',
-            port:   nil,
-            path:   '/1234/repo.git',
+            user: 'git',
+            host: 'github.com',
+            port: nil,
+            path: '/1234/repo.git',
           )
         end
       end
@@ -453,8 +453,8 @@ describe PDK::Util::TemplateURI do
 
         it 'converts it to the new default template URL' do
           is_expected.to include(
-            type:           'PDK answers',
-            uri:            Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'),
+            type: 'PDK answers',
+            uri: Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'),
             allow_fallback: true,
           )
         end
@@ -465,8 +465,8 @@ describe PDK::Util::TemplateURI do
 
         it 'uses the template as specified' do
           is_expected.to include(
-            type:           'PDK answers',
-            uri:            Addressable::URI.parse(answers_template_url),
+            type: 'PDK answers',
+            uri: Addressable::URI.parse(answers_template_url),
             allow_fallback: true,
           )
         end
@@ -488,7 +488,7 @@ describe PDK::Util::TemplateURI do
         instance_double(
           PDK::Module::Metadata,
           data: {
-            'pdk-version'  => PDK::VERSION,
+            'pdk-version' => PDK::VERSION,
             'template-url' => metadata_url,
           },
         )
@@ -521,11 +521,11 @@ describe PDK::Util::TemplateURI do
         it 'converts the URL to and ssh:// URI' do
           is_expected.to include(
             type: 'metadata.json',
-            uri:  Addressable::URI.new(
+            uri: Addressable::URI.new(
               scheme: 'ssh',
-              user:   'git',
-              host:   'github.com',
-              path:   '/puppetlabs/pdk-templates.git',
+              user: 'git',
+              host: 'github.com',
+              path: '/puppetlabs/pdk-templates.git',
             ),
             allow_fallback: true,
           )

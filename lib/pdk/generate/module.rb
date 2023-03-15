@@ -49,7 +49,7 @@ module PDK
         else
           PDK.logger.info "Using the %{method} template-url and template-ref '%{template_uri}'." % {
             method: opts.key?(:'template-url') ? 'specified' : 'saved',
-              template_uri: template_uri.metadata_format,
+            template_uri: template_uri.metadata_format,
           }
         end
 
@@ -104,8 +104,8 @@ module PDK
           end
         rescue Errno::EACCES => e
           raise PDK::CLI::FatalError, "Failed to move '%{source}' to '%{target}': %{message}" % {
-            source:  temp_target_dir,
-            target:  target_dir,
+            source: temp_target_dir,
+            target: target_dir,
             message: e.message,
           }
         end
@@ -158,7 +158,7 @@ module PDK
             PDK::Util::Filesystem.mkdir_p(dir)
           rescue SystemCallError => e
             raise PDK::CLI::FatalError, "Unable to create directory '%{dir}': %{message}" % {
-              dir:     dir,
+              dir: dir,
               message: e.message,
             }
           end
@@ -171,86 +171,86 @@ module PDK
 
         questions = [
           {
-            name:             'module_name',
-            question:         'If you have a name for your module, add it here.',
-            help:             'This is the name that will be associated with your module, it should be relevant to the modules content.',
-            required:         true,
+            name: 'module_name',
+            question: 'If you have a name for your module, add it here.',
+            help: 'This is the name that will be associated with your module, it should be relevant to the modules content.',
+            required: true,
             validate_pattern: %r{\A[a-z][a-z0-9_]*\Z}i,
             validate_message: 'Module names must begin with a lowercase letter and can only include lowercase letters, numbers, and underscores.',
           },
           {
-            name:             'forge_username',
-            question:         'If you have a Puppet Forge username, add it here.',
-            help:             'We can use this to upload your module to the Forge when it\'s complete.',
-            required:         true,
+            name: 'forge_username',
+            question: 'If you have a Puppet Forge username, add it here.',
+            help: 'We can use this to upload your module to the Forge when it\'s complete.',
+            required: true,
             validate_pattern: %r{\A[a-z0-9]+\Z}i,
             validate_message: 'Forge usernames can only contain lowercase letters and numbers',
-            default:          opts[:username],
+            default: opts[:username],
           },
           {
-            name:             'version',
-            question:         'What version is this module?',
-            help:             'Puppet uses Semantic Versioning (semver.org) to version modules.',
-            required:         true,
+            name: 'version',
+            question: 'What version is this module?',
+            help: 'Puppet uses Semantic Versioning (semver.org) to version modules.',
+            required: true,
             validate_pattern: %r{\A[0-9]+\.[0-9]+\.[0-9]+}i,
             validate_message: 'Semantic Version numbers must be in the form MAJOR.MINOR.PATCH',
-            default:          metadata.data['version'],
-            forge_only:       true,
+            default: metadata.data['version'],
+            forge_only: true,
           },
           {
-            name:     'author',
+            name: 'author',
             question: 'Who wrote this module?',
-            help:     'This is used to credit the module\'s author.',
+            help: 'This is used to credit the module\'s author.',
             required: true,
-            default:  metadata.data['author'],
+            default: metadata.data['author'],
           },
           {
-            name:     'license',
+            name: 'license',
             question: 'What license does this module code fall under?',
-            help:     'This should be an identifier from https://spdx.org/licenses/. Common values are "Apache-2.0", "MIT", or "proprietary".',
+            help: 'This should be an identifier from https://spdx.org/licenses/. Common values are "Apache-2.0", "MIT", or "proprietary".',
             required: true,
-            default:  metadata.data['license'],
+            default: metadata.data['license'],
           },
           {
-            name:     'operatingsystem_support',
+            name: 'operatingsystem_support',
             question: 'What operating systems does this module support?',
-            help:     'Use the up and down keys to move between the choices, space to select and enter to continue.',
+            help: 'Use the up and down keys to move between the choices, space to select and enter to continue.',
             required: true,
-            type:     :multi_select,
-            choices:  PDK::Module::Metadata::OPERATING_SYSTEMS,
-            default:  PDK::Module::Metadata::DEFAULT_OPERATING_SYSTEMS.map do |os_name|
+            type: :multi_select,
+            choices: PDK::Module::Metadata::OPERATING_SYSTEMS,
+            default: PDK::Module::Metadata::DEFAULT_OPERATING_SYSTEMS.map do |os_name|
               # tty-prompt uses a 1-index
               PDK::Module::Metadata::OPERATING_SYSTEMS.keys.index(os_name) + 1
             end,
           },
           {
-            name:       'summary',
-            question:   'Summarize the purpose of this module in a single sentence.',
-            help:       'This helps other Puppet users understand what the module does.',
-            required:   true,
-            default:    metadata.data['summary'],
+            name: 'summary',
+            question: 'Summarize the purpose of this module in a single sentence.',
+            help: 'This helps other Puppet users understand what the module does.',
+            required: true,
+            default: metadata.data['summary'],
             forge_only: true,
           },
           {
-            name:       'source',
-            question:   'If there is a source code repository for this module, enter the URL here.',
-            help:       'Skip this if no repository exists yet. You can update this later in the metadata.json.',
-            required:   true,
-            default:    metadata.data['source'],
+            name: 'source',
+            question: 'If there is a source code repository for this module, enter the URL here.',
+            help: 'Skip this if no repository exists yet. You can update this later in the metadata.json.',
+            required: true,
+            default: metadata.data['source'],
             forge_only: true,
           },
           {
-            name:       'project_page',
-            question:   'If there is a URL where others can learn more about this module, enter it here.',
-            help:       'Optional. You can update this later in the metadata.json.',
-            default:    metadata.data['project_page'],
+            name: 'project_page',
+            question: 'If there is a URL where others can learn more about this module, enter it here.',
+            help: 'Optional. You can update this later in the metadata.json.',
+            default: metadata.data['project_page'],
             forge_only: true,
           },
           {
-            name:       'issues_url',
-            question:   'If there is a public issue tracker for this module, enter its URL here.',
-            help:       'Optional. You can update this later in the metadata.json.',
-            default:    metadata.data['issues_url'],
+            name: 'issues_url',
+            question: 'If there is a public issue tracker for this module, enter its URL here.',
+            help: 'Optional. You can update this later in the metadata.json.',
+            default: metadata.data['issues_url'],
             forge_only: true,
           },
         ]
@@ -321,7 +321,7 @@ module PDK
 
           continue = PDK::CLI::Util.prompt_for_yes(
             'Metadata will be generated based on this information, continue?',
-            prompt:         prompt,
+            prompt: prompt,
             cancel_message: 'Interview cancelled; exiting.',
           )
 

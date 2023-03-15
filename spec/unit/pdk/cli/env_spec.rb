@@ -30,7 +30,7 @@ describe 'Running `pdk env`' do
         expect(analytics).to receive(:screen_view).with(
           'env',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
 

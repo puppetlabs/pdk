@@ -96,7 +96,7 @@ describe 'PDK::CLI convert' do
         expect(analytics).to receive(:screen_view).with(
           'convert',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -113,9 +113,9 @@ describe 'PDK::CLI convert' do
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'convert',
-          cli_options:   'template-url=redacted',
+          cli_options: 'template-url=redacted',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -132,9 +132,9 @@ describe 'PDK::CLI convert' do
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'convert',
-          cli_options:   'template-url=redacted,template-ref=redacted',
+          cli_options: 'template-url=redacted,template-ref=redacted',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -151,9 +151,9 @@ describe 'PDK::CLI convert' do
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'convert',
-          cli_options:   'noop=true',
+          cli_options: 'noop=true',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -170,9 +170,9 @@ describe 'PDK::CLI convert' do
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'convert',
-          cli_options:   'force=true',
+          cli_options: 'force=true',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -203,9 +203,9 @@ describe 'PDK::CLI convert' do
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'convert',
-          cli_options:   'skip-interview=true',
+          cli_options: 'skip-interview=true',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -222,9 +222,9 @@ describe 'PDK::CLI convert' do
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'convert',
-          cli_options:   'full-interview=true',
+          cli_options: 'full-interview=true',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -242,9 +242,9 @@ describe 'PDK::CLI convert' do
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'convert',
-          cli_options:   'skip-interview=true,full-interview=true',
+          cli_options: 'skip-interview=true,full-interview=true',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -262,9 +262,9 @@ describe 'PDK::CLI convert' do
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'convert',
-          cli_options:   'force=true,full-interview=true',
+          cli_options: 'force=true,full-interview=true',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -308,9 +308,9 @@ describe 'PDK::CLI convert' do
         it 'submits the command to analytics' do
           expect(analytics).to receive(:screen_view).with(
             'convert',
-            cli_options:   'default-template=true,template-url=redacted',
+            cli_options: 'default-template=true,template-url=redacted',
             output_format: 'default',
-            ruby_version:  RUBY_VERSION,
+            ruby_version: RUBY_VERSION,
           )
           run
         end

@@ -31,9 +31,9 @@ describe 'pdk new defined_type', module_command: true do
         its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a defined type',
-                        name:     'new_define',
+                        name: 'new_define',
                         manifest: File.join('manifests', 'init.pp'),
-                        spec:     File.join('spec', 'defines', 'new_define_spec.rb')
+                        spec: File.join('spec', 'defines', 'new_define_spec.rb')
       end
     end
 
@@ -46,9 +46,9 @@ describe 'pdk new defined_type', module_command: true do
         its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a defined type',
-                        name:     'new_define::ancillary',
+                        name: 'new_define::ancillary',
                         manifest: File.join('manifests', 'ancillary.pp'),
-                        spec:     File.join('spec', 'defines', 'ancillary_spec.rb')
+                        spec: File.join('spec', 'defines', 'ancillary_spec.rb')
       end
     end
 
@@ -61,9 +61,9 @@ describe 'pdk new defined_type', module_command: true do
         its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a defined type',
-                        name:     'new_define::foo::bar::baz',
+                        name: 'new_define::foo::bar::baz',
                         manifest: File.join('manifests', 'foo', 'bar', 'baz.pp'),
-                        spec:     File.join('spec', 'defines', 'foo', 'bar', 'baz_spec.rb')
+                        spec: File.join('spec', 'defines', 'foo', 'bar', 'baz_spec.rb')
       end
     end
   end

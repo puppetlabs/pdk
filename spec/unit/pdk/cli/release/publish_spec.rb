@@ -58,11 +58,11 @@ describe 'PDK::CLI release publish' do
       expect(PDK::Module::Release).to receive(:new).with(
         Object,
         hash_including(
-          :'skip-validation'    => true,
-          :'skip-changelog'     => true,
-          :'skip-dependency'    => true,
+          :'skip-validation' => true,
+          :'skip-changelog' => true,
+          :'skip-dependency' => true,
           :'skip-documentation' => true,
-          :'skip-build'         => true,
+          :'skip-build' => true,
         ),
       )
 

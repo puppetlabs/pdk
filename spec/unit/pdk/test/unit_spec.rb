@@ -204,7 +204,7 @@ describe PDK::Test::Unit do
       let(:json) do
         { 'summary' => {
           'example_count' => 30,
-          'duration'      => 32,
+          'duration' => 32,
           'failure_count' => 2,
           'pending_count' => 6,
         } }
@@ -306,7 +306,7 @@ describe PDK::Test::Unit do
       let(:command) do
         instance_double(
           PDK::CLI::Exec::InteractiveCommand,
-          :context=     => true,
+          :context= => true,
           :environment= => true,
         )
       end
@@ -375,7 +375,7 @@ describe PDK::Test::Unit do
         let(:options) do
           {
             :'clean-fixtures' => true,
-            :tests            => 'testmod_spec.rb',
+            :tests => 'testmod_spec.rb',
           }
         end
 

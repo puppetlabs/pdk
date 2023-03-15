@@ -87,7 +87,7 @@ describe 'PDK::CLI new defined_type' do
         expect(analytics).to receive(:screen_view).with(
           'new_defined_type',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end

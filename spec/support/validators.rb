@@ -8,9 +8,9 @@ class MockSuccessValidator < PDK::Validate::Validator
 
   def invoke(report)
     report.add_event(
-      file:     'pass.txt',
-      source:   name,
-      state:    :passed,
+      file: 'pass.txt',
+      source: name,
+      state: :passed,
       severity: 'ok',
     )
 
@@ -41,11 +41,11 @@ class MockFailedValidator < PDK::Validate::Validator
 
   def invoke(report)
     report.add_event(
-      file:     'fail.txt',
-      source:   name,
-      state:    :failure,
+      file: 'fail.txt',
+      source: name,
+      state: :failure,
       severity: 'error',
-      message:  'Mock Failure',
+      message: 'Mock Failure',
     )
 
     1
@@ -60,11 +60,11 @@ class MockAnotherFailedValidator < PDK::Validate::Validator
 
   def invoke(report)
     report.add_event(
-      file:     'another_fail.txt',
-      source:   name,
-      state:    :failure,
+      file: 'another_fail.txt',
+      source: name,
+      state: :failure,
       severity: 'error',
-      message:  'Another Mock Failure',
+      message: 'Another Mock Failure',
     )
 
     2

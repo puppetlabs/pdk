@@ -4,10 +4,10 @@ require 'pdk/validate/tasks/tasks_name_validator'
 describe PDK::Validate::Tasks::TasksMetadataLintValidator do
   let(:schema) do
     {
-      'title'       => 'Puppet Task Metadata',
+      'title' => 'Puppet Task Metadata',
       'description' => 'The metadata format for Puppet Tasks',
-      'type'        => 'object',
-      'properties'  => {
+      'type' => 'object',
+      'properties' => {
         'description' => {
           'type' => 'string',
         },
@@ -51,11 +51,11 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target[:name],
-          source:   'task-metadata-lint',
-          state:    :failure,
+          file: target[:name],
+          source: 'task-metadata-lint',
+          state: :failure,
           severity: 'error',
-          message:  'Could not be read.',
+          message: 'Could not be read.',
         )
         expect(return_value).to eq(1)
       end
@@ -64,16 +64,16 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
     context 'when a target is provided that contains valid JSON' do
       let(:target) do
         {
-          name:    'tasks/valid.json',
+          name: 'tasks/valid.json',
           content: '{"description": "wow. so. valid.", "version": 1}',
         }
       end
 
       it 'adds a passing event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target[:name],
-          source:   'task-metadata-lint',
-          state:    :passed,
+          file: target[:name],
+          source: 'task-metadata-lint',
+          state: :passed,
           severity: 'ok',
         )
         expect(return_value).to eq(0)
@@ -83,18 +83,18 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
     context 'when a target is provided that contains invalid JSON' do
       let(:target) do
         {
-          name:    'tasks/invalid.json',
+          name: 'tasks/invalid.json',
           content: '{"description": "Invalid Metadata", "version": "definitely the wrong type"}',
         }
       end
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target[:name],
-          source:   'task-metadata-lint',
-          state:    :failure,
+          file: target[:name],
+          source: 'task-metadata-lint',
+          state: :failure,
           severity: 'error',
-          message:  a_string_matching(%r{did not match the following type}i),
+          message: a_string_matching(%r{did not match the following type}i),
         )
         expect(return_value).to eq(1)
       end

@@ -15,9 +15,9 @@ describe 'Running `pdk bundle`' do
     before(:each) do
       mock_command = instance_double(
         PDK::CLI::Exec::InteractiveCommand,
-        :context=           => true,
+        :context= => true,
         :update_environment => true,
-        :execute!           => command_result,
+        :execute! => command_result,
       )
       allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new)
         .with(PDK::CLI::Exec.bundle_bin, *(command_args[1..-1] || []))
@@ -37,7 +37,7 @@ describe 'Running `pdk bundle`' do
         expect(analytics).to receive(:screen_view).with(
           'bundle',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -49,7 +49,7 @@ describe 'Running `pdk bundle`' do
         expect(analytics).to receive(:screen_view).with(
           'bundle_config',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -61,7 +61,7 @@ describe 'Running `pdk bundle`' do
         expect(analytics).to receive(:screen_view).with(
           'bundle_exec_rspec',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end

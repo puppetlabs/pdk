@@ -35,9 +35,9 @@ module PDK
         def validate_target(report, target)
           unless PDK::Util::Filesystem.readable?(target)
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
               message: 'Could not be read.',
             )
@@ -59,9 +59,9 @@ module PDK
 
             if errors.empty?
               report.add_event(
-                file:     target,
-                source:   name,
-                state:    :passed,
+                file: target,
+                source: name,
+                state: :passed,
                 severity: 'ok',
               )
               return 0
@@ -71,11 +71,11 @@ module PDK
                 error = error.split('in schema').first if error.include? 'in schema'
 
                 report.add_event(
-                  file:     target,
-                  source:   name,
-                  state:    :failure,
+                  file: target,
+                  source: name,
+                  state: :failure,
                   severity: 'error',
-                  message:  error,
+                  message: error,
                 )
               end
               return 1

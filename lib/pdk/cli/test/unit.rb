@@ -27,7 +27,7 @@ module PDK::CLI
       PDK::CLI::Util.validate_puppet_version_opts(opts)
 
       PDK::CLI::Util.ensure_in_module!(
-        message:   'Unit tests can only be run from inside a valid module directory.',
+        message: 'Unit tests can only be run from inside a valid module directory.',
         log_level: :info,
       )
 

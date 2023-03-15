@@ -24,12 +24,12 @@ module PDK
         data.each { |k, v| yield k, PDK::Config::Setting.new(k, self, v) }
       rescue Psych::SyntaxError => e
         raise PDK::Config::LoadError, 'Syntax error when loading %{file}: %{error}' % {
-          file:  filename,
+          file: filename,
           error: "#{e.problem} #{e.context}",
         }
       rescue Psych::DisallowedClass => e
         raise PDK::Config::LoadError, 'Unsupported class in %{file}: %{error}' % {
-          file:  filename,
+          file: filename,
           error: e.message,
         }
       end

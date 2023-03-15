@@ -88,7 +88,7 @@ describe 'PDK::CLI new class' do
         expect(analytics).to receive(:screen_view).with(
           'new_class',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end

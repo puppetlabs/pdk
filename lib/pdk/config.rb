@@ -24,12 +24,12 @@ module PDK
     def initialize(options = nil)
       options = {} if options.nil?
       @config_options = {
-        'system.path'                 => PDK::Config.system_config_path,
+        'system.path' => PDK::Config.system_config_path,
         'system.module_defaults.path' => PDK::Config.system_answers_path,
-        'user.path'                   => PDK::Config.user_config_path,
-        'user.module_defaults.path'   => PDK::AnswerFile.default_answer_file_path,
-        'user.analytics.path'         => PDK::Config.analytics_config_path,
-        'context'                     => PDK.context,
+        'user.path' => PDK::Config.user_config_path,
+        'user.module_defaults.path' => PDK::AnswerFile.default_answer_file_path,
+        'user.analytics.path' => PDK::Config.analytics_config_path,
+        'context' => PDK.context,
       }.merge(options)
     end
 
@@ -197,7 +197,7 @@ module PDK
       PDK::Config::YAML.new(file: file)
     rescue PDK::Config::LoadError => e
       PDK.logger.debug 'Unable to load %{file}: %{message}' % {
-        file:    file,
+        file: file,
         message: e.message,
       }
       PDK::Config::YAML.new
@@ -247,14 +247,14 @@ module PDK
         'editing the analytics configuration file at %{path} and changing ' \
         "the '%{key}' value." % {
           path: PDK::Config.analytics_config_path,
-        key:  'disabled',
+          key: 'disabled',
         }
 
       questions = [
         {
-          name:     'enabled',
+          name: 'enabled',
           question: 'Do you consent to the collection of anonymous PDK usage information?',
-          type:     :yes,
+          type: :yes,
         },
       ]
 
@@ -320,8 +320,8 @@ module PDK
       # Note - Order is important. This dictates the resolution precedence order (topmost is processed first)
       {
         'project' => :project_config,
-        'user'    => :user_config,
-        'system'  => :system_config,
+        'user' => :user_config,
+        'system' => :system_config,
       }.freeze
     end
 

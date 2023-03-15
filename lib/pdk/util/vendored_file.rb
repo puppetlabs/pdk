@@ -49,7 +49,7 @@ module PDK
 
         PDK.logger.debug '%{file_name} was not found in the cache, downloading it from %{url}.' % {
           file_name: file_name,
-          url:       url,
+          url: url,
         }
 
         uri = URI.parse(url)
@@ -62,8 +62,8 @@ module PDK
 
         unless response.code == '200'
           raise DownloadError, 'Unable to download %{url}. %{code}: %{message}.' % {
-            url:     url,
-            code:    response.code,
+            url: url,
+            code: response.code,
             message: response.message,
           }
         end

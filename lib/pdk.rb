@@ -63,13 +63,13 @@ module PDK
 
   def self.analytics
     @analytics ||= PDK::Analytics.build_client(
-      logger:        PDK.logger,
-      disabled:      PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK.config.get_within_scopes('analytics.disabled', %w[user system]),
-      user_id:       PDK.config.get_within_scopes('analytics.user-id', %w[user system]),
-      app_id:        "UA-139917834-#{PDK::Util.development_mode? ? '2' : '1'}",
-      client:        :google_analytics,
-      app_name:      'pdk',
-      app_version:   PDK::VERSION,
+      logger: PDK.logger,
+      disabled: PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK.config.get_within_scopes('analytics.disabled', %w[user system]),
+      user_id: PDK.config.get_within_scopes('analytics.user-id', %w[user system]),
+      app_id: "UA-139917834-#{PDK::Util.development_mode? ? '2' : '1'}",
+      client: :google_analytics,
+      app_name: 'pdk',
+      app_version: PDK::VERSION,
       app_installer: PDK::Util.package_install? ? 'package' : 'gem',
     )
   end

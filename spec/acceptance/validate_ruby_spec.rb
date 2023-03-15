@@ -66,14 +66,14 @@ describe 'pdk validate ruby', module_command: true do
           its(:stdout) do
             is_expected.to have_junit_testsuite('rubocop').with_attributes(
               'failures' => a_value >= 1,
-              'tests'    => a_value >= 2,
+              'tests' => a_value >= 2,
             )
           end
 
           its(:stdout) do
             is_expected.to have_junit_testcase.in_testsuite('rubocop').with_attributes(
               'classname' => 'rubocop',
-              'name'      => File.join('spec', 'spec_helper.rb'),
+              'name' => File.join('spec', 'spec_helper.rb'),
             ).that_passed
           end
 

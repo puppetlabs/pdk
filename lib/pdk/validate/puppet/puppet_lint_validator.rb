@@ -40,23 +40,23 @@ module PDK
           # events to the report for any target not listed in the JSON output.
           targets.reject { |target| json_data.any? { |j| j['path'] == target } }.each do |target|
             report.add_event(
-              file:     target,
-              source:   name,
+              file: target,
+              source: name,
               severity: 'ok',
-              state:    :passed,
+              state: :passed,
             )
           end
 
           json_data.each do |offense|
             report.add_event(
-              file:     offense['path'],
-              source:   name,
-              line:     offense['line'],
-              column:   offense['column'],
-              message:  offense['message'],
-              test:     offense['check'],
+              file: offense['path'],
+              source: name,
+              line: offense['line'],
+              column: offense['column'],
+              message: offense['message'],
+              test: offense['check'],
               severity: (offense['kind'] == 'fixed') ? 'corrected' : offense['kind'],
-              state:    :failure,
+              state: :failure,
             )
           end
         end

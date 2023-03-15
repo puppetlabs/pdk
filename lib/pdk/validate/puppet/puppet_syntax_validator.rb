@@ -93,10 +93,10 @@ module PDK
           # events to the report for any target not listed in the output.
           targets.reject { |target| results_data.any? { |j| j[:file] =~ %r{#{target}} } }.each do |target|
             report.add_event(
-              file:     target,
-              source:   name,
+              file: target,
+              source: name,
               severity: :ok,
-              state:    :passed,
+              state: :passed,
             )
           end
 
@@ -109,8 +109,8 @@ module PDK
           sanitize_console_output(offense)
 
           offense_data = {
-            source:  name,
-            state:  :failure,
+            source: name,
+            state: :failure,
           }
 
           if offense.match(PUPPET_LOGGER_PREFIX)

@@ -7,7 +7,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
   it 'defines the base validator attributes' do
     expect(validator).to have_attributes(
       name: 'metadata-json-lint',
-      cmd:  'metadata-json-lint',
+      cmd: 'metadata-json-lint',
     )
   end
 
@@ -91,9 +91,9 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
 
       it 'adds a passing event for the target to the report' do
         expect(report).to receive(:add_event).with(
-          file:     targets.first,
-          source:   validator.name,
-          state:    :passed,
+          file: targets.first,
+          source: validator.name,
+          state: :passed,
           severity: :ok,
         )
 
@@ -120,12 +120,12 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
 
         errors.each do |error|
           expect(report).to receive(:add_event).with(
-            file:     targets.first,
-            source:   validator.name,
-            message:  error['msg'],
-            test:     error['check'],
+            file: targets.first,
+            source: validator.name,
+            message: error['msg'],
+            test: error['check'],
             severity: 'error',
-            state:    :failure,
+            state: :failure,
           )
         end
 
@@ -137,12 +137,12 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
 
         warnings.each do |warning|
           expect(report).to receive(:add_event).with(
-            file:     targets.first,
-            source:   validator.name,
-            message:  warning['msg'],
-            test:     warning['check'],
+            file: targets.first,
+            source: validator.name,
+            message: warning['msg'],
+            test: warning['check'],
             severity: 'warning',
-            state:    :failure,
+            state: :failure,
           )
         end
 

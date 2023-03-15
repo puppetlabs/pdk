@@ -12,9 +12,9 @@ describe PDK::Report::Event do
 
   let(:default_data) do
     {
-      file:   'testfile.rb',
+      file: 'testfile.rb',
       source: 'test-validator',
-      state:  :passed,
+      state: :passed,
     }
   end
 
@@ -124,8 +124,8 @@ describe PDK::Report::Event do
     methods = [:pass, :error, :failure, :skipped]
 
     {
-      passed:  :pass,
-      error:   :error,
+      passed: :pass,
+      error: :error,
       failure: :failure,
       skipped: :skipped,
     }.each do |state_sym, state_method|
@@ -378,7 +378,7 @@ describe PDK::Report::Event do
       context 'and a column number is provided' do
         let(:data) do
           {
-            line:   123,
+            line: 123,
             column: 456,
           }
         end
@@ -391,12 +391,12 @@ describe PDK::Report::Event do
       context 'it includes a snippet of the file for rspec events' do
         let(:data) do
           {
-            line:     4,
-            source:   'rspec',
-            message:  'test message',
+            line: 4,
+            source: 'rspec',
+            message: 'test message',
             severity: 'failure',
-            test:     'spec description',
-            state:    :failure,
+            test: 'spec description',
+            state: :failure,
           }
         end
 
@@ -480,7 +480,7 @@ describe PDK::Report::Event do
       context 'and a severity is provided' do
         let(:data) do
           {
-            message:  'test message',
+            message: 'test message',
             severity: 'critical',
           }
         end
@@ -540,7 +540,7 @@ describe PDK::Report::Event do
     context 'and both line and column numbers are provided' do
       let(:data) do
         {
-          line:   123,
+          line: 123,
           column: 456,
         }
       end
@@ -574,11 +574,11 @@ describe PDK::Report::Event do
     context 'for a failing test case' do
       let(:data) do
         {
-          state:     :failure,
-          line:      123,
-          column:    456,
+          state: :failure,
+          line: 123,
+          column: 456,
           severity: 'critical',
-          message:  'some message',
+          message: 'some message',
         }
       end
 

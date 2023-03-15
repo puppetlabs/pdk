@@ -48,10 +48,10 @@ def cri_to_powershell_hash(base_command)
   output = []
   # Mapping of PDK CRI command to PowerShell Verb
   pdk_to_powershell = {
-    'convert'  => 'ConvertTo',
-    'new'      => 'New',
-    'test'     => 'Test',
-    'update'   => 'Update',
+    'convert' => 'ConvertTo',
+    'new' => 'New',
+    'test' => 'Test',
+    'update' => 'Update',
     'validate' => 'Validate',
   }
 
@@ -69,9 +69,9 @@ def cri_to_powershell_hash(base_command)
       function_name += has_subcommands ? to_title_case(sub_command['name']) : 'Module'
 
       ps_command = {
-        'description'    => sub_command['summary'],
-        'pdk_verb'       => pdk_verb,
-        'function_name'  => function_name,
+        'description' => sub_command['summary'],
+        'pdk_verb' => pdk_verb,
+        'function_name' => function_name,
       }
       ps_command['pdk_subcommand'] = sub_command['name'] if has_subcommands
 
@@ -79,9 +79,9 @@ def cri_to_powershell_hash(base_command)
       options_hash = {}
       sub_command['options'].each do |option|
         obj = {
-          'pdkname'  => option[:long], # The PDK argument name
-          'desc'     => option[:desc], # A description of the parameter
-          'type'     => 'String', # The PowerShell Type of the parameter
+          'pdkname' => option[:long], # The PDK argument name
+          'desc' => option[:desc], # A description of the parameter
+          'type' => 'String', # The PowerShell Type of the parameter
           'reserved' => false, # Whether this is a reserved PowerShell name e.g. Verbose
           'position' => -1 # What position the parameter has. -1 means no position
         }
@@ -101,8 +101,8 @@ def cri_to_powershell_hash(base_command)
           pdk_name = match.captures[0]
           pwsh_name = to_title_case(pdk_name)
           options_hash[pwsh_name] = {
-            'desc'     => "The specified #{pdk_name}", # A description of the parameter
-            'type'     => 'String', # The PowerShell Type of the parameter
+            'desc' => "The specified #{pdk_name}", # A description of the parameter
+            'type' => 'String', # The PowerShell Type of the parameter
             'reserved' => false, # Whether this is a reserved PowerShell name e.g. Verbose
             'position' => position # What position the parameter has. -1 means no position
           }
@@ -126,13 +126,13 @@ end
 
 def describe_command(cri_command)
   {
-    'name'        => cri_command.name,
-    'aliases'     => cri_command.aliases.to_a,
+    'name' => cri_command.name,
+    'aliases' => cri_command.aliases.to_a,
     'description' => cri_command.description,
-    'hidden'      => cri_command.hidden,
-    'summary'     => cri_command.summary,
-    'usage'       => cri_command.summary,
-    'options'     => cri_command.option_definitions.map { |r| describe_option(r) },
+    'hidden' => cri_command.hidden,
+    'summary' => cri_command.summary,
+    'usage' => cri_command.summary,
+    'options' => cri_command.option_definitions.map { |r| describe_option(r) },
     'subcommands' => cri_command.subcommands.map { |r| describe_command(r) },
   }
 end

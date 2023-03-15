@@ -37,11 +37,11 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     targets.first[:name],
-          source:   'metadata-syntax',
-          state:    :failure,
+          file: targets.first[:name],
+          source: 'metadata-syntax',
+          state: :failure,
           severity: 'error',
-          message:  'Could not be read.',
+          message: 'Could not be read.',
         )
         expect(return_value).to eq(1)
       end
@@ -56,9 +56,9 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
 
       it 'adds a passing event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     targets.first[:name],
-          source:   'metadata-syntax',
-          state:    :passed,
+          file: targets.first[:name],
+          source: 'metadata-syntax',
+          state: :passed,
           severity: 'ok',
         )
         expect(return_value).to eq(0)
@@ -74,11 +74,11 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     targets.first[:name],
-          source:   'metadata-syntax',
-          state:    :failure,
+          file: targets.first[:name],
+          source: 'metadata-syntax',
+          state: :failure,
           severity: 'error',
-          message:  a_string_matching(%r{\Aexpected ':' in object}),
+          message: a_string_matching(%r{\Aexpected ':' in object}),
         )
         expect(return_value).to eq(1)
       end

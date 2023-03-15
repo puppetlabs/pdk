@@ -93,24 +93,24 @@ describe PDK::Module::Metadata do
     context 'when the metadata contains all the required fields' do
       let(:metadata) do
         {
-          'name'                    => 'test-module',
-          'version'                 => '0.1.0',
-          'author'                  => 'Test User',
-          'summary'                 => 'This module is amazing. Really.',
-          'license'                 => 'Apache-2.0',
-          'source'                  => 'https://github.com/puppetlabs/test-module',
-          'project_page'            => 'https://github.com/puppetlabs/test-module',
-          'issues_url'              => 'https://github.com/puppetlabs/test-module/issues',
-          'dependencies'            => [],
+          'name' => 'test-module',
+          'version' => '0.1.0',
+          'author' => 'Test User',
+          'summary' => 'This module is amazing. Really.',
+          'license' => 'Apache-2.0',
+          'source' => 'https://github.com/puppetlabs/test-module',
+          'project_page' => 'https://github.com/puppetlabs/test-module',
+          'issues_url' => 'https://github.com/puppetlabs/test-module/issues',
+          'dependencies' => [],
           'operatingsystem_support' => [
             {
-              'operatingsystem'        => 'Debian',
+              'operatingsystem' => 'Debian',
               'operatingsystemrelease' => ['10'],
             },
           ],
           'requirements' => [
             {
-              'name'                => 'puppet',
+              'name' => 'puppet',
               'version_requirement' => '>= 4.7.0 < 6.0.0',
             },
           ],
@@ -123,7 +123,7 @@ describe PDK::Module::Metadata do
     context 'when the metadata is missing fields' do
       let(:metadata) do
         {
-          'name'    => 'test-module',
+          'name' => 'test-module',
           'version' => '0.1.0',
         }
       end
@@ -142,23 +142,23 @@ describe PDK::Module::Metadata do
     context 'when the metadata is missing fields' do
       let(:metadata) do
         {
-          'name'                    => 'test-module',
-          'version'                 => '0.1.0',
-          'author'                  => 'Test User',
-          'summary'                 => 'This module is amazing. Really.',
-          'license'                 => 'Apache-2.0',
-          'project_page'            => 'https://github.com/puppetlabs/test-module',
-          'issues_url'              => 'https://github.com/puppetlabs/test-module/issues',
-          'dependencies'            => [],
+          'name' => 'test-module',
+          'version' => '0.1.0',
+          'author' => 'Test User',
+          'summary' => 'This module is amazing. Really.',
+          'license' => 'Apache-2.0',
+          'project_page' => 'https://github.com/puppetlabs/test-module',
+          'issues_url' => 'https://github.com/puppetlabs/test-module/issues',
+          'dependencies' => [],
           'operatingsystem_support' => [
             {
-              'operatingsystem'        => 'Debian',
+              'operatingsystem' => 'Debian',
               'operatingsystemrelease' => ['10'],
             },
           ],
           'requirements' => [
             {
-              'name'                => 'puppet',
+              'name' => 'puppet',
               'version_requirement' => '>= 4.7.0 < 6.0.0',
             },
           ],

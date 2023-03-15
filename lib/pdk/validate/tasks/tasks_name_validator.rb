@@ -24,19 +24,19 @@ module PDK
           task_name = File.basename(target, File.extname(target))
           if PDK::CLI::Util::OptionValidator.valid_task_name?(task_name)
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :passed,
+              file: target,
+              source: name,
+              state: :passed,
               severity: 'ok',
             )
             return 0
           else
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              message:  INVALID_TASK_MSG,
+              message: INVALID_TASK_MSG,
             )
             return 1
           end

@@ -16,9 +16,9 @@ describe PDK::Template::Renderer::V1::Renderer do
       let(:render_options) { {} }
       let(:file_in_template_response1) do
         {
-          'manage.erb'    => File.join(template_root, 'moduleroot'),
+          'manage.erb' => File.join(template_root, 'moduleroot'),
           'unmanaged.erb' => File.join(template_root, 'moduleroot'),
-          'delete.erb'    => File.join(template_root, 'moduleroot'),
+          'delete.erb' => File.join(template_root, 'moduleroot'),
         }
       end
 

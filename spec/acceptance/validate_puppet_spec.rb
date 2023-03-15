@@ -95,16 +95,16 @@ class foo {
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
               'failures' => eq(2),
-              'tests'    => eq(2),
+              'tests' => eq(2),
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
               'classname' => 'puppet-syntax',
-              'name'      => a_string_starting_with(init_pp),
+              'name' => a_string_starting_with(init_pp),
             ).that_failed(
-              'type'    => a_string_matching(%r{warning}i),
+              'type' => a_string_matching(%r{warning}i),
               'message' => a_string_matching(%r{unrecognized escape sequence \'\\\[\'}i),
             )
           end
@@ -112,9 +112,9 @@ class foo {
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
               'classname' => 'puppet-syntax',
-              'name'      => a_string_starting_with(init_pp),
+              'name' => a_string_starting_with(init_pp),
             ).that_failed(
-              'type'    => a_string_matching(%r{warning}i),
+              'type' => a_string_matching(%r{warning}i),
               'message' => a_string_matching(%r{unrecognized escape sequence \'\\\]\'}i),
             )
           end
@@ -122,16 +122,16 @@ class foo {
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
               'failures' => a_value > 0,
-              'tests'    => a_value > 0,
+              'tests' => a_value > 0,
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
               'classname' => a_string_starting_with('puppet-lint'),
-              'name'      => a_string_starting_with(init_pp),
+              'name' => a_string_starting_with(init_pp),
             ).that_failed(
-              'type'    => a_string_matching(%r{warning}i),
+              'type' => a_string_matching(%r{warning}i),
               'message' => a_string_matching(%r{double quoted string containing no variables}i),
             )
           end
@@ -201,28 +201,28 @@ class foo {
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
               'failures' => eq(0),
-              'tests'    => eq(1),
+              'tests' => eq(1),
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
               'classname' => 'puppet-syntax',
-              'name'      => init_pp,
+              'name' => init_pp,
             ).that_passed
           end
 
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
               'failures' => eq(1),
-              'tests'    => eq(1),
+              'tests' => eq(1),
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
               'classname' => 'puppet-lint.documentation',
-              'name'      => a_string_starting_with(init_pp),
+              'name' => a_string_starting_with(init_pp),
             ).that_failed
           end
         end
@@ -262,16 +262,16 @@ class foo {
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
               'failures' => eq(3),
-              'tests'    => eq(3),
+              'tests' => eq(3),
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
               'classname' => 'puppet-syntax',
-              'name'      => a_string_starting_with(init_pp),
+              'name' => a_string_starting_with(init_pp),
             ).that_failed(
-              'type'    => 'Error',
+              'type' => 'Error',
               'message' => a_string_matching(%r{This Name has no effect}i),
             )
           end
@@ -279,9 +279,9 @@ class foo {
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
               'classname' => 'puppet-syntax',
-              'name'      => a_string_starting_with(init_pp),
+              'name' => a_string_starting_with(init_pp),
             ).that_failed(
-              'type'    => 'Error',
+              'type' => 'Error',
               'message' => a_string_matching(%r{This Type-Name has no effect}i),
             )
           end
@@ -314,14 +314,14 @@ class foo {
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
               'failures' => eq(1),
-              'tests'    => eq(1),
+              'tests' => eq(1),
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
               'classname' => 'puppet-lint.autoloader_layout',
-              'name'      => a_string_starting_with(example_pp),
+              'name' => a_string_starting_with(example_pp),
             ).that_failed
           end
         end
@@ -353,28 +353,28 @@ class foo {
             its(:content) do
               is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
                 'failures' => eq(0),
-                'tests'    => eq(1),
+                'tests' => eq(1),
               )
             end
 
             its(:content) do
               is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
                 'classname' => 'puppet-syntax',
-                'name'      => a_string_starting_with(clean_pp),
+                'name' => a_string_starting_with(clean_pp),
               ).that_passed
             end
 
             its(:content) do
               is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
                 'failures' => eq(0),
-                'tests'    => eq(1),
+                'tests' => eq(1),
               )
             end
 
             its(:content) do
               is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
                 'classname' => 'puppet-lint',
-                'name'      => a_string_starting_with(clean_pp),
+                'name' => a_string_starting_with(clean_pp),
               ).that_passed
             end
           end
@@ -410,21 +410,21 @@ class foo {
             its(:content) do
               is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
                 'failures' => eq(2),
-                'tests'    => eq(2),
+                'tests' => eq(2),
               )
             end
 
             its(:content) do
               is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
                 'classname' => a_string_starting_with('puppet-lint'),
-                'name'      => a_string_starting_with(another_problem_pp),
+                'name' => a_string_starting_with(another_problem_pp),
               ).that_failed
             end
 
             its(:content) do
               is_expected.not_to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
                 'classname' => a_string_starting_with('puppet-lint'),
-                'name'      => a_string_starting_with(example_pp),
+                'name' => a_string_starting_with(example_pp),
               )
             end
           end

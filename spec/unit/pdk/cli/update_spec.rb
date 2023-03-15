@@ -127,7 +127,7 @@ describe 'PDK::CLI update' do
         expect(analytics).to receive(:screen_view).with(
           'update',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -164,9 +164,9 @@ describe 'PDK::CLI update' do
 
         expect(analytics).to receive(:screen_view).with(
           'update',
-          cli_options:   'noop=true',
+          cli_options: 'noop=true',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end
@@ -186,9 +186,9 @@ describe 'PDK::CLI update' do
 
         expect(analytics).to receive(:screen_view).with(
           'update',
-          cli_options:   'force=true',
+          cli_options: 'force=true',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION,
         )
       end
     end

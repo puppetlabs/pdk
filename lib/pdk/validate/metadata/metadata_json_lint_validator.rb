@@ -54,9 +54,9 @@ module PDK
 
           if json_data.empty?
             report.add_event(
-              file:     targets.first,
-              source:   name,
-              state:    :passed,
+              file: targets.first,
+              source: name,
+              state: :passed,
               severity: :ok,
             )
           else
@@ -69,12 +69,12 @@ module PDK
                 event_type = type[%r{\A(.+?)s?\Z}, 1]
 
                 report.add_event(
-                  file:     targets.first,
-                  source:   name,
-                  message:  offense['msg'],
-                  test:     offense['check'],
+                  file: targets.first,
+                  source: name,
+                  message: offense['msg'],
+                  test: offense['check'],
                   severity: event_type,
-                  state:    :failure,
+                  state: :failure,
                 )
               end
             end

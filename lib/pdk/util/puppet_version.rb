@@ -118,7 +118,7 @@ module PDK
         if version.segments.length == 3
           PDK.logger.warn('Puppet %{requested_version} is not available, activating %{found_version} instead.' % {
             requested_version: version_str,
-            found_version:     latest_available_gem[:gem_version].version,
+            found_version: latest_available_gem[:gem_version].version,
           })
         end
 
@@ -145,7 +145,7 @@ module PDK
         end
 
         PDK.logger.info 'Puppet Enterprise %{pe_version} maps to Puppet %{puppet_version}.' % {
-          pe_version:     version_str,
+          pe_version: version_str,
           puppet_version: gem_version,
         }
 

@@ -53,11 +53,11 @@ module PDK
                         end
 
               report.add_event(
-                file:     target,
-                source:   name,
-                state:    :failure,
+                file: target,
+                source: name,
+                state: :failure,
                 severity: 'error',
-                message:  message,
+                message: message,
               )
               is_valid = false
             end
@@ -65,11 +65,11 @@ module PDK
             timeout = env_conf.fetch('environment_timeout', nil)
             unless timeout.nil? || timeout == '0' || timeout == 'unlimited'
               report.add_event(
-                file:     target,
-                source:   name,
-                state:    :failure,
+                file: target,
+                source: name,
+                state: :failure,
                 severity: 'error',
-                message:  "environment_timeout is set to '%{timeout}' but should be 0, 'unlimited' or not set." % { timeout: timeout },
+                message: "environment_timeout is set to '%{timeout}' but should be 0, 'unlimited' or not set." % { timeout: timeout },
               )
               is_valid = false
             end
@@ -77,19 +77,19 @@ module PDK
             return 1 unless is_valid
 
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :passed,
+              file: target,
+              source: name,
+              state: :passed,
               severity: 'ok',
             )
             return 0
           rescue StandardError => e
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              message:  e.message,
+              message: e.message,
             )
             return 1
           end

@@ -32,11 +32,11 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target[:name],
-          source:   'yaml-syntax',
-          state:    :failure,
+          file: target[:name],
+          source: 'yaml-syntax',
+          state: :failure,
           severity: 'error',
-          message:  'Could not be read.',
+          message: 'Could not be read.',
         )
         expect(return_value).to eq(1)
       end
@@ -55,9 +55,9 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
 
       it 'adds a passing event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target[:name],
-          source:   'yaml-syntax',
-          state:    :passed,
+          file: target[:name],
+          source: 'yaml-syntax',
+          state: :passed,
           severity: 'ok',
         )
         expect(return_value).to eq(0)
@@ -69,9 +69,9 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
 
       it 'adds a passing event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target[:name],
-          source:   'yaml-syntax',
-          state:    :passed,
+          file: target[:name],
+          source: 'yaml-syntax',
+          state: :passed,
           severity: 'ok',
         )
         expect(return_value).to eq(0)
@@ -83,13 +83,13 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target[:name],
-          source:   'yaml-syntax',
-          state:    :failure,
+          file: target[:name],
+          source: 'yaml-syntax',
+          state: :failure,
           severity: 'error',
-          message:  a_string_matching(%r{\Afound character that cannot start}),
-          line:     2,
-          column:   1,
+          message: a_string_matching(%r{\Afound character that cannot start}),
+          line: 2,
+          column: 1,
         )
         expect(return_value).to eq(1)
       end
@@ -100,11 +100,11 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
 
       it 'adds a failure event to the report' do
         expect(report).to receive(:add_event).with(
-          file:     target[:name],
-          source:   'yaml-syntax',
-          state:    :failure,
+          file: target[:name],
+          source: 'yaml-syntax',
+          state: :failure,
           severity: 'error',
-          message:  a_string_matching(%r{unspecified class: file}i),
+          message: a_string_matching(%r{unspecified class: file}i),
         )
         expect(return_value).to eq(1)
       end

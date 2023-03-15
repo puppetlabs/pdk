@@ -59,9 +59,9 @@ module PDK
       def task_metadata
         {
           puppet_task_version: 1,
-          supports_noop:       false,
-          description:         options.fetch(:description, 'A short description of this task'),
-          parameters:          {},
+          supports_noop: false,
+          description: options.fetch(:description, 'A short description of this task'),
+          parameters: {},
         }
       end
     end

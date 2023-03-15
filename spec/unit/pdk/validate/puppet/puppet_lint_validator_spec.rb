@@ -23,8 +23,8 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
 
   it 'defines the base validator attributes' do
     expect(validator).to have_attributes(
-      name:         'puppet-lint',
-      cmd:          'puppet-lint',
+      name: 'puppet-lint',
+      cmd: 'puppet-lint',
     )
     expect(validator.spinner_text_for_targets(nil)).to match(%r{puppet manifest style}i)
   end
@@ -72,12 +72,12 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
 
     def mock_lint(path, line, column, message, check, kind)
       {
-        'path'    => path,
-        'line'    => line.to_s,
-        'column'  => column.to_s,
+        'path' => path,
+        'line' => line.to_s,
+        'column' => column.to_s,
         'message' => message,
-        'check'   => check,
-        'kind'    => kind,
+        'check' => check,
+        'kind' => kind,
       }
     end
 
@@ -96,10 +96,10 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
 
       it 'adds a passing event for the file to the report' do
         expect(report).to receive(:add_event).with(
-          file:     targets.first,
-          source:   validator.name,
+          file: targets.first,
+          source: validator.name,
           severity: 'ok',
-          state:    :passed,
+          state: :passed,
         )
 
         parse_output
@@ -116,14 +116,14 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
 
       it 'adds a failure event for the file to the report' do
         expect(report).to receive(:add_event).with(
-          file:     targets.first,
-          source:   validator.name,
-          line:     '1',
-          column:   '2',
-          message:  'test message',
-          test:     'test_check',
+          file: targets.first,
+          source: validator.name,
+          line: '1',
+          column: '2',
+          message: 'test message',
+          test: 'test_check',
           severity: 'warning',
-          state:    :failure,
+          state: :failure,
         )
 
         parse_output
@@ -138,14 +138,14 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
 
         it 'adds a failure event for the file to the report with the corrected severity' do
           expect(report).to receive(:add_event).with(
-            file:     targets.first,
-            source:   validator.name,
-            line:     '1',
-            column:   '2',
-            message:  'test message',
-            test:     'test_check',
+            file: targets.first,
+            source: validator.name,
+            line: '1',
+            column: '2',
+            message: 'test message',
+            test: 'test_check',
             severity: 'corrected',
-            state:    :failure,
+            state: :failure,
           )
 
           parse_output
@@ -169,9 +169,9 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
 
       it 'adds a passing event to the report for the file with no offenses' do
         expect(report).to receive(:add_event).with(
-          file:     'target2',
-          source:   validator.name,
-          state:    :passed,
+          file: 'target2',
+          source: validator.name,
+          state: :passed,
           severity: 'ok',
         )
 
@@ -180,36 +180,36 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
 
       it 'adds failure events to the report for the files with offenses' do
         expect(report).to receive(:add_event).with(
-          file:     'target1',
-          source:   validator.name,
-          line:     '1',
-          column:   '2',
-          message:  'test message 1',
-          test:     'test_check_1',
+          file: 'target1',
+          source: validator.name,
+          line: '1',
+          column: '2',
+          message: 'test message 1',
+          test: 'test_check_1',
           severity: 'warning',
-          state:    :failure,
+          state: :failure,
         )
 
         expect(report).to receive(:add_event).with(
-          file:     'target1',
-          source:   validator.name,
-          line:     '5',
-          column:   '6',
-          message:  'test message 2',
-          test:     'test_check_2',
+          file: 'target1',
+          source: validator.name,
+          line: '5',
+          column: '6',
+          message: 'test message 2',
+          test: 'test_check_2',
           severity: 'corrected',
-          state:    :failure,
+          state: :failure,
         )
 
         expect(report).to receive(:add_event).with(
-          file:     'target3',
-          source:   validator.name,
-          line:     '3',
-          column:   '4',
-          message:  'test message 3',
-          test:     'test_check_3',
+          file: 'target3',
+          source: validator.name,
+          line: '3',
+          column: '4',
+          message: 'test message 3',
+          test: 'test_check_3',
           severity: 'error',
-          state:    :failure,
+          state: :failure,
         )
 
         parse_output

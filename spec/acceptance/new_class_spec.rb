@@ -33,7 +33,7 @@ describe 'pdk new class', module_command: true do
         it_behaves_like 'it creates a class',
                         name: 'new_class',
                         manifest: File.join('manifests', 'init.pp'),
-                        spec:     File.join('spec', 'classes', 'new_class_spec.rb')
+                        spec: File.join('spec', 'classes', 'new_class_spec.rb')
       end
     end
 
@@ -46,9 +46,9 @@ describe 'pdk new class', module_command: true do
         its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a class',
-                        name:     'new_class::bar',
+                        name: 'new_class::bar',
                         manifest: File.join('manifests', 'bar.pp'),
-                        spec:     File.join('spec', 'classes', 'bar_spec.rb')
+                        spec: File.join('spec', 'classes', 'bar_spec.rb')
       end
     end
 
@@ -61,9 +61,9 @@ describe 'pdk new class', module_command: true do
         its(:stderr) { is_expected.to have_no_output }
 
         it_behaves_like 'it creates a class',
-                        name:     'new_class::bar::baz',
+                        name: 'new_class::bar::baz',
                         manifest: File.join('manifests', 'bar', 'baz.pp'),
-                        spec:     File.join('spec', 'classes', 'bar', 'baz_spec.rb')
+                        spec: File.join('spec', 'classes', 'bar', 'baz_spec.rb')
       end
     end
   end

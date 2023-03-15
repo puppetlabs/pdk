@@ -5,20 +5,20 @@ describe 'pdk build', module_command: true do
     include_context 'in a new module', 'build'
 
     metadata = {
-      'name'                    => 'testuser-build',
-      'version'                 => '0.1.0',
-      'author'                  => 'testuser',
-      'summary'                 => 'a test module',
-      'license'                 => 'Apache-2.0',
-      'source'                  => 'https://github.com/testuser/puppet-build',
-      'project_page'            => 'https://testuser.github.io/puppet-build',
-      'issues_url'              => 'https://github.com/testuser/puppet-build/issues',
-      'dependencies'            => [],
+      'name' => 'testuser-build',
+      'version' => '0.1.0',
+      'author' => 'testuser',
+      'summary' => 'a test module',
+      'license' => 'Apache-2.0',
+      'source' => 'https://github.com/testuser/puppet-build',
+      'project_page' => 'https://testuser.github.io/puppet-build',
+      'issues_url' => 'https://github.com/testuser/puppet-build/issues',
+      'dependencies' => [],
       'operatingsystem_support' => [{ 'operatingsystem' => 'windows', 'operatingsystemrelease' => ['10'] }],
-      'requirements'            => [{ 'name' => 'puppet', 'version_requirement' => '> 6.21.0 < 7.0.0' }],
-      'pdk-version'             => '1.2.3',
-      'template-url'            => 'https://github.com/puppetlabs/pdk-templates',
-      'template-ref'            => 'heads/main-0-g1234abc',
+      'requirements' => [{ 'name' => 'puppet', 'version_requirement' => '> 6.21.0 < 7.0.0' }],
+      'pdk-version' => '1.2.3',
+      'template-url' => 'https://github.com/puppetlabs/pdk-templates',
+      'template-ref' => 'heads/main-0-g1234abc',
     }
 
     context 'when the module has complete metadata' do

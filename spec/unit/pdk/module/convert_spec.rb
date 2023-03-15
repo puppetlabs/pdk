@@ -390,7 +390,7 @@ describe PDK::Module::Convert do
       let(:added_files) do
         Set.new(
           [{
-            path:    'path/to/file',
+            path: 'path/to/file',
             content: 'file contents',
           }],
         )
@@ -539,10 +539,10 @@ describe PDK::Module::Convert do
 
           let(:existing_metadata) do
             {
-              'name'                    => 'testuser-testmodule',
-              'requirements'            => [],
+              'name' => 'testuser-testmodule',
+              'requirements' => [],
               'operatingsystem_support' => [],
-              'license'                 => nil,
+              'license' => nil,
             }.to_json
           end
 

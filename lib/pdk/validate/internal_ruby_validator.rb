@@ -66,11 +66,11 @@ module PDK
           validation_result = validate_target(report, target)
           if validation_result.nil?
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              message:  "Validation did not return an exit code for #{target}",
+              message: "Validation did not return an exit code for #{target}",
             )
             validation_result = 1
           end

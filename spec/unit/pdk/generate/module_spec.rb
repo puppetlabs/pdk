@@ -49,8 +49,8 @@ describe PDK::Generate::Module do
     let(:target_dir) { PDK::Util::Filesystem.expand_path('/path/to/target/module') }
     let(:invoke_opts) do
       {
-        :target_dir       => target_dir,
-        :module_name      => 'foo',
+        :target_dir => target_dir,
+        :module_name => 'foo',
         :'skip-interview' => true,
       }
     end
@@ -385,41 +385,41 @@ describe PDK::Generate::Module do
 
         it 'populates the Metadata object based on user input' do
           expect(interview_metadata).to include(
-            'name'                    => 'foo-bar',
-            'version'                 => '2.2.0',
-            'author'                  => 'William Hopper',
-            'license'                 => 'Apache-2.0',
-            'summary'                 => 'A simple module to do some stuff.',
-            'source'                  => 'github.com/whopper/bar',
-            'project_page'            => 'forge.puppet.com/whopper/bar',
-            'issues_url'              => 'tickets.foo.com/whopper/bar',
+            'name' => 'foo-bar',
+            'version' => '2.2.0',
+            'author' => 'William Hopper',
+            'license' => 'Apache-2.0',
+            'summary' => 'A simple module to do some stuff.',
+            'source' => 'github.com/whopper/bar',
+            'project_page' => 'forge.puppet.com/whopper/bar',
+            'issues_url' => 'tickets.foo.com/whopper/bar',
             'operatingsystem_support' => [
               {
-                'operatingsystem'        => 'CentOS',
+                'operatingsystem' => 'CentOS',
                 'operatingsystemrelease' => ['7'],
               },
               {
-                'operatingsystem'        => 'OracleLinux',
+                'operatingsystem' => 'OracleLinux',
                 'operatingsystemrelease' => ['7'],
               },
               {
-                'operatingsystem'        => 'RedHat',
+                'operatingsystem' => 'RedHat',
                 'operatingsystemrelease' => ['8'],
               },
               {
-                'operatingsystem'        => 'Scientific',
+                'operatingsystem' => 'Scientific',
                 'operatingsystemrelease' => ['7'],
               },
               {
-                'operatingsystem'        => 'Debian',
+                'operatingsystem' => 'Debian',
                 'operatingsystemrelease' => ['10'],
               },
               {
-                'operatingsystem'        => 'Ubuntu',
+                'operatingsystem' => 'Ubuntu',
                 'operatingsystemrelease' => ['18.04'],
               },
               {
-                'operatingsystem'        => 'windows',
+                'operatingsystem' => 'windows',
                 'operatingsystemrelease' => %w[2019 10],
               },
             ],
@@ -445,10 +445,10 @@ describe PDK::Generate::Module do
         let(:options) { { :module_name => 'bar', :username => 'defaultauthor', :'full-interview' => true } }
         let(:default_metadata) do
           {
-            'author'  => 'defaultauthor',
+            'author' => 'defaultauthor',
             'version' => '0.0.1',
             'summary' => 'default summary',
-            'source'  => 'default source',
+            'source' => 'default source',
             'license' => 'default license',
           }
         end
@@ -469,12 +469,12 @@ describe PDK::Generate::Module do
 
         it 'populates the interview question defaults with existing metadata values' do
           expect(interview_metadata).to include(
-            'name'    => 'defaultauthor-bar',
+            'name' => 'defaultauthor-bar',
             'version' => '0.0.1',
-            'author'  => 'defaultauthor',
+            'author' => 'defaultauthor',
             'license' => 'default license',
             'summary' => 'default summary',
-            'source'  => 'default source',
+            'source' => 'default source',
           )
         end
 
@@ -508,14 +508,14 @@ describe PDK::Generate::Module do
 
       it 'populates the Metadata object based on user input for both module name and forge name' do
         expect(interview_metadata).to include(
-          'name'         => 'myforgename-mymodule',
-          'version'      => '0.1.0',
-          'author'       => 'William Hopper',
-          'license'      => 'MIT',
-          'summary'      => '',
-          'source'       => '',
+          'name' => 'myforgename-mymodule',
+          'version' => '0.1.0',
+          'author' => 'William Hopper',
+          'license' => 'MIT',
+          'summary' => '',
+          'source' => '',
           'project_page' => nil,
-          'issues_url'   => nil,
+          'issues_url' => nil,
         )
       end
     end
@@ -535,14 +535,14 @@ describe PDK::Generate::Module do
 
       it 'populates the Metadata object based on user input' do
         expect(interview_metadata).to include(
-          'name'         => 'foo-bar',
-          'version'      => '0.1.0',
-          'author'       => 'William Hopper',
-          'license'      => 'MIT',
-          'summary'      => '',
-          'source'       => '',
+          'name' => 'foo-bar',
+          'version' => '0.1.0',
+          'author' => 'William Hopper',
+          'license' => 'MIT',
+          'summary' => '',
+          'source' => '',
           'project_page' => nil,
-          'issues_url'   => nil,
+          'issues_url' => nil,
         )
       end
 
@@ -610,14 +610,14 @@ describe PDK::Generate::Module do
         expect { interview_metadata }.not_to raise_error
 
         expect(interview_metadata).to include(
-          'name'         => 'foo-bar',
-          'version'      => '0.1.0',
-          'author'       => 'William Hopper',
-          'license'      => 'Apache-2.0',
-          'summary'      => '',
-          'source'       => '',
+          'name' => 'foo-bar',
+          'version' => '0.1.0',
+          'author' => 'William Hopper',
+          'license' => 'Apache-2.0',
+          'summary' => '',
+          'source' => '',
           'project_page' => nil,
-          'issues_url'   => nil,
+          'issues_url' => nil,
         )
       end
     end
@@ -640,14 +640,14 @@ describe PDK::Generate::Module do
         expect { interview_metadata }.not_to raise_error
 
         expect(interview_metadata).to include(
-          'name'         => 'foo-bar',
-          'version'      => '0.1.0',
-          'author'       => 'William Hopper',
-          'license'      => 'Apache-2.0',
-          'summary'      => '',
-          'source'       => '',
+          'name' => 'foo-bar',
+          'version' => '0.1.0',
+          'author' => 'William Hopper',
+          'license' => 'Apache-2.0',
+          'summary' => '',
+          'source' => '',
           'project_page' => nil,
-          'issues_url'   => nil,
+          'issues_url' => nil,
         )
 
         expect(interview_metadata['operatingsystem_support']).not_to be_nil

@@ -76,7 +76,7 @@ describe PDK::Util::PuppetStrings do
       let(:result) do
         {
           exit_code: 1,
-          stderr:    'some error text',
+          stderr: 'some error text',
         }
       end
 
@@ -91,7 +91,7 @@ describe PDK::Util::PuppetStrings do
       let(:result) do
         {
           exit_code: 0,
-          stdout:    'bleh]',
+          stdout: 'bleh]',
         }
       end
 
@@ -106,7 +106,7 @@ describe PDK::Util::PuppetStrings do
       let(:result) do
         {
           exit_code: 0,
-          stdout:    '{ "puppet_classes": [] }',
+          stdout: '{ "puppet_classes": [] }',
         }
       end
 

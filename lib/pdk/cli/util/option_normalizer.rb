@@ -33,7 +33,7 @@ module PDK
               OptionValidator.enum(format, PDK::Report.formats)
             rescue ArgumentError
               raise PDK::CLI::ExitWithError, "'%{name}' is not a valid report format (%{valid})" % {
-                name:  format,
+                name: format,
                 valid: PDK::Report.formats.join(', '),
               }
             end

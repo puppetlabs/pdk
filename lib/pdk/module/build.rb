@@ -156,7 +156,7 @@ module PDK
 
         PDK.logger.warn 'Symlinks in modules are not supported and will not be included in the package. Please investigate symlink %{from} -> %{to}.' % {
           from: symlink_path.relative_path_from(module_path),
-          to:   symlink_path.realpath.relative_path_from(module_path),
+          to: symlink_path.realpath.relative_path_from(module_path),
         }
       end
 

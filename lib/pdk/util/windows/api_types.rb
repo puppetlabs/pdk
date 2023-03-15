@@ -29,9 +29,9 @@ module PDK::Util::Windows::APITypes
       str.encode(dst_encoding, str.encoding, **encode_options)
     rescue StandardError => e
       PDK.logger.debug 'Unable to convert value %{string} to encoding %{encoding} due to %{error}' % {
-        string:   str.dump,
+        string: str.dump,
         encoding: dst_encoding,
-        error:    e.inspect,
+        error: e.inspect,
       }
       raise
     end

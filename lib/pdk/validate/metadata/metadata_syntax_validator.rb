@@ -49,9 +49,9 @@ module PDK
             JSON.parse(PDK::Util::Filesystem.read_file(target))
 
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :passed,
+              file: target,
+              source: name,
+              state: :passed,
               severity: 'ok',
             )
             return 0
@@ -63,11 +63,11 @@ module PDK
             sane_message = e.message.dump[%r{\A"(.+?)!?"\Z}, 1]
 
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              message:  sane_message,
+              message: sane_message,
             )
             return 1
           end

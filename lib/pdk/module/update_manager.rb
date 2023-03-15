@@ -47,8 +47,8 @@ module PDK
         calculate_diffs
 
         {
-          added:    @added_files,
-          removed:  @removed_files.select { |f| PDK::Util::Filesystem.exist?(f) },
+          added: @added_files,
+          removed: @removed_files.select { |f| PDK::Util::Filesystem.exist?(f) },
           modified: @diff_cache.reject { |_, value| value.nil? },
         }
       end
@@ -122,7 +122,7 @@ module PDK
         end
       rescue => e
         raise PDK::CLI::ExitWithError, "Unable to remove '%{path}': %{message}" % {
-          path:    path,
+          path: path,
           message: e.message,
         }
       end

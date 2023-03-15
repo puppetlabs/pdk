@@ -8,10 +8,10 @@ module PDK
         TRACKING_URL      = 'https://google-analytics.com/collect'.freeze
         CUSTOM_DIMENSIONS = {
           operating_system: :cd1,
-          output_format:    :cd2,
-          ruby_version:     :cd3,
-          cli_options:      :cd4,
-          env_vars:         :cd5,
+          output_format: :cd2,
+          ruby_version: :cd3,
+          cli_options: :cd4,
+          env_vars: :cd5,
         }.freeze
 
         attr_reader :user_id
@@ -47,7 +47,7 @@ module PDK
 
           screen_view_params = {
             # Type
-            t:  'screenview',
+            t: 'screenview',
             # Screen Name
             cd: screen,
           }.merge(custom_dimensions)
@@ -62,7 +62,7 @@ module PDK
 
           event_params = {
             # Type
-            t:  'event',
+            t: 'event',
             # Event Category
             ec: category,
             # Event Action
@@ -95,23 +95,23 @@ module PDK
           require 'locale'
 
           {
-            v:    PROTOCOL_VERSION,
+            v: PROTOCOL_VERSION,
             # Client ID
-            cid:  user_id,
+            cid: user_id,
             # Tracking ID
-            tid:  app_id,
+            tid: app_id,
             # Application Name
-            an:   app_name,
+            an: app_name,
             # Application Version
-            av:   app_version,
+            av: app_version,
             # Application Installer ID
             aiid: app_installer,
             # Anonymize IPs
-            aip:  true,
+            aip: true,
             # User locale
-            ul:   Locale.current.to_rfc,
+            ul: Locale.current.to_rfc,
             # Custom Dimension 1 (Operating System)
-            cd1:  @os.value,
+            cd1: @os.value,
           }
         end
 

@@ -43,7 +43,7 @@ module PDK
         run_validations(options) unless skip_validation?
 
         PDK.logger.info 'Releasing %{module_name} - from version %{module_version}' % {
-          module_name:    module_metadata.data['name'],
+          module_name: module_metadata.data['name'],
           module_version: module_metadata.data['version'],
         }
 

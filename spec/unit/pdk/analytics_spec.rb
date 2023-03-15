@@ -18,13 +18,13 @@ describe PDK::Analytics do
 
     let(:options) do
       {
-        logger:      logger,
-        client:      :google_analytics,
-        disabled:    disabled,
-        user_id:     uuid,
-        app_name:    'pdk',
+        logger: logger,
+        client: :google_analytics,
+        disabled: disabled,
+        user_id: uuid,
+        app_name: 'pdk',
         app_version: PDK::VERSION,
-        app_id:      '1',
+        app_id: '1',
       }
     end
 
