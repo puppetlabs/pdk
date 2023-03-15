@@ -17,12 +17,12 @@ module PDK
         PDK::Util.module_pdk_compatible?(root_path)
       end
 
-      #:nocov:
+      # :nocov:
       # @see PDK::Context::AbstractContext.display_name
       def display_name
         'a Puppet Module context'
       end
-      #:nocov:
+      # :nocov:
     end
   end
 end

@@ -74,12 +74,12 @@ module PDK
 
         private
 
-        #:nocov: This is a just a wrapper for another method
+        # :nocov: This is a just a wrapper for another method
         def describe_path_and_ref(path, ref = nil)
           require 'pdk/util/git'
           PDK::Util::Git.describe(File.join(path, '.git'), ref)
         end
-        #:nocov:
+        # :nocov:
       end
     end
   end

@@ -90,11 +90,11 @@ module PDK
         nil
       end
 
-      #:nocov: There's nothing to test here
+      # :nocov: There's nothing to test here
       def to_s
         "#<#{self.class}:#{object_id}>#{context_path}"
       end
-      #:nocov:
+      # :nocov:
     end
   end
 end

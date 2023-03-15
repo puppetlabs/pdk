@@ -33,7 +33,7 @@ module PDK
       types
     ].freeze
 
-    #:nocov:
+    # :nocov:
     # This method just wraps core Ruby functionality and
     # can be ignored for code coverage
 
@@ -41,7 +41,7 @@ module PDK
     def exit_process(exit_code)
       exit exit_code
     end
-    #:nocov:
+    # :nocov:
 
     # Searches upwards from current working directory for the given target file.
     #

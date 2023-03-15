@@ -278,7 +278,7 @@ module PDK
 
     private
 
-    #:nocov: This is a private method and is tested elsewhere
+    # :nocov: This is a private method and is tested elsewhere
     def traverse_object(object, *names)
       return nil if object.nil? || !object.respond_to?(:[])
       return nil if names.nil?
@@ -299,9 +299,9 @@ module PDK
         traverse_object(value, *names)
       end
     end
-    #:nocov:
+    # :nocov:
 
-    #:nocov: This is a private method and is tested elsewhere
+    # :nocov: This is a private method and is tested elsewhere
     # Takes a string representation of a setting and splits into its constituent setting parts e.g.
     # 'user.a.b.c' becomes ['user', 'a', 'b', 'c']
     # @return [Array[String]] The string split into each setting name as an array
@@ -310,9 +310,9 @@ module PDK
 
       key.split('.')
     end
-    #:nocov:
+    # :nocov:
 
-    #:nocov:
+    # :nocov:
     # Returns all known scope names and their associated method name to call, to query the scope
     # Note - Order is important. This dictates the resolution precedence order (topmost is processed first)
     # @return [Hash[String, Symbol]] A hash of the scope name then method name to call to query the scope (as a Symbol)
@@ -325,7 +325,7 @@ module PDK
       }.freeze
     end
 
-    #:nocov: This is a private method and is tested elsewhere
+    # :nocov: This is a private method and is tested elsewhere
     # Deeply traverses an object tree via `[]` and sets the last
     # element to the value specified.
     #
@@ -388,6 +388,6 @@ module PDK
       namespace[name] = current_value.merge(hash_value)
       value
     end
-    #:nocov:
+    # :nocov:
   end
 end

@@ -5,12 +5,12 @@ module PDK
     # Represents a context which the PDK does not know. For example
     # an empty directory
     class None < PDK::Context::AbstractContext
-      #:nocov:
+      # :nocov:
       # @see PDK::Context::AbstractContext.display_name
       def display_name
         'an unknown context'
       end
-      #:nocov:
+      # :nocov:
 
       # @see PDK::Context::AbstractContext.parent_context
       def parent_context

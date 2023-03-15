@@ -238,7 +238,7 @@ module PDK
         !skip_publish?
       end
 
-      #:nocov:
+      # :nocov:
       # These are just convenience methods and are tested elsewhere
       def forge_compatible?
         module_metadata.forge_ready?
@@ -250,7 +250,7 @@ module PDK
         builder = PDK::Module::Build.new(module_dir: module_path)
         @pdk_compatible = builder.module_pdk_compatible?
       end
-      #:nocov:
+      # :nocov:
 
       private
 

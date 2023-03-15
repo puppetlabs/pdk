@@ -27,7 +27,7 @@ module PDK
       end
       module_function :read_file
 
-      #:nocov:
+      # :nocov:
       # These methods just wrap core Ruby functionality and
       # can be ignored for code coverage
       def directory?(*args)
@@ -133,7 +133,7 @@ module PDK
         end
       end
       module_function :mv
-      #:nocov:
+      # :nocov:
     end
   end
 end

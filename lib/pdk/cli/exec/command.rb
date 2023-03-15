@@ -268,7 +268,7 @@ module PDK
 
         private
 
-        #:nocov:
+        # :nocov:
         # These are just bundler helper methods and are tested via the public run_process_in_clean_env! method
         def run_process_with_unbundled_env!
           # Bundler 2.1.0 or greater
@@ -276,9 +276,9 @@ module PDK
             run_process!
           end
         end
-        #:nocov:
+        # :nocov:
 
-        #:nocov:
+        # :nocov:
         # These are just bundler helper methods and are tested via the public run_process_in_clean_env! method
         def run_process_with_clean_env!
           # Bundler 2.0.2 or less
@@ -286,7 +286,7 @@ module PDK
             run_process!
           end
         end
-        #:nocov:
+        # :nocov:
       end
     end
   end

@@ -34,7 +34,7 @@ module PDK
           end
         end
 
-        #:nocov: Tested as part of the public methods
+        # :nocov: Tested as part of the public methods
         # Returns a hash, summarizing the contents of the Update Manager object
         # @param update_manager [PDK::Module::UpdateManager] The object to create a summary of
         #
@@ -75,7 +75,7 @@ module PDK
           banner
         end
         private_class_method :generate_banner
-        #:nocov:
+        # :nocov:
       end
     end
   end

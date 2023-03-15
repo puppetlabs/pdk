@@ -42,12 +42,12 @@ module PDK
                                                  .select { |path| PDK::Util::Filesystem.directory?(PDK::Util::Filesystem.expand_path(File.join(root_path, path))) }
       end
 
-      #:nocov:
+      # :nocov:
       # @see PDK::Context::AbstractContext.display_name
       def display_name
         'a Control Repository context'
       end
-      #:nocov:
+      # :nocov:
 
       private
 

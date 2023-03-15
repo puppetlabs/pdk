@@ -30,34 +30,34 @@ module PDK
           # @param item_path [String] The path of the single item to render
           # @return [String]
           # @api private
-          #:nocov:
+          # :nocov:
           def single_item_path(item_path)
             File.join(template_root, 'object_templates', item_path)
           end
-          #:nocov:
+          # :nocov:
 
           # Helper method used during testing
-          #:nocov:
+          # :nocov:
           # @api private
           def new_template_file(template_file, template_data_hash)
             TemplateFile.new(template_file, template_data_hash)
           end
-          #:nocov:
+          # :nocov:
 
           # Helper method used during testing
-          #:nocov:
+          # :nocov:
           # @api private
           def new_legacy_template_dir(context, uri, path, module_metadata = {})
             LegacyTemplateDir.new(context, uri, path, module_metadata)
           end
-          #:nocov:
+          # :nocov:
 
           # Renders a new module
           #
           # @param options [Hash{Object => Object}] A list of options to pass through to the renderer. See PDK::Template::TemplateDir helper methods for other options
           # @see #render
           # @api private
-          #:nocov: This is tested in acceptance and packaging tests
+          # :nocov: This is tested in acceptance and packaging tests
           def render_module(options = {})
             require 'pdk/template/renderer/v1/template_file'
 
@@ -98,7 +98,7 @@ module PDK
               yield dest_path, dest_content, dest_status
             end
           end
-          #:nocov:
+          # :nocov:
 
           # Returns all files in the given template directories
           #
