@@ -10,7 +10,7 @@ describe 'pdk new fact', module_command: true do
           its(:exit_status) { is_expected.to eq 0 }
           its(:stdout) { is_expected.to match(%r{Files added}) }
           its(:stdout) { is_expected.to match(%r{#{File.join('lib', 'facter', 'new_fact.rb')}}) }
-          its(:stdout) { is_expected.to match(%r{#{ File.join('spec', 'unit', 'facter', 'new_fact_spec.rb')}}) }
+          its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'unit', 'facter', 'new_fact_spec.rb')}}) }
           its(:stderr) { is_expected.to have_no_output }
 
           it_behaves_like 'it creates a fact',

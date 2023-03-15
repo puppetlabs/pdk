@@ -9,7 +9,7 @@ describe 'pdk new function', module_command: true do
           its(:exit_status) { is_expected.to eq 0 }
           its(:stdout) { is_expected.to match(%r{Files added}) }
           its(:stdout) { is_expected.to match(%r{#{File.join('lib', 'puppet', 'functions', 'abs.rb')}}) }
-          its(:stdout) { is_expected.to match(%r{#{ File.join('dspec', 'functions', 'abs_spec.rb')}}) }
+          its(:stdout) { is_expected.to match(%r{#{File.join('dspec', 'functions', 'abs_spec.rb')}}) }
           its(:stderr) { is_expected.to have_no_output }
 
           it_behaves_like 'it creates a function',
@@ -22,7 +22,7 @@ describe 'pdk new function', module_command: true do
           its(:exit_status) { is_expected.to eq 0 }
           its(:stdout) { is_expected.to match(%r{Files added}) }
           its(:stdout) { is_expected.to match(%r{#{File.join('functions', 'abs.pp')}}) }
-          its(:stdout) { is_expected.to match(%r{#{ File.join('spec', 'functions', 'abs_spec.rb')}}) }
+          its(:stdout) { is_expected.to match(%r{#{File.join('spec', 'functions', 'abs_spec.rb')}}) }
           its(:stderr) { is_expected.to have_no_output }
 
           it_behaves_like 'it creates a function',
