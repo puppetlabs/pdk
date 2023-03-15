@@ -8,9 +8,9 @@ describe 'pdk validate', module_command: true do
 
     before(:all) do
       File.open(File.join('manifests', 'init.pp'), 'w') do |f|
-        f.puts <<-EOS
-# validate_all
-class validate_all {}
+        f.puts <<~EOS
+          # validate_all
+          class validate_all {}
         EOS
       end
     end
@@ -30,11 +30,11 @@ class validate_all {}
 
       before(:all) do
         File.open(init_pp, 'w') do |f|
-          f.puts <<-EOS
-# foo
-class validate_all {
-  Fails here because of gibberish
-}
+          f.puts <<~EOS
+            # foo
+            class validate_all {
+              Fails here because of gibberish
+            }
           EOS
         end
       end

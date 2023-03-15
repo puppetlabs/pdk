@@ -3,8 +3,8 @@ module PDK::CLI
     name 'env'
     usage 'env'
     summary '(Experimental) Output environment variables for specific Puppet context'
-    description <<-EOF
-[experimental] Aids in setting a CLI context for a specified version of Puppet by outputting export commands for necessary environment variables.
+    description <<~EOF
+      [experimental] Aids in setting a CLI context for a specified version of Puppet by outputting export commands for necessary environment variables.
     EOF
 
     PDK::CLI.puppet_version_options(self)

@@ -27,10 +27,10 @@ describe 'pdk convert', module_command: true do
     before(:all) do
       FileUtils.rm_f 'metadata.json'
       File.open('.sync.yml', 'w') do |f|
-        f.puts <<-EOS
----
-.project:
-  unmanaged: true
+        f.puts <<~EOS
+          ---
+          .project:
+            unmanaged: true
         EOS
       end
     end
@@ -56,10 +56,10 @@ describe 'pdk convert', module_command: true do
     before(:all) do
       FileUtils.rm_f 'metadata.json'
       File.open('.sync.yml', 'w') do |f|
-        f.puts <<-EOS
----
-.project:
-  unmanaged: true
+        f.puts <<~EOS
+          ---
+          .project:
+            unmanaged: true
         EOS
       end
     end
@@ -85,10 +85,10 @@ describe 'pdk convert', module_command: true do
 
     before(:all) do
       File.open('.sync.yml', 'w') do |f|
-        f.puts <<-EOS
----
-.gitignore:
-  unmanaged: true
+        f.puts <<~EOS
+          ---
+          .gitignore:
+            unmanaged: true
         EOS
       end
 
@@ -113,10 +113,10 @@ describe 'pdk convert', module_command: true do
 
     before(:all) do
       File.open('.sync.yml', 'w') do |f|
-        f.puts <<-EOS
----
-.travis.yml:
-  delete: true
+        f.puts <<~EOS
+          ---
+          .travis.yml:
+            delete: true
         EOS
       end
     end

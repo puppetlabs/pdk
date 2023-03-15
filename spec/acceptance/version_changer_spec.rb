@@ -53,28 +53,28 @@ describe 'puppet version selection' do
     describe 'puppet-dev uses the correct puppet env' do
       before(:all) do
         File.open(File.join('manifests', 'init.pp'), 'w') do |f|
-          f.puts <<-PPFILE
-# version_select
-class version_select {
-}
+          f.puts <<~PPFILE
+            # version_select
+            class version_select {
+            }
           PPFILE
         end
 
         FileUtils.mkdir_p(File.join('spec', 'classes'))
         File.open(File.join('spec', 'classes', 'version_select_spec.rb'), 'w') do |f|
-          f.puts <<-TESTFILE
-# frozen_string_literal: true
+          f.puts <<~TESTFILE
+            # frozen_string_literal: true
 
-require 'spec_helper'
+            require 'spec_helper'
 
-describe 'version_select' do
-  context 'test env' do
-    it('has path') {
-      path = Gem::Specification.find_by_name('puppet').source.options.key?('path')
-      expect(path).to be true
-    }
-  end
-end
+            describe 'version_select' do
+              context 'test env' do
+                it('has path') {
+                  path = Gem::Specification.find_by_name('puppet').source.options.key?('path')
+                  expect(path).to be true
+                }
+              end
+            end
           TESTFILE
         end
       end

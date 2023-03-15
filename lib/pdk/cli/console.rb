@@ -4,10 +4,10 @@ module PDK::CLI
     usage 'console [console_options]'
     summary '(Experimental) Start a session of the puppet debugger console.'
     default_subcommand 'help'
-    description <<-EOF
-The pdk console runs a interactive session of the puppet debugger tool to test out snippets of code, run
-language evaluations, datatype prototyping and much more.  A virtual playground for your puppet code!
-For usage details see the puppet debugger docs at https://docs.puppet-debugger.com.
+    description <<~EOF
+      The pdk console runs a interactive session of the puppet debugger tool to test out snippets of code, run
+      language evaluations, datatype prototyping and much more.  A virtual playground for your puppet code!
+      For usage details see the puppet debugger docs at https://docs.puppet-debugger.com.
 
     EOF
 
@@ -52,16 +52,16 @@ For usage details see the puppet debugger docs at https://docs.puppet-debugger.c
 
     # Logs a fatal message about the gem missing and how to add it
     def inform_user_for_missing_gem(gem_name = 'puppet-debugger', version = '~> 0.14')
-      PDK.logger.fatal(<<-EOF
-Your Gemfile is missing the #{gem_name} gem.  You can add the missing gem
-by updating your #{File.join(PDK::Util.module_root, '.sync.yml')} file with the following
-and running pdk update.
+      PDK.logger.fatal(<<~EOF
+        Your Gemfile is missing the #{gem_name} gem.  You can add the missing gem
+        by updating your #{File.join(PDK::Util.module_root, '.sync.yml')} file with the following
+        and running pdk update.
 
-Gemfile:
-  required:
-    ":development":
-      - gem: #{gem_name}
-        version: \"#{version}\"
+        Gemfile:
+          required:
+            ":development":
+              - gem: #{gem_name}
+                version: \"#{version}\"
 
       EOF
                       )

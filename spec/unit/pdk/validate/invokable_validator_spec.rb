@@ -368,12 +368,12 @@ describe PDK::Validate::InvokableValidator do
       end
       let(:globbed_files) { files.map { |file| File.join(context_root, file) } }
       let(:project_ignore_yaml) do
-        <<CONTENTS
----
-ignore:
-- "/*.yaml"
-- vendor/*.yaml
-CONTENTS
+        <<~CONTENTS
+          ---
+          ignore:
+          - "/*.yaml"
+          - vendor/*.yaml
+        CONTENTS
       end
 
       it 'does not match the ignored files' do

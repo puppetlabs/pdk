@@ -12,12 +12,12 @@ describe 'pdk validate tasks', module_command: true do
     context 'with valid task' do
       before(:all) do
         File.open(File.join('tasks', 'valid.json'), 'w') do |f|
-          f.puts <<-EOS
-{
-  "puppet_task_version": 1,
-  "supports_noop": false,
-  "description": "A short description of this task"
-}
+          f.puts <<~EOS
+            {
+              "puppet_task_version": 1,
+              "supports_noop": false,
+              "description": "A short description of this task"
+            }
           EOS
         end
       end
@@ -41,12 +41,12 @@ describe 'pdk validate tasks', module_command: true do
     context 'with an invalid task name' do
       before(:all) do
         File.open(File.join('tasks', 'Invalid.json'), 'w') do |f|
-          f.puts <<-EOS
-{
-  "puppet_task_version": 1,
-  "supports_noop": "false",
-  "description": "A short description of this task"
-}
+          f.puts <<~EOS
+            {
+              "puppet_task_version": 1,
+              "supports_noop": "false",
+              "description": "A short description of this task"
+            }
           EOS
         end
       end
