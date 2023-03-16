@@ -78,7 +78,7 @@ describe PDK::Template::Fetcher do
   end
 
   describe PDK::Template::Fetcher::AbstractFetcher do
-    subject(:fetcher) { PDK::Template::Fetcher::AbstractFetcher.new(template_uri, fetcher_options) }
+    subject(:fetcher) { described_class.new(template_uri, fetcher_options) }
 
     it 'responds to uri' do
       expect(fetcher.uri).to eq(template_uri)

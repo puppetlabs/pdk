@@ -31,7 +31,7 @@ describe PDK::Template::Renderer do
   end
 
   describe PDK::Template::Renderer::AbstractRenderer do
-    subject(:renderer) { PDK::Template::Renderer::AbstractRenderer.new(template_path, template_uri, pdk_context) }
+    subject(:renderer) { described_class.new(template_path, template_uri, pdk_context) }
 
     it 'responds to template_root' do
       expect(renderer.template_root).to eq(template_path)
