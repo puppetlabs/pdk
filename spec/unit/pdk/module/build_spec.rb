@@ -324,15 +324,15 @@ describe PDK::Module::Build do
     end
 
     it 'returns false for paths not matched by the patterns' do
-      expect(instance.ignored_path?(File.join(module_dir, 'bar'))).to be_falsey
+      expect(instance).not_to be_ignored_path(File.join(module_dir, 'bar'))
     end
 
     it 'returns true for paths matched by the patterns' do
-      expect(instance.ignored_path?(File.join(module_dir, 'foo'))).to be_truthy
+      expect(instance).to be_ignored_path(File.join(module_dir, 'foo'))
     end
 
     it 'returns true for children of ignored parent directories' do
-      expect(instance.ignored_path?(File.join(module_dir, 'vendor', 'test'))).to be_truthy
+      expect(instance).to be_ignored_path(File.join(module_dir, 'vendor', 'test'))
     end
   end
 

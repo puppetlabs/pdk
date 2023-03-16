@@ -230,7 +230,7 @@ describe PDK::Generate::PuppetObject do
       end
 
       it 'renders the object file' do
-        expect(templated_object.stage_changes(update_manager).changes?).to be_truthy
+        expect(templated_object.stage_changes(update_manager)).to be_changes
       end
     end
 
@@ -249,7 +249,7 @@ describe PDK::Generate::PuppetObject do
       let(:non_template_files) { { 'additional_file' => 'additional content' } }
 
       it 'renders the object file' do
-        expect(templated_object.stage_changes(update_manager).changes?).to be_truthy
+        expect(templated_object.stage_changes(update_manager)).to be_changes
       end
     end
   end

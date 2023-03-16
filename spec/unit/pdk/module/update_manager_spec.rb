@@ -8,7 +8,7 @@ describe PDK::Module::UpdateManager do
 
   describe '#initialize' do
     it 'has no pending changes by default' do
-      expect(update_manager.changes?).to be_falsey
+      expect(update_manager).not_to be_changes
     end
   end
 
@@ -20,7 +20,7 @@ describe PDK::Module::UpdateManager do
     end
 
     it 'creates a pending change' do
-      expect(update_manager.changes?).to be_truthy
+      expect(update_manager).to be_changes
     end
 
     it 'creates a file added change' do
@@ -28,7 +28,7 @@ describe PDK::Module::UpdateManager do
     end
 
     it 'knows that the file will be changed' do
-      expect(update_manager.changed?(dummy_file)).to be_truthy
+      expect(update_manager).to be_changed(dummy_file)
     end
 
     context 'when syncing the changes' do
@@ -63,7 +63,7 @@ describe PDK::Module::UpdateManager do
       end
 
       it 'does not create a pending change' do
-        expect(update_manager.changes?).to be_falsey
+        expect(update_manager).not_to be_changes
       end
     end
 
@@ -73,7 +73,7 @@ describe PDK::Module::UpdateManager do
       end
 
       it 'creates a pending change' do
-        expect(update_manager.changes?).to be_truthy
+        expect(update_manager).to be_changes
       end
 
       it 'creates a file removed change' do
@@ -81,7 +81,7 @@ describe PDK::Module::UpdateManager do
       end
 
       it 'knows that the file will be changed' do
-        expect(update_manager.changed?(dummy_file)).to be_truthy
+        expect(update_manager).to be_changed(dummy_file)
       end
 
       context 'when syncing the changes' do
@@ -178,7 +178,7 @@ describe PDK::Module::UpdateManager do
       end
 
       it 'creates a pending change' do
-        expect(update_manager.changes?).to be_truthy
+        expect(update_manager).to be_changes
       end
 
       it 'creates a file modified change' do
@@ -193,7 +193,7 @@ describe PDK::Module::UpdateManager do
       end
 
       it 'knows that the file will be changed' do
-        expect(update_manager.changed?(dummy_file)).to be_truthy
+        expect(update_manager).to be_changed(dummy_file)
       end
 
       context 'when syncing the changes' do
@@ -223,7 +223,7 @@ describe PDK::Module::UpdateManager do
       end
 
       it 'does not create a pending change' do
-        expect(update_manager.changes?).to be_falsey
+        expect(update_manager).not_to be_changes
       end
 
       it 'does not create a file modified change' do
@@ -231,7 +231,7 @@ describe PDK::Module::UpdateManager do
       end
 
       it 'knows that the file will not be changed' do
-        expect(update_manager.changed?(dummy_file)).to be_falsey
+        expect(update_manager).not_to be_changed(dummy_file)
       end
 
       context 'when syncing the changes' do

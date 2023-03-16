@@ -333,19 +333,19 @@ describe PDK::Config::Namespace do
 
     context 'on a root namespace' do
       it 'returns false' do
-        expect(config.child_namespace?).to be_falsey
+        expect(config).not_to be_child_namespace
       end
     end
 
     context 'on a nested namespace' do
       it 'returns true' do
-        expect(config['nested'].child_namespace?).to be_truthy
+        expect(config['nested']).to be_child_namespace
       end
     end
 
     context 'on a mounted file' do
       it 'returns true' do
-        expect(config['mounted'].child_namespace?).to be_truthy
+        expect(config['mounted']).to be_child_namespace
       end
     end
   end
@@ -356,19 +356,19 @@ describe PDK::Config::Namespace do
 
     context 'on a root namespace' do
       it 'returns false' do
-        expect(config.include_in_parent?).to be_falsey
+        expect(config).not_to be_include_in_parent
       end
     end
 
     context 'on a nested namespace' do
       it 'returns true' do
-        expect(config['nested'].include_in_parent?).to be_truthy
+        expect(config['nested']).to be_include_in_parent
       end
     end
 
     context 'on a mounted file' do
       it 'returns true' do
-        expect(config['mounted'].include_in_parent?).to be_falsey
+        expect(config['mounted']).not_to be_include_in_parent
       end
     end
   end
