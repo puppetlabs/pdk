@@ -122,7 +122,7 @@ module PDK
         self
       end
 
-      def to_json
+      def to_json(*_args)
         require 'json'
 
         JSON.pretty_generate(@data.dup.delete_if { |_key, value| value.nil? })
