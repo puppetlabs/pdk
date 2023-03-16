@@ -89,6 +89,7 @@ describe 'pdk validate tasks', module_command: true do
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
+
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('task-metadata-lint').with_attributes(
               'classname' => 'task-metadata-lint',

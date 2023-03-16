@@ -49,6 +49,7 @@ describe 'pdk build', module_command: true do
 
           describe command("minitar list -l #{pkg_file}") do
             its(:exit_status) { is_expected.to eq(0) }
+
             its(:stdout) do
               is_expected.to satisfy('show that all the files in the tarball have sane modes') do |output|
                 output.split("\n").all? do |line|

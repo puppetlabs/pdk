@@ -23,11 +23,13 @@ describe 'pdk config get' do
       its(:exit_status) { is_expected.to eq 0 }
       # There should be two configuration items returned
       its(:stdout) { expect(is_expected.target.split("\n").count).to eq(2) }
+
       its(:stdout) do
         result = is_expected.target.split("\n").sort
         expect(result[0]).to match('user.analytics.disabled=true')
         expect(result[1]).to match(%r{user.analytics.user-id=.+})
       end
+
       its(:stderr) { is_expected.to match(%r{The 'pdk config get' command is deprecated}) }
     end
 

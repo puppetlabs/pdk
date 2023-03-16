@@ -23,6 +23,7 @@ describe 'pdk new test', module_command: true do
 
         describe file(File.join('spec', 'classes', 'new_unit_test_spec.rb')) do
           it { is_expected.to be_file }
+
           its(:content) do
             is_expected.to match(%r{describe 'new_unit_test' do})
           end
@@ -39,6 +40,7 @@ describe 'pdk new test', module_command: true do
 
         describe file(File.join('spec', 'defines', 'def_type_spec.rb')) do
           it { is_expected.to be_file }
+
           its(:content) do
             is_expected.to match(%r{describe 'new_unit_test::def_type' do})
           end

@@ -32,6 +32,7 @@ describe 'Specifying a template-ref' do
 
       describe file('foo/metadata.json') do
         it { is_expected.to be_file }
+
         its(:content_as_json) do
           is_expected.to include('template-ref' => match(%r{2\.3\.0}))
         end

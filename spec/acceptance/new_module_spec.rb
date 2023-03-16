@@ -19,6 +19,7 @@ describe 'pdk new module' do
 
       describe file(File.join('new_module', 'metadata.json')) do
         it { is_expected.to be_file }
+
         its(:content_as_json) do
           is_expected.to include(
             'name' => match(%r{-new_module}),

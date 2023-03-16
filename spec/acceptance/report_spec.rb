@@ -48,6 +48,7 @@ describe 'Saves report to a file' do
         its(:stdout) { is_expected.to have_no_output }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
         its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
+
         its(:stderr) do
           # Due to spinners writing at arbitrary cursor locations, we can't depend on the text
           # being at a the beginning of a line.
