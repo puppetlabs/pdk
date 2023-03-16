@@ -6,7 +6,7 @@ describe PDK::Template::Renderer::V1::TemplateFile do
 
   let(:data) { { configs: { 'test' => 'value' }, some: 'value' } }
 
-  context '#config_for' do
+  describe '#config_for' do
     subject { template_file.config_for(filename) }
 
     let(:filename) { 'testfile' }

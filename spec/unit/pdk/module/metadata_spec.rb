@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/module/metadata'
 
 describe PDK::Module::Metadata do
-  context '.from_file' do
+  describe '.from_file' do
     let(:metadata_json_path) { '/tmp/metadata.json' }
     let(:metadata_json_content) do
       {
