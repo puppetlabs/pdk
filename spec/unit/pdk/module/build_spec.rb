@@ -36,11 +36,11 @@ describe PDK::Module::Build do
 
     context 'by default' do
       it 'uses the current working directory as the module directory' do
-        is_expected.to have_attributes(module_dir: pwd)
+        expect(subject).to have_attributes(module_dir: pwd)
       end
 
       it 'places the built packages in the pkg directory in the module' do
-        is_expected.to have_attributes(target_dir: File.join(pwd, 'pkg'))
+        expect(subject).to have_attributes(target_dir: File.join(pwd, 'pkg'))
       end
     end
 
@@ -52,11 +52,11 @@ describe PDK::Module::Build do
       end
 
       it 'uses the provided path as the module directory' do
-        is_expected.to have_attributes(module_dir: initialize_options[:module_dir])
+        expect(subject).to have_attributes(module_dir: initialize_options[:module_dir])
       end
 
       it 'places the built packages in the pkg directory in the module' do
-        is_expected.to have_attributes(target_dir: File.join(initialize_options[:module_dir], 'pkg'))
+        expect(subject).to have_attributes(target_dir: File.join(initialize_options[:module_dir], 'pkg'))
       end
     end
 
@@ -68,11 +68,11 @@ describe PDK::Module::Build do
       end
 
       it 'uses the current working directory as the module directory' do
-        is_expected.to have_attributes(module_dir: pwd)
+        expect(subject).to have_attributes(module_dir: pwd)
       end
 
       it 'places the built packages in the provided path' do
-        is_expected.to have_attributes(target_dir: initialize_options[:'target-dir'])
+        expect(subject).to have_attributes(target_dir: initialize_options[:'target-dir'])
       end
     end
 
@@ -85,11 +85,11 @@ describe PDK::Module::Build do
       end
 
       it 'uses the provided module_dir path as the module directory' do
-        is_expected.to have_attributes(module_dir: initialize_options[:module_dir])
+        expect(subject).to have_attributes(module_dir: initialize_options[:module_dir])
       end
 
       it 'places the built packages in the provided target_dir path' do
-        is_expected.to have_attributes(target_dir: initialize_options[:'target-dir'])
+        expect(subject).to have_attributes(target_dir: initialize_options[:'target-dir'])
       end
     end
   end
@@ -373,21 +373,21 @@ describe PDK::Module::Build do
       let(:available_files) { ['.gitignore'] }
 
       it 'returns the path to the .gitignore file' do
-        is_expected.to eq(File.join(module_dir, '.gitignore'))
+        expect(subject).to eq(File.join(module_dir, '.gitignore'))
       end
 
       context 'and .pmtignore is present' do
         let(:available_files) { ['.gitignore', '.pmtignore'] }
 
         it 'returns the path to the .pmtignore file' do
-          is_expected.to eq(File.join(module_dir, '.pmtignore'))
+          expect(subject).to eq(File.join(module_dir, '.pmtignore'))
         end
 
         context 'and .pdkignore is present' do
           let(:available_files) { possible_files }
 
           it 'returns the path to the .pdkignore file' do
-            is_expected.to eq(File.join(module_dir, '.pdkignore'))
+            expect(subject).to eq(File.join(module_dir, '.pdkignore'))
           end
         end
       end
@@ -410,9 +410,9 @@ describe PDK::Module::Build do
       end
 
       it 'returns a PathSpec object with the target dir' do
-        is_expected.to be_a(PathSpec)
-        is_expected.not_to be_empty
-        is_expected.to match('pkg/')
+        expect(subject).to be_a(PathSpec)
+        expect(subject).not_to be_empty
+        expect(subject).to match('pkg/')
       end
     end
 
@@ -426,8 +426,8 @@ describe PDK::Module::Build do
       end
 
       it 'returns a PathSpec object populated by the ignore file' do
-        is_expected.to be_a(PathSpec)
-        is_expected.to have_attributes(specs: array_including(an_instance_of(PathSpec::GitIgnoreSpec)))
+        expect(subject).to be_a(PathSpec)
+        expect(subject).to have_attributes(specs: array_including(an_instance_of(PathSpec::GitIgnoreSpec)))
       end
     end
   end

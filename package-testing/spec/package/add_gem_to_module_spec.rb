@@ -26,7 +26,7 @@ describe 'C100545 - Generate a module, add a gem to it, and validate it' do
 
         it 'differs from the vendored lockfile' do
           vendored_lockfile = File.join(install_dir, 'share', 'cache', 'Gemfile.lock')
-          is_expected.not_to eq(file(vendored_lockfile).content)
+          expect(subject).not_to eq(file(vendored_lockfile).content)
         end
       end
     end

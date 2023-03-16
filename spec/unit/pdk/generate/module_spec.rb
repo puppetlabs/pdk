@@ -771,7 +771,7 @@ describe PDK::Generate::Module do
       let(:login) { 'testuser123' }
 
       it 'returns the unaltered login' do
-        is_expected.to eq(login)
+        expect(subject).to eq(login)
       end
     end
 
@@ -779,7 +779,7 @@ describe PDK::Generate::Module do
       let(:login) { nil }
 
       it 'warns the user and returns the string "username"' do
-        is_expected.to eq('username')
+        expect(subject).to eq('username')
       end
     end
 
@@ -788,7 +788,7 @@ describe PDK::Generate::Module do
 
       it 'warns the user and returns the login with the characters removed' do
         expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
-        is_expected.to eq('testuser')
+        expect(subject).to eq('testuser')
       end
     end
 
@@ -797,7 +797,7 @@ describe PDK::Generate::Module do
 
       it 'warns the user and returns the login with the characters downcased' do
         expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
-        is_expected.to eq('administrator')
+        expect(subject).to eq('administrator')
       end
     end
 
@@ -806,7 +806,7 @@ describe PDK::Generate::Module do
 
       it 'warns the user and returns the string "username"' do
         expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
-        is_expected.to eq('username')
+        expect(subject).to eq('username')
       end
     end
   end

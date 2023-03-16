@@ -32,7 +32,7 @@ describe PDK::Analytics do
       let(:disabled) { true }
 
       it 'returns an instance of the Noop client' do
-        is_expected.to be_an_instance_of(described_class::Client::Noop)
+        expect(subject).to be_an_instance_of(described_class::Client::Noop)
       end
     end
 
@@ -40,7 +40,7 @@ describe PDK::Analytics do
       let(:disabled) { false }
 
       it 'returns an instance of the GoogleAnalytics client' do
-        is_expected.to be_an_instance_of(described_class::Client::GoogleAnalytics)
+        expect(subject).to be_an_instance_of(described_class::Client::GoogleAnalytics)
       end
 
       context 'when the client instantiation fails' do
@@ -49,7 +49,7 @@ describe PDK::Analytics do
         end
 
         it 'returns an instance of the Noop client' do
-          is_expected.to be_an_instance_of(described_class::Client::Noop)
+          expect(subject).to be_an_instance_of(described_class::Client::Noop)
         end
       end
     end

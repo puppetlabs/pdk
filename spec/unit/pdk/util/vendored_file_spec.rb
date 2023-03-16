@@ -30,7 +30,7 @@ describe PDK::Util::VendoredFile do
       end
 
       it 'returns the content of the file vendored in the package' do
-        is_expected.to eq(package_vendored_content)
+        expect(subject).to eq(package_vendored_content)
       end
     end
 
@@ -45,7 +45,7 @@ describe PDK::Util::VendoredFile do
         end
 
         it 'returns the content of the vendored file' do
-          is_expected.to eq(gem_vendored_content)
+          expect(subject).to eq(gem_vendored_content)
         end
       end
 
@@ -80,7 +80,7 @@ describe PDK::Util::VendoredFile do
           end
 
           it 'returns the downloaded content' do
-            is_expected.to eq(gem_vendored_content)
+            expect(subject).to eq(gem_vendored_content)
           end
         end
 

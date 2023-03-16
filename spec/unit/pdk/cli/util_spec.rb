@@ -175,7 +175,7 @@ describe PDK::CLI::Util do
         gemset: { puppet: puppet_version },
         ruby_version: ruby_version,
       }
-      is_expected.to eq(expected_result)
+      expect(subject).to eq(expected_result)
     end
   end
 

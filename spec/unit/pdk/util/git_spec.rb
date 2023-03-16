@@ -157,7 +157,7 @@ describe PDK::Util::Git do
       end
 
       it 'returns only the SHA for the exact ref match' do
-        is_expected.to eq('main-sha')
+        expect(subject).to eq('main-sha')
       end
     end
   end

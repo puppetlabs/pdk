@@ -324,7 +324,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { true }
 
         it 'returns main' do
-          is_expected.to eq('main')
+          expect(subject).to eq('main')
         end
       end
 
@@ -332,7 +332,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { false }
 
         it 'returns main' do
-          is_expected.to eq('main')
+          expect(subject).to eq('main')
         end
       end
     end
@@ -344,7 +344,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { false }
 
         it 'returns the built-in TEMPLATE_REF' do
-          is_expected.to eq(PDK::TEMPLATE_REF)
+          expect(subject).to eq(PDK::TEMPLATE_REF)
         end
       end
 
@@ -352,7 +352,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { true }
 
         it 'returns main' do
-          is_expected.to eq('main')
+          expect(subject).to eq('main')
         end
       end
     end
@@ -364,7 +364,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { false }
 
         it 'returns the built-in TEMPLATE_REF' do
-          is_expected.to eq(PDK::TEMPLATE_REF)
+          expect(subject).to eq(PDK::TEMPLATE_REF)
         end
       end
 
@@ -372,7 +372,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { true }
 
         it 'returns main' do
-          is_expected.to eq('main')
+          expect(subject).to eq('main')
         end
       end
     end
@@ -452,7 +452,7 @@ describe PDK::Util::TemplateURI do
         let(:answers_template_url) { 'https://github.com/puppetlabs/pdk-module-template' }
 
         it 'converts it to the new default template URL' do
-          is_expected.to include(
+          expect(subject).to include(
             type: 'PDK answers',
             uri: Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'),
             allow_fallback: true,
@@ -464,7 +464,7 @@ describe PDK::Util::TemplateURI do
         let(:answers_template_url) { 'https://github.com/my/pdk-template' }
 
         it 'uses the template as specified' do
-          is_expected.to include(
+          expect(subject).to include(
             type: 'PDK answers',
             uri: Addressable::URI.parse(answers_template_url),
             allow_fallback: true,
@@ -479,7 +479,7 @@ describe PDK::Util::TemplateURI do
       end
 
       it 'does not include a PDK answers template option' do
-        is_expected.not_to include(type: 'PDK answers', uri: anything, allow_fallback: true)
+        expect(subject).not_to include(type: 'PDK answers', uri: anything, allow_fallback: true)
       end
     end
 
@@ -507,7 +507,7 @@ describe PDK::Util::TemplateURI do
         let(:expected_uri) { described_class.default_template_addressable_uri.tap { |obj| obj.fragment = 'main' } }
 
         it 'converts the keyword to the default template' do
-          is_expected.to include(
+          expect(subject).to include(
             type: 'metadata.json',
             uri: expected_uri,
             allow_fallback: true,
@@ -519,7 +519,7 @@ describe PDK::Util::TemplateURI do
         let(:metadata_url) { 'git@github.com:puppetlabs/pdk-templates.git' }
 
         it 'converts the URL to and ssh:// URI' do
-          is_expected.to include(
+          expect(subject).to include(
             type: 'metadata.json',
             uri: Addressable::URI.new(
               scheme: 'ssh',

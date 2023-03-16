@@ -498,7 +498,7 @@ describe PDK::Module::Convert do
       end
 
       it do
-        is_expected.to eq(PDK::Util::TemplateURI.new(options))
+        expect(subject).to eq(PDK::Util::TemplateURI.new(options))
       end
     end
   end
@@ -640,7 +640,7 @@ describe PDK::Module::Convert do
       let(:objects) { [] }
 
       it 'returns an empty array' do
-        is_expected.to eq([])
+        expect(subject).to eq([])
       end
     end
 
@@ -657,11 +657,11 @@ describe PDK::Module::Convert do
       end
 
       it 'returns an array of generators' do
-        is_expected.to all(be_an_instance_of(PDK::Generate::PuppetClass))
+        expect(subject).to all(be_an_instance_of(PDK::Generate::PuppetClass))
       end
 
       it 'instantiates all the generators as spec_only' do
-        is_expected.to all(have_attributes(spec_only?: true))
+        expect(subject).to all(have_attributes(spec_only?: true))
       end
     end
   end

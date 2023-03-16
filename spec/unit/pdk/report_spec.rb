@@ -5,7 +5,7 @@ describe PDK::Report do
   %w[junit text].each do |report_format|
     it "can format the report as #{report_format}" do
       expect(described_class.formats).to include(report_format)
-      is_expected.to respond_to("write_#{report_format}")
+      expect(subject).to respond_to("write_#{report_format}")
     end
   end
 
@@ -18,7 +18,7 @@ describe PDK::Report do
   end
 
   it 'has no events in the report by default' do
-    is_expected.to have_attributes(events: {})
+    expect(subject).to have_attributes(events: {})
   end
 
   context 'when adding events to the report' do

@@ -97,7 +97,7 @@ describe PDK::Util do
     subject { described_class.make_tmpdir_name('test') }
 
     it 'returns a path based on Dir.tmpdir' do
-      is_expected.to match(a_string_starting_with(Dir.tmpdir))
+      expect(subject).to match(a_string_starting_with(Dir.tmpdir))
     end
   end
 
@@ -226,7 +226,7 @@ describe PDK::Util do
 
     context 'when the PDK was installed from a native package', version_file: true do
       it 'returns the directory where the version file is located' do
-        is_expected.to eq(File.dirname(version_file))
+        expect(subject).to eq(File.dirname(version_file))
       end
     end
   end
@@ -244,7 +244,7 @@ describe PDK::Util do
 
     context 'when the PDK was installed from a native package', version_file: true do
       it 'returns the path to the share/cache directory in the package' do
-        is_expected.to eq(File.join(File.dirname(version_file), 'share', 'cache'))
+        expect(subject).to eq(File.join(File.dirname(version_file), 'share', 'cache'))
       end
     end
   end
@@ -259,7 +259,7 @@ describe PDK::Util do
       end
 
       it 'returns a path in the %LOCALAPPDATA% folder' do
-        is_expected.to eq(File.join('C:/Users/test', 'PDK', 'cache'))
+        expect(subject).to eq(File.join('C:/Users/test', 'PDK', 'cache'))
       end
     end
 
@@ -270,7 +270,7 @@ describe PDK::Util do
       end
 
       it 'returns a path to a hidden folder in the users home directory' do
-        is_expected.to eq(File.join('/home/test', '.pdk', 'cache'))
+        expect(subject).to eq(File.join('/home/test', '.pdk', 'cache'))
       end
     end
   end
@@ -285,7 +285,7 @@ describe PDK::Util do
       end
 
       it 'returns a path in the %LOCALAPPDATA% folder' do
-        is_expected.to eq(File.join('C:/Users/test', 'PDK'))
+        expect(subject).to eq(File.join('C:/Users/test', 'PDK'))
       end
     end
 
@@ -299,7 +299,7 @@ describe PDK::Util do
       end
 
       it 'returns a path inside the users .config directory' do
-        is_expected.to eq('/xdg_home/test/.config/pdk')
+        expect(subject).to eq('/xdg_home/test/.config/pdk')
       end
     end
   end
@@ -328,7 +328,7 @@ describe PDK::Util do
         end
 
         it 'returns a path in the Program Data directory' do
-          is_expected.to eq(windows_path)
+          expect(subject).to eq(windows_path)
         end
       end
 
@@ -340,7 +340,7 @@ describe PDK::Util do
         end
 
         it 'returns a path in the Program Data directory' do
-          is_expected.to eq(windows_path)
+          expect(subject).to eq(windows_path)
         end
       end
     end
@@ -352,7 +352,7 @@ describe PDK::Util do
       end
 
       it 'returns a path inside the system opt directory' do
-        is_expected.to match(%r{\A/opt/})
+        expect(subject).to match(%r{\A/opt/})
       end
     end
   end
@@ -370,7 +370,7 @@ describe PDK::Util do
       let(:in_module_root) { true }
 
       it 'valid fixtures dir' do
-        is_expected.to eq(File.join(File.dirname(metadata_path), 'spec', 'fixtures'))
+        expect(subject).to eq(File.join(File.dirname(metadata_path), 'spec', 'fixtures'))
       end
     end
 
@@ -379,7 +379,7 @@ describe PDK::Util do
       let(:in_module_root) { false }
 
       it 'invalid fixtures dir' do
-        is_expected.to be_nil
+        expect(subject).to be_nil
       end
     end
   end
@@ -397,7 +397,7 @@ describe PDK::Util do
       let(:in_module_root) { true }
 
       it 'returns the path to the directory containing the metadata.json file' do
-        is_expected.to eq(File.dirname(metadata_path))
+        expect(subject).to eq(File.dirname(metadata_path))
       end
     end
 
@@ -557,7 +557,7 @@ describe PDK::Util do
 
     context 'when the metadata.json can be read' do
       it 'returns the metadata object' do
-        is_expected.to eq(mock_metadata.data)
+        expect(subject).to eq(mock_metadata.data)
       end
     end
 

@@ -277,7 +277,7 @@ describe PDK::Module::Update do
       include_context 'with mock metadata'
 
       it 'returns the metadata object' do
-        is_expected.to eq(mock_metadata)
+        expect(subject).to eq(mock_metadata)
       end
     end
 
@@ -298,7 +298,7 @@ describe PDK::Module::Update do
     include_context 'with mock metadata'
 
     it 'returns the template-url value from the module metadata' do
-      is_expected.to eq('https://github.com/puppetlabs/pdk-templates')
+      expect(subject).to eq('https://github.com/puppetlabs/pdk-templates')
     end
   end
 
@@ -311,7 +311,7 @@ describe PDK::Module::Update do
       let(:template_ref) { '1.3.2-0-g07678c8' }
 
       it 'returns the tag name' do
-        is_expected.to eq('1.3.2')
+        expect(subject).to eq('1.3.2')
       end
     end
 
@@ -319,7 +319,7 @@ describe PDK::Module::Update do
       let(:template_ref) { 'heads/main-4-g1234abc' }
 
       it 'returns the branch name and the commit SHA' do
-        is_expected.to eq('main@1234abc')
+        expect(subject).to eq('main@1234abc')
       end
     end
   end
@@ -335,7 +335,7 @@ describe PDK::Module::Update do
       end
 
       it 'returns the tag name' do
-        is_expected.to eq(PDK::TEMPLATE_REF)
+        expect(subject).to eq(PDK::TEMPLATE_REF)
       end
     end
 
@@ -351,7 +351,7 @@ describe PDK::Module::Update do
       let(:template_ref) { 'main-0-g07678c8' }
 
       it 'returns the branch name and the commit SHA' do
-        is_expected.to eq('main@3cdd84e')
+        expect(subject).to eq('main@3cdd84e')
       end
     end
   end
@@ -381,7 +381,7 @@ describe PDK::Module::Update do
       let(:options) { { :'template-ref' => 'my-custom-branch' } }
 
       it 'returns the specified template-ref value' do
-        is_expected.to eq('my-custom-branch')
+        expect(subject).to eq('my-custom-branch')
       end
     end
 
@@ -404,7 +404,7 @@ describe PDK::Module::Update do
             end
 
             it 'returns the default ref' do
-              is_expected.to eq(PDK::Util::TemplateURI.default_template_ref)
+              expect(subject).to eq(PDK::Util::TemplateURI.default_template_ref)
             end
           end
 
@@ -414,7 +414,7 @@ describe PDK::Module::Update do
             end
 
             it 'returns the ref from the metadata' do
-              is_expected.to eq(template_url.split('#').last)
+              expect(subject).to eq(template_url.split('#').last)
             end
           end
         end
@@ -425,7 +425,7 @@ describe PDK::Module::Update do
           end
 
           it 'returns the ref from the metadata' do
-            is_expected.to eq(template_url.split('#').last)
+            expect(subject).to eq(template_url.split('#').last)
           end
         end
       end
@@ -436,7 +436,7 @@ describe PDK::Module::Update do
         end
 
         it 'returns the ref stored in the template_url metadata' do
-          is_expected.to eq(template_url.split('#').last)
+          expect(subject).to eq(template_url.split('#').last)
         end
       end
     end

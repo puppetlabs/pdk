@@ -53,7 +53,7 @@ describe 'Updating an existing module' do
           subject { super().stdout.split("\n") }
 
           it 'does not output any unexpected errors' do
-            is_expected.to all(match(%r{\((?:info|warning|error)\): (?:puppet-lint|rubocop|task-metadata-lint|task-name|puppet-epp)}i))
+            expect(subject).to all(match(%r{\((?:info|warning|error)\): (?:puppet-lint|rubocop|task-metadata-lint|task-name|puppet-epp)}i))
           end
         end
       end

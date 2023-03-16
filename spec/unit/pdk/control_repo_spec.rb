@@ -13,7 +13,7 @@ describe PDK::ControlRepo do
       let(:control_repo_root) { true }
 
       it 'returns the path to the directory containing the environment.conf file' do
-        is_expected.to eq(File.dirname(environment_path))
+        expect(subject).to eq(File.dirname(environment_path))
       end
     end
 

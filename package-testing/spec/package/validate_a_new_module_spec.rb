@@ -37,7 +37,7 @@ describe 'C100321 - Generate a module and validate it (i.e. ensure bundle instal
           it 'is identical to the vendored lockfile' do
             vendored_lockfile = File.join(install_dir, 'share', 'cache', "Gemfile-#{ruby_version}.lock")
 
-            is_expected.to eq(file(vendored_lockfile).content.gsub(%r{^DEPENDENCIES.+?\n\n}m, ''))
+            expect(subject).to eq(file(vendored_lockfile).content.gsub(%r{^DEPENDENCIES.+?\n\n}m, ''))
           end
         end
       end

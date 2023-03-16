@@ -33,7 +33,7 @@ describe PDK::Report::Event do
       end
 
       it 'converts the path to one relative to the module root' do
-        is_expected.to have_attributes(file: 'lib/some/file.rb')
+        expect(subject).to have_attributes(file: 'lib/some/file.rb')
       end
     end
 
