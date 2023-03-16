@@ -3,7 +3,7 @@ require 'pdk/config/json_schema_namespace'
 
 def load_and_ignore(namespace)
   namespace.schema
-rescue StandardError # rubocop:disable Lint/HandleExceptions In this I don't want to handle the error
+rescue StandardError
   # Do nothing
 end
 

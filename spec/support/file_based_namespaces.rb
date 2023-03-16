@@ -1,4 +1,3 @@
-# rubocop:disable RSpec/NamedSubject This is a shared example, you don't know what the name of the subject is
 RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
   before(:each) do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
@@ -206,4 +205,3 @@ RSpec.shared_examples 'a json file based namespace' do
     end
   end
 end
-# rubocop:enable RSpec/NamedSubject

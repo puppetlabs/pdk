@@ -7,7 +7,7 @@ describe 'pdk remove config' do
   shared_examples 'a saved configuration file' do |new_content|
     it 'saves the setting' do
       # Force the command to run if not already
-      subject.exit_status # rubocop:disable RSpec/NamedSubject We don't actually know the name here
+      subject.exit_status
       expect(File).to exist(ENV['PDK_ANSWER_FILE'])
 
       actual_content = File.open(ENV['PDK_ANSWER_FILE'], 'rb:utf-8') { |f| f.read }
@@ -18,7 +18,7 @@ describe 'pdk remove config' do
   shared_examples 'a saved JSON configuration file' do |new_json_content|
     it 'saves the setting' do
       # Force the command to run if not already
-      subject.exit_status # rubocop:disable RSpec/NamedSubject We don't actually know the name here
+      subject.exit_status
       expect(File).to exist(ENV['PDK_ANSWER_FILE'])
 
       actual_content_raw = File.open(ENV['PDK_ANSWER_FILE'], 'rb:utf-8') { |f| f.read }
