@@ -172,7 +172,7 @@ module PDK
 
         # Split combined requirements like ">= 4.7.0 < 6.0.0" into their
         # component requirements [">= 4.7.0", "< 6.0.0"]
-        pattern = %r{#{Gem::Requirement::PATTERN_RAW}}
+        pattern = %r{#{Gem::Requirement::PATTERN_RAW}}o
         requirement_strings = metadata_requirement['version_requirement'].scan(pattern).map do |req|
           req.compact.join(' ')
         end

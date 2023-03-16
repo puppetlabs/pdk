@@ -47,8 +47,8 @@ describe PDK::Config do
 
       before(:each) do
         # Allow anything in the fixtures dir to actually be read
-        allow(PDK::Util::Filesystem).to receive(:file?).with(%r{#{FIXTURES_DIR}}).and_call_original
-        allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{#{FIXTURES_DIR}}).and_call_original
+        allow(PDK::Util::Filesystem).to receive(:file?).with(%r{#{FIXTURES_DIR}}o).and_call_original
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{#{FIXTURES_DIR}}o).and_call_original
       end
 
       it 'has environment settings' do
