@@ -236,7 +236,7 @@ module PDK
             spec_tuple.name == 'puppet' && Gem::Platform.match(spec_tuple.platform)
           end
           puppet_versions = puppet_tuples.map { |name, _| name.version }.uniq
-          puppet_versions.sort { |a, b| b <=> a }
+          puppet_versions.sort.reverse
         end
       end
 

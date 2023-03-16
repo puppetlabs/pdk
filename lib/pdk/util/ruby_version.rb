@@ -155,7 +155,7 @@ module PDK
           puppet_specs << spec if spec.name == 'puppet'
         end
 
-        @available_puppet_versions = puppet_specs.map(&:version).sort { |a, b| b <=> a }
+        @available_puppet_versions = puppet_specs.map(&:version).sort.reverse
       end
 
       private
