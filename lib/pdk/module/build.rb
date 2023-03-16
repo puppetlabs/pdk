@@ -7,8 +7,7 @@ module PDK
         new(options).build
       end
 
-      attr_reader :module_dir
-      attr_reader :target_dir
+      attr_reader :module_dir, :target_dir
 
       def initialize(options = {})
         @module_dir = PDK::Util::Filesystem.expand_path(options[:module_dir] || Dir.pwd)

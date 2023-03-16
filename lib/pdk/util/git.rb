@@ -3,10 +3,7 @@ require 'pdk'
 module PDK
   module Util
     class GitError < StandardError
-      attr_reader :stdout
-      attr_reader :stderr
-      attr_reader :exit_code
-      attr_reader :args
+      attr_reader :stdout, :stderr, :exit_code, :args
 
       def initialze(args, result)
         @args = args

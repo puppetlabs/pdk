@@ -12,8 +12,7 @@ module PDK
     end
 
     class ExitWithError < StandardError
-      attr_reader :exit_code
-      attr_reader :log_level
+      attr_reader :exit_code, :log_level
 
       def initialize(msg, opts = {})
         @exit_code = opts.fetch(:exit_code, 1)

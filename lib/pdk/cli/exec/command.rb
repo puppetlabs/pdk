@@ -4,10 +4,8 @@ module PDK
   module CLI
     module Exec
       class Command
-        attr_reader :argv
-        attr_reader :context
-        attr_accessor :timeout
-        attr_accessor :environment
+        attr_reader :argv, :context
+        attr_accessor :timeout, :environment
         attr_writer :exec_group
 
         # The spinner for this command.

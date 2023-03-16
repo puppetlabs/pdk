@@ -3,9 +3,7 @@ require 'pdk'
 module PDK
   module Generate
     class PuppetObject
-      attr_reader :context
-      attr_reader :object_name
-      attr_reader :options
+      attr_reader :context, :object_name, :options
 
       # Initialises the PDK::Generate::PuppetObject object.
       #

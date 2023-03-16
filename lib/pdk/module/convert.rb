@@ -7,9 +7,7 @@ module PDK
         new(module_dir, options).run
       end
 
-      attr_reader :module_dir
-
-      attr_reader :options
+      attr_reader :module_dir, :options
 
       def initialize(module_dir, options = {})
         @module_dir = module_dir

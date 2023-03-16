@@ -5,8 +5,7 @@ module PDK
     class VendoredFile
       class DownloadError < StandardError; end
 
-      attr_reader :file_name
-      attr_reader :url
+      attr_reader :file_name, :url
 
       def initialize(file_name, url)
         @file_name = file_name

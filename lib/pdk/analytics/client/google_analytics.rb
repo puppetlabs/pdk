@@ -14,12 +14,7 @@ module PDK
           env_vars: :cd5,
         }.freeze
 
-        attr_reader :user_id
-        attr_reader :logger
-        attr_reader :app_name
-        attr_reader :app_id
-        attr_reader :app_version
-        attr_reader :app_installer
+        attr_reader :user_id, :logger, :app_name, :app_id, :app_version, :app_installer
 
         def initialize(opts)
           # lazy-load expensive gem code
