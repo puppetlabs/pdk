@@ -165,7 +165,7 @@ module PDK
         request.body = data.to_json
 
         require 'openssl'
-        use_ssl = uri.class == URI::HTTPS
+        use_ssl = uri.instance_of?(URI::HTTPS)
         response = Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
           http.request(request)
         end
