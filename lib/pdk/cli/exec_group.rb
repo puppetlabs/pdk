@@ -38,7 +38,7 @@ module PDK
       #
       # @api private
       def register(&_block)
-        raise PDK::CLI::FatalError, 'No block registered' unless block_given?
+        raise PDK::CLI::FatalError, 'No block registered' unless _block
       end
 
       # The return code of running all registered blocks

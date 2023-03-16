@@ -110,7 +110,7 @@ module PDK
       #
       # @return [nil]
       def default_to(&block)
-        raise ArgumentError, 'must be passed a block' unless block_given?
+        raise ArgumentError, 'must be passed a block' unless block
 
         @default_to = block
       end

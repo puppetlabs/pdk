@@ -36,7 +36,7 @@ module PDK
         @loaded_from_file = false
         @read_only = false
 
-        instance_eval(&block) if block_given?
+        instance_eval(&block) if block
       end
 
       # Pre-configure a value in the namespace.
@@ -50,7 +50,7 @@ module PDK
       # @return [nil]
       def setting(key, &block)
         @settings[key.to_s] ||= default_setting_class.new(key.to_s, self)
-        @settings[key.to_s].instance_eval(&block) if block_given?
+        @settings[key.to_s].instance_eval(&block) if block
       end
 
       # Mount a provided [self] (or subclass) into the namespace.
@@ -69,7 +69,7 @@ module PDK
 
         obj.parent = self
         obj.name = key.to_s
-        obj.instance_eval(&block) if block_given?
+        obj.instance_eval(&block) if block
         @mounts[key.to_s] = obj
       end
 
