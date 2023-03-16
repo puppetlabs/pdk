@@ -18,7 +18,7 @@ describe 'Specifying a template-ref' do
     ]
 
     around(:each) do |example|
-      old_answer_file = ENV['PDK_ANSWER_FILE']
+      old_answer_file = ENV.fetch('PDK_ANSWER_FILE', nil)
       ENV['PDK_ANSWER_FILE'] = 'foo_answers.json'
       example.run
       ENV['PDK_ANSWER_FILE'] = old_answer_file

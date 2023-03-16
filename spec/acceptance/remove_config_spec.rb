@@ -8,9 +8,9 @@ describe 'pdk remove config' do
     it 'saves the setting' do
       # Force the command to run if not already
       subject.exit_status
-      expect(File).to exist(ENV['PDK_ANSWER_FILE'])
+      expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
 
-      actual_content = File.open(ENV['PDK_ANSWER_FILE'], 'rb:utf-8') { |f| f.read }
+      actual_content = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8') { |f| f.read }
       expect(actual_content).to eq(new_content)
     end
   end
@@ -19,9 +19,9 @@ describe 'pdk remove config' do
     it 'saves the setting' do
       # Force the command to run if not already
       subject.exit_status
-      expect(File).to exist(ENV['PDK_ANSWER_FILE'])
+      expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
 
-      actual_content_raw = File.open(ENV['PDK_ANSWER_FILE'], 'rb:utf-8') { |f| f.read }
+      actual_content_raw = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8') { |f| f.read }
       actual_json_content = ::JSON.parse(actual_content_raw)
       expect(actual_json_content).to eq(new_json_content)
     end
@@ -40,7 +40,7 @@ describe 'pdk remove config' do
     end
 
     after(:all) do
-      File.delete(ENV['PDK_ANSWER_FILE']) if File.exist?(ENV['PDK_ANSWER_FILE']) # rubocop:disable PDK/FileDelete,PDK/FileExistPredicate Need actual file calls here
+      File.delete(ENV.fetch('PDK_ANSWER_FILE', nil)) if File.exist?(ENV.fetch('PDK_ANSWER_FILE', nil)) # rubocop:disable PDK/FileDelete,PDK/FileExistPredicate Need actual file calls here
       ENV.delete('PDK_ANSWER_FILE')
     end
   end

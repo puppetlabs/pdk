@@ -1,4 +1,4 @@
-if ENV['COVERAGE'] == 'yes'
+if ENV.fetch('COVERAGE', nil) == 'yes'
   require 'codecov'
   require 'simplecov'
   require 'simplecov-console'

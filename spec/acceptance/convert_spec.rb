@@ -158,7 +158,7 @@ describe 'pdk convert', module_command: true do
     include_context 'in a new module', 'non_default_template'
 
     around(:each) do |example|
-      old_answer_file = ENV['PDK_ANSWER_FILE']
+      old_answer_file = ENV.fetch('PDK_ANSWER_FILE', nil)
       ENV['PDK_ANSWER_FILE'] = File.expand_path(File.join('..', 'non_default_template_answers.json'))
       example.run
       ENV['PDK_ANSWER_FILE'] = old_answer_file

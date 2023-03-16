@@ -34,7 +34,7 @@ describe PDK do
 
   describe '.feature_flag?' do
     around(:each) do |example|
-      old_flags = ENV['PDK_FEATURE_FLAGS']
+      old_flags = ENV.fetch('PDK_FEATURE_FLAGS', nil)
       ENV['PDK_FEATURE_FLAGS'] = flag_env_var
       example.run
       ENV['PDK_FEATURE_FLAGS'] = old_flags
