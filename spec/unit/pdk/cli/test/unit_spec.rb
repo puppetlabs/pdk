@@ -7,12 +7,12 @@ describe '`pdk test unit`' do
   let(:puppet_version) { '5.4.0' }
   let(:ruby_version) { '2.4.3' }
 
-  it { is_expected.not_to be_nil }
-
   before(:each) do
     allow(PDK::Util::RubyVersion).to receive(:use)
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(hash_including(:puppet))
   end
+
+  it { is_expected.not_to be_nil }
 
   context 'with --help' do
     it do
