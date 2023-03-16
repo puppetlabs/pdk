@@ -278,7 +278,7 @@ module PDK
 
         if (format_args = cmd_opts.delete(:format))
           formats = PDK::CLI::Util::OptionNormalizer.report_formats(format_args)
-          dimensions[:output_format] = formats.map { |r| r[:method].to_s.gsub(%r{\Awrite_}, '') }.sort.uniq.join(',')
+          dimensions[:output_format] = formats.map { |r| r[:method].to_s.delete_prefix('write_') }.sort.uniq.join(',')
         else
           dimensions[:output_format] = 'default'
         end
