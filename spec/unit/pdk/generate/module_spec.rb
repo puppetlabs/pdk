@@ -289,18 +289,17 @@ describe PDK::Generate::Module do
   end
 
   describe '.module_interview' do
-    subject(:interview_metadata) do
-      metadata = PDK::Module::Metadata.new
-      metadata.update!(default_metadata)
-      described_class.module_interview(metadata, options)
-      metadata.data
-    end
-
     subject(:answers) do
       interview_metadata
       PDK.config.get(%w[user module_defaults])
     end
 
+    let(:interview_metadata) do
+      metadata = PDK::Module::Metadata.new
+      metadata.update!(default_metadata)
+      described_class.module_interview(metadata, options)
+      metadata.data
+    end
     let(:module_name) { 'bar' }
     let(:default_metadata) { {} }
     let(:options) { { module_name: module_name } }

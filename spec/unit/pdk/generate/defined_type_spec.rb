@@ -2,19 +2,18 @@ require 'spec_helper'
 require 'pdk/generate/defined_type'
 
 describe PDK::Generate::DefinedType do
-  subject(:generator) { described_class.new(context, given_name, options) }
-
-  subject(:target_object_path) { generator.target_object_path }
-
-  subject(:target_spec_path) { generator.target_spec_path }
-
   subject(:template_data) { generator.template_data }
 
+  let(:generator) { described_class.new(context, given_name, options) }
   let(:context) { PDK::Context::Module.new(module_dir, module_dir) }
   let(:module_name) { 'test_module' }
   let(:module_dir) { '/tmp/test_module' }
   let(:options) { {} }
   let(:expected_name) { given_name }
+
+  let(:target_object_path) { generator.target_object_path }
+
+  let(:target_spec_path) { generator.target_spec_path }
 
   before(:each) do
     test_metadata = { 'name' => module_name }

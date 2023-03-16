@@ -2,14 +2,10 @@ require 'spec_helper'
 require 'pdk/report/event'
 
 describe PDK::Report::Event do
-  subject(:junit_event) { event.to_junit }
-
-  subject(:text_event) { event.to_text }
-
   subject { event }
 
+  let(:junit_event) { event.to_junit }
   let(:event) { described_class.new(default_data.merge(data)) }
-
   let(:default_data) do
     {
       file: 'testfile.rb',
@@ -17,8 +13,9 @@ describe PDK::Report::Event do
       state: :passed,
     }
   end
-
   let(:data) { {} }
+
+  let(:text_event) { event.to_text }
 
   context 'when validating arguments' do
     context 'and passed an absolute path to the file being tested' do

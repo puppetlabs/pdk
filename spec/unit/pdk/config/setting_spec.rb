@@ -2,10 +2,9 @@ require 'spec_helper'
 require 'pdk/config/setting'
 
 describe PDK::Config::Setting do
-  subject(:namespace) { PDK::Config::Namespace.new('rspec') }
-
   subject(:config_setting) { described_class.new(name, namespace) }
 
+  let(:namespace) { PDK::Config::Namespace.new('rspec') }
   let(:name) { 'my_config_setting' }
 
   describe '#qualified_name' do
