@@ -123,12 +123,13 @@ module PDK
         private
 
         def walk_keys(data, &block)
-          if data.is_a?(Hash)
+          case data
+          when Hash
             data.each_with_object({}) do |(k, v), acc|
               v = walk_keys(v, &block)
               acc[yield(k)] = v
             end
-          elsif data.is_a?(Array)
+          when Array
             data.map { |v| walk_keys(v, &block) }
           else
             data

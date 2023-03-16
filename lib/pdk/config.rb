@@ -124,9 +124,10 @@ module PDK
       return nil if root.nil? || root.empty?
 
       if keys.empty?
-        if root.is_a?(Array)
+        case root
+        when Array
           name = root
-        elsif root.is_a?(String)
+        when String
           name = split_key_string(root)
         else
           return nil

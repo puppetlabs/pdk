@@ -199,10 +199,11 @@ module PDK
       # Helper method to collate the default ignored paths
       # @return [PathSpec] Paths to ignore
       def ignore_pathspec
-        ignore_pathspec = if context.is_a?(PDK::Context::Module)
+        ignore_pathspec = case context
+                          when PDK::Context::Module
                             require 'pdk/module'
                             PDK::Module.default_ignored_pathspec(ignore_dotfiles?)
-                          elsif context.is_a?(PDK::Context::ControlRepo)
+                          when PDK::Context::ControlRepo
                             require 'pdk/control_repo'
                             PDK::ControlRepo.default_ignored_pathspec(ignore_dotfiles?)
                           else

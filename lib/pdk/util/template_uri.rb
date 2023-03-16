@@ -37,9 +37,10 @@ module PDK
       def initialize(opts_or_uri)
         require 'addressable'
         # If a uri string is passed, skip the valid uri finding code.
-        @uri = if opts_or_uri.is_a?(self.class)
+        @uri = case opts_or_uri
+               when self.class
                  opts_or_uri.uri
-               elsif opts_or_uri.is_a?(String)
+               when String
                  begin
                    uri, ref = opts_or_uri.split('#', 2)
                    if PDK::Util::TemplateURI.packaged_template?(uri)
@@ -50,7 +51,7 @@ module PDK
                  rescue Addressable::URI::InvalidURIError
                    raise PDK::CLI::FatalError, 'PDK::Util::TemplateURI attempted initialization with a non-uri string: {string}' % { string: opts_or_uri }
                  end
-               elsif opts_or_uri.is_a?(Addressable::URI)
+               when Addressable::URI
                  opts_or_uri.dup
                else
                  PDK::Util::TemplateURI.first_valid_uri(PDK::Util::TemplateURI.templates(opts_or_uri))

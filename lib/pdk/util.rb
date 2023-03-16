@@ -267,9 +267,10 @@ module PDK
     # @return [Object] duplicate of the original object
     #   the current working dir does not appear to be within a module.
     def deep_duplicate(object)
-      if object.is_a?(Array)
+      case object
+      when Array
         object.map { |item| deep_duplicate(item) }
-      elsif object.is_a?(Hash)
+      when Hash
         hash = object.dup
         hash.each_pair { |key, value| hash[key] = deep_duplicate(value) }
         hash

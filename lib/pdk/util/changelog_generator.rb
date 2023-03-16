@@ -94,16 +94,17 @@ module PDK
         end
 
         # Check for meta headers in first two header line matches
-        if %r{^### Changed}.match?(data)
+        case data
+        when %r{^### Changed}
           # Major Version bump
           version[0] += 1
           version[1] = 0
           version[2] = 0
-        elsif %r{^### Added}.match?(data)
+        when %r{^### Added}
           # Minor Version bump
           version[1] += 1
           version[2] = 0
-        elsif %r{^### Fixed}.match?(data)
+        when %r{^### Fixed}
           # Patch Version bump
           version[2] += 1
         end
