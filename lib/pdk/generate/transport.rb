@@ -8,7 +8,7 @@ module PDK
       end
 
       def template_files
-        # Note : Due to how the V1 templates work, the names of the source template files may be mismatched to
+        # NOTE: Due to how the V1 templates work, the names of the source template files may be mismatched to
         # their destination, e.g. transport_type.erb is really a transport schema
         files = {
           'transport_spec.erb' => File.join('spec', 'unit', 'puppet', 'transport', object_name) + '_spec.rb',
