@@ -33,7 +33,7 @@ module PDK
 
         output = changelog_content
 
-        raise PDK::CLI::ExitWithError, 'The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details' % { changelog_file: changelog_file } if output =~ %r{UNCATEGORIZED PRS; GO LABEL THEM} # rubocop:disable Metrics/LineLength
+        raise PDK::CLI::ExitWithError, 'The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details' % { changelog_file: changelog_file } if %r{UNCATEGORIZED PRS; GO LABEL THEM}.match?(output) # rubocop:disable Metrics/LineLength
 
         output
       end
@@ -43,7 +43,7 @@ module PDK
       # @param current_version [String, Gem::Version] The current version of the module
       # @return [String] The new version. May be the same as the current version if there are no notable changes
       def self.compute_next_version(current_version)
-        raise PDK::CLI::ExitWithError, 'Invalid version string %{version}' % { version: current_version } unless current_version =~ VERSION_REGEX
+        raise PDK::CLI::ExitWithError, 'Invalid version string %{version}' % { version: current_version } unless VERSION_REGEX.match?(current_version)
 
         version = Gem::Version.create(current_version).segments
         PDK.logger.info 'Determing the target version from \'%{file}\'' % { file: changelog_file }
@@ -94,16 +94,16 @@ module PDK
         end
 
         # Check for meta headers in first two header line matches
-        if data =~ %r{^### Changed}
+        if %r{^### Changed}.match?(data)
           # Major Version bump
           version[0] += 1
           version[1] = 0
           version[2] = 0
-        elsif data =~ %r{^### Added}
+        elsif %r{^### Added}.match?(data)
           # Minor Version bump
           version[1] += 1
           version[2] = 0
-        elsif data =~ %r{^### Fixed}
+        elsif %r{^### Fixed}.match?(data)
           # Patch Version bump
           version[2] += 1
         end

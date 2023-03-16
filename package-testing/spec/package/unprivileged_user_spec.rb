@@ -5,7 +5,7 @@ describe 'Running PDK as an unprivileged user' do
 
   before(:all) do
     hosts.each do |host|
-      next if host.platform =~ %r{windows}
+      next if %r{windows}.match?(host.platform)
 
       host.user_present('testuser')
 

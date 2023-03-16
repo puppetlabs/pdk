@@ -19,7 +19,7 @@ describe 'Using the PDK configuration commands' do
 
   def host_user_configdir(host)
     # This emulates the PDK::Util.configdir method
-    if host.platform =~ %r{windows}
+    if %r{windows}.match?(host.platform)
       # Ugh... The double backslash escaping makes me REALLY sad :_(
       windows_path(env_var(host, 'LOCALAPPDATA')) + '\\\\PDK'
     else

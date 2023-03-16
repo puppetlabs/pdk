@@ -93,7 +93,7 @@ module PDK::CLI
     # options are for the pdk and debugger pass through
     def process_opts(opts)
       args = opts.map do |e|
-        if e =~ %r{\A-{2}puppet|pe\-version|dev}
+        if %r{\A-{2}puppet|pe\-version|dev}.match?(e)
           value = e.split('=')
           (value.count < 2) ? value + [''] : value
         end
@@ -105,7 +105,7 @@ module PDK::CLI
         memo
       end
       # pass through all other args that are bound for puppet debugger
-      processed_args = opts.map { |e| e unless e =~ %r{\A-{2}puppet|pe\-version|dev} }.compact
+      processed_args = opts.map { |e| e unless %r{\A-{2}puppet|pe\-version|dev}.match?(e) }.compact
       [args, processed_args]
     end
 

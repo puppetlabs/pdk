@@ -225,7 +225,7 @@ module PDK
       #
       # @return [nil]
       def validate_path_encoding!(path)
-        return unless path =~ %r{[^\x00-\x7F]}
+        return unless %r{[^\x00-\x7F]}.match?(path)
 
         raise ArgumentError, "'%{path}' can only include ASCII characters in its path or " \
                              'filename in order to be compatible with a wide range of hosts.' % { path: path }

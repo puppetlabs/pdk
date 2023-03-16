@@ -97,7 +97,7 @@ module PDK
 
         return data if data.nil?
 
-        if data[:base] =~ %r{^(?:heads|remotes)/}
+        if %r{^(?:heads|remotes)/}.match?(data[:base])
           "#{data[:base].gsub(%r{^(heads/|remotes/\w+?/)}, '')}@#{data[:sha]}"
         else
           data[:base]
