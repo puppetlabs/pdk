@@ -95,7 +95,7 @@ RSpec.configure do |c|
     end
 
     # recover bundle environment from serverspec munging
-    bundler_env.keys.each do |k|
+    bundler_env.each_key do |k|
       ENV[k] = bundler_env[k]
     end
   end

@@ -173,14 +173,14 @@ module PDK
       def resolve(filter = nil)
         resolved = {}
         # Resolve the settings
-        settings.values.each do |setting|
+        settings.each_value do |setting|
           setting_name = setting.qualified_name
           if be_resolved?(setting_name, filter)
             resolved[setting_name] = setting.value.nil? ? setting.default : setting.value
           end
         end
         # Resolve the mounts
-        @mounts.values.each { |mount| resolved.merge!(mount.resolve(filter)) }
+        @mounts.each_value { |mount| resolved.merge!(mount.resolve(filter)) }
         resolved
       end
 

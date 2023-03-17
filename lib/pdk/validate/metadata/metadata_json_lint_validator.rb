@@ -61,7 +61,7 @@ module PDK
             )
           else
             json_data.delete('result')
-            json_data.keys.each do |type|
+            json_data.each_key do |type|
               json_data[type].each do |offense|
                 # metadata-json-lint groups the offenses by type, so the type ends
                 # up being `warnings` or `errors`. We want to convert that to the

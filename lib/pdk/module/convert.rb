@@ -249,7 +249,7 @@ module PDK
 
         footer = false
 
-        summary.keys.each do |category|
+        summary.each_key do |category|
           next if summary[category].empty?
 
           PDK::Report.default_target.puts("\n%{banner}" % { banner: generate_banner("Files to be #{category}", 40) })
