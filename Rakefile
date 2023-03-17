@@ -10,8 +10,8 @@ if File.exist?(build_defs_file)
     require 'yaml'
     @build_defaults ||= YAML.load_file(build_defs_file)
   rescue StandardError => e
-    STDERR.puts "Unable to load yaml from #{build_defs_file}:"
-    STDERR.puts e
+    $stderr.puts "Unable to load yaml from #{build_defs_file}:"
+    $stderr.puts e
   end
   @packaging_url  = @build_defaults['packaging_url']
   @packaging_repo = @build_defaults['packaging_repo']

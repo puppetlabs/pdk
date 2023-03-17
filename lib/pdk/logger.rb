@@ -6,7 +6,7 @@ module PDK
     WRAP_COLUMN_LIMIT = 78
 
     def initialize
-      super(STDERR)
+      super($stderr)
       @sent_messages = {}
 
       # TODO: Decide on output format.

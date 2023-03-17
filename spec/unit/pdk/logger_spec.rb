@@ -6,13 +6,13 @@ describe PDK::Logger do
 
   context 'by default' do
     it 'prints info messages to stdout' do
-      expect(STDERR).to receive(:write).with(a_string_matching(%r{test message}))
+      expect($stderr).to receive(:write).with(a_string_matching(%r{test message}))
 
       pdk_logger.info('test message')
     end
 
     it 'does not print debug messages to stdout' do
-      expect(STDERR).not_to receive(:write).with(anything)
+      expect($stderr).not_to receive(:write).with(anything)
 
       pdk_logger.debug('test message')
     end
@@ -26,7 +26,7 @@ describe PDK::Logger do
     end
 
     it 'prints debug messages to stdout' do
-      expect(STDERR).to receive(:write).with(a_string_matching(%r{test debug message}))
+      expect($stderr).to receive(:write).with(a_string_matching(%r{test debug message}))
 
       pdk_logger.debug('test debug message')
     end
@@ -36,7 +36,7 @@ describe PDK::Logger do
 
   describe '#warn_once' do
     it 'only sends each message once' do
-      expect(STDERR).to receive(:write).with("pdk (WARN): message 1\n").once
+      expect($stderr).to receive(:write).with("pdk (WARN): message 1\n").once
 
       pdk_logger.warn_once('message 1')
       pdk_logger.warn_once('message 1')
