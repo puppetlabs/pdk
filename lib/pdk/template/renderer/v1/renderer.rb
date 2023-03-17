@@ -122,7 +122,7 @@ module PDK
                 template_path.sub!(%r{\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
               end
             end
-            Hash[temp_paths.zip dirlocs]
+            (temp_paths.zip dirlocs).to_h
           end
         end
       end

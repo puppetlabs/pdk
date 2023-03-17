@@ -22,7 +22,7 @@ module PDK::Util::Windows::Process
                    .reject { |env_str| env_str.nil? || env_str.empty? || env_str[0] == '=' }
                    .reject { |env_str| contains_unicode_replacement.call(env_str) }
                    .map { |env_pair| env_pair.split('=', 2) }
-    Hash[pairs]
+    pairs.to_h
   ensure
     if env_ptr && !env_ptr.null?
       if FreeEnvironmentStringsW(env_ptr) == PDK::Util::Windows::WIN32_FALSE
