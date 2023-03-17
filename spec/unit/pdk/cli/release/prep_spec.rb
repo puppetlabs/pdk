@@ -51,7 +51,7 @@ describe 'PDK::CLI release prep' do
     end
 
     it 'skips building and publishing' do
-      expect(PDK::Module::Release).to receive(:new).with(Object, hash_including(:'skip-build' => true, :'skip-publish' => true))
+      expect(PDK::Module::Release).to receive(:new).with(Object, hash_including('skip-build': true, 'skip-publish': true))
 
       expect { PDK::CLI.run(cli_args.concat(%w[--force])) }.not_to raise_error
     end

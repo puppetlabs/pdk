@@ -189,7 +189,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when puppet-dev has been set' do
-      let(:options) { { :'puppet-dev' => true } }
+      let(:options) { { 'puppet-dev': true } }
       let(:ruby_version) { '2.4.4' }
       let(:puppet_version) { 'path/to/puppet' }
 
@@ -232,7 +232,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when puppet-version has been set' do
-      let(:options) { { :'puppet-version' => '4.10.10' } }
+      let(:options) { { 'puppet-version': '4.10.10' } }
       let(:ruby_version) { '2.1.9' }
       let(:puppet_version) { '4.10.10' }
 
@@ -257,7 +257,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when pe-version has been set' do
-      let(:options) { { :'pe-version' => '2017.3.1' } }
+      let(:options) { { 'pe-version': '2017.3.1' } }
       let(:ruby_version) { '2.4.3' }
       let(:puppet_version) { '5.3.2' }
 
@@ -331,7 +331,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when puppet-version is unmappable' do
-      let(:options) { { :'puppet-version' => '99.99.0' } }
+      let(:options) { { 'puppet-version': '99.99.0' } }
       let(:ruby_version) { '2.1.9' }
       let(:puppet_version) { '99.99.0' }
 
@@ -345,7 +345,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when pe-version is unmappable' do
-      let(:options) { { :'pe-version' => '99.99.0' } }
+      let(:options) { { 'pe-version': '99.99.0' } }
       let(:ruby_version) { '2.1.9' }
       let(:pe_version) { '99.99.0' }
 
@@ -359,7 +359,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when the Puppet version is older than 5.0.0' do
-      let(:options) { { :'puppet-version' => '4.10.10' } }
+      let(:options) { { 'puppet-version': '4.10.10' } }
       let(:ruby_version) { '2.1.9' }
       let(:puppet_version) { '4.10.10' }
 
@@ -376,7 +376,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when the Puppet version is at least 5.0.0' do
-      let(:options) { { :'puppet-version' => '5.0.0' } }
+      let(:options) { { 'puppet-version': '5.0.0' } }
       let(:ruby_version) { '2.4.5' }
       let(:puppet_version) { '5.0.0' }
 
@@ -404,7 +404,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when template-ref has been specified but not template-url' do
-      let(:options) { { :'template-ref' => '1.9.1' } }
+      let(:options) { { 'template-ref': '1.9.1' } }
 
       it 'raises an error' do
         expect { validate_template_opts }.to raise_error(PDK::CLI::ExitWithError, %r{--template-ref requires --template-url})
@@ -412,7 +412,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when template-ref and template-url have been specified' do
-      let(:options) { { :'template-url' => 'https://my/template', :'template-ref' => '1.9.1' } }
+      let(:options) { { 'template-url': 'https://my/template', 'template-ref': '1.9.1' } }
 
       it 'does not raise an error' do
         expect { validate_template_opts }.not_to raise_error
@@ -420,14 +420,14 @@ describe PDK::CLI::Util do
     end
 
     context 'when template-url has been specified but not template-ref' do
-      let(:options) { { :'template-url' => 'https://my/template' } }
+      let(:options) { { 'template-url': 'https://my/template' } }
 
       it 'does not raise an error' do
         expect { validate_template_opts }.not_to raise_error
       end
 
       context 'and the template-url value contains a #' do
-        let(:options) { { :'template-url' => 'https://my/template#1.9.1' } }
+        let(:options) { { 'template-url': 'https://my/template#1.9.1' } }
 
         it 'raises an error' do
           expect { validate_template_opts }.to raise_error(PDK::CLI::ExitWithError, %r{may not be used to specify paths containing #})
@@ -445,7 +445,7 @@ describe PDK::CLI::Util do
     let(:env_pe_version) { '2017.3' }
 
     context 'when --puppet-dev is set' do
-      let(:options) { { :'puppet-dev' => true } }
+      let(:options) { { 'puppet-dev': true } }
 
       it 'is silent' do
         expect(logger).not_to receive(:warn)
@@ -466,7 +466,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when --puppet-version is also set' do
-        let(:options) { { :'puppet-version' => cli_puppet_version, :'puppet-dev' => true } }
+        let(:options) { { 'puppet-version': cli_puppet_version, 'puppet-dev': true } }
 
         it 'exits with error' do
           expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*option}i)
@@ -484,7 +484,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when --pe-version is also set' do
-        let(:options) { { :'pe-version' => cli_pe_version, :'puppet-dev' => true } }
+        let(:options) { { 'pe-version': cli_pe_version, 'puppet-dev': true } }
 
         it 'exits with error' do
           expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*option}i)
@@ -503,7 +503,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when --puppet-version is set' do
-      let(:options) { { :'puppet-version' => cli_puppet_version } }
+      let(:options) { { 'puppet-version': cli_puppet_version } }
 
       it 'is silent' do
         expect(logger).not_to receive(:warn)
@@ -524,7 +524,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when --pe-version is also set' do
-        let(:options) { { :'puppet-version' => cli_puppet_version, :'pe-version' => cli_pe_version } }
+        let(:options) { { 'puppet-version': cli_puppet_version, 'pe-version': cli_pe_version } }
 
         it 'exits with error' do
           expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*option}i)
@@ -543,7 +543,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when --pe-version is set' do
-      let(:options) { { :'pe-version' => cli_pe_version } }
+      let(:options) { { 'pe-version': cli_pe_version } }
 
       it 'is silent' do
         expect(logger).not_to receive(:warn)
@@ -564,7 +564,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when --puppet-version is also set' do
-        let(:options) { { :'puppet-version' => cli_puppet_version, :'pe-version' => cli_pe_version } }
+        let(:options) { { 'puppet-version': cli_puppet_version, 'pe-version': cli_pe_version } }
 
         it 'exits with error' do
           expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*option}i)
@@ -596,7 +596,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when --puppet-version is also set' do
-        let(:options) { { :'puppet-version' => cli_puppet_version } }
+        let(:options) { { 'puppet-version': cli_puppet_version } }
 
         it 'warns about option precedence' do
           expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
@@ -616,7 +616,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when --pe-version is also set' do
-        let(:options) { { :'pe-version' => cli_pe_version } }
+        let(:options) { { 'pe-version': cli_pe_version } }
 
         it 'exits with error' do
           expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)
@@ -638,7 +638,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when --pe-version is also set' do
-        let(:options) { { :'pe-version' => cli_pe_version } }
+        let(:options) { { 'pe-version': cli_pe_version } }
 
         it 'warns about option precedence' do
           expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
@@ -658,7 +658,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when --puppet-version is also set' do
-        let(:options) { { :'puppet-version' => cli_puppet_version } }
+        let(:options) { { 'puppet-version': cli_puppet_version } }
 
         it 'exits with error' do
           expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)

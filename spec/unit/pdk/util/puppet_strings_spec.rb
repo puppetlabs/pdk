@@ -13,8 +13,8 @@ describe PDK::Util::PuppetStrings do
     let(:ruby_path) { File.join('path', 'to', 'ruby') }
     let(:mock_command) do
       instance_double(PDK::CLI::Exec::Command,
-                      :'context=' => true,
-                      :add_spinner => true)
+                      'context=': true,
+                      add_spinner: true)
     end
     let(:command_args) { %w[some args] }
 

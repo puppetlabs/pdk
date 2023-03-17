@@ -378,7 +378,7 @@ describe PDK::Module::Update do
     end
 
     context 'when a template-ref is specified' do
-      let(:options) { { :'template-ref' => 'my-custom-branch' } }
+      let(:options) { { 'template-ref': 'my-custom-branch' } }
 
       it 'returns the specified template-ref value' do
         expect(subject).to eq('my-custom-branch')

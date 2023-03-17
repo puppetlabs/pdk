@@ -62,12 +62,12 @@ describe PDK::Module::Release do
     context 'when skipping everything' do
       let(:options) do
         {
-          :'skip-validation' => true,
-          :'skip-changelog' => true,
-          :'skip-documentation' => true,
-          :'skip-dependency' => true,
-          :'skip-build' => true,
-          :'skip-publish' => true,
+          'skip-validation': true,
+          'skip-changelog': true,
+          'skip-documentation': true,
+          'skip-dependency': true,
+          'skip-build': true,
+          'skip-publish': true,
         }
       end
 
@@ -86,9 +86,9 @@ describe PDK::Module::Release do
     context 'when skipping nothing and forcing the release' do
       let(:options) do
         {
-          :force => true,
-          :'forge-upload-url' => 'https://localhost/api',
-          :'forge-token' => '12345',
+          force: true,
+          'forge-upload-url': 'https://localhost/api',
+          'forge-token': '12345',
         }
       end
 
@@ -146,7 +146,7 @@ describe PDK::Module::Release do
 
     context 'when detecting the version number' do
       let(:new_version) { '2.0.0' }
-      let(:options) { { :'skip-publish' => true } }
+      let(:options) { { 'skip-publish': true } }
 
       it 'returns a new version from Changelog Generator' do
         expect(PDK::Util::ChangelogGenerator).to receive(:latest_version).and_return('2.0.0')

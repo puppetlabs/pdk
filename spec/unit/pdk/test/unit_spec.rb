@@ -374,8 +374,8 @@ describe PDK::Test::Unit do
       context 'when enabled' do
         let(:options) do
           {
-            :'clean-fixtures' => true,
-            :tests => 'testmod_spec.rb',
+            'clean-fixtures': true,
+            tests: 'testmod_spec.rb',
           }
         end
 

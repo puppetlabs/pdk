@@ -107,7 +107,7 @@ describe 'PDK::CLI convert' do
       end
 
       it 'invokes the converter with the user supplied template' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including(:'template-url' => 'https://my/template'))
+        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including('template-url': 'https://my/template'))
       end
 
       it 'submits the command to analytics' do
@@ -126,7 +126,7 @@ describe 'PDK::CLI convert' do
       end
 
       it 'invokes the converter with the user supplied template' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including(:'template-url' => 'https://my/template', :'template-ref' => '1.0.0'))
+        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including('template-url': 'https://my/template', 'template-ref': '1.0.0'))
       end
 
       it 'submits the command to analytics' do
@@ -197,7 +197,7 @@ describe 'PDK::CLI convert' do
       end
 
       it 'passes the skip-interview option through to the converter' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including(:'skip-interview' => true))
+        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including('skip-interview': true))
       end
 
       it 'submits the command to analytics' do
@@ -216,7 +216,7 @@ describe 'PDK::CLI convert' do
       end
 
       it 'passes the full-interview option through to the converter' do
-        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including(:'full-interview' => true))
+        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including('full-interview': true))
       end
 
       it 'submits the command to analytics' do
@@ -236,7 +236,7 @@ describe 'PDK::CLI convert' do
 
       it 'ignores full-interview and continues with a log message' do
         expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --skip-interview.}i))
-        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including(:'skip-interview' => true, :'full-interview' => false))
+        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including('skip-interview': true, 'full-interview': false))
       end
 
       it 'submits the command to analytics' do
@@ -256,7 +256,7 @@ describe 'PDK::CLI convert' do
 
       it 'ignores full-interview and continues with a log message' do
         expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --force.}i))
-        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including(:force => true, :'full-interview' => false))
+        expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including(force: true, 'full-interview': false))
       end
 
       it 'submits the command to analytics' do
@@ -296,7 +296,7 @@ describe 'PDK::CLI convert' do
           expected_template = PDK::Util::TemplateURI.default_template_addressable_uri.to_s
 
           expect(PDK::Module::Convert).to receive(:invoke)
-            .with(module_root, hash_including(:'template-url' => expected_template))
+            .with(module_root, hash_including('template-url': expected_template))
           run
         end
 

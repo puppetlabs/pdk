@@ -114,7 +114,7 @@ describe 'Running `pdk new module`' do
       let(:template_url) { 'https://github.com/myuser/my-pdk-template' }
 
       it 'passes the value of the template-url option to PDK::Generate::Module.invoke' do
-        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(:'template-url' => template_url))
+        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including('template-url': template_url))
         expect(logger).to receive(:info).with("Creating new module: #{module_name}")
         PDK::CLI.run(['new', 'module', '--template-url', template_url, module_name])
       end
@@ -173,7 +173,7 @@ describe 'Running `pdk new module`' do
 
     context 'and the skip-interview flag' do
       it 'passes true as the value of the skip-interview option to PDK::Generate::Module.invoke' do
-        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(:'skip-interview' => true))
+        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including('skip-interview': true))
         expect(logger).to receive(:info).with("Creating new module: #{module_name}")
         PDK::CLI.run(['new', 'module', '--skip-interview', module_name])
       end
@@ -194,7 +194,7 @@ describe 'Running `pdk new module`' do
 
     context 'and the full-interview flag' do
       it 'passes true as the value of the full-interview option to PDK::Generate::Module.invoke' do
-        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(:'full-interview' => true))
+        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including('full-interview': true))
         expect(logger).to receive(:info).with("Creating new module: #{module_name}")
         PDK::CLI.run(['new', 'module', '--full-interview', module_name])
       end
@@ -216,7 +216,7 @@ describe 'Running `pdk new module`' do
     context 'and the --skip-interview and --full-interview flags have been passed' do
       it 'ignores full-interview and continues with a log message' do
         expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --skip-interview.}i))
-        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including(:'skip-interview' => true, :'full-interview' => false))
+        expect(PDK::Generate::Module).to receive(:invoke).with(hash_including('skip-interview': true, 'full-interview': false))
 
         PDK::CLI.run(['new', 'module', '--skip-interview', '--full-interview', module_name])
       end

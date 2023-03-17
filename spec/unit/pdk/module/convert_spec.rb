@@ -140,7 +140,7 @@ describe PDK::Module::Convert do
       end
 
       context 'and it is to add tests' do
-        let(:options) { { :'add-tests' => true } }
+        let(:options) { { 'add-tests': true } }
 
         before(:each) do
           # Don't test output here
@@ -253,7 +253,7 @@ describe PDK::Module::Convert do
           end
 
           context 'and it is to add tests' do
-            let(:options) { { :'add-tests' => true } }
+            let(:options) { { 'add-tests': true } }
 
             context 'and there are tests to add' do
               before(:each) do
@@ -324,7 +324,7 @@ describe PDK::Module::Convert do
         end
 
         context 'and it is to add tests' do
-          let(:options) { super().merge(:'add-tests' => true) }
+          let(:options) { super().merge('add-tests': true) }
 
           context 'and there are tests to add' do
             before(:each) do
@@ -483,7 +483,7 @@ describe PDK::Module::Convert do
     end
 
     context 'when a template-url is provided in the options' do
-      let(:options) { { :'template-url' => 'https://my/custom/template' } }
+      let(:options) { { 'template-url': 'https://my/custom/template' } }
 
       before(:each) do
         allow(PDK::Util::Git).to receive(:repo?).with(options[:'template-url']).and_return(true)
@@ -613,13 +613,13 @@ describe PDK::Module::Convert do
     subject { described_class.new(module_root, options).add_tests? }
 
     context 'when add-tests => true' do
-      let(:options) { { :'add-tests' => true } }
+      let(:options) { { 'add-tests': true } }
 
       it { is_expected.to be_truthy }
     end
 
     context 'when add-tests => false' do
-      let(:options) { { :'add-tests' => false } }
+      let(:options) { { 'add-tests': false } }
 
       it { is_expected.to be_falsey }
     end

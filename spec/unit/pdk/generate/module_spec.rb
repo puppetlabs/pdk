@@ -49,9 +49,9 @@ describe PDK::Generate::Module do
     let(:target_dir) { PDK::Util::Filesystem.expand_path('/path/to/target/module') }
     let(:invoke_opts) do
       {
-        :target_dir => target_dir,
-        :module_name => 'foo',
-        :'skip-interview' => true,
+        target_dir: target_dir,
+        module_name: 'foo',
+        'skip-interview': true,
       }
     end
 
@@ -211,27 +211,27 @@ describe PDK::Generate::Module do
           expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
           expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
 
-          described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+          described_class.invoke(invoke_opts.merge('template-url': 'cli-template'))
         end
 
         it 'takes precedence over the template-url answer' do
           PDK.config.set(%w[user module_defaults template-url], 'answer-template')
           expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('cli-template#main'), anything).and_yield(template_dir)
-          described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+          described_class.invoke(invoke_opts.merge('template-url': 'cli-template'))
         end
 
         it 'saves the template-url and template-ref to the answer file if it is not the default template' do
-          described_class.invoke(invoke_opts.merge(:'template-url' => 'cli-template'))
+          described_class.invoke(invoke_opts.merge('template-url': 'cli-template'))
           expect(PDK.config.get(%w[user module_defaults template-url])).to eq(Addressable::URI.parse('cli-template#main').to_s)
         end
 
         it 'saves the template-url and template-ref to the answer file if it is not the default ref' do
-          described_class.invoke(invoke_opts.merge(:'template-url' => default_template_url, :'template-ref' => '1.2.3'))
+          described_class.invoke(invoke_opts.merge('template-url': default_template_url, 'template-ref': '1.2.3'))
           expect(PDK.config.get(%w[user module_defaults template-url])).to eq("#{default_template_url}#1.2.3")
         end
 
         it 'clears the saved template-url answer if it is the default template' do
-          described_class.invoke(invoke_opts.merge(:'template-url' => default_template_url))
+          described_class.invoke(invoke_opts.merge('template-url': default_template_url))
           expect(PDK.config.get(%w[user module_defaults template-url])).to eq(nil)
         end
       end
@@ -362,7 +362,7 @@ describe PDK::Generate::Module do
     end
 
     context 'with --full-interview' do
-      let(:options) { { :module_name => module_name, :'full-interview' => true } }
+      let(:options) { { module_name: module_name, 'full-interview': true } }
 
       context 'when provided answers to all the questions' do
         include_context 'allow summary to be printed to stdout'
@@ -441,7 +441,7 @@ describe PDK::Generate::Module do
       context 'when the user chooses the default values for everything' do
         include_context 'allow summary to be printed to stdout'
 
-        let(:options) { { :module_name => 'bar', :username => 'defaultauthor', :'full-interview' => true } }
+        let(:options) { { module_name: 'bar', username: 'defaultauthor', 'full-interview': true } }
         let(:default_metadata) do
           {
             'author' => 'defaultauthor',
@@ -673,7 +673,7 @@ describe PDK::Generate::Module do
     let(:options) { { module_name: 'baz' } }
 
     context 'when provided :skip-interview => true' do
-      let(:options) { { :module_name => 'baz', :'skip-interview' => true } }
+      let(:options) { { module_name: 'baz', 'skip-interview': true } }
 
       it 'does not perform the module interview' do
         expect(described_class).not_to receive(:module_interview)

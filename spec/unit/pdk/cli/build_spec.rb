@@ -122,7 +122,7 @@ describe 'PDK::CLI build' do
       include_context 'exits cleanly'
 
       it 'invokes the builder with the default target directory' do
-        expect(PDK::Module::Build).to receive(:new).with(hash_with_defaults_including(:'target-dir' => File.join(Dir.pwd, 'pkg'))).and_return(mock_builder)
+        expect(PDK::Module::Build).to receive(:new).with(hash_with_defaults_including('target-dir': File.join(Dir.pwd, 'pkg'))).and_return(mock_builder)
       end
 
       it 'submits the command to analytics' do
@@ -136,7 +136,7 @@ describe 'PDK::CLI build' do
       let(:command_opts) { ['--target-dir', '/tmp/pdk_builds'] }
 
       it 'invokes the builder with the specified target directory' do
-        expect(PDK::Module::Build).to receive(:new).with(hash_including(:'target-dir' => '/tmp/pdk_builds')).and_return(mock_builder)
+        expect(PDK::Module::Build).to receive(:new).with(hash_including('target-dir': '/tmp/pdk_builds')).and_return(mock_builder)
       end
 
       it 'submits the command to analytics' do

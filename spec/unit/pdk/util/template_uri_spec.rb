@@ -67,8 +67,8 @@ describe PDK::Util::TemplateURI do
     context 'with options' do
       let(:opts_or_uri) do
         {
-          :'template-url' => 'https://github.com/my/pdk-templates.git',
-          :'template-ref' => 'custom',
+          'template-url': 'https://github.com/my/pdk-templates.git',
+          'template-ref': 'custom',
         }
       end
 
@@ -158,7 +158,7 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'and passed template-url' do
-          let(:opts_or_uri) { { :'template-url' => 'cli-templates' } }
+          let(:opts_or_uri) { { 'template-url': 'cli-templates' } }
 
           it 'returns the specified template' do
             expect(template_uri.to_s).to eq('cli-templates#main')
@@ -166,7 +166,7 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'and passed windows template-url' do
-          let(:opts_or_uri) { { :'template-url' => 'C:\\cli-templates' } }
+          let(:opts_or_uri) { { 'template-url': 'C:\\cli-templates' } }
 
           it 'returns the specified template' do
             allow(Gem).to receive(:win_platform?).and_return(true)
@@ -175,7 +175,7 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'and passed template-url and template-ref' do
-          let(:opts_or_uri) { { :'template-url' => 'cli-templates', :'template-ref' => 'cli-ref' } }
+          let(:opts_or_uri) { { 'template-url': 'cli-templates', 'template-ref': 'cli-ref' } }
 
           it 'returns the specified template and ref' do
             uri = Addressable::URI.parse('cli-templates')
@@ -384,7 +384,7 @@ describe PDK::Util::TemplateURI do
     let(:options) { {} }
 
     context 'when provided a template-url' do
-      subject(:cli_template_uri) { described_class.templates(:'template-url' => template_url).first[:uri] }
+      subject(:cli_template_uri) { described_class.templates('template-url': template_url).first[:uri] }
 
       context 'that is a ssh:// URL without a port' do
         let(:template_url) { 'ssh://git@github.com/1234/repo.git' }

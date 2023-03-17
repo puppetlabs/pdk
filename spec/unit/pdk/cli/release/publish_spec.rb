@@ -58,11 +58,11 @@ describe 'PDK::CLI release publish' do
       expect(PDK::Module::Release).to receive(:new).with(
         Object,
         hash_including(
-          :'skip-validation' => true,
-          :'skip-changelog' => true,
-          :'skip-dependency' => true,
-          :'skip-documentation' => true,
-          :'skip-build' => true,
+          'skip-validation': true,
+          'skip-changelog': true,
+          'skip-dependency': true,
+          'skip-documentation': true,
+          'skip-build': true,
         ),
       )
 
@@ -98,7 +98,7 @@ describe 'PDK::CLI release publish' do
         end
 
         it 'uses forge-token from environment' do
-          expect(PDK::Module::Release).to receive(:new).with(Object, hash_including(:'forge-token' => 'env123'))
+          expect(PDK::Module::Release).to receive(:new).with(Object, hash_including('forge-token': 'env123'))
 
           expect { PDK::CLI.run(cli_args) }.not_to raise_error
         end
@@ -114,7 +114,7 @@ describe 'PDK::CLI release publish' do
       end
 
       it 'value from command line takes precedence' do
-        expect(PDK::Module::Release).to receive(:new).with(Object, hash_including(:'forge-token' => 'cli123'))
+        expect(PDK::Module::Release).to receive(:new).with(Object, hash_including('forge-token': 'cli123'))
 
         expect { PDK::CLI.run(cli_args) }.not_to raise_error
       end

@@ -63,7 +63,7 @@ describe PDK::Module::Build do
     context 'if target_dir has been customised' do
       let(:initialize_options) do
         {
-          :'target-dir' => File.join(root_dir, 'tmp'),
+          'target-dir': File.join(root_dir, 'tmp'),
         }
       end
 
@@ -79,7 +79,7 @@ describe PDK::Module::Build do
     context 'if both module_dir and target_dir have been customised' do
       let(:initialize_options) do
         {
-          :'target-dir' => File.join(root_dir, 'var', 'cache'),
+          'target-dir': File.join(root_dir, 'var', 'cache'),
           module_dir: File.join(root_dir, 'tmp', 'git', 'my-module'),
         }
       end
@@ -112,7 +112,7 @@ describe PDK::Module::Build do
   end
 
   describe '#package_file' do
-    subject { described_class.new(:'target-dir' => target_dir).package_file }
+    subject { described_class.new('target-dir': target_dir).package_file }
 
     let(:target_dir) { File.join(root_dir, 'tmp') }
 
@@ -122,7 +122,7 @@ describe PDK::Module::Build do
   end
 
   describe '#build_dir' do
-    subject { described_class.new(:'target-dir' => target_dir).build_dir }
+    subject { described_class.new('target-dir': target_dir).build_dir }
 
     let(:target_dir) { File.join(root_dir, 'tmp') }
 
