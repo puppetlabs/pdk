@@ -84,8 +84,8 @@ Install PDK with the YUM package manager.
     -   Fedora 36
 
         ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-fedora-30.noarch.rpm
-                sudo dnf install pdk
+        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-fedora-36.noarch.rpm
+        sudo dnf install pdk
         ```
 
 2.  Open a terminal to re-source your shell profile and make PDK available to your PATH.
