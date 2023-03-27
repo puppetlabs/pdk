@@ -54,7 +54,7 @@ module PDK
         end
 
         def context=(new_context)
-          raise ArgumentError, "Expected execution context to be :system or :module but got '%{context}'." % { context: new_context } unless [:system, :module, :pwd].include?(new_context)
+          raise ArgumentError, format("Expected execution context to be :system or :module but got '%{context}'.", context: new_context) unless [:system, :module, :pwd].include?(new_context)
 
           @context = new_context
         end
@@ -133,12 +133,8 @@ module PDK
             duration: @duration,
           }
 
-          PDK.logger.debug 'STDOUT: %{output}' % {
-            output: process_data[:stdout].empty? ? 'N/A' : "\n#{process_data[:stdout]}",
-          }
-          PDK.logger.debug 'STDERR: %{output}' % {
-            output: process_data[:stderr].empty? ? 'N/A' : "\n#{process_data[:stderr]}",
-          }
+          PDK.logger.debug format('STDOUT: %{output}', output: process_data[:stdout].empty? ? 'N/A' : "\n#{process_data[:stdout]}")
+          PDK.logger.debug format('STDERR: %{output}', output: process_data[:stderr].empty? ? 'N/A' : "\n#{process_data[:stderr]}")
 
           process_data
         ensure
@@ -156,7 +152,7 @@ module PDK
           end
 
           ['FACTER', 'HIERA'].each do |gem|
-            PDK.logger.warn_once '%{varname} is not supported by PDK.' % { varname: "#{gem}_GEM_VERSION" } if PDK::Util::Env["#{gem}_GEM_VERSION"]
+            PDK.logger.warn_once format('%{varname} is not supported by PDK.', varname: "#{gem}_GEM_VERSION") if PDK::Util::Env["#{gem}_GEM_VERSION"]
           end
         end
 
@@ -226,7 +222,7 @@ module PDK
         def run_process!
           command_string = argv.join(' ')
 
-          PDK.logger.debug("Executing '%{command}'" % { command: command_string })
+          PDK.logger.debug(format("Executing '%{command}'", command: command_string))
 
           if context == :module
             PDK.logger.debug('Command environment:')
@@ -240,7 +236,7 @@ module PDK
           begin
             @process.start
           rescue ChildProcess::LaunchError => e
-            raise PDK::CLI::FatalError, "Failed to execute '%{command}': %{message}" % { command: command_string, message: e.message }
+            raise PDK::CLI::FatalError, format("Failed to execute '%{command}': %{message}", command: command_string, message: e.message)
           end
 
           if timeout
@@ -256,8 +252,8 @@ module PDK
 
           @duration = Time.now - start_time
 
-          PDK.logger.debug("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})" %
-            { command: command_string, duration_in_seconds: @duration, exit_code: @process.exit_code })
+          PDK.logger.debug(format("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})", command: command_string, duration_in_seconds: @duration,
+                                                                                                                                     exit_code: @process.exit_code))
         end
 
         private

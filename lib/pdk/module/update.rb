@@ -10,11 +10,7 @@ module PDK
 
         stage_changes!
 
-        if current_version == new_version
-          PDK.logger.debug 'This module is already up to date with version %{version} of the template.' % {
-            version: new_version,
-          }
-        end
+        PDK.logger.debug format('This module is already up to date with version %{version} of the template.', version: new_version) if current_version == new_version
 
         unless update_manager.changes?
           PDK::Report.default_target.puts('No changes required.')
@@ -119,12 +115,7 @@ module PDK
                           'Updating %{module_name} using the template at %{template_url}, from %{current_version} to %{new_version}'
                         end
 
-        format_string % {
-          module_name: module_metadata.data['name'],
-          template_url: template_uri.bare_uri,
-          current_version: current_version,
-          new_version: new_version,
-        }
+        format(format_string, module_name: module_metadata.data['name'], template_url: template_uri.bare_uri, current_version: current_version, new_version: new_version)
       end
     end
   end

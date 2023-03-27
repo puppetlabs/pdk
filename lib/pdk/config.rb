@@ -142,8 +142,8 @@ module PDK
     # @scopes [Nil, Array[String]] The list of scopes, in order, to query in turn for the setting_name. Invalid or missing scopes are ignored.
     # @return [PDK::Config::Namespace, Object, nil] The value of the configuration setting. Returns nil if it does no exist
     def get_within_scopes(setting_name, scopes = nil)
-      raise ArgumentError, 'Expected an Array but got \'%{klass}\' for scopes' % { klass: scopes.class } unless scopes.nil? || scopes.is_a?(Array)
-      raise ArgumentError, 'Expected an Array or String but got \'%{klass}\' for setting_name' % { klass: setting_name.class } unless setting_name.is_a?(Array) || setting_name.is_a?(String)
+      raise ArgumentError, format('Expected an Array but got \'%{klass}\' for scopes', klass: scopes.class) unless scopes.nil? || scopes.is_a?(Array)
+      raise ArgumentError, format('Expected an Array or String but got \'%{klass}\' for setting_name', klass: setting_name.class) unless setting_name.is_a?(Array) || setting_name.is_a?(String)
 
       setting_arr = setting_name.is_a?(String) ? split_key_string(setting_name) : setting_name
       all_scope_names = all_scopes.keys
@@ -186,7 +186,7 @@ module PDK
       raise ArgumentError, 'Invalid configuration names' if names.nil? || !names.is_a?(Array) || names.empty?
 
       scope_name = names[0]
-      raise ArgumentError, "Unknown configuration root '%{name}'" % { name: scope_name } if all_scopes[scope_name].nil?
+      raise ArgumentError, format("Unknown configuration root '%{name}'", name: scope_name) if all_scopes[scope_name].nil?
 
       deep_set_object(value, options[:force], send(all_scopes[scope_name]), *names[1..])
     end
@@ -195,10 +195,7 @@ module PDK
       file = PDK::Util::Filesystem.expand_path('~/.puppetlabs/bolt/analytics.yaml')
       PDK::Config::YAML.new(file: file)
     rescue PDK::Config::LoadError => e
-      PDK.logger.debug 'Unable to load %{file}: %{message}' % {
-        file: file,
-        message: e.message,
-      }
+      PDK.logger.debug format('Unable to load %{file}: %{message}', file: file, message: e.message)
       PDK::Config::YAML.new
     end
 
@@ -237,17 +234,14 @@ module PDK
       return unless PDK::CLI::Util.interactive?
 
       pre_message =
-        'PDK collects anonymous usage information to help us understand how ' \
-        'it is being used and make decisions on how to improve it. You can ' \
-        'find out more about what data we collect and how it is used in the ' \
-        "PDK documentation at %{url}.\n" % { url: 'https://puppet.com/docs/pdk/latest/pdk_install.html' }
+        format('PDK collects anonymous usage information to help us understand how ' \
+               'it is being used and make decisions on how to improve it. You can ' \
+               'find out more about what data we collect and how it is used in the ' \
+               "PDK documentation at %{url}.\n", url: 'https://puppet.com/docs/pdk/latest/pdk_install.html')
       post_message =
-        'You can opt in or out of the usage data collection at any time by ' \
-        'editing the analytics configuration file at %{path} and changing ' \
-        "the '%{key}' value." % {
-          path: PDK::Config.analytics_config_path,
-          key: 'disabled',
-        }
+        format('You can opt in or out of the usage data collection at any time by ' \
+               'editing the analytics configuration file at %{path} and changing ' \
+               "the '%{key}' value.", path: PDK::Config.analytics_config_path, key: 'disabled')
 
       questions = [
         {
@@ -305,7 +299,7 @@ module PDK
     # 'user.a.b.c' becomes ['user', 'a', 'b', 'c']
     # @return [Array[String]] The string split into each setting name as an array
     def split_key_string(key)
-      raise ArgumentError, 'Expected a String but got \'%{klass}\'' % { klass: key.class } unless key.is_a?(String)
+      raise ArgumentError, format('Expected a String but got \'%{klass}\'', klass: key.class) unless key.is_a?(String)
 
       key.split('.')
     end
@@ -380,7 +374,7 @@ module PDK
         return value
       end
 
-      raise ArgumentError, "Unable to set '%{key}' to '%{value}' as it is not a Hash" % { key: "#{namespace.name}.#{name}", value: hash_value } unless current_value.is_a?(Hash)
+      raise ArgumentError, format("Unable to set '%{key}' to '%{value}' as it is not a Hash", key: "#{namespace.name}.#{name}", value: hash_value) unless current_value.is_a?(Hash)
 
       namespace[name] = current_value.merge(hash_value)
       value

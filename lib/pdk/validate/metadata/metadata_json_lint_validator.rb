@@ -19,9 +19,7 @@ module PDK
         end
 
         def spinner_text_for_targets(targets)
-          'Checking module metadata style (%{targets}).' % {
-            targets: PDK::Util.targets_relative_to_pwd(targets.flatten).join(' '),
-          }
+          format('Checking module metadata style (%{targets}).', targets: PDK::Util.targets_relative_to_pwd(targets.flatten).join(' '))
         end
 
         def pattern

@@ -36,7 +36,7 @@ module PDK
         @metadata = {}
 
         @renderer = renderer.nil? ? Renderer.instance(uri, path, context) : renderer
-        raise 'Could not find a compatible template renderer for %{path}' % { path: path } if @renderer.nil?
+        raise format('Could not find a compatible template renderer for %{path}', path: path) if @renderer.nil?
       end
 
       # Later additions may include Control Repo rendering, for example

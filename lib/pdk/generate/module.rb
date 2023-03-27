@@ -7,13 +7,13 @@ module PDK
         require 'pdk/cli/util/option_validator'
 
         unless PDK::CLI::Util::OptionValidator.valid_module_name?(opts[:module_name])
-          error_msg = "'%{module_name}' is not a valid module name.\n" \
-                      'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.' % { module_name: opts[:module_name] }
+          error_msg = format("'%{module_name}' is not a valid module name.\n" \
+                             'Module names must begin with a lowercase letter and can only include lowercase letters, digits, and underscores.', module_name: opts[:module_name])
           raise PDK::CLI::ExitWithError, error_msg
         end
 
         target_dir = PDK::Util::Filesystem.expand_path(opts[:target_dir])
-        raise PDK::CLI::ExitWithError, "The destination directory '%{dir}' already exists" % { dir: target_dir } if PDK::Util::Filesystem.exist?(target_dir)
+        raise PDK::CLI::ExitWithError, format("The destination directory '%{dir}' already exists", dir: target_dir) if PDK::Util::Filesystem.exist?(target_dir)
       end
 
       def self.invoke(opts = {})
@@ -33,9 +33,7 @@ module PDK
           PDK::Util::Filesystem.write_file(test_file, 'This file was created by the Puppet Development Kit to test if this folder was writable, you can safely remove this file.')
           PDK::Util::Filesystem.rm_f(test_file)
         rescue Errno::EACCES
-          raise PDK::CLI::FatalError, "You do not have permission to write to '%{parent_dir}'" % {
-            parent_dir: parent_dir,
-          }
+          raise PDK::CLI::FatalError, format("You do not have permission to write to '%{parent_dir}'", parent_dir: parent_dir)
         end
 
         temp_target_dir = PDK::Util.make_tmpdir_name('pdk-module-target')
@@ -47,10 +45,8 @@ module PDK
         if template_uri.default? && template_uri.default_ref?
           PDK.logger.info 'Using the default template-url and template-ref.'
         else
-          PDK.logger.info "Using the %{method} template-url and template-ref '%{template_uri}'." % {
-            method: opts.key?(:'template-url') ? 'specified' : 'saved',
-            template_uri: template_uri.metadata_format,
-          }
+          PDK.logger.info format("Using the %{method} template-url and template-ref '%{template_uri}'.", method: opts.key?(:'template-url') ? 'specified' : 'saved',
+                                                                                                         template_uri: template_uri.metadata_format)
         end
 
         begin
@@ -96,18 +92,11 @@ module PDK
               end
             end
 
-            PDK.logger.info "Module '%{name}' generated at path '%{path}'." % {
-              name: opts[:module_name],
-              path: target_dir,
-            }
+            PDK.logger.info format("Module '%{name}' generated at path '%{path}'.", name: opts[:module_name], path: target_dir)
             PDK.logger.info "In your module directory, add classes with the 'pdk new class' command."
           end
         rescue Errno::EACCES => e
-          raise PDK::CLI::FatalError, "Failed to move '%{source}' to '%{target}': %{message}" % {
-            source: temp_target_dir,
-            target: target_dir,
-            message: e.message,
-          }
+          raise PDK::CLI::FatalError, format("Failed to move '%{source}' to '%{target}': %{message}", source: temp_target_dir, target: target_dir, message: e.message)
         end
       end
 
@@ -119,9 +108,7 @@ module PDK
         login_clean = 'username' if login_clean.empty?
 
         if login_clean != login
-          PDK.logger.debug 'Your username is not a valid Forge username. Proceeding with the username %{username}. You can fix this later in metadata.json.' % {
-            username: login_clean,
-          }
+          PDK.logger.debug format('Your username is not a valid Forge username. Proceeding with the username %{username}. You can fix this later in metadata.json.', username: login_clean)
         end
 
         login_clean
@@ -156,10 +143,7 @@ module PDK
         ].each do |dir|
           PDK::Util::Filesystem.mkdir_p(dir)
         rescue SystemCallError => e
-          raise PDK::CLI::FatalError, "Unable to create directory '%{dir}': %{message}" % {
-            dir: dir,
-            message: e.message,
-          }
+          raise PDK::CLI::FatalError, format("Unable to create directory '%{dir}': %{message}", dir: dir, message: e.message)
         end
       end
 
@@ -274,15 +258,11 @@ module PDK
         interview.add_questions(questions)
 
         if PDK::Util::Filesystem.file?('metadata.json')
-          puts "\nWe need to update the metadata.json file for this module, so we\'re going to ask you %{count} " \
-               "questions.\n" % {
-                 count: interview.num_questions,
-               }
+          puts format("\nWe need to update the metadata.json file for this module, so we\'re going to ask you %{count} " \
+                      "questions.\n", count: interview.num_questions)
         else
-          puts "\nWe need to create the metadata.json file for this module, so we\'re going to ask you %{count} " \
-               "questions.\n" % {
-                 count: interview.num_questions,
-               }
+          puts format("\nWe need to create the metadata.json file for this module, so we\'re going to ask you %{count} " \
+                      "questions.\n", count: interview.num_questions)
         end
 
         puts 'If the question is not applicable to this module, accept the default option ' \

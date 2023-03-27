@@ -17,7 +17,7 @@ module PDK
           vals = val.is_a?(Array) ? val : [val]
           invalid_entries = vals.reject { |e| valid_entries.include?(e) }
 
-          raise ArgumentError, 'Error: the following values are invalid: %{invalid_entries}' % { invalid_entries: invalid_entries } unless invalid_entries.empty?
+          raise ArgumentError, format('Error: the following values are invalid: %{invalid_entries}', invalid_entries: invalid_entries) unless invalid_entries.empty?
 
           val
         end

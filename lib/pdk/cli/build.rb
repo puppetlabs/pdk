@@ -42,7 +42,7 @@ module PDK::CLI
 
       unless opts[:force]
         if builder.package_already_exists?
-          PDK.logger.info "The file '%{package}' already exists." % { package: builder.package_file }
+          PDK.logger.info format("The file '%{package}' already exists.", package: builder.package_file)
 
           unless PDK::CLI::Util.prompt_for_yes('Overwrite?', default: false)
             PDK.logger.info 'Build cancelled; exiting.'
@@ -62,17 +62,12 @@ module PDK::CLI
         end
       end
 
-      PDK.logger.info 'Building %{module_name} version %{module_version}' % {
-        module_name: module_metadata.data['name'],
-        module_version: module_metadata.data['version'],
-      }
+      PDK.logger.info format('Building %{module_name} version %{module_version}', module_name: module_metadata.data['name'], module_version: module_metadata.data['version'])
 
       builder.build
 
-      PDK.logger.info 'Build of %{package_name} has completed successfully. Built package can be found here: %{package_path}' % {
-        package_name: module_metadata.data['name'],
-        package_path: builder.package_file,
-      }
+      PDK.logger.info format('Build of %{package_name} has completed successfully. Built package can be found here: %{package_path}', package_name: module_metadata.data['name'],
+                                                                                                                                      package_path: builder.package_file)
     end
   end
 end

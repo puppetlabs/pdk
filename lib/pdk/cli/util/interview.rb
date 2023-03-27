@@ -30,7 +30,7 @@ module PDK
           num_questions = @questions.count
           @questions.each do |question_name, question|
             @name = question_name
-            @prompt.print "#{pastel.bold('[Q %{current_number}/%{questions_total}]' % { current_number: i, questions_total: num_questions })} "
+            @prompt.print "#{pastel.bold(format('[Q %{current_number}/%{questions_total}]', current_number: i, questions_total: num_questions))} "
             @prompt.puts pastel.bold(question[:question])
             @prompt.puts question[:help] if question.key?(:help)
 

@@ -21,20 +21,13 @@ module PDK
         return if value.nil? || value.is_a?(String) || value.is_a?(Integer)
 
         # The only other valid-ish type is a Hash
-        unless value.is_a?(Hash)
-          raise ArgumentError, 'The setting %{key} may only be a String or Integer, not %{class}' % {
-            key: qualified_name,
-            class: value.class,
-          }
-        end
+        raise ArgumentError, format('The setting %{key} may only be a String or Integer, not %{class}', key: qualified_name, class: value.class) unless value.is_a?(Hash)
+
         # Any hashes can only have a single String/Integer value
         value.each do |child_name, child_value|
           next if child_value.nil? || child_value.is_a?(String) || child_value.is_a?(Integer)
 
-          raise ArgumentError, 'The setting %{key} may only be a String or Integer, not %{class}' % {
-            key: "#{qualified_name}.#{child_name}",
-            class: child_value.class,
-          }
+          raise ArgumentError, format('The setting %{key} may only be a String or Integer, not %{class}', key: "#{qualified_name}.#{child_name}", class: child_value.class)
         end
       end
     end

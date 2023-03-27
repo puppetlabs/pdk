@@ -14,7 +14,7 @@ module PDK::CLI
         exit 1
       end
 
-      raise PDK::CLI::ExitWithError, "'%{name}' is not a valid transport name" % { name: transport_name } unless Util::OptionValidator.valid_transport_name?(transport_name)
+      raise PDK::CLI::ExitWithError, format("'%{name}' is not a valid transport name", name: transport_name) unless Util::OptionValidator.valid_transport_name?(transport_name)
 
       require 'pdk/generate/transport'
 

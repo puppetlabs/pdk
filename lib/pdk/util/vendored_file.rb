@@ -46,10 +46,7 @@ module PDK
           Timeout::Error,
         ]
 
-        PDK.logger.debug '%{file_name} was not found in the cache, downloading it from %{url}.' % {
-          file_name: file_name,
-          url: url,
-        }
+        PDK.logger.debug format('%{file_name} was not found in the cache, downloading it from %{url}.', file_name: file_name, url: url)
 
         uri = URI.parse(url)
         http = Net::HTTP.new(uri.host, uri.port)
@@ -59,20 +56,11 @@ module PDK
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)
 
-        unless response.code == '200'
-          raise DownloadError, 'Unable to download %{url}. %{code}: %{message}.' % {
-            url: url,
-            code: response.code,
-            message: response.message,
-          }
-        end
+        raise DownloadError, format('Unable to download %{url}. %{code}: %{message}.', url: url, code: response.code, message: response.message) unless response.code == '200'
 
         response.body
       rescue *http_errors => e
-        raise DownloadError, 'Unable to download %{url}. Check internet connectivity and try again. %{error}' % {
-          url: url,
-          error: e,
-        }
+        raise DownloadError, format('Unable to download %{url}. Check internet connectivity and try again. %{error}', url: url, error: e)
       end
 
       def package_vendored_path

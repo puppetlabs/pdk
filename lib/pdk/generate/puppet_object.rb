@@ -19,7 +19,7 @@ module PDK
       # @param object_name [String] The name of the object.
       # @param options [Hash{Symbol => Object}]
       def initialize(context, object_name, options)
-        raise ArgumentError, 'Expected PDK::Context::AbstractContext but got \'%{klass}\' for context' % { klass: context.class } unless context.is_a?(PDK::Context::AbstractContext)
+        raise ArgumentError, format('Expected PDK::Context::AbstractContext but got \'%{klass}\' for context', klass: context.class) unless context.is_a?(PDK::Context::AbstractContext)
 
         @context = context
         @options = options
@@ -60,7 +60,7 @@ module PDK
       # @return [void]
       # @abstract
       def check_preconditions
-        raise ArgumentError, 'Expected a module context but got %{context_name}' % { context_name: context.display_name } unless context.is_a?(PDK::Context::Module)
+        raise ArgumentError, format('Expected a module context but got %{context_name}', context_name: context.display_name) unless context.is_a?(PDK::Context::Module)
       end
 
       # Check the preconditions of this template group, behaving as a predicate rather than raising an exception.
@@ -121,11 +121,9 @@ module PDK
       def stage_change(relative_dest_path, content, update_manager)
         absolute_file_path = File.join(context.root_path, relative_dest_path)
         if PDK::Util::Filesystem.exist?(absolute_file_path)
-          raise PDK::CLI::ExitWithError, "Unable to generate %{object_type}; '%{file}' already exists." % {
-            file: absolute_file_path,
-            object_type: spec_only? ? 'unit test' : friendly_name,
-          }
+          raise PDK::CLI::ExitWithError, format("Unable to generate %{object_type}; '%{file}' already exists.", file: absolute_file_path, object_type: spec_only? ? 'unit test' : friendly_name)
         end
+
         update_manager.add_file(absolute_file_path, content)
       end
 
@@ -159,7 +157,7 @@ module PDK
 
         templates.each do |template|
           if template[:uri].nil?
-            PDK.logger.debug('No %{dir_type} template found; trying next template directory.' % { dir_type: template[:type] })
+            PDK.logger.debug(format('No %{dir_type} template found; trying next template directory.', dir_type: template[:type]))
             next
           end
 
@@ -169,9 +167,9 @@ module PDK
               # TODO: refactor to a search-and-execute form instead
               return # work is done # rubocop:disable Lint/NonLocalExitFromIterator
             elsif template[:allow_fallback]
-              PDK.logger.debug('Unable to find a %{type} template in %{url}; trying next template directory.' % { type: friendly_name, url: template[:uri] })
+              PDK.logger.debug(format('Unable to find a %{type} template in %{url}; trying next template directory.', type: friendly_name, url: template[:uri]))
             else
-              raise PDK::CLI::FatalError, 'Unable to find the %{type} template in %{url}.' % { type: friendly_name, url: template[:uri] }
+              raise PDK::CLI::FatalError, format('Unable to find the %{type} template in %{url}.', type: friendly_name, url: template[:uri])
             end
           end
         end

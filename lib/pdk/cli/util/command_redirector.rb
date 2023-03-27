@@ -16,7 +16,7 @@ module PDK
         end
 
         def run
-          @prompt.puts 'Did you mean \'%{command}\'?' % { command: pastel.bold(@command) }
+          @prompt.puts format('Did you mean \'%{command}\'?', command: pastel.bold(@command))
           @prompt.yes?('-->')
         rescue PDK::CLI::Util::Interview::READER::InputInterrupt
           nil

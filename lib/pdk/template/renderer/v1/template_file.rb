@@ -65,7 +65,7 @@ module PDK
           def template_content
             return PDK::Util::Filesystem.read_file(@template_file) if PDK::Util::Filesystem.file?(@template_file) && PDK::Util::Filesystem.readable?(@template_file)
 
-            raise ArgumentError, "'%{template}' is not a readable file" % { template: @template_file }
+            raise ArgumentError, format("'%{template}' is not a readable file", template: @template_file)
           end
 
           # Renders the content of the template file as an ERB template.

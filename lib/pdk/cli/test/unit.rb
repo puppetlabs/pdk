@@ -60,7 +60,7 @@ module PDK::CLI
 
             file_examples = examples.select { |example| example[:file_path] == file }
             file_examples.each do |file_example|
-              puts "\t%{id}\t%{description}" % { id: file_example[:id], description: file_example[:full_description] }
+              puts format("\t%{id}\t%{description}", id: file_example[:id], description: file_example[:full_description])
             end
           end
         end

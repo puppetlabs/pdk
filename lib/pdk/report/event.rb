@@ -233,15 +233,10 @@ module PDK
         raise ArgumentError, 'State not specified.' if value.nil? || (value.is_a?(String) && value.empty?)
 
         value = value.to_sym if value.is_a?(String)
-        raise ArgumentError, 'State must be a Symbol, not %{type}' % { type: value.class } unless value.is_a?(Symbol)
+        raise ArgumentError, format('State must be a Symbol, not %{type}', type: value.class) unless value.is_a?(Symbol)
 
         valid_states = [:passed, :error, :failure, :skipped]
-        unless valid_states.include?(value)
-          raise ArgumentError, 'Invalid state %{state}. Valid states are: %{valid}.' % {
-            state: value.inspect,
-            valid: valid_states.map(&:inspect).join(', '),
-          }
-        end
+        raise ArgumentError, format('Invalid state %{state}. Valid states are: %{valid}.', state: value.inspect, valid: valid_states.map(&:inspect).join(', ')) unless valid_states.include?(value)
 
         value
       end

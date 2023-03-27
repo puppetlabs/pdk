@@ -11,7 +11,7 @@ module PDK
         @stderr = result[:stderr]
         @exit_code = result[:exit_code]
 
-        super('Git command failed: git %{args}' % { args: args.join(' ') })
+        super(format('Git command failed: git %{args}', args: args.join(' ')))
       end
     end
 
@@ -99,8 +99,8 @@ module PDK
       end
 
       def self.work_dir_clean?(repo)
-        raise PDK::CLI::ExitWithError, 'Unable to locate git work dir "%{workdir}"' % { workdir: repo } unless PDK::Util::Filesystem.directory?(repo)
-        raise PDK::CLI::ExitWithError, 'Unable to locate git dir "%{gitdir}"' % { gitdir: repo } unless PDK::Util::Filesystem.directory?(File.join(repo, '.git'))
+        raise PDK::CLI::ExitWithError, format('Unable to locate git work dir "%{workdir}"', workdir: repo) unless PDK::Util::Filesystem.directory?(repo)
+        raise PDK::CLI::ExitWithError, format('Unable to locate git dir "%{gitdir}"', gitdir: repo) unless PDK::Util::Filesystem.directory?(File.join(repo, '.git'))
 
         git('--work-tree', repo, '--git-dir', File.join(repo, '.git'), 'status', '--untracked-files=no', '--porcelain', repo)[:stdout].empty?
       end
@@ -113,14 +113,12 @@ module PDK
         unless output[:exit_code].zero?
           PDK.logger.error output[:stdout]
           PDK.logger.error output[:stderr]
-          raise PDK::CLI::ExitWithError, 'Unable to access the template repository "%{repository}"' % {
-            repository: repo,
-          }
+          raise PDK::CLI::ExitWithError, format('Unable to access the template repository "%{repository}"', repository: repo)
         end
 
         matching_refs = output[:stdout].split(%r{\r?\n}).map { |r| r.split("\t") }
         matching_ref = matching_refs.find { |_sha, remote_ref| ["refs/tags/#{ref}", "refs/remotes/origin/#{ref}", "refs/heads/#{ref}"].include?(remote_ref) }
-        raise PDK::CLI::ExitWithError, 'Unable to find a branch or tag named "%{ref}" in %{repo}' % { ref: ref, repo: repo } if matching_ref.nil?
+        raise PDK::CLI::ExitWithError, format('Unable to find a branch or tag named "%{ref}" in %{repo}', ref: ref, repo: repo) if matching_ref.nil?
 
         matching_ref.first
       end

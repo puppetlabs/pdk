@@ -13,9 +13,7 @@ module PDK
         end
 
         def spinner_text
-          'Checking metadata syntax (%{patterns}).' % {
-            patterns: pattern.join(' '),
-          }
+          format('Checking metadata syntax (%{patterns}).', patterns: pattern.join(' '))
         end
 
         def invoke(report)

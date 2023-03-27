@@ -122,7 +122,7 @@ module PDK
           result[:exit_code] = 0
         end
 
-        raise PDK::CLI::FatalError, 'Unit test output did not contain a valid JSON result: %{output}' % { output: result[:stdout] } if json_result.nil? || json_result.empty?
+        raise PDK::CLI::FatalError, format('Unit test output did not contain a valid JSON result: %{output}', output: result[:stdout]) if json_result.nil? || json_result.empty?
 
         json_result = merge_json_results(json_result) if options[:parallel]
 
@@ -174,12 +174,8 @@ module PDK
         return unless json_data['summary']
 
         # TODO: standardize summary output
-        $stderr.puts '  ' << ('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.' % {
-          total: json_data['summary']['example_count'],
-          duration: duration,
-          failures: json_data['summary']['failure_count'],
-          pending: json_data['summary']['pending_count'],
-        })
+        $stderr.puts '  ' << (format('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.', total: json_data['summary']['example_count'], duration: duration,
+                                                                                                                                   failures: json_data['summary']['failure_count'], pending: json_data['summary']['pending_count']))
       end
 
       def self.merge_json_results(json_data)
@@ -236,13 +232,13 @@ module PDK
         output = rake('spec_list_json', 'Finding unit tests.', environment)
 
         rspec_json = PDK::Util.find_first_json_in(output[:stdout])
-        raise PDK::CLI::FatalError, 'Failed to find valid JSON in output from rspec: %{output}' % { output: output[:stdout] } unless rspec_json
+        raise PDK::CLI::FatalError, format('Failed to find valid JSON in output from rspec: %{output}', output: output[:stdout]) unless rspec_json
 
         if rspec_json['examples'].empty?
           rspec_message = rspec_json['messages'][0]
           return [] if rspec_message == 'No examples found.'
 
-          raise PDK::CLI::FatalError, 'Unable to enumerate examples. rspec reported: %{message}' % { message: rspec_message }
+          raise PDK::CLI::FatalError, format('Unable to enumerate examples. rspec reported: %{message}', message: rspec_message)
         else
           examples = []
           rspec_json['examples'].each do |example|

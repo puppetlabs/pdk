@@ -17,7 +17,7 @@ module PDK
         end
 
         unless bundle.gemfile?
-          PDK.logger.debug("No Gemfile found in '%{cwd}'. Skipping bundler management." % { cwd: Dir.pwd })
+          PDK.logger.debug(format("No Gemfile found in '%{cwd}'. Skipping bundler management.", cwd: Dir.pwd))
           return
         end
 
@@ -121,13 +121,9 @@ module PDK
               PDK::Util::Filesystem.exist?(lockfile)
             end
 
-            unless vendored_gemfile_lock
-              raise PDK::CLI::FatalError, 'Vendored Gemfile.lock (%{source}) not found.' % {
-                source: vendored_gemfile_lock,
-              }
-            end
+            raise PDK::CLI::FatalError, format('Vendored Gemfile.lock (%{source}) not found.', source: vendored_gemfile_lock) unless vendored_gemfile_lock
 
-            PDK.logger.debug('Using vendored Gemfile.lock from %{source}.' % { source: vendored_gemfile_lock })
+            PDK.logger.debug(format('Using vendored Gemfile.lock from %{source}.', source: vendored_gemfile_lock))
             PDK::Util::Filesystem.cp(vendored_gemfile_lock, File.join(PDK::Util.module_root, 'Gemfile.lock'))
           else
             argv = ['lock']
@@ -218,7 +214,7 @@ module PDK
           result = cmd.execute!
 
           unless result[:exit_code].zero?
-            PDK.logger.fatal("Failed to generate binstubs for '%{gems}':\n%{output}" % { gems: gems.join(' '), output: result.values_at(:stdout, :stderr).join("\n") }) unless PDK.logger.debug?
+            PDK.logger.fatal(format("Failed to generate binstubs for '%{gems}':\n%{output}", gems: gems.join(' '), output: result.values_at(:stdout, :stderr).join("\n"))) unless PDK.logger.debug?
             raise PDK::CLI::FatalError, 'Unable to install requested binstubs.'
           end
 

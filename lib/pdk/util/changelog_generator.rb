@@ -16,7 +16,7 @@ module PDK
 
         return if result[:exit_code].zero?
 
-        raise PDK::CLI::ExitWithError, 'Unable to generate the changelog as the %{gem} gem is not included in this module\'s Gemfile' % { gem: GEM }
+        raise PDK::CLI::ExitWithError, format('Unable to generate the changelog as the %{gem} gem is not included in this module\'s Gemfile', gem: GEM)
       end
 
       # Runs the Changelog Generator gem (in the module's context) to automatically create a CHANGLELOG.MD file
@@ -29,11 +29,11 @@ module PDK
         changelog_command.context = :module
 
         result = changelog_command.execute!
-        raise PDK::CLI::ExitWithError, 'Error generating changelog: %{stdout}' % { stdout: result[:stdout] } unless result[:exit_code].zero?
+        raise PDK::CLI::ExitWithError, format('Error generating changelog: %{stdout}', stdout: result[:stdout]) unless result[:exit_code].zero?
 
         output = changelog_content
 
-        raise PDK::CLI::ExitWithError, 'The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details' % { changelog_file: changelog_file } if %r{UNCATEGORIZED PRS; GO LABEL THEM}.match?(output) # rubocop:disable Metrics/LineLength
+        raise PDK::CLI::ExitWithError, format('The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details', changelog_file: changelog_file) if %r{UNCATEGORIZED PRS; GO LABEL THEM}.match?(output) # rubocop:disable Metrics/LineLength
 
         output
       end
@@ -43,10 +43,10 @@ module PDK
       # @param current_version [String, Gem::Version] The current version of the module
       # @return [String] The new version. May be the same as the current version if there are no notable changes
       def self.compute_next_version(current_version)
-        raise PDK::CLI::ExitWithError, 'Invalid version string %{version}' % { version: current_version } unless VERSION_REGEX.match?(current_version)
+        raise PDK::CLI::ExitWithError, format('Invalid version string %{version}', version: current_version) unless VERSION_REGEX.match?(current_version)
 
         version = Gem::Version.create(current_version).segments
-        PDK.logger.info 'Determing the target version from \'%{file}\'' % { file: changelog_file }
+        PDK.logger.info format('Determing the target version from \'%{file}\'', file: changelog_file)
 
         # Grab all lines that start with ## between from the latest changes
         # For example given the changelog below

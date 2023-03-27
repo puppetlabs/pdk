@@ -313,9 +313,7 @@ module PDK
       rescue Errno::ENOENT => e
         raise PDK::Config::LoadError, e.message
       rescue Errno::EACCES
-        raise PDK::Config::LoadError, 'Unable to open %{file} for reading' % {
-          file: filename,
-        }
+        raise PDK::Config::LoadError, format('Unable to open %{file} for reading', file: filename)
       end
 
       # Persist the contents of the namespace to disk.
@@ -336,9 +334,7 @@ module PDK
 
         PDK::Util::Filesystem.write_file(file, serialize_data(to_h))
       rescue Errno::EACCES
-        raise PDK::Config::LoadError, 'Unable to open %{file} for writing' % {
-          file: file,
-        }
+        raise PDK::Config::LoadError, format('Unable to open %{file} for writing', file: file)
       rescue SystemCallError => e
         raise PDK::Config::LoadError, e.message
       end

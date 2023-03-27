@@ -11,14 +11,14 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, 'Configuration name is required' if item_name.nil?
 
         current_value = PDK.config.get(item_name)
-        raise PDK::CLI::ExitWithError, "The configuration item '%{name}' can not be removed." % { name: item_name } if current_value.is_a?(PDK::Config::Namespace)
+        raise PDK::CLI::ExitWithError, format("The configuration item '%{name}' can not be removed.", name: item_name) if current_value.is_a?(PDK::Config::Namespace)
 
         if current_value.nil?
-          PDK.logger.info("Could not remove '%{name}' as it has not been set" % { name: item_name })
+          PDK.logger.info(format("Could not remove '%{name}' as it has not been set", name: item_name))
           return 0
         end
 
-        PDK.logger.info("Ignoring the item value '%{value}' as --force has been set" % { value: item_value }) if current_value.is_a?(Array) && !item_value.nil? && force
+        PDK.logger.info(format("Ignoring the item value '%{value}' as --force has been set", value: item_value)) if current_value.is_a?(Array) && !item_value.nil? && force
         PDK.logger.info('Ignoring --force as the setting is not multi-valued') if !current_value.is_a?(Array) && force
 
         # FIXME: It'd be nice to shortcircuit deleting default values.  This causes the configuration file
@@ -32,9 +32,9 @@ module PDK::CLI
           new_value = item_value.nil? ? [] : current_value.reject { |item| item.to_s == item_value }
           if current_value.count == new_value.count
             if item_value.nil?
-              PDK.logger.info("Could not remove '%{name}' as it is already empty" % { name: item_name })
+              PDK.logger.info(format("Could not remove '%{name}' as it is already empty", name: item_name))
             else
-              PDK.logger.info("Could not remove '%{value}' from '%{name}' as it has not been set" % { value: item_value, name: item_name })
+              PDK.logger.info(format("Could not remove '%{value}' from '%{name}' as it has not been set", value: item_value, name: item_name))
             end
             return 0
           end
@@ -50,18 +50,18 @@ module PDK::CLI
           # Arrays have a special output format. If item_value is nil then the user wanted to empty/clear
           # the array otherwise they just wanted to remove a single entry.
           if item_value.nil?
-            PDK.logger.info("Cleared '%{name}' which had a value of '%{from}'" % { name: item_name, from: current_value })
+            PDK.logger.info(format("Cleared '%{name}' which had a value of '%{from}'", name: item_name, from: current_value))
           else
-            PDK.logger.info("Removed '%{value}' from '%{name}'" % { value: item_value, name: item_name })
+            PDK.logger.info(format("Removed '%{value}' from '%{name}'", value: item_value, name: item_name))
           end
         elsif !new_value.nil?
-          PDK.logger.info("Could not remove '%{name}' as it using a default value of '%{to}'" % { name: item_name, to: new_value })
+          PDK.logger.info(format("Could not remove '%{name}' as it using a default value of '%{to}'", name: item_name, to: new_value))
         else
-          PDK.logger.info("Removed '%{name}' which had a value of '%{from}'" % { name: item_name, from: current_value })
+          PDK.logger.info(format("Removed '%{name}' which had a value of '%{from}'", name: item_name, from: current_value))
         end
 
         # Same output as `get config`
-        $stdout.puts '%{name}=%{value}' % { name: item_name, value: new_value }
+        $stdout.puts format('%{name}=%{value}', name: item_name, value: new_value)
         0
       end
     end

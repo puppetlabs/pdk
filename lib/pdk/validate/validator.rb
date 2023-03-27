@@ -33,7 +33,7 @@ module PDK
         if context.nil?
           @context = PDK::Context::None.new(nil)
         else
-          raise ArgumentError, 'Expected PDK::Context::AbstractContext but got \'%{klass}\' for context' % { klass: context.class } unless context.is_a?(PDK::Context::AbstractContext)
+          raise ArgumentError, format('Expected PDK::Context::AbstractContext but got \'%{klass}\' for context', klass: context.class) unless context.is_a?(PDK::Context::AbstractContext)
 
           @context = context
         end

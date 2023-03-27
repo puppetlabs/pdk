@@ -19,9 +19,7 @@ module PDK
         end
 
         def spinner_text
-          'Checking Puppet Environment settings (%{patterns}).' % {
-            patterns: pattern.join(' '),
-          }
+          format('Checking Puppet Environment settings (%{patterns}).', patterns: pattern.join(' '))
         end
 
         def validate_target(report, target)
@@ -47,9 +45,9 @@ module PDK
 
               # A hash indicates that the ini file has a section in it.
               message = if setting_value.is_a?(Hash)
-                          "Invalid section '%{name}'" % { name: setting_name }
+                          format("Invalid section '%{name}'", name: setting_name)
                         else
-                          "Invalid setting '%{name}'" % { name: setting_name }
+                          format("Invalid setting '%{name}'", name: setting_name)
                         end
 
               report.add_event(
@@ -69,7 +67,7 @@ module PDK
                 source: name,
                 state: :failure,
                 severity: 'error',
-                message: "environment_timeout is set to '%{timeout}' but should be 0, 'unlimited' or not set." % { timeout: timeout },
+                message: format("environment_timeout is set to '%{timeout}' but should be 0, 'unlimited' or not set.", timeout: timeout),
               )
               is_valid = false
             end

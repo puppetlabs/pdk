@@ -15,9 +15,7 @@ module PDK
         end
 
         def spinner_text
-          'Checking task metadata style (%{pattern}).' % {
-            pattern: pattern.join(' '),
-          }
+          format('Checking task metadata style (%{pattern}).', pattern: pattern.join(' '))
         end
 
         def schema_file
@@ -54,7 +52,7 @@ module PDK
             begin
               errors = JSON::Validator.fully_validate(schema_file, PDK::Util::Filesystem.read_file(target)) || []
             rescue JSON::Schema::SchemaError => e
-              raise PDK::CLI::FatalError, 'Unable to validate Task Metadata. %{error}.' % { error: e.message }
+              raise PDK::CLI::FatalError, format('Unable to validate Task Metadata. %{error}.', error: e.message)
             end
 
             if errors.empty?

@@ -49,7 +49,7 @@ module PDK
                      Addressable::URI.parse(opts_or_uri)
                    end
                  rescue Addressable::URI::InvalidURIError
-                   raise PDK::CLI::FatalError, 'PDK::Util::TemplateURI attempted initialization with a non-uri string: {string}' % { string: opts_or_uri }
+                   raise PDK::CLI::FatalError, format('PDK::Util::TemplateURI attempted initialization with a non-uri string: {string}', string: opts_or_uri)
                  end
                when Addressable::URI
                  opts_or_uri.dup
@@ -179,10 +179,7 @@ module PDK
         return url unless Pathname.new(url).relative? && scp_url
 
         uri = Addressable::URI.new(scheme: 'ssh', user: scp_url[:user], host: scp_url[:host], path: scp_url[:path])
-        PDK.logger.warn '%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}' % {
-          scp_uri: url,
-          rfc_uri: uri.to_s,
-        }
+        PDK.logger.warn format('%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}', scp_uri: url, rfc_uri: uri.to_s)
 
         uri.to_s
       end
@@ -281,11 +278,7 @@ module PDK
           end
         end
 
-        unless template[:allow_fallback]
-          raise PDK::CLI::FatalError, 'Unable to find a valid template at %{uri}' % {
-            uri: template[:uri].to_s,
-          }
-        end
+        raise PDK::CLI::FatalError, format('Unable to find a valid template at %{uri}', uri: template[:uri].to_s) unless template[:allow_fallback]
 
         false
       end

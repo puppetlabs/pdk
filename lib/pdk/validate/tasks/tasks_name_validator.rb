@@ -15,9 +15,7 @@ module PDK
         end
 
         def spinner_text
-          'Checking task names (%{pattern}).' % {
-            pattern: pattern.join(' '),
-          }
+          format('Checking task names (%{pattern}).', pattern: pattern.join(' '))
         end
 
         def validate_target(report, target)

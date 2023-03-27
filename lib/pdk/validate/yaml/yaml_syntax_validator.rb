@@ -33,9 +33,7 @@ module PDK
         end
 
         def spinner_text
-          'Checking YAML syntax (%{patterns}).' % {
-            patterns: pattern.join(' '),
-          }
+          format('Checking YAML syntax (%{patterns}).', patterns: pattern.join(' '))
         end
 
         def validate_target(report, target)
@@ -70,10 +68,7 @@ module PDK
               severity: 'error',
               line: e.line,
               column: e.column,
-              message: '%{problem} %{context}' % {
-                problem: e.problem,
-                context: e.context,
-              },
+              message: format('%{problem} %{context}', problem: e.problem, context: e.context),
             )
             1
           rescue Psych::DisallowedClass => e
@@ -82,9 +77,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: 'Unsupported class: %{message}' % {
-                message: e.message,
-              },
+              message: format('Unsupported class: %{message}', message: e.message),
             )
             1
           end

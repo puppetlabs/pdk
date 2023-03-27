@@ -29,7 +29,7 @@ module PDK::CLI
 
       if opts[:list]
         PDK::CLI::Util.analytics_screen_view('validate', opts)
-        PDK.logger.info('Available validators: %{validator_names}' % { validator_names: PDK::Validate.validator_names.join(', ') })
+        PDK.logger.info(format('Available validators: %{validator_names}', validator_names: PDK::Validate.validator_names.join(', ')))
         exit 0
       end
 
@@ -56,7 +56,7 @@ module PDK::CLI
 
           vals.reject { |v| PDK::Validate.validator_names.include?(v) }
               .each do |v|
-            PDK.logger.warn("Unknown validator '%{v}'. Available validators: %{validators}." % { v: v, validators: PDK::Validate.validator_names.join(', ') })
+            PDK.logger.warn(format("Unknown validator '%{v}'. Available validators: %{validators}.", v: v, validators: PDK::Validate.validator_names.join(', ')))
           end
         else
           # This is a single item. Check if it's a known validator, or otherwise treat it as a target.

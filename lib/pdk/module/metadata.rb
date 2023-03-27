@@ -93,15 +93,15 @@ module PDK
       def self.from_file(metadata_json_path)
         raise ArgumentError, 'Cannot read metadata from file: no path to file was given.' if metadata_json_path.nil?
 
-        raise ArgumentError, "'%{file}' does not exist or is not a file." % { file: metadata_json_path } unless PDK::Util::Filesystem.file?(metadata_json_path)
+        raise ArgumentError, format("'%{file}' does not exist or is not a file.", file: metadata_json_path) unless PDK::Util::Filesystem.file?(metadata_json_path)
 
-        raise ArgumentError, "Unable to open '%{file}' for reading." % { file: metadata_json_path } unless PDK::Util::Filesystem.readable?(metadata_json_path)
+        raise ArgumentError, format("Unable to open '%{file}' for reading.", file: metadata_json_path) unless PDK::Util::Filesystem.readable?(metadata_json_path)
 
         require 'json'
         begin
           data = JSON.parse(PDK::Util::Filesystem.read_file(metadata_json_path))
         rescue JSON::JSONError => e
-          raise ArgumentError, 'Invalid JSON in metadata.json: %{msg}' % { msg: e.message }
+          raise ArgumentError, format('Invalid JSON in metadata.json: %{msg}', msg: e.message)
         end
 
         require 'pdk/util'
@@ -189,7 +189,7 @@ module PDK
                 'Namespace must contain only alphanumeric characters.'
               end
 
-        raise ArgumentError, "Invalid 'name' field in metadata.json: %{err}" % { err: err }
+        raise ArgumentError, format("Invalid 'name' field in metadata.json: %{err}", err: err)
       end
     end
   end

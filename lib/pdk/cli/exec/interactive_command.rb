@@ -70,7 +70,7 @@ module PDK
         # TODO: debug logging
         def run_process!
           command_string = argv.join(' ')
-          PDK.logger.debug("Executing '%{command}' interactively" % { command: command_string })
+          PDK.logger.debug(format("Executing '%{command}' interactively", command: command_string))
 
           if context == :module
             PDK.logger.debug('Command environment:')
@@ -86,13 +86,8 @@ module PDK
           exit_code = child_status.exitstatus
           duration = Time.now - start_time
 
-          PDK.logger.debug("Execution of '%{command}' complete (duration: \
-                              %{duration_in_seconds}s; exit code: %{exit_code})" %
-                              {
-                                command: command_string,
-                                exit_code: exit_code,
-                                duration_in_seconds: duration,
-                              })
+          PDK.logger.debug(format("Execution of '%{command}' complete (duration: \
+                              %{duration_in_seconds}s; exit code: %{exit_code})", command: command_string, exit_code: exit_code, duration_in_seconds: duration))
 
           { exit_code: exit_code, duration: duration }
         end

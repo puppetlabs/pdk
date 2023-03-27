@@ -32,7 +32,7 @@ module PDK
     class ValidatorGroup < Validator
       # @see PDK::Validate::Validator.spinner_text
       def spinner_text
-        'Running %{name} validators ...' % { name: name }
+        format('Running %{name} validators ...', name: name)
       end
 
       # @see PDK::Validate::Validator.spinner

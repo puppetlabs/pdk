@@ -124,8 +124,8 @@ module PDK
         return unless version < deprecated_below
 
         deprecated_msg =
-          'Support for Puppet versions older than %{version} is ' \
-          'deprecated and will be removed in a future version of PDK.' % { version: deprecated_below.to_s }
+          format('Support for Puppet versions older than %{version} is ' \
+                 'deprecated and will be removed in a future version of PDK.', version: deprecated_below.to_s)
         PDK.logger.warn(deprecated_msg)
       end
       module_function :check_for_deprecated_puppet
@@ -162,11 +162,7 @@ module PDK
         end
 
         # Notify user of what Ruby version will be used.
-        unless logging_disabled
-          PDK.logger.info('Using Ruby %{version}' % {
-            version: puppet_env[:ruby_version],
-          })
-        end
+        PDK.logger.info(format('Using Ruby %{version}', version: puppet_env[:ruby_version])) unless logging_disabled
 
         check_for_deprecated_puppet(puppet_env[:gem_version])
 
@@ -177,10 +173,7 @@ module PDK
           gemset.each do |gem, version|
             next if version.nil?
 
-            PDK.logger.info('Using %{gem} %{version}' % {
-              gem: gem.to_s.capitalize,
-              version: version,
-            })
+            PDK.logger.info(format('Using %{gem} %{version}', gem: gem.to_s.capitalize, version: version))
           end
         end
 
@@ -208,10 +201,7 @@ module PDK
           [puppet_ver_specs, pe_ver_specs].each do |offending|
             next if offending.empty?
 
-            raise PDK::CLI::ExitWithError, 'You cannot specify a %{first} and %{second} at the same time.' % {
-              first: pup_dev_spec,
-              second: offending.first,
-            }
+            raise PDK::CLI::ExitWithError, format('You cannot specify a %{first} and %{second} at the same time.', first: pup_dev_spec, second: offending.first)
           end
         end
 
@@ -220,36 +210,24 @@ module PDK
 
           offending = [pup_ver_spec, pe_ver_specs[0]].sort
 
-          raise PDK::CLI::ExitWithError, 'You cannot specify a %{first} and %{second} at the same time.' % {
-            first: offending[0],
-            second: offending[1],
-          }
+          raise PDK::CLI::ExitWithError, format('You cannot specify a %{first} and %{second} at the same time.', first: offending[0], second: offending[1])
         end
 
         if puppet_dev_specs.size == 2
           warning_str = 'Puppet dev flag from command line: "--puppet-dev" '
           warning_str += 'overrides value from environment: "PDK_PUPPET_DEV=true". You should not specify both.'
 
-          PDK.logger.warn(warning_str % {
-            pup_ver_opt: opts[:'puppet-dev'],
-            pup_ver_env: PDK::Util::Env['PDK_PUPPET_DEV'],
-          })
+          PDK.logger.warn(format(warning_str, pup_ver_opt: opts[:'puppet-dev'], pup_ver_env: PDK::Util::Env['PDK_PUPPET_DEV']))
         elsif puppet_ver_specs.size == 2
           warning_str = 'Puppet version option from command line: "--puppet-version=%{pup_ver_opt}" '
           warning_str += 'overrides value from environment: "PDK_PUPPET_VERSION=%{pup_ver_env}". You should not specify both.'
 
-          PDK.logger.warn(warning_str % {
-            pup_ver_opt: opts[:'puppet-version'],
-            pup_ver_env: PDK::Util::Env['PDK_PUPPET_VERSION'],
-          })
+          PDK.logger.warn(format(warning_str, pup_ver_opt: opts[:'puppet-version'], pup_ver_env: PDK::Util::Env['PDK_PUPPET_VERSION']))
         elsif pe_ver_specs.size == 2
           warning_str = 'Puppet Enterprise version option from command line: "--pe-version=%{pe_ver_opt}" '
           warning_str += 'overrides value from environment: "PDK_PE_VERSION=%{pe_ver_env}". You should not specify both.'
 
-          PDK.logger.warn(warning_str % {
-            pe_ver_opt: opts[:'pe-version'],
-            pe_ver_env: PDK::Util::Env['PDK_PE_VERSION'],
-          })
+          PDK.logger.warn(format(warning_str, pe_ver_opt: opts[:'pe-version'], pe_ver_env: PDK::Util::Env['PDK_PE_VERSION']))
         end
       end
       module_function :validate_puppet_version_opts

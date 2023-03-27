@@ -37,7 +37,7 @@ module PDK::CLI
         end
         opts[:target_dir] = opts[:module_name]
 
-        PDK.logger.info('Creating new module: %{modname}' % { modname: module_name })
+        PDK.logger.info(format('Creating new module: %{modname}', modname: module_name))
         PDK::Generate::Module.invoke(opts)
       else
         exit 1

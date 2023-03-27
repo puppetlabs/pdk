@@ -96,10 +96,7 @@ module PDK
         @validators.each do |validator|
           next if validator[:proc].call(value)
 
-          raise ArgumentError, '%{key} %{message}' % {
-            key: qualified_name,
-            message: validator[:message],
-          }
+          raise ArgumentError, format('%{key} %{message}', key: qualified_name, message: validator[:message])
         end
       end
 

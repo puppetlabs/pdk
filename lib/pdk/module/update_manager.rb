@@ -115,16 +115,13 @@ module PDK
         require 'pdk/util/filesystem'
 
         if PDK::Util::Filesystem.file?(path)
-          PDK.logger.debug("unlinking '%{path}'" % { path: path })
+          PDK.logger.debug(format("unlinking '%{path}'", path: path))
           PDK::Util::Filesystem.rm(path)
         else
-          PDK.logger.debug("'%{path}': already gone" % { path: path })
+          PDK.logger.debug(format("'%{path}': already gone", path: path))
         end
       rescue StandardError => e
-        raise PDK::CLI::ExitWithError, "Unable to remove '%{path}': %{message}" % {
-          path: path,
-          message: e.message,
-        }
+        raise PDK::CLI::ExitWithError, format("Unable to remove '%{path}': %{message}", path: path, message: e.message)
       end
 
       private
@@ -140,7 +137,7 @@ module PDK
         @modified_files.each do |file|
           next if @diff_cache.key?(file[:path])
 
-          raise PDK::CLI::ExitWithError, "Unable to open '%{path}' for reading" % { path: file[:path] } unless PDK::Util::Filesystem.readable?(file[:path])
+          raise PDK::CLI::ExitWithError, format("Unable to open '%{path}' for reading", path: file[:path]) unless PDK::Util::Filesystem.readable?(file[:path])
 
           old_content = PDK::Util::Filesystem.read_file(file[:path])
           file_diff = unified_diff(file[:path], old_content, file[:content])
@@ -158,10 +155,10 @@ module PDK
         require 'pdk/util/filesystem'
 
         PDK::Util::Filesystem.mkdir_p(File.dirname(path))
-        PDK.logger.debug("writing '%{path}'" % { path: path })
+        PDK.logger.debug(format("writing '%{path}'", path: path))
         PDK::Util::Filesystem.write_file(path, content)
       rescue Errno::EACCES
-        raise PDK::CLI::ExitWithError, "You do not have permission to write to '%{path}'" % { path: path }
+        raise PDK::CLI::ExitWithError, format("You do not have permission to write to '%{path}'", path: path)
       end
 
       # Generate a unified diff of the changes to be made to a file.
