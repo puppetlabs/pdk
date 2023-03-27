@@ -154,14 +154,12 @@ module PDK
           File.join(target_dir, 'templates'),
           File.join(target_dir, 'tasks'),
         ].each do |dir|
-          begin
-            PDK::Util::Filesystem.mkdir_p(dir)
-          rescue SystemCallError => e
-            raise PDK::CLI::FatalError, "Unable to create directory '%{dir}': %{message}" % {
-              dir: dir,
-              message: e.message,
-            }
-          end
+          PDK::Util::Filesystem.mkdir_p(dir)
+        rescue SystemCallError => e
+          raise PDK::CLI::FatalError, "Unable to create directory '%{dir}': %{message}" % {
+            dir: dir,
+            message: e.message,
+          }
         end
       end
 

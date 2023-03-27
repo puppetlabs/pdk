@@ -244,31 +244,29 @@ module PDK
         PDK::Util::Filesystem.rm_f(package_file)
 
         Dir.chdir(target_dir) do
-          begin
-            gz = Zlib::GzipWriter.new(File.open(package_file, 'wb')) # rubocop:disable PDK/FileOpen
-            tar = Minitar::Output.new(gz)
-            Find.find(release_name) do |entry|
-              entry_meta = {
-                name: entry,
-              }
+          gz = Zlib::GzipWriter.new(File.open(package_file, 'wb')) # rubocop:disable PDK/FileOpen
+          tar = Minitar::Output.new(gz)
+          Find.find(release_name) do |entry|
+            entry_meta = {
+              name: entry,
+            }
 
-              orig_mode = PDK::Util::Filesystem.stat(entry).mode
-              min_mode = Minitar.dir?(entry) ? 0o755 : 0o644
+            orig_mode = PDK::Util::Filesystem.stat(entry).mode
+            min_mode = Minitar.dir?(entry) ? 0o755 : 0o644
 
-              entry_meta[:mode] = orig_mode | min_mode
+            entry_meta[:mode] = orig_mode | min_mode
 
-              if entry_meta[:mode] != orig_mode
-                PDK.logger.debug('Updated permissions of packaged \'%{entry}\' to %{new_mode}' % {
-                  entry: entry,
-                  new_mode: (entry_meta[:mode] & 0o7777).to_s(8),
-                })
-              end
-
-              Minitar.pack_file(entry_meta, tar)
+            if entry_meta[:mode] != orig_mode
+              PDK.logger.debug('Updated permissions of packaged \'%{entry}\' to %{new_mode}' % {
+                entry: entry,
+                new_mode: (entry_meta[:mode] & 0o7777).to_s(8),
+              })
             end
-          ensure
-            tar.close
+
+            Minitar.pack_file(entry_meta, tar)
           end
+        ensure
+          tar.close
         end
       end
 

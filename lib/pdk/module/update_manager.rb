@@ -201,19 +201,17 @@ module PDK
         file_length_difference = 0
 
         diffs.each do |piece|
-          begin
-            hunk = Diff::LCS::Hunk.new(old_lines, new_lines, piece, lines_of_context, file_length_difference)
-            file_length_difference = hunk.file_length_difference
+          hunk = Diff::LCS::Hunk.new(old_lines, new_lines, piece, lines_of_context, file_length_difference)
+          file_length_difference = hunk.file_length_difference
 
-            next unless oldhunk
+          next unless oldhunk
 
-            # If the hunk overlaps with the oldhunk, merge them.
-            next if lines_of_context > 0 && hunk.merge(oldhunk)
+          # If the hunk overlaps with the oldhunk, merge them.
+          next if lines_of_context > 0 && hunk.merge(oldhunk)
 
-            output << oldhunk.diff(:unified)
-          ensure
-            oldhunk = hunk
-          end
+          output << oldhunk.diff(:unified)
+        ensure
+          oldhunk = hunk
         end
 
         output << oldhunk.diff(:unified)
