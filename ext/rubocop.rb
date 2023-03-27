@@ -780,8 +780,8 @@ module RuboCop
 
       class SmartQuotes < Cop
         MSG = 'Use ASCII quotes instead of Unicode smart quotes'.freeze
-        SINGLE_QUOTES_PAT = %r{(?:\u2018|\u2019)}
-        DOUBLE_QUOTES_PAT = %r{(?:\u201C|\u201D)}
+        SINGLE_QUOTES_PAT = %r{(?:\u2018|\u2019)}.freeze
+        DOUBLE_QUOTES_PAT = %r{(?:\u201C|\u201D)}.freeze
 
         def on_str(node)
           return unless node.loc.respond_to?(:begin) && node.loc.begin

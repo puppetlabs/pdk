@@ -4,7 +4,7 @@ module PDK
   module Util
     module ChangelogGenerator
       # Taken from the version regex in https://forgeapi.puppet.com/schemas/module.json
-      VERSION_REGEX = %r{^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$}
+      VERSION_REGEX = %r{^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$}.freeze
       GEM = 'github_changelog_generator'.freeze
 
       # Raises if the github_changelog_generator is not available
