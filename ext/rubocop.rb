@@ -23,7 +23,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_file_predicate?(node)
                       node.children[0].loc.expression
                     else
@@ -56,7 +56,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_exist_predicate?(node)
                       node.children[0].loc.expression
                     else
@@ -90,7 +90,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_directory_predicate?(node)
                       node.children[0].loc.expression
                     else
@@ -124,7 +124,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if fileutils_mkdir_p?(node)
                       node.children[0].loc.expression
                     else
@@ -158,7 +158,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_expand_path?(node)
                       node.children[0].loc.expression
                     else
@@ -191,7 +191,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if dir_glob?(node)
                       node.children[0].loc.expression
                     else
@@ -225,7 +225,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_fnmatch_predicate?(node)
                       node.children[0].loc.expression
                     else
@@ -258,7 +258,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_readable_predicate?(node)
                       node.children[0].loc.expression
                     else
@@ -291,7 +291,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if fileutils_rm?(node)
                       node.children[0].loc.expression
                     else
@@ -324,7 +324,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             if file_read?(node)
               const = node.children[0].loc.expression
               method = node.loc.selector
@@ -362,7 +362,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_zero?(node)
                       node.children[0].loc.expression
                     else
@@ -395,7 +395,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_stat?(node)
                       node.children[0].loc.expression
                     else
@@ -428,7 +428,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             if dir_exist?(node)
               const = node.children[0].loc.expression
               method = node.loc.selector
@@ -466,7 +466,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             if dir_brackets?(node)
               const = node.children[0].loc.expression
               method = node.loc.selector
@@ -526,7 +526,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_symlink?(node)
                       node.children[0].loc.expression
                     else
@@ -559,7 +559,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if file_delete?(node)
                       node.children[0].loc.expression
                     else
@@ -592,7 +592,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if fileutils_rm_f?(node)
                       node.children[0].loc.expression
                     else
@@ -625,7 +625,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if fileutils_rm_rf?(node)
                       node.children[0].loc.expression
                     else
@@ -658,7 +658,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if fileutils_cp?(node)
                       node.children[0].loc.expression
                     else
@@ -691,7 +691,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if fileutils_mv?(node)
                       node.children[0].loc.expression
                     else
@@ -724,7 +724,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             if fileutils_remove_dir?(node)
               const = node.children[0].loc.expression
               method = node.loc.selector
@@ -767,7 +767,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             const = if fileutils_remove_entry_secure?(node)
                       node.children[0].loc.expression
                     else
@@ -807,7 +807,7 @@ module RuboCop
         end
 
         def autocorrect(node)
-          ->(corrector) do
+          lambda do |corrector|
             if smart_single_quotes?(node)
               new_str = node.source.gsub(SINGLE_QUOTES_PAT, "'")
               if new_str.start_with?("'")

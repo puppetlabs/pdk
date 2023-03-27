@@ -8,7 +8,7 @@ module PDK::Util::Windows::Process
   def environment_hash
     env_ptr = GetEnvironmentStringsW()
 
-    contains_unicode_replacement = ->(string) do
+    contains_unicode_replacement = lambda do |string|
       return false unless string.include?("\uFFFD")
 
       PDK.logger.warning "Discarding environment variable #{string} which contains invalid bytes"
