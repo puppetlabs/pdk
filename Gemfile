@@ -34,13 +34,3 @@ end
 group :acceptance_ci do
   gem 'puppetlabs_spec_helper'
 end
-
-# Evaluate Gemfile.local and ~/.gemfile if they exist
-extra_gemfiles = [
-  "#{__FILE__}.local",
-  File.join(Dir.home, '.gemfile'),
-]
-
-extra_gemfiles.each do |gemfile|
-  eval(File.read(gemfile), binding) if File.file?(gemfile) && File.readable?(gemfile)
-end
