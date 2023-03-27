@@ -83,7 +83,7 @@ def cri_to_powershell_hash(base_command)
           'desc' => option[:desc], # A description of the parameter
           'type' => 'String', # The PowerShell Type of the parameter
           'reserved' => false, # Whether this is a reserved PowerShell name e.g. Verbose
-          'position' => -1 # What position the parameter has. -1 means no position
+          'position' => -1, # What position the parameter has. -1 means no position
         }
         obj['type'] = 'Switch' if option[:argument] == :forbidden
         if option[:long] == 'verbose'
@@ -104,7 +104,7 @@ def cri_to_powershell_hash(base_command)
             'desc' => "The specified #{pdk_name}", # A description of the parameter
             'type' => 'String', # The PowerShell Type of the parameter
             'reserved' => false, # Whether this is a reserved PowerShell name e.g. Verbose
-            'position' => position # What position the parameter has. -1 means no position
+            'position' => position, # What position the parameter has. -1 means no position
           }
           position += 1
         end

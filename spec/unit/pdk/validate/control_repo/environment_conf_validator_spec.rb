@@ -78,7 +78,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
       let(:target) do
         {
           name: 'environment.conf',
-          content: <<-EOT
+          content: <<-EOT,
                    modulepath=foo
                    manifest=foo
                    config_version=foo
@@ -102,7 +102,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
       let(:target) do
         {
           name: 'environment.conf',
-          content: <<-EOT
+          content: <<-EOT,
                    modulepath=foo
                    manifest=foo
                    config_version=foo
