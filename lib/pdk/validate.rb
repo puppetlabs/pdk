@@ -61,7 +61,7 @@ module PDK
         Ruby::RubyValidatorGroup,
         Tasks::TasksValidatorGroup,
         YAML::YAMLValidatorGroup,
-      ].map { |klass| [klass.new.name, klass] }.to_h.freeze
+      ].to_h { |klass| [klass.new.name, klass] }.freeze
     end
 
     def self.invoke_validators_by_name(context, names, parallel = false, options = {})
