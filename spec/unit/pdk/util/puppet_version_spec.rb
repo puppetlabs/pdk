@@ -59,7 +59,7 @@ describe PDK::Util::PuppetVersion do
     subject { described_class.latest_available }
 
     let(:expected_version) do
-      versions.sort.last
+      versions.max
     end
 
     context 'when running from a package install' do

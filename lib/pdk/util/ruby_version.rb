@@ -71,7 +71,7 @@ module PDK
         end
 
         def latest_ruby_version
-          versions.keys.sort { |a, b| Gem::Version.new(b) <=> Gem::Version.new(a) }.first
+          versions.keys.min { |a, b| Gem::Version.new(b) <=> Gem::Version.new(a) }
         end
 
         def versions
