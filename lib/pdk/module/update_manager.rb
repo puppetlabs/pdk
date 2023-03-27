@@ -49,7 +49,7 @@ module PDK
         {
           added: @added_files,
           removed: @removed_files.select { |f| PDK::Util::Filesystem.exist?(f) },
-          modified: @diff_cache.reject { |_, value| value.nil? },
+          modified: @diff_cache.compact,
         }
       end
 
