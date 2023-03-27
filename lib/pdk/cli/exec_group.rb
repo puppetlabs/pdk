@@ -37,8 +37,8 @@ module PDK
       # @param block [Block] A block of ruby to execute
       #
       # @api private
-      def register(&_block)
-        raise PDK::CLI::FatalError, 'No block registered' unless _block
+      def register(&block)
+        raise PDK::CLI::FatalError, 'No block registered' unless block
       end
 
       # The return code of running all registered blocks
