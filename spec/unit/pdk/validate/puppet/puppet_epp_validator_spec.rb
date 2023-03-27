@@ -140,7 +140,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
         "error: 5.3.4 test-type-4 (line: 34)\n",
         "error: 5.3.4 test-type-5 (file: warning.epp)\n",
         "error: language validaton logged 2 errors. giving up\n",
-      ].join('')
+      ].join
     end
 
     let(:targets) { ['pass.epp', 'fail.epp'] }

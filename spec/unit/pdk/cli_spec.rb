@@ -99,7 +99,7 @@ describe PDK::CLI do
       it 'informs the user that this is not a module folder' do
         expect(logger).to receive(:error).with(a_string_matching(%r{(no metadata\.json found|only be run from inside a valid module)}i))
 
-        expect { described_class.run(command.split(' ')) }.to exit_nonzero
+        expect { described_class.run(command.split) }.to exit_nonzero
       end
     end
   end
