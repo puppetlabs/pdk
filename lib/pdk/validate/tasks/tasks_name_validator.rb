@@ -29,7 +29,7 @@ module PDK
               state: :passed,
               severity: 'ok',
             )
-            return 0
+            0
           else
             report.add_event(
               file: target,
@@ -38,7 +38,7 @@ module PDK
               severity: 'error',
               message: INVALID_TASK_MSG,
             )
-            return 1
+            1
           end
         end
       end

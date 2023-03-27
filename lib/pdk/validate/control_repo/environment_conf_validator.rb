@@ -82,7 +82,7 @@ module PDK
               state: :passed,
               severity: 'ok',
             )
-            return 0
+            0
           rescue StandardError => e
             report.add_event(
               file: target,
@@ -91,7 +91,7 @@ module PDK
               severity: 'error',
               message: e.message,
             )
-            return 1
+            1
           end
         end
       end

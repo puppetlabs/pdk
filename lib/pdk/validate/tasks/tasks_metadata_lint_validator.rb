@@ -64,7 +64,7 @@ module PDK
                 state: :passed,
                 severity: 'ok',
               )
-              return 0
+              0
             else
               errors.each do |error|
                 # strip off the trailing parts that aren't relevant
@@ -78,7 +78,7 @@ module PDK
                   message: error,
                 )
               end
-              return 1
+              1
             end
           end
         end

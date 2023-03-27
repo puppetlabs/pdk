@@ -61,7 +61,7 @@ module PDK
               state: :passed,
               severity: 'ok',
             )
-            return 0
+            0
           rescue Psych::SyntaxError => e
             report.add_event(
               file: target,
@@ -75,7 +75,7 @@ module PDK
                 context: e.context,
               },
             )
-            return 1
+            1
           rescue Psych::DisallowedClass => e
             report.add_event(
               file: target,
@@ -86,7 +86,7 @@ module PDK
                 message: e.message,
               },
             )
-            return 1
+            1
           end
         end
       end

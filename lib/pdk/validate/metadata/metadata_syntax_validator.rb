@@ -54,7 +54,7 @@ module PDK
               state: :passed,
               severity: 'ok',
             )
-            return 0
+            0
           rescue JSON::ParserError => e
             # Because the message contains a raw segment of the file, we use
             # String#dump here to unescape any escape characters like newlines.
@@ -69,7 +69,7 @@ module PDK
               severity: 'error',
               message: sane_message,
             )
-            return 1
+            1
           end
         end
       end
