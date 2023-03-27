@@ -63,7 +63,7 @@ module PDK::CLI
       private_class_method :convert_to_number
 
       def self.run(opts, args)
-        item_name = (args.count > 0) ? args[0] : nil
+        item_name = args.count.positive? ? args[0] : nil
         item_value = (args.count > 1) ? args[1] : nil
 
         opts[:type] = opts[:as] if opts[:type].nil? && !opts[:as].nil?

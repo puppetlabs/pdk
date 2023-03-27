@@ -60,7 +60,7 @@ def cri_to_powershell_hash(base_command)
     pdk_verb = cmd['name']
     pwsh_verb = pdk_to_powershell[pdk_verb]
 
-    has_subcommands = cmd['subcommands'].count > 0
+    has_subcommands = cmd['subcommands'].count.positive?
     sub_commands = has_subcommands ? cmd['subcommands'].reject { |item| item['name'] == 'help' } : [cmd]
 
     sub_commands.each do |sub_command|

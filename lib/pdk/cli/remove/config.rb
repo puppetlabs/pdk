@@ -2,7 +2,7 @@ module PDK::CLI
   module Remove
     module Config
       def self.run(opts, args)
-        item_name = (args.count > 0) ? args[0] : nil
+        item_name = args.count.positive? ? args[0] : nil
         item_value = (args.count > 1) ? args[1].strip : nil
         item_value = nil if !item_value.nil? && item_value.empty?
 

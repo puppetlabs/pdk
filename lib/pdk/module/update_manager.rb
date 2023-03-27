@@ -207,7 +207,7 @@ module PDK
           next unless oldhunk
 
           # If the hunk overlaps with the oldhunk, merge them.
-          next if lines_of_context > 0 && hunk.merge(oldhunk)
+          next if lines_of_context.positive? && hunk.merge(oldhunk)
 
           output << oldhunk.diff(:unified)
         ensure
