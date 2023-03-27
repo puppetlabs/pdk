@@ -20,7 +20,7 @@ module PDK
 
       def read_file(file, nil_on_error: false, open_args: 'r')
         File.read(file, open_args: Array(open_args))
-      rescue => e
+      rescue StandardError => e
         raise e unless nil_on_error
 
         nil

@@ -88,7 +88,7 @@ module PDK
               else
                 begin
                   dest_content = new_template_file(File.join(template_loc, template_file), configs: config, template_dir: legacy_template_dir).render
-                rescue => e
+                rescue StandardError => e
                   error_msg = "Failed to render template '%{template}'\n" \
                               '%{exception}: %{message}' % { template: template_file, exception: e.class, message: e.message }
                   raise PDK::CLI::FatalError, error_msg

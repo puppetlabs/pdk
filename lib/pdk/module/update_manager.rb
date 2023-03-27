@@ -120,7 +120,7 @@ module PDK
         else
           PDK.logger.debug("'%{path}': already gone" % { path: path })
         end
-      rescue => e
+      rescue StandardError => e
         raise PDK::CLI::ExitWithError, "Unable to remove '%{path}': %{message}" % {
           path: path,
           message: e.message,
