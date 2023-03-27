@@ -134,7 +134,7 @@ module PDK
         name = [root].concat(keys)
       end
 
-      get_within_scopes(name[1..-1], [name[0]])
+      get_within_scopes(name[1..], [name[0]])
     end
 
     # Returns a configuration setting by name, using scope precedence rules. If no scopes are passed, then all scopes are queried using the default precedence rules
@@ -188,7 +188,7 @@ module PDK
       scope_name = names[0]
       raise ArgumentError, "Unknown configuration root '%{name}'" % { name: scope_name } if all_scopes[scope_name].nil?
 
-      deep_set_object(value, options[:force], send(all_scopes[scope_name]), *names[1..-1])
+      deep_set_object(value, options[:force], send(all_scopes[scope_name]), *names[1..])
     end
 
     def self.bolt_analytics_config

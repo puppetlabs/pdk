@@ -28,7 +28,7 @@ module PDK
         files = { 'class_spec.erb' => "#{File.join('spec', 'classes', *class_name_parts)}_spec.rb" }
         return files if spec_only?
 
-        class_name_parts = object_name.split('::')[1..-1]
+        class_name_parts = object_name.split('::')[1..]
         class_name_parts << 'init' if class_name_parts.empty?
         files['class.erb'] = "#{File.join('manifests', *class_name_parts)}.pp"
 

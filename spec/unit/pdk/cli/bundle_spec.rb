@@ -20,7 +20,7 @@ describe 'Running `pdk bundle`' do
         :execute! => command_result,
       )
       allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new)
-        .with(PDK::CLI::Exec.bundle_bin, *(command_args[1..-1] || []))
+        .with(PDK::CLI::Exec.bundle_bin, *(command_args[1..] || []))
         .and_return(mock_command)
 
       allow(PDK::Util).to receive(:module_root)

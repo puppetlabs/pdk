@@ -189,7 +189,7 @@ describe PDK::Module::UpdateManager do
         diff_lines = update_manager.changes[:modified][dummy_file].split("\n")
         expect(diff_lines[0]).to match(%r{\A--- #{Regexp.escape(dummy_file)}.+})
         expect(diff_lines[1]).to match(%r{\A\+\+\+ #{Regexp.escape(dummy_file)}\.pdknew.+})
-        expect(diff_lines[2..-1].join("\n")).to eq(expected_diff)
+        expect(diff_lines[2..].join("\n")).to eq(expected_diff)
       end
 
       it 'knows that the file will be changed' do

@@ -160,7 +160,7 @@ module PDK
       #
       # @returns String
       def self.human_readable(string)
-        (Gem.win_platform? && string =~ %r{^\/[a-zA-Z][\|:]}) ? string[1..-1] : string
+        (Gem.win_platform? && string =~ %r{^\/[a-zA-Z][\|:]}) ? string[1..] : string
       end
 
       def self.parse_scp_url(url)

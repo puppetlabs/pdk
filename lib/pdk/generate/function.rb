@@ -28,7 +28,7 @@ module PDK
         }
         return files if spec_only?
 
-        func_name_parts = object_name.split('::')[1..-1]
+        func_name_parts = object_name.split('::')[1..]
         template_file = File.join('functions', "#{options[:type]}_function.erb")
 
         files[template_file] = if options[:type].eql?('v4')
