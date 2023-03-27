@@ -112,10 +112,8 @@ module PDK
           if offense.match(PUPPET_LOGGER_PREFIX)
             attributes = offense.match(PUPPET_SYNTAX_PATTERN)
 
-            unless attributes.nil?
-              attributes.names.each do |name|
-                offense_data[name.to_sym] = attributes[name] unless attributes[name].nil?
-              end
+            attributes&.names&.each do |name|
+              offense_data[name.to_sym] = attributes[name] unless attributes[name].nil?
             end
           else
             offense_data[:message] = offense

@@ -9,9 +9,9 @@ describe PDK::CLI::Util::UpdateManagerPrinter do
   let(:update_manager) do
     manager = PDK::Module::UpdateManager.new
 
-    updated_files[:add_file].each { |path| manager.add_file(path, 'content') } unless updated_files[:add_file].nil?
-    updated_files[:modify_file].each { |path| manager.modify_file(path, 'new content') } unless updated_files[:modify_file].nil?
-    updated_files[:remove_file].each { |path| manager.remove_file(path) } unless updated_files[:remove_file].nil?
+    updated_files[:add_file]&.each { |path| manager.add_file(path, 'content') }
+    updated_files[:modify_file]&.each { |path| manager.modify_file(path, 'new content') }
+    updated_files[:remove_file]&.each { |path| manager.remove_file(path) }
 
     manager
   end

@@ -44,7 +44,7 @@ module PDK
         # If there are missing dependencies after updating the lockfile, let `bundle install`
         # go out and get them. If the specified puppet gem version points to a remote location
         # or local filepath, then run bundle install as well.
-        bundle.install!(gem_overrides) if !bundle.installed?(gem_overrides) || (gem_overrides[:puppet] && gem_overrides[:puppet].start_with?('file://', 'git://', 'https://'))
+        bundle.install!(gem_overrides) if !bundle.installed?(gem_overrides) || gem_overrides[:puppet]&.start_with?('file://', 'git://', 'https://')
 
         mark_as_bundled!(bundle.gemfile, gem_overrides)
       end

@@ -77,7 +77,7 @@ module PDK
       # Start the spinner if it exists
       # @api private
       def start_spinner
-        spinner.auto_spin unless spinner.nil?
+        spinner&.auto_spin
         nil
       end
 

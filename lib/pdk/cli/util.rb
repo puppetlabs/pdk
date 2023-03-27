@@ -257,7 +257,7 @@ module PDK
       def validate_template_opts(opts)
         raise PDK::CLI::ExitWithError, '--template-ref requires --template-url to also be specified.' if opts[:'template-ref'] && opts[:'template-url'].nil?
 
-        return unless opts[:'template-url'] && opts[:'template-url'].include?('#')
+        return unless opts[:'template-url']&.include?('#')
 
         raise PDK::CLI::ExitWithError, '--template-url may not be used to specify paths containing #\'s.'
       end

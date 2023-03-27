@@ -65,7 +65,7 @@ module PDK
                                'unmanaged'
                              elsif c['delete']
                                'deleted'
-                             elsif @sync_config && @sync_config.key?(dest_path)
+                             elsif @sync_config&.key?(dest_path)
                                'customized'
                              else
                                'default'

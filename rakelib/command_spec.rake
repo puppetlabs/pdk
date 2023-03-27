@@ -96,18 +96,16 @@ def cri_to_powershell_hash(base_command)
       # Not all CRI options are explicit. Some are implicitly inside the usage text surrounded by angle brackets < >
       # Extract these from the usage text. Also these are positional
       position = 0
-      unless sub_command['usage'].nil?
-        sub_command['usage'].match(%r{(?:<([^>]+)>)}) do |match|
-          pdk_name = match.captures[0]
-          pwsh_name = to_title_case(pdk_name)
-          options_hash[pwsh_name] = {
-            'desc' => "The specified #{pdk_name}", # A description of the parameter
-            'type' => 'String', # The PowerShell Type of the parameter
-            'reserved' => false, # Whether this is a reserved PowerShell name e.g. Verbose
-            'position' => position, # What position the parameter has. -1 means no position
-          }
-          position += 1
-        end
+      sub_command['usage']&.match(%r{(?:<([^>]+)>)}) do |match|
+        pdk_name = match.captures[0]
+        pwsh_name = to_title_case(pdk_name)
+        options_hash[pwsh_name] = {
+          'desc' => "The specified #{pdk_name}", # A description of the parameter
+          'type' => 'String', # The PowerShell Type of the parameter
+          'reserved' => false, # Whether this is a reserved PowerShell name e.g. Verbose
+          'position' => position, # What position the parameter has. -1 means no position
+        }
+        position += 1
       end
 
       ps_command['options'] = options_hash

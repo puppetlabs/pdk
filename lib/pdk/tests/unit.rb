@@ -54,8 +54,8 @@ module PDK
 
       def self.print_failure(result, exception)
         $stderr.puts ''
-        result[:stdout].each_line { |line| $stderr.puts line.rstrip } unless result[:stdout].nil?
-        result[:stderr].each_line { |line| $stderr.puts line.rstrip } unless result[:stderr].nil?
+        result[:stdout]&.each_line { |line| $stderr.puts line.rstrip }
+        result[:stderr]&.each_line { |line| $stderr.puts line.rstrip }
         $stderr.puts ''
         raise PDK::CLI::FatalError, exception
       end
@@ -135,7 +135,7 @@ module PDK
 
       def self.parse_output(report, json_data, duration)
         # Output messages to stderr.
-        json_data['messages'] && json_data['messages'].each { |msg| $stderr.puts msg }
+        json_data['messages']&.each { |msg| $stderr.puts msg }
 
         example_results = {
           # Only possibilities are passed, failed, pending:
@@ -145,7 +145,7 @@ module PDK
           'pending' => [],
         }
 
-        json_data['examples'] && json_data['examples'].each do |ex|
+        json_data['examples']&.each do |ex|
           example_results[ex['status']] << ex if example_results.key?(ex['status'])
         end
 
