@@ -86,8 +86,8 @@ describe 'pdk validate puppet', module_command: true do
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
 
-        its(:stdout) { is_expected.to match(%r{\(warning\):.*Unrecognized escape sequence \'\\\[\'}i) }
-        its(:stdout) { is_expected.to match(%r{\(warning\):.*Unrecognized escape sequence \'\\\]\'}i) }
+        its(:stdout) { is_expected.to match(%r{\(warning\):.*Unrecognized escape sequence '\\\['}i) }
+        its(:stdout) { is_expected.to match(%r{\(warning\):.*Unrecognized escape sequence '\\\]'}i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -105,7 +105,7 @@ describe 'pdk validate puppet', module_command: true do
               'name' => a_string_starting_with(init_pp),
             ).that_failed(
               'type' => a_string_matching(%r{warning}i),
-              'message' => a_string_matching(%r{unrecognized escape sequence \'\\\[\'}i),
+              'message' => a_string_matching(%r{unrecognized escape sequence '\\\['}i),
             )
           end
 
@@ -115,7 +115,7 @@ describe 'pdk validate puppet', module_command: true do
               'name' => a_string_starting_with(init_pp),
             ).that_failed(
               'type' => a_string_matching(%r{warning}i),
-              'message' => a_string_matching(%r{unrecognized escape sequence \'\\\]\'}i),
+              'message' => a_string_matching(%r{unrecognized escape sequence '\\\]'}i),
             )
           end
 

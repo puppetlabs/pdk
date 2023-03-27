@@ -173,7 +173,7 @@ module PDK
 
       # Validates that the given module name is both namespaced and well-formed.
       def validate_name(name)
-        return if %r{\A[a-z0-9]+[-\/][a-z][a-z0-9_]*\Z}i.match?(name)
+        return if %r{\A[a-z0-9]+[-/][a-z][a-z0-9_]*\Z}i.match?(name)
 
         namespace, modname = name.split(%r{[-/]}, 2)
         modname = :namespace_missing if namespace == ''

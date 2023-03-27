@@ -597,7 +597,7 @@ describe PDK::Config do
 
     def uuid_regex(uuid)
       # Depending on the YAML or JSON generator, it may, or may not have quotes
-      %r{user-id: (?:#{uuid}|'#{uuid}'|\"#{uuid}\")}
+      %r{user-id: (?:#{uuid}|'#{uuid}'|"#{uuid}")}
     end
 
     context 'default value' do
