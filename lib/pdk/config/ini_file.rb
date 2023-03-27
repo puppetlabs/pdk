@@ -62,7 +62,7 @@ module PDK
       def munge_serialized_value(value)
         value = value.to_s unless value.is_a?(String)
         # Add enclosing quotes if there's a space in the value
-        value = '"' + value + '"' if value.include?(' ')
+        value = "\"#{value}\"" if value.include?(' ')
         value
       end
 

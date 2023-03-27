@@ -191,7 +191,7 @@ module PDK
         module_pattern = [module_pattern] unless module_pattern.is_a?(Array)
         return module_pattern unless context.is_a?(PDK::Context::ControlRepo)
 
-        context.actualized_module_paths.map { |mod_path| module_pattern.map { |pat_path| mod_path + '/*/' + pat_path } }.flatten
+        context.actualized_module_paths.map { |mod_path| module_pattern.map { |pat_path| "#{mod_path}/*/#{pat_path}" } }.flatten
       end
 
       private

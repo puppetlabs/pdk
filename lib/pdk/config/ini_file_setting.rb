@@ -32,7 +32,7 @@ module PDK
           next if child_value.nil? || child_value.is_a?(String) || child_value.is_a?(Integer)
 
           raise ArgumentError, 'The setting %{key} may only be a String or Integer, not %{class}' % {
-            key: qualified_name + '.' + child_name,
+            key: "#{qualified_name}.#{child_name}",
             class: child_value.class,
           }
         end

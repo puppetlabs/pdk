@@ -136,7 +136,7 @@ module PDK
       #
       # @return [Boolean] true if the path matches and should be ignored.
       def ignored_path?(path)
-        path = path.to_s + '/' if PDK::Util::Filesystem.directory?(path)
+        path = "#{path}/" if PDK::Util::Filesystem.directory?(path)
 
         !ignored_files.match_paths([path], module_dir).empty?
       end

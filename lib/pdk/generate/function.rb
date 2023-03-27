@@ -24,7 +24,7 @@ module PDK
         # Drop the module name if the object name contains multiple parts
         func_name_parts.delete_at(0) if func_name_parts.length > 1
         files = {
-          File.join('functions', 'function_spec.erb') => File.join('spec', 'functions', *func_name_parts) + '_spec.rb',
+          File.join('functions', 'function_spec.erb') => "#{File.join('spec', 'functions', *func_name_parts)}_spec.rb",
         }
         return files if spec_only?
 
@@ -32,9 +32,9 @@ module PDK
         template_file = File.join('functions', "#{options[:type]}_function.erb")
 
         files[template_file] = if options[:type].eql?('v4')
-                                 File.join('lib', 'puppet', 'functions', module_name, *func_name_parts) + '.rb'
+                                 "#{File.join('lib', 'puppet', 'functions', module_name, *func_name_parts)}.rb"
                                else
-                                 File.join('functions', *func_name_parts) + '.pp'
+                                 "#{File.join('functions', *func_name_parts)}.pp"
                                end
         files
       end

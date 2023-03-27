@@ -52,7 +52,7 @@ module PDK::CLI
 
     # Logs a fatal message about the gem missing and how to add it
     def inform_user_for_missing_gem(gem_name = 'puppet-debugger', version = '~> 0.14')
-      PDK.logger.fatal(<<~EOF
+      PDK.logger.fatal(<<~EOF,
         Your Gemfile is missing the #{gem_name} gem.  You can add the missing gem
         by updating your #{File.join(PDK::Util.module_root, '.sync.yml')} file with the following
         and running pdk update.

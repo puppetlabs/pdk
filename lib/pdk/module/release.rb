@@ -156,7 +156,7 @@ module PDK
         uri = URI(forge_upload_url)
         require 'net/http'
         request = Net::HTTP::Post.new(uri.path)
-        request['Authorization'] = 'Bearer ' + forge_token
+        request['Authorization'] = "Bearer #{forge_token}"
         request['Content-Type'] = 'application/json'
         data = { file: file_data }
 

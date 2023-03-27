@@ -245,7 +245,7 @@ module PDK
         return true if filter.nil? # If we're not filtering, this value should always be resolved
         return true if name == filter # If it's exactly the same name then it should be resolved
 
-        name.start_with?(filter + '.') # If name is a subkey of the filter then it should be resolved
+        name.start_with?("#{filter}.") # If name is a subkey of the filter then it should be resolved
       end
 
       # @abstract Subclass and override {#parse_file} to implement parsing logic

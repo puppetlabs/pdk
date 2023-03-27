@@ -15,7 +15,7 @@ describe PDK::Util::Env do
     ENV.delete(env_name)
   end
 
-  let(:env_name) { SecureRandom.hex(10) + 'ABCabc' }
+  let(:env_name) { "#{SecureRandom.hex(10)}ABCabc" }
   let(:env_val) { 'PDK::Util::Env test value' }
   let(:upcase_name) { env_name.upcase }
   let(:downcase_name) { env_name.upcase }

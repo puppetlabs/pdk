@@ -55,7 +55,7 @@ describe PDK::Module::Update do
         let(:template_url) { 'https://github.com/puppetlabs/pdk-templates' }
 
         context 'and the url fragment is set to a tag name' do
-          let(:template_url) { super() + '#1.0.0' }
+          let(:template_url) { "#{super()}#1.0.0" }
 
           before(:each) do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
@@ -75,7 +75,7 @@ describe PDK::Module::Update do
         end
 
         context 'and the url fragment is not set to a tag name' do
-          let(:template_url) { super() + '#my_branch' }
+          let(:template_url) { "#{super()}#my_branch" }
 
           before(:each) do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(false)
@@ -103,7 +103,7 @@ describe PDK::Module::Update do
         let(:template_url) { 'https://github.com/puppetlabs/pdk-templates' }
 
         context 'and the url fragment is set to a tag name' do
-          let(:template_url) { super() + '#1.0.0' }
+          let(:template_url) { "#{super()}#1.0.0" }
 
           before(:each) do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
@@ -123,7 +123,7 @@ describe PDK::Module::Update do
         end
 
         context 'and the url fragment is not set to a tag name' do
-          let(:template_url) { super() + '#my_branch' }
+          let(:template_url) { "#{super()}#my_branch" }
 
           before(:each) do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(false)

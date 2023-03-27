@@ -11,7 +11,7 @@ module PDK
         return {} if spec_only?
 
         {
-          'task.erb' => File.join('tasks', task_name + '.sh'),
+          'task.erb' => File.join('tasks', "#{task_name}.sh"),
         }
       end
 
@@ -32,7 +32,7 @@ module PDK
         error = "A task named '%{name}' already exists in this module; defined in %{file}"
         allowed_extensions = ['.md', '.conf']
 
-        PDK::Util::Filesystem.glob(File.join(context.root_path, 'tasks', task_name + '.*')).each do |file|
+        PDK::Util::Filesystem.glob(File.join(context.root_path, 'tasks', "#{task_name}.*")).each do |file|
           next if allowed_extensions.include?(File.extname(file))
 
           raise PDK::CLI::ExitWithError, error % { name: task_name, file: file }
@@ -40,7 +40,7 @@ module PDK
       end
 
       def non_template_files
-        task_metadata_file = File.join('tasks', task_name + '.json')
+        task_metadata_file = File.join('tasks', "#{task_name}.json")
         { task_metadata_file => JSON.pretty_generate(task_metadata) }
       end
 

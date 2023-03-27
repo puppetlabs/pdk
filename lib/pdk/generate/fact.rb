@@ -9,12 +9,12 @@ module PDK
 
       def template_files
         files = {
-          'fact_spec.erb' => File.join('spec', 'unit', 'facter', object_name) + '_spec.rb',
+          'fact_spec.erb' => "#{File.join('spec', 'unit', 'facter', object_name)}_spec.rb",
         }
         return files if spec_only?
 
         files.merge(
-          'fact.erb' => File.join('lib', 'facter', object_name) + '.rb',
+          'fact.erb' => "#{File.join('lib', 'facter', object_name)}.rb",
         )
       end
 

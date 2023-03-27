@@ -307,7 +307,7 @@ describe PDK::Generate::Module do
     before(:each) do
       prompt = TTY::Prompt::Test.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
-      prompt.input << (responses.join("\r") + "\r")
+      prompt.input << ("#{responses.join("\r")}\r")
       prompt.input.rewind
 
       allow($stdout).to receive(:puts).with(a_string_matching(%r{manually updating the metadata.json file}m))

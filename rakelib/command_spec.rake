@@ -65,7 +65,7 @@ def cri_to_powershell_hash(base_command)
 
     sub_commands.each do |sub_command|
       # Convert the PDK name into a PowerShell compatible Function name
-      function_name = pwsh_verb + '-PDK'
+      function_name = "#{pwsh_verb}-PDK"
       function_name += has_subcommands ? to_title_case(sub_command['name']) : 'Module'
 
       ps_command = {

@@ -51,7 +51,7 @@ describe 'PDK::CLI update' do
       FileUtils.mkdir_p(File.join(spec_dir, 'site', 'profile', 'manifests'))
       File.write(
         File.join(spec_dir, 'metadata.json'),
-        <<-EOT
+        <<-EOT,
         {
           "name": "spec-foo",
           "version": "0.1.0",

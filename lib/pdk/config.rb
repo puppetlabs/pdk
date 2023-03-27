@@ -224,7 +224,7 @@ module PDK
 
     # return nil if not exist
     def self.json_schema(name)
-      File.join(json_schemas_path, name + '_schema.json')
+      File.join(json_schemas_path, "#{name}_schema.json")
     end
 
     def self.analytics_config_exist?
@@ -380,7 +380,7 @@ module PDK
         return value
       end
 
-      raise ArgumentError, "Unable to set '%{key}' to '%{value}' as it is not a Hash" % { key: namespace.name + '.' + name, value: hash_value } unless current_value.is_a?(Hash)
+      raise ArgumentError, "Unable to set '%{key}' to '%{value}' as it is not a Hash" % { key: "#{namespace.name}.#{name}", value: hash_value } unless current_value.is_a?(Hash)
 
       namespace[name] = current_value.merge(hash_value)
       value

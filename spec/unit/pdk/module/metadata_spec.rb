@@ -27,7 +27,7 @@ describe PDK::Module::Metadata do
     it 'can populate itself from a metadata.json file on disk with a trailing newline' do
       allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_json_path).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_json_path).and_return(true)
-      allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_json_path).and_return(metadata_json_content + "\n")
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_json_path).and_return("#{metadata_json_content}\n")
 
       expect(described_class.from_file(metadata_json_path).data).to include('name' => 'foo-bar', 'version' => '0.1.0')
     end

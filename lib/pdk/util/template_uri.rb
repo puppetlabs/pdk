@@ -111,7 +111,7 @@ module PDK
         require 'addressable'
 
         if uri.is_a?(Addressable::URI) && uri.fragment
-          human_readable(uri.to_s.chomp('#' + uri.fragment))
+          human_readable(uri.to_s.chomp("##{uri.fragment}"))
         else
           human_readable(uri.to_s)
         end
