@@ -118,7 +118,7 @@ describe 'pdk console' do
     end
 
     it 'can pass --pe-version' do
-      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with({ "pe-version": '2023.0' }, true).and_return(gemset: { puppet: '7.23.0' }, ruby_version: '2.7.7')
+      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with({ 'pe-version': '2023.0' }, true).and_return(gemset: { puppet: '7.23.0' }, ruby_version: '2.7.7')
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet: '7.23.0')
       command = instance_double(PDK::CLI::Exec::InteractiveCommand)
       allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.7.7' => '2.7.0')
@@ -130,7 +130,7 @@ describe 'pdk console' do
     end
 
     it 'can pass --puppet-dev' do
-      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with({ "puppet-dev": '' }, true)
+      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with({ 'puppet-dev': '' }, true)
                                                                 .and_return(gemset: { puppet: 'file:///home/user1/.pdk/cache/src/puppet' }, ruby_version: '2.7.7')
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet: 'file:///home/user1/.pdk/cache/src/puppet')
       command = instance_double(PDK::CLI::Exec::InteractiveCommand)
