@@ -17,7 +17,7 @@ task :generate_powershell do
 
   @pdk_pwsh_commands = cri_to_powershell_hash(describe_base_command)
 
-  %w[PuppetDevelopmentKit PuppetDevelopmentKitBeta].each do |dir|
+  ['PuppetDevelopmentKit', 'PuppetDevelopmentKitBeta'].each do |dir|
     this_output = File.join(output_dir, dir)
     FileUtils.mkdir_p(this_output)
     Dir.glob(File.join(ext_dir, dir, '/*')).each do |file|

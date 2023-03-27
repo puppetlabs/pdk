@@ -50,7 +50,7 @@ describe 'Running `pdk env`' do
     end
 
     context 'and called with a puppet version' do
-      let(:command_args) { super() + %w[--puppet-version=6] }
+      let(:command_args) { super() + ['--puppet-version=6'] }
 
       it 'outputs export commands for environment variables' do
         output_regexes = [

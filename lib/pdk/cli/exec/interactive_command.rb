@@ -42,9 +42,7 @@ module PDK
           if [:module, :pwd].include?(context)
             mod_root = PDK::Util.module_root
 
-            unless mod_root
-              raise PDK::CLI::FatalError, 'Current working directory is not part of a module. (No metadata.json was found.)'
-            end
+            raise PDK::CLI::FatalError, 'Current working directory is not part of a module. (No metadata.json was found.)' unless mod_root
 
             unless context == :pwd || Dir.pwd == mod_root
               orig_workdir = Dir.pwd

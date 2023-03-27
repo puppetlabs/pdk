@@ -9,7 +9,7 @@ describe 'Running pdk module generate' do
   describe 'when not passed a module name' do
     it do
       expect {
-        PDK::CLI.run(%w[module generate])
+        PDK::CLI.run(['module', 'generate'])
       }.to exit_nonzero.and output(a_string_matching(%r{^USAGE\s+pdk module generate}m)).to_stdout
     end
   end

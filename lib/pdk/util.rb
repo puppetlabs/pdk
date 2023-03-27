@@ -22,16 +22,7 @@ module PDK
     autoload :VendoredFile, 'pdk/util/vendored_file'
     autoload :Version, 'pdk/util/version'
 
-    MODULE_FOLDERS = %w[
-      manifests
-      lib/puppet
-      lib/puppet_x
-      lib/facter
-      tasks
-      facts.d
-      functions
-      types
-    ].freeze
+    MODULE_FOLDERS = ['manifests', 'lib/puppet', 'lib/puppet_x', 'lib/facter', 'tasks', 'facts.d', 'functions', 'types'].freeze
 
     # :nocov:
     # This method just wraps core Ruby functionality and
@@ -85,9 +76,7 @@ module PDK
     # @return [String] Canonical path
     def canonical_path(path)
       if Gem.win_platform?
-        unless PDK::Util::Filesystem.exist?(path)
-          raise PDK::CLI::FatalError, "Cannot resolve a full path to '%{path}', as it does not currently exist." % { path: path }
-        end
+        raise PDK::CLI::FatalError, "Cannot resolve a full path to '%{path}', as it does not currently exist." % { path: path } unless PDK::Util::Filesystem.exist?(path)
 
         PDK::Util::Windows::File.get_long_pathname(path)
       else

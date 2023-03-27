@@ -65,7 +65,7 @@ describe PDK::Validate do
     end
 
     context 'with run in parallel' do
-      let(:validators_to_run) { %w[mocksuccess] }
+      let(:validators_to_run) { ['mocksuccess'] }
       let(:parallel) { true }
 
       it 'creates an ExecGroup with parallel set to true' do
@@ -77,7 +77,7 @@ describe PDK::Validate do
     end
 
     context 'with run in serial' do
-      let(:validators_to_run) { %w[mocksuccess] }
+      let(:validators_to_run) { ['mocksuccess'] }
       let(:parallel) { false }
 
       it 'creates an ExecGroup with parallel set to true' do
@@ -89,13 +89,13 @@ describe PDK::Validate do
     end
 
     context 'with only successful validations' do
-      let(:validators_to_run) { %w[mocksuccess] }
+      let(:validators_to_run) { ['mocksuccess'] }
 
       it_behaves_like 'a successful result', 1
     end
 
     context 'with only unknown validations' do
-      let(:validators_to_run) { %w[unknown whodis] }
+      let(:validators_to_run) { ['unknown', 'whodis'] }
 
       it_behaves_like 'a successful result', 0
     end
@@ -103,19 +103,19 @@ describe PDK::Validate do
     context 'with only invalid in context validations' do
       # The MockNoContextValidator will raise an error it is invoked. However, because
       # it should be filtered out, it should never be invoked and therefore never raise.
-      let(:validators_to_run) { %w[mocknocontext] }
+      let(:validators_to_run) { ['mocknocontext'] }
 
       it_behaves_like 'a successful result', 0
     end
 
     context 'with only failed validations' do
-      let(:validators_to_run) { %w[mockfailed] }
+      let(:validators_to_run) { ['mockfailed'] }
 
       it_behaves_like 'a failed result', 0, 1
     end
 
     context 'with failed, uknown and successful validations' do
-      let(:validators_to_run) { %w[mocksuccess unknown whodis mockfailed] }
+      let(:validators_to_run) { ['mocksuccess', 'unknown', 'whodis', 'mockfailed'] }
 
       it_behaves_like 'a failed result', 1, 1
     end

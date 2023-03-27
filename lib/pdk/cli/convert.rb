@@ -17,19 +17,15 @@ module PDK::CLI
       # Write the context information to the debug log
       PDK.context.to_debug_log
 
-      unless PDK.context.is_a?(PDK::Context::Module)
-        raise PDK::CLI::ExitWithError, '`pdk convert` can only be run from inside a valid module directory.'
-      end
+      raise PDK::CLI::ExitWithError, '`pdk convert` can only be run from inside a valid module directory.' unless PDK.context.is_a?(PDK::Context::Module)
 
-      if opts[:noop] && opts[:force]
-        raise PDK::CLI::ExitWithError, 'You can not specify --noop and --force when converting a module'
-      end
+      raise PDK::CLI::ExitWithError, 'You can not specify --noop and --force when converting a module' if opts[:noop] && opts[:force]
 
       if opts[:'default-template']
         raise PDK::CLI::ExitWithError, 'You can not specify --template-url and --default-template.' if opts[:'template-url']
 
         opts[:'template-url'] = PDK::Util::TemplateURI.default_template_addressable_uri.to_s
-        PDK.config.set(%w[user module_defaults template-url], nil)
+        PDK.config.set(['user', 'module_defaults', 'template-url'], nil)
       end
 
       PDK::CLI::Util.validate_template_opts(opts)

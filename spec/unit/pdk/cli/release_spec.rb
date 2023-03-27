@@ -7,7 +7,7 @@ describe 'PDK::CLI release' do
 
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
-      expect { PDK::CLI.run(%w[release]) }.to exit_nonzero
+      expect { PDK::CLI.run(['release']) }.to exit_nonzero
     end
   end
 
@@ -40,25 +40,25 @@ describe 'PDK::CLI release' do
                                                                    force: true,
                                                                    'forge-upload-url': 'https://example.com',
                                                                  ))
-      PDK::CLI.run(%w[release --forge-token=cli123 --force --forge-upload-url=https://example.com])
+      PDK::CLI.run(['release', '--forge-token=cli123', '--force', '--forge-upload-url=https://example.com'])
     end
 
     it 'calls PDK::Module::Release.run' do
       expect(release_object).to receive(:run).and_return(nil)
 
-      expect { PDK::CLI.run(%w[release --force]) }.not_to raise_error
+      expect { PDK::CLI.run(['release', '--force']) }.not_to raise_error
     end
 
     it 'does not start an interview when --force is used' do
       expect(PDK::CLI::Util::Interview).not_to receive(:new)
 
-      PDK::CLI.run(%w[release --force])
+      PDK::CLI.run(['release', '--force'])
     end
 
     it 'calls PDK::CLI::Release.module_compatibility_checks!' do
       expect(PDK::CLI::Release).to receive(:module_compatibility_checks!).and_return(nil)
 
-      expect { PDK::CLI.run(%w[release --force]) }.not_to raise_error
+      expect { PDK::CLI.run(['release', '--force']) }.not_to raise_error
     end
   end
 

@@ -1,7 +1,7 @@
 module PDK::CLI
   module Set
     module Config
-      ALLOWED_TYPE_NAMES = %w[array boolean number string].freeze
+      ALLOWED_TYPE_NAMES = ['array', 'boolean', 'number', 'string'].freeze
 
       # :nocov:
       def self.pretty_allowed_names
@@ -48,8 +48,8 @@ module PDK::CLI
       def self.convert_to_boolean(value)
         string_val = value.to_s.strip.downcase
 
-        return true  if %w[yes true -1 1].include?(string_val)
-        return false if %w[no false 0].include?(string_val)
+        return true  if ['yes', 'true', '-1', '1'].include?(string_val)
+        return false if ['no', 'false', '0'].include?(string_val)
 
         raise ArgumentError
       end

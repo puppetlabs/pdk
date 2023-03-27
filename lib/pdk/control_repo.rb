@@ -2,7 +2,7 @@ require 'pdk'
 
 module PDK
   module ControlRepo
-    CONTROL_REPO_FILES = %w[environment.conf Puppetfile].freeze
+    CONTROL_REPO_FILES = ['environment.conf', 'Puppetfile'].freeze
 
     DEFAULT_IGNORED = [
       '/pkg/',

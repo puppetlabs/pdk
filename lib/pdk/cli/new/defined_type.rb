@@ -17,9 +17,7 @@ module PDK::CLI
         exit 1
       end
 
-      unless Util::OptionValidator.valid_defined_type_name?(defined_type_name)
-        raise PDK::CLI::ExitWithError, "'%{name}' is not a valid defined type name" % { name: defined_type_name }
-      end
+      raise PDK::CLI::ExitWithError, "'%{name}' is not a valid defined type name" % { name: defined_type_name } unless Util::OptionValidator.valid_defined_type_name?(defined_type_name)
 
       PDK::CLI::Util.analytics_screen_view('new_defined_type', opts)
 

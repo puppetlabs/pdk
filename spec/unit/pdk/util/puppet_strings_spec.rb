@@ -16,7 +16,7 @@ describe PDK::Util::PuppetStrings do
                       'context=': true,
                       add_spinner: true)
     end
-    let(:command_args) { %w[some args] }
+    let(:command_args) { ['some', 'args'] }
 
     context 'on Windows' do
       before(:each) do

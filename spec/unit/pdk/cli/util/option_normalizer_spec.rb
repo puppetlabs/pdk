@@ -4,7 +4,7 @@ require 'pdk/cli/util/option_normalizer'
 describe PDK::CLI::Util::OptionNormalizer do
   context 'when normalizing lists' do
     it 'normalizes and return an array of strings when the list is comma separated' do
-      expect(described_class.comma_separated_list_to_array('a,b,c')).to eq(%w[a b c])
+      expect(described_class.comma_separated_list_to_array('a,b,c')).to eq(['a', 'b', 'c'])
     end
 
     it 'raises an error when the list is invalid' do

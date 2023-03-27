@@ -39,9 +39,7 @@ module PDK
       def latest_available
         latest = find_gem(Gem::Requirement.create('>= 0'))
 
-        if latest.nil?
-          raise ArgumentError, 'Unable to find a Puppet gem in current Ruby environment or from Rubygems.org.'
-        end
+        raise ArgumentError, 'Unable to find a Puppet gem in current Ruby environment or from Rubygems.org.' if latest.nil?
 
         latest
       end

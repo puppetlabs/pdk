@@ -4,14 +4,11 @@ require 'json'
 
 describe PDK::Util::PuppetVersion do
   let(:cache_versions) do
-    %w[6.29.0 7.23.0]
+    ['6.29.0', '7.23.0']
   end
 
   let(:rubygems_versions) do
-    %w[
-      7.23.0
-      6.29.0
-    ]
+    ['7.23.0', '6.29.0']
   end
 
   let(:forge_version_map) do

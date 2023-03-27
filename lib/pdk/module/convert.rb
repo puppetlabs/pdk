@@ -156,9 +156,7 @@ module PDK
             when :delete
               update_manager.remove_file(absolute_file_path)
             when :init
-              if convert? && !PDK::Util::Filesystem.exist?(absolute_file_path)
-                update_manager.add_file(absolute_file_path, file_content)
-              end
+              update_manager.add_file(absolute_file_path, file_content) if convert? && !PDK::Util::Filesystem.exist?(absolute_file_path)
             when :manage
               if PDK::Util::Filesystem.exist?(absolute_file_path)
                 update_manager.modify_file(absolute_file_path, file_content)

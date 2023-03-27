@@ -153,7 +153,7 @@ RSpec.describe PDK::Util::Bundler do
     end
 
     describe '.ensure_binstubs!' do
-      let(:gems) { %w[apple banana mango] }
+      let(:gems) { ['apple', 'banana', 'mango'] }
 
       it 'delegates to BundleHelper.binstubs!' do
         expect(bundle_helper).to receive(:binstubs!).with(gems)
@@ -256,9 +256,7 @@ RSpec.describe PDK::Util::Bundler do
 
       cmd = command_double(result)
 
-      if spinner_message
-        expect(cmd).to receive(:add_spinner).with(spinner_message, any_args)
-      end
+      expect(cmd).to receive(:add_spinner).with(spinner_message, any_args) if spinner_message
 
       # TODO: it would be nice to update 'expect_command' to allow arguments in any order
       expect(PDK::CLI::Exec::Command).to receive(:new).with(*argv).and_return(cmd)
@@ -625,7 +623,7 @@ RSpec.describe PDK::Util::Bundler do
 
     describe '#binstubs!' do
       let(:gemfile) { '/Gemfile' }
-      let(:requested_gems) { %w[rake rspec metadata-json-lint] }
+      let(:requested_gems) { ['rake', 'rspec', 'metadata-json-lint'] }
 
       before(:each) do
         allow(instance).to receive(:gemfile).and_return(gemfile)

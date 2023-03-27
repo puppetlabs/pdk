@@ -24,7 +24,7 @@ describe PDK::Validate::ExternalCommandValidator do
 
   describe '.spinner_text_for_targets' do
     it 'returns nil' do
-      expect(validator.spinner_text_for_targets(%w[123 abc])).to be_nil
+      expect(validator.spinner_text_for_targets(['123', 'abc'])).to be_nil
     end
   end
 
@@ -288,7 +288,7 @@ describe PDK::Validate::ExternalCommandValidator do
       end
 
       context 'with successful and failed validations' do
-        let(:targets) { %w[success fail2 fail1] }
+        let(:targets) { ['success', 'fail2', 'fail1'] }
 
         it 'calls PDK::Util::Bundler.ensure_binstubs!' do
           expect(PDK::Util::Bundler).to receive(:ensure_binstubs!).and_return(nil)

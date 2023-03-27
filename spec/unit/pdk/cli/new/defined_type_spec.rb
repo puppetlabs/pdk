@@ -40,7 +40,7 @@ describe 'PDK::CLI new defined_type' do
   context 'when not run from inside a module' do
     include_context 'run outside module'
     let(:module_root) { nil }
-    let(:args) { %w[new defined_type test_define] }
+    let(:args) { ['new', 'defined_type', 'test_define'] }
 
     it_behaves_like 'it exits with an error', %r{must be run from inside a valid module}
   end
@@ -49,7 +49,7 @@ describe 'PDK::CLI new defined_type' do
     let(:module_root) { '/path/to/test/module' }
 
     context 'and not provided with a name for the new defined type' do
-      let(:args) { %w[new defined_type] }
+      let(:args) { ['new', 'defined_type'] }
 
       it_behaves_like 'it exits non-zero and prints the help text'
     end
@@ -61,7 +61,7 @@ describe 'PDK::CLI new defined_type' do
     end
 
     context 'and provided an invalid defined type name' do
-      let(:args) { %w[new defined_type test-define] }
+      let(:args) { ['new', 'defined_type', 'test-define'] }
 
       it_behaves_like 'it exits with an error', %r{'test-define' is not a valid defined type name}
     end
@@ -76,7 +76,7 @@ describe 'PDK::CLI new defined_type' do
       end
 
       after(:each) do
-        PDK::CLI.run(%w[new defined_type test_define])
+        PDK::CLI.run(['new', 'defined_type', 'test_define'])
       end
 
       it 'generates the defined type' do

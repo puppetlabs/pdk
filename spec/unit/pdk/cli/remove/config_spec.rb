@@ -210,7 +210,7 @@ describe 'PDK::CLI::Remove::Config' do
           let(:setting_value) { 'quokka' }
 
           before(:each) do
-            pdk_config.set(setting_name, %w[quokka kangaroo], force: true)
+            pdk_config.set(setting_name, ['quokka', 'kangaroo'], force: true)
           end
 
           it_behaves_like 'a removed setting', SETTING_ARRAY_NONDEFAULT, ['kangaroo'], %r{Removed .+ from .+}
@@ -248,7 +248,7 @@ describe 'PDK::CLI::Remove::Config' do
           let(:setting_value) { 'quokka' }
 
           before(:each) do
-            pdk_config.set(setting_name, %w[quokka kangaroo], force: true)
+            pdk_config.set(setting_name, ['quokka', 'kangaroo'], force: true)
             expect(PDK.logger).to receive(:info).with(%r{Ignoring the item value .+ as --force has been set})
           end
 

@@ -106,14 +106,14 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
   describe '.parse_options' do
     subject(:command_args) { validator.parse_options(targets) }
 
-    let(:targets) { %w[target1 target2.pp] }
+    let(:targets) { ['target1', 'target2.pp'] }
 
     before(:each) do
       allow(Gem).to receive(:win_platform?).and_return(false)
     end
 
     it 'invokes `puppet parser validate`' do
-      expect(command_args.first(2)).to eq(%w[parser validate])
+      expect(command_args.first(2)).to eq(['parser', 'validate'])
     end
 
     it 'appends the targets to the command arguments' do
@@ -124,7 +124,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
       let(:options) { { auto_correct: true } }
 
       it 'has no effect' do
-        expect(command_args).to eq(%w[parser validate --config /dev/null --modulepath].push(tmpdir).concat(targets))
+        expect(command_args).to eq(['parser', 'validate', '--config', '/dev/null', '--modulepath'].push(tmpdir).concat(targets))
       end
     end
   end

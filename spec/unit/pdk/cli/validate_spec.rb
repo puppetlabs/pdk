@@ -101,7 +101,7 @@ describe 'Running `pdk validate` in a module' do
         hash_including(puppet: puppet_version),
       ).and_return([0, report])
 
-      expect { PDK::CLI.run(%w[validate metadata]) }.to exit_zero
+      expect { PDK::CLI.run(['validate', 'metadata']) }.to exit_zero
     end
 
     it 'submits the command to analytics' do
@@ -111,12 +111,12 @@ describe 'Running `pdk validate` in a module' do
         ruby_version: RUBY_VERSION,
       )
 
-      expect { PDK::CLI.run(%w[validate metadata]) }.to exit_zero
+      expect { PDK::CLI.run(['validate', 'metadata']) }.to exit_zero
     end
   end
 
   context 'when multiple known validators are given as arguments' do
-    let(:invoked_validators) { %w[metadata puppet] }
+    let(:invoked_validators) { ['metadata', 'puppet'] }
 
     it 'invokes each given validator and exits zero' do
       expect(PDK::Validate).to receive(:invoke_validators_by_name).with(
@@ -139,7 +139,7 @@ describe 'Running `pdk validate` in a module' do
   end
 
   context 'when unknown validators are given as arguments' do
-    let(:invoked_validators) { %w[puppet] }
+    let(:invoked_validators) { ['puppet'] }
 
     it 'warns about unknown validators, invokes known validators, and exits zero' do
       expect(logger).to receive(:warn).with(%r{Unknown validator 'bad-val'. Available validators: #{pretty_validator_names}}i)
@@ -165,7 +165,7 @@ describe 'Running `pdk validate` in a module' do
   end
 
   context 'when targets are provided as arguments' do
-    let(:invoked_validators) { %w[metadata] }
+    let(:invoked_validators) { ['metadata'] }
 
     it 'invokes the specified validator with the target as an option' do
       expect(PDK::Validate).to receive(:invoke_validators_by_name).with(
@@ -261,7 +261,7 @@ describe 'Running `pdk validate` in a module' do
       expect(report).to receive(:write_junit).with('testfile.xml')
 
       expect {
-        PDK::CLI.run(%w[validate --format text:stderr --format junit:testfile.xml --format text])
+        PDK::CLI.run(['validate', '--format', 'text:stderr', '--format', 'junit:testfile.xml', '--format', 'text'])
       }.to exit_zero
     end
 
@@ -273,7 +273,7 @@ describe 'Running `pdk validate` in a module' do
       )
 
       expect {
-        PDK::CLI.run(%w[validate --format text:stderr --format junit:testfile.xml --format text])
+        PDK::CLI.run(['validate', '--format', 'text:stderr', '--format', 'junit:testfile.xml', '--format', 'text'])
       }.to exit_zero
     end
   end
@@ -324,7 +324,7 @@ describe 'Running `pdk validate` in a module' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-dev.*and.*--puppet-version}i))
 
       expect {
-        PDK::CLI.run(%w[validate --puppet-version 4.10.10 --puppet-dev])
+        PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--puppet-dev'])
       }.to exit_nonzero
     end
 
@@ -332,7 +332,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).not_to receive(:screen_view)
 
       expect {
-        PDK::CLI.run(%w[validate --puppet-version 4.10.10 --puppet-dev])
+        PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--puppet-dev'])
       }.to exit_nonzero
     end
   end
@@ -342,7 +342,7 @@ describe 'Running `pdk validate` in a module' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-dev.*and.*--pe-version}i))
 
       expect {
-        PDK::CLI.run(%w[validate --pe-version 2018.1 --puppet-dev])
+        PDK::CLI.run(['validate', '--pe-version', '2018.1', '--puppet-dev'])
       }.to exit_nonzero
     end
 
@@ -350,7 +350,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).not_to receive(:screen_view)
 
       expect {
-        PDK::CLI.run(%w[validate --pe-version 2018.1 --puppet-dev])
+        PDK::CLI.run(['validate', '--pe-version', '2018.1', '--puppet-dev'])
       }.to exit_nonzero
     end
   end
@@ -360,7 +360,7 @@ describe 'Running `pdk validate` in a module' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
 
       expect {
-        PDK::CLI.run(%w[validate --puppet-version 4.10.10 --pe-version 2018.1.1])
+        PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
       }.to exit_nonzero
     end
 
@@ -368,7 +368,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).not_to receive(:screen_view)
 
       expect {
-        PDK::CLI.run(%w[validate --puppet-version 4.10.10 --pe-version 2018.1.1])
+        PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
       }.to exit_nonzero
     end
   end

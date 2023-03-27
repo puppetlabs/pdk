@@ -9,7 +9,7 @@ describe 'Running `pdk new module`' do
       it 'continues to module interview' do
         expect(PDK::Generate::Module).to receive(:invoke)
         expect(logger).to receive(:info).with(%r{Creating new module:})
-        PDK::CLI.run(%w[new module])
+        PDK::CLI.run(['new', 'module'])
       end
 
       it 'submits the command to analytics' do
@@ -21,7 +21,7 @@ describe 'Running `pdk new module`' do
           ruby_version: RUBY_VERSION,
         )
 
-        PDK::CLI.run(%w[new module])
+        PDK::CLI.run(['new', 'module'])
       end
     end
 
@@ -29,7 +29,7 @@ describe 'Running `pdk new module`' do
       it 'exits with an error' do
         expect(logger).to receive(:error).with(%r{must specify a module name}i)
 
-        expect { PDK::CLI.run(%w[new module --skip-interview]) }.to exit_nonzero
+        expect { PDK::CLI.run(['new', 'module', '--skip-interview']) }.to exit_nonzero
       end
 
       it 'submits the command to analytics' do
@@ -40,7 +40,7 @@ describe 'Running `pdk new module`' do
           ruby_version: RUBY_VERSION,
         )
 
-        expect { PDK::CLI.run(%w[new module --skip-interview]) }.to exit_nonzero
+        expect { PDK::CLI.run(['new', 'module', '--skip-interview']) }.to exit_nonzero
       end
     end
   end
@@ -49,7 +49,7 @@ describe 'Running `pdk new module`' do
     it 'informs the user that the module name is invalid' do
       expect(logger).to receive(:error).with(a_string_matching(%r{'123test'.*not.*valid module name}m))
 
-      expect { PDK::CLI.run(%w[new module 123test]) }.to exit_nonzero
+      expect { PDK::CLI.run(['new', 'module', '123test']) }.to exit_nonzero
     end
 
     # Unlike most other commands, the validation of parameters does not happen
@@ -63,7 +63,7 @@ describe 'Running `pdk new module`' do
         ruby_version: RUBY_VERSION,
       )
 
-      expect { PDK::CLI.run(%w[new module 123test]) }.to exit_nonzero
+      expect { PDK::CLI.run(['new', 'module', '123test']) }.to exit_nonzero
     end
   end
 

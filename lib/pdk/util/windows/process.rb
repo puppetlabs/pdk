@@ -25,9 +25,7 @@ module PDK::Util::Windows::Process
     pairs.to_h
   ensure
     if env_ptr && !env_ptr.null?
-      if FreeEnvironmentStringsW(env_ptr) == PDK::Util::Windows::WIN32_FALSE
-        PDK.logger.debug 'FreeEnvironmentStringsW memory leak'
-      end
+      PDK.logger.debug 'FreeEnvironmentStringsW memory leak' if FreeEnvironmentStringsW(env_ptr) == PDK::Util::Windows::WIN32_FALSE
     end
   end
   module_function :environment_hash
@@ -37,14 +35,10 @@ module PDK::Util::Windows::Process
 
     FFI::MemoryPointer.from_string_to_wide_string(name) do |name_ptr|
       if val.nil?
-        if SetEnvironmentVariableW(name_ptr, FFI::MemoryPointer::NULL) == PDK::Util::Windows::WIN32_FALSE
-          raise 'Failed to remove environment variable: %{name}' % { name: name }
-        end
+        raise 'Failed to remove environment variable: %{name}' % { name: name } if SetEnvironmentVariableW(name_ptr, FFI::MemoryPointer::NULL) == PDK::Util::Windows::WIN32_FALSE
       else
         FFI::MemoryPointer.from_string_to_wide_string(val) do |val_ptr|
-          if SetEnvironmentVariableW(name_ptr, val_ptr) == PDK::Util::Windows::WIN32_FALSE
-            raise 'Failed to set environment variaible: %{name}' % { name: name }
-          end
+          raise 'Failed to set environment variaible: %{name}' % { name: name } if SetEnvironmentVariableW(name_ptr, val_ptr) == PDK::Util::Windows::WIN32_FALSE
         end
       end
     end

@@ -96,14 +96,14 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
   describe '.parse_options' do
     subject(:command_args) { validator.parse_options(targets) }
 
-    let(:targets) { %w[target1 target2.pp] }
+    let(:targets) { ['target1', 'target2.pp'] }
 
     before(:each) do
       allow(Gem).to receive(:win_platform?).and_return(false)
     end
 
     it 'invokes `puppet parser validate --tasks`' do
-      expect(command_args.first(3)).to eq(%w[parser validate --tasks])
+      expect(command_args.first(3)).to eq(['parser', 'validate', '--tasks'])
     end
   end
 end

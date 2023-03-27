@@ -215,24 +215,24 @@ describe PDK::Generate::Module do
         end
 
         it 'takes precedence over the template-url answer' do
-          PDK.config.set(%w[user module_defaults template-url], 'answer-template')
+          PDK.config.set(['user', 'module_defaults', 'template-url'], 'answer-template')
           expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('cli-template#main'), anything).and_yield(template_dir)
           described_class.invoke(invoke_opts.merge('template-url': 'cli-template'))
         end
 
         it 'saves the template-url and template-ref to the answer file if it is not the default template' do
           described_class.invoke(invoke_opts.merge('template-url': 'cli-template'))
-          expect(PDK.config.get(%w[user module_defaults template-url])).to eq(Addressable::URI.parse('cli-template#main').to_s)
+          expect(PDK.config.get(['user', 'module_defaults', 'template-url'])).to eq(Addressable::URI.parse('cli-template#main').to_s)
         end
 
         it 'saves the template-url and template-ref to the answer file if it is not the default ref' do
           described_class.invoke(invoke_opts.merge('template-url': default_template_url, 'template-ref': '1.2.3'))
-          expect(PDK.config.get(%w[user module_defaults template-url])).to eq("#{default_template_url}#1.2.3")
+          expect(PDK.config.get(['user', 'module_defaults', 'template-url'])).to eq("#{default_template_url}#1.2.3")
         end
 
         it 'clears the saved template-url answer if it is the default template' do
           described_class.invoke(invoke_opts.merge('template-url': default_template_url))
-          expect(PDK.config.get(%w[user module_defaults template-url])).to eq(nil)
+          expect(PDK.config.get(['user', 'module_defaults', 'template-url'])).to eq(nil)
         end
       end
 
@@ -244,7 +244,7 @@ describe PDK::Generate::Module do
 
         context 'and a template-url answer exists' do
           it 'uses the template-url from the answer file to generate the module' do
-            PDK.config.set(%w[user module_defaults template-url], 'answer-template')
+            PDK.config.set(['user', 'module_defaults', 'template-url'], 'answer-template')
             expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('answer-template'), anything).and_yield(template_dir)
             expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
             expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
@@ -263,10 +263,10 @@ describe PDK::Generate::Module do
             it 'uses the vendored template url' do
               template_uri = "file:///tmp/package/cache/pdk-templates.git##{PDK::Util::TemplateURI.default_template_ref}"
               expect(PDK::Template).to receive(:with).with(Addressable::URI.parse(template_uri), anything).and_yield(template_dir)
-              before = PDK.config.get(%w[user module_defaults template-url])
+              before = PDK.config.get(['user', 'module_defaults', 'template-url'])
 
               described_class.invoke(invoke_opts)
-              expect(PDK.config.get(%w[user module_defaults template-url])).to eq(before)
+              expect(PDK.config.get(['user', 'module_defaults', 'template-url'])).to eq(before)
             end
           end
 
@@ -277,10 +277,10 @@ describe PDK::Generate::Module do
 
             it 'uses the default template to generate the module' do
               expect(PDK::Template).to receive(:with).with(any_args).and_yield(template_dir)
-              before = PDK.config.get(%w[user module_defaults template-url])
+              before = PDK.config.get(['user', 'module_defaults', 'template-url'])
 
               described_class.invoke(invoke_opts)
-              expect(PDK.config.get(%w[user module_defaults template-url])).to eq(before)
+              expect(PDK.config.get(['user', 'module_defaults', 'template-url'])).to eq(before)
             end
           end
         end
@@ -291,7 +291,7 @@ describe PDK::Generate::Module do
   describe '.module_interview' do
     subject(:answers) do
       interview_metadata
-      PDK.config.get(%w[user module_defaults])
+      PDK.config.get(['user', 'module_defaults'])
     end
 
     let(:interview_metadata) do
@@ -419,7 +419,7 @@ describe PDK::Generate::Module do
               },
               {
                 'operatingsystem' => 'windows',
-                'operatingsystemrelease' => %w[2019 10],
+                'operatingsystemrelease' => ['2019', '10'],
               },
             ],
           )
@@ -654,7 +654,7 @@ describe PDK::Generate::Module do
         [
           { 'operatingsystem' => 'Debian', 'operatingsystemrelease' => ['10'] },
           { 'operatingsystem' => 'Ubuntu', 'operatingsystemrelease' => ['18.04'] },
-          { 'operatingsystem' => 'windows', 'operatingsystemrelease' => %w[2019 10] },
+          { 'operatingsystem' => 'windows', 'operatingsystemrelease' => ['2019', '10'] },
           { 'operatingsystem' => 'Solaris', 'operatingsystemrelease' => ['11'] },
         ].each do |expected_os|
           expect(interview_metadata['operatingsystem_support']).to include(expected_os)
@@ -706,9 +706,9 @@ describe PDK::Generate::Module do
       before(:each) do
         allow(described_class).to receive(:module_interview).with(any_args)
 
-        PDK.config.set(%w[user module_defaults forge_username], 'testuser123')
-        PDK.config.set(%w[user module_defaults license], 'MIT')
-        PDK.config.set(%w[user module_defaults author], 'Test User')
+        PDK.config.set(['user', 'module_defaults', 'forge_username'], 'testuser123')
+        PDK.config.set(['user', 'module_defaults', 'license'], 'MIT')
+        PDK.config.set(['user', 'module_defaults', 'author'], 'Test User')
       end
 
       it 'uses the saved forge_username answer' do

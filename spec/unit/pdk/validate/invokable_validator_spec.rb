@@ -421,7 +421,7 @@ describe PDK::Validate::InvokableValidator do
 
   describe '.process_skipped' do
     let(:report) { PDK::Report.new }
-    let(:targets) { %w[abc 123] }
+    let(:targets) { ['abc', '123'] }
     let(:validator_name) { 'mock-validator' }
 
     before(:each) do
@@ -445,7 +445,7 @@ describe PDK::Validate::InvokableValidator do
 
   describe '.process_invalid' do
     let(:report) { PDK::Report.new }
-    let(:targets) { %w[abc 123] }
+    let(:targets) { ['abc', '123'] }
     let(:validator_name) { 'mock-validator' }
 
     before(:each) do

@@ -26,10 +26,7 @@ describe 'pdk console' do
     end
 
     let(:rubygems_versions) do
-      %w[
-        7.23.0
-        6.29.0
-      ]
+      ['7.23.0', '6.29.0']
     end
 
     let(:versions) { rubygems_versions.map { |r| Gem::Version.new(r) } }

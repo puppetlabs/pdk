@@ -6,7 +6,7 @@ module PDK
 
     # @return [Array<String>] the list of supported report formats.
     def self.formats
-      @report_formats ||= %w[junit text].freeze
+      @report_formats ||= ['junit', 'text'].freeze
     end
 
     # @return [Symbol] the method name of the default report format.

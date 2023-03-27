@@ -14,9 +14,7 @@ module PDK::CLI
         exit 1
       end
 
-      unless Util::OptionValidator.valid_fact_name?(fact_name)
-        raise PDK::CLI::ExitWithError, "'%{name}' is not a valid fact name" % { name: fact_name }
-      end
+      raise PDK::CLI::ExitWithError, "'%{name}' is not a valid fact name" % { name: fact_name } unless Util::OptionValidator.valid_fact_name?(fact_name)
 
       PDK::CLI::Util.analytics_screen_view('new_fact', opts)
 

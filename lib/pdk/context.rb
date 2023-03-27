@@ -20,9 +20,7 @@ module PDK
 
         # Puppet Module detection
         metadata_file = File.join(current, 'metadata.json')
-        if PDK::Util::Filesystem.file?(metadata_file) || PDK::Util.in_module_root?(context_path)
-          return PDK::Context::Module.new(current, context_path)
-        end
+        return PDK::Context::Module.new(current, context_path) if PDK::Util::Filesystem.file?(metadata_file) || PDK::Util.in_module_root?(context_path)
 
         previous = current
         current = PDK::Util::Filesystem.expand_path('..', current)

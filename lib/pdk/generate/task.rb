@@ -30,7 +30,7 @@ module PDK
         super
 
         error = "A task named '%{name}' already exists in this module; defined in %{file}"
-        allowed_extensions = %w[.md .conf]
+        allowed_extensions = ['.md', '.conf']
 
         PDK::Util::Filesystem.glob(File.join(context.root_path, 'tasks', task_name + '.*')).each do |file|
           next if allowed_extensions.include?(File.extname(file))

@@ -321,7 +321,7 @@ describe '`pdk test unit`' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
 
       expect {
-        PDK::CLI.run(%w[test unit --puppet-version 4.10.10 --pe-version 2018.1.1])
+        PDK::CLI.run(['test', 'unit', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
       }.to exit_nonzero
     end
 
@@ -329,7 +329,7 @@ describe '`pdk test unit`' do
       expect(analytics).not_to receive(:screen_view)
 
       expect {
-        PDK::CLI.run(%w[test unit --puppet-version 4.10.10 --pe-version 2018.1.1])
+        PDK::CLI.run(['test', 'unit', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
       }.to exit_nonzero
     end
   end

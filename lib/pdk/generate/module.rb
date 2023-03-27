@@ -80,11 +80,11 @@ module PDK
           # If the user specifies our default template url via the command
           # line, remove the saved template-url answer so that the template_uri
           # resolution can find new default URLs in the future.
-          PDK.config.set(%w[user module_defaults template-url], nil) if opts.key?(:'template-url')
+          PDK.config.set(['user', 'module_defaults', 'template-url'], nil) if opts.key?(:'template-url')
         else
           # Save the template-url answers if the module was generated using a
           # template/reference other than ours.
-          PDK.config.set(%w[user module_defaults template-url], template_uri.metadata_format)
+          PDK.config.set(['user', 'module_defaults', 'template-url'], template_uri.metadata_format)
         end
 
         begin
@@ -261,7 +261,7 @@ module PDK
 
         if opts[:only_ask]
           questions.reject! do |question|
-            if %w[module_name forge_username].include?(question[:name])
+            if ['module_name', 'forge_username'].include?(question[:name])
               metadata.data['name'] && metadata.data['name'] =~ %r{\A[a-z0-9]+-[a-z][a-z0-9_]*\Z}i
             else
               !opts[:only_ask].include?(question[:name])
@@ -332,9 +332,9 @@ module PDK
         end
 
         require 'pdk/answer_file'
-        PDK.config.set(%w[user module_defaults forge_username], opts[:username]) unless opts[:username].nil?
-        PDK.config.set(%w[user module_defaults author], answers['author']) unless answers['author'].nil?
-        PDK.config.set(%w[user module_defaults license], answers['license']) unless answers['license'].nil?
+        PDK.config.set(['user', 'module_defaults', 'forge_username'], opts[:username]) unless opts[:username].nil?
+        PDK.config.set(['user', 'module_defaults', 'author'], answers['author']) unless answers['author'].nil?
+        PDK.config.set(['user', 'module_defaults', 'license'], answers['license']) unless answers['license'].nil?
       end
     end
   end

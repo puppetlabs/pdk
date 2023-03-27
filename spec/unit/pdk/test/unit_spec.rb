@@ -123,7 +123,7 @@ describe PDK::Test::Unit do
   describe '.merge_json_results' do
     let(:results) do
       [{ 'messages' => ['message 1', 'message 2'],
-         'examples' => %w[example example example],
+         'examples' => ['example', 'example', 'example'],
          'summary' => {
            'example_count' => 40,
            'failure_count' => 7,
@@ -132,7 +132,7 @@ describe PDK::Test::Unit do
          } },
        {
          'messages' => ['message 2', 'message 3'],
-         'examples' => %w[example example example],
+         'examples' => ['example', 'example', 'example'],
          'summary' => {
            'example_count' => 30,
            'failure_count' => 4,

@@ -52,11 +52,11 @@ module PDK
         },
         'Windows' => {
           'operatingsystem' => 'windows',
-          'operatingsystemrelease' => %w[2019 10],
+          'operatingsystemrelease' => ['2019', '10'],
         },
         'AIX' => {
           'operatingsystem' => 'AIX',
-          'operatingsystemrelease' => %w[6.1 7.1 7.2],
+          'operatingsystemrelease' => ['6.1', '7.1', '7.2'],
         },
       }.freeze
 
@@ -91,17 +91,11 @@ module PDK
       end
 
       def self.from_file(metadata_json_path)
-        if metadata_json_path.nil?
-          raise ArgumentError, 'Cannot read metadata from file: no path to file was given.'
-        end
+        raise ArgumentError, 'Cannot read metadata from file: no path to file was given.' if metadata_json_path.nil?
 
-        unless PDK::Util::Filesystem.file?(metadata_json_path)
-          raise ArgumentError, "'%{file}' does not exist or is not a file." % { file: metadata_json_path }
-        end
+        raise ArgumentError, "'%{file}' does not exist or is not a file." % { file: metadata_json_path } unless PDK::Util::Filesystem.file?(metadata_json_path)
 
-        unless PDK::Util::Filesystem.readable?(metadata_json_path)
-          raise ArgumentError, "Unable to open '%{file}' for reading." % { file: metadata_json_path }
-        end
+        raise ArgumentError, "Unable to open '%{file}' for reading." % { file: metadata_json_path } unless PDK::Util::Filesystem.readable?(metadata_json_path)
 
         require 'json'
         begin
@@ -162,7 +156,7 @@ module PDK
       end
 
       def missing_fields
-        fields = DEFAULTS.keys - %w[data_provider requirements dependencies]
+        fields = DEFAULTS.keys - ['data_provider', 'requirements', 'dependencies']
         fields.select { |key| @data[key].nil? || @data[key].empty? }
       end
 

@@ -13,13 +13,9 @@ namespace :acceptance do
             '  LOCAL_PKG: path to a locally built package to use for testing'
     end
 
-    if ENV.fetch('SHA', nil) && ENV.fetch('LOCAL_PKG', nil)
-      abort 'Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other.'
-    end
+    abort 'Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other.' if ENV.fetch('SHA', nil) && ENV.fetch('LOCAL_PKG', nil)
 
-    if ENV.fetch('LOCAL_PKG', nil) && !File.exist?(ENV.fetch('LOCAL_PKG', nil))
-      abort "LOCAL_PKG is set to '#{ENV.fetch('LOCAL_PKG', nil)}' but that file does not exist."
-    end
+    abort "LOCAL_PKG is set to '#{ENV.fetch('LOCAL_PKG', nil)}' but that file does not exist." if ENV.fetch('LOCAL_PKG', nil) && !File.exist?(ENV.fetch('LOCAL_PKG', nil))
 
     test_target = ENV.fetch('TEST_TARGET', nil)
     abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. "redhat7-64workstation."' unless test_target
@@ -50,9 +46,7 @@ namespace :acceptance do
 
         ENV['SUITE_VERSION'] = %r{^pdk[-_](\d+\.\d+\.\d+\.\d+(.pre\d?)?(\.\d+\.g[a-f\d]+)?)}.match(File.basename(ENV.fetch('LOCAL_PKG', nil), '.dmg'))[1]
 
-        unless ENV['SUITE_VERSION']
-          abort "Could not find a valid SUITE_VERSION in the filename: '#{ENV.fetch('LOCAL_PKG', nil)}'"
-        end
+        abort "Could not find a valid SUITE_VERSION in the filename: '#{ENV.fetch('LOCAL_PKG', nil)}'" unless ENV['SUITE_VERSION']
       else
         metadata_url = "http://#{ENV.fetch('BUILD_SERVER', nil)}/pdk/#{ENV.fetch('SHA', nil)}/artifacts/#{ENV.fetch('SHA', nil)}.build_metadata.json"
         $stderr.puts "SUITE_VERSION has not been set. Fetching it from build metadata for '#{ENV.fetch('SHA', nil)}' at '#{metadata_url}'"

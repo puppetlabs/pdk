@@ -11,9 +11,7 @@ module PDK::Util::Windows::File
       # includes terminating NULL
       buffer_size = GetLongPathNameW(path_ptr, FFI::Pointer::NULL, 0)
       FFI::MemoryPointer.new(:wchar, buffer_size) do |converted_ptr|
-        if GetLongPathNameW(path_ptr, converted_ptr, buffer_size) == PDK::Util::Windows::WIN32_FALSE
-          raise 'Failed to call GetLongPathName'
-        end
+        raise 'Failed to call GetLongPathName' if GetLongPathNameW(path_ptr, converted_ptr, buffer_size) == PDK::Util::Windows::WIN32_FALSE
 
         converted = converted_ptr.read_wide_string(buffer_size - 1)
       end

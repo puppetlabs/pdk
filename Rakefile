@@ -72,7 +72,7 @@ namespace :acceptance do
 end
 
 RuboCop::RakeTask.new(:rubocop) do |task|
-  task.options = %w[-D -S -E]
+  task.options = ['-D', '-S', '-E']
 end
 
 task(:binstubs) do
@@ -89,7 +89,7 @@ begin
     config.header = "# Changelog\n\n" \
                     "All changes to this repo will be documented in this file.\n" \
                     "See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.\n"
-    config.include_labels = %w[enhancement bug]
+    config.include_labels = ['enhancement', 'bug']
     config.user = 'puppetlabs'
     config.project = 'pdk'
     config.issues = false

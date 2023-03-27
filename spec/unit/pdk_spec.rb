@@ -41,7 +41,7 @@ describe PDK do
     end
 
     before(:each) do
-      allow(described_class).to receive(:available_feature_flags).and_return(%w[setflag unsetflag])
+      allow(described_class).to receive(:available_feature_flags).and_return(['setflag', 'unsetflag'])
       # Reset memoized variables
       described_class.instance_variable_set(:@requested_feature_flags, nil)
     end

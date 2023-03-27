@@ -4,7 +4,7 @@ module PDK
   module Validate
     module ControlRepo
       class EnvironmentConfValidator < InternalRubyValidator
-        ALLOWED_SETTINGS = %w[modulepath manifest config_version environment_timeout].freeze
+        ALLOWED_SETTINGS = ['modulepath', 'manifest', 'config_version', 'environment_timeout'].freeze
 
         def name
           'environment-conf'

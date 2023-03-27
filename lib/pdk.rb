@@ -46,9 +46,7 @@ module PDK
   end
 
   def self.available_feature_flags
-    @available_feature_flags ||= %w[
-      controlrepo
-    ].freeze
+    @available_feature_flags ||= ['controlrepo'].freeze
   end
 
   def self.requested_feature_flags
@@ -64,8 +62,8 @@ module PDK
   def self.analytics
     @analytics ||= PDK::Analytics.build_client(
       logger: PDK.logger,
-      disabled: PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK.config.get_within_scopes('analytics.disabled', %w[user system]),
-      user_id: PDK.config.get_within_scopes('analytics.user-id', %w[user system]),
+      disabled: PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK.config.get_within_scopes('analytics.disabled', ['user', 'system']),
+      user_id: PDK.config.get_within_scopes('analytics.user-id', ['user', 'system']),
       app_id: "UA-139917834-#{PDK::Util.development_mode? ? '2' : '1'}",
       client: :google_analytics,
       app_name: 'pdk',

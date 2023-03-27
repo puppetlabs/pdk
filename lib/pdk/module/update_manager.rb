@@ -140,9 +140,7 @@ module PDK
         @modified_files.each do |file|
           next if @diff_cache.key?(file[:path])
 
-          unless PDK::Util::Filesystem.readable?(file[:path])
-            raise PDK::CLI::ExitWithError, "Unable to open '%{path}' for reading" % { path: file[:path] }
-          end
+          raise PDK::CLI::ExitWithError, "Unable to open '%{path}' for reading" % { path: file[:path] } unless PDK::Util::Filesystem.readable?(file[:path])
 
           old_content = PDK::Util::Filesystem.read_file(file[:path])
           file_diff = unified_diff(file[:path], old_content, file[:content])

@@ -15,13 +15,13 @@ describe 'PDK::CLI new class' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
 
-      expect { PDK::CLI.run(%w[new class test_class]) }.to exit_nonzero
+      expect { PDK::CLI.run(['new', 'class', 'test_class']) }.to exit_nonzero
     end
 
     it 'does not submit the command to analytics' do
       expect(analytics).not_to receive(:screen_view)
 
-      expect { PDK::CLI.run(%w[new class test_class]) }.to exit_nonzero
+      expect { PDK::CLI.run(['new', 'class', 'test_class']) }.to exit_nonzero
     end
   end
 
@@ -34,13 +34,13 @@ describe 'PDK::CLI new class' do
 
     context 'and not provided with a class name' do
       it 'exits non-zero and prints the `pdk new class` help' do
-        expect { PDK::CLI.run(%w[new class]) }.to exit_nonzero.and output(help_text).to_stdout
+        expect { PDK::CLI.run(['new', 'class']) }.to exit_nonzero.and output(help_text).to_stdout
       end
 
       it 'does not submit the command to analytics' do
         expect(analytics).not_to receive(:screen_view)
 
-        expect { PDK::CLI.run(%w[new class]) }.to exit_nonzero.and output(help_text).to_stdout
+        expect { PDK::CLI.run(['new', 'class']) }.to exit_nonzero.and output(help_text).to_stdout
       end
     end
 
@@ -60,13 +60,13 @@ describe 'PDK::CLI new class' do
       it 'exits with an error' do
         expect(logger).to receive(:error).with(a_string_matching(%r{'test-class' is not a valid class name}))
 
-        expect { PDK::CLI.run(%w[new class test-class]) }.to exit_nonzero
+        expect { PDK::CLI.run(['new', 'class', 'test-class']) }.to exit_nonzero
       end
 
       it 'does not submit the command to analytics' do
         expect(analytics).not_to receive(:screen_view)
 
-        expect { PDK::CLI.run(%w[new class test-class]) }.to exit_nonzero
+        expect { PDK::CLI.run(['new', 'class', 'test-class']) }.to exit_nonzero
       end
     end
 
@@ -74,7 +74,7 @@ describe 'PDK::CLI new class' do
       let(:generator) { instance_double('PDK::Generate::PuppetClass', run: true) }
 
       after(:each) do
-        PDK::CLI.run(%w[new class test_class])
+        PDK::CLI.run(['new', 'class', 'test_class'])
       end
 
       it 'generates the class' do

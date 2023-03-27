@@ -90,10 +90,7 @@ describe PDK::ControlRepo do
     end
 
     # Files which indicate a control repo
-    %w[
-      Puppetfile
-      environment.conf
-    ].each do |testcase|
+    ['Puppetfile', 'environment.conf'].each do |testcase|
       it "detects #{testcase} as being in the root of a control repo" do
         allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(test_path, testcase)).and_return(true)
         expect(described_class.control_repo_root?(test_path)).to eq(true)
@@ -101,11 +98,7 @@ describe PDK::ControlRepo do
     end
 
     # Files which do not indicate a control repo
-    %w[
-      puppetfile
-      Environment.conf
-      Gemfile
-    ].each do |testcase|
+    ['puppetfile', 'Environment.conf', 'Gemfile'].each do |testcase|
       it "detects #{testcase} as not being in the root of a control repo" do
         allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(test_path, testcase)).and_return(true)
         expect(described_class.control_repo_root?(test_path)).to eq(false)

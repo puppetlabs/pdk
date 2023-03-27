@@ -255,9 +255,7 @@ module PDK
       module_function :validate_puppet_version_opts
 
       def validate_template_opts(opts)
-        if opts[:'template-ref'] && opts[:'template-url'].nil?
-          raise PDK::CLI::ExitWithError, '--template-ref requires --template-url to also be specified.'
-        end
+        raise PDK::CLI::ExitWithError, '--template-ref requires --template-url to also be specified.' if opts[:'template-ref'] && opts[:'template-url'].nil?
 
         return unless opts[:'template-url'] && opts[:'template-url'].include?('#')
 
@@ -294,7 +292,7 @@ module PDK
         end
         dimensions[:cli_options] = redacted_opts.join(',') unless redacted_opts.empty?
 
-        ignored_env_vars = %w[PDK_ANALYTICS_CONFIG PDK_DISABLE_ANALYTICS]
+        ignored_env_vars = ['PDK_ANALYTICS_CONFIG', 'PDK_DISABLE_ANALYTICS']
         env_vars = PDK::Util::Env.select { |k, _| k.start_with?('PDK_') && !ignored_env_vars.include?(k) }.map { |k, v| "#{k}=#{v}" }
         dimensions[:env_vars] = env_vars.join(',') unless env_vars.empty?
 

@@ -106,9 +106,7 @@ module PDK
       end
 
       def self.ls_remote(repo, ref)
-        if PDK::Util::Filesystem.directory?(repo)
-          repo = 'file://' + repo
-        end
+        repo = 'file://' + repo if PDK::Util::Filesystem.directory?(repo)
 
         output = git('ls-remote', '--refs', repo, ref)
 

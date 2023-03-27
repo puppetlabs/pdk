@@ -57,7 +57,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
   describe '.parse_options' do
     subject(:command_args) { validator.parse_options(targets) }
 
-    let(:targets) { %w[target1 target2] }
+    let(:targets) { ['target1', 'target2'] }
 
     context 'when auto-correct is enabled' do
       let(:options) { { auto_correct: true } }

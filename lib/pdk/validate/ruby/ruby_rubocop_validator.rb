@@ -31,9 +31,7 @@ module PDK
         def parse_options(targets)
           cmd_options = ['--format', 'json']
 
-          if options[:auto_correct]
-            cmd_options << '--auto-correct'
-          end
+          cmd_options << '--auto-correct' if options[:auto_correct]
 
           cmd_options.concat(targets)
         end

@@ -21,9 +21,7 @@ module PDK::CLI
         exit 1
       end
 
-      unless Util::OptionValidator.valid_task_name?(task_name)
-        raise PDK::CLI::ExitWithError, "'%{name}' is not a valid task name" % { name: task_name }
-      end
+      raise PDK::CLI::ExitWithError, "'%{name}' is not a valid task name" % { name: task_name } unless Util::OptionValidator.valid_task_name?(task_name)
 
       PDK::CLI::Util.analytics_screen_view('new_task', opts)
 

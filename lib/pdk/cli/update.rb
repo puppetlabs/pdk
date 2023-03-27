@@ -13,15 +13,11 @@ module PDK::CLI
       # Write the context information to the debug log
       PDK.context.to_debug_log
 
-      unless PDK.context.is_a?(PDK::Context::Module)
-        raise PDK::CLI::ExitWithError, '`pdk update` can only be run from inside a valid module directory.'
-      end
+      raise PDK::CLI::ExitWithError, '`pdk update` can only be run from inside a valid module directory.' unless PDK.context.is_a?(PDK::Context::Module)
 
       raise PDK::CLI::ExitWithError, 'This module does not appear to be PDK compatible. To make the module compatible with PDK, run `pdk convert`.' unless PDK::Util.module_pdk_compatible?
 
-      if opts[:noop] && opts[:force]
-        raise PDK::CLI::ExitWithError, 'You can not specify --noop and --force when updating a module'
-      end
+      raise PDK::CLI::ExitWithError, 'You can not specify --noop and --force when updating a module' if opts[:noop] && opts[:force]
 
       if Gem::Version.new(PDK::VERSION) < Gem::Version.new(PDK::Util.module_pdk_version)
         PDK.logger.warn "This module has been updated to PDK #{PDK::Util.module_pdk_version} which is newer than your PDK version (#{PDK::VERSION}), proceed with caution!"

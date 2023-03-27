@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/report'
 
 describe PDK::Report do
-  %w[junit text].each do |report_format|
+  ['junit', 'text'].each do |report_format|
     it "can format the report as #{report_format}" do
       expect(described_class.formats).to include(report_format)
       expect(subject).to respond_to("write_#{report_format}")

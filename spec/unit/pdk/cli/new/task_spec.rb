@@ -39,7 +39,7 @@ describe 'PDK::CLI new task' do
   context 'when not run from inside a module' do
     include_context 'run outside module'
     let(:module_root) { nil }
-    let(:args) { %w[new task test_task] }
+    let(:args) { ['new', 'task', 'test_task'] }
 
     it_behaves_like 'it exits with an error', %r{must be run from inside a valid module}
   end
@@ -48,7 +48,7 @@ describe 'PDK::CLI new task' do
     let(:module_root) { '/path/to/test/module' }
 
     context 'and not provided with a name for the new task' do
-      let(:args) { %w[new task] }
+      let(:args) { ['new', 'task'] }
 
       it_behaves_like 'it exits non-zero and prints the help text'
     end
@@ -60,7 +60,7 @@ describe 'PDK::CLI new task' do
     end
 
     context 'and provided an invalid task name' do
-      let(:args) { %w[new task test-task] }
+      let(:args) { ['new', 'task', 'test-task'] }
 
       it_behaves_like 'it exits with an error', %r{'test-task' is not a valid task name}
     end
@@ -77,7 +77,7 @@ describe 'PDK::CLI new task' do
       it 'generates the task' do
         expect(generator_double).to receive(:run)
 
-        PDK::CLI.run(%w[new task test_task])
+        PDK::CLI.run(['new', 'task', 'test_task'])
       end
 
       it 'submits the command to analytics' do
@@ -87,7 +87,7 @@ describe 'PDK::CLI new task' do
           ruby_version: RUBY_VERSION,
         )
 
-        PDK::CLI.run(%w[new task test_task])
+        PDK::CLI.run(['new', 'task', 'test_task'])
       end
 
       context 'and provided a description for the task' do

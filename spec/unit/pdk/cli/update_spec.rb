@@ -19,13 +19,13 @@ describe 'PDK::CLI update' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{can only be run from inside a valid module directory}))
 
-      expect { PDK::CLI.run(%w[update]) }.to exit_nonzero
+      expect { PDK::CLI.run(['update']) }.to exit_nonzero
     end
 
     it 'does not submit the command to analytics' do
       expect(analytics).not_to receive(:screen_view)
 
-      expect { PDK::CLI.run(%w[update]) }.to exit_nonzero
+      expect { PDK::CLI.run(['update']) }.to exit_nonzero
     end
   end
 
@@ -92,7 +92,7 @@ describe 'PDK::CLI update' do
     it 'uses the nested module directory' do
       expect(PDK::Module::Update).to receive(:new).with(Dir.pwd, anything).and_return(updater)
 
-      expect { PDK::CLI.run(%w[update --force]) }.not_to raise_error(StandardError)
+      expect { PDK::CLI.run(['update', '--force']) }.not_to raise_error(StandardError)
     end
   end
 
@@ -108,7 +108,7 @@ describe 'PDK::CLI update' do
 
     context 'and provided no flags' do
       after(:each) do
-        PDK::CLI.run(%w[update])
+        PDK::CLI.run(['update'])
       end
 
       it 'invokes the updater with no options' do
@@ -134,7 +134,7 @@ describe 'PDK::CLI update' do
 
     context 'and the module is pinned to tagged version of our template' do
       after(:each) do
-        PDK::CLI.run(%w[update])
+        PDK::CLI.run(['update'])
       end
 
       before(:each) do
@@ -151,7 +151,7 @@ describe 'PDK::CLI update' do
 
     context 'and the --noop flag has been passed' do
       after(:each) do
-        PDK::CLI.run(%w[update --noop])
+        PDK::CLI.run(['update', '--noop'])
       end
 
       it 'passes the noop option through to the updater' do
@@ -173,7 +173,7 @@ describe 'PDK::CLI update' do
 
     context 'and the --force flag has been passed' do
       after(:each) do
-        PDK::CLI.run(%w[update --force])
+        PDK::CLI.run(['update', '--force'])
       end
 
       it 'passes the force option through to the updater' do
@@ -197,13 +197,13 @@ describe 'PDK::CLI update' do
       it 'exits with an error' do
         expect(logger).to receive(:error).with(a_string_matching(%r{can not specify --noop and --force}i))
 
-        expect { PDK::CLI.run(%w[update --noop --force]) }.to exit_nonzero
+        expect { PDK::CLI.run(['update', '--noop', '--force']) }.to exit_nonzero
       end
 
       it 'does not submit the command to analytics' do
         expect(analytics).not_to receive(:screen_view)
 
-        expect { PDK::CLI.run(%w[update --noop --force]) }.to exit_nonzero
+        expect { PDK::CLI.run(['update', '--noop', '--force']) }.to exit_nonzero
       end
     end
 
@@ -215,7 +215,7 @@ describe 'PDK::CLI update' do
           expect(logger).to receive(:warn).with(a_string_matching(%r{newer than your PDK version}i))
           expect(logger).to receive(:error).with(a_string_matching(%r{update your PDK installation}i))
 
-          expect { PDK::CLI.run(%w[update]) }.to exit_nonzero
+          expect { PDK::CLI.run(['update']) }.to exit_nonzero
         end
       end
 
@@ -224,7 +224,7 @@ describe 'PDK::CLI update' do
           allow(PDK::Module::Update).to receive(:new).with(module_root, hash_including(force: true)).and_return(updater)
           expect(logger).to receive(:warn).with(a_string_matching(%r{newer than your PDK version}i))
 
-          PDK::CLI.run(%w[update --force])
+          PDK::CLI.run(['update', '--force'])
         end
       end
     end
@@ -240,13 +240,13 @@ describe 'PDK::CLI update' do
       it 'raises ExitWithError' do
         expect(logger).to receive(:error).with(a_string_matching(%r{This module does not appear to be PDK compatible}i))
 
-        expect { PDK::CLI.run(%w[update]) }.to exit_nonzero
+        expect { PDK::CLI.run(['update']) }.to exit_nonzero
       end
 
       it 'does not submit the command to analytics' do
         expect(analytics).not_to receive(:screen_view)
 
-        expect { PDK::CLI.run(%w[update]) }.to exit_nonzero
+        expect { PDK::CLI.run(['update']) }.to exit_nonzero
       end
     end
   end

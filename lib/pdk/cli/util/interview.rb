@@ -52,9 +52,7 @@ module PDK
               ask('-->') do |q|
                 q.required(question.fetch(:required, false))
 
-                if question.key?(:validate_pattern)
-                  q.validate(question[:validate_pattern], question[:validate_message])
-                end
+                q.validate(question[:validate_pattern], question[:validate_message]) if question.key?(:validate_pattern)
 
                 q.default(question[:default]) if question.key?(:default)
               end

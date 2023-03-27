@@ -63,7 +63,7 @@ describe 'PDK::CLI build' do
     context 'and the module contains incomplete metadata' do
       before(:each) do
         allow(mock_metadata_obj).to receive(:forge_ready?).and_return(false)
-        allow(mock_metadata_obj).to receive(:missing_fields).and_return(%w[operatingsystem_support source])
+        allow(mock_metadata_obj).to receive(:missing_fields).and_return(['operatingsystem_support', 'source'])
         allow(PDK::Module::Build).to receive(:new).with(any_args).and_return(mock_builder)
       end
 

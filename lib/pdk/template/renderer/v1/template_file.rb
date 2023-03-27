@@ -20,9 +20,7 @@ module PDK
           def initialize(template_file, data = {})
             @template_file = template_file
 
-            if data.key?(:configs)
-              @configs = data[:configs]
-            end
+            @configs = data[:configs] if data.key?(:configs)
 
             super(data)
           end
@@ -65,9 +63,7 @@ module PDK
           #
           # @api private
           def template_content
-            if PDK::Util::Filesystem.file?(@template_file) && PDK::Util::Filesystem.readable?(@template_file)
-              return PDK::Util::Filesystem.read_file(@template_file)
-            end
+            return PDK::Util::Filesystem.read_file(@template_file) if PDK::Util::Filesystem.file?(@template_file) && PDK::Util::Filesystem.readable?(@template_file)
 
             raise ArgumentError, "'%{template}' is not a readable file" % { template: @template_file }
           end

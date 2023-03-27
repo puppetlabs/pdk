@@ -9,11 +9,11 @@ module PDK::CLI
       PDK.logger.warn 'The \'pdk config\' command is deprecated, please use \'pdk get config\' and \'pdk set config\' instead.'
 
       if args == ['help']
-        PDK::CLI.run(%w[config --help])
+        PDK::CLI.run(['config', '--help'])
         exit 0
       end
 
-      PDK::CLI.run(%w[config help]) if args.empty?
+      PDK::CLI.run(['config', 'help']) if args.empty?
     end
   end
   @config_cmd.add_command Cri::Command.new_basic_help

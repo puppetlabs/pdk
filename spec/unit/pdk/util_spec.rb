@@ -427,16 +427,7 @@ describe PDK::Util do
     end
 
     # Directories which indicate a module root
-    %w[
-      manifests
-      lib/puppet
-      lib/puppet_x
-      lib/facter
-      tasks
-      facts.d
-      functions
-      types
-    ].each do |testcase|
+    ['manifests', 'lib/puppet', 'lib/puppet_x', 'lib/facter', 'tasks', 'facts.d', 'functions', 'types'].each do |testcase|
       it "detects #{testcase} as being in the root of a module" do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
         expect(described_class.in_module_root?(test_path)).to eq(true)
@@ -444,11 +435,7 @@ describe PDK::Util do
     end
 
     # Directories which do not indicate a module root
-    %w[
-      lib
-      Boltdir
-      puppet
-    ].each do |testcase|
+    ['lib', 'Boltdir', 'puppet'].each do |testcase|
       it "detects #{testcase} as not being in the root of a module" do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
         expect(described_class.in_module_root?(test_path)).to eq(false)

@@ -11,7 +11,7 @@ module PDK
         # Whether the template directory and context are valid for the V1 renderer
         # @see PDK::Template::Renderer.instance
         def self.compatible?(template_root, _context)
-          %w[moduleroot moduleroot_init].all? { |dir| PDK::Util::Filesystem.directory?(File.join(template_root, dir)) }
+          ['moduleroot', 'moduleroot_init'].all? { |dir| PDK::Util::Filesystem.directory?(File.join(template_root, dir)) }
         end
 
         # Creates an instance of the V1 Renderer

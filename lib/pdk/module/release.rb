@@ -49,9 +49,7 @@ module PDK
 
         # Calculate the new module version
         new_version = specified_version
-        if new_version.nil? && !skip_changelog?
-          new_version = PDK::Util::ChangelogGenerator.compute_next_version(module_metadata.data['version'])
-        end
+        new_version = PDK::Util::ChangelogGenerator.compute_next_version(module_metadata.data['version']) if new_version.nil? && !skip_changelog?
         new_version = module_metadata.data['version'] if new_version.nil?
 
         if new_version != module_metadata.data['version']

@@ -39,7 +39,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
   describe '.parse_options' do
     subject(:command_args) { validator.parse_options(targets) }
 
-    let(:targets) { %w[target1 target2.pp] }
+    let(:targets) { ['target1', 'target2.pp'] }
 
     context 'when auto-correct is enabled' do
       let(:options) { { auto_correct: true } }
@@ -154,7 +154,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
     end
 
     context 'when puppet-lint generates output for multiple files' do
-      let(:targets) { %w[target1 target2 target3] }
+      let(:targets) { ['target1', 'target2', 'target3'] }
       let(:offenses) do
         [
           mock_lint('target1', 1, 2, 'test message 1', 'test_check_1', 'warning'),

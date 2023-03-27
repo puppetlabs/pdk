@@ -14,9 +14,7 @@ module PDK::CLI
         exit 1
       end
 
-      unless Util::OptionValidator.valid_provider_name?(provider_name)
-        raise PDK::CLI::ExitWithError, "'%{name}' is not a valid provider name" % { name: provider_name }
-      end
+      raise PDK::CLI::ExitWithError, "'%{name}' is not a valid provider name" % { name: provider_name } unless Util::OptionValidator.valid_provider_name?(provider_name)
 
       PDK::CLI::Util.analytics_screen_view('new_provider', opts)
 

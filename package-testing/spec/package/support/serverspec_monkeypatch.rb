@@ -64,9 +64,7 @@ class Specinfra::Backend::BeakerExec
               else
                 "'#{unescape(command)}'"
               end
-    if get_config(:run_as)
-      output << '-i --'
-    end
+    output << '-i --' if get_config(:run_as)
 
     # sudo on osx 10.11 behaves strangely when processing arguments and does
     # not preserve quoted arguments, so we have to quote twice for this corner

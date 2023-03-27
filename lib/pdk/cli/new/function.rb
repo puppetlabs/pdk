@@ -15,9 +15,7 @@ module PDK::CLI
         exit 1
       end
 
-      unless Util::OptionValidator.valid_function_name?(function_name)
-        raise PDK::CLI::ExitWithError, "'%{name}' is not a valid function name" % { name: function_name }
-      end
+      raise PDK::CLI::ExitWithError, "'%{name}' is not a valid function name" % { name: function_name } unless Util::OptionValidator.valid_function_name?(function_name)
 
       PDK::CLI::Util.analytics_screen_view('new_function', opts)
 

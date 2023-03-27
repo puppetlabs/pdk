@@ -52,7 +52,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
   describe '.parse_options' do
     subject(:command_args) { validator.parse_options(targets) }
 
-    let(:targets) { %w[target1 target2.json] }
+    let(:targets) { ['target1', 'target2.json'] }
 
     it 'sets the output format as JSON' do
       expect(command_args.join(' ')).to match(%r{--format json})

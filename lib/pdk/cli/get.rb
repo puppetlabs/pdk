@@ -7,11 +7,11 @@ module PDK::CLI
 
     run do |_opts, args, _cmd|
       if args == ['help']
-        PDK::CLI.run(%w[get --help])
+        PDK::CLI.run(['get', '--help'])
         exit 0
       end
 
-      PDK::CLI.run(%w[get help]) if args.empty?
+      PDK::CLI.run(['get', 'help']) if args.empty?
     end
   end
   @get_cmd.add_command Cri::Command.new_basic_help

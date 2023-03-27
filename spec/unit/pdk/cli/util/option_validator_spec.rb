@@ -68,19 +68,19 @@ describe PDK::CLI::Util::OptionValidator do
     it { is_expected.to respond_to(:enum).with(2).arguments }
 
     it 'succeeds when a single value is provided which exists' do
-      expect(validator.enum('lint', %w[lint foo])).to eq('lint')
+      expect(validator.enum('lint', ['lint', 'foo'])).to eq('lint')
     end
 
     it 'raises an error when a single values is provided which does not exist' do
-      expect { validator.enum('foo', %w[lint bar]) }.to raise_error('Error: the following values are invalid: ["foo"]')
+      expect { validator.enum('foo', ['lint', 'bar']) }.to raise_error('Error: the following values are invalid: ["foo"]')
     end
 
     it 'succeeds when an array of values are provided and they all exist' do
-      expect(validator.enum(%w[lint foo], %w[lint foo])).to eq(%w[lint foo])
+      expect(validator.enum(['lint', 'foo'], ['lint', 'foo'])).to eq(['lint', 'foo'])
     end
 
     it 'raises an error when an array of values is provided and one does not exist' do
-      expect { validator.enum(%w[lint foo bar], ['lint']) }.to raise_error('Error: the following values are invalid: ["foo", "bar"]')
+      expect { validator.enum(['lint', 'foo', 'bar'], ['lint']) }.to raise_error('Error: the following values are invalid: ["foo", "bar"]')
     end
   end
 
@@ -124,13 +124,13 @@ describe PDK::CLI::Util::OptionValidator do
     it_behaves_like :it_rejects_strings_not_starting_with_lowercase_char
 
     it 'rejects reserved variable names' do
-      %w[trusted facts server_facts title name].each do |reserved_word|
+      ['trusted', 'facts', 'server_facts', 'title', 'name'].each do |reserved_word|
         expect(validator.valid_param_name?(reserved_word)).to be false
       end
     end
 
     it 'rejects metaparameter names' do
-      %w[alias audit before loglevel noop notify require schedule stage subscribe tag].each do |metaparam|
+      ['alias', 'audit', 'before', 'loglevel', 'noop', 'notify', 'require', 'schedule', 'stage', 'subscribe', 'tag'].each do |metaparam|
         expect(validator.valid_param_name?(metaparam)).to be false
       end
     end

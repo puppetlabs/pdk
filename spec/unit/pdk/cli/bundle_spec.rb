@@ -43,7 +43,7 @@ describe 'Running `pdk bundle`' do
     end
 
     context 'and called with a bundler subcommand that is not "exec"' do
-      let(:command_args) { super() + %w[config something] }
+      let(:command_args) { super() + ['config', 'something'] }
 
       it 'includes only the subcommand in the screen view name sent to analytics' do
         expect(analytics).to receive(:screen_view).with(

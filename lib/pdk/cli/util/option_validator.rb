@@ -17,9 +17,7 @@ module PDK
           vals = val.is_a?(Array) ? val : [val]
           invalid_entries = vals.reject { |e| valid_entries.include?(e) }
 
-          unless invalid_entries.empty?
-            raise ArgumentError, 'Error: the following values are invalid: %{invalid_entries}' % { invalid_entries: invalid_entries }
-          end
+          raise ArgumentError, 'Error: the following values are invalid: %{invalid_entries}' % { invalid_entries: invalid_entries } unless invalid_entries.empty?
 
           val
         end
@@ -56,8 +54,8 @@ module PDK
         # The parameter should also not be a reserved word or overload
         # a metaparameter.
         def self.valid_param_name?(string)
-          reserved_words = %w[trusted facts server_facts title name].freeze
-          metaparams = %w[alias audit before loglevel noop notify require schedule stage subscribe tag].freeze
+          reserved_words = ['trusted', 'facts', 'server_facts', 'title', 'name'].freeze
+          metaparams = ['alias', 'audit', 'before', 'loglevel', 'noop', 'notify', 'require', 'schedule', 'stage', 'subscribe', 'tag'].freeze
           return false if reserved_words.include?(string) || metaparams.include?(string)
 
           !(string =~ %r{\A[a-z][a-zA-Z0-9_]*\Z}).nil?

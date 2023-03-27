@@ -114,9 +114,7 @@ module PDK
               raise ArgumentError, "The directory '%{dir}' doesn't exist" % { dir: dir } unless PDK::Util::Filesystem.directory?(dir)
 
               temp_paths += PDK::Util::Filesystem.glob(File.join(dir, *glob_suffix), File::FNM_DOTMATCH).select do |template_path|
-                if PDK::Util::Filesystem.file?(template_path) && !PDK::Util::Filesystem.symlink?(template_path)
-                  dirlocs << dir
-                end
+                dirlocs << dir if PDK::Util::Filesystem.file?(template_path) && !PDK::Util::Filesystem.symlink?(template_path)
               end
               temp_paths.map do |template_path|
                 template_path.sub!(%r{\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}}, '')

@@ -127,7 +127,7 @@ describe PDK::Validate::InternalRubyValidator do
     end
 
     context 'with successful, failed and missing validations' do
-      let(:targets) { %w[success fail2 fail1 missing] }
+      let(:targets) { ['success', 'fail2', 'fail1', 'missing'] }
 
       it 'calls before_validation' do
         expect(validator).to receive(:before_validation).and_call_original

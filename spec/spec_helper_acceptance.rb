@@ -55,8 +55,7 @@ ENV['GEM_PATH'] = [ENV.fetch('GEM_PATH', nil), File.absolute_path(File.join(bund
 # Save bundle environment from being purged by specinfra. This needs to be repeated for every example, as specinfra does not correctly reset the environment after a `describe command()` block
 # presumably https://github.com/mizzy/specinfra/blob/79b62b37909545b67b7492574a97c300fb1dc91e/lib/specinfra/backend/exec.rb#L143-L165
 bundler_env = {}
-keys = %w[BUNDLER_EDITOR BUNDLE_BIN_PATH BUNDLE_GEMFILE
-          RUBYOPT GEM_HOME GEM_PATH GEM_CACHE]
+keys = ['BUNDLER_EDITOR', 'BUNDLE_BIN_PATH', 'BUNDLE_GEMFILE', 'RUBYOPT', 'GEM_HOME', 'GEM_PATH', 'GEM_CACHE']
 keys.each do |k|
   bundler_env[k] = ENV.fetch(k, nil) if ENV.key? k
 end

@@ -130,7 +130,7 @@ module PDK::CLI
         return { exit_code: 1 }
       end
 
-      debugger_args = %w[exec puppet] + bundle_args
+      debugger_args = ['exec', 'puppet'] + bundle_args
       command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, *debugger_args).tap do |c|
         c.context = :pwd
         c.update_environment(gemfile_env)

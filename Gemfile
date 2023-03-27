@@ -42,7 +42,5 @@ extra_gemfiles = [
 ]
 
 extra_gemfiles.each do |gemfile|
-  if File.file?(gemfile) && File.readable?(gemfile)
-    eval(File.read(gemfile), binding)
-  end
+  eval(File.read(gemfile), binding) if File.file?(gemfile) && File.readable?(gemfile)
 end

@@ -91,9 +91,7 @@ module PDK
     def project_config
       context = @config_options['context']
       @project ||= PDK::Config::Namespace.new('project') do
-        if context.is_a?(PDK::Context::ControlRepo)
-          mount :environment, PDK::ControlRepo.environment_conf_as_config(File.join(context.root_path, 'environment.conf'))
-        end
+        mount :environment, PDK::ControlRepo.environment_conf_as_config(File.join(context.root_path, 'environment.conf')) if context.is_a?(PDK::Context::ControlRepo)
 
         mount :validate, PDK::Config::YAML.new('validate', file: File.join(context.root_path, 'pdk.yaml'), persistent_defaults: true) do
           setting 'ignore' do
@@ -269,9 +267,9 @@ module PDK
 
       if answers.nil?
         PDK.logger.info 'No answer given, opting out of analytics collection.'
-        PDK.config.set(%w[user analytics disabled], true)
+        PDK.config.set(['user', 'analytics', 'disabled'], true)
       else
-        PDK.config.set(%w[user analytics disabled], !answers['enabled'])
+        PDK.config.set(['user', 'analytics', 'disabled'], !answers['enabled'])
       end
 
       PDK.logger.info(text: post_message, wrap: true)
@@ -339,9 +337,7 @@ module PDK
       current_value = namespace[name]
 
       # If the next thing in the traversal chain is another namespace, set the value using that child namespace.
-      if current_value.is_a?(PDK::Config::Namespace)
-        return deep_set_object(value, force, current_value, *names)
-      end
+      return deep_set_object(value, force, current_value, *names) if current_value.is_a?(PDK::Config::Namespace)
 
       # We're at the end of the name traversal
       if names.empty?

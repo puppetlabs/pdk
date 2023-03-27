@@ -17,7 +17,7 @@ describe PDK::Config::IniFileSetting do
   end
 
   context 'with invalid initial value' do
-    let(:initial_value) { %w[abc 123] }
+    let(:initial_value) { ['abc', '123'] }
 
     it 'raises' do
       expect { setting }.to raise_error(ArgumentError, %r{spec_setting})
@@ -49,7 +49,7 @@ describe PDK::Config::IniFileSetting do
 
     context 'with invalid values' do
       include_examples 'an error raising validator', 'Symbol', :value
-      include_examples 'an error raising validator', 'Array', %w[abc 123]
+      include_examples 'an error raising validator', 'Array', ['abc', '123']
       include_examples 'an error raising validator', 'Nested hash', 'foo' => { 'bar' => 'baz' }
       include_examples 'an error raising validator', 'Float', 1.0
     end

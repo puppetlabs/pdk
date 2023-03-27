@@ -54,9 +54,7 @@ module PDK
         end
 
         def context=(new_context)
-          unless [:system, :module, :pwd].include?(new_context)
-            raise ArgumentError, "Expected execution context to be :system or :module but got '%{context}'." % { context: new_context }
-          end
+          raise ArgumentError, "Expected execution context to be :system or :module but got '%{context}'." % { context: new_context } unless [:system, :module, :pwd].include?(new_context)
 
           @context = new_context
         end
@@ -157,10 +155,8 @@ module PDK
                                  'or set the PDK_PUPPET_VERSION environment variable instead'
           end
 
-          %w[FACTER HIERA].each do |gem|
-            if PDK::Util::Env["#{gem}_GEM_VERSION"]
-              PDK.logger.warn_once '%{varname} is not supported by PDK.' % { varname: "#{gem}_GEM_VERSION" }
-            end
+          ['FACTER', 'HIERA'].each do |gem|
+            PDK.logger.warn_once '%{varname} is not supported by PDK.' % { varname: "#{gem}_GEM_VERSION" } if PDK::Util::Env["#{gem}_GEM_VERSION"]
           end
         end
 

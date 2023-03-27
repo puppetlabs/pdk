@@ -19,13 +19,13 @@ describe 'PDK::CLI convert' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{can only be run from inside a valid module directory}))
 
-      expect { PDK::CLI.run(%w[convert]) }.to exit_nonzero
+      expect { PDK::CLI.run(['convert']) }.to exit_nonzero
     end
 
     it 'does not submit the command to analytics' do
       expect(analytics).not_to receive(:screen_view)
 
-      expect { PDK::CLI.run(%w[convert]) }.to exit_nonzero
+      expect { PDK::CLI.run(['convert']) }.to exit_nonzero
     end
   end
 
@@ -73,7 +73,7 @@ describe 'PDK::CLI convert' do
     it 'uses the nested module directory' do
       expect(PDK::Module::Convert).to receive(:invoke).with(Dir.pwd, anything)
 
-      expect { PDK::CLI.run(%w[convert]) }.not_to raise_error(StandardError)
+      expect { PDK::CLI.run(['convert']) }.not_to raise_error(StandardError)
     end
   end
 
@@ -302,7 +302,7 @@ describe 'PDK::CLI convert' do
 
         it 'clears the saved template-url answer' do
           run
-          expect(PDK.config.get(%w[user module_defaults template-url])).to be_nil
+          expect(PDK.config.get(['user', 'module_defaults', 'template-url'])).to be_nil
         end
 
         it 'submits the command to analytics' do

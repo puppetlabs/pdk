@@ -88,9 +88,7 @@ module PDK
 
             in_changelog_entry = true
           end
-          if in_changelog_entry && line.start_with?('##')
-            data += line
-          end
+          data += line if in_changelog_entry && line.start_with?('##')
         end
 
         # Check for meta headers in first two header line matches

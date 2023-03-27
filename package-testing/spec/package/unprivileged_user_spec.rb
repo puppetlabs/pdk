@@ -15,15 +15,11 @@ describe 'Running PDK as an unprivileged user' do
       else
         on(host, 'getent passwd testuser') do |result|
           _, _, uid, gid, _, homedir, = result.stdout.strip.split(':')
-          unless directory_exists_on(host, homedir)
-            on(host, "mkdir #{homedir} && chown #{uid}:#{gid} #{homedir}")
-          end
+          on(host, "mkdir #{homedir} && chown #{uid}:#{gid} #{homedir}") unless directory_exists_on(host, homedir)
         end
       end
 
-      if file_exists_on(host, '/etc/sudoers')
-        on(host, 'sed -i -e \'s/\srequiretty/!requiretty/g\' /etc/sudoers')
-      end
+      on(host, 'sed -i -e \'s/\srequiretty/!requiretty/g\' /etc/sudoers') if file_exists_on(host, '/etc/sudoers')
     end
   end
 

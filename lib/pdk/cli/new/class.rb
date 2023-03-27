@@ -19,9 +19,7 @@ module PDK::CLI
         exit 1
       end
 
-      unless Util::OptionValidator.valid_class_name?(class_name)
-        raise PDK::CLI::ExitWithError, "'%{name}' is not a valid class name" % { name: class_name }
-      end
+      raise PDK::CLI::ExitWithError, "'%{name}' is not a valid class name" % { name: class_name } unless Util::OptionValidator.valid_class_name?(class_name)
 
       PDK::CLI::Util.analytics_screen_view('new_class', opts)
 
