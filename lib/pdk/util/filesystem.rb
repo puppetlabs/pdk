@@ -14,7 +14,7 @@ module PDK
         # Make sure all written files have a trailing newline.
         content += "\n" unless content[-1] == "\n"
 
-        File.open(path, 'wb') { |f| f.write(content) }
+        File.binwrite(path, content)
       end
       module_function :write_file
 

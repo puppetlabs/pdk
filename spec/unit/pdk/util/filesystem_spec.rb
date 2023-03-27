@@ -55,8 +55,7 @@ describe PDK::Util::Filesystem do
     let(:path) { nil }
 
     before(:each) do
-      allow(File).to receive(:open).and_call_original
-      allow(File).to receive(:open).with(path, 'wb').and_yield(dummy_file)
+      allow(File).to receive(:binwrite).with(path, "#{content}\n")
     end
 
     context 'when content is a String' do
