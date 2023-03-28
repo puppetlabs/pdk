@@ -102,7 +102,7 @@ module OS
   end
 
   def self.mac?
-    (%r{darwin} =~ RUBY_PLATFORM) != nil
+    RUBY_PLATFORM.include?('darwin') != nil
   end
 
   def self.unix?

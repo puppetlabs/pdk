@@ -20,7 +20,7 @@ module SpecUtils
   end
 
   def windows_node?
-    get_working_node.platform =~ %r{windows}
+    get_working_node.platform.include?('windows')
   end
   module_function :windows_node?
 

@@ -313,7 +313,7 @@ module PDK
         # Drop any stacktrace lines that include '/gems/' in the path or
         # are the original rspec binstub lines
         value.reject do |line|
-          (line =~ %r{/gems/}) || (line =~ %r{bin/rspec:})
+          line.include?('/gems/') || line.include?('bin/rspec:')
         end
       end
 

@@ -1,5 +1,5 @@
 def install_dir(host)
-  if %r{windows}.match?(host.platform)
+  if host.platform.include?('windows')
     '/cygdrive/c/Program\ Files/Puppet\ Labs/DevelopmentKit'
   else
     '/opt/puppetlabs/pdk'
@@ -7,7 +7,7 @@ def install_dir(host)
 end
 
 def pdk_git_bin_dir(host)
-  if %r{windows}.match?(host.platform)
+  if host.platform.include?('windows')
     "#{install_dir(host)}/private/git/mingw64/bin"
   else
     "#{install_dir(host)}/private/git/bin"
@@ -19,7 +19,7 @@ def pdk_command(host, command, env = {})
   env ||= {}
   env_str = ''
 
-  if %r{windows}.match?(host.platform)
+  if host.platform.include?('windows')
     env.each do |var, val|
       env_str += "\\$env:#{var}='#{val}'; "
     end
