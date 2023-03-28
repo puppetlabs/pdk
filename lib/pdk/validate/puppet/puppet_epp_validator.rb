@@ -76,7 +76,7 @@ module PDK
         def parse_output(report, result, targets)
           # Due to PUP-7504, we will have to programmatically construct the json
           # object from the text output for now.
-          output = result[:stderr].split(/\r?\n/).reject { |entry| entry.empty? }
+          output = result[:stderr].split(/\r?\n/).reject(&:empty?)
 
           results_data = []
           output.each do |offense|

@@ -266,7 +266,7 @@ describe PDK::Validate::InvokableValidator do
 
       it 'returns the targets' do
         # Simulate passing in case insensitive targets
-        targets.map! { |target| target.upcase }
+        targets.map!(&:upcase)
 
         expect(target_files[0]).to eq(real_targets)
         expect(target_files[1]).to be_empty

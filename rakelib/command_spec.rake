@@ -25,7 +25,7 @@ task :generate_powershell do
         dest_path = File.join(this_output, File.basename(file)[0..-5])
         puts "Generating #{dest_path} ..."
         # Create the ERB template object
-        template = ERB.new(File.open(file, 'rb:utf-8') { |f| f.read }, trim_mode: '-')
+        template = ERB.new(File.open(file, 'rb:utf-8', &:read), trim_mode: '-')
         # Generating the content
         new_content = template.result
         File.open(dest_path, 'wb:utf-8') { |f| f.write(new_content) }

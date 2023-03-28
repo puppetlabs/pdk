@@ -10,7 +10,7 @@ describe 'pdk set config' do
       subject.exit_status
       expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
 
-      actual_content = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8') { |f| f.read }
+      actual_content = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8', &:read)
       expect(actual_content).to eq(new_content)
     end
   end
@@ -21,7 +21,7 @@ describe 'pdk set config' do
       subject.exit_status
       expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
 
-      actual_content_raw = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8') { |f| f.read }
+      actual_content_raw = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8', &:read)
       actual_json_content = JSON.parse(actual_content_raw)
       expect(actual_json_content).to eq(new_json_content)
     end

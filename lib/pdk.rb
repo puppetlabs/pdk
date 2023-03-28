@@ -50,7 +50,7 @@ module PDK
   end
 
   def self.requested_feature_flags
-    @requested_feature_flags ||= (PDK::Util::Env['PDK_FEATURE_FLAGS'] || '').split(',').map { |flag| flag.strip }
+    @requested_feature_flags ||= (PDK::Util::Env['PDK_FEATURE_FLAGS'] || '').split(',').map(&:strip)
   end
 
   def self.feature_flag?(flagname)
