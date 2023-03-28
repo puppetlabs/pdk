@@ -47,25 +47,25 @@ describe 'PDK::CLI release prep' do
     it 'calls PDK::Module::Release.run' do
       expect(release_object).to receive(:run)
 
-      expect { PDK::CLI.run(cli_args.concat(['--force'])) }.not_to raise_error
+      expect { PDK::CLI.run(cli_args.push('--force')) }.not_to raise_error
     end
 
     it 'skips building and publishing' do
       expect(PDK::Module::Release).to receive(:new).with(Object, hash_including('skip-build': true, 'skip-publish': true))
 
-      expect { PDK::CLI.run(cli_args.concat(['--force'])) }.not_to raise_error
+      expect { PDK::CLI.run(cli_args.push('--force')) }.not_to raise_error
     end
 
     it 'does not start an interview when --force is used' do
       expect(PDK::CLI::Util::Interview).not_to receive(:new)
 
-      PDK::CLI.run(cli_args.concat(['--force']))
+      PDK::CLI.run(cli_args.push('--force'))
     end
 
     it 'calls PDK::CLI::Release.module_compatibility_checks!' do
       expect(PDK::CLI::Release).to receive(:module_compatibility_checks!).and_return(nil)
 
-      expect { PDK::CLI.run(cli_args.concat(['--force'])) }.not_to raise_error
+      expect { PDK::CLI.run(cli_args.push('--force')) }.not_to raise_error
     end
   end
 end

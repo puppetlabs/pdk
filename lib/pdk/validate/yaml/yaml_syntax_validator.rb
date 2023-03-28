@@ -20,11 +20,9 @@ module PDK
             '**/*.yml',
           ].tap do |pat|
             if context.is_a?(PDK::Context::ControlRepo)
-              pat.concat(
-                [
-                  '**/*.eyaml',
-                  '**/*.eyml',
-                ],
+              pat.push(
+                '**/*.eyaml',
+                '**/*.eyml',
               )
             else
               pat

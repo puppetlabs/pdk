@@ -42,7 +42,7 @@ module PDK
           ruby_basedir = File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', '*')
           PDK::Util::Filesystem.glob(ruby_basedir).sort.map { |ruby_dir|
             version = File.basename(ruby_dir)
-            [version, version.split('.').take(2).concat(['0']).join('.')]
+            [version, version.split('.').take(2).push('0').join('.')]
           }.reverse.to_h
         end
 

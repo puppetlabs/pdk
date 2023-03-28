@@ -51,7 +51,7 @@ describe 'PDK::CLI release publish' do
     it 'calls PDK::Module::Release.run' do
       expect(release_object).to receive(:run)
 
-      expect { PDK::CLI.run(cli_args.concat(['--force'])) }.not_to raise_error
+      expect { PDK::CLI.run(cli_args.push('--force')) }.not_to raise_error
     end
 
     it 'skips all but publishing' do
@@ -66,13 +66,13 @@ describe 'PDK::CLI release publish' do
         ),
       )
 
-      expect { PDK::CLI.run(cli_args.concat(['--force'])) }.not_to raise_error
+      expect { PDK::CLI.run(cli_args.push('--force')) }.not_to raise_error
     end
 
     it 'does not start an interview when --force is used' do
       expect(PDK::CLI::Util::Interview).not_to receive(:new)
 
-      PDK::CLI.run(cli_args.concat(['--force']))
+      PDK::CLI.run(cli_args.push('--force'))
     end
 
     it 'implicitly uses --force in non-interactive environments' do
