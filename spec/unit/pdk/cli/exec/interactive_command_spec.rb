@@ -33,7 +33,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
   end
 
   describe '.register_spinner' do
-    let(:spinner) { instance_double('spinner') }
+    let(:spinner) { instance_double(TTY::Spinner) }
 
     it 'raises an exception' do
       expect { command.register_spinner(spinner) }.to raise_error %r{method.*not implemented}i
@@ -53,7 +53,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
   end
 
   describe '.exec_group=' do
-    let(:exec_group) { instance_double('exec_group') }
+    let(:exec_group) { instance_double(Object) }
 
     it 'raises an exception' do
       expect { command.exec_group = exec_group }.to raise_error %r{method.*not implemented}i

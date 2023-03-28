@@ -14,7 +14,7 @@ describe PDK::Util::Version do
       allow(PDK::Util::Filesystem).to receive(:exist?).with('/tmp/package/PDK_VERSION').and_return(false)
       allow(PDK::Util::Filesystem).to receive(:directory?).with(%r{.git\Z}).and_return(true)
 
-      result = instance_double('exec_git_describe_result')
+      result = instance_double(Hash)
       allow(result).to receive(:[]).with(:stdout).and_return('git_hash')
       allow(result).to receive(:[]).with(:exit_code).and_return(0)
 

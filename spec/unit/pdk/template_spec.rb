@@ -31,7 +31,7 @@ describe PDK::Template do
           template_uri,
           nil,
           pdk_context,
-          instance_double('PDK::Template::Renderer::AbstractRenderer'),
+          instance_double(PDK::Template::Renderer::AbstractRenderer),
         )
       end
 

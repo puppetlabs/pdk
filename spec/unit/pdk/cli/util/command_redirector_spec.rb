@@ -6,7 +6,7 @@ describe PDK::CLI::Util::CommandRedirector do
     described_class.new(prompt, {})
   end
 
-  let(:prompt) { instance_double('TTY::Prompt') }
+  let(:prompt) { instance_double(TTY::Prompt) }
 
   let(:command) { 'foo' }
 

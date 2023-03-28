@@ -57,7 +57,7 @@ describe PDK::CLI::Exec::Command do
   end
 
   describe '.register_spinner' do
-    let(:spinner) { instance_double('spinner') }
+    let(:spinner) { instance_double(TTY::Spinner) }
 
     context 'without --debug' do
       before(:each) do
@@ -89,8 +89,8 @@ describe PDK::CLI::Exec::Command do
   end
 
   describe '.execute!' do
-    let(:process) { instance_double('ChildProcess.build(*@argv)') }
-    let(:io) { instance_double('ChildProcess.io') }
+    let(:process) { instance_double(ChildProcess::AbstractProcess) }
+    let(:io) { instance_double(ChildProcess::AbstractIO) }
 
     before(:each) do
       expect(ChildProcess).to receive(:build).with('/bin/echo', 'foo').and_return(process)

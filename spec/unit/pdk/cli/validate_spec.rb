@@ -5,7 +5,7 @@ describe 'Running `pdk validate` in a module' do
   subject { PDK::CLI.instance_variable_get(:@validate_cmd) }
 
   let(:pretty_validator_names) { PDK::Validate.validator_names.join(', ') }
-  let(:report) { instance_double('PDK::Report').as_null_object }
+  let(:report) { instance_double(PDK::Report).as_null_object }
   let(:ruby_version) { '2.4.3' }
   let(:puppet_version) { '5.4.0' }
   let(:module_path) { '/path/to/testmodule' }

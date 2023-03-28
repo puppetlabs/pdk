@@ -71,7 +71,7 @@ describe 'PDK::CLI new class' do
     end
 
     context 'and provided a valid class name' do
-      let(:generator) { instance_double('PDK::Generate::PuppetClass', run: true) }
+      let(:generator) { instance_double(PDK::Generate::PuppetClass, run: true) }
 
       after(:each) do
         PDK::CLI.run(['new', 'class', 'test_class'])

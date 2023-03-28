@@ -42,7 +42,7 @@ FIXTURES_DIR = File.join(__dir__, 'fixtures')
 EMPTY_MODULE_ROOT = File.join(FIXTURES_DIR, 'module_root')
 
 RSpec.shared_context 'stubbed logger' do
-  let(:logger) { instance_double('PDK::Logger').as_null_object }
+  let(:logger) { instance_double(PDK::Logger).as_null_object }
 
   before(:each) do |example|
     allow(PDK).to receive(:logger).and_return(logger) if example.metadata[:use_stubbed_logger]

@@ -17,7 +17,7 @@ end
 shared_context 'mock template dir' do
   let(:test_template_path) { instance_double(Pathname, mkpath: true, to_path: '/a/path') }
   let(:template_dir) { PDK::Template::TemplateDir.new(nil, nil, pdk_context, renderer) }
-  let(:renderer) { instance_double('PDK::Template::Renderer::AbstractRenderer') }
+  let(:renderer) { instance_double(PDK::Template::Renderer::AbstractRenderer) }
 
   before(:each) do
     allow(PDK::Template).to receive(:with).with(anything, anything).and_yield(template_dir)

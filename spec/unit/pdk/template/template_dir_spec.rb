@@ -7,7 +7,7 @@ describe PDK::Template::TemplateDir do
   let(:template_uri) { PDK::Util::TemplateURI.new(PDK::Util::TemplateURI::PDK_TEMPLATE_URL) }
   let(:template_path) { '/some/path' }
   let(:pdk_context) { PDK::Context::None.new(nil) }
-  let(:renderer) { instance_double('PDK::Template::Renderer::AbstractRenderer') }
+  let(:renderer) { instance_double(PDK::Template::Renderer::AbstractRenderer) }
 
   describe '#instance' do
     it 'creates a TemplateDir object' do

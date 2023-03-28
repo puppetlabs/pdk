@@ -78,7 +78,7 @@ describe 'PDK::CLI new test' do
     end
 
     context 'and provided a valid object name' do
-      let(:generator) { instance_double('PDK::Generate::PuppetClass', run: true) }
+      let(:generator) { instance_double(PDK::Generate::PuppetClass, run: true) }
 
       before(:each) do
         allow(PDK::Util::PuppetStrings).to receive(:find_object).with('test_class').and_return([PDK::Generate::PuppetClass, { 'name' => 'my_module::test_class' }])

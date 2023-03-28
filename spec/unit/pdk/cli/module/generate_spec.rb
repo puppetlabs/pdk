@@ -16,7 +16,7 @@ describe 'Running pdk module generate' do
 
   context 'with a yes at the prompt' do
     before(:each) do
-      redirector = instance_double('PDK::CLI::Util::CommandRedirector')
+      redirector = instance_double(PDK::CLI::Util::CommandRedirector)
       allow(redirector).to receive(:target_command)
       allow(redirector).to receive(:run).and_return(true)
       expect(logger).to receive(:info).with(%r{New modules are created using the 'pdk new module' command}i)

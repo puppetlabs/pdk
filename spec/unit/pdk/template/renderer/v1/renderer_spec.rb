@@ -30,14 +30,14 @@ describe PDK::Template::Renderer::V1::Renderer do
 
       let(:template_file) do
         instance_double(
-          'PDK::Template::Renderer::V1::TemplateFile',
+          PDK::Template::Renderer::V1::TemplateFile,
           render: 'rendered value',
         )
       end
 
       let(:legacy_template_dir) do
         instance_double(
-          'PDK::Template::Renderer::V1::LegacyTemplateDir',
+          PDK::Template::Renderer::V1::LegacyTemplateDir,
         )
       end
 
@@ -140,7 +140,7 @@ describe PDK::Template::Renderer::V1::Renderer do
 
       let(:template_file) do
         instance_double(
-          'PDK::Template::Renderer::V1::TemplateFile',
+          PDK::Template::Renderer::V1::TemplateFile,
           render: 'rendered value',
         )
       end
