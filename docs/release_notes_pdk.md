@@ -2,6 +2,18 @@
 
 New features, enhancements, and resolved issues for PDK.
 
+## PDK 2.7.1
+
+### New features and enhancements
+
+* PDK Templates have been updated to 2.7.4
+
+### Resolved issues
+
+* Fixes an issue with duplicate build-ids for RedHat 9 packages
+
+For more more details, please feel free to check out our [project changelog](https://github.com/puppetlabs/pdk/releases/tag/v2.7.1).
+
 ## PDK 2.7.0
 
 ### New features and enhancements
@@ -11,7 +23,7 @@ New features, enhancements, and resolved issues for PDK.
 * PDK Templates have been updated to 2.7.2.
 * Puppet 7.23 has been added to the packages.
 * Ruby 2.7.7 is now the default runtime used by packaged versions of PDK.
-* The minimum ruby requirement has been raised to 2.5.9./op
+* The minimum ruby requirement has been raised to 2.5.9.
 
 ### Resolved issues
 
