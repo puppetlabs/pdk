@@ -7,7 +7,7 @@ describe 'pdk console' do
   let(:context) { PDK::Context::Module.new(module_path, module_path) }
 
   before do
-    allow_any_instance_of(PDK::Util::Bundler::BundleHelper).to receive(:gemfile_lock).and_return(File.join(FIXTURES_DIR, 'module_gemfile_lockfile'))
+    allow_any_instance_of(PDK::Util::Bundler::BundleHelper).to receive(:gemfile_lock).and_return(File.join(FIXTURES_DIR, 'module_gemfile_lockfile')) # rubocop:disable RSpec/AnyInstance
     allow(Bundler).to receive(:default_lockfile).and_return(File.join(FIXTURES_DIR, 'module_gemfile_lockfile'))
     allow(PDK::CLI::Util).to receive(:module_version_check).and_return(true)
     allow(PDK).to receive(:context).and_return(context)
