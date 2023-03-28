@@ -38,8 +38,6 @@ module PDK
                File.dirname(environment_conf_path)
              elsif control_repo_root?(Dir.pwd)
                Dir.pwd
-             else
-               nil
              end
       return path if path.nil? || !strict_check
 

@@ -159,8 +159,6 @@ module PDK
         File.dirname(metadata_path)
       elsif in_module_root?
         Dir.pwd
-      else
-        nil
       end
     end
     module_function :module_root
