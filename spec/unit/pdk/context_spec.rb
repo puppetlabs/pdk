@@ -4,7 +4,7 @@ require 'tmpdir'
 require 'fileutils'
 
 class MockContext < PDK::Context::AbstractContext
-  def initialize(context_path, prefix, parent_context = nil)
+  def initialize(context_path, prefix, parent_context = nil) # rubocop:disable Lint/MissingSuper
     @prefix = prefix
     @parent_context = parent_context
     @root_path = context_path
