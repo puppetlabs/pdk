@@ -55,7 +55,7 @@ module PDK
                                column: offense['column'],
                                message: offense['message'],
                                test: offense['check'],
-                               severity: (offense['kind'] == 'fixed') ? 'corrected' : offense['kind'],
+                               severity: offense['kind'] == 'fixed' ? 'corrected' : offense['kind'],
                                state: :failure,
                              })
           end

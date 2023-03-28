@@ -16,7 +16,7 @@ describe 'Test puppet & ruby version selection' do
   end
 
   test_cases.each do |test_case|
-    slug = (test_case[:envvar] == 'PDK_PE_VERSION') ? 'PE' : 'Puppet'
+    slug = test_case[:envvar] == 'PDK_PE_VERSION' ? 'PE' : 'Puppet'
 
     context "Select #{slug} #{test_case[:version]}" do
       let(:env) { { test_case[:envvar] => test_case[:version] } }

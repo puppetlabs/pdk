@@ -23,7 +23,7 @@ module PDK
             next if files.empty?
 
             PDK::Report.default_target.puts('')
-            PDK::Report.default_target.puts(generate_banner("Files #{(options[:tense] == :future) ? 'to be ' : ''}#{category}", 40))
+            PDK::Report.default_target.puts(generate_banner("Files #{options[:tense] == :future ? 'to be ' : ''}#{category}", 40))
             PDK::Report.default_target.puts(files.map(&:to_s).join("\n"))
             footer = true
           end

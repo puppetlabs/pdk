@@ -5,7 +5,7 @@ module PDK
     module Util
       class OptionValidator
         def self.comma_separated_list?(list, _options = {})
-          (list =~ /^[\w-]+(?:,[\w-]+)+$/) ? true : false
+          /^[\w-]+(?:,[\w-]+)+$/.match?(list)
         end
 
         # @return [Boolean] true if the fact name is valid

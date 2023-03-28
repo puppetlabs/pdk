@@ -38,8 +38,8 @@ module PDK::Util::Windows::APITypes
               format('Unable to read wide strings with %{null_terminator} terminal nulls', null_terminator: null_terminator)
       end
 
-      terminator_width = (null_terminator == :single_null) ? 1 : 2
-      reader_method = (null_terminator == :single_null) ? :get_uint16 : :get_uint32
+      terminator_width = null_terminator == :single_null ? 1 : 2
+      reader_method = null_terminator == :single_null ? :get_uint16 : :get_uint32
 
       # Look for the null_terminator; if found, read up to that null
       # (exclusive)

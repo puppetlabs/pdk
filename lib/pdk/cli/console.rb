@@ -95,7 +95,7 @@ module PDK::CLI
       args = opts.map do |e|
         if /\A-{2}puppet|pe-version|dev/.match?(e)
           value = e.split('=')
-          (value.count < 2) ? value + [''] : value
+          value.count < 2 ? value + [''] : value
         end
       end
       args = args.compact.to_h

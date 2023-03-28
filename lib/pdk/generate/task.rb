@@ -53,7 +53,7 @@ module PDK
       #
       # @api private
       def task_name
-        (object_name == module_name) ? 'init' : object_name
+        object_name == module_name ? 'init' : object_name
       end
 
       def task_metadata

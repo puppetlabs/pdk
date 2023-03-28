@@ -58,13 +58,13 @@ module PDK::CLI
       def self.convert_to_number(value)
         float_val = Float(value)
         # Return an Integer if this is actually and Integer, otherwise return the float
-        (float_val.truncate == float_val) ? float_val.truncate : float_val
+        float_val.truncate == float_val ? float_val.truncate : float_val
       end
       private_class_method :convert_to_number
 
       def self.run(opts, args)
         item_name = args.count.positive? ? args[0] : nil
-        item_value = (args.count > 1) ? args[1] : nil
+        item_value = args.count > 1 ? args[1] : nil
 
         opts[:type] = opts[:as] if opts[:type].nil? && !opts[:as].nil?
         force = opts[:force] || false
