@@ -31,11 +31,9 @@ module PDK
         end
 
         def use(version)
-          if versions.key?(version)
-            @active_ruby_version = version
-          else
-            raise ArgumentError, format('Unknown Ruby version "%{ruby_version}"', ruby_version: version)
-          end
+          raise ArgumentError, format('Unknown Ruby version "%{ruby_version}"', ruby_version: version) unless versions.key?(version)
+
+          @active_ruby_version = version
         end
 
         def scan_for_packaged_rubies
