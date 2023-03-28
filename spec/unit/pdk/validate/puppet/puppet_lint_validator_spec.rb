@@ -95,12 +95,12 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
       let(:targets) { ['target1'] }
 
       it 'adds a passing event for the file to the report' do
-        expect(report).to receive(:add_event).with(
-          file: targets.first,
-          source: validator.name,
-          severity: 'ok',
-          state: :passed,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: targets.first,
+                                                     source: validator.name,
+                                                     severity: 'ok',
+                                                     state: :passed,
+                                                   })
 
         parse_output
       end
@@ -115,16 +115,16 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
       end
 
       it 'adds a failure event for the file to the report' do
-        expect(report).to receive(:add_event).with(
-          file: targets.first,
-          source: validator.name,
-          line: '1',
-          column: '2',
-          message: 'test message',
-          test: 'test_check',
-          severity: 'warning',
-          state: :failure,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: targets.first,
+                                                     source: validator.name,
+                                                     line: '1',
+                                                     column: '2',
+                                                     message: 'test message',
+                                                     test: 'test_check',
+                                                     severity: 'warning',
+                                                     state: :failure,
+                                                   })
 
         parse_output
       end
@@ -137,16 +137,16 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
         end
 
         it 'adds a failure event for the file to the report with the corrected severity' do
-          expect(report).to receive(:add_event).with(
-            file: targets.first,
-            source: validator.name,
-            line: '1',
-            column: '2',
-            message: 'test message',
-            test: 'test_check',
-            severity: 'corrected',
-            state: :failure,
-          )
+          expect(report).to receive(:add_event).with({
+                                                       file: targets.first,
+                                                       source: validator.name,
+                                                       line: '1',
+                                                       column: '2',
+                                                       message: 'test message',
+                                                       test: 'test_check',
+                                                       severity: 'corrected',
+                                                       state: :failure,
+                                                     })
 
           parse_output
         end
@@ -168,49 +168,49 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
       end
 
       it 'adds a passing event to the report for the file with no offenses' do
-        expect(report).to receive(:add_event).with(
-          file: 'target2',
-          source: validator.name,
-          state: :passed,
-          severity: 'ok',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'target2',
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: 'ok',
+                                                   })
 
         parse_output
       end
 
       it 'adds failure events to the report for the files with offenses' do
-        expect(report).to receive(:add_event).with(
-          file: 'target1',
-          source: validator.name,
-          line: '1',
-          column: '2',
-          message: 'test message 1',
-          test: 'test_check_1',
-          severity: 'warning',
-          state: :failure,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'target1',
+                                                     source: validator.name,
+                                                     line: '1',
+                                                     column: '2',
+                                                     message: 'test message 1',
+                                                     test: 'test_check_1',
+                                                     severity: 'warning',
+                                                     state: :failure,
+                                                   })
 
-        expect(report).to receive(:add_event).with(
-          file: 'target1',
-          source: validator.name,
-          line: '5',
-          column: '6',
-          message: 'test message 2',
-          test: 'test_check_2',
-          severity: 'corrected',
-          state: :failure,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'target1',
+                                                     source: validator.name,
+                                                     line: '5',
+                                                     column: '6',
+                                                     message: 'test message 2',
+                                                     test: 'test_check_2',
+                                                     severity: 'corrected',
+                                                     state: :failure,
+                                                   })
 
-        expect(report).to receive(:add_event).with(
-          file: 'target3',
-          source: validator.name,
-          line: '3',
-          column: '4',
-          message: 'test message 3',
-          test: 'test_check_3',
-          severity: 'error',
-          state: :failure,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'target3',
+                                                     source: validator.name,
+                                                     line: '3',
+                                                     column: '4',
+                                                     message: 'test message 3',
+                                                     test: 'test_check_3',
+                                                     severity: 'error',
+                                                     state: :failure,
+                                                   })
 
         parse_output
       end

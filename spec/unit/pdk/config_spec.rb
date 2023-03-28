@@ -300,11 +300,11 @@ describe PDK::Config do
       end
 
       def system_config
-        @system_config ||= PDK::Config::Namespace.new('system') { ; }
+        @system_config ||= PDK::Config::Namespace.new('system') {}
       end
 
       def project_config
-        @system_config ||= PDK::Config::Namespace.new('project') { ; }
+        @system_config ||= PDK::Config::Namespace.new('project') {}
       end
     end
 

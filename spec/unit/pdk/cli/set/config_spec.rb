@@ -24,15 +24,15 @@ describe 'PDK::CLI::Set::Config' do
     # Note, this class name needs to be unqiue in the ENTIRE rspec suite!
     class MockEmptyConfig < PDK::Config
       def user_config
-        @user_config ||= PDK::Config::Namespace.new('user') { ; }
+        @user_config ||= PDK::Config::Namespace.new('user') {}
       end
 
       def system_config
-        @system_config ||= PDK::Config::Namespace.new('system') { ; }
+        @system_config ||= PDK::Config::Namespace.new('system') {}
       end
 
       def project_config
-        @project_config ||= PDK::Config::Namespace.new('project') { ; }
+        @project_config ||= PDK::Config::Namespace.new('project') {}
       end
     end
 

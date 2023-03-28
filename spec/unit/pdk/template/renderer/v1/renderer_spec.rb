@@ -149,7 +149,7 @@ describe PDK::Template::Renderer::V1::Renderer do
         allow(PDK::Util::Filesystem).to receive(:file?).with("#{template_root}/object_templates/item.erb").and_return(true)
         allow(PDK::Util::Filesystem).to receive(:readable?).with("#{template_root}/object_templates/item.erb").and_return(true)
         allow(PDK::Util::Filesystem).to receive(:read_file).with("#{template_root}/object_templates/item.erb").and_return(item_content)
-        allow(renderer).to receive(:new_template_file).with(%r{item\.erb}, Hash).and_return(template_file) # rubocop:disable RSpec/SubjectStub This is fine
+        allow(renderer).to receive(:new_template_file).with(%r{item\.erb}, Hash).and_return(template_file) # This is fine
       end
 
       it 'returns the rendered content' do

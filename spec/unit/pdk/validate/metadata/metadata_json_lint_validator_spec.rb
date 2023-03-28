@@ -90,12 +90,12 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
       let(:metadata_json_lint_output) { '' }
 
       it 'adds a passing event for the target to the report' do
-        expect(report).to receive(:add_event).with(
-          file: targets.first,
-          source: validator.name,
-          state: :passed,
-          severity: :ok,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: targets.first,
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: :ok,
+                                                   })
 
         parse_output
       end
@@ -119,14 +119,14 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
         allow(report).to receive(:add_event)
 
         errors.each do |error|
-          expect(report).to receive(:add_event).with(
-            file: targets.first,
-            source: validator.name,
-            message: error['msg'],
-            test: error['check'],
-            severity: 'error',
-            state: :failure,
-          )
+          expect(report).to receive(:add_event).with({
+                                                       file: targets.first,
+                                                       source: validator.name,
+                                                       message: error['msg'],
+                                                       test: error['check'],
+                                                       severity: 'error',
+                                                       state: :failure,
+                                                     })
         end
 
         parse_output
@@ -136,14 +136,14 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
         allow(report).to receive(:add_event)
 
         warnings.each do |warning|
-          expect(report).to receive(:add_event).with(
-            file: targets.first,
-            source: validator.name,
-            message: warning['msg'],
-            test: warning['check'],
-            severity: 'warning',
-            state: :failure,
-          )
+          expect(report).to receive(:add_event).with({
+                                                       file: targets.first,
+                                                       source: validator.name,
+                                                       message: warning['msg'],
+                                                       test: warning['check'],
+                                                       severity: 'warning',
+                                                       state: :failure,
+                                                     })
         end
 
         parse_output

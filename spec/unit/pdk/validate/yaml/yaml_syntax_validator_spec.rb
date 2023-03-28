@@ -31,13 +31,13 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
       let(:target) { { name: '.sync.yml', readable: false } }
 
       it 'adds a failure event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: 'yaml-syntax',
-          state: :failure,
-          severity: 'error',
-          message: 'Could not be read.',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: 'yaml-syntax',
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: 'Could not be read.',
+                                                   })
         expect(return_value).to eq(1)
       end
     end
@@ -54,12 +54,12 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
       let(:target) { { name: '.sync.yml', content: "---\n  foo: bar" } }
 
       it 'adds a passing event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: 'yaml-syntax',
-          state: :passed,
-          severity: 'ok',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: 'yaml-syntax',
+                                                     state: :passed,
+                                                     severity: 'ok',
+                                                   })
         expect(return_value).to eq(0)
       end
     end
@@ -68,12 +68,12 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
       let(:target) { { name: '.sync.yml', content: "---\n  foo: :bar" } }
 
       it 'adds a passing event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: 'yaml-syntax',
-          state: :passed,
-          severity: 'ok',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: 'yaml-syntax',
+                                                     state: :passed,
+                                                     severity: 'ok',
+                                                   })
         expect(return_value).to eq(0)
       end
     end
@@ -82,15 +82,15 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
       let(:target) { { name: '.sync.yaml', content: "---\n\tfoo: bar" } }
 
       it 'adds a failure event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: 'yaml-syntax',
-          state: :failure,
-          severity: 'error',
-          message: a_string_matching(%r{\Afound character that cannot start}),
-          line: 2,
-          column: 1,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: 'yaml-syntax',
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: a_string_matching(%r{\Afound character that cannot start}),
+                                                     line: 2,
+                                                     column: 1,
+                                                   })
         expect(return_value).to eq(1)
       end
     end
@@ -99,13 +99,13 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
       let(:target) { { name: 'file.yml', content: "--- !ruby/object:File {}\n" } }
 
       it 'adds a failure event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: 'yaml-syntax',
-          state: :failure,
-          severity: 'error',
-          message: a_string_matching(%r{unspecified class: file}i),
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: 'yaml-syntax',
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: a_string_matching(%r{unspecified class: file}i),
+                                                   })
         expect(return_value).to eq(1)
       end
     end

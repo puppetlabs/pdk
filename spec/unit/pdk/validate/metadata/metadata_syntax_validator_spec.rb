@@ -36,13 +36,13 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
       end
 
       it 'adds a failure event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: targets.first[:name],
-          source: 'metadata-syntax',
-          state: :failure,
-          severity: 'error',
-          message: 'Could not be read.',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: targets.first[:name],
+                                                     source: 'metadata-syntax',
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: 'Could not be read.',
+                                                   })
         expect(return_value).to eq(1)
       end
     end
@@ -55,12 +55,12 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
       end
 
       it 'adds a passing event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: targets.first[:name],
-          source: 'metadata-syntax',
-          state: :passed,
-          severity: 'ok',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: targets.first[:name],
+                                                     source: 'metadata-syntax',
+                                                     state: :passed,
+                                                     severity: 'ok',
+                                                   })
         expect(return_value).to eq(0)
       end
     end
@@ -73,13 +73,13 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
       end
 
       it 'adds a failure event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: targets.first[:name],
-          source: 'metadata-syntax',
-          state: :failure,
-          severity: 'error',
-          message: a_string_matching(%r{\Aexpected ':' in object}),
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: targets.first[:name],
+                                                     source: 'metadata-syntax',
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: a_string_matching(%r{\Aexpected ':' in object}),
+                                                   })
         expect(return_value).to eq(1)
       end
     end

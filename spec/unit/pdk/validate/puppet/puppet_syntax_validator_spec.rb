@@ -177,113 +177,113 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
 
     context 'when the output contains no references to a target' do
       it 'adds a passing event for the target to the report' do
-        expect(report).to receive(:add_event).with(
-          file: 'pass.pp',
-          source: validator.name,
-          state: :passed,
-          severity: :ok,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'pass.pp',
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: :ok,
+                                                   })
       end
     end
 
     context 'with Puppet <= 5.3.3' do
       it 'handles syntax error locations with a file, line, and column' do
-        expect(report).to receive(:add_event).with(
-          file: 'fail.pp',
-          source: validator.name,
-          state: :failure,
-          message: 'test message 1',
-          severity: 'error',
-          column: '2',
-          line: '1',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'fail.pp',
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: 'test message 1',
+                                                     severity: 'error',
+                                                     column: '2',
+                                                     line: '1',
+                                                   })
       end
 
       it 'handles syntax error locations with a file and line' do
-        expect(report).to receive(:add_event).with(
-          file: 'fail.pp',
-          source: validator.name,
-          state: :failure,
-          message: 'test message 2',
-          severity: 'error',
-          line: '1',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'fail.pp',
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: 'test message 2',
+                                                     severity: 'error',
+                                                     line: '1',
+                                                   })
       end
 
       it 'handles syntax error locations with a file' do
-        expect(report).to receive(:add_event).with(
-          file: 'fail.pp',
-          source: validator.name,
-          state: :failure,
-          message: 'test message 3',
-          severity: 'error',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'fail.pp',
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: 'test message 3',
+                                                     severity: 'error',
+                                                   })
       end
 
       it 'handles syntax error locations with a line' do
-        expect(report).to receive(:add_event).with(
-          source: validator.name,
-          state: :failure,
-          message: 'test message 4',
-          severity: 'error',
-          line: '1',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: 'test message 4',
+                                                     severity: 'error',
+                                                     line: '1',
+                                                   })
       end
     end
 
     context 'with Puppet >= 5.3.4' do
       it 'handles syntax error locations with a file, line, and column' do
-        expect(report).to receive(:add_event).with(
-          file: 'warning.pp',
-          source: validator.name,
-          state: :failure,
-          message: '5.3.4 test-type-1',
-          severity: 'error',
-          column: '45',
-          line: '34',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'warning.pp',
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: '5.3.4 test-type-1',
+                                                     severity: 'error',
+                                                     column: '45',
+                                                     line: '34',
+                                                   })
       end
 
       it 'handles syntax error locations with a file and line' do
-        expect(report).to receive(:add_event).with(
-          file: 'warning.pp',
-          source: validator.name,
-          state: :failure,
-          message: '5.3.4 test-type-2',
-          severity: 'error',
-          line: '34',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'warning.pp',
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: '5.3.4 test-type-2',
+                                                     severity: 'error',
+                                                     line: '34',
+                                                   })
       end
 
       it 'handles syntax error locations with a line and column' do
-        expect(report).to receive(:add_event).with(
-          source: validator.name,
-          state: :failure,
-          message: '5.3.4 test-type-3',
-          severity: 'error',
-          column: '45',
-          line: '34',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: '5.3.4 test-type-3',
+                                                     severity: 'error',
+                                                     column: '45',
+                                                     line: '34',
+                                                   })
       end
 
       it 'handles syntax error locations with a line' do
-        expect(report).to receive(:add_event).with(
-          source: validator.name,
-          state: :failure,
-          message: '5.3.4 test-type-4',
-          severity: 'error',
-          line: '34',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: '5.3.4 test-type-4',
+                                                     severity: 'error',
+                                                     line: '34',
+                                                   })
       end
 
       it 'handles syntax error locations with a file' do
-        expect(report).to receive(:add_event).with(
-          file: 'warning.pp',
-          source: validator.name,
-          state: :failure,
-          message: '5.3.4 test-type-5',
-          severity: 'error',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: 'warning.pp',
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: '5.3.4 test-type-5',
+                                                     severity: 'error',
+                                                   })
       end
     end
 
@@ -296,11 +296,11 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
       end
 
       it 'handles the Ruby error and prints it out as the message' do
-        expect(report).to receive(:add_event).with(
-          source: validator.name,
-          state: :failure,
-          message: validate_output.split("\n").first,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     message: validate_output.split("\n").first,
+                                                   })
       end
     end
   end

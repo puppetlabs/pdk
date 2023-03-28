@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'github_changelog_generator', '~> 1.15.2'
   gem 'ruby-prof'
   gem 'yard'
 

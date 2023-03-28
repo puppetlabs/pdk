@@ -5,7 +5,7 @@ module PDK
     module Bundler
       class BundleHelper; end
 
-      def self.ensure_bundle!(gem_overrides = nil)
+      def self.ensure_bundle!(gem_overrides = {})
         bundle = BundleHelper.new
 
         # This will default ensure_bundle! to re-resolving everything to latest

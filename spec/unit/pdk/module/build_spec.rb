@@ -20,7 +20,7 @@ describe PDK::Module::Build do
     it 'creates a new PDK::Module::Build instance and calls #build' do
       build_double = instance_double(described_class, build: true)
 
-      expect(described_class).to receive(:new).with(module_dir: 'test').and_return(build_double)
+      expect(described_class).to receive(:new).with({ module_dir: 'test' }).and_return(build_double)
       expect(build_double).to receive(:build)
 
       described_class.invoke(module_dir: 'test')

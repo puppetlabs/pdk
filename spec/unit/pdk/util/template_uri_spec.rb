@@ -127,7 +127,7 @@ describe PDK::Util::TemplateURI do
           context 'and the answer file template is invalid' do
             before(:each) do
               allow(described_class).to receive(:valid_template?).with(anything).and_call_original
-              allow(described_class).to receive(:valid_template?).with(uri: anything, type: anything, allow_fallback: true).and_return(false)
+              allow(described_class).to receive(:valid_template?).with({ uri: anything, type: anything, allow_fallback: true }).and_return(false)
             end
 
             it 'returns the default template' do

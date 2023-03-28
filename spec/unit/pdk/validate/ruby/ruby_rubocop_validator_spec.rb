@@ -124,12 +124,12 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       end
 
       it 'adds a passing event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: test_file,
-          source: validator.name,
-          state: :passed,
-          severity: :ok,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: test_file,
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: :ok,
+                                                   })
 
         parse_output
       end
@@ -147,16 +147,16 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       end
 
       it 'adds a failure event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: test_file,
-          source: validator.name,
-          state: :failure,
-          severity: 'error',
-          message: 'test message',
-          line: 1,
-          column: 2,
-          test: 'Test/Cop',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: test_file,
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: 'test message',
+                                                     line: 1,
+                                                     column: 2,
+                                                     test: 'Test/Cop',
+                                                   })
 
         parse_output
       end
@@ -169,16 +169,16 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
         end
 
         it 'changes the severity of the event to "corrected"' do
-          expect(report).to receive(:add_event).with(
-            file: test_file,
-            source: validator.name,
-            state: :failure,
-            severity: 'corrected',
-            message: 'test message',
-            line: 1,
-            column: 2,
-            test: 'Test/Cop',
-          )
+          expect(report).to receive(:add_event).with({
+                                                       file: test_file,
+                                                       source: validator.name,
+                                                       state: :failure,
+                                                       severity: 'corrected',
+                                                       message: 'test message',
+                                                       line: 1,
+                                                       column: 2,
+                                                       test: 'Test/Cop',
+                                                     })
 
           parse_output
         end
@@ -204,42 +204,42 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       end
 
       it 'adds a passing event to the report for the file with no offenses' do
-        expect(report).to receive(:add_event).with(
-          file: File.join('spec', 'spec_helper.rb'),
-          source: validator.name,
-          state: :passed,
-          severity: :ok,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: File.join('spec', 'spec_helper.rb'),
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: :ok,
+                                                   })
 
         parse_output
       end
 
       it 'adds a corrected failure event to the report for the file with offenses' do
-        expect(report).to receive(:add_event).with(
-          file: File.join('lib', 'fail.rb'),
-          source: validator.name,
-          state: :failure,
-          severity: 'corrected',
-          message: 'correctable error',
-          line: 1,
-          column: 2,
-          test: 'Test/Cop',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: File.join('lib', 'fail.rb'),
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'corrected',
+                                                     message: 'correctable error',
+                                                     line: 1,
+                                                     column: 2,
+                                                     test: 'Test/Cop',
+                                                   })
 
         parse_output
       end
 
       it 'adds a failure event to the report for the file with offenses' do
-        expect(report).to receive(:add_event).with(
-          file: File.join('lib', 'fail.rb'),
-          source: validator.name,
-          state: :failure,
-          severity: 'warning',
-          message: 'uncorrectable thing',
-          line: 3,
-          column: 4,
-          test: 'Test/Cop2',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: File.join('lib', 'fail.rb'),
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'warning',
+                                                     message: 'uncorrectable thing',
+                                                     line: 3,
+                                                     column: 4,
+                                                     test: 'Test/Cop2',
+                                                   })
 
         parse_output
       end

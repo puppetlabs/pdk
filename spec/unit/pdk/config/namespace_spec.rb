@@ -9,7 +9,7 @@ def spec_simple_validator
 end
 
 describe PDK::Config::Namespace do
-  subject(:config) { described_class.new('config', config_options) }
+  subject(:config) { described_class.new('config', **config_options) }
 
   let(:config_options) { {} }
 

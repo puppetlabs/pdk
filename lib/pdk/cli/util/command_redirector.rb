@@ -7,6 +7,15 @@ module PDK
       class CommandRedirector < TTY::Prompt::AnswersCollector
         attr_accessor :command
 
+        # Override the initialize method because the original one
+        # doesn't work with Ruby 3.
+        # rubocop:disable Lint/MissingSuper
+        def initialize(prompt, options = {})
+          @prompt  = prompt
+          @answers = options.fetch(:answers) { {} }
+        end
+        # rubocop:enable Lint/MissingSuper
+
         def pastel
           @pastel ||= Pastel.new
         end
@@ -16,7 +25,7 @@ module PDK
         end
 
         def run
-          @prompt.puts format('Did you mean \'%{command}\'?', command: pastel.bold(@command))
+          @prompt.puts "Did you mean '#{pastel.bold(@command)}'?"
           @prompt.yes?('-->')
         rescue PDK::CLI::Util::Interview::READER::InputInterrupt
           nil

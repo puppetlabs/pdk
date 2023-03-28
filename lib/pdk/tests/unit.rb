@@ -175,7 +175,7 @@ module PDK
 
         # TODO: standardize summary output
         $stderr.puts '  ' << (format('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.', total: json_data['summary']['example_count'], duration: duration,
-                                                                                                                                   failures: json_data['summary']['failure_count'], pending: json_data['summary']['pending_count']))
+                                                                                                                                   failures: json_data['summary']['failure_count'], pending: json_data['summary']['pending_count'])) # rubocop:disable Layout/LineLength
       end
 
       def self.merge_json_results(json_data)

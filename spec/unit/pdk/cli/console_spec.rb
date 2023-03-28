@@ -52,7 +52,7 @@ describe 'pdk console' do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet: '7.23.0')
       command = instance_double(PDK::CLI::Exec::InteractiveCommand)
       allow(command).to receive(:context=).with(:pwd)
-      allow(command).to receive(:update_environment).with('PUPPET_GEM_VERSION' => '7.23.0')
+      allow(command).to receive(:update_environment).with({ 'PUPPET_GEM_VERSION' => '7.23.0' })
       allow(command).to receive(:execute!).and_return(exit_code: 0)
       allow(PDK::Util).to receive(:module_root).and_return('/modules/ntp')
       args = [
@@ -75,10 +75,10 @@ describe 'pdk console' do
     include_context 'not packaged install'
 
     it 'invokes console with options' do
-      allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet: '7.23.0')
+      allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with({ puppet: '7.23.0' })
       command = instance_double(PDK::CLI::Exec::InteractiveCommand)
       allow(command).to receive(:context=).with(:pwd)
-      allow(command).to receive(:update_environment).with('PUPPET_GEM_VERSION' => '7.23.0')
+      allow(command).to receive(:update_environment).with({ 'PUPPET_GEM_VERSION' => '7.23.0' })
       allow(command).to receive(:execute!).and_return(exit_code: 0)
       allow(PDK::Util).to receive(:module_root).and_return('/modules/ntp')
       args = [
@@ -111,7 +111,7 @@ describe 'pdk console' do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet: '7.23.0')
       command = instance_double(PDK::CLI::Exec::InteractiveCommand)
       allow(command).to receive(:context=).with(:pwd)
-      allow(command).to receive(:update_environment).with('PUPPET_GEM_VERSION' => '7.23.0')
+      allow(command).to receive(:update_environment).with({ 'PUPPET_GEM_VERSION' => '7.23.0' })
       allow(command).to receive(:execute!).and_return(exit_code: 0)
       allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
       expect { console_cmd.run(['--puppet-version=7', '--run-once', '--quiet', '--execute=$foo = 123']) }.to exit_zero
@@ -123,7 +123,7 @@ describe 'pdk console' do
       command = instance_double(PDK::CLI::Exec::InteractiveCommand)
       allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.7.7' => '2.7.0')
       allow(command).to receive(:context=).with(:pwd)
-      allow(command).to receive(:update_environment).with('PUPPET_GEM_VERSION' => '7.23.0')
+      allow(command).to receive(:update_environment).with({ 'PUPPET_GEM_VERSION' => '7.23.0' })
       allow(command).to receive(:execute!).and_return(exit_code: 0)
       allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
       expect { console_cmd.run(['--pe-version=2023.0', '--run-once', '--quiet', '--execute=$foo = 123']) }.to exit_zero
@@ -136,7 +136,7 @@ describe 'pdk console' do
       command = instance_double(PDK::CLI::Exec::InteractiveCommand)
       allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.7.7' => '2.7.0')
       allow(command).to receive(:context=).with(:pwd)
-      allow(command).to receive(:update_environment).with('PUPPET_GEM_VERSION' => 'file:///home/user1/.pdk/cache/src/puppet')
+      allow(command).to receive(:update_environment).with({ 'PUPPET_GEM_VERSION' => 'file:///home/user1/.pdk/cache/src/puppet' })
       allow(command).to receive(:execute!).and_return(exit_code: 0)
       allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
       expect { console_cmd.run(['--puppet-dev', '--run-once', '--quiet', '--execute=$foo = 123']) }.to exit_zero
@@ -147,7 +147,7 @@ describe 'pdk console' do
         allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet: '7.23.0')
         command = instance_double(PDK::CLI::Exec::InteractiveCommand)
         allow(command).to receive(:context=).with(:pwd)
-        allow(command).to receive(:update_environment).with('PUPPET_GEM_VERSION' => '7.23.0')
+        allow(command).to receive(:update_environment).with({ 'PUPPET_GEM_VERSION' => '7.23.0' })
         allow(command).to receive(:execute!).and_return(exit_code: 0)
         allow(PDK::Util).to receive(:module_root).and_return('C:/modules/ntp')
         args = [
@@ -164,7 +164,7 @@ describe 'pdk console' do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet: '7.23.0')
       command = instance_double(PDK::CLI::Exec::InteractiveCommand)
       allow(command).to receive(:context=).with(:pwd)
-      allow(command).to receive(:update_environment).with('PUPPET_GEM_VERSION' => '7.23.0')
+      allow(command).to receive(:update_environment).with({ 'PUPPET_GEM_VERSION' => '7.23.0' })
       allow(command).to receive(:execute!).and_return(exit_code: 0)
       allow(PDK::Util).to receive(:module_root).and_return('/modules/ntp')
       args = [

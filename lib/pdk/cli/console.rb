@@ -45,7 +45,7 @@ module PDK::CLI
                 []
               end
       debugger_args = ['debugger'] + processed_args + flags
-      result = run_in_module(processed_options, debugger_args)
+      result = run_in_module(debugger_args, **processed_options)
 
       exit result[:exit_code]
     end
@@ -112,7 +112,7 @@ module PDK::CLI
     # @param opts [Hash] - the options passed into the CRI command
     # @param bundle_args [Array] array of bundle exec args and puppet debugger args
     # @return [Hash] - a command result hash
-    def run_in_module(opts, bundle_args)
+    def run_in_module(bundle_args, opts)
       require 'pdk/cli/exec'
       require 'pdk/cli/exec/interactive_command'
       require 'pdk/util/ruby_version'
@@ -124,7 +124,7 @@ module PDK::CLI
       gemfile_env = PDK::Util::Bundler::BundleHelper.gemfile_env(puppet_env[:gemset])
       PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
       PDK::Util::RubyVersion.instance(puppet_env[:ruby_version])
-      PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
+      PDK::Util::Bundler.ensure_bundle!(**puppet_env[:gemset])
       unless gem_in_bundle_lockfile?('puppet-debugger')
         inform_user_for_missing_gem
         return { exit_code: 1 }

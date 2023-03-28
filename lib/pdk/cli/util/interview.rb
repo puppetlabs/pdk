@@ -7,6 +7,15 @@ module PDK
       class Interview < TTY::Prompt::AnswersCollector
         READER = defined?(TTY::Reader) ? TTY::Reader : TTY::Prompt::Reader
 
+        # Override the initialize method because the original one
+        # doesn't work with Ruby 3.
+        # rubocop:disable Lint/MissingSuper
+        def initialize(prompt, options = {})
+          @prompt  = prompt
+          @answers = options.fetch(:answers) { {} }
+        end
+        # rubocop:enable Lint/MissingSuper
+
         def pastel
           @pastel ||= Pastel.new
         end

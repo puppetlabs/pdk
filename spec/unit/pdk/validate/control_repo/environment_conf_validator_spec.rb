@@ -41,13 +41,13 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
       let(:target) { { name: 'environment.conf', readable: false } }
 
       it 'adds a failure event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: validator.name,
-          state: :failure,
-          severity: 'error',
-          message: 'Could not be read.',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: 'Could not be read.',
+                                                   })
         expect(return_value).to eq(1)
       end
     end
@@ -64,12 +64,12 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
       let(:target) { { name: 'environment.conf', content: '' } }
 
       it 'adds a passing event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: validator.name,
-          state: :passed,
-          severity: 'ok',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: 'ok',
+                                                   })
         expect(return_value).to eq(0)
       end
     end
@@ -88,12 +88,12 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
       end
 
       it 'adds a passing event to the report' do
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: validator.name,
-          state: :passed,
-          severity: 'ok',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: 'ok',
+                                                   })
         expect(return_value).to eq(0)
       end
     end
@@ -124,37 +124,37 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
 
       it 'adds a invalid setting failures event to the report' do
         allow(report).to receive(:add_event).and_call_original
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: validator.name,
-          state: :failure,
-          severity: 'error',
-          message: a_string_matching(%r{Invalid setting 'invalid'}),
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: a_string_matching(%r{Invalid setting 'invalid'}),
+                                                   })
         expect(return_value).to eq(1)
       end
 
       it 'adds a invalid section failures event to the report' do
         allow(report).to receive(:add_event).and_call_original
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: validator.name,
-          state: :failure,
-          severity: 'error',
-          message: a_string_matching(%r{Invalid section 'invalid_section'}),
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: a_string_matching(%r{Invalid section 'invalid_section'}),
+                                                   })
         expect(return_value).to eq(1)
       end
 
       it 'adds a invalid environment_timeout failures event to the report' do
         allow(report).to receive(:add_event).and_call_original
-        expect(report).to receive(:add_event).with(
-          file: target[:name],
-          source: validator.name,
-          state: :failure,
-          severity: 'error',
-          message: a_string_matching(%r{environment_timeout is set to 'foo' but should be}),
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: a_string_matching(%r{environment_timeout is set to 'foo' but should be}),
+                                                   })
         expect(return_value).to eq(1)
       end
     end

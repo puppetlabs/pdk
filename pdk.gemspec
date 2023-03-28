@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.5.9' # rubocop:disable Gemspec/RequiredRubyVersion
+  spec.required_ruby_version = '>= 2.7.7'
 
   spec.add_runtime_dependency 'bundler', '>= 2.3.0', '< 3.0.0'
   spec.add_runtime_dependency 'childprocess', '~> 4.1.0'
@@ -25,17 +25,17 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'diff-lcs', '>= 1.5.0'
   spec.add_runtime_dependency 'ffi', '>= 1.15.5', '< 2.0.0'
   spec.add_runtime_dependency 'hitimes', '2.0.0'
-  spec.add_runtime_dependency 'json_pure', '~> 2.6.2'
-  spec.add_runtime_dependency 'json-schema', '2.8.0'
-  spec.add_runtime_dependency 'minitar', '~> 0.6'
-  spec.add_runtime_dependency 'pathspec', '~> 0.2.1'
+  spec.add_runtime_dependency 'json_pure', '~> 2.6.3'
+  spec.add_runtime_dependency 'json-schema', '3.0'
+  spec.add_runtime_dependency 'minitar', '~> 0.8'
+  spec.add_runtime_dependency 'pathspec', '~> 1.1'
   spec.add_runtime_dependency 'tty-prompt', '~> 0.23'
   spec.add_runtime_dependency 'tty-spinner', '~> 0.9'
   spec.add_runtime_dependency 'tty-which', '~> 0.5'
 
   # Analytics dependencies
-  spec.add_runtime_dependency 'concurrent-ruby', '~> 1.1.10'
-  spec.add_runtime_dependency 'facter', '>= 4.0.0', '< 5.0.0'
+  spec.add_runtime_dependency 'concurrent-ruby', '1.1.10'
+  spec.add_runtime_dependency 'facter', '~> 4.0'
   spec.add_runtime_dependency 'httpclient', '~> 2.8.3'
 
   # Used in the pdk-templates

@@ -48,16 +48,16 @@ module PDK
           end
 
           json_data.each do |offense|
-            report.add_event(
-              file: offense['path'],
-              source: name,
-              line: offense['line'],
-              column: offense['column'],
-              message: offense['message'],
-              test: offense['check'],
-              severity: (offense['kind'] == 'fixed') ? 'corrected' : offense['kind'],
-              state: :failure,
-            )
+            report.add_event({
+                               file: offense['path'],
+                               source: name,
+                               line: offense['line'],
+                               column: offense['column'],
+                               message: offense['message'],
+                               test: offense['check'],
+                               severity: (offense['kind'] == 'fixed') ? 'corrected' : offense['kind'],
+                               state: :failure,
+                             })
           end
         end
       end

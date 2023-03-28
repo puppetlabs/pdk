@@ -62,11 +62,11 @@ describe 'PDK::CLI::Remove::Config' do
       end
 
       def system_config
-        @system_config ||= PDK::Config::Namespace.new('system') { ; }
+        @system_config ||= PDK::Config::Namespace.new('system') {}
       end
 
       def project_config
-        @project_config ||= PDK::Config::Namespace.new('project') { ; }
+        @project_config ||= PDK::Config::Namespace.new('project') {}
       end
     end
 
