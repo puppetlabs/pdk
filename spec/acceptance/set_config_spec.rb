@@ -40,7 +40,7 @@ describe 'pdk set config' do
     end
 
     after(:all) do
-      File.delete(ENV.fetch('PDK_ANSWER_FILE', nil)) if File.exist?(ENV.fetch('PDK_ANSWER_FILE', nil)) # rubocop:disable PDK/FileDelete,PDK/FileExistPredicate Need actual file calls here
+      FileUtils.rm_f(ENV.fetch('PDK_ANSWER_FILE', nil)) # Need actual file calls here
       ENV.delete('PDK_ANSWER_FILE')
     end
   end

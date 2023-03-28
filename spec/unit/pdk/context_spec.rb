@@ -83,7 +83,7 @@ describe PDK::Context do
       end
 
       after(:each) do
-        FileUtils.rm_rf(temp_context_path) if Dir.exist?(temp_context_path) # rubocop:disable PDK/DirExistPredicate,PDK/FileUtilsRMRF We need to call the real functions
+        FileUtils.rm_rf(temp_context_path) # rubocop:disable PDK/FileUtilsRMRF We need to call the real functions
       end
 
       context 'and is empty' do
