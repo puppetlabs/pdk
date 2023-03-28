@@ -96,9 +96,7 @@ module PDK
 
               target_list
             elsif PDK::Util::Filesystem.file?(target)
-              if Array(pattern).include? target
-                target
-              elsif Array(pattern).any? { |p| PDK::Util::Filesystem.fnmatch(PDK::Util::Filesystem.expand_path(p), PDK::Util::Filesystem.expand_path(target), File::FNM_DOTMATCH) }
+              if (Array(pattern).include? target) || fnmatch?(pattern, target)
                 target
               else
                 skipped << target
@@ -111,6 +109,13 @@ module PDK
           end
         end.flatten.uniq
         [matched, skipped, invalid]
+      end
+
+      # Matches a target against a pattern
+      # @param pattern [String, Array[String]] The pattern to match against
+      # @return [Boolean]
+      def fnmatch?(pattern, target)
+        Array(pattern).any? { |p| PDK::Util::Filesystem.fnmatch(PDK::Util::Filesystem.expand_path(p), PDK::Util::Filesystem.expand_path(target), File::FNM_DOTMATCH) }
       end
 
       # Whether the target parsing ignores "dotfiles" (e.g. .gitignore or .pdkignore) which are considered hidden files in POSIX

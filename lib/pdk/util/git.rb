@@ -145,11 +145,8 @@ module PDK
 
       def self.cached_git_query(repo, query)
         # TODO: Not thread safe
-        if @git_repo_expire_cache.nil?
+        if @git_repo_expire_cache.nil? || Time.now > @git_repo_expire_cache
           @git_repo_expire_cache = Time.now + GIT_QUERY_CACHE_TTL # Expire the cache every GIT_QUERY_CACHE_TTL seconds
-          @git_repo_cache = {}
-        elsif Time.now > @git_repo_expire_cache
-          @git_repo_expire_cache = Time.now + GIT_QUERY_CACHE_TTL
           @git_repo_cache = {}
         end
         return nil if @git_repo_cache[repo].nil?
