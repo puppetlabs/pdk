@@ -81,9 +81,9 @@ describe PDK::Util::PuppetStrings do
       end
 
       it 'raises a PDK::Util::PuppetStrings::RunError' do
-        expect {
+        expect do
           described_class.generate_hash
-        }.to raise_error(described_class::RunError, 'some error text')
+        end.to raise_error(described_class::RunError, 'some error text')
       end
     end
 
@@ -96,9 +96,9 @@ describe PDK::Util::PuppetStrings do
       end
 
       it 'raises a PDK::Util::PuppetStrings::RunError' do
-        expect {
+        expect do
           described_class.generate_hash
-        }.to raise_error(described_class::RunError, 'Unable to parse puppet-strings output')
+        end.to raise_error(described_class::RunError, 'Unable to parse puppet-strings output')
       end
     end
 
@@ -138,9 +138,9 @@ describe PDK::Util::PuppetStrings do
       end
 
       it 'raises PDK::Util::PuppetStrings::NoObjectError' do
-        expect {
+        expect do
           described_class.find_object('my_object')
-        }.to raise_error(described_class::NoObjectError)
+        end.to raise_error(described_class::NoObjectError)
       end
     end
 
@@ -173,9 +173,9 @@ describe PDK::Util::PuppetStrings do
         end
 
         it 'raises PDK::Util::PuppetStrings::NoGeneratorError' do
-          expect {
+          expect do
             described_class.find_object('my_object')
-          }.to raise_error(described_class::NoGeneratorError, 'data_types')
+          end.to raise_error(described_class::NoGeneratorError, 'data_types')
         end
       end
     end

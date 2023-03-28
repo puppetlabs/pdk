@@ -127,9 +127,9 @@ describe PDK::Util::PuppetVersion do
         it 'raises an error' do
           expect(logger).to receive(:error).with(a_string_matching(%r{foo}))
           expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
-          expect {
+          expect do
             described_class.fetch_puppet_dev
-          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to clone git repository}i))
+          end.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to clone git repository}i))
         end
       end
 
@@ -175,9 +175,9 @@ describe PDK::Util::PuppetVersion do
         it 'raises an error' do
           expect(logger).to receive(:error).with(a_string_matching(%r{foo}))
           expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
-          expect {
+          expect do
             described_class.fetch_puppet_dev
-          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to fetch from git remote at}i))
+          end.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to fetch from git remote at}i))
         end
       end
 
@@ -219,9 +219,9 @@ describe PDK::Util::PuppetVersion do
         it 'raises an error' do
           expect(logger).to receive(:error).with(a_string_matching(%r{foo}))
           expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
-          expect {
+          expect do
             described_class.fetch_puppet_dev
-          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to update git repository}i))
+          end.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to update git repository}i))
         end
       end
 
@@ -253,9 +253,9 @@ describe PDK::Util::PuppetVersion do
 
       context 'and passed an invalid version number' do
         it 'raises an ArgumentError' do
-          expect {
+          expect do
             described_class.find_gem_for('irving')
-          }.to raise_error(ArgumentError, %r{not a valid version number}i)
+          end.to raise_error(ArgumentError, %r{not a valid version number}i)
         end
       end
 
@@ -289,9 +289,9 @@ describe PDK::Util::PuppetVersion do
 
       context 'and the specified version does not exist in the cache' do
         it 'raises an ArgumentError if no version can be found' do
-          expect {
+          expect do
             described_class.find_gem_for('1.0.0')
-          }.to raise_error(ArgumentError, %r{unable to find a puppet gem matching}i)
+          end.to raise_error(ArgumentError, %r{unable to find a puppet gem matching}i)
         end
       end
     end
@@ -309,9 +309,9 @@ describe PDK::Util::PuppetVersion do
 
       context 'and passed an invalid version number' do
         it 'raises an ArgumentError' do
-          expect {
+          expect do
             described_class.find_gem_for('irving')
-          }.to raise_error(ArgumentError, %r{not a valid version number}i)
+          end.to raise_error(ArgumentError, %r{not a valid version number}i)
         end
       end
 
@@ -395,15 +395,15 @@ describe PDK::Util::PuppetVersion do
       end
 
       it 'raises an ArgumentError if given an unknown PE version' do
-        expect {
+        expect do
           described_class.from_pe_version('9999.1.1')
-        }.to raise_error(ArgumentError, %r{unable to map puppet enterprise version}i)
+        end.to raise_error(ArgumentError, %r{unable to map puppet enterprise version}i)
       end
 
       it 'raises an ArgumentError if given an invalid version string' do
-        expect {
+        expect do
           described_class.from_pe_version('irving')
-        }.to raise_error(ArgumentError, %r{not a valid version number}i)
+        end.to raise_error(ArgumentError, %r{not a valid version number}i)
       end
     end
 
@@ -452,15 +452,15 @@ describe PDK::Util::PuppetVersion do
       end
 
       it 'raises an ArgumentError if given an unknown PE version' do
-        expect {
+        expect do
           described_class.from_pe_version('9999.1.1')
-        }.to raise_error(ArgumentError, %r{unable to map puppet enterprise version}i)
+        end.to raise_error(ArgumentError, %r{unable to map puppet enterprise version}i)
       end
 
       it 'raises an ArgumentError if given an invalid version string' do
-        expect {
+        expect do
           described_class.from_pe_version('irving')
-        }.to raise_error(ArgumentError, %r{not a valid version number}i)
+        end.to raise_error(ArgumentError, %r{not a valid version number}i)
       end
     end
   end
@@ -495,9 +495,9 @@ describe PDK::Util::PuppetVersion do
       end
 
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           described_class.from_module_metadata(metadata)
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
       end
     end
 

@@ -65,9 +65,9 @@ describe PDK::Test::Unit do
       let(:exit_code) { 0 }
 
       it 'does not raise an error' do
-        expect {
+        expect do
           described_class.setup
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
 
@@ -81,9 +81,9 @@ describe PDK::Test::Unit do
         expect(logger).to receive(:error).with(a_string_matching(%r{spec_prep rake task failed}))
         expect(described_class).to receive(:tear_down)
 
-        expect {
+        expect do
           described_class.setup
-        }.to raise_error(PDK::CLI::FatalError, %r{failed to prepare to run the unit tests}i)
+        end.to raise_error(PDK::CLI::FatalError, %r{failed to prepare to run the unit tests}i)
       end
     end
   end
@@ -98,9 +98,9 @@ describe PDK::Test::Unit do
       let(:exit_code) { 0 }
 
       it 'does not raise an error' do
-        expect {
+        expect do
           described_class.tear_down
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
 
@@ -113,9 +113,9 @@ describe PDK::Test::Unit do
         expect($stderr).to receive(:puts).with('some error')
         expect(logger).to receive(:error).with(a_string_matching(%r{spec_clean rake task failed}))
 
-        expect {
+        expect do
           described_class.tear_down
-        }.to raise_error(PDK::CLI::FatalError, %r{failed to clean up after running unit tests}i)
+        end.to raise_error(PDK::CLI::FatalError, %r{failed to clean up after running unit tests}i)
       end
     end
   end

@@ -8,9 +8,9 @@ describe PDK::Template do
   describe '.with' do
     context 'when not passed a block' do
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           described_class.with(template_uri, pdk_context)
-        }.to raise_error(ArgumentError, %r{must be passed a block}i)
+        end.to raise_error(ArgumentError, %r{must be passed a block}i)
       end
     end
 
@@ -18,9 +18,9 @@ describe PDK::Template do
       let(:template_uri) { 'string uri' }
 
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           described_class.with(template_uri, pdk_context) {}
-        }.to raise_error(ArgumentError, %r{must be passed a PDK::Util::TemplateURI}i)
+        end.to raise_error(ArgumentError, %r{must be passed a PDK::Util::TemplateURI}i)
       end
     end
 

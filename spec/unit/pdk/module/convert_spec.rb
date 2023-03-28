@@ -120,9 +120,9 @@ describe PDK::Module::Convert do
       end
 
       it 'reraises the error as a CLI error' do
-        expect {
+        expect do
           instance.run
-        }.to raise_error(PDK::CLI::ExitWithError, 'The specified template is not a directory')
+        end.to raise_error(PDK::CLI::ExitWithError, 'The specified template is not a directory')
       end
     end
 
@@ -584,9 +584,9 @@ describe PDK::Module::Convert do
           end
 
           it 'exits with an error' do
-            expect {
+            expect do
               described_class.new(module_root).update_metadata(metadata_path, template_metadata)
-            }.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not readable})
+            end.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not readable})
           end
         end
       end
@@ -597,9 +597,9 @@ describe PDK::Module::Convert do
         end
 
         it 'exits with an error' do
-          expect {
+          expect do
             described_class.new(module_root).update_metadata(metadata_path, template_metadata)
-          }.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not a file})
+          end.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not a file})
         end
       end
     end

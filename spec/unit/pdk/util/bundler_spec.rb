@@ -207,9 +207,9 @@ RSpec.describe PDK::Util::Bundler do
       let(:overrides) { {} }
 
       it 'changes response of already_bundled? from false to true' do
-        expect {
+        expect do
           described_class.mark_as_bundled!(gemfile, overrides)
-        }.to change {
+        end.to change {
           described_class.already_bundled?(gemfile, overrides)
         }.from(false).to(true)
       end
@@ -220,9 +220,9 @@ RSpec.describe PDK::Util::Bundler do
         end
 
         it 'changes response of already_bundled? from false to true' do
-          expect {
+          expect do
             described_class.mark_as_bundled!(gemfile, overrides)
-          }.to change {
+          end.to change {
             described_class.already_bundled?(gemfile, overrides)
           }.from(false).to(true)
         end

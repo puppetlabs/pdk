@@ -194,9 +194,9 @@ describe PDK::Module::Build do
         end
 
         it 'exits with an error' do
-          expect {
+          expect do
             instance.stage_path(path)
-          }.to raise_error(PDK::CLI::ExitWithError, %r{can only include ASCII characters})
+          end.to raise_error(PDK::CLI::ExitWithError, %r{can only include ASCII characters})
         end
       end
 
@@ -245,9 +245,9 @@ describe PDK::Module::Build do
         let(:path_to_stage) { File.join(*['thing'] * 30) }
 
         it 'exits with an error' do
-          expect {
+          expect do
             instance.stage_path(path_to_stage)
-          }.to raise_error(PDK::CLI::ExitWithError)
+          end.to raise_error(PDK::CLI::ExitWithError)
         end
       end
     end
@@ -294,17 +294,17 @@ describe PDK::Module::Build do
 
     context 'when passed a path containing only ASCII characters' do
       it 'does not raise an error' do
-        expect {
+        expect do
           instance.validate_path_encoding!(File.join('path', 'to', 'file'))
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
 
     context 'when passed a path containing non-ASCII characters' do
       it 'raises an error' do
-        expect {
+        expect do
           instance.validate_path_encoding!(File.join('path', "\330\271to", 'file'))
-        }.to raise_error(ArgumentError, %r{can only include ASCII characters})
+        end.to raise_error(ArgumentError, %r{can only include ASCII characters})
       end
     end
   end

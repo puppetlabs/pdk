@@ -44,9 +44,9 @@ describe PDK::Module::UpdateManager do
         end
 
         it 'exits with an error' do
-          expect {
+          expect do
             update_manager.sync_changes!
-          }.to raise_error(PDK::CLI::ExitWithError, %r{You do not have permission to write to '#{Regexp.escape(dummy_file)}'})
+          end.to raise_error(PDK::CLI::ExitWithError, %r{You do not have permission to write to '#{Regexp.escape(dummy_file)}'})
         end
       end
     end
@@ -102,9 +102,9 @@ describe PDK::Module::UpdateManager do
             end
 
             it 'exits with an error' do
-              expect {
+              expect do
                 update_manager.sync_changes!
-              }.to raise_error(PDK::CLI::ExitWithError, %r{Unable to remove '#{Regexp.escape(dummy_file)}': an unknown error})
+              end.to raise_error(PDK::CLI::ExitWithError, %r{Unable to remove '#{Regexp.escape(dummy_file)}': an unknown error})
             end
           end
         end
@@ -155,9 +155,9 @@ describe PDK::Module::UpdateManager do
       end
 
       it 'exits with an error' do
-        expect {
+        expect do
           update_manager.changes
-        }.to raise_error(PDK::CLI::ExitWithError, %r{Unable to open '#{Regexp.escape(dummy_file)}' for reading})
+        end.to raise_error(PDK::CLI::ExitWithError, %r{Unable to open '#{Regexp.escape(dummy_file)}' for reading})
       end
     end
 
@@ -209,9 +209,9 @@ describe PDK::Module::UpdateManager do
           end
 
           it 'exits with an error' do
-            expect {
+            expect do
               update_manager.sync_changes!
-            }.to raise_error(PDK::CLI::ExitWithError, %r{You do not have permission to write to '#{Regexp.escape(dummy_file)}'})
+            end.to raise_error(PDK::CLI::ExitWithError, %r{You do not have permission to write to '#{Regexp.escape(dummy_file)}'})
           end
         end
       end

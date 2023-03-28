@@ -139,9 +139,9 @@ describe PDK::Util::Git do
         expect(logger).to receive(:error).with(git_result[:stdout])
         expect(logger).to receive(:error).with(git_result[:stderr])
 
-        expect {
+        expect do
           described_class.ls_remote(repo, ref)
-        }.to raise_error(PDK::CLI::ExitWithError, %r{unable to access the template repository}i)
+        end.to raise_error(PDK::CLI::ExitWithError, %r{unable to access the template repository}i)
       end
     end
 

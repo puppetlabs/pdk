@@ -116,9 +116,9 @@ describe PDK::CLI::Util do
       let(:module_pdk_ver) { nil }
 
       it 'does not raise an error' do
-        expect {
+        expect do
           module_version_check
-        }.to raise_error(PDK::CLI::ExitWithError, %r{this module is not pdk compatible}i)
+        end.to raise_error(PDK::CLI::ExitWithError, %r{this module is not pdk compatible}i)
       end
     end
 

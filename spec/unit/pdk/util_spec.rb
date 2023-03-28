@@ -115,9 +115,9 @@ describe PDK::Util do
         end
 
         it 'raises a FatalError' do
-          expect {
+          expect do
             described_class.canonical_path(path)
-          }.to raise_error(PDK::CLI::FatalError, %r{cannot resolve a full path}i)
+          end.to raise_error(PDK::CLI::FatalError, %r{cannot resolve a full path}i)
         end
       end
 
@@ -218,9 +218,9 @@ describe PDK::Util do
 
     context 'when the PDK was installed from a gem', version_file: false do
       it 'raises a FatalError' do
-        expect {
+        expect do
           described_class.pdk_package_basedir
-        }.to raise_error(PDK::CLI::FatalError, %r{Package basedir requested for non-package install}i)
+        end.to raise_error(PDK::CLI::FatalError, %r{Package basedir requested for non-package install}i)
       end
     end
 
@@ -236,9 +236,9 @@ describe PDK::Util do
 
     context 'when the PDK was installed from a gem', version_file: false do
       it 'raises a FatalError' do
-        expect {
+        expect do
           described_class.package_cachedir
-        }.to raise_error(PDK::CLI::FatalError, %r{Package basedir requested for non-package install}i)
+        end.to raise_error(PDK::CLI::FatalError, %r{Package basedir requested for non-package install}i)
       end
     end
 

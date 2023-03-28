@@ -36,9 +36,9 @@ RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
       end
 
       it 'raises PDK::Config::LoadError' do
-        expect {
+        expect do
           subject.parse_file(subject.file) {}
-        }.to raise_error(PDK::Config::LoadError, "Unable to open #{subject.file} for reading")
+        end.to raise_error(PDK::Config::LoadError, "Unable to open #{subject.file} for reading")
       end
     end
   end

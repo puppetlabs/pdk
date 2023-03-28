@@ -66,9 +66,9 @@ describe PDK::Generate::Module do
         expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
         expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
 
-        expect {
+        expect do
           described_class.invoke(module_name: 'foo', target_dir: target_dir)
-        }.to raise_error(PDK::CLI::ExitWithError, %r{destination directory '.+' already exists}i)
+        end.to raise_error(PDK::CLI::ExitWithError, %r{destination directory '.+' already exists}i)
       end
     end
 
@@ -99,9 +99,9 @@ describe PDK::Generate::Module do
           expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
           expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
 
-          expect {
+          expect do
             described_class.invoke(invoke_opts)
-          }.to raise_error(PDK::CLI::FatalError, %r{you do not have permission to write to}i)
+          end.to raise_error(PDK::CLI::FatalError, %r{you do not have permission to write to}i)
         end
       end
 
@@ -192,9 +192,9 @@ describe PDK::Generate::Module do
           expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
           expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
 
-          expect {
+          expect do
             described_class.invoke(invoke_opts)
-          }.to raise_error(PDK::CLI::FatalError, %r{failed to move .+: permission denied}i)
+          end.to raise_error(PDK::CLI::FatalError, %r{failed to move .+: permission denied}i)
         end
       end
 
@@ -752,9 +752,9 @@ describe PDK::Generate::Module do
       end
 
       it 'raises a FatalError' do
-        expect {
+        expect do
           described_class.prepare_module_directory(path)
-        }.to raise_error(PDK::CLI::FatalError, %r{unable to create directory.+some message}i)
+        end.to raise_error(PDK::CLI::FatalError, %r{unable to create directory.+some message}i)
       end
     end
   end

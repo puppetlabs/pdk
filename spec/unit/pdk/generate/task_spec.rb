@@ -89,9 +89,9 @@ describe PDK::Generate::Task do
       let(:task_files) { [File.join(module_dir, 'tasks', "#{given_name}.ps1")] }
 
       it 'raises ExitWithError' do
-        expect {
+        expect do
           generator.check_preconditions
-        }.to raise_error(PDK::CLI::ExitWithError, %r{a task named '#{given_name}' already exists}i)
+        end.to raise_error(PDK::CLI::ExitWithError, %r{a task named '#{given_name}' already exists}i)
       end
     end
   end

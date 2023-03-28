@@ -74,7 +74,7 @@ module PDK
 
         skipped = []
         invalid = []
-        matched = targets.filter_map { |target|
+        matched = targets.filter_map do |target|
           if pattern.nil?
             target
           else
@@ -109,7 +109,7 @@ module PDK
               next
             end
           end
-        }.flatten.uniq
+        end.flatten.uniq
         [matched, skipped, invalid]
       end
 

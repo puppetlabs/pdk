@@ -38,9 +38,9 @@ describe PDK::Template::Fetcher do
 
     context 'when not passed a block' do
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           described_class.with(template_uri, fetcher_options)
-        }.to raise_error(ArgumentError, %r{must be passed a block}i)
+        end.to raise_error(ArgumentError, %r{must be passed a block}i)
       end
     end
 

@@ -136,9 +136,9 @@ describe PDK::CLI do
         'CLI', 'invalid command', label: 'test acceptance --an-opt redacted redacted'
       )
 
-      expect {
+      expect do
         described_class.run(['test', 'acceptance', '--an-opt', 'opt-value', 'some_arg'])
-      }.to exit_nonzero.and output.to_stderr
+      end.to exit_nonzero.and output.to_stderr
     end
   end
 end

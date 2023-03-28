@@ -92,9 +92,9 @@ describe PDK::Util::VendoredFile do
           end
 
           it 'raises a DownloadError' do
-            expect {
+            expect do
               vendored_file_read
-            }.to raise_error(download_error, %r{unable to download.+\. 404: file not found}i)
+            end.to raise_error(download_error, %r{unable to download.+\. 404: file not found}i)
           end
         end
 
@@ -104,9 +104,9 @@ describe PDK::Util::VendoredFile do
           end
 
           it 'raises a DownloadError' do
-            expect {
+            expect do
               vendored_file_read
-            }.to raise_error(download_error, %r{check internet connectivity}i)
+            end.to raise_error(download_error, %r{check internet connectivity}i)
           end
         end
       end

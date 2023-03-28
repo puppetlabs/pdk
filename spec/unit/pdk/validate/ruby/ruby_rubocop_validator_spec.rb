@@ -104,9 +104,9 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       let(:rubocop_json) { 'this is not JSON' }
 
       it 'does not add any events to the report' do
-        expect {
+        expect do
           parse_output
-        }.to raise_error(PDK::Validate::ParseOutputError, 'this is not JSON')
+        end.to raise_error(PDK::Validate::ParseOutputError, 'this is not JSON')
       end
     end
 

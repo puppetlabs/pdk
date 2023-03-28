@@ -54,9 +54,9 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
 
       it 'cleans up the temp dir after invoking' do
         expect(validator).to receive(:remove_validate_tmpdir) # rubocop:disable RSpec/SubjectStub
-        expect {
+        expect do
           validator.invoke(PDK::Report.new)
-        }.to raise_error(PDK::CLI::FatalError)
+        end.to raise_error(PDK::CLI::FatalError)
       end
     end
   end

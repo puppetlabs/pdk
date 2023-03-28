@@ -41,9 +41,9 @@ describe PDK::Util::TemplateURI do
         let(:opts_or_uri) { 'https://' }
 
         it 'raises a FatalError' do
-          expect {
+          expect do
             template_uri
-          }.to raise_error(PDK::CLI::FatalError, %r{initialization with a non-uri string}i)
+          end.to raise_error(PDK::CLI::FatalError, %r{initialization with a non-uri string}i)
         end
       end
     end

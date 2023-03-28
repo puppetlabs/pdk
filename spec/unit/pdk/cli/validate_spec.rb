@@ -260,9 +260,9 @@ describe 'Running `pdk validate` in a module' do
       expect(report).to receive(:write_text).with($stdout)
       expect(report).to receive(:write_junit).with('testfile.xml')
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--format', 'text:stderr', '--format', 'junit:testfile.xml', '--format', 'text'])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'submits the command to analytics' do
@@ -272,9 +272,9 @@ describe 'Running `pdk validate` in a module' do
         ruby_version: RUBY_VERSION,
       )
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--format', 'text:stderr', '--format', 'junit:testfile.xml', '--format', 'text'])
-      }.to exit_zero
+      end.to exit_zero
     end
   end
 
@@ -294,17 +294,17 @@ describe 'Running `pdk validate` in a module' do
     it 'activates puppet github source' do
       expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--puppet-dev'])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'activates resolved ruby version' do
       expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--puppet-dev'])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'submits the command to analytics' do
@@ -323,17 +323,17 @@ describe 'Running `pdk validate` in a module' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-dev.*and.*--puppet-version}i))
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--puppet-dev'])
-      }.to exit_nonzero
+      end.to exit_nonzero
     end
 
     it 'does not submit the command to analytics' do
       expect(analytics).not_to receive(:screen_view)
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--puppet-dev'])
-      }.to exit_nonzero
+      end.to exit_nonzero
     end
   end
 
@@ -341,17 +341,17 @@ describe 'Running `pdk validate` in a module' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-dev.*and.*--pe-version}i))
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--pe-version', '2018.1', '--puppet-dev'])
-      }.to exit_nonzero
+      end.to exit_nonzero
     end
 
     it 'does not submit the command to analytics' do
       expect(analytics).not_to receive(:screen_view)
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--pe-version', '2018.1', '--puppet-dev'])
-      }.to exit_nonzero
+      end.to exit_nonzero
     end
   end
 
@@ -359,17 +359,17 @@ describe 'Running `pdk validate` in a module' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
-      }.to exit_nonzero
+      end.to exit_nonzero
     end
 
     it 'does not submit the command to analytics' do
       expect(analytics).not_to receive(:screen_view)
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
-      }.to exit_nonzero
+      end.to exit_nonzero
     end
   end
 
@@ -389,17 +389,17 @@ describe 'Running `pdk validate` in a module' do
     it 'activates resolved puppet version' do
       expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', "--puppet-version=#{puppet_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'activates resolved ruby version' do
       expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', "--puppet-version=#{puppet_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'submits the command to analytics' do
@@ -410,9 +410,9 @@ describe 'Running `pdk validate` in a module' do
         ruby_version: RUBY_VERSION,
       )
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', "--puppet-version=#{puppet_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
   end
 
@@ -432,17 +432,17 @@ describe 'Running `pdk validate` in a module' do
     it 'activates resolved puppet version' do
       expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', "--pe-version=#{pe_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'activates resolved ruby version' do
       expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', "--pe-version=#{pe_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'submits the command to analytics' do
@@ -453,9 +453,9 @@ describe 'Running `pdk validate` in a module' do
         ruby_version: RUBY_VERSION,
       )
 
-      expect {
+      expect do
         PDK::CLI.run(['validate', "--pe-version=#{pe_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
   end
 end

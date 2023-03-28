@@ -8,9 +8,9 @@ describe 'Running `pdk test`' do
 
   context 'when no arguments or options are provided' do
     it do
-      expect {
+      expect do
         PDK::CLI.run(['test'])
-      }.to output(%r{^USAGE\s+pdk test}m).to_stdout
+      end.to output(%r{^USAGE\s+pdk test}m).to_stdout
     end
   end
 end

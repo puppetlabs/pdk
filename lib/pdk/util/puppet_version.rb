@@ -175,7 +175,7 @@ module PDK
       end
 
       def pe_version_map
-        @pe_version_map ||= fetch_pe_version_map.map { |version_map|
+        @pe_version_map ||= fetch_pe_version_map.map do |version_map|
           maps = version_map['versions'].map do |pe_release|
             requirements = ["= #{pe_release['version']}"]
 
@@ -193,7 +193,7 @@ module PDK
             requirement: requirement_from_forge_range(version_map['release']),
             gem_version: version_map['versions'].find { |r| r['version'] == version_map['latest'] }['puppet'],
           }
-        }.flatten
+        end.flatten
       end
 
       def fetch_pe_version_map

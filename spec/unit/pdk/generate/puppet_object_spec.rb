@@ -53,25 +53,25 @@ describe PDK::Generate::PuppetObject do
 
   describe '#friendly_name' do
     it 'needs to be implemented by the subclass' do
-      expect {
+      expect do
         templated_object.friendly_name
-      }.to raise_error(NotImplementedError)
+      end.to raise_error(NotImplementedError)
     end
   end
 
   describe '#template_files' do
     it 'needs to be implemented by the subclass' do
-      expect {
+      expect do
         templated_object.template_files
-      }.to raise_error(NotImplementedError)
+      end.to raise_error(NotImplementedError)
     end
   end
 
   describe '#template_data' do
     it 'needs to be implemented by the subclass' do
-      expect {
+      expect do
         templated_object.template_data
-      }.to raise_error(NotImplementedError)
+      end.to raise_error(NotImplementedError)
     end
   end
 
@@ -90,9 +90,9 @@ describe PDK::Generate::PuppetObject do
       end
 
       it 'raises a fatal error' do
-        expect {
+        expect do
           templated_object.module_name
-        }.to raise_error(PDK::CLI::FatalError, %r{'#{metadata_path}'.*not exist})
+        end.to raise_error(PDK::CLI::FatalError, %r{'#{metadata_path}'.*not exist})
       end
     end
   end

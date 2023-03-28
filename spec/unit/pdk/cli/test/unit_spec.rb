@@ -137,9 +137,9 @@ describe '`pdk test unit`' do
             ),
           ).once.and_return(0)
 
-          expect {
+          expect do
             test_unit_cmd.run_this(['--clean-fixtures'])
-          }.to exit_zero
+          end.to exit_zero
         end
 
         it 'submits the command to analytics' do
@@ -159,9 +159,9 @@ describe '`pdk test unit`' do
       context 'when not passed --clean-fixtures' do
         it 'invokes the command without :clean-fixtures' do
           expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(puppet: puppet_version, tests: anything, interactive: true)).once.and_return(0)
-          expect {
+          expect do
             test_unit_cmd.run_this([])
-          }.to exit_zero
+          end.to exit_zero
         end
 
         it 'submits the command to analytics' do
@@ -289,17 +289,17 @@ describe '`pdk test unit`' do
     it 'activates puppet github source' do
       expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
 
-      expect {
+      expect do
         test_unit_cmd.run_this(['--puppet-dev'])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'activates resolved ruby version' do
       expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
 
-      expect {
+      expect do
         test_unit_cmd.run_this(['--puppet-dev'])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'submits the command to analytics' do
@@ -310,9 +310,9 @@ describe '`pdk test unit`' do
         ruby_version: RUBY_VERSION,
       )
 
-      expect {
+      expect do
         test_unit_cmd.run_this(['--puppet-dev'])
-      }.to exit_zero
+      end.to exit_zero
     end
   end
 
@@ -320,17 +320,17 @@ describe '`pdk test unit`' do
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
 
-      expect {
+      expect do
         PDK::CLI.run(['test', 'unit', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
-      }.to exit_nonzero
+      end.to exit_nonzero
     end
 
     it 'does not submit the command to analytics' do
       expect(analytics).not_to receive(:screen_view)
 
-      expect {
+      expect do
         PDK::CLI.run(['test', 'unit', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
-      }.to exit_nonzero
+      end.to exit_nonzero
     end
   end
 
@@ -353,17 +353,17 @@ describe '`pdk test unit`' do
     it 'activates resolved puppet version' do
       expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
 
-      expect {
+      expect do
         test_unit_cmd.run_this(["--puppet-version=#{puppet_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'activates resolved ruby version' do
       expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
 
-      expect {
+      expect do
         test_unit_cmd.run_this(["--puppet-version=#{puppet_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'submits the command to analytics' do
@@ -374,9 +374,9 @@ describe '`pdk test unit`' do
         ruby_version: RUBY_VERSION,
       )
 
-      expect {
+      expect do
         test_unit_cmd.run_this(["--puppet-version=#{puppet_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
   end
 
@@ -399,17 +399,17 @@ describe '`pdk test unit`' do
     it 'activates resolved puppet version' do
       expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
 
-      expect {
+      expect do
         test_unit_cmd.run_this(["--pe-version=#{pe_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'activates resolved ruby version' do
       expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
 
-      expect {
+      expect do
         test_unit_cmd.run_this(["--pe-version=#{pe_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
 
     it 'submits the command to analytics' do
@@ -420,9 +420,9 @@ describe '`pdk test unit`' do
         ruby_version: RUBY_VERSION,
       )
 
-      expect {
+      expect do
         test_unit_cmd.run_this(["--pe-version=#{pe_version}"])
-      }.to exit_zero
+      end.to exit_zero
     end
   end
 end

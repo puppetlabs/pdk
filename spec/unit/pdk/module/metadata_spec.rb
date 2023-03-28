@@ -176,9 +176,9 @@ describe PDK::Module::Metadata do
 
     context 'when the metadata contains a puppet requirement with a version_requirement' do
       it 'does not raise an error' do
-        expect {
+        expect do
           metadata.validate_puppet_version_requirement!
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
 
@@ -188,9 +188,9 @@ describe PDK::Module::Metadata do
       end
 
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           metadata.validate_puppet_version_requirement!
-        }.to raise_error(ArgumentError, %r{does not contain any requirements}i)
+        end.to raise_error(ArgumentError, %r{does not contain any requirements}i)
       end
     end
 
@@ -200,9 +200,9 @@ describe PDK::Module::Metadata do
       end
 
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           metadata.validate_puppet_version_requirement!
-        }.to raise_error(ArgumentError, %r{does not contain a "puppet" requirement}i)
+        end.to raise_error(ArgumentError, %r{does not contain a "puppet" requirement}i)
       end
     end
 
@@ -212,9 +212,9 @@ describe PDK::Module::Metadata do
       end
 
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           metadata.validate_puppet_version_requirement!
-        }.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
+        end.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
       end
     end
 
@@ -224,9 +224,9 @@ describe PDK::Module::Metadata do
       end
 
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           metadata.validate_puppet_version_requirement!
-        }.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
+        end.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
       end
     end
   end

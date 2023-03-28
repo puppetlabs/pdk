@@ -40,10 +40,10 @@ module PDK
           require 'pdk/util'
 
           ruby_basedir = File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', '*')
-          PDK::Util::Filesystem.glob(ruby_basedir).sort.map { |ruby_dir|
+          PDK::Util::Filesystem.glob(ruby_basedir).sort.map do |ruby_dir|
             version = File.basename(ruby_dir)
             [version, version.split('.').take(2).push('0').join('.')]
-          }.reverse.to_h
+          end.reverse.to_h
         end
 
         def default_ruby_version

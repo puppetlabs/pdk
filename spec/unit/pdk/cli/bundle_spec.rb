@@ -7,9 +7,9 @@ describe 'Running `pdk bundle`' do
 
   context 'when it calls bundler successfully' do
     after do
-      expect {
+      expect do
         PDK::CLI.run(command_args)
-      }.to exit_zero
+      end.to exit_zero
     end
 
     before do

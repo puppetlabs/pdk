@@ -85,9 +85,9 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
       let(:lint_output) { 'this is not JSON' }
 
       it 'adds no events to the report' do
-        expect {
+        expect do
           parse_output
-        }.to raise_error(PDK::Validate::ParseOutputError, 'this is not JSON')
+        end.to raise_error(PDK::Validate::ParseOutputError, 'this is not JSON')
       end
     end
 
