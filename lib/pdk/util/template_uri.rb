@@ -12,7 +12,7 @@ module PDK
       LEGACY_PACKAGED_TEMPLATE_PATHS = {
         'windows' => 'file:///C:/Program Files/Puppet Labs/DevelopmentKit/share/cache/pdk-templates.git',
         'macos' => 'file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git',
-        'linux' => 'file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git',
+        'linux' => 'file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git'
       }.freeze
 
       # XXX Previously

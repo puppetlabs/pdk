@@ -142,7 +142,7 @@ module PDK
           # https://github.com/rspec/rspec-core/blob/main/lib/rspec/core/example.rb#L548
           'passed' => [],
           'failed' => [],
-          'pending' => [],
+          'pending' => []
         }
 
         json_data['examples']&.each do |ex|
@@ -205,7 +205,7 @@ module PDK
         summary_hash = {
           'example_count' => 0,
           'failure_count' => 0,
-          'pending_count' => 0,
+          'pending_count' => 0
         }
         json_data.each do |json|
           next unless json['summary']

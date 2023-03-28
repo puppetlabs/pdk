@@ -11,7 +11,7 @@ module PDK
           output_format: :cd2,
           ruby_version: :cd3,
           cli_options: :cd4,
-          env_vars: :cd5,
+          env_vars: :cd5
         }.freeze
 
         attr_reader :user_id, :logger, :app_name, :app_id, :app_version, :app_installer
@@ -44,7 +44,7 @@ module PDK
             # Type
             t: 'screenview',
             # Screen Name
-            cd: screen,
+            cd: screen
           }.merge(custom_dimensions)
 
           submit(base_params.merge(screen_view_params))
@@ -61,7 +61,7 @@ module PDK
             # Event Category
             ec: category,
             # Event Action
-            ea: action,
+            ea: action
           }.merge(custom_dimensions)
 
           # Event Label
@@ -106,7 +106,7 @@ module PDK
             # User locale
             ul: Locale.current.to_rfc,
             # Custom Dimension 1 (Operating System)
-            cd1: @os.value,
+            cd1: @os.value
           }
         end
 

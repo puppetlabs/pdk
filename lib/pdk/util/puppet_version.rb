@@ -26,7 +26,7 @@ module PDK
 
         {
           gem_version: format('file://%{path}', path: puppet_dev_path),
-          ruby_version: PDK::Util::RubyVersion.latest_ruby_version,
+          ruby_version: PDK::Util::RubyVersion.latest_ruby_version
         }
       end
 
@@ -126,7 +126,7 @@ module PDK
         safe_versions = {
           2023 => '7.23.0',
           2021 => '7.23.0',
-          2019 => '6.29.0',
+          2019 => '6.29.0'
         }
 
         gem_version = safe_versions[version.segments[0]]
@@ -185,13 +185,13 @@ module PDK
             requirements << "!= #{pe_release['version'].gsub(/\.\d+\Z/, '')}" if pe_release['version'].end_with?('.0')
             {
               requirement: Gem::Requirement.create(requirements),
-              gem_version: pe_release['puppet'],
+              gem_version: pe_release['puppet']
             }
           end
 
           maps << {
             requirement: requirement_from_forge_range(version_map['release']),
-            gem_version: version_map['versions'].find { |r| r['version'] == version_map['latest'] }['puppet'],
+            gem_version: version_map['versions'].find { |r| r['version'] == version_map['latest'] }['puppet']
           }
         end.flatten
       end

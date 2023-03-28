@@ -32,7 +32,7 @@ describe PDK::Validate::Tasks::TasksNameValidator do
                                                      source: 'task-name',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: described_class::INVALID_TASK_MSG,
+                                                     message: described_class::INVALID_TASK_MSG
                                                    })
       end
 
@@ -50,7 +50,7 @@ describe PDK::Validate::Tasks::TasksNameValidator do
                                                      source: 'task-name',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: described_class::INVALID_TASK_MSG,
+                                                     message: described_class::INVALID_TASK_MSG
                                                    })
       end
 
@@ -67,7 +67,7 @@ describe PDK::Validate::Tasks::TasksNameValidator do
                                                      file: target,
                                                      source: 'task-name',
                                                      state: :passed,
-                                                     severity: 'ok',
+                                                     severity: 'ok'
                                                    })
       end
 

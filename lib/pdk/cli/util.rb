@@ -31,7 +31,7 @@ module PDK
       def spinner_opts_for_platform
         windows_opts = {
           success_mark: '*',
-          error_mark: 'X',
+          error_mark: 'X'
         }
 
         return windows_opts if Gem.win_platform?
@@ -179,7 +179,7 @@ module PDK
 
         {
           gemset: gemset,
-          ruby_version: puppet_env[:ruby_version],
+          ruby_version: puppet_env[:ruby_version]
         }
       end
       module_function :puppet_from_opts_or_env
@@ -245,7 +245,7 @@ module PDK
         require 'pdk/analytics'
 
         dimensions = {
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         }
 
         cmd_opts = opts.dup.reject do |_, v|

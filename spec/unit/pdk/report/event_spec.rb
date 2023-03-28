@@ -10,7 +10,7 @@ describe PDK::Report::Event do
     {
       file: 'testfile.rb',
       source: 'test-validator',
-      state: :passed,
+      state: :passed
     }
   end
   let(:data) { {} }
@@ -25,7 +25,7 @@ describe PDK::Report::Event do
 
       let(:data) do
         {
-          file: '/path/to/test/module/lib/some/file.rb',
+          file: '/path/to/test/module/lib/some/file.rb'
         }
       end
 
@@ -37,7 +37,7 @@ describe PDK::Report::Event do
     context 'and not passed a file path' do
       let(:data) do
         {
-          file: nil,
+          file: nil
         }
       end
 
@@ -49,7 +49,7 @@ describe PDK::Report::Event do
     context 'and passed a file path that is not a String' do
       let(:data) do
         {
-          file: ['/path/to/test/module/lib/some/file.rb'],
+          file: ['/path/to/test/module/lib/some/file.rb']
         }
       end
 
@@ -61,7 +61,7 @@ describe PDK::Report::Event do
     context 'and passed an empty string as the file path' do
       let(:data) do
         {
-          file: '',
+          file: ''
         }
       end
 
@@ -73,7 +73,7 @@ describe PDK::Report::Event do
     context 'and not passed a source' do
       let(:data) do
         {
-          source: nil,
+          source: nil
         }
       end
 
@@ -85,7 +85,7 @@ describe PDK::Report::Event do
     context 'and passed an empty string as the source' do
       let(:data) do
         {
-          source: '',
+          source: ''
         }
       end
 
@@ -97,7 +97,7 @@ describe PDK::Report::Event do
     context 'and not passed a state' do
       let(:data) do
         {
-          state: nil,
+          state: nil
         }
       end
 
@@ -109,7 +109,7 @@ describe PDK::Report::Event do
     context 'and passed an empty string as the state' do
       let(:data) do
         {
-          state: '',
+          state: ''
         }
       end
 
@@ -124,13 +124,13 @@ describe PDK::Report::Event do
       passed: :pass,
       error: :error,
       failure: :failure,
-      skipped: :skipped,
+      skipped: :skipped
     }.each do |state_sym, state_method|
       [state_sym, state_sym.to_s].each do |state|
         context "and passed #{state.inspect} as the state" do
           let(:data) do
             {
-              state: state,
+              state: state
             }
           end
 
@@ -152,7 +152,7 @@ describe PDK::Report::Event do
     context 'and passed a state that is not a String or Symbol' do
       let(:data) do
         {
-          state: /passed/,
+          state: /passed/
         }
       end
 
@@ -164,7 +164,7 @@ describe PDK::Report::Event do
     context 'and passed an unknown state' do
       let(:data) do
         {
-          state: :maybe,
+          state: :maybe
         }
       end
 
@@ -176,7 +176,7 @@ describe PDK::Report::Event do
     context 'and passed an Integer line number' do
       let(:data) do
         {
-          line: 123,
+          line: 123
         }
       end
 
@@ -188,7 +188,7 @@ describe PDK::Report::Event do
     context 'and passed a String line number containing only digits' do
       let(:data) do
         {
-          line: '123',
+          line: '123'
         }
       end
 
@@ -204,7 +204,7 @@ describe PDK::Report::Event do
     context 'and passed a String line number containing non-digit characters' do
       let(:data) do
         {
-          line: 'line 123',
+          line: 'line 123'
         }
       end
 
@@ -216,7 +216,7 @@ describe PDK::Report::Event do
     context 'and passed a line number that is not a String or Integer' do
       let(:data) do
         {
-          line: [123],
+          line: [123]
         }
       end
 
@@ -228,7 +228,7 @@ describe PDK::Report::Event do
     context 'and passed a nil line number' do
       let(:data) do
         {
-          line: nil,
+          line: nil
         }
       end
 
@@ -244,7 +244,7 @@ describe PDK::Report::Event do
     context 'and passed an Integer column number' do
       let(:data) do
         {
-          column: 456,
+          column: 456
         }
       end
 
@@ -256,7 +256,7 @@ describe PDK::Report::Event do
     context 'and passed a String column number containing only digits' do
       let(:data) do
         {
-          column: 456,
+          column: 456
         }
       end
 
@@ -272,7 +272,7 @@ describe PDK::Report::Event do
     context 'and passed a String column number containing non-digit characters' do
       let(:data) do
         {
-          column: 'column 456',
+          column: 'column 456'
         }
       end
 
@@ -284,7 +284,7 @@ describe PDK::Report::Event do
     context 'and passed a column number that is not a String or Integer' do
       let(:data) do
         {
-          column: [456],
+          column: [456]
         }
       end
 
@@ -296,7 +296,7 @@ describe PDK::Report::Event do
     context 'and passed a nil column number' do
       let(:data) do
         {
-          column: nil,
+          column: nil
         }
       end
 
@@ -312,7 +312,7 @@ describe PDK::Report::Event do
     context 'and passed a trace that is not an Array' do
       let(:data) do
         {
-          trace: 'test',
+          trace: 'test'
         }
       end
 
@@ -329,7 +329,7 @@ describe PDK::Report::Event do
             'bin/rspec: this should not exist',
             'vendor/bundle/gems/test.rb: nor should this',
             'bin/rspec-foo: this should though'
-          ],
+          ]
         }
       end
 
@@ -364,7 +364,7 @@ describe PDK::Report::Event do
     context 'and a line number is provided' do
       let(:data) do
         {
-          line: 123,
+          line: 123
         }
       end
 
@@ -376,7 +376,7 @@ describe PDK::Report::Event do
         let(:data) do
           {
             line: 123,
-            column: 456,
+            column: 456
           }
         end
 
@@ -393,7 +393,7 @@ describe PDK::Report::Event do
             message: 'test message',
             severity: 'failure',
             test: 'spec description',
-            state: :failure,
+            state: :failure
           }
         end
 
@@ -442,7 +442,7 @@ describe PDK::Report::Event do
     context 'and a severity is provided' do
       let(:data) do
         {
-          severity: 'ok',
+          severity: 'ok'
         }
       end
 
@@ -454,7 +454,7 @@ describe PDK::Report::Event do
     context 'and a validator is provided' do
       let(:data) do
         {
-          source: 'my-validator',
+          source: 'my-validator'
         }
       end
 
@@ -466,7 +466,7 @@ describe PDK::Report::Event do
     context 'and a message is provided' do
       let(:data) do
         {
-          message: 'test message',
+          message: 'test message'
         }
       end
 
@@ -478,7 +478,7 @@ describe PDK::Report::Event do
         let(:data) do
           {
             message: 'test message',
-            severity: 'critical',
+            severity: 'critical'
           }
         end
 
@@ -497,7 +497,7 @@ describe PDK::Report::Event do
     context 'and a test name is provided' do
       let(:data) do
         {
-          test: 'test-method',
+          test: 'test-method'
         }
       end
 
@@ -513,7 +513,7 @@ describe PDK::Report::Event do
     context 'and a line number is provided' do
       let(:data) do
         {
-          line: 123,
+          line: 123
         }
       end
 
@@ -525,7 +525,7 @@ describe PDK::Report::Event do
     context 'and a column number is provided' do
       let(:data) do
         {
-          column: 456,
+          column: 456
         }
       end
 
@@ -538,7 +538,7 @@ describe PDK::Report::Event do
       let(:data) do
         {
           line: 123,
-          column: 456,
+          column: 456
         }
       end
 
@@ -556,7 +556,7 @@ describe PDK::Report::Event do
     context 'for a skipped test case' do
       let(:data) do
         {
-          state: :skipped,
+          state: :skipped
         }
       end
 
@@ -575,7 +575,7 @@ describe PDK::Report::Event do
           line: 123,
           column: 456,
           severity: 'critical',
-          message: 'some message',
+          message: 'some message'
         }
       end
 

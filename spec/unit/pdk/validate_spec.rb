@@ -56,7 +56,7 @@ describe PDK::Validate do
       {
         'mocksuccess' => MockSuccessValidator,
         'mockfailed' => MockFailedValidator,
-        'mocknocontext' => MockNoContextValidator,
+        'mocknocontext' => MockNoContextValidator
       }
     end
 

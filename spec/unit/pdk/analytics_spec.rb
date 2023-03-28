@@ -24,7 +24,7 @@ describe PDK::Analytics do
         user_id: uuid,
         app_name: 'pdk',
         app_version: PDK::VERSION,
-        app_id: '1',
+        app_id: '1'
       }
     end
 

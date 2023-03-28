@@ -20,7 +20,7 @@ describe PDK::Template::Renderer::V1::TemplateFile do
       let(:data) do
         {
           configs: { 'test' => 'value' },
-          template_dir: instance_double(PDK::Template::Renderer::V1::LegacyTemplateDir),
+          template_dir: instance_double(PDK::Template::Renderer::V1::LegacyTemplateDir)
         }
       end
 

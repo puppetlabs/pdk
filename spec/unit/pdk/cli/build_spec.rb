@@ -38,7 +38,7 @@ describe 'PDK::CLI build' do
     let(:mock_metadata) do
       {
         'name' => 'testuser-testmodule',
-        'version' => '2.3.4',
+        'version' => '2.3.4'
       }
     end
     let(:mock_metadata_obj) do

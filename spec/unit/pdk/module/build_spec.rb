@@ -47,7 +47,7 @@ describe PDK::Module::Build do
     context 'if module_dir has been customised' do
       let(:initialize_options) do
         {
-          module_dir: File.join(root_dir, 'some', 'other', 'module'),
+          module_dir: File.join(root_dir, 'some', 'other', 'module')
         }
       end
 
@@ -63,7 +63,7 @@ describe PDK::Module::Build do
     context 'if target_dir has been customised' do
       let(:initialize_options) do
         {
-          'target-dir': File.join(root_dir, 'tmp'),
+          'target-dir': File.join(root_dir, 'tmp')
         }
       end
 
@@ -80,7 +80,7 @@ describe PDK::Module::Build do
       let(:initialize_options) do
         {
           'target-dir': File.join(root_dir, 'var', 'cache'),
-          module_dir: File.join(root_dir, 'tmp', 'git', 'my-module'),
+          module_dir: File.join(root_dir, 'tmp', 'git', 'my-module')
         }
       end
 
@@ -269,7 +269,7 @@ describe PDK::Module::Build do
       File.join('a' * 152, 'b' * 10, 'c' * 92) => /could not be split/i,
       File.join('a' * 162, 'b' * 10) => /could not be split/i,
       File.join('a' * 10, 'b' * 110) => /could not be split/i,
-      'a' * 114 => /could not be split/i,
+      'a' * 114 => /could not be split/i
     }
 
     good_paths.each do |path|

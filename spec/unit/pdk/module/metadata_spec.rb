@@ -7,7 +7,7 @@ describe PDK::Module::Metadata do
     let(:metadata_json_content) do
       {
         'name' => 'foo-bar',
-        'version' => '0.1.0',
+        'version' => '0.1.0'
       }.to_json
     end
 
@@ -105,15 +105,15 @@ describe PDK::Module::Metadata do
           'operatingsystem_support' => [
             {
               'operatingsystem' => 'Debian',
-              'operatingsystemrelease' => ['10'],
+              'operatingsystemrelease' => ['10']
             }
           ],
           'requirements' => [
             {
               'name' => 'puppet',
-              'version_requirement' => '>= 4.7.0 < 6.0.0',
+              'version_requirement' => '>= 4.7.0 < 6.0.0'
             }
-          ],
+          ]
         }
       end
 
@@ -124,7 +124,7 @@ describe PDK::Module::Metadata do
       let(:metadata) do
         {
           'name' => 'test-module',
-          'version' => '0.1.0',
+          'version' => '0.1.0'
         }
       end
 
@@ -153,15 +153,15 @@ describe PDK::Module::Metadata do
           'operatingsystem_support' => [
             {
               'operatingsystem' => 'Debian',
-              'operatingsystemrelease' => ['10'],
+              'operatingsystemrelease' => ['10']
             }
           ],
           'requirements' => [
             {
               'name' => 'puppet',
-              'version_requirement' => '>= 4.7.0 < 6.0.0',
+              'version_requirement' => '>= 4.7.0 < 6.0.0'
             }
-          ],
+          ]
         }
       end
 

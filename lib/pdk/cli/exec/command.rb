@@ -130,7 +130,7 @@ module PDK
             stdout: @stdout.read,
             stderr: @stderr.read,
             exit_code: @process.exit_code,
-            duration: @duration,
+            duration: @duration
           }
 
           PDK.logger.debug format('STDOUT: %{output}', output: process_data[:stdout].empty? ? 'N/A' : "\n#{process_data[:stdout]}")

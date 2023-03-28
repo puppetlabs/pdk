@@ -52,7 +52,7 @@ module PDK
 
             result = {
               file: file_info['path'],
-              source: 'rubocop',
+              source: 'rubocop'
             }
 
             if file_info['offenses'].empty?

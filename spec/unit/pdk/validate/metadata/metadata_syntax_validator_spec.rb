@@ -41,7 +41,7 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
                                                      source: 'metadata-syntax',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: 'Could not be read.',
+                                                     message: 'Could not be read.'
                                                    })
         expect(return_value).to eq(1)
       end
@@ -59,7 +59,7 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
                                                      file: targets.first[:name],
                                                      source: 'metadata-syntax',
                                                      state: :passed,
-                                                     severity: 'ok',
+                                                     severity: 'ok'
                                                    })
         expect(return_value).to eq(0)
       end
@@ -78,7 +78,7 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
                                                      source: 'metadata-syntax',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(/\Aexpected ':' in object/),
+                                                     message: a_string_matching(/\Aexpected ':' in object/)
                                                    })
         expect(return_value).to eq(1)
       end

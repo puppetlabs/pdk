@@ -51,7 +51,7 @@ describe PDK::Generate::Module do
       {
         target_dir: target_dir,
         module_name: 'foo',
-        'skip-interview': true,
+        'skip-interview': true
       }
     end
 
@@ -149,7 +149,7 @@ describe PDK::Generate::Module do
         let(:template_metadata) do
           {
             'template-url' => 'test_template_url',
-            'template-ref' => 'test_template_ref',
+            'template-ref' => 'test_template_ref'
           }
         end
 
@@ -323,7 +323,7 @@ describe PDK::Generate::Module do
 
       let(:default_metadata) do
         {
-          'name' => 'test-module',
+          'name' => 'test-module'
         }
       end
 
@@ -348,7 +348,7 @@ describe PDK::Generate::Module do
       context 'and the module name contains underscores' do
         let(:default_metadata) do
           {
-            'name' => 'test-long_module_name',
+            'name' => 'test-long_module_name'
           }
         end
 
@@ -395,31 +395,31 @@ describe PDK::Generate::Module do
             'operatingsystem_support' => [
               {
                 'operatingsystem' => 'CentOS',
-                'operatingsystemrelease' => ['7'],
+                'operatingsystemrelease' => ['7']
               },
               {
                 'operatingsystem' => 'OracleLinux',
-                'operatingsystemrelease' => ['7'],
+                'operatingsystemrelease' => ['7']
               },
               {
                 'operatingsystem' => 'RedHat',
-                'operatingsystemrelease' => ['8'],
+                'operatingsystemrelease' => ['8']
               },
               {
                 'operatingsystem' => 'Scientific',
-                'operatingsystemrelease' => ['7'],
+                'operatingsystemrelease' => ['7']
               },
               {
                 'operatingsystem' => 'Debian',
-                'operatingsystemrelease' => ['10'],
+                'operatingsystemrelease' => ['10']
               },
               {
                 'operatingsystem' => 'Ubuntu',
-                'operatingsystemrelease' => ['18.04'],
+                'operatingsystemrelease' => ['18.04']
               },
               {
                 'operatingsystem' => 'windows',
-                'operatingsystemrelease' => ['2019', '10'],
+                'operatingsystemrelease' => ['2019', '10']
               }
             ]
           )
@@ -448,7 +448,7 @@ describe PDK::Generate::Module do
             'version' => '0.0.1',
             'summary' => 'default summary',
             'source' => 'default source',
-            'license' => 'default license',
+            'license' => 'default license'
           }
         end
 

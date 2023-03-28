@@ -193,7 +193,7 @@ describe PDK::Module::Convert do
 
       let(:modified_files) do
         {
-          'Gemfile' => 'a diff',
+          'Gemfile' => 'a diff'
         }
       end
 
@@ -230,7 +230,7 @@ describe PDK::Module::Convert do
 
       let(:modified_files) do
         {
-          'some/file' => 'a diff',
+          'some/file' => 'a diff'
         }
       end
 
@@ -391,7 +391,7 @@ describe PDK::Module::Convert do
         Set.new(
           [{
             path: 'path/to/file',
-            content: 'file contents',
+            content: 'file contents'
           }]
         )
       end
@@ -512,7 +512,7 @@ describe PDK::Module::Convert do
     let(:template_metadata) do
       {
         'template-url' => 'http://my.test/template.git',
-        'template-ref' => 'v1.2.3',
+        'template-ref' => 'v1.2.3'
       }
     end
     let(:new_metadata_file) { StringIO.new }
@@ -542,7 +542,7 @@ describe PDK::Module::Convert do
               'name' => 'testuser-testmodule',
               'requirements' => [],
               'operatingsystem_support' => [],
-              'license' => nil,
+              'license' => nil
             }.to_json
           end
 

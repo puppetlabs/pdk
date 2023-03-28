@@ -9,55 +9,55 @@ module PDK
         'RedHat based Linux' => [
           {
             'operatingsystem' => 'CentOS',
-            'operatingsystemrelease' => ['7'],
+            'operatingsystemrelease' => ['7']
           },
           {
             'operatingsystem' => 'OracleLinux',
-            'operatingsystemrelease' => ['7'],
+            'operatingsystemrelease' => ['7']
           },
           {
             'operatingsystem' => 'RedHat',
-            'operatingsystemrelease' => ['8'],
+            'operatingsystemrelease' => ['8']
           },
           {
             'operatingsystem' => 'Scientific',
-            'operatingsystemrelease' => ['7'],
+            'operatingsystemrelease' => ['7']
           }
         ],
         'Debian based Linux' => [
           {
             'operatingsystem' => 'Debian',
-            'operatingsystemrelease' => ['10'],
+            'operatingsystemrelease' => ['10']
           },
           {
             'operatingsystem' => 'Ubuntu',
-            'operatingsystemrelease' => ['18.04'],
+            'operatingsystemrelease' => ['18.04']
           }
         ],
         'Fedora' => {
           'operatingsystem' => 'Fedora',
-          'operatingsystemrelease' => ['29'],
+          'operatingsystemrelease' => ['29']
         },
         'OSX' => {
           'operatingsystem' => 'Darwin',
-          'operatingsystemrelease' => ['16'],
+          'operatingsystemrelease' => ['16']
         },
         'SLES' => {
           'operatingsystem' => 'SLES',
-          'operatingsystemrelease' => ['15'],
+          'operatingsystemrelease' => ['15']
         },
         'Solaris' => {
           'operatingsystem' => 'Solaris',
-          'operatingsystemrelease' => ['11'],
+          'operatingsystemrelease' => ['11']
         },
         'Windows' => {
           'operatingsystem' => 'windows',
-          'operatingsystemrelease' => ['2019', '10'],
+          'operatingsystemrelease' => ['2019', '10']
         },
         'AIX' => {
           'operatingsystem' => 'AIX',
-          'operatingsystemrelease' => ['6.1', '7.1', '7.2'],
-        },
+          'operatingsystemrelease' => ['6.1', '7.1', '7.2']
+        }
       }.freeze
 
       DEFAULT_OPERATING_SYSTEMS = [
@@ -82,7 +82,7 @@ module PDK
         end.flatten,
         'requirements' => [
           { 'name' => 'puppet', 'version_requirement' => '>= 6.21.0 < 8.0.0' }
-        ],
+        ]
       }.freeze
 
       def initialize(params = {})
@@ -140,7 +140,7 @@ module PDK
         msgs = {
           no_reqs: 'Module metadata does not contain any requirements.',
           no_puppet_req: 'Module metadata does not contain a "puppet" requirement.',
-          no_puppet_ver: 'The "puppet" requirement in module metadata does not specify a "version_requirement".',
+          no_puppet_ver: 'The "puppet" requirement in module metadata does not specify a "version_requirement".'
         }
 
         raise ArgumentError, msgs[:no_reqs] unless @data.key?('requirements')

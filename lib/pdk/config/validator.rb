@@ -13,7 +13,7 @@ module PDK
       def self.boolean
         {
           proc: ->(value) { [true, false].include?(value) },
-          message: 'must be a boolean: true or false',
+          message: 'must be a boolean: true or false'
         }
       end
 
@@ -23,7 +23,7 @@ module PDK
       def self.uuid
         {
           proc: ->(value) { value.match(/\A\h{8}(?:-\h{4}){3}-\h{12}\z/) },
-          message: 'must be a version 4 UUID',
+          message: 'must be a version 4 UUID'
         }
       end
     end

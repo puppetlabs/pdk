@@ -58,12 +58,12 @@ describe '`pdk test unit`' do
             {
               file_path: '/path/to/first_test',
               id: 'first_id',
-              full_description: 'first_description',
+              full_description: 'first_description'
             },
             {
               file_path: '/path/to/second_test',
               id: 'second_id',
-              full_description: 'second_description',
+              full_description: 'second_description'
             }
           ]
         end
@@ -274,7 +274,7 @@ describe '`pdk test unit`' do
     let(:puppet_env) do
       {
         ruby_version: ruby_version,
-        gemset: { puppet: 'file://path/to/puppet' },
+        gemset: { puppet: 'file://path/to/puppet' }
       }
     end
 
@@ -339,7 +339,7 @@ describe '`pdk test unit`' do
     let(:puppet_env) do
       {
         ruby_version: ruby_version,
-        gemset: { puppet: '5.3.5' },
+        gemset: { puppet: '5.3.5' }
       }
     end
 
@@ -385,7 +385,7 @@ describe '`pdk test unit`' do
     let(:puppet_env) do
       {
         ruby_version: '2.1.9',
-        gemset: { puppet: '4.10.9' },
+        gemset: { puppet: '4.10.9' }
       }
     end
 

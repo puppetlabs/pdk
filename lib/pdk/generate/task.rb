@@ -11,13 +11,13 @@ module PDK
         return {} if spec_only?
 
         {
-          'task.erb' => File.join('tasks', "#{task_name}.sh"),
+          'task.erb' => File.join('tasks', "#{task_name}.sh")
         }
       end
 
       def template_data
         {
-          name: object_name,
+          name: object_name
         }
       end
 
@@ -61,7 +61,7 @@ module PDK
           puppet_task_version: 1,
           supports_noop: false,
           description: options.fetch(:description, 'A short description of this task'),
-          parameters: {},
+          parameters: {}
         }
       end
     end

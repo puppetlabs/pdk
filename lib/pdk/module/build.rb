@@ -242,7 +242,7 @@ module PDK
           tar = Minitar::Output.new(gz)
           Find.find(release_name) do |entry|
             entry_meta = {
-              name: entry,
+              name: entry
             }
 
             orig_mode = PDK::Util::Filesystem.stat(entry).mode

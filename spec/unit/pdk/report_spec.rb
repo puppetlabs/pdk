@@ -39,7 +39,7 @@ describe PDK::Report do
       expect(report).to have_attributes(
         events: {
           'puppet-lint' => [instance_of(PDK::Report::Event)],
-          'rubocop' => [instance_of(PDK::Report::Event)],
+          'rubocop' => [instance_of(PDK::Report::Event)]
         }
       )
     end
@@ -66,13 +66,13 @@ describe PDK::Report do
               source: 'rspec',
               state: :passed,
               file: "#{PDK::Util::Filesystem.expand_path(Dir.pwd)}/private/cache/ruby/lib/rspec-puppet/coverage.rb",
-              message: 'coverage report text',
+              message: 'coverage report text'
             },
             {
               source: 'rspec',
               state: :failure,
               file: 'spec/classes/foo_spec.rb',
-              message: 'some failure happened',
+              message: 'some failure happened'
             }
           ]
         end

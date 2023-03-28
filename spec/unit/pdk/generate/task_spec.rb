@@ -107,7 +107,7 @@ describe PDK::Generate::Task do
           'puppet_task_version' => 1,
           'supports_noop' => false,
           'description' => 'A short description of this task',
-          'parameters' => {},
+          'parameters' => {}
         }
 
         expect(generator.non_template_files).to include('tasks/test_task.json' => JSON.pretty_generate(expected_content))
@@ -122,7 +122,7 @@ describe PDK::Generate::Task do
           'puppet_task_version' => 1,
           'supports_noop' => false,
           'description' => 'This is a test task',
-          'parameters' => {},
+          'parameters' => {}
         }
 
         expect(generator.non_template_files).to include('tasks/test_task.json' => JSON.pretty_generate(expected_content))

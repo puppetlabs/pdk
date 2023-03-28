@@ -77,7 +77,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
         'column' => column.to_s,
         'message' => message,
         'check' => check,
-        'kind' => kind,
+        'kind' => kind
       }
     end
 
@@ -99,7 +99,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
                                                      file: targets.first,
                                                      source: validator.name,
                                                      severity: 'ok',
-                                                     state: :passed,
+                                                     state: :passed
                                                    })
 
         parse_output
@@ -123,7 +123,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
                                                      message: 'test message',
                                                      test: 'test_check',
                                                      severity: 'warning',
-                                                     state: :failure,
+                                                     state: :failure
                                                    })
 
         parse_output
@@ -145,7 +145,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
                                                        message: 'test message',
                                                        test: 'test_check',
                                                        severity: 'corrected',
-                                                       state: :failure,
+                                                       state: :failure
                                                      })
 
           parse_output
@@ -172,7 +172,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
                                                      file: 'target2',
                                                      source: validator.name,
                                                      state: :passed,
-                                                     severity: 'ok',
+                                                     severity: 'ok'
                                                    })
 
         parse_output
@@ -187,7 +187,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
                                                      message: 'test message 1',
                                                      test: 'test_check_1',
                                                      severity: 'warning',
-                                                     state: :failure,
+                                                     state: :failure
                                                    })
 
         expect(report).to receive(:add_event).with({
@@ -198,7 +198,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
                                                      message: 'test message 2',
                                                      test: 'test_check_2',
                                                      severity: 'corrected',
-                                                     state: :failure,
+                                                     state: :failure
                                                    })
 
         expect(report).to receive(:add_event).with({
@@ -209,7 +209,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
                                                      message: 'test message 3',
                                                      test: 'test_check_3',
                                                      severity: 'error',
-                                                     state: :failure,
+                                                     state: :failure
                                                    })
 
         parse_output

@@ -80,7 +80,7 @@ module PDK
           @metadata = {
             'pdk-version' => PDK::Util::Version.version_string,
             'template-url' => nil,
-            'template-ref' => nil,
+            'template-ref' => nil
           }
           @fetched = false
           @temporary = false

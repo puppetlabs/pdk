@@ -24,7 +24,7 @@ module PDK
         # Drop the module name if the object name contains multiple parts
         func_name_parts.delete_at(0) if func_name_parts.length > 1
         files = {
-          File.join('functions', 'function_spec.erb') => "#{File.join('spec', 'functions', *func_name_parts)}_spec.rb",
+          File.join('functions', 'function_spec.erb') => "#{File.join('spec', 'functions', *func_name_parts)}_spec.rb"
         }
         return files if spec_only?
 

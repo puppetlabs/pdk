@@ -9,12 +9,12 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
       'type' => 'object',
       'properties' => {
         'description' => {
-          'type' => 'string',
+          'type' => 'string'
         },
         'version' => {
-          'type' => 'integer',
-        },
-      },
+          'type' => 'integer'
+        }
+      }
     }
   end
 
@@ -55,7 +55,7 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
                                                      source: 'task-metadata-lint',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: 'Could not be read.',
+                                                     message: 'Could not be read.'
                                                    })
         expect(return_value).to eq(1)
       end
@@ -65,7 +65,7 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
       let(:target) do
         {
           name: 'tasks/valid.json',
-          content: '{"description": "wow. so. valid.", "version": 1}',
+          content: '{"description": "wow. so. valid.", "version": 1}'
         }
       end
 
@@ -74,7 +74,7 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
                                                      file: target[:name],
                                                      source: 'task-metadata-lint',
                                                      state: :passed,
-                                                     severity: 'ok',
+                                                     severity: 'ok'
                                                    })
         expect(return_value).to eq(0)
       end
@@ -84,7 +84,7 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
       let(:target) do
         {
           name: 'tasks/invalid.json',
-          content: '{"description": "Invalid Metadata", "version": "definitely the wrong type"}',
+          content: '{"description": "Invalid Metadata", "version": "definitely the wrong type"}'
         }
       end
 
@@ -94,7 +94,7 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
                                                      source: 'task-metadata-lint',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(/did not match the following type/i),
+                                                     message: a_string_matching(/did not match the following type/i)
                                                    })
         expect(return_value).to eq(1)
       end

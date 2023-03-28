@@ -73,7 +73,7 @@ module PDK::CLI
                            opts[:interactive] = true
                            [{
                              method: PDK::Report.default_format,
-                             target: PDK::Report.default_target,
+                             target: PDK::Report.default_target
                            }]
                          end
 

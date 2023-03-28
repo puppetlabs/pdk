@@ -10,7 +10,7 @@ describe PDK::Module::Update do
       data: {
         'name' => 'mock-module',
         'template-url' => template_url,
-        'template-ref' => template_ref,
+        'template-ref' => template_ref
       }
     )
   end

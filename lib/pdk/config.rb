@@ -29,7 +29,7 @@ module PDK
         'user.path' => PDK::Config.user_config_path,
         'user.module_defaults.path' => PDK::AnswerFile.default_answer_file_path,
         'user.analytics.path' => PDK::Config.analytics_config_path,
-        'context' => PDK.context,
+        'context' => PDK.context
       }.merge(options)
     end
 
@@ -179,7 +179,7 @@ module PDK
     # @return [Object] The new value of the configuration setting
     def set(key, value, options = {})
       options = {
-        force: false,
+        force: false
       }.merge(options)
 
       names = key.is_a?(String) ? split_key_string(key) : key
@@ -247,7 +247,7 @@ module PDK
         {
           name: 'enabled',
           question: 'Do you consent to the collection of anonymous PDK usage information?',
-          type: :yes,
+          type: :yes
         }
       ]
 
@@ -314,7 +314,7 @@ module PDK
       {
         'project' => :project_config,
         'user' => :user_config,
-        'system' => :system_config,
+        'system' => :system_config
       }.freeze
     end
 

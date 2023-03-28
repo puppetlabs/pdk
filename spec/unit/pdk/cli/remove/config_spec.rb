@@ -8,7 +8,7 @@ describe 'PDK::CLI::Remove::Config' do
     let(:force_opt) { nil }
     let(:cli_opts) do
       {
-        force: force_opt,
+        force: force_opt
       }
     end
     let(:setting_name) { nil }

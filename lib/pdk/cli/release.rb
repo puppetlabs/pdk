@@ -93,42 +93,42 @@ module PDK::CLI
         questions << {
           name: 'validation',
           question: 'Do you want to run the module validation ?',
-          type: :yes,
+          type: :yes
         }
       end
       unless opts[:'skip-changelog']
         questions << {
           name: 'changelog',
           question: 'Do you want to run the automatic changelog generation ?',
-          type: :yes,
+          type: :yes
         }
       end
       unless opts[:version]
         questions << {
           name: 'setversion',
           question: 'Do you want to set the module version ?',
-          type: :yes,
+          type: :yes
         }
       end
       unless opts[:'skip-dependency']
         questions << {
           name: 'dependency',
           question: 'Do you want to run the dependency-checker on this module?',
-          type: :yes,
+          type: :yes
         }
       end
       unless opts[:'skip-documentation']
         questions << {
           name: 'documentation',
           question: 'Do you want to update the documentation for this module?',
-          type: :yes,
+          type: :yes
         }
       end
       unless opts[:'skip-publish']
         questions << {
           name: 'publish',
           question: 'Do you want to publish the module on the Puppet Forge?',
-          type: :yes,
+          type: :yes
         }
       end
 
@@ -159,7 +159,7 @@ module PDK::CLI
           help: 'This value is the version that will be used in the changelog generator and building of the module.',
           required: true,
           validate_pattern: /(\*|\d+(\.\d+){0,2}(\.\*)?)$/i,
-          validate_message: 'The version format should be in the format x.y.z where x represents the major version, y the minor version and z the build number.',
+          validate_message: 'The version format should be in the format x.y.z where x represents the major version, y the minor version and z the build number.'
         }
       ]
       interview = PDK::CLI::Util::Interview.new(prompt)
@@ -176,7 +176,7 @@ module PDK::CLI
           name: 'apikey',
           question: 'Please set the api key(authorization token) to upload on the Puppet Forge',
           help: 'This value is used for authentication on the Puppet Forge to upload your module tarball.',
-          required: true,
+          required: true
         }
       ]
       interview = PDK::CLI::Util::Interview.new(prompt)

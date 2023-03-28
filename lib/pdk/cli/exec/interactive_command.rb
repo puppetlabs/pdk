@@ -59,7 +59,7 @@ module PDK
             stdout: nil,
             stderr: nil,
             exit_code: result[:exit_code],
-            duration: result[:duration],
+            duration: result[:duration]
           }
         ensure
           Dir.chdir(orig_workdir) if orig_workdir

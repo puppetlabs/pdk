@@ -131,7 +131,7 @@ describe PDK::Util::Git do
         {
           exit_code: 1,
           stdout: 'some stdout text',
-          stderr: 'some stderr text',
+          stderr: 'some stderr text'
         }
       end
 
@@ -152,7 +152,7 @@ describe PDK::Util::Git do
           stdout: [
             "main-sha\trefs/heads/main",
             "mainful-sha\trefs/heads/mainful"
-          ].join("\n"),
+          ].join("\n")
         }
       end
 

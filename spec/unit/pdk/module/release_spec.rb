@@ -10,7 +10,7 @@ describe PDK::Module::Release do
     {
       'name' => 'mock-module',
       'version' => '1.0.0',
-      'pdk-version' => 'mock',
+      'pdk-version' => 'mock'
     }
   end
   let(:mock_metadata_object) do
@@ -67,7 +67,7 @@ describe PDK::Module::Release do
           'skip-documentation': true,
           'skip-dependency': true,
           'skip-build': true,
-          'skip-publish': true,
+          'skip-publish': true
         }
       end
 
@@ -88,7 +88,7 @@ describe PDK::Module::Release do
         {
           force: true,
           'forge-upload-url': 'https://localhost/api',
-          'forge-token': '12345',
+          'forge-token': '12345'
         }
       end
 

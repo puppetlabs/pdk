@@ -46,7 +46,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                                                      source: validator.name,
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: 'Could not be read.',
+                                                     message: 'Could not be read.'
                                                    })
         expect(return_value).to eq(1)
       end
@@ -68,7 +68,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                                                      file: target[:name],
                                                      source: validator.name,
                                                      state: :passed,
-                                                     severity: 'ok',
+                                                     severity: 'ok'
                                                    })
         expect(return_value).to eq(0)
       end
@@ -78,7 +78,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
       let(:target) do
         {
           name: 'environment.conf',
-          content: <<-EOT,
+          content: <<-EOT
                    modulepath=foo
                    manifest=foo
                    config_version=foo
@@ -92,7 +92,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                                                      file: target[:name],
                                                      source: validator.name,
                                                      state: :passed,
-                                                     severity: 'ok',
+                                                     severity: 'ok'
                                                    })
         expect(return_value).to eq(0)
       end
@@ -102,7 +102,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
       let(:target) do
         {
           name: 'environment.conf',
-          content: <<-EOT,
+          content: <<-EOT
                    modulepath=foo
                    manifest=foo
                    config_version=foo
@@ -129,7 +129,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                                                      source: validator.name,
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(/Invalid setting 'invalid'/),
+                                                     message: a_string_matching(/Invalid setting 'invalid'/)
                                                    })
         expect(return_value).to eq(1)
       end
@@ -141,7 +141,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                                                      source: validator.name,
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(/Invalid section 'invalid_section'/),
+                                                     message: a_string_matching(/Invalid section 'invalid_section'/)
                                                    })
         expect(return_value).to eq(1)
       end
@@ -153,7 +153,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                                                      source: validator.name,
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(/environment_timeout is set to 'foo' but should be/),
+                                                     message: a_string_matching(/environment_timeout is set to 'foo' but should be/)
                                                    })
         expect(return_value).to eq(1)
       end

@@ -16,7 +16,7 @@ describe PDK::Util::RubyVersion do
     let(:packaged_rubies) do
       {
         '2.4.4' => '2.4.0',
-        '2.1.9' => '2.1.0',
+        '2.1.9' => '2.1.0'
       }
     end
 
@@ -129,7 +129,7 @@ describe PDK::Util::RubyVersion do
 
       it 'returns the running Ruby version' do
         running_ruby = {
-          RbConfig::CONFIG['RUBY_PROGRAM_VERSION'] => RbConfig::CONFIG['ruby_version'],
+          RbConfig::CONFIG['RUBY_PROGRAM_VERSION'] => RbConfig::CONFIG['ruby_version']
         }
 
         expect(subject).to eq(running_ruby)

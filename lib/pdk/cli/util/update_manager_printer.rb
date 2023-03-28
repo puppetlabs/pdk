@@ -14,7 +14,7 @@ module PDK
           require 'pdk/report'
 
           options = {
-            tense: :future,
+            tense: :future
           }.merge(options)
 
           footer = false

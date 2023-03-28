@@ -115,7 +115,7 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 1,
+            exit_code: 1
           }
         end
 
@@ -138,7 +138,7 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 0,
+            exit_code: 0
           }
         end
 
@@ -163,7 +163,7 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 1,
+            exit_code: 1
           }
         end
 
@@ -186,7 +186,7 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 0,
+            exit_code: 0
           }
         end
 
@@ -206,7 +206,7 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 1,
+            exit_code: 1
           }
         end
 
@@ -230,7 +230,7 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 0,
+            exit_code: 0
           }
         end
 
@@ -263,7 +263,7 @@ describe PDK::Util::PuppetVersion do
         it 'returns the latest version matching the major version' do
           expected_result = {
             gem_version: Gem::Version.new('6.29.0'),
-            ruby_version: '2.5.9',
+            ruby_version: '2.5.9'
           }
           expect(described_class.find_gem_for('6')).to eq(expected_result)
         end
@@ -273,7 +273,7 @@ describe PDK::Util::PuppetVersion do
         it 'returns the latest patch version for the major and minor version' do
           expected_result = {
             gem_version: Gem::Version.new('6.29.0'),
-            ruby_version: '2.5.9',
+            ruby_version: '2.5.9'
           }
           expect(described_class.find_gem_for('6.29')).to eq(expected_result)
         end
@@ -282,7 +282,7 @@ describe PDK::Util::PuppetVersion do
       it 'returns the specified version if it exists in the cache' do
         expected_result = {
           gem_version: Gem::Version.new('6.29.0'),
-          ruby_version: '2.5.9',
+          ruby_version: '2.5.9'
         }
         expect(described_class.find_gem_for('6.29.0')).to eq(expected_result)
       end
@@ -303,7 +303,7 @@ describe PDK::Util::PuppetVersion do
       def result(version)
         {
           gem_version: Gem::Version.new(version),
-          ruby_version: PDK::Util::RubyVersion.default_ruby_version,
+          ruby_version: PDK::Util::RubyVersion.default_ruby_version
         }
       end
 
@@ -350,16 +350,16 @@ describe PDK::Util::PuppetVersion do
         safe_versions = {
           2023 => {
             'puppet' => '7.23.0',
-            'ruby' => '2.7.7',
+            'ruby' => '2.7.7'
           },
           2021 => {
             'puppet' => '7.23.0',
-            'ruby' => '2.7.7',
+            'ruby' => '2.7.7'
           },
           2019 => {
             'puppet' => '6.29.0',
-            'ruby' => '2.5.9',
-          },
+            'ruby' => '2.5.9'
+          }
         }
 
         parsed_version = Gem::Version.new(pe_version)
@@ -375,7 +375,7 @@ describe PDK::Util::PuppetVersion do
 
         {
           gem_version: Gem::Version.new(gem_version),
-          ruby_version: version_info['ruby'],
+          ruby_version: version_info['ruby']
         }
       end
 
@@ -415,16 +415,16 @@ describe PDK::Util::PuppetVersion do
         safe_versions = {
           2023 => {
             'puppet' => '7.23.0',
-            'ruby' => '2.7.7',
+            'ruby' => '2.7.7'
           },
           2021 => {
             'puppet' => '7.23.0',
-            'ruby' => '2.7.7',
+            'ruby' => '2.7.7'
           },
           2019 => {
             'puppet' => '6.29.0',
-            'ruby' => '2.5.9',
-          },
+            'ruby' => '2.5.9'
+          }
         }
 
         parsed_version = Gem::Version.new(pe_version)
@@ -432,7 +432,7 @@ describe PDK::Util::PuppetVersion do
 
         {
           gem_version: Gem::Version.new(version_info['puppet']),
-          ruby_version: PDK::Util::RubyVersion.default_ruby_version,
+          ruby_version: PDK::Util::RubyVersion.default_ruby_version
         }
       end
 

@@ -128,7 +128,7 @@ describe PDK::Test::Unit do
            'example_count' => 40,
            'failure_count' => 7,
            'pending_count' => 12,
-           'duration' => 30,
+           'duration' => 30
          } },
        {
          'messages' => ['message 2', 'message 3'],
@@ -137,8 +137,8 @@ describe PDK::Test::Unit do
            'example_count' => 30,
            'failure_count' => 4,
            'pending_count' => 6,
-           'duration' => 40,
-         },
+           'duration' => 40
+         }
        }]
     end
 
@@ -206,7 +206,7 @@ describe PDK::Test::Unit do
           'example_count' => 30,
           'duration' => 32,
           'failure_count' => 2,
-          'pending_count' => 6,
+          'pending_count' => 6
         } }
       end
 
@@ -252,7 +252,7 @@ describe PDK::Test::Unit do
           {
             file_path: './path/to/test',
             id: './path/to/test[1:1:1]',
-            full_description: 'a bunch of useful descriptive words',
+            full_description: 'a bunch of useful descriptive words'
           }
         ]
 
@@ -375,7 +375,7 @@ describe PDK::Test::Unit do
         let(:options) do
           {
             'clean-fixtures': true,
-            tests: 'testmod_spec.rb',
+            tests: 'testmod_spec.rb'
           }
         end
 
@@ -387,7 +387,7 @@ describe PDK::Test::Unit do
       context 'when disabled' do
         let(:options) do
           {
-            tests: 'testmod_spec.rb',
+            tests: 'testmod_spec.rb'
           }
         end
 

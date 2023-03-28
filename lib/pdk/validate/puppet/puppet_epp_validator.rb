@@ -106,7 +106,7 @@ module PDK
 
           offense_data = {
             source: name,
-            state: :failure,
+            state: :failure
           }
 
           if offense.match(PUPPET_LOGGER_PREFIX)

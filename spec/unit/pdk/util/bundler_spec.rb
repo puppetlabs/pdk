@@ -237,7 +237,7 @@ RSpec.describe PDK::Util::Bundler do
         'context=' => true,
         'add_spinner' => true,
         'environment' => {},
-        'update_environment' => {},
+        'update_environment' => {}
       }.merge(overrides))
     end
 
@@ -512,7 +512,7 @@ RSpec.describe PDK::Util::Bundler do
         let(:expected_environment) do
           {
             'PUPPET_GEM_VERSION' => '1.2.3',
-            'FACTER_GEM_VERSION' => '2.3.4',
+            'FACTER_GEM_VERSION' => '2.3.4'
           }
         end
 

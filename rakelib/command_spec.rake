@@ -52,7 +52,7 @@ def cri_to_powershell_hash(base_command)
     'new' => 'New',
     'test' => 'Test',
     'update' => 'Update',
-    'validate' => 'Validate',
+    'validate' => 'Validate'
   }
 
   base_command['subcommands'].select { |item| pdk_to_powershell.key?(item['name']) }
@@ -71,7 +71,7 @@ def cri_to_powershell_hash(base_command)
       ps_command = {
         'description' => sub_command['summary'],
         'pdk_verb' => pdk_verb,
-        'function_name' => function_name,
+        'function_name' => function_name
       }
       ps_command['pdk_subcommand'] = sub_command['name'] if has_subcommands
 
@@ -83,7 +83,7 @@ def cri_to_powershell_hash(base_command)
           'desc' => option[:desc], # A description of the parameter
           'type' => 'String', # The PowerShell Type of the parameter
           'reserved' => false, # Whether this is a reserved PowerShell name e.g. Verbose
-          'position' => -1, # What position the parameter has. -1 means no position
+          'position' => -1 # What position the parameter has. -1 means no position
         }
         obj['type'] = 'Switch' if option[:argument] == :forbidden
         if option[:long] == 'verbose'
@@ -103,7 +103,7 @@ def cri_to_powershell_hash(base_command)
           'desc' => "The specified #{pdk_name}", # A description of the parameter
           'type' => 'String', # The PowerShell Type of the parameter
           'reserved' => false, # Whether this is a reserved PowerShell name e.g. Verbose
-          'position' => position, # What position the parameter has. -1 means no position
+          'position' => position # What position the parameter has. -1 means no position
         }
         position += 1
       end
@@ -131,7 +131,7 @@ def describe_command(cri_command)
     'summary' => cri_command.summary,
     'usage' => cri_command.summary,
     'options' => cri_command.option_definitions.map { |r| describe_option(r) },
-    'subcommands' => cri_command.subcommands.map { |r| describe_command(r) },
+    'subcommands' => cri_command.subcommands.map { |r| describe_command(r) }
   }
 end
 

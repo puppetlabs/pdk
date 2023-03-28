@@ -24,7 +24,7 @@ module PDK::CLI
 
       resolved_env = {
         'PDK_RESOLVED_PUPPET_VERSION' => puppet_env[:gemset][:puppet],
-        'PDK_RESOLVED_RUBY_VERSION' => puppet_env[:ruby_version],
+        'PDK_RESOLVED_RUBY_VERSION' => puppet_env[:ruby_version]
       }
 
       resolved_env['GEM_HOME'] = PDK::Util::RubyVersion.gem_home

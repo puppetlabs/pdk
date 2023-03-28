@@ -15,7 +15,7 @@ describe PDK::Analytics::Client::GoogleAnalytics do
       app_name: 'pdk',
       app_id: 'UA-xxxx-1',
       app_version: PDK::VERSION,
-      user_id: uuid,
+      user_id: uuid
     }
   end
 
@@ -30,7 +30,7 @@ describe PDK::Analytics::Client::GoogleAnalytics do
       aiid: options[:app_installer],
       ul: Locale.current.to_rfc,
       aip: true,
-      cd1: os_name,
+      cd1: os_name
     }
   end
   let(:mock_httpclient) { instance_double(HTTPClient) }

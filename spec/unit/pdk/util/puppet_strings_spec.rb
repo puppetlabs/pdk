@@ -76,7 +76,7 @@ describe PDK::Util::PuppetStrings do
       let(:result) do
         {
           exit_code: 1,
-          stderr: 'some error text',
+          stderr: 'some error text'
         }
       end
 
@@ -91,7 +91,7 @@ describe PDK::Util::PuppetStrings do
       let(:result) do
         {
           exit_code: 0,
-          stdout: 'bleh]',
+          stdout: 'bleh]'
         }
       end
 
@@ -106,7 +106,7 @@ describe PDK::Util::PuppetStrings do
       let(:result) do
         {
           exit_code: 0,
-          stdout: '{ "puppet_classes": [] }',
+          stdout: '{ "puppet_classes": [] }'
         }
       end
 
@@ -125,7 +125,7 @@ describe PDK::Util::PuppetStrings do
 
     let(:metadata_hash) do
       {
-        'name' => 'myuser-mymodule',
+        'name' => 'myuser-mymodule'
       }
     end
 
@@ -133,7 +133,7 @@ describe PDK::Util::PuppetStrings do
       let(:puppet_strings_data) do
         {
           'puppet_classes' => [],
-          'defined_types' => [],
+          'defined_types' => []
         }
       end
 
@@ -151,7 +151,7 @@ describe PDK::Util::PuppetStrings do
             'puppet_classes' => [],
             'defined_types' => [
               { 'name' => 'mymodule::my_object' }
-            ],
+            ]
           }
         end
 
@@ -168,7 +168,7 @@ describe PDK::Util::PuppetStrings do
             'defined_types' => [],
             'data_types' => [
               { 'name' => 'mymodule::my_object' }
-            ],
+            ]
           }
         end
 
@@ -201,7 +201,7 @@ describe PDK::Util::PuppetStrings do
         {
           'data_types' => [
             { 'name' => 'mymodule::my_object' }
-          ],
+          ]
         }
       end
 
@@ -218,7 +218,7 @@ describe PDK::Util::PuppetStrings do
           ],
           'defined_types' => [
             { 'name' => 'mymodule::my_define' }
-          ],
+          ]
         }
       end
 

@@ -68,7 +68,7 @@ describe PDK::Util::TemplateURI do
       let(:opts_or_uri) do
         {
           'template-url': 'https://github.com/my/pdk-templates.git',
-          'template-ref': 'custom',
+          'template-ref': 'custom'
         }
       end
 
@@ -89,7 +89,7 @@ describe PDK::Util::TemplateURI do
           data: {
             'pdk-version' => pdk_version,
             'template-url' => template_url,
-            'template-ref' => template_ref,
+            'template-ref' => template_ref
           }
         )
       end
@@ -489,7 +489,7 @@ describe PDK::Util::TemplateURI do
           PDK::Module::Metadata,
           data: {
             'pdk-version' => PDK::VERSION,
-            'template-url' => metadata_url,
+            'template-url' => metadata_url
           }
         )
       end

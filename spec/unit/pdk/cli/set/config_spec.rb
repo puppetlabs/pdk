@@ -12,7 +12,7 @@ describe 'PDK::CLI::Set::Config' do
       {
         type: type_opt,
         as: as_opt,
-        force: force_opt,
+        force: force_opt
       }
     end
     let(:setting_name) { nil }

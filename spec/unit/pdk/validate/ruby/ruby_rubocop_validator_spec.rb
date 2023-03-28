@@ -128,7 +128,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
                                                      file: test_file,
                                                      source: validator.name,
                                                      state: :passed,
-                                                     severity: :ok,
+                                                     severity: :ok
                                                    })
 
         parse_output
@@ -155,7 +155,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
                                                      message: 'test message',
                                                      line: 1,
                                                      column: 2,
-                                                     test: 'Test/Cop',
+                                                     test: 'Test/Cop'
                                                    })
 
         parse_output
@@ -177,7 +177,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
                                                        message: 'test message',
                                                        line: 1,
                                                        column: 2,
-                                                       test: 'Test/Cop',
+                                                       test: 'Test/Cop'
                                                      })
 
           parse_output
@@ -192,7 +192,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
           File.join('lib', 'fail.rb') => [
             mock_offense('error', 'correctable error', 'Test/Cop', true, 1, 2),
             mock_offense('warning', 'uncorrectable thing', 'Test/Cop2', false, 3, 4)
-          ],
+          ]
         }
       end
 
@@ -208,7 +208,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
                                                      file: File.join('spec', 'spec_helper.rb'),
                                                      source: validator.name,
                                                      state: :passed,
-                                                     severity: :ok,
+                                                     severity: :ok
                                                    })
 
         parse_output
@@ -223,7 +223,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
                                                      message: 'correctable error',
                                                      line: 1,
                                                      column: 2,
-                                                     test: 'Test/Cop',
+                                                     test: 'Test/Cop'
                                                    })
 
         parse_output
@@ -238,7 +238,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
                                                      message: 'uncorrectable thing',
                                                      line: 3,
                                                      column: 4,
-                                                     test: 'Test/Cop2',
+                                                     test: 'Test/Cop2'
                                                    })
 
         parse_output

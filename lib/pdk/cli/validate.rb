@@ -89,7 +89,7 @@ module PDK::CLI
                        else
                          [{
                            method: PDK::Report.default_format,
-                           target: PDK::Report.default_target,
+                           target: PDK::Report.default_target
                          }]
                        end
 

@@ -36,7 +36,7 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
                                                      source: 'yaml-syntax',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: 'Could not be read.',
+                                                     message: 'Could not be read.'
                                                    })
         expect(return_value).to eq(1)
       end
@@ -58,7 +58,7 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
                                                      file: target[:name],
                                                      source: 'yaml-syntax',
                                                      state: :passed,
-                                                     severity: 'ok',
+                                                     severity: 'ok'
                                                    })
         expect(return_value).to eq(0)
       end
@@ -72,7 +72,7 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
                                                      file: target[:name],
                                                      source: 'yaml-syntax',
                                                      state: :passed,
-                                                     severity: 'ok',
+                                                     severity: 'ok'
                                                    })
         expect(return_value).to eq(0)
       end
@@ -89,7 +89,7 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
                                                      severity: 'error',
                                                      message: a_string_matching(/\Afound character that cannot start/),
                                                      line: 2,
-                                                     column: 1,
+                                                     column: 1
                                                    })
         expect(return_value).to eq(1)
       end
@@ -104,7 +104,7 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
                                                      source: 'yaml-syntax',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(/unspecified class: file/i),
+                                                     message: a_string_matching(/unspecified class: file/i)
                                                    })
         expect(return_value).to eq(1)
       end

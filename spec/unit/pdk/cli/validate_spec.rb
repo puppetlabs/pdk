@@ -282,7 +282,7 @@ describe 'Running `pdk validate` in a module' do
     let(:puppet_env) do
       {
         ruby_version: ruby_version,
-        gemset: { puppet: 'file://path/to/puppet' },
+        gemset: { puppet: 'file://path/to/puppet' }
       }
     end
 
@@ -378,7 +378,7 @@ describe 'Running `pdk validate` in a module' do
     let(:puppet_env) do
       {
         ruby_version: ruby_version,
-        gemset: { puppet: '5.3.5' },
+        gemset: { puppet: '5.3.5' }
       }
     end
 
@@ -421,7 +421,7 @@ describe 'Running `pdk validate` in a module' do
     let(:puppet_env) do
       {
         ruby_version: '2.1.9',
-        gemset: { puppet: '4.10.9' },
+        gemset: { puppet: '4.10.9' }
       }
     end
 

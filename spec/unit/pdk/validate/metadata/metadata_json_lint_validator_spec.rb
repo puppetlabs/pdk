@@ -94,7 +94,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
                                                      file: targets.first,
                                                      source: validator.name,
                                                      state: :passed,
-                                                     severity: :ok,
+                                                     severity: :ok
                                                    })
 
         parse_output
@@ -125,7 +125,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
                                                        message: error['msg'],
                                                        test: error['check'],
                                                        severity: 'error',
-                                                       state: :failure,
+                                                       state: :failure
                                                      })
         end
 
@@ -142,7 +142,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
                                                        message: warning['msg'],
                                                        test: warning['check'],
                                                        severity: 'warning',
-                                                       state: :failure,
+                                                       state: :failure
                                                      })
         end
 

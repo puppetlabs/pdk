@@ -174,7 +174,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      file: 'pass.epp',
                                                      source: validator.name,
                                                      state: :passed,
-                                                     severity: :ok,
+                                                     severity: :ok
                                                    })
       end
     end
@@ -188,7 +188,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      message: 'test message 1',
                                                      severity: 'error',
                                                      column: '2',
-                                                     line: '1',
+                                                     line: '1'
                                                    })
       end
 
@@ -199,7 +199,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      state: :failure,
                                                      message: 'test message 2',
                                                      severity: 'error',
-                                                     line: '1',
+                                                     line: '1'
                                                    })
       end
 
@@ -209,7 +209,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      source: validator.name,
                                                      state: :failure,
                                                      message: 'test message 3',
-                                                     severity: 'error',
+                                                     severity: 'error'
                                                    })
       end
 
@@ -219,7 +219,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      state: :failure,
                                                      message: 'test message 4',
                                                      severity: 'error',
-                                                     line: '1',
+                                                     line: '1'
                                                    })
       end
     end
@@ -233,7 +233,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      message: '5.3.4 test-type-1',
                                                      severity: 'error',
                                                      column: '45',
-                                                     line: '34',
+                                                     line: '34'
                                                    })
       end
 
@@ -244,7 +244,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      state: :failure,
                                                      message: '5.3.4 test-type-2',
                                                      severity: 'error',
-                                                     line: '34',
+                                                     line: '34'
                                                    })
       end
 
@@ -255,7 +255,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      message: '5.3.4 test-type-3',
                                                      severity: 'error',
                                                      column: '45',
-                                                     line: '34',
+                                                     line: '34'
                                                    })
       end
 
@@ -265,7 +265,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      state: :failure,
                                                      message: '5.3.4 test-type-4',
                                                      severity: 'error',
-                                                     line: '34',
+                                                     line: '34'
                                                    })
       end
 
@@ -275,7 +275,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
                                                      source: validator.name,
                                                      state: :failure,
                                                      message: '5.3.4 test-type-5',
-                                                     severity: 'error',
+                                                     severity: 'error'
                                                    })
       end
     end
@@ -292,7 +292,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
         expect(report).to receive(:add_event).with({
                                                      source: validator.name,
                                                      state: :failure,
-                                                     message: validate_output.split("\n").first,
+                                                     message: validate_output.split("\n").first
                                                    })
       end
     end
