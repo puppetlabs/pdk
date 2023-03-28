@@ -17,7 +17,7 @@ module PDK
         def pattern
           [
             '**/*.yaml',
-            '**/*.yml',
+            '**/*.yml'
           ].tap do |pat|
             if context.is_a?(PDK::Context::ControlRepo)
               pat.push(

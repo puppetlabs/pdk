@@ -26,7 +26,7 @@ RSpec.shared_context 'mock configuration' do
       { file: PDK::Config.analytics_config_path, content: analytics_config_content },
       { file: PDK::Config.user_config_path, content: user_config_content },
       { file: PDK::Config.system_config_path, content: system_config_content },
-      { file: '~/.puppetlabs/bolt/analytics.yaml', content: bolt_analytics_content },
+      { file: '~/.puppetlabs/bolt/analytics.yaml', content: bolt_analytics_content }
     ].each do |item|
       # If the content is nil then mock a missing file, otherwise mock a read-able file
       if item[:content].nil?

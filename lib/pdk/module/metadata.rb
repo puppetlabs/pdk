@@ -22,7 +22,7 @@ module PDK
           {
             'operatingsystem' => 'Scientific',
             'operatingsystemrelease' => ['7'],
-          },
+          }
         ],
         'Debian based Linux' => [
           {
@@ -32,7 +32,7 @@ module PDK
           {
             'operatingsystem' => 'Ubuntu',
             'operatingsystemrelease' => ['18.04'],
-          },
+          }
         ],
         'Fedora' => {
           'operatingsystem' => 'Fedora',
@@ -63,7 +63,7 @@ module PDK
       DEFAULT_OPERATING_SYSTEMS = [
         'RedHat based Linux',
         'Debian based Linux',
-        'Windows',
+        'Windows'
       ].freeze
 
       DEFAULTS = {
@@ -81,7 +81,7 @@ module PDK
           OPERATING_SYSTEMS[os_name]
         end.flatten,
         'requirements' => [
-          { 'name' => 'puppet', 'version_requirement' => '>= 6.21.0 < 8.0.0' },
+          { 'name' => 'puppet', 'version_requirement' => '>= 6.21.0 < 8.0.0' }
         ],
       }.freeze
 

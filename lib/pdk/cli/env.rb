@@ -39,7 +39,7 @@ module PDK::CLI
         File.join(resolved_env['GEM_HOME'], 'bin'),
         PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path_raw| File.join(gem_path_raw, 'bin') },
         package_binpath,
-        PDK::Util::Env['PATH'],
+        PDK::Util::Env['PATH']
       ].compact.flatten.join(File::PATH_SEPARATOR)
 
       resolved_env.each do |var, val|

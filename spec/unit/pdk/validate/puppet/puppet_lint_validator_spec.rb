@@ -110,7 +110,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
       let(:targets) { ['target1'] }
       let(:offenses) do
         [
-          mock_lint(targets.first, 1, 2, 'test message', 'test_check', 'warning'),
+          mock_lint(targets.first, 1, 2, 'test message', 'test_check', 'warning')
         ]
       end
 
@@ -132,7 +132,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
       context 'when puppet-lint has corrected the offense' do
         let(:offenses) do
           [
-            mock_lint(targets.first, 1, 2, 'test message', 'test_check', 'fixed'),
+            mock_lint(targets.first, 1, 2, 'test message', 'test_check', 'fixed')
           ]
         end
 
@@ -159,7 +159,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
         [
           mock_lint('target1', 1, 2, 'test message 1', 'test_check_1', 'warning'),
           mock_lint('target1', 5, 6, 'test message 2', 'test_check_2', 'fixed'),
-          mock_lint('target3', 3, 4, 'test message 3', 'test_check_3', 'error'),
+          mock_lint('target3', 3, 4, 'test message 3', 'test_check_3', 'error')
         ]
       end
 

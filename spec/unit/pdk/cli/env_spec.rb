@@ -40,7 +40,7 @@ describe 'Running `pdk env`' do
           /export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"/,
           /export GEM_HOME=.*/,
           /export GEM_PATH=.*/,
-          /export PATH=.*/,
+          /export PATH=.*/
         ]
 
         output_regexes.each do |regex|
@@ -58,7 +58,7 @@ describe 'Running `pdk env`' do
           /export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"/,
           /export GEM_HOME=.*/,
           /export GEM_PATH=.*/,
-          /export PATH=.*/,
+          /export PATH=.*/
         ]
 
         output_regexes.each do |regex|

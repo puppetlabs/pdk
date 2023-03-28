@@ -63,7 +63,7 @@ describe PDK::Module::Metadata do
         'name' => 'foo-bar',
         'version' => '0.1.0',
         'dependencies' => [
-          { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' },
+          { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' }
         ]
       )
     end
@@ -106,13 +106,13 @@ describe PDK::Module::Metadata do
             {
               'operatingsystem' => 'Debian',
               'operatingsystemrelease' => ['10'],
-            },
+            }
           ],
           'requirements' => [
             {
               'name' => 'puppet',
               'version_requirement' => '>= 4.7.0 < 6.0.0',
-            },
+            }
           ],
         }
       end
@@ -154,13 +154,13 @@ describe PDK::Module::Metadata do
             {
               'operatingsystem' => 'Debian',
               'operatingsystemrelease' => ['10'],
-            },
+            }
           ],
           'requirements' => [
             {
               'name' => 'puppet',
               'version_requirement' => '>= 4.7.0 < 6.0.0',
-            },
+            }
           ],
         }
       end

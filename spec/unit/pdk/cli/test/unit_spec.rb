@@ -64,7 +64,7 @@ describe '`pdk test unit`' do
               file_path: '/path/to/second_test',
               id: 'second_id',
               full_description: 'second_description',
-            },
+            }
           ]
         end
 

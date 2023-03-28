@@ -43,7 +43,7 @@ module PDK
           Net::HTTPBadResponse,
           Net::HTTPHeaderSyntaxError,
           Net::ProtocolError,
-          Timeout::Error,
+          Timeout::Error
         ]
 
         PDK.logger.debug format('%{file_name} was not found in the cache, downloading it from %{url}.', file_name: file_name, url: url)

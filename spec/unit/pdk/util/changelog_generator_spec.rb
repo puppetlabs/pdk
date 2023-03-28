@@ -46,7 +46,7 @@ describe PDK::Util::ChangelogGenerator do
       [
         '1.x',
         '1',
-        'a.b.c',
+        'a.b.c'
       ].each do |testcase|
         it "raises for #{testcase}" do
           expect { described_class.compute_next_version(testcase) }.to raise_error(StandardError)

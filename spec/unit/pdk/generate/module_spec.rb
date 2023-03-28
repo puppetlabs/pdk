@@ -330,7 +330,7 @@ describe PDK::Generate::Module do
       let(:responses) do
         [
           'https://something',
-          'yes',
+          'yes'
         ]
       end
 
@@ -378,7 +378,7 @@ describe PDK::Generate::Module do
             'github.com/whopper/bar',
             'forge.puppet.com/whopper/bar',
             'tickets.foo.com/whopper/bar',
-            'yes',
+            'yes'
           ]
         end
 
@@ -420,7 +420,7 @@ describe PDK::Generate::Module do
               {
                 'operatingsystem' => 'windows',
                 'operatingsystemrelease' => ['2019', '10'],
-              },
+              }
             ]
           )
         end
@@ -462,7 +462,7 @@ describe PDK::Generate::Module do
             '',
             '',
             '',
-            '',
+            ''
           ]
         end
 
@@ -501,7 +501,7 @@ describe PDK::Generate::Module do
           'myforgename',
           'William Hopper',
           '',
-          'yes',
+          'yes'
         ]
       end
 
@@ -528,7 +528,7 @@ describe PDK::Generate::Module do
           'foo',
           'William Hopper',
           '',
-          'yes',
+          'yes'
         ]
       end
 
@@ -561,7 +561,7 @@ describe PDK::Generate::Module do
     context 'when the user cancels the interview' do
       let(:responses) do
         [
-          "foo\003", # \003 being the equivalent to the user hitting Ctrl-C
+          "foo\003" # \003 being the equivalent to the user hitting Ctrl-C
         ]
       end
 
@@ -580,7 +580,7 @@ describe PDK::Generate::Module do
           'William Hopper',
           'Apache-2.0',
           '',
-          'no',
+          'no'
         ]
       end
 
@@ -600,7 +600,7 @@ describe PDK::Generate::Module do
           'Apache-2.0',
           '',
           'test', # incorrect confirmation
-          'yes',  # reattempted confirmation
+          'yes' # reattempted confirmation
         ]
       end
 
@@ -630,7 +630,7 @@ describe PDK::Generate::Module do
           'William Hopper',
           'Apache-2.0',
           "\e[A 1 ", # \e[A == up arrow
-          'yes',
+          'yes'
         ]
       end
 
@@ -655,7 +655,7 @@ describe PDK::Generate::Module do
           { 'operatingsystem' => 'Debian', 'operatingsystemrelease' => ['10'] },
           { 'operatingsystem' => 'Ubuntu', 'operatingsystemrelease' => ['18.04'] },
           { 'operatingsystem' => 'windows', 'operatingsystemrelease' => ['2019', '10'] },
-          { 'operatingsystem' => 'Solaris', 'operatingsystemrelease' => ['11'] },
+          { 'operatingsystem' => 'Solaris', 'operatingsystemrelease' => ['11'] }
         ].each do |expected_os|
           expect(interview_metadata['operatingsystem_support']).to include(expected_os)
         end

@@ -188,7 +188,7 @@ module PDK
               PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path_raw| File.join(gem_path_raw, 'bin') },
               package_binpath,
               PDK::Util.package_install? ? PDK::Util::Git.git_paths : nil,
-              PDK::Util::Env['PATH'],
+              PDK::Util::Env['PATH']
             ].compact.flatten.join(File::PATH_SEPARATOR)
           end
 

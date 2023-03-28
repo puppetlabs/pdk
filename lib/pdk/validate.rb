@@ -60,7 +60,7 @@ module PDK
         Puppet::PuppetValidatorGroup,
         Ruby::RubyValidatorGroup,
         Tasks::TasksValidatorGroup,
-        YAML::YAMLValidatorGroup,
+        YAML::YAMLValidatorGroup
       ].to_h { |klass| [klass.new.name, klass] }.freeze
     end
 

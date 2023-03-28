@@ -76,7 +76,7 @@ module PDK
           PDK::Util::RubyVersion.bin_path,
           File.join(PDK::Util::RubyVersion.gem_home, 'bin'),
           PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path_raw| File.join(gem_path_raw, 'bin') },
-          PDK::Util.package_install? ? File.join(PDK::Util.pdk_package_basedir, 'bin') : nil,
+          PDK::Util.package_install? ? File.join(PDK::Util.pdk_package_basedir, 'bin') : nil
         ].flatten.compact
       end
 

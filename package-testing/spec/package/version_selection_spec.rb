@@ -8,7 +8,7 @@ describe 'Test puppet & ruby version selection' do
     # PE should now map to the latest Puppet version relative to the PE version
     { envvar: 'PDK_PE_VERSION', version: '2019.8.7', expected_puppet: '6.29', expected_ruby: '2.5.9' },
     { envvar: 'PDK_PE_VERSION', version: '2021.7.0', expected_puppet: '7.23', expected_ruby: '2.7.7' },
-    { envvar: 'PDK_PE_VERSION', version: '2021.7.1', expected_puppet: '7.23', expected_ruby: '2.7.7' },
+    { envvar: 'PDK_PE_VERSION', version: '2021.7.1', expected_puppet: '7.23', expected_ruby: '2.7.7' }
   ]
 
   before(:all) do

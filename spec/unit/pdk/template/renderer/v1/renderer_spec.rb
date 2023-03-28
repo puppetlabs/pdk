@@ -69,7 +69,7 @@ describe PDK::Template::Renderer::V1::Renderer do
         expected_result = [
           { dest_path: 'manage',    dest_content: 'rendered value', dest_status: :manage },
           { dest_path: 'unmanaged', dest_content: nil,              dest_status: :unmanage },
-          { dest_path: 'delete',    dest_content: nil,              dest_status: :delete },
+          { dest_path: 'delete',    dest_content: nil,              dest_status: :delete }
         ]
         result = rendered_files
 
@@ -94,7 +94,7 @@ describe PDK::Template::Renderer::V1::Renderer do
             { dest_path: 'manage',    dest_content: 'rendered value', dest_status: :manage },
             { dest_path: 'unmanaged', dest_content: nil,              dest_status: :unmanage },
             { dest_path: 'delete',    dest_content: nil,              dest_status: :delete },
-            { dest_path: 'init',      dest_content: 'rendered value', dest_status: :init },
+            { dest_path: 'init',      dest_content: 'rendered value', dest_status: :init }
           ]
           result = rendered_files
 

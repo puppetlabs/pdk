@@ -253,7 +253,7 @@ describe PDK::Test::Unit do
             file_path: './path/to/test',
             id: './path/to/test[1:1:1]',
             full_description: 'a bunch of useful descriptive words',
-          },
+          }
         ]
 
         expect(described_class.list).to eq(expected_result)

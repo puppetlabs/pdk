@@ -160,7 +160,7 @@ module PDK::CLI
           required: true,
           validate_pattern: /(\*|\d+(\.\d+){0,2}(\.\*)?)$/i,
           validate_message: 'The version format should be in the format x.y.z where x represents the major version, y the minor version and z the build number.',
-        },
+        }
       ]
       interview = PDK::CLI::Util::Interview.new(prompt)
       interview.add_questions(questions)
@@ -177,7 +177,7 @@ module PDK::CLI
           question: 'Please set the api key(authorization token) to upload on the Puppet Forge',
           help: 'This value is used for authentication on the Puppet Forge to upload your module tarball.',
           required: true,
-        },
+        }
       ]
       interview = PDK::CLI::Util::Interview.new(prompt)
       interview.add_questions(questions)

@@ -75,7 +75,7 @@ module PDK
           'BAMBOO_BUILDKEY',        # Bamboo
           'GOCD_SERVER_URL',        # Go CD
           'TRAVIS',                 # Travis CI
-          'GITHUB_WORKFLOW',        # GitHub Actions
+          'GITHUB_WORKFLOW' # GitHub Actions
         ].any? { |name| PDK::Util::Env.key?(name) }
       end
       module_function :ci_environment?

@@ -8,7 +8,7 @@ describe 'pdk validate metadata', module_command: true do
   def broken_metadata
     JSON.parse(File.read('metadata.bak')).tap do |metadata|
       metadata['dependencies'] = [
-        { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.0.0' },
+        { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 4.0.0' }
       ]
     end
   end

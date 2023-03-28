@@ -138,7 +138,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
     context 'when the rubocop output has an offense for a file' do
       let(:offenses) do
         [
-          mock_offense('error', 'test message', 'Test/Cop', false, 1, 2),
+          mock_offense('error', 'test message', 'Test/Cop', false, 1, 2)
         ]
       end
 
@@ -164,7 +164,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       context 'when rubocop has corrected the offense' do
         let(:offenses) do
           [
-            mock_offense('error', 'test message', 'Test/Cop', true, 1, 2),
+            mock_offense('error', 'test message', 'Test/Cop', true, 1, 2)
           ]
         end
 
@@ -191,7 +191,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
           File.join('spec', 'spec_helper.rb') => [],
           File.join('lib', 'fail.rb') => [
             mock_offense('error', 'correctable error', 'Test/Cop', true, 1, 2),
-            mock_offense('warning', 'uncorrectable thing', 'Test/Cop2', false, 3, 4),
+            mock_offense('warning', 'uncorrectable thing', 'Test/Cop2', false, 3, 4)
           ],
         }
       end

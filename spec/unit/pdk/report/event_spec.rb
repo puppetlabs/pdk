@@ -328,7 +328,7 @@ describe PDK::Report::Event do
             'lib/myfile.rb: test',
             'bin/rspec: this should not exist',
             'vendor/bundle/gems/test.rb: nor should this',
-            'bin/rspec-foo: this should though',
+            'bin/rspec-foo: this should though'
           ],
         }
       end
@@ -348,7 +348,7 @@ describe PDK::Report::Event do
       it 'includes the other lines' do
         expected_lines = [
           a_string_matching(%r{lib/myfile}),
-          a_string_matching(%r{bin/rspec-foo}),
+          a_string_matching(%r{bin/rspec-foo})
         ]
 
         expect(event).to have_attributes(trace: include(*expected_lines))
@@ -403,7 +403,7 @@ describe PDK::Report::Event do
             'line 2',
             'line 3',
             'line 4',
-            'line 5',
+            'line 5'
           ].join("\n")
         end
 

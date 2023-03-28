@@ -31,7 +31,7 @@ describe PDK::Report do
     let(:events) do
       [
         { source: 'puppet-lint', state: :failure, file: 'testfile.pp' },
-        { source: 'rubocop', state: :passed, file: 'testfile.rb' },
+        { source: 'rubocop', state: :passed, file: 'testfile.rb' }
       ]
     end
 
@@ -73,7 +73,7 @@ describe PDK::Report do
               state: :failure,
               file: 'spec/classes/foo_spec.rb',
               message: 'some failure happened',
-            },
+            }
           ]
         end
 

@@ -5,7 +5,7 @@ require 'json'
 modules = [
   'puppetlabs/puppetlabs-motd',
   'puppetlabs/puppetlabs-concat',
-  'puppetlabs/puppetlabs-inifile',
+  'puppetlabs/puppetlabs-inifile'
 ]
 
 describe 'Updating an existing module' do

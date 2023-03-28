@@ -85,7 +85,7 @@ module PDK
       def release_name
         @release_name ||= [
           metadata['name'],
-          metadata['version'],
+          metadata['version']
         ].join('-')
       end
 
@@ -270,7 +270,7 @@ module PDK
         @ignore_file ||= [
           File.join(module_dir, '.pdkignore'),
           File.join(module_dir, '.pmtignore'),
-          File.join(module_dir, '.gitignore'),
+          File.join(module_dir, '.gitignore')
         ].find { |file| PDK::Util::Filesystem.file?(file) && PDK::Util::Filesystem.readable?(file) }
       end
 

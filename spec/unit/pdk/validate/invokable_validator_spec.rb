@@ -130,7 +130,7 @@ describe PDK::Validate::InvokableValidator do
         [
           File.join(context_root, 'manifests', 'init.pp'),
           fixture_file,
-          pkg_file,
+          pkg_file
         ]
       end
 
@@ -334,7 +334,7 @@ describe PDK::Validate::InvokableValidator do
         [
           File.join('manifests', 'init.pp'),
           File.join('plans', 'foo.pp'),
-          File.join('plans', 'nested', 'thing.pp'),
+          File.join('plans', 'nested', 'thing.pp')
         ]
       end
       let(:globbed_files) { files.map { |file| File.join(context_root, file) } }
@@ -363,7 +363,7 @@ describe PDK::Validate::InvokableValidator do
           File.join('vendor', 'bad.yaml'),
           File.join('plans', 'foo.pp'),
           File.join('plans', 'fine.yaml'),
-          File.join('plans', 'nested', 'thing.pp'),
+          File.join('plans', 'nested', 'thing.pp')
         ]
       end
       let(:globbed_files) { files.map { |file| File.join(context_root, file) } }

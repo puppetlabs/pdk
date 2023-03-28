@@ -248,7 +248,7 @@ module PDK
           name: 'enabled',
           question: 'Do you consent to the collection of anonymous PDK usage information?',
           type: :yes,
-        },
+        }
       ]
 
       require 'pdk/cli/util/interview'

@@ -31,7 +31,7 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
     context 'when a target is provided that is an unreadable file' do
       let(:targets) do
         [
-          { name: 'metadata.json', readable: false },
+          { name: 'metadata.json', readable: false }
         ]
       end
 
@@ -50,7 +50,7 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
     context 'when a target is provided that contains valid JSON' do
       let(:targets) do
         [
-          { name: 'metadata.json', content: '{"test": "value"}' },
+          { name: 'metadata.json', content: '{"test": "value"}' }
         ]
       end
 
@@ -68,7 +68,7 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
     context 'when a target is provided that contains invalid JSON' do
       let(:targets) do
         [
-          { name: 'metadata.json', content: '{"test"": "value"}' },
+          { name: 'metadata.json', content: '{"test"": "value"}' }
         ]
       end
 

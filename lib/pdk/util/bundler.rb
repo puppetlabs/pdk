@@ -114,7 +114,7 @@ module PDK
             # Subsequent 'bundle install' will still pick up any new dependencies.
             vendored_lockfiles = [
               File.join(PDK::Util.package_cachedir, "Gemfile-#{PDK::Util::RubyVersion.active_ruby_version}.lock"),
-              File.join(PDK::Util.package_cachedir, 'Gemfile.lock'),
+              File.join(PDK::Util.package_cachedir, 'Gemfile.lock')
             ]
 
             vendored_gemfile_lock = vendored_lockfiles.find do |lockfile|

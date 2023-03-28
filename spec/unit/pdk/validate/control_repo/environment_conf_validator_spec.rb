@@ -28,7 +28,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
     before do
       [
         target[:name],
-        File.join(validator_context.root_path, target[:name]),
+        File.join(validator_context.root_path, target[:name])
       ].each do |filename|
         allow(PDK::Util::Filesystem).to receive(:directory?).with(filename).and_return(target.fetch(:directory, false))
         allow(PDK::Util::Filesystem).to receive(:file?).with(filename).and_return(target.fetch(:file, true))

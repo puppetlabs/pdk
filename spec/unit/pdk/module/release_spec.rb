@@ -388,7 +388,7 @@ describe PDK::Module::Release do
     { method: 'specified_version',   option_name: :version },
     { method: 'specified_package',   option_name: :file },
     { method: 'forge_token',         option_name: :'forge-token' },
-    { method: 'forge_upload_url',    option_name: :'forge-upload-url' },
+    { method: 'forge_upload_url',    option_name: :'forge-upload-url' }
   ].each do |testcase|
     describe "##{testcase[:method]}" do
       context "when the #{testcase[:option_name]} options is set" do

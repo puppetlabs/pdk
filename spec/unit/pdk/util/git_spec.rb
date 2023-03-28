@@ -151,7 +151,7 @@ describe PDK::Util::Git do
           exit_code: 0,
           stdout: [
             "main-sha\trefs/heads/main",
-            "mainful-sha\trefs/heads/mainful",
+            "mainful-sha\trefs/heads/mainful"
           ].join("\n"),
         }
       end

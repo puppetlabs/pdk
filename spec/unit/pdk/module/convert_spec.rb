@@ -650,9 +650,9 @@ describe PDK::Module::Convert do
           [
             PDK::Generate::PuppetClass, [
               { 'name' => 'foo' },
-              { 'name' => 'bar' },
+              { 'name' => 'bar' }
             ]
-          ],
+          ]
         ]
       end
 
@@ -690,9 +690,9 @@ describe PDK::Module::Convert do
         [
           [
             PDK::Generate::PuppetClass, [
-              { 'name' => 'mymodule::foo' },
+              { 'name' => 'mymodule::foo' }
             ]
-          ],
+          ]
         ]
       end
 
@@ -722,7 +722,7 @@ describe PDK::Module::Convert do
         instance_double(
           PDK::Generate::PuppetClass,
           template_files: {}
-        ),
+        )
       ]
     end
 

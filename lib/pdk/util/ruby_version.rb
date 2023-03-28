@@ -107,7 +107,7 @@ module PDK
           [
             File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', ruby_version, 'lib', 'ruby', 'gems', versions[ruby_version]),
             File.join(PDK::Util.package_cachedir, 'ruby', versions[ruby_version]),
-            File.join(PDK::Util.pdk_package_basedir, 'private', 'puppet', 'ruby', versions[ruby_version]),
+            File.join(PDK::Util.pdk_package_basedir, 'private', 'puppet', 'ruby', versions[ruby_version])
           ]
         else
           # This allows the subprocess to find the 'bundler' gem, which isn't

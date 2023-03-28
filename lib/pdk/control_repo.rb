@@ -11,7 +11,7 @@ module PDK
       # Strictly speaking this isn't default but if people have tricked older PDK into thinking that a
       # Control Repo is a module, they may have recursive symlinks in spec/fixtures/modules
       '/spec/fixtures/modules/',
-      '/vendor/',
+      '/vendor/'
     ].freeze
 
     # Returns path to the root of the Control Repo being worked on.

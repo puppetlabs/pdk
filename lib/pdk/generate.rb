@@ -16,7 +16,7 @@ module PDK
         PDK::Generate::Provider,
         PDK::Generate::PuppetClass,
         PDK::Generate::Task,
-        PDK::Generate::Transport,
+        PDK::Generate::Transport
       ].freeze
     end
     module_function :generators

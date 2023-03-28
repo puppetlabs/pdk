@@ -146,7 +146,7 @@ describe PDK::Generate::PuppetObject do
       let(:templates) do
         [
           { uri: 'uri1', allow_fallback: true },
-          { uri: 'expected1', allow_fallback: true },
+          { uri: 'expected1', allow_fallback: true }
         ]
       end
 
@@ -159,7 +159,7 @@ describe PDK::Generate::PuppetObject do
       let(:templates) do
         [
           { uri: 'uri1', allow_fallback: false },
-          { uri: 'expected1', allow_fallback: true },
+          { uri: 'expected1', allow_fallback: true }
         ]
       end
 

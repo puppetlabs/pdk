@@ -150,7 +150,7 @@ describe PDK::Util::PuppetStrings do
           {
             'puppet_classes' => [],
             'defined_types' => [
-              { 'name' => 'mymodule::my_object' },
+              { 'name' => 'mymodule::my_object' }
             ],
           }
         end
@@ -167,7 +167,7 @@ describe PDK::Util::PuppetStrings do
             'puppet_classes' => [],
             'defined_types' => [],
             'data_types' => [
-              { 'name' => 'mymodule::my_object' },
+              { 'name' => 'mymodule::my_object' }
             ],
           }
         end
@@ -200,7 +200,7 @@ describe PDK::Util::PuppetStrings do
       let(:puppet_strings_data) do
         {
           'data_types' => [
-            { 'name' => 'mymodule::my_object' },
+            { 'name' => 'mymodule::my_object' }
           ],
         }
       end
@@ -214,10 +214,10 @@ describe PDK::Util::PuppetStrings do
       let(:puppet_strings_data) do
         {
           'puppet_classes' => [
-            { 'name' => 'mymodule::my_class' },
+            { 'name' => 'mymodule::my_class' }
           ],
           'defined_types' => [
-            { 'name' => 'mymodule::my_define' },
+            { 'name' => 'mymodule::my_define' }
           ],
         }
       end
@@ -226,7 +226,7 @@ describe PDK::Util::PuppetStrings do
         expect(result).to eq(
           [
             [PDK::Generate::DefinedType, [{ 'name' => 'mymodule::my_define' }]],
-            [PDK::Generate::PuppetClass, [{ 'name' => 'mymodule::my_class' }]],
+            [PDK::Generate::PuppetClass, [{ 'name' => 'mymodule::my_class' }]]
           ]
         )
       end

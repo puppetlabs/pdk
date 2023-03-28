@@ -13,7 +13,7 @@ module PDK
             PuppetSyntaxValidator,
             PuppetPlanSyntaxValidator,
             PuppetLintValidator,
-            PuppetEPPValidator,
+            PuppetEPPValidator
           ].freeze
         end
       end

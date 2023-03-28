@@ -139,7 +139,7 @@ module PDK
           File.join(target_dir, 'files'),
           File.join(target_dir, 'manifests'),
           File.join(target_dir, 'templates'),
-          File.join(target_dir, 'tasks'),
+          File.join(target_dir, 'tasks')
         ].each do |dir|
           PDK::Util::Filesystem.mkdir_p(dir)
         rescue SystemCallError => e
@@ -234,7 +234,7 @@ module PDK
             help: 'Optional. You can update this later in the metadata.json.',
             default: metadata.data['issues_url'],
             forge_only: true,
-          },
+          }
         ]
 
         prompt = TTY::Prompt.new(help_color: :cyan)

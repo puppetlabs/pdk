@@ -10,7 +10,7 @@ module PDK
 
         def validators
           [
-            YAMLSyntaxValidator,
+            YAMLSyntaxValidator
           ].freeze
         end
       end

@@ -3,7 +3,7 @@ RSpec.shared_examples_for 'only valid in specified PDK contexts' do |*context_cl
     [
       PDK::Context::None.new(nil),
       PDK::Context::Module.new(nil, nil),
-      PDK::Context::ControlRepo.new(nil, nil),
+      PDK::Context::ControlRepo.new(nil, nil)
     ].each do |pdk_context|
       context "in #{pdk_context.display_name}" do
         subject { described_class.new(pdk_context, {}).valid_in_context? }
