@@ -7,7 +7,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
   it 'defines the base validator attributes' do
     expect(validator).to have_attributes(
       name: 'metadata-json-lint',
-      cmd: 'metadata-json-lint',
+      cmd: 'metadata-json-lint'
     )
   end
 

@@ -18,7 +18,7 @@ describe 'Running `pdk new module`' do
         expect(analytics).to receive(:screen_view).with(
           'new_module',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         PDK::CLI.run(['new', 'module'])
@@ -37,7 +37,7 @@ describe 'Running `pdk new module`' do
           'new_module',
           cli_options: 'skip-interview=true',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         expect { PDK::CLI.run(['new', 'module', '--skip-interview']) }.to exit_nonzero
@@ -60,7 +60,7 @@ describe 'Running `pdk new module`' do
       expect(analytics).to receive(:screen_view).with(
         'new_module',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['new', 'module', '123test']) }.to exit_nonzero
@@ -82,7 +82,7 @@ describe 'Running `pdk new module`' do
       expect(analytics).to receive(:screen_view).with(
         'new_module',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       PDK::CLI.run(['new', 'module', module_name])
@@ -103,7 +103,7 @@ describe 'Running `pdk new module`' do
         expect(analytics).to receive(:screen_view).with(
           'new_module',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         PDK::CLI.run(['new', 'module', module_name, target_dir])
@@ -126,7 +126,7 @@ describe 'Running `pdk new module`' do
           'new_module',
           cli_options: 'template-url=redacted',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         PDK::CLI.run(['new', 'module', '--template-url', template_url, module_name])
@@ -164,7 +164,7 @@ describe 'Running `pdk new module`' do
           'new_module',
           cli_options: 'license=redacted',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         PDK::CLI.run(['new', 'module', '--license', license, module_name])
@@ -185,7 +185,7 @@ describe 'Running `pdk new module`' do
           'new_module',
           cli_options: 'skip-interview=true',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         PDK::CLI.run(['new', 'module', '--skip-interview', module_name])
@@ -206,7 +206,7 @@ describe 'Running `pdk new module`' do
           'new_module',
           cli_options: 'full-interview=true',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         PDK::CLI.run(['new', 'module', '--full-interview', module_name])
@@ -228,7 +228,7 @@ describe 'Running `pdk new module`' do
           'new_module',
           cli_options: 'skip-interview=true,full-interview=true',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         PDK::CLI.run(['new', 'module', '--skip-interview', '--full-interview', module_name])
@@ -251,7 +251,7 @@ describe 'Running `pdk new module`' do
       expect(analytics).to receive(:screen_view).with(
         'new_module',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       PDK::CLI.run(['new', 'module', module_name])

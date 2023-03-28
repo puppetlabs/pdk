@@ -421,7 +421,7 @@ describe PDK::Generate::Module do
                 'operatingsystem' => 'windows',
                 'operatingsystemrelease' => ['2019', '10'],
               },
-            ],
+            ]
           )
         end
 
@@ -473,7 +473,7 @@ describe PDK::Generate::Module do
             'author' => 'defaultauthor',
             'license' => 'default license',
             'summary' => 'default summary',
-            'source' => 'default source',
+            'source' => 'default source'
           )
         end
 
@@ -514,7 +514,7 @@ describe PDK::Generate::Module do
           'summary' => '',
           'source' => '',
           'project_page' => nil,
-          'issues_url' => nil,
+          'issues_url' => nil
         )
       end
     end
@@ -541,7 +541,7 @@ describe PDK::Generate::Module do
           'summary' => '',
           'source' => '',
           'project_page' => nil,
-          'issues_url' => nil,
+          'issues_url' => nil
         )
       end
 
@@ -616,7 +616,7 @@ describe PDK::Generate::Module do
           'summary' => '',
           'source' => '',
           'project_page' => nil,
-          'issues_url' => nil,
+          'issues_url' => nil
         )
       end
     end
@@ -646,7 +646,7 @@ describe PDK::Generate::Module do
           'summary' => '',
           'source' => '',
           'project_page' => nil,
-          'issues_url' => nil,
+          'issues_url' => nil
         )
 
         expect(interview_metadata['operatingsystem_support']).not_to be_nil
@@ -697,7 +697,7 @@ describe PDK::Generate::Module do
 
       it 'has no dependencies' do
         expect(metadata.data).to include(
-          'dependencies' => [],
+          'dependencies' => []
         )
       end
     end

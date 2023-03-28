@@ -307,7 +307,7 @@ describe PDK::Test::Unit do
         instance_double(
           PDK::CLI::Exec::InteractiveCommand,
           :context= => true,
-          :environment= => true,
+          :environment= => true
         )
       end
 

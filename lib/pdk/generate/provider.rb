@@ -16,7 +16,7 @@ module PDK
 
         files.merge(
           'provider.erb' => "#{File.join('lib', 'puppet', 'provider', object_name, object_name)}.rb",
-          'provider_type.erb' => "#{File.join('lib', 'puppet', 'type', object_name)}.rb",
+          'provider_type.erb' => "#{File.join('lib', 'puppet', 'type', object_name)}.rb"
         )
       end
 

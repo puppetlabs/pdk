@@ -13,7 +13,7 @@ describe PDK::Validate::Validator do
       TTY::Spinner,
       auto_spin: nil,
       success: nil,
-      error: nil,
+      error: nil
     )
   end
 

@@ -222,7 +222,7 @@ describe 'pdk test unit', module_command: true do
           its(:content) do
             is_expected.to have_junit_testsuite('rspec').with_attributes(
               'failures' => eq(0),
-              'tests' => eq(2),
+              'tests' => eq(2)
             )
           end
         end
@@ -237,7 +237,7 @@ describe 'pdk test unit', module_command: true do
           its(:content) do
             is_expected.to have_junit_testsuite('rspec').with_attributes(
               'failures' => eq(0),
-              'tests' => eq(2),
+              'tests' => eq(2)
             )
           end
         end

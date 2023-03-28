@@ -300,7 +300,7 @@ module PDK
           continue = PDK::CLI::Util.prompt_for_yes(
             'Metadata will be generated based on this information, continue?',
             prompt: prompt,
-            cancel_message: 'Interview cancelled; exiting.',
+            cancel_message: 'Interview cancelled; exiting.'
           )
 
           unless continue

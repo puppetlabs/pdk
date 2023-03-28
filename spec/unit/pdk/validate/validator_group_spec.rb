@@ -129,7 +129,7 @@ describe PDK::Validate::ValidatorGroup do
           MockSuccessValidator,
           PDK::Validate::Validator,
           MockNoContextValidator,
-        ],
+        ]
       )
     end
 

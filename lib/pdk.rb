@@ -68,7 +68,7 @@ module PDK
       client: :google_analytics,
       app_name: 'pdk',
       app_version: PDK::VERSION,
-      app_installer: PDK::Util.package_install? ? 'package' : 'gem',
+      app_installer: PDK::Util.package_install? ? 'package' : 'gem'
     )
   end
 end

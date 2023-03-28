@@ -55,7 +55,7 @@ module PDK
               file: targets.first,
               source: name,
               state: :passed,
-              severity: :ok,
+              severity: :ok
             )
           else
             json_data.delete('result')
@@ -72,7 +72,7 @@ module PDK
                   message: offense['msg'],
                   test: offense['check'],
                   severity: event_type,
-                  state: :failure,
+                  state: :failure
                 )
               end
             end

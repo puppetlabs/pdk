@@ -25,7 +25,7 @@ module PDK
               file: target,
               source: name,
               state: :passed,
-              severity: 'ok',
+              severity: 'ok'
             )
             0
           else
@@ -34,7 +34,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: INVALID_TASK_MSG,
+              message: INVALID_TASK_MSG
             )
             1
           end

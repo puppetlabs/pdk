@@ -51,7 +51,7 @@ describe 'PDK::CLI update' do
       FileUtils.mkdir_p(File.join(spec_dir, 'site', 'profile', 'manifests'))
       File.write(
         File.join(spec_dir, 'metadata.json'),
-        <<-EOT,
+        <<-EOT
         {
           "name": "spec-foo",
           "version": "0.1.0",
@@ -127,7 +127,7 @@ describe 'PDK::CLI update' do
         expect(analytics).to receive(:screen_view).with(
           'update',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
       end
     end
@@ -166,7 +166,7 @@ describe 'PDK::CLI update' do
           'update',
           cli_options: 'noop=true',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
       end
     end
@@ -188,7 +188,7 @@ describe 'PDK::CLI update' do
           'update',
           cli_options: 'force=true',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
       end
     end

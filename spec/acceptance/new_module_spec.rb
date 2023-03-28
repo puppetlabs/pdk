@@ -26,8 +26,8 @@ describe 'pdk new module' do
             'template-ref' => match(%r{(main-)|(^(tags/)?(\d+)\.(\d+)\.(\d+))}),
             'operatingsystem_support' => include(
               'operatingsystem' => 'Debian',
-              'operatingsystemrelease' => ['10'],
-            ),
+              'operatingsystemrelease' => ['10']
+            )
           )
         end
       end

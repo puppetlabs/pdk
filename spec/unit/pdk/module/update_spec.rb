@@ -11,7 +11,7 @@ describe PDK::Module::Update do
         'name' => 'mock-module',
         'template-url' => template_url,
         'template-ref' => template_ref,
-      },
+      }
     )
   end
   let(:template_url) { 'https://github.com/puppetlabs/pdk-templates' }
@@ -367,7 +367,7 @@ describe PDK::Module::Update do
         PDK::Util::TemplateURI,
         default?: true,
         bare_uri: 'https://github.com/puppetlabs/pdk-templates',
-        uri_fragment: module_template_ref,
+        uri_fragment: module_template_ref
       )
     end
     let(:template_url) { "https://github.com/puppetlabs/pdk-templates##{module_template_ref}" }

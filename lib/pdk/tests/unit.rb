@@ -166,7 +166,7 @@ module PDK
               test: ex['full_description'],
               severity: ex['status'],
               message: ex['pending_message'] || (ex['exception'] && ex['exception']['message']) || nil,
-              trace: (ex['exception'] && ex['exception']['backtrace']) || nil,
+              trace: (ex['exception'] && ex['exception']['backtrace']) || nil
             )
           end
         end

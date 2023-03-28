@@ -14,7 +14,7 @@ module PDK::CLI
       PDK::CLI::Util.validate_puppet_version_opts(opts)
       PDK::CLI::Util.ensure_in_module!(
         message: 'Tests can only be created from inside a valid module directory.',
-        log_level: :info,
+        log_level: :info
       )
 
       object_name = args[0]

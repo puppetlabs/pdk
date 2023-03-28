@@ -28,7 +28,7 @@ module PDK::CLI
 
       PDK::CLI::Util.ensure_in_module!(
         message: 'Unit tests can only be run from inside a valid module directory.',
-        log_level: :info,
+        log_level: :info
       )
 
       PDK::CLI::Util.module_version_check

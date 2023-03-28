@@ -46,7 +46,7 @@ describe 'PDK::CLI build' do
         PDK::Module::Metadata,
         data: mock_metadata,
         forge_ready?: true,
-        interview_for_forge!: true,
+        interview_for_forge!: true
       )
     end
     let(:package_path) { File.join(Dir.pwd, 'pkg', 'testuser-testmodule-2.3.4.tar.gz') }
@@ -56,7 +56,7 @@ describe 'PDK::CLI build' do
         build: true,
         module_pdk_compatible?: true,
         package_already_exists?: false,
-        package_file: package_path,
+        package_file: package_path
       )
     end
 

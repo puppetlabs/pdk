@@ -78,7 +78,7 @@ module PDK
       exec_group = PDK::CLI::ExecGroup.create(
         format('Validating module using %{num_of_threads} threads', num_of_threads: instances.count),
         { parallel: parallel },
-        options,
+        options
       )
 
       instances.each do |validator|

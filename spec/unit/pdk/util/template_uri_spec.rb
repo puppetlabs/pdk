@@ -90,7 +90,7 @@ describe PDK::Util::TemplateURI do
             'pdk-version' => pdk_version,
             'template-url' => template_url,
             'template-ref' => template_ref,
-          },
+          }
         )
       end
 
@@ -395,7 +395,7 @@ describe PDK::Util::TemplateURI do
             user: 'git',
             host: 'github.com',
             port: nil,
-            path: '/1234/repo.git',
+            path: '/1234/repo.git'
           )
         end
       end
@@ -409,7 +409,7 @@ describe PDK::Util::TemplateURI do
             user: 'git',
             host: 'github.com',
             port: 1234,
-            path: '/user/repo.git',
+            path: '/user/repo.git'
           )
         end
       end
@@ -423,7 +423,7 @@ describe PDK::Util::TemplateURI do
             user: 'git',
             host: 'github.com',
             port: nil,
-            path: '/user/repo.git',
+            path: '/user/repo.git'
           )
         end
       end
@@ -437,7 +437,7 @@ describe PDK::Util::TemplateURI do
             user: 'git',
             host: 'github.com',
             port: nil,
-            path: '/1234/repo.git',
+            path: '/1234/repo.git'
           )
         end
       end
@@ -455,7 +455,7 @@ describe PDK::Util::TemplateURI do
           expect(subject).to include(
             type: 'PDK answers',
             uri: Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'),
-            allow_fallback: true,
+            allow_fallback: true
           )
         end
       end
@@ -467,7 +467,7 @@ describe PDK::Util::TemplateURI do
           expect(subject).to include(
             type: 'PDK answers',
             uri: Addressable::URI.parse(answers_template_url),
-            allow_fallback: true,
+            allow_fallback: true
           )
         end
       end
@@ -490,7 +490,7 @@ describe PDK::Util::TemplateURI do
           data: {
             'pdk-version' => PDK::VERSION,
             'template-url' => metadata_url,
-          },
+          }
         )
       end
 
@@ -510,7 +510,7 @@ describe PDK::Util::TemplateURI do
           expect(subject).to include(
             type: 'metadata.json',
             uri: expected_uri,
-            allow_fallback: true,
+            allow_fallback: true
           )
         end
       end
@@ -525,9 +525,9 @@ describe PDK::Util::TemplateURI do
               scheme: 'ssh',
               user: 'git',
               host: 'github.com',
-              path: '/puppetlabs/pdk-templates.git',
+              path: '/puppetlabs/pdk-templates.git'
             ),
-            allow_fallback: true,
+            allow_fallback: true
           )
         end
       end

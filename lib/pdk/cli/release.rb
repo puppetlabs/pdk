@@ -35,7 +35,7 @@ module PDK::CLI
       # Make sure build is being run in a valid module directory with a metadata.json
       PDK::CLI::Util.ensure_in_module!(
         message: '`pdk release` can only be run from inside a valid module with a metadata.json.',
-        log_level: :info,
+        log_level: :info
       )
 
       Release.prepare_interview(opts) unless opts[:force]

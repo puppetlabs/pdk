@@ -24,7 +24,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
   it 'defines the base validator attributes' do
     expect(validator).to have_attributes(
       name: 'puppet-lint',
-      cmd: 'puppet-lint',
+      cmd: 'puppet-lint'
     )
     expect(validator.spinner_text_for_targets(nil)).to match(/puppet manifest style/i)
   end

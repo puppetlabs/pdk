@@ -38,7 +38,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: 'Could not be read.',
+              message: 'Could not be read.'
             )
             return 1
           end
@@ -50,7 +50,7 @@ module PDK
               file: target,
               source: name,
               state: :passed,
-              severity: 'ok',
+              severity: 'ok'
             )
             0
           rescue JSON::ParserError => e
@@ -65,7 +65,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: sane_message,
+              message: sane_message
             )
             1
           end

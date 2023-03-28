@@ -64,7 +64,7 @@ describe PDK::Module::Metadata do
         'version' => '0.1.0',
         'dependencies' => [
           { 'name' => 'puppetlabs-stdlib', 'version_requirement' => '>= 1.0.0' },
-        ],
+        ]
       )
     end
 
@@ -237,7 +237,7 @@ describe PDK::Module::Metadata do
     let(:metadata) do
       described_class.new.update!(
         'name' => 'foo-bar',
-        'version' => '0.1.0',
+        'version' => '0.1.0'
       )
     end
 

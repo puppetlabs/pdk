@@ -38,7 +38,7 @@ describe '`pdk test unit`' do
           'test_unit',
           cli_options: 'list=true',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         expect { test_unit_cmd.run_this(args) }.to output.to_stdout
@@ -86,7 +86,7 @@ describe '`pdk test unit`' do
           'test_unit',
           cli_options: 'list=true,verbose=true',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         expect { test_unit_cmd.run_this(args) }.to output.to_stdout
@@ -133,8 +133,8 @@ describe '`pdk test unit`' do
               puppet: puppet_version,
               tests: anything,
               'clean-fixtures': true,
-              interactive: true,
-            ),
+              interactive: true
+            )
           ).once.and_return(0)
 
           expect do
@@ -149,7 +149,7 @@ describe '`pdk test unit`' do
             'test_unit',
             cli_options: 'clean-fixtures=true',
             output_format: 'default',
-            ruby_version: RUBY_VERSION,
+            ruby_version: RUBY_VERSION
           )
 
           expect { test_unit_cmd.run_this(['--clean-fixtures']) }.to exit_zero
@@ -170,7 +170,7 @@ describe '`pdk test unit`' do
           expect(analytics).to receive(:screen_view).with(
             'test_unit',
             output_format: 'default',
-            ruby_version: RUBY_VERSION,
+            ruby_version: RUBY_VERSION
           )
 
           expect { test_unit_cmd.run_this([]) }.to exit_zero
@@ -190,7 +190,7 @@ describe '`pdk test unit`' do
           expect(analytics).to receive(:screen_view).with(
             'test_unit',
             output_format: 'default',
-            ruby_version: RUBY_VERSION,
+            ruby_version: RUBY_VERSION
           )
 
           expect { test_unit_cmd.run_this([]) }.to exit_zero
@@ -212,7 +212,7 @@ describe '`pdk test unit`' do
             expect(analytics).to receive(:screen_view).with(
               'test_unit',
               output_format: 'text',
-              ruby_version: RUBY_VERSION,
+              ruby_version: RUBY_VERSION
             )
 
             expect { test_unit_cmd.run_this(['--format=text:results.txt']) }.to exit_zero
@@ -238,7 +238,7 @@ describe '`pdk test unit`' do
               'test_unit',
               cli_options: 'tests=redacted',
               output_format: 'default',
-              ruby_version: RUBY_VERSION,
+              ruby_version: RUBY_VERSION
             )
 
             expect { test_unit_cmd.run_this(["--tests=#{tests}"]) }.to exit_zero
@@ -261,7 +261,7 @@ describe '`pdk test unit`' do
           expect(analytics).to receive(:screen_view).with(
             'test_unit',
             output_format: 'default',
-            ruby_version: RUBY_VERSION,
+            ruby_version: RUBY_VERSION
           )
 
           expect { test_unit_cmd.run_this([]) }.to exit_nonzero
@@ -307,7 +307,7 @@ describe '`pdk test unit`' do
         'test_unit',
         cli_options: 'puppet-dev=true',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect do
@@ -371,7 +371,7 @@ describe '`pdk test unit`' do
         'test_unit',
         cli_options: "puppet-version=#{puppet_version}",
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect do
@@ -417,7 +417,7 @@ describe '`pdk test unit`' do
         'test_unit',
         cli_options: "pe-version=#{pe_version}",
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect do

@@ -26,7 +26,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
   it 'defines the ExternalCommandValidator attributes' do
     expect(validator).to have_attributes(
       name: 'rubocop',
-      cmd: 'rubocop',
+      cmd: 'rubocop'
     )
     expect(validator.spinner_text_for_targets(nil)).to match(/ruby code style/i)
   end
@@ -96,7 +96,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
         last_line: line,
         real_column: column,
         last_column: column,
-        location: OpenStruct.new(length: 0),
+        location: OpenStruct.new(length: 0)
       )
     end
 

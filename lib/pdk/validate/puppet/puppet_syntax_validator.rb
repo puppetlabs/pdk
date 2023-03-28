@@ -96,7 +96,7 @@ module PDK
               file: target,
               source: name,
               severity: :ok,
-              state: :passed,
+              state: :passed
             )
           end
 

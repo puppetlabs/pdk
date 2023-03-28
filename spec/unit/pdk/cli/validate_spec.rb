@@ -28,7 +28,7 @@ describe 'Running `pdk validate` in a module' do
         PDK::Context::AbstractContext,
         PDK::Validate.validator_names,
         false,
-        hash_including(puppet: puppet_version),
+        hash_including(puppet: puppet_version)
       ).and_return([0, report])
 
       expect(logger).to receive(:info).with('Running all available validators...')
@@ -40,7 +40,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate']) }.to exit_zero
@@ -52,7 +52,7 @@ describe 'Running `pdk validate` in a module' do
           PDK::Context::AbstractContext,
           PDK::Validate.validator_names,
           true,
-          hash_including(puppet: puppet_version),
+          hash_including(puppet: puppet_version)
         ).and_return([0, report])
 
         expect(logger).to receive(:info).with('Running all available validators...')
@@ -65,7 +65,7 @@ describe 'Running `pdk validate` in a module' do
           'validate',
           cli_options: 'parallel=true',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         expect { PDK::CLI.run(['validate', '--parallel']) }.to exit_zero
@@ -85,7 +85,7 @@ describe 'Running `pdk validate` in a module' do
         'validate',
         cli_options: 'list=true',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate', '--list']) }.to exit_zero
@@ -98,7 +98,7 @@ describe 'Running `pdk validate` in a module' do
         PDK::Context::AbstractContext,
         ['metadata'],
         false,
-        hash_including(puppet: puppet_version),
+        hash_including(puppet: puppet_version)
       ).and_return([0, report])
 
       expect { PDK::CLI.run(['validate', 'metadata']) }.to exit_zero
@@ -108,7 +108,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate_metadata',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate', 'metadata']) }.to exit_zero
@@ -131,7 +131,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate_metadata_puppet',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate', 'puppet,metadata']) }.to exit_zero
@@ -147,7 +147,7 @@ describe 'Running `pdk validate` in a module' do
         PDK::Context::AbstractContext,
         invoked_validators,
         false,
-        hash_including(puppet: puppet_version),
+        hash_including(puppet: puppet_version)
       ).and_return([0, report])
 
       expect { PDK::CLI.run(['validate', 'puppet,bad-val']) }.to exit_zero
@@ -157,7 +157,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate_puppet',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate', 'puppet,bad-val']) }.to exit_zero
@@ -172,7 +172,7 @@ describe 'Running `pdk validate` in a module' do
         PDK::Context::AbstractContext,
         invoked_validators,
         false,
-        hash_including(puppet: puppet_version, targets: ['lib/', 'manifests/']),
+        hash_including(puppet: puppet_version, targets: ['lib/', 'manifests/'])
       ).and_return([0, report])
 
       expect { PDK::CLI.run(['validate', 'metadata', 'lib/', 'manifests/']) }.to exit_zero
@@ -182,7 +182,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate_metadata',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate', 'metadata', 'lib/', 'manifests/']) }.to exit_zero
@@ -197,7 +197,7 @@ describe 'Running `pdk validate` in a module' do
         PDK::Context::AbstractContext,
         invoked_validators,
         false,
-        hash_including(puppet: puppet_version, targets: ['lib/', 'manifests/']),
+        hash_including(puppet: puppet_version, targets: ['lib/', 'manifests/'])
       ).and_return([0, report])
 
       expect(logger).to receive(:info).with('Running all available validators...')
@@ -209,7 +209,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate', 'lib/', 'manifests/']) }.to exit_zero
@@ -228,7 +228,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate']) }.to exit_zero
@@ -247,7 +247,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'junit',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate', '--format', 'junit']) }.to exit_zero
@@ -269,7 +269,7 @@ describe 'Running `pdk validate` in a module' do
       expect(analytics).to receive(:screen_view).with(
         'validate',
         output_format: 'junit,text',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect do
@@ -312,7 +312,7 @@ describe 'Running `pdk validate` in a module' do
         'validate',
         cli_options: 'puppet-dev=true',
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect { PDK::CLI.run(['validate', '--puppet-dev']) }.to exit_zero
@@ -407,7 +407,7 @@ describe 'Running `pdk validate` in a module' do
         'validate',
         cli_options: "puppet-version=#{puppet_version}",
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect do
@@ -450,7 +450,7 @@ describe 'Running `pdk validate` in a module' do
         'validate',
         cli_options: "pe-version=#{pe_version}",
         output_format: 'default',
-        ruby_version: RUBY_VERSION,
+        ruby_version: RUBY_VERSION
       )
 
       expect do

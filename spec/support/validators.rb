@@ -11,7 +11,7 @@ class MockSuccessValidator < PDK::Validate::Validator
       file: 'pass.txt',
       source: name,
       state: :passed,
-      severity: 'ok',
+      severity: 'ok'
     )
 
     0
@@ -45,7 +45,7 @@ class MockFailedValidator < PDK::Validate::Validator
       source: name,
       state: :failure,
       severity: 'error',
-      message: 'Mock Failure',
+      message: 'Mock Failure'
     )
 
     1
@@ -64,7 +64,7 @@ class MockAnotherFailedValidator < PDK::Validate::Validator
       source: name,
       state: :failure,
       severity: 'error',
-      message: 'Another Mock Failure',
+      message: 'Another Mock Failure'
     )
 
     2

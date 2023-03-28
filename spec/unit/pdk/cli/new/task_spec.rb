@@ -84,7 +84,7 @@ describe 'PDK::CLI new task' do
         expect(analytics).to receive(:screen_view).with(
           'new_task',
           output_format: 'default',
-          ruby_version: RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
         PDK::CLI.run(['new', 'task', 'test_task'])
@@ -108,7 +108,7 @@ describe 'PDK::CLI new task' do
             'new_task',
             cli_options: 'description=redacted',
             output_format: 'default',
-            ruby_version: RUBY_VERSION,
+            ruby_version: RUBY_VERSION
           )
 
           PDK::CLI.run(['new', 'task', 'test_task', '--description', 'test_task description'])

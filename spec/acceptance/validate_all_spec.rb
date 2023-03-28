@@ -53,27 +53,27 @@ describe 'pdk validate', module_command: true do
           its(:content) do
             is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
               'failures' => eq(3),
-              'tests' => eq(3),
+              'tests' => eq(3)
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
               'classname' => 'puppet-syntax',
-              'name' => a_string_starting_with(init_pp),
+              'name' => a_string_starting_with(init_pp)
             ).that_failed(
               'type' => 'Error',
-              'message' => a_string_matching(/This Name has no effect/i),
+              'message' => a_string_matching(/This Name has no effect/i)
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
               'classname' => 'puppet-syntax',
-              'name' => a_string_starting_with(init_pp),
+              'name' => a_string_starting_with(init_pp)
             ).that_failed(
               'type' => 'Error',
-              'message' => a_string_matching(/This Type-Name has no effect/i),
+              'message' => a_string_matching(/This Type-Name has no effect/i)
             )
           end
         end

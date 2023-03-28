@@ -100,7 +100,7 @@ describe PDK::Template::Fetcher do
       expect(fetcher.metadata).to include(
         'pdk-version' => anything,
         'template-url' => nil,
-        'template-ref' => nil,
+        'template-ref' => nil
       )
     end
 

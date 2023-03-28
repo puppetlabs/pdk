@@ -18,7 +18,7 @@ describe PDK::Module::Release do
       PDK::Module::Metadata,
       data: metadata_hash,
       forge_ready?: true,
-      write!: nil,
+      write!: nil
     )
   end
 

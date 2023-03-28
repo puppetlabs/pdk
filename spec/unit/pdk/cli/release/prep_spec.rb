@@ -27,14 +27,14 @@ describe 'PDK::CLI release prep' do
         PDK::Module::Release,
         pdk_compatible?: true,
         module_metadata: mock_metadata_obj,
-        run: nil,
+        run: nil
       )
     end
 
     let(:mock_metadata_obj) do
       instance_double(
         PDK::Module::Metadata,
-        forge_ready?: true,
+        forge_ready?: true
       )
     end
 

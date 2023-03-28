@@ -40,7 +40,7 @@ describe PDK::Report do
         events: {
           'puppet-lint' => [instance_of(PDK::Report::Event)],
           'rubocop' => [instance_of(PDK::Report::Event)],
-        },
+        }
       )
     end
 

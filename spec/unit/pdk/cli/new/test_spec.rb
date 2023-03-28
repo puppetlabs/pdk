@@ -101,7 +101,7 @@ describe 'PDK::CLI new test' do
             'new_test',
             cli_options: 'unit=true',
             output_format: 'default',
-            ruby_version: RUBY_VERSION,
+            ruby_version: RUBY_VERSION
           )
         end
       end
@@ -123,7 +123,7 @@ describe 'PDK::CLI new test' do
             'new_test',
             cli_options: 'unit=true',
             output_format: 'default',
-            ruby_version: RUBY_VERSION,
+            ruby_version: RUBY_VERSION
           )
         end
       end

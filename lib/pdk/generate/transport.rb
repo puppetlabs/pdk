@@ -19,7 +19,7 @@ module PDK
         files.merge(
           'transport.erb' => "#{File.join('lib', 'puppet', 'transport', object_name)}.rb",
           'transport_device.erb' => File.join('lib', 'puppet', 'util', 'network_device', object_name, 'device.rb'),
-          'transport_type.erb' => "#{File.join('lib', 'puppet', 'transport', 'schema', object_name)}.rb",
+          'transport_type.erb' => "#{File.join('lib', 'puppet', 'transport', 'schema', object_name)}.rb"
         )
       end
 

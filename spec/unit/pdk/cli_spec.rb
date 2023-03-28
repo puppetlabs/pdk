@@ -22,7 +22,7 @@ describe PDK::CLI do
     it 'informs the user of the upcoming Ruby deprecation' do
       expect(logger).to receive(:info).with(
         text: a_string_matching(/ruby versions older than/i),
-        wrap: true,
+        wrap: true
       )
 
       described_class.run([])
@@ -37,7 +37,7 @@ describe PDK::CLI do
     it 'does not inform the user of an upcoming Ruby deprecation' do
       expect(logger).not_to receive(:info).with(
         text: a_string_matching(/ruby versions older than/i),
-        wrap: true,
+        wrap: true
       )
 
       described_class.run([])

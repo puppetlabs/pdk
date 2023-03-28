@@ -16,7 +16,7 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
   it 'defines the ExternalCommandValidator attributes' do
     expect(validator).to have_attributes(
       name: 'puppet-plan-syntax',
-      cmd: 'puppet',
+      cmd: 'puppet'
     )
     expect(validator.spinner_text_for_targets(nil)).to match(/puppet plan syntax/i)
   end

@@ -13,7 +13,7 @@ module PDK::CLI
       require 'pdk/util/bundler'
 
       PDK::CLI::Util.ensure_in_module!(
-        message: '`pdk bundle` can only be run from inside a valid module directory.',
+        message: '`pdk bundle` can only be run from inside a valid module directory.'
       )
 
       PDK::CLI::Util.validate_puppet_version_opts({})

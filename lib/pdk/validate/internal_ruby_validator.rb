@@ -70,7 +70,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: "Validation did not return an exit code for #{target}",
+              message: "Validation did not return an exit code for #{target}"
             )
             validation_result = 1
           end

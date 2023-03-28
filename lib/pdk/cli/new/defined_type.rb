@@ -7,7 +7,7 @@ module PDK::CLI
     run do |opts, args, _cmd|
       PDK::CLI::Util.ensure_in_module!(
         message: 'Defined types can only be created from inside a valid module directory.',
-        log_level: :info,
+        log_level: :info
       )
 
       defined_type_name = args[0]

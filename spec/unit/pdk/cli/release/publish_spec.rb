@@ -29,14 +29,14 @@ describe 'PDK::CLI release publish' do
         PDK::Module::Release,
         pdk_compatible?: true,
         module_metadata: mock_metadata_obj,
-        run: nil,
+        run: nil
       )
     end
 
     let(:mock_metadata_obj) do
       instance_double(
         PDK::Module::Metadata,
-        forge_ready?: true,
+        forge_ready?: true
       )
     end
 
@@ -62,8 +62,8 @@ describe 'PDK::CLI release publish' do
           'skip-changelog': true,
           'skip-dependency': true,
           'skip-documentation': true,
-          'skip-build': true,
-        ),
+          'skip-build': true
+        )
       )
 
       expect { PDK::CLI.run(cli_args.push('--force')) }.not_to raise_error

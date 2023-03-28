@@ -12,7 +12,7 @@ describe PDK::Util do
         'pdk-version' => pdk_version,
         'template-url' => template_url,
         'template-ref' => template_ref,
-      },
+      }
     )
   end
 

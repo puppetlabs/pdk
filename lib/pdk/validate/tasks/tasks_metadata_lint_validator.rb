@@ -37,7 +37,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: 'Could not be read.',
+              message: 'Could not be read.'
             )
             return 1
           end
@@ -60,7 +60,7 @@ module PDK
                 file: target,
                 source: name,
                 state: :passed,
-                severity: 'ok',
+                severity: 'ok'
               )
               0
             else
@@ -73,7 +73,7 @@ module PDK
                   source: name,
                   state: :failure,
                   severity: 'error',
-                  message: error,
+                  message: error
                 )
               end
               1

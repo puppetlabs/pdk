@@ -93,10 +93,10 @@ describe 'pdk validate tasks', module_command: true do
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('task-metadata-lint').with_attributes(
               'classname' => 'task-metadata-lint',
-              'name' => a_string_matching(/invalid.json/),
+              'name' => a_string_matching(/invalid.json/)
             ).that_failed(
               'type' => a_string_matching(/error/i),
-              'message' => a_string_matching(%r{The property '#/supports_noop' of type string did not match the following type: boolean}i),
+              'message' => a_string_matching(%r{The property '#/supports_noop' of type string did not match the following type: boolean}i)
             )
           end
         end

@@ -114,14 +114,14 @@ describe PDK::Generate::PuppetObject do
     let(:missing_renderer) do
       instance_double(
         PDK::Template::Renderer::AbstractRenderer,
-        has_single_item?: false,
+        has_single_item?: false
       )
     end
 
     let(:found_renderer) do
       instance_double(
         PDK::Template::Renderer::AbstractRenderer,
-        has_single_item?: true,
+        has_single_item?: true
       )
     end
 

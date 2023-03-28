@@ -29,7 +29,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: 'Could not be read.',
+              message: 'Could not be read.'
             )
             return 1
           end
@@ -55,7 +55,7 @@ module PDK
                 source: name,
                 state: :failure,
                 severity: 'error',
-                message: message,
+                message: message
               )
               is_valid = false
             end
@@ -67,7 +67,7 @@ module PDK
                 source: name,
                 state: :failure,
                 severity: 'error',
-                message: format("environment_timeout is set to '%{timeout}' but should be 0, 'unlimited' or not set.", timeout: timeout),
+                message: format("environment_timeout is set to '%{timeout}' but should be 0, 'unlimited' or not set.", timeout: timeout)
               )
               is_valid = false
             end
@@ -78,7 +78,7 @@ module PDK
               file: target,
               source: name,
               state: :passed,
-              severity: 'ok',
+              severity: 'ok'
             )
             0
           rescue StandardError => e
@@ -87,7 +87,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: e.message,
+              message: e.message
             )
             1
           end

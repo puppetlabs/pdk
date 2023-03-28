@@ -147,7 +147,7 @@ module PDK
             source: name,
             message: format('Target does not contain any files to validate (%{pattern}).', pattern: pattern),
             severity: :info,
-            state: :skipped,
+            state: :skipped
           )
         end
       end
@@ -163,7 +163,7 @@ module PDK
             source: name,
             message: 'File does not exist.',
             severity: :error,
-            state: :error,
+            state: :error
           )
         end
       end

@@ -126,7 +126,7 @@ module PDK
         # The schema should not query external URI references, except for the meta-schema. Local files are allowed
         schema_reader = ::JSON::Schema::Reader.new(
           accept_file: true,
-          accept_uri: proc { |uri| uri.host.nil? || ['json-schema.org'].include?(uri.host) },
+          accept_uri: proc { |uri| uri.host.nil? || ['json-schema.org'].include?(uri.host) }
         )
         @document_schema = schema_reader.read(Addressable::URI.convert_path(@schema_file))
       rescue ::JSON::Schema::JsonParseError => e

@@ -392,7 +392,7 @@ describe PDK::Module::Convert do
           [{
             path: 'path/to/file',
             content: 'file contents',
-          }],
+          }]
         )
       end
 
@@ -721,7 +721,7 @@ describe PDK::Module::Convert do
       [
         instance_double(
           PDK::Generate::PuppetClass,
-          template_files: {},
+          template_files: {}
         ),
       ]
     end

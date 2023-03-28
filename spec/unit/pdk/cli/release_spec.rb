@@ -17,14 +17,14 @@ describe 'PDK::CLI release' do
         PDK::Module::Release,
         pdk_compatible?: true,
         module_metadata: mock_metadata_obj,
-        run: nil,
+        run: nil
       )
     end
 
     let(:mock_metadata_obj) do
       instance_double(
         PDK::Module::Metadata,
-        forge_ready?: true,
+        forge_ready?: true
       )
     end
 
@@ -38,7 +38,7 @@ describe 'PDK::CLI release' do
       expect(PDK::Module::Release).to receive(:new).with(Object, hash_including(
                                                                    'forge-token': 'cli123',
                                                                    force: true,
-                                                                   'forge-upload-url': 'https://example.com',
+                                                                   'forge-upload-url': 'https://example.com'
                                                                  ))
       PDK::CLI.run(['release', '--forge-token=cli123', '--force', '--forge-upload-url=https://example.com'])
     end
@@ -68,14 +68,14 @@ describe 'PDK::CLI release' do
         PDK::Module::Release,
         pdk_compatible?: true,
         module_metadata: mock_metadata_obj,
-        run: nil,
+        run: nil
       )
     end
 
     let(:mock_metadata_obj) do
       instance_double(
         PDK::Module::Metadata,
-        forge_ready?: true,
+        forge_ready?: true
       )
     end
 

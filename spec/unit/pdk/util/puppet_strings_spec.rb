@@ -25,7 +25,7 @@ describe PDK::Util::PuppetStrings do
         allow(PDK::CLI::Exec::Command).to receive(:new).with(
           File.join(ruby_path, 'ruby.exe'),
           File.join(module_root, 'bin', 'puppet'),
-          *command_args,
+          *command_args
         ).and_return(mock_command)
       end
 
@@ -48,7 +48,7 @@ describe PDK::Util::PuppetStrings do
 
         allow(PDK::CLI::Exec::Command).to receive(:new).with(
           File.join(module_root, 'bin', 'puppet'),
-          *command_args,
+          *command_args
         ).and_return(mock_command)
       end
 
@@ -227,7 +227,7 @@ describe PDK::Util::PuppetStrings do
           [
             [PDK::Generate::DefinedType, [{ 'name' => 'mymodule::my_define' }]],
             [PDK::Generate::PuppetClass, [{ 'name' => 'mymodule::my_class' }]],
-          ],
+          ]
         )
       end
     end

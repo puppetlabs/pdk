@@ -16,7 +16,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
   it 'defines the base validator attributes' do
     expect(validator).to have_attributes(
       name: 'puppet-epp',
-      cmd: 'puppet',
+      cmd: 'puppet'
     )
     expect(validator.spinner_text_for_targets(nil)).to match(/puppet EPP syntax/i)
   end

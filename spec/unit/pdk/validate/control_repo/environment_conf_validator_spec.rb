@@ -117,7 +117,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
 
       it 'does not add a passing event to the report' do
         expect(report).not_to receive(:add_event).with(
-          state: :passed,
+          state: :passed
         )
         expect(return_value).to eq(1)
       end

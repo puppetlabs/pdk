@@ -42,14 +42,14 @@ describe 'pdk validate metadata', module_command: true do
           its(:content) do
             is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
               'failures' => eq(1),
-              'tests' => eq(1),
+              'tests' => eq(1)
             )
           end
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
               'classname' => 'metadata-json-lint.dependencies',
-              'name' => 'metadata.json',
+              'name' => 'metadata.json'
             ).that_failed
           end
         end
@@ -71,13 +71,13 @@ describe 'pdk validate metadata', module_command: true do
 
         its(:stdout) do
           is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
-            'name' => 'metadata.json',
+            'name' => 'metadata.json'
           )
         end
 
         its(:stdout) do
           is_expected.not_to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
-            'name' => 'broken.json',
+            'name' => 'broken.json'
           )
         end
       end
@@ -89,13 +89,13 @@ describe 'pdk validate metadata', module_command: true do
         its(:stdout) do
           is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]').with_attributes(
             'tests' => '1',
-            'skipped' => '1',
+            'skipped' => '1'
           )
         end
 
         its(:stdout) do
           is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
-            'name' => 'broken.json',
+            'name' => 'broken.json'
           )
         end
       end
@@ -116,13 +116,13 @@ describe 'pdk validate metadata', module_command: true do
           its(:stdout) do
             is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
               'skipped' => eq(1),
-              'tests' => eq(1),
+              'tests' => eq(1)
             )
           end
 
           its(:stdout) do
             is_expected.to have_xpath('/testsuites/testsuite[@name="metadata-json-lint"]/testcase').with_attributes(
-              'name' => 'broken.json',
+              'name' => 'broken.json'
             )
           end
         end

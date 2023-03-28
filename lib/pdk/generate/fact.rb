@@ -14,7 +14,7 @@ module PDK
         return files if spec_only?
 
         files.merge(
-          'fact.erb' => "#{File.join('lib', 'facter', object_name)}.rb",
+          'fact.erb' => "#{File.join('lib', 'facter', object_name)}.rb"
         )
       end
 

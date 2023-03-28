@@ -22,7 +22,7 @@ module PDK
             if context.is_a?(PDK::Context::ControlRepo)
               pat.push(
                 '**/*.eyaml',
-                '**/*.eyml',
+                '**/*.eyml'
               )
             else
               pat
@@ -43,7 +43,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: 'Could not be read.',
+              message: 'Could not be read.'
             )
             return 1
           end
@@ -55,7 +55,7 @@ module PDK
               file: target,
               source: name,
               state: :passed,
-              severity: 'ok',
+              severity: 'ok'
             )
             0
           rescue Psych::SyntaxError => e
@@ -66,7 +66,7 @@ module PDK
               severity: 'error',
               line: e.line,
               column: e.column,
-              message: format('%{problem} %{context}', problem: e.problem, context: e.context),
+              message: format('%{problem} %{context}', problem: e.problem, context: e.context)
             )
             1
           rescue Psych::DisallowedClass => e
@@ -75,7 +75,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: format('Unsupported class: %{message}', message: e.message),
+              message: format('Unsupported class: %{message}', message: e.message)
             )
             1
           end

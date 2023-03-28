@@ -11,7 +11,7 @@ module PDK::CLI
 
       PDK::CLI::Util.ensure_in_module!(
         message: 'Tasks can only be created from inside a valid module directory.',
-        log_level: :info,
+        log_level: :info
       )
 
       task_name = args[0]
