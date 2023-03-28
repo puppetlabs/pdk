@@ -16,7 +16,7 @@ describe PDK::Generate::PuppetClass do
   let(:options) { {} }
   let(:expected_class_name) { given_class_name }
 
-  before(:each) do
+  before do
     test_metadata = { 'name' => module_name }
     allow(PDK::Util).to receive(:module_metadata).and_return(test_metadata)
   end

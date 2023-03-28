@@ -20,7 +20,7 @@ describe PDK::Util::RubyVersion do
       }
     end
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(true)
       allow(PDK::Util).to receive(:pdk_package_basedir).and_return(pdk_package_basedir)
       allow(PDK::Util).to receive(:package_cachedir).and_return(package_cachedir)
@@ -29,7 +29,7 @@ describe PDK::Util::RubyVersion do
   end
 
   shared_context 'is not a package install' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(false)
       bundler_basedir = File.join('/', 'usr', 'lib', 'ruby', 'gems', '2.1.0', 'gems', 'bundler-1.16.1', 'lib')
       allow(instance).to receive(:bundler_basedir).and_return(bundler_basedir)
@@ -68,7 +68,7 @@ describe PDK::Util::RubyVersion do
     context 'when running from a package install' do
       include_context 'is a package install'
 
-      before(:each) do
+      before do
         allow(described_class).to receive(:versions).and_return(packaged_rubies)
         allow(described_class).to receive(:default_ruby_version).and_return('2.4.4')
       end
@@ -93,7 +93,7 @@ describe PDK::Util::RubyVersion do
 
     let(:cachedir) { File.join('/', 'path', 'to', 'user', 'cache') }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:cachedir).and_return(cachedir)
     end
 
@@ -105,14 +105,14 @@ describe PDK::Util::RubyVersion do
   describe '.versions' do
     subject { described_class.versions }
 
-    before(:each) do
+    before do
       described_class.instance_variable_set(:@versions, nil)
     end
 
     context 'when running from a package install' do
       include_context 'is a package install'
 
-      before(:each) do
+      before do
         basedir = File.join('/', 'basedir')
         ruby_dirs = ['2.1.9', '2.4.4'].map { |r| File.join(basedir, 'private', 'ruby', r) }
         allow(PDK::Util).to receive(:pdk_package_basedir).and_return(basedir)
@@ -169,7 +169,7 @@ describe PDK::Util::RubyVersion do
       results
     end
 
-    before(:each) do
+    before do
       allow(instance).to receive(:gem_path).and_return(gem_path)
       allow(PDK::Util::Filesystem).to receive(:glob).with(gem_path_pattern).and_return(gem_path_results.keys)
       allow(instance).to receive(:gem_home).and_return(gem_home)

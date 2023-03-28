@@ -15,7 +15,7 @@ describe PDK::CLI do
   end
 
   context 'when invoked by Ruby < 2.4.0', if: deprecated_runtime? do
-    before(:each) do
+    before do
       allow($stdout).to receive(:puts)
     end
 
@@ -30,7 +30,7 @@ describe PDK::CLI do
   end
 
   context 'when invoked by Ruby >= 2.4.0', unless: deprecated_runtime? do
-    before(:each) do
+    before do
       allow($stdout).to receive(:puts)
     end
 
@@ -45,7 +45,7 @@ describe PDK::CLI do
   end
 
   context 'analytics opt-out prompt' do
-    before(:each) do
+    before do
       # Temporarily bypass suite-wide analytics disable
       allow(PDK::Util::Env).to receive(:[]).and_call_original
       allow(PDK::Util::Env).to receive(:[]).with('PDK_ANALYTICS_CONFIG').and_return(nil)
@@ -56,7 +56,7 @@ describe PDK::CLI do
     end
 
     context 'when analytics config does not yet exist' do
-      before(:each) do
+      before do
         allow(PDK::Config).to receive(:analytics_config_exist?).and_return(false)
       end
 
@@ -67,7 +67,7 @@ describe PDK::CLI do
       end
 
       context 'when PDK_DISABLE_ANALYTICS is set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return('true')
         end
 
@@ -80,7 +80,7 @@ describe PDK::CLI do
     end
 
     context 'when analytics config already exists' do
-      before(:each) do
+      before do
         allow(PDK::Config).to receive(:analytics_config_exist?).and_return(true)
       end
 

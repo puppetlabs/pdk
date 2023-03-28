@@ -15,7 +15,7 @@ describe 'Running pdk module generate' do
   end
 
   context 'with a yes at the prompt' do
-    before(:each) do
+    before do
       redirector = instance_double(PDK::CLI::Util::CommandRedirector)
       allow(redirector).to receive(:target_command)
       allow(redirector).to receive(:run).and_return(true)

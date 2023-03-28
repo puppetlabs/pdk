@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/validate'
 
 describe PDK::Validate do
-  before(:each) do
+  before do
     # Remove any memoized variables
     described_class.instance_variable_set(:@validator_hash, nil)
   end
@@ -60,7 +60,7 @@ describe PDK::Validate do
       }
     end
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:validator_hash).and_return(mock_hash)
     end
 

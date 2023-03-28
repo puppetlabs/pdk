@@ -10,7 +10,7 @@ describe PDK::Template::Renderer::V1 do
     subject(:compatible) { described_class.compatible?(template_root, pdk_context) }
 
     context 'when all module template directories exist' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with('/some/path/moduleroot').and_return(true)
         allow(PDK::Util::Filesystem).to receive(:directory?).with('/some/path/moduleroot_init').and_return(true)
       end
@@ -21,7 +21,7 @@ describe PDK::Template::Renderer::V1 do
     end
 
     context 'when only some of module template directories exist' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with('/some/path/moduleroot').and_return(true)
         allow(PDK::Util::Filesystem).to receive(:directory?).with('/some/path/moduleroot_init').and_return(false)
       end

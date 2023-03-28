@@ -44,7 +44,7 @@ EMPTY_MODULE_ROOT = File.join(FIXTURES_DIR, 'module_root')
 RSpec.shared_context 'stubbed logger' do
   let(:logger) { instance_double(PDK::Logger).as_null_object }
 
-  before(:each) do |example|
+  before do |example|
     allow(PDK).to receive(:logger).and_return(logger) if example.metadata[:use_stubbed_logger]
   end
 end
@@ -52,7 +52,7 @@ end
 RSpec.shared_context 'stubbed analytics' do
   let(:analytics) { PDK::Analytics::Client::Noop.new(logger: logger) }
 
-  before(:each) do |example|
+  before do |example|
     allow(PDK).to receive(:analytics).and_return(analytics) if example.metadata[:use_stubbed_analytics]
   end
 end
@@ -79,7 +79,7 @@ RSpec.configure do |c|
   end
 
   # This should catch any tests where we are not mocking out the actual calls to Rubygems.org
-  c.before(:each) do
+  c.before do
     allow(Gem::SpecFetcher).to receive(:fetcher).and_raise('Unmocked call to Gem::SpecFetcher.fetcher!')
     ENV['PDK_DISABLE_ANALYTICS'] = 'true'
   end

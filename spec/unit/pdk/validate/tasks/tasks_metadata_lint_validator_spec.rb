@@ -36,7 +36,7 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
     let(:validator) { described_class.new }
     let(:report) { PDK::Report.new }
 
-    before(:each) do
+    before do
       allow(validator).to receive(:schema_file).and_return(schema)
       allow(PDK::Util::Filesystem).to receive(:directory?).with(target[:name]).and_return(target.fetch(:directory, false))
       allow(PDK::Util::Filesystem).to receive(:file?).with(target[:name]).and_return(target.fetch(:file, true))

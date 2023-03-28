@@ -4,7 +4,7 @@ require 'pdk/cli'
 describe 'PDK::CLI new class' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new class}m) }
 
-  before(:each) do
+  before do
     # Stop printing out the result
     allow(PDK::CLI::Util::UpdateManagerPrinter).to receive(:print_summary)
   end
@@ -28,7 +28,7 @@ describe 'PDK::CLI new class' do
   context 'when run from inside a module' do
     let(:root_dir) { '/path/to/test/module' }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:module_root).and_return(root_dir)
     end
 
@@ -73,7 +73,7 @@ describe 'PDK::CLI new class' do
     context 'and provided a valid class name' do
       let(:generator) { instance_double(PDK::Generate::PuppetClass, run: true) }
 
-      after(:each) do
+      after do
         PDK::CLI.run(['new', 'class', 'test_class'])
       end
 

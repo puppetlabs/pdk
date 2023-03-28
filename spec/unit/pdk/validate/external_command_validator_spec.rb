@@ -11,7 +11,7 @@ describe PDK::Validate::ExternalCommandValidator do
   let(:parsed_targets) { [targets, skipped_targets, invalid_targets] }
   let(:report) { PDK::Report.new }
 
-  before(:each) do
+  before do
     allow(validator).to receive(:name).and_return('mock_name')
     allow(validator).to receive(:parse_targets).and_return(parsed_targets)
   end
@@ -35,7 +35,7 @@ describe PDK::Validate::ExternalCommandValidator do
   end
 
   describe '.cmd_path' do
-    before(:each) do
+    before do
       allow(validator).to receive(:cmd).and_return('command')
     end
 
@@ -44,7 +44,7 @@ describe PDK::Validate::ExternalCommandValidator do
     end
 
     context 'when the context has no bin path or Gemfile' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(%r{#{validator_context.root_path}}).and_return(false)
         allow_any_instance_of(PDK::Util::Bundler::BundleHelper).to receive(:gemfile).and_return(nil) # rubocop:disable RSpec/AnyInstance BundleHelper needs a refactor
       end
@@ -71,7 +71,7 @@ describe PDK::Validate::ExternalCommandValidator do
   end
 
   describe '.prepare_invoke!' do
-    before(:each) do
+    before do
       allow(validator).to receive(:cmd).and_return('mock_cmd')
     end
 
@@ -86,7 +86,7 @@ describe PDK::Validate::ExternalCommandValidator do
     context 'when spinners are disabled' do
       let(:targets) { ['target'] }
 
-      before(:each) do
+      before do
         allow(validator).to receive(:spinners_enabled?).and_return(false)
       end
 
@@ -105,7 +105,7 @@ describe PDK::Validate::ExternalCommandValidator do
         instance_double(PDK::CLI::Exec::Command, :context= => nil, :execute! => { exit_code: 0 })
       end
 
-      before(:each) do
+      before do
         allow(validator).to receive(:spinners_enabled?).and_return(true)
         expect(PDK::CLI::Exec::Command).to receive(:new).and_return(dummy_command)
       end
@@ -137,7 +137,7 @@ describe PDK::Validate::ExternalCommandValidator do
       let(:targets) { [] }
 
       context 'when empty targets are not allowed' do
-        before(:each) do
+        before do
           allow(validator).to receive(:allow_empty_targets?).and_return(false)
         end
 
@@ -148,7 +148,7 @@ describe PDK::Validate::ExternalCommandValidator do
       end
 
       context 'when empty targets are allowed' do
-        before(:each) do
+        before do
           allow(validator).to receive(:allow_empty_targets?).and_return(true)
         end
 
@@ -161,7 +161,7 @@ describe PDK::Validate::ExternalCommandValidator do
     end
 
     context 'when invoke_style is :once' do
-      before(:each) do
+      before do
         allow(validator).to receive(:invoke_style).and_return(:once)
       end
 
@@ -185,7 +185,7 @@ describe PDK::Validate::ExternalCommandValidator do
     end
 
     context 'when invoke_style is :per_target' do
-      before(:each) do
+      before do
         allow(validator).to receive(:invoke_style).and_return(:per_target)
       end
 
@@ -206,7 +206,7 @@ describe PDK::Validate::ExternalCommandValidator do
     let(:skipped_targets) { ['skipped'] }
     let(:invalid_targets) { ['invalid'] }
 
-    before(:each) do
+    before do
       allow(validator).to receive(:cmd).and_return('command')
     end
 
@@ -247,7 +247,7 @@ describe PDK::Validate::ExternalCommandValidator do
         instance_double(PDK::CLI::Exec::Command, :context= => nil, :execute! => { exit_code: 2 })
       end
 
-      before(:each) do
+      before do
         # Disable the spinners
         allow(validator).to receive(:spinners_enabled?).and_return(false)
         allow(PDK::Util::Bundler).to receive(:ensure_binstubs!).and_return(nil)
@@ -259,7 +259,7 @@ describe PDK::Validate::ExternalCommandValidator do
       context 'when parse_output fails' do
         let(:targets) { ['test'] }
 
-        before(:each) do
+        before do
           expect(validator).to receive(:parse_output).with(report, Hash, ['test']).and_raise(PDK::Validate::ParseOutputError, 'test_error')
         end
 

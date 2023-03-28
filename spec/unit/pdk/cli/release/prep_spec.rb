@@ -38,7 +38,7 @@ describe 'PDK::CLI release prep' do
       )
     end
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:ensure_in_module!).and_return(nil)
       allow(PDK::Module::Release).to receive(:new).and_return(release_object)
       allow(PDK::Util).to receive(:exit_process).and_raise('exit_process mock should not be called')

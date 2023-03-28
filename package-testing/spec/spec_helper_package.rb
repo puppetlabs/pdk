@@ -31,7 +31,7 @@ RSpec.configure do |c|
   end
   # rubocop:enable RSpec/BeforeAfterAll
 
-  c.after(:each) do
+  c.after do
     cmd = if windows_node?
             command('rm -Recurse -Force $env:LOCALAPPDATA/PDK/Cache/ruby')
           else

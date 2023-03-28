@@ -25,7 +25,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
 
     let(:report) { PDK::Report.new }
 
-    before(:each) do
+    before do
       [
         target[:name],
         File.join(validator_context.root_path, target[:name]),

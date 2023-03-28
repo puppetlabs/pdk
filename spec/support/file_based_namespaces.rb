@@ -1,11 +1,11 @@
 RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
   end
 
   describe '#parse_file' do
     context 'when the file contains valid data' do
-      before(:each) do
+      before do
         expect(subject).to receive(:load_data).and_return(content)
       end
 
@@ -21,7 +21,7 @@ RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
     end
 
     context 'when the file is deleted mid-read' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:read_file).with(subject.file).and_raise(Errno::ENOENT, 'error')
       end
 
@@ -31,7 +31,7 @@ RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
     end
 
     context 'when the file is unreadable' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:read_file).with(subject.file).and_raise(Errno::EACCES)
       end
 
@@ -44,7 +44,7 @@ RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
   end
 
   context 'when serializing deserializing data' do
-    before(:each) do
+    before do
       expect(subject).to receive(:load_data).and_return(content)
     end
 
@@ -63,14 +63,14 @@ end
 #   * foo is included in the schema
 #   * extra_setting is NOT included in the schema
 RSpec.shared_examples 'a file based namespace with a schema' do |content|
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
     allow(subject).to receive(:load_data).and_return(content)
   end
 
   describe '#parse_file' do
     context 'when the file does not exist or is unreadable' do
-      before(:each) do
+      before do
         allow(subject).to receive(:load_data).and_return(nil)
       end
 
@@ -121,13 +121,13 @@ RSpec.shared_examples 'a file based namespace with a schema' do |content|
 end
 
 RSpec.shared_examples 'a file based namespace without a schema' do
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
   end
 
   describe '#parse_file' do
     context 'when the file does not exist or is unreadable' do
-      before(:each) do
+      before do
         allow(subject).to receive(:load_data).and_return(nil)
       end
 
@@ -146,7 +146,7 @@ RSpec.shared_examples 'a file based namespace without a schema' do
 end
 
 RSpec.shared_examples 'a yaml file based namespace' do
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
   end
 

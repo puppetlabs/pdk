@@ -119,7 +119,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
     end
 
     context 'when the rubocop output has no offenses for a file' do
-      before(:each) do
+      before do
         rubocop_report.file_finished(test_file, [])
       end
 
@@ -142,7 +142,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
         ]
       end
 
-      before(:each) do
+      before do
         rubocop_report.file_finished(test_file, offenses)
       end
 
@@ -196,7 +196,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
         }
       end
 
-      before(:each) do
+      before do
         test_files.each do |file, offenses|
           rubocop_report.file_finished(file, offenses)
         end

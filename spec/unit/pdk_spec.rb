@@ -33,14 +33,14 @@ describe PDK do
   end
 
   describe '.feature_flag?' do
-    around(:each) do |example|
+    around do |example|
       old_flags = ENV.fetch('PDK_FEATURE_FLAGS', nil)
       ENV['PDK_FEATURE_FLAGS'] = flag_env_var
       example.run
       ENV['PDK_FEATURE_FLAGS'] = old_flags
     end
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:available_feature_flags).and_return(['setflag', 'unsetflag'])
       # Reset memoized variables
       described_class.instance_variable_set(:@requested_feature_flags, nil)

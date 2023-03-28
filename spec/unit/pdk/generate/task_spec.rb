@@ -11,7 +11,7 @@ describe PDK::Generate::Task do
   let(:options) { {} }
   let(:expected_name) { given_name }
 
-  before(:each) do
+  before do
     allow(instance).to receive(:module_name).and_return(module_name)
   end
 
@@ -59,7 +59,7 @@ describe PDK::Generate::Task do
     let(:given_name) { 'test_task' }
     let(:task_files) { [] }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:glob).with(File.join(module_dir, 'tasks', "#{given_name}.*")).and_return(task_files)
     end
 

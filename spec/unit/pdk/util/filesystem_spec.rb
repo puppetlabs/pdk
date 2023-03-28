@@ -10,7 +10,7 @@ describe PDK::Util::Filesystem do
     let(:nil_on_error) { false }
 
     context 'when given a path to a readable file' do
-      before(:each) do
+      before do
         allow(File).to receive(:read).with(path, anything).and_return('some content')
       end
 
@@ -24,7 +24,7 @@ describe PDK::Util::Filesystem do
     end
 
     context 'when given a path to an unreadable file' do
-      before(:each) do
+      before do
         allow(File).to receive(:read).with(path, anything).and_raise(Errno::EACCES, 'some error')
       end
 
@@ -54,7 +54,7 @@ describe PDK::Util::Filesystem do
     let(:dummy_file) { StringIO.new }
     let(:path) { nil }
 
-    before(:each) do
+    before do
       allow(File).to receive(:binwrite).with(path, "#{content}\n")
     end
 

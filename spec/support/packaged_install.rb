@@ -1,7 +1,7 @@
 RSpec.shared_context 'packaged install' do
   let(:package_cachedir) { '/package/share/cache' }
 
-  before(:each) do
+  before do
     allow(PDK::Util).to receive(:package_install?).and_return(true)
     allow(PDK::Util::Filesystem).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
     allow(PDK::Util::Filesystem).to receive(:exist?).with(%r{bundle(\.bat)?$}).and_return(true)
@@ -12,7 +12,7 @@ RSpec.shared_context 'packaged install' do
 end
 
 RSpec.shared_context 'not packaged install' do
-  before(:each) do
+  before do
     allow(PDK::Util).to receive(:package_install?).and_return(false)
   end
 end

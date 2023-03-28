@@ -19,13 +19,13 @@ describe PDK::Util do
   shared_context 'with version file', version_file: true do
     let(:version_file) { File.join('path', 'to', 'the', 'version', 'file') }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Version).to receive(:version_file).and_return(version_file)
     end
   end
 
   shared_context 'without version file', version_file: false do
-    before(:each) do
+    before do
       allow(PDK::Util::Version).to receive(:version_file).and_return(nil)
     end
   end
@@ -37,7 +37,7 @@ describe PDK::Util do
     let(:start_dir) { nil }
     let(:actual_start_dir) { '/path/to/something/deep/in/a/module' }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep/in/a/module').and_return(true)
       allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in/a/module').and_return('/path/to/something/deep/in/a')
       allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep/in/a').and_return(true)
@@ -59,12 +59,12 @@ describe PDK::Util do
     end
 
     context 'when start_dir is nil' do
-      before(:each) do
+      before do
         allow(Dir).to receive(:pwd).and_return(actual_start_dir)
       end
 
       context 'and the target file exists' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
         end
 
@@ -80,7 +80,7 @@ describe PDK::Util do
       let(:start_dir) { actual_start_dir }
 
       context 'and the target file exists' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
         end
 
@@ -105,12 +105,12 @@ describe PDK::Util do
     let(:path) { 'some_path' }
 
     context 'when running on Windows' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(true)
       end
 
       context 'and the path does not exist' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:exist?).with(path).and_return(false)
         end
 
@@ -122,7 +122,7 @@ describe PDK::Util do
       end
 
       context 'and the path exists' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:exist?).with(path).and_return(true)
         end
 
@@ -135,7 +135,7 @@ describe PDK::Util do
     end
 
     context 'when running on a POSIX host' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(false)
       end
 
@@ -163,7 +163,7 @@ describe PDK::Util do
     subject { described_class.development_mode? }
 
     context 'when running from a release' do
-      before(:each) do
+      before do
         allow(PDK::Util::Version).to receive(:git_ref).and_return(nil)
         stub_const('PDK::VERSION', '1.3.0')
       end
@@ -172,7 +172,7 @@ describe PDK::Util do
     end
 
     context 'when running from a pre-release' do
-      before(:each) do
+      before do
         allow(PDK::Util::Version).to receive(:git_ref).and_return(nil)
         stub_const('PDK::VERSION', '1.3.0.pre')
       end
@@ -181,7 +181,7 @@ describe PDK::Util do
     end
 
     context 'when running from git' do
-      before(:each) do
+      before do
         allow(PDK::Util::Version).to receive(:git_ref).and_return('abc')
       end
 
@@ -192,7 +192,7 @@ describe PDK::Util do
   describe '.gem_install?' do
     subject { described_class.gem_install? }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:development_mode?).and_return(false)
     end
 
@@ -205,7 +205,7 @@ describe PDK::Util do
     end
 
     context 'when a version file is present and in development mode is true', version_file: false do
-      before(:each) do
+      before do
         allow(described_class).to receive(:development_mode?).and_return(true)
       end
 
@@ -253,7 +253,7 @@ describe PDK::Util do
     subject { described_class.cachedir }
 
     context 'when running on Windows' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(true)
         allow(PDK::Util::Env).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
       end
@@ -264,7 +264,7 @@ describe PDK::Util do
     end
 
     context 'when running on a POSIX host' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(false)
         allow(Dir).to receive(:home).and_return('/home/test')
       end
@@ -279,7 +279,7 @@ describe PDK::Util do
     subject { described_class.configdir }
 
     context 'when running on Windows' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(true)
         allow(PDK::Util::Env).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
       end
@@ -290,7 +290,7 @@ describe PDK::Util do
     end
 
     context 'when running on a POSIX host' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(false)
         allow(Dir).to receive(:home).with(any_args).and_return('/home/test')
         allow(PDK::Util::Env).to receive(:fetch)
@@ -310,18 +310,18 @@ describe PDK::Util do
     let(:program_data) { 'C:/mock_program_data' }
     let(:windows_path) { File.join(program_data, 'PuppetLabs', 'PDK') }
 
-    before(:each) do
+    before do
       # Reset memoize values
       described_class.instance_variable_set(:@system_configdir, nil)
     end
 
     context 'when running on Windows' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(true)
       end
 
       context 'when ProgramData environment variable exists' do
-        before(:each) do
+        before do
           # ProgramData was added in Windows Vista
           allow(PDK::Util::Env).to receive(:[]).with('ProgramData').and_return(program_data)
           allow(PDK::Util::Env).to receive(:[]).with('AllUsersProfile').and_return(nil)
@@ -333,7 +333,7 @@ describe PDK::Util do
       end
 
       context 'when AllUsersProfile environment variable exists' do
-        before(:each) do
+        before do
           # AllUsersProfile was added in Windows 2000
           allow(PDK::Util::Env).to receive(:[]).with('ProgramData').and_return(nil)
           allow(PDK::Util::Env).to receive(:[]).with('AllUsersProfile').and_return(program_data)
@@ -346,7 +346,7 @@ describe PDK::Util do
     end
 
     context 'when running on a POSIX host' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(false)
         allow(Dir).to receive(:home).and_return('/home/test')
       end
@@ -360,7 +360,7 @@ describe PDK::Util do
   describe '.module_fixtures_dir' do
     subject { described_class.module_fixtures_dir }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:find_upwards).with('metadata.json').and_return(metadata_path)
       allow(described_class).to receive(:in_module_root?).and_return(in_module_root)
     end
@@ -387,7 +387,7 @@ describe PDK::Util do
   describe '.module_root' do
     subject { described_class.module_root }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:find_upwards).with('metadata.json').and_return(metadata_path)
       allow(described_class).to receive(:in_module_root?).and_return(in_module_root)
     end
@@ -422,7 +422,7 @@ describe PDK::Util do
     # We use NUL here because that should never be a valid directory name. But it will work with RSpec mocking.
     let(:test_path) { '\x00path/test' }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:directory?).and_call_original
     end
 
@@ -537,7 +537,7 @@ describe PDK::Util do
   describe 'module_metadata' do
     subject(:result) { described_class.module_metadata }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
       allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(described_class.module_root, 'metadata.json')).and_return(mock_metadata)
     end
@@ -549,7 +549,7 @@ describe PDK::Util do
     end
 
     context 'when the metadata.json can not be read' do
-      before(:each) do
+      before do
         allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(described_class.module_root, 'metadata.json')).and_raise(ArgumentError, 'some error')
       end
 
@@ -563,7 +563,7 @@ describe PDK::Util do
     subject(:result) { described_class.module_pdk_compatible? }
 
     context 'is compatible' do
-      before(:each) do
+      before do
         allow(described_class).to receive(:module_metadata).and_return(mock_metadata.data)
       end
 
@@ -571,7 +571,7 @@ describe PDK::Util do
     end
 
     context 'is not compatible' do
-      before(:each) do
+      before do
         allow(described_class).to receive(:module_metadata).and_return({})
       end
 
@@ -584,7 +584,7 @@ describe PDK::Util do
 
     let(:module_metadata) { {} }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:module_metadata).and_return(module_metadata)
     end
 
@@ -611,7 +611,7 @@ describe PDK::Util do
     end
 
     context 'if there is a problem reading the metadata.json file' do
-      before(:each) do
+      before do
         allow(described_class).to receive(:module_metadata).and_raise(ArgumentError, 'some error')
       end
 

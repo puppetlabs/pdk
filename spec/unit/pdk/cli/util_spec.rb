@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/cli/util'
 
 describe PDK::CLI::Util do
-  before(:each) do
+  before do
     allow(PDK::Util::Env).to receive(:[]).and_call_original
   end
 
@@ -13,7 +13,7 @@ describe PDK::CLI::Util do
     let(:options) { {} }
 
     context 'when a metadata.json exists' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:module_root).and_return('something')
       end
 
@@ -23,7 +23,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when there is no metadata.json' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:module_root).and_return(nil)
         allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(false)
       end
@@ -46,7 +46,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when not passed :check_module_layout' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with(anything).and_return(true)
         end
 
@@ -60,7 +60,7 @@ describe PDK::CLI::Util do
   describe '.interactive?' do
     subject { described_class.interactive? }
 
-    before(:each) do
+    before do
       allow(PDK.logger).to receive(:debug?).and_return(false)
       allow($stderr).to receive(:isatty).and_return(true)
       allow(PDK::CLI::Util).to receive(:ci_environment?).and_return(false) # rubocop:disable RSpec/DescribedClass This reads better
@@ -72,7 +72,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when the logger is in debug mode' do
-      before(:each) do
+      before do
         allow(PDK.logger).to receive(:debug?).and_return(true)
       end
 
@@ -80,7 +80,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when PDK_FRONTEND env var is set to noninteractive' do
-      before(:each) do
+      before do
         allow(PDK::Util::Env).to receive(:[]).with('PDK_FRONTEND').and_return('noninteractive')
       end
 
@@ -88,7 +88,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when in a Continuous Integration environment' do
-      before(:each) do
+      before do
         allow(PDK::CLI::Util).to receive(:ci_environment?).and_return(true) # rubocop:disable RSpec/DescribedClass This reads better
       end
 
@@ -96,7 +96,7 @@ describe PDK::CLI::Util do
     end
 
     context 'when STDERR is not a TTY' do
-      before(:each) do
+      before do
         allow($stderr).to receive(:isatty).and_return(false)
       end
 
@@ -107,7 +107,7 @@ describe PDK::CLI::Util do
   describe 'module_version_check' do
     subject(:module_version_check) { described_class.module_version_check }
 
-    before(:each) do
+    before do
       stub_const('PDK::VERSION', '1.5.0')
       allow(PDK::Util).to receive(:module_pdk_version).and_return(module_pdk_ver)
     end
@@ -125,7 +125,7 @@ describe PDK::CLI::Util do
     context 'if module version is older than 1.3.1' do
       let(:module_pdk_ver) { '1.2.0' }
 
-      before(:each) do
+      before do
         expect(logger).to receive(:warn).with(a_string_matching(%r{This module template is out of date. Run `pdk convert` to make it compatible with your version of PDK.}i))
       end
 
@@ -137,7 +137,7 @@ describe PDK::CLI::Util do
     context 'if module version is newer than installed version' do
       let(:module_pdk_ver) { '1.5.1' }
 
-      before(:each) do
+      before do
         expect(logger).to receive(:warn).with(a_string_matching(%r{This module is compatible with a newer version of PDK. Upgrade your version of PDK to ensure compatibility.}i))
       end
 
@@ -149,7 +149,7 @@ describe PDK::CLI::Util do
     context 'if module version is older than installed version' do
       let(:module_pdk_ver) { '1.3.1' }
 
-      before(:each) do
+      before do
         expect(logger).to receive(:warn).with(a_string_matching(%r{This module is compatible with an older version of PDK. Run `pdk update` to update it to your version of PDK.}i))
       end
 
@@ -200,7 +200,7 @@ describe PDK::CLI::Util do
         }
       end
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_path).and_return(puppet_version)
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_env).and_return(version_result)
         allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev)
@@ -221,7 +221,7 @@ describe PDK::CLI::Util do
         }
       end
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_path).and_return(puppet_version)
         allow(PDK::Util::PuppetVersion).to receive(:puppet_dev_env).and_return(version_result)
         allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_DEV').and_return('true')
@@ -236,7 +236,7 @@ describe PDK::CLI::Util do
       let(:ruby_version) { '2.1.9' }
       let(:puppet_version) { '4.10.10' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
       end
 
@@ -248,7 +248,7 @@ describe PDK::CLI::Util do
       let(:ruby_version) { '2.1.9' }
       let(:puppet_version) { '4.10.10' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
         allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return('4.10.10')
       end
@@ -261,7 +261,7 @@ describe PDK::CLI::Util do
       let(:ruby_version) { '2.4.3' }
       let(:puppet_version) { '5.3.2' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with(anything).and_return(version_result)
       end
 
@@ -273,7 +273,7 @@ describe PDK::CLI::Util do
       let(:ruby_version) { '2.4.3' }
       let(:puppet_version) { '5.3.2' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with(anything).and_return(version_result)
         allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return('2017.3.1')
       end
@@ -291,7 +291,7 @@ describe PDK::CLI::Util do
           let(:ruby_version) { '2.4.3' }
           let(:puppet_version) { '5.3.0' }
 
-          before(:each) do
+          before do
             allow(PDK::Util::PuppetVersion).to receive(:from_module_metadata).and_return(version_result)
           end
 
@@ -307,7 +307,7 @@ describe PDK::CLI::Util do
           let(:ruby_version) { '2.4.3' }
           let(:puppet_version) { '5.5.1' }
 
-          before(:each) do
+          before do
             allow(PDK::Util::PuppetVersion).to receive(:from_module_metadata).and_return(nil)
             allow(PDK::Util::PuppetVersion).to receive(:latest_available).and_return(version_result)
           end
@@ -322,7 +322,7 @@ describe PDK::CLI::Util do
         let(:ruby_version) { '2.4.3' }
         let(:puppet_version) { '5.3.0' }
 
-        before(:each) do
+        before do
           expect(PDK::Util::PuppetVersion).to receive(:latest_available).and_return(version_result)
         end
 
@@ -335,7 +335,7 @@ describe PDK::CLI::Util do
       let(:ruby_version) { '2.1.9' }
       let(:puppet_version) { '99.99.0' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_raise(ArgumentError, 'error msg')
       end
 
@@ -349,7 +349,7 @@ describe PDK::CLI::Util do
       let(:ruby_version) { '2.1.9' }
       let(:pe_version) { '99.99.0' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:from_pe_version).with(anything).and_raise(ArgumentError, 'error msg')
       end
 
@@ -363,7 +363,7 @@ describe PDK::CLI::Util do
       let(:ruby_version) { '2.1.9' }
       let(:puppet_version) { '4.10.10' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
       end
 
@@ -380,7 +380,7 @@ describe PDK::CLI::Util do
       let(:ruby_version) { '2.4.5' }
       let(:puppet_version) { '5.0.0' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
       end
 
@@ -454,7 +454,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when PDK_PUPPET_DEV is also set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_DEV').and_return('true')
         end
 
@@ -474,7 +474,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when PDK_PUPPET_VERSION is also set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
         end
 
@@ -492,7 +492,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when PDK_PE_VERSION is also set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_pe_version)
         end
 
@@ -512,7 +512,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when PDK_PUPPET_VERSION is also set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
         end
 
@@ -532,7 +532,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when PDK_PE_VERSION is also set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_puppet_version)
         end
 
@@ -552,7 +552,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when PDK_PE_VERSION is also set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_pe_version)
         end
 
@@ -572,7 +572,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when PDK_PUPPET_VERSION is also set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
         end
 
@@ -585,7 +585,7 @@ describe PDK::CLI::Util do
     context 'when PDK_PUPPET_VERSION is set' do
       let(:options) { {} }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
       end
 
@@ -606,7 +606,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when PDK_PE_VERSION is also set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_puppet_version)
         end
 
@@ -627,7 +627,7 @@ describe PDK::CLI::Util do
     context 'when PDK_PE_VERSION is set' do
       let(:options) { {} }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Env).to receive(:[]).with('PDK_PE_VERSION').and_return(env_pe_version)
       end
 
@@ -648,7 +648,7 @@ describe PDK::CLI::Util do
       end
 
       context 'when PDK_PUPPET_VERSION is also set' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(env_puppet_version)
         end
 

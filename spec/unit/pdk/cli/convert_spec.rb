@@ -8,7 +8,7 @@ describe 'PDK::CLI convert' do
   let(:pdk_context) { PDK::Context::Module.new(module_root, module_root) }
   let(:module_root) { '/path/to/test/module' }
 
-  before(:each) do
+  before do
     allow(PDK::Util).to receive(:package_install?).and_return(false)
     allow(PDK).to receive(:context).and_return(pdk_context)
   end
@@ -41,7 +41,7 @@ describe 'PDK::CLI convert' do
     #              +- manifests
     #                 ....
     #
-    around(:each) do |example|
+    around do |example|
       # We need the real methods here
       # rubocop:disable PDK/FileUtilsMkdirP
       # rubocop:disable PDK/FileUtilsRMRF
@@ -62,7 +62,7 @@ describe 'PDK::CLI convert' do
       # rubocop:enable PDK/FileUtilsRMRF
     end
 
-    before(:each) do
+    before do
       # Undo some of the mock_configuration mocking
       allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
       # Reset cached information
@@ -78,13 +78,13 @@ describe 'PDK::CLI convert' do
   end
 
   context 'when run from inside a module' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Module::Convert).to receive(:invoke)
     end
 
     context 'and provided no flags' do
-      after(:each) do
+      after do
         PDK::CLI.run(['convert'])
       end
 
@@ -102,7 +102,7 @@ describe 'PDK::CLI convert' do
     end
 
     context 'and the --template-url option has been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['convert', '--template-url', 'https://my/template'])
       end
 
@@ -121,7 +121,7 @@ describe 'PDK::CLI convert' do
     end
 
     context 'and the --template-ref option has been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['convert', '--template-url', 'https://my/template', '--template-ref', '1.0.0'])
       end
 
@@ -140,7 +140,7 @@ describe 'PDK::CLI convert' do
     end
 
     context 'and the --noop flag has been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['convert', '--noop'])
       end
 
@@ -159,7 +159,7 @@ describe 'PDK::CLI convert' do
     end
 
     context 'and the --force flag has been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['convert', '--force'])
       end
 
@@ -192,7 +192,7 @@ describe 'PDK::CLI convert' do
     end
 
     context 'and the --skip-interview flag has been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['convert', '--skip-interview'])
       end
 
@@ -211,7 +211,7 @@ describe 'PDK::CLI convert' do
     end
 
     context 'and the --full-interview flag has been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['convert', '--full-interview'])
       end
 
@@ -230,7 +230,7 @@ describe 'PDK::CLI convert' do
     end
 
     context 'and the --skip-interview and --full-interview flags have been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['convert', '--skip-interview', '--full-interview'])
       end
 
@@ -250,7 +250,7 @@ describe 'PDK::CLI convert' do
     end
 
     context 'and the --force and --full-interview flags have been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['convert', '--force', '--full-interview'])
       end
 

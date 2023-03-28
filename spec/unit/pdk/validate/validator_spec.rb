@@ -65,7 +65,7 @@ describe PDK::Validate::Validator do
     end
 
     context 'with a TTY::Spinner instance' do
-      before(:each) do
+      before do
         allow(validator).to receive(:spinner).and_return(mock_spinner) # rubocop:disable RSpec/SubjectStub This is fine
       end
 
@@ -84,7 +84,7 @@ describe PDK::Validate::Validator do
     end
 
     context 'with a TTY::Spinner instance' do
-      before(:each) do
+      before do
         allow(validator).to receive(:spinner).and_return(mock_spinner) # rubocop:disable RSpec/SubjectStub This is fine
       end
 
@@ -114,7 +114,7 @@ describe PDK::Validate::Validator do
     let(:report) { PDK::Report.new }
     let(:validator_name) { 'mock-validator' }
 
-    before(:each) do
+    before do
       allow(validator).to receive(:name).and_return(validator_name) # rubocop:disable RSpec/SubjectStub This is fine
     end
 

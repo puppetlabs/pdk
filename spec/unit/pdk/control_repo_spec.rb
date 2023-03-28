@@ -3,7 +3,7 @@ require 'pdk/util'
 
 describe PDK::ControlRepo do
   RSpec.shared_examples 'a discoverable control repo' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:find_upwards).with('environment.conf').and_return(environment_path)
       allow(described_class).to receive(:control_repo_root?).and_return(control_repo_root)
     end
@@ -42,7 +42,7 @@ describe PDK::ControlRepo do
     context 'with strict_check set to true but is not a Bolt project dir' do
       subject { described_class.find_control_repo_root(true) }
 
-      before(:each) do
+      before do
         allow(PDK::Bolt).to receive(:bolt_project_root?).and_return(false)
       end
 
@@ -52,7 +52,7 @@ describe PDK::ControlRepo do
     context 'with strict_check set to true and is also a Bolt project dir' do
       subject { described_class.find_control_repo_root(true) }
 
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:find_upwards).with('environment.conf').and_return(environment_path)
         allow(described_class).to receive(:control_repo_root?).and_return(control_repo_root)
         allow(PDK::Bolt).to receive(:bolt_project_root?).and_return(true)
@@ -85,7 +85,7 @@ describe PDK::ControlRepo do
     # We use NUL here because that should never be a valid directory name. But it will work with RSpec mocking.
     let(:test_path) { '\x00path/test' }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
     end
 

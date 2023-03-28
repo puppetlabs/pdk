@@ -3,7 +3,7 @@ require 'pdk/util/puppet_strings'
 
 describe PDK::Util::PuppetStrings do
   describe '.puppet' do
-    before(:each) do
+    before do
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!).with('puppet')
       allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util::RubyVersion).to receive(:bin_path).and_return(ruby_path)
@@ -19,7 +19,7 @@ describe PDK::Util::PuppetStrings do
     let(:command_args) { ['some', 'args'] }
 
     context 'on Windows' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(true)
 
         allow(PDK::CLI::Exec::Command).to receive(:new).with(
@@ -43,7 +43,7 @@ describe PDK::Util::PuppetStrings do
     end
 
     context 'on nix' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(false)
 
         allow(PDK::CLI::Exec::Command).to receive(:new).with(
@@ -67,7 +67,7 @@ describe PDK::Util::PuppetStrings do
   end
 
   describe '.generate_hash' do
-    before(:each) do
+    before do
       allow(described_class).to receive(:puppet)
         .with('strings', 'generate', '--format', 'json').and_return(result)
     end
@@ -117,7 +117,7 @@ describe PDK::Util::PuppetStrings do
   end
 
   describe '.find_object' do
-    before(:each) do
+    before do
       allow(described_class).to receive(:generate_hash)
         .and_return(puppet_strings_data)
       allow(PDK::Util).to receive(:module_metadata).and_return(metadata_hash)
@@ -184,7 +184,7 @@ describe PDK::Util::PuppetStrings do
   describe '.all_objects' do
     subject(:result) { described_class.all_objects }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:generate_hash).and_return(puppet_strings_data)
     end
 

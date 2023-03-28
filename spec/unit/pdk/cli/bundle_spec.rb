@@ -6,13 +6,13 @@ describe 'Running `pdk bundle`' do
   let(:command_result) { { exit_code: 0 } }
 
   context 'when it calls bundler successfully' do
-    after(:each) do
+    after do
       expect {
         PDK::CLI.run(command_args)
       }.to exit_zero
     end
 
-    before(:each) do
+    before do
       mock_command = instance_double(
         PDK::CLI::Exec::InteractiveCommand,
         :context= => true,

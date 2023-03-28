@@ -16,7 +16,7 @@ describe PDK::Util::PuppetVersion do
   end
 
   shared_context 'with a mocked rubygems response' do
-    before(:each) do
+    before do
       mock_fetcher = instance_double(Gem::SpecFetcher)
       allow(Gem::SpecFetcher).to receive(:fetcher).and_return(mock_fetcher)
       mock_response = rubygems_versions.map do |version|
@@ -29,14 +29,14 @@ describe PDK::Util::PuppetVersion do
 
   # TODO: use existing shared context from spec/support/packaged_install.rb
   shared_context 'is not a package install' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(false)
     end
   end
 
   # TODO: use existing shared context from spec/support/packaged_install.rb
   shared_context 'is a package install' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(true)
       allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.5.9' => '2.5.0', '2.7.7' => '2.7.0')
 
@@ -49,7 +49,7 @@ describe PDK::Util::PuppetVersion do
       allow(instance277).to receive(:available_puppet_versions).and_return(versions277)
     end
 
-    after(:each) do
+    after do
       PDK::Util::RubyVersion.instance_variable_set(:@instance, nil)
       PDK::Util::RubyVersion.instance_variable_set(:@active_ruby_version, nil)
     end
@@ -81,7 +81,7 @@ describe PDK::Util::PuppetVersion do
 
   describe '.fetch_puppet_dev' do
     context 'if puppet source has already been fetched' do
-      before(:each) do
+      before do
         allow(described_class.instance).to receive(:puppet_dev_fetched?).and_return(true)
       end
 
@@ -106,7 +106,7 @@ describe PDK::Util::PuppetVersion do
     end
 
     context 'if puppet source is not cloned yet' do
-      before(:each) do
+      before do
         allow(PDK::Util::Git).to receive(:remote_repo?).with(anything).and_return(false)
       end
 
@@ -119,7 +119,7 @@ describe PDK::Util::PuppetVersion do
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return(File.join('path', 'to'))
           allow(PDK::Util::Git).to receive(:git).with('clone', anything, anything).and_return(clone_results)
         end
@@ -142,7 +142,7 @@ describe PDK::Util::PuppetVersion do
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return(File.join('path', 'to'))
           allow(PDK::Util::Git).to receive(:git).with('clone', anything, anything).and_return(clone_results)
         end
@@ -154,7 +154,7 @@ describe PDK::Util::PuppetVersion do
     end
 
     context 'if puppet source is already cloned' do
-      before(:each) do
+      before do
         allow(PDK::Util::Git).to receive(:remote_repo?).with(anything).and_return(true)
       end
 
@@ -167,7 +167,7 @@ describe PDK::Util::PuppetVersion do
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(fetch_results)
         end
@@ -190,7 +190,7 @@ describe PDK::Util::PuppetVersion do
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(fetch_results)
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/main').and_return(exit_code: 0)
@@ -210,7 +210,7 @@ describe PDK::Util::PuppetVersion do
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(exit_code: 0)
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/main').and_return(reset_results)
@@ -234,7 +234,7 @@ describe PDK::Util::PuppetVersion do
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(exit_code: 0)
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/main').and_return(reset_results)
@@ -334,11 +334,11 @@ describe PDK::Util::PuppetVersion do
   end
 
   describe '.from_pe_version' do
-    before(:each) do
+    before do
       allow(described_class.instance).to receive(:fetch_pe_version_map).and_return(forge_version_map)
     end
 
-    after(:each) do
+    after do
       # Clear memoization of the version map between specs
       described_class.instance.instance_variable_set(:@pe_version_map, nil)
     end
@@ -478,7 +478,7 @@ describe PDK::Util::PuppetVersion do
     end
 
     context 'with a pinned version requirement' do
-      before(:each) do
+      before do
         metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '4.10.10' }]
       end
 
@@ -490,7 +490,7 @@ describe PDK::Util::PuppetVersion do
     end
 
     context 'with an invalid version requirement' do
-      before(:each) do
+      before do
         metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '' }]
       end
 
@@ -502,7 +502,7 @@ describe PDK::Util::PuppetVersion do
     end
 
     context 'when module has no metadata.json' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:find_upwards).with('metadata.json').and_return(nil)
       end
 

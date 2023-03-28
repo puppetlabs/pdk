@@ -6,13 +6,13 @@ describe 'Running `pdk env`' do
   let(:command_result) { { exit_code: 0 } }
 
   context 'when it calls env successfully' do
-    after(:each) do
+    after do
       expect {
         PDK::CLI.run(command_args)
       }.to exit_zero
     end
 
-    before(:each) do
+    before do
       allow(PDK::Util::RubyVersion).to receive(:gem_home).and_return('/opt/puppetlabs/pdk/share/cache/ruby/2.4.0')
       allow(PDK::Util::RubyVersion).to receive(:gem_path).and_return('/opt/puppetlabs/pdk/private/ruby/2.4.3/lib')
       allow(PDK::Util::RubyVersion).to receive(:bin_path).and_return('/opt/puppetlabs/pdk/private/ruby/2.4.3/bin')

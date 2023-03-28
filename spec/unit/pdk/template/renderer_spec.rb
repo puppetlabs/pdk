@@ -10,7 +10,7 @@ describe PDK::Template::Renderer do
     subject(:instance) { described_class.instance(template_uri, template_path, pdk_context) }
 
     context 'given an original template directory' do
-      before(:each) do
+      before do
         allow(PDK::Template::Renderer::V1).to receive(:compatible?).and_return(true)
       end
 
@@ -20,7 +20,7 @@ describe PDK::Template::Renderer do
     end
 
     context 'given a template that has no appropriate renderer' do
-      before(:each) do
+      before do
         allow(PDK::Template::Renderer::V1).to receive(:compatible?).and_return(false)
       end
 

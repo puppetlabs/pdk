@@ -15,7 +15,7 @@ describe PDK::Generate::DefinedType do
 
   let(:target_spec_path) { generator.target_spec_path }
 
-  before(:each) do
+  before do
     test_metadata = { 'name' => module_name }
     allow(PDK::Util).to receive(:module_metadata).and_return(test_metadata)
   end

@@ -5,7 +5,7 @@ require 'addressable'
 shared_context 'with puppet object module metadata' do
   let(:module_metadata) { '{"name": "testuser-test_module"}' }
 
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_path).and_return(true)
     allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_path).and_return(true)
     allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_path).and_return(module_metadata)
@@ -23,7 +23,7 @@ describe PDK::Generate::PuppetObject do
 
   include_context 'mock configuration'
 
-  before(:each) do
+  before do
     stub_const('PDK::Generate::PuppetObject::OBJECT_TYPE', object_type)
     allow(PDK::Util).to receive(:package_install?).and_return(false)
     allow(PDK::Util).to receive(:module_root).and_return(module_dir)
@@ -85,7 +85,7 @@ describe PDK::Generate::PuppetObject do
     end
 
     context 'when the module metadata.json is not available' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_path).and_return(false)
       end
 
@@ -131,7 +131,7 @@ describe PDK::Generate::PuppetObject do
       end
     end
 
-    before(:each) do
+    before do
       # Mock required PuppetObject methods
       allow(templated_object).to receive(:friendly_name).and_return('spec_object')
       allow(templated_object).to receive(:template_files).and_return('source' => 'target')
@@ -173,7 +173,7 @@ describe PDK::Generate::PuppetObject do
     subject { templated_object.can_run? }
 
     context 'when check_preconditions raises an error' do
-      before(:each) do
+      before do
         expect(templated_object).to receive(:check_preconditions).and_raise('Mock Error')
       end
 
@@ -181,7 +181,7 @@ describe PDK::Generate::PuppetObject do
     end
 
     context 'when check_preconditions does not raise an error' do
-      before(:each) do
+      before do
         expect(templated_object).to receive(:check_preconditions).and_return(nil)
       end
 
@@ -211,7 +211,7 @@ describe PDK::Generate::PuppetObject do
     let(:null_renderer) { PDK::Template::Renderer::AbstractRenderer.new(nil, nil, pdk_context) }
     let(:template_dir) { PDK::Template::TemplateDir.new(nil, nil, pdk_context, null_renderer) }
 
-    before(:each) do
+    before do
       # Mock required PuppetObject methods
       allow(templated_object).to receive(:template_files).and_return(template_files)
       allow(templated_object).to receive(:template_data).and_return({})
@@ -225,7 +225,7 @@ describe PDK::Generate::PuppetObject do
     end
 
     context 'when the target files do not exist' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(absolute_target_file).and_return(false)
       end
 
@@ -235,7 +235,7 @@ describe PDK::Generate::PuppetObject do
     end
 
     context 'when the target object file exists' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(absolute_target_file).and_return(true)
       end
 

@@ -14,13 +14,13 @@ describe PDK::Config::Namespace do
   let(:config_options) { {} }
 
   shared_context 'with a nested namespace' do |name|
-    before(:each) do
+    before do
       config.namespace(name)
     end
   end
 
   shared_context 'with a mounted file' do |name|
-    before(:each) do
+    before do
       path = PDK::Util::Filesystem.expand_path(File.join('path', 'to', name))
       allow(PDK::Util::Filesystem).to receive(:read_file).with(path, anything)
       allow(PDK::Util::Filesystem).to receive(:write_file).with(path, anything)
@@ -31,7 +31,7 @@ describe PDK::Config::Namespace do
   end
 
   shared_context 'with a mounted file with content' do |name, content|
-    before(:each) do
+    before do
       path = PDK::Util::Filesystem.expand_path(File.join('path', 'to', name))
       allow(PDK::Util::Filesystem).to receive(:read_file).with(path).and_return(content)
       allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
@@ -44,7 +44,7 @@ describe PDK::Config::Namespace do
   end
 
   describe '#[]' do
-    before(:each) do
+    before do
       config.setting('foo')
       config[:foo] = 'bar'
     end
@@ -73,7 +73,7 @@ describe PDK::Config::Namespace do
     context 'when persistent_defaults is true' do
       let(:config_options) { { persistent_defaults: true } }
 
-      before(:each) do
+      before do
         # Add a value with a default value
         config.setting('spec_test') do
           default_to { 'spec_default' }
@@ -89,7 +89,7 @@ describe PDK::Config::Namespace do
     context 'when persistent_defaults is false' do
       let(:config_options) { { persistent_defaults: false } }
 
-      before(:each) do
+      before do
         # Add a value with a default value
         config.setting('spec_test') do
           default_to { 'spec_default' }
@@ -104,7 +104,7 @@ describe PDK::Config::Namespace do
   end
 
   describe '#[]=' do
-    before(:each) do
+    before do
       config.setting('foo') { validate spec_simple_validator }
       config[:foo] = 'bar'
     end
@@ -135,7 +135,7 @@ describe PDK::Config::Namespace do
   end
 
   describe '#fetch' do
-    before(:each) do
+    before do
       config.setting('foo')
       config[:foo] = 'bar'
     end
@@ -167,7 +167,7 @@ describe PDK::Config::Namespace do
 
     include_context 'with a mounted file with content', 'mounted', '{"setting1": "value1"}'
 
-    before(:each) do
+    before do
       # Add a value with a default value
       config.setting('spec_test') do
         default_to { 'spec_default' }
@@ -219,7 +219,7 @@ describe PDK::Config::Namespace do
   end
 
   describe '#namespace' do
-    before(:each) do
+    before do
       config.namespace('test')
     end
 
@@ -243,7 +243,7 @@ describe PDK::Config::Namespace do
   describe '#mount' do
     let(:new_namespace) { described_class.new }
 
-    before(:each) do
+    before do
       config.mount('test_mount', new_namespace)
     end
 
@@ -261,7 +261,7 @@ describe PDK::Config::Namespace do
   end
 
   describe '#setting' do
-    before(:each) do
+    before do
       config.setting('my_value') { default_to { 'foo' } }
     end
 
@@ -297,7 +297,7 @@ describe PDK::Config::Namespace do
     include_context 'with a nested namespace', 'nested'
     include_context 'with a mounted file', 'mounted'
 
-    before(:each) do
+    before do
       # Create the settings
       config.setting('in_root')
       config.setting('nil_setting')

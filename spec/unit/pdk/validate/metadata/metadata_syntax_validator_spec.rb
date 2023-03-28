@@ -19,7 +19,7 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
 
     let(:report) { PDK::Report.new }
 
-    before(:each) do
+    before do
       targets.each do |target|
         allow(PDK::Util::Filesystem).to receive(:directory?).with(target[:name]).and_return(target.fetch(:directory, false))
         allow(PDK::Util::Filesystem).to receive(:file?).with(target[:name]).and_return(target.fetch(:file, true))

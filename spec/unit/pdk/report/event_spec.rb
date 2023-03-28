@@ -19,7 +19,7 @@ describe PDK::Report::Event do
 
   context 'when validating arguments' do
     context 'and passed an absolute path to the file being tested' do
-      before(:each) do
+      before do
         expect(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
       end
 
@@ -420,7 +420,7 @@ describe PDK::Report::Event do
           END
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:read_file).with('testfile.rb').and_return(file_content)
           allow(PDK::Util::Filesystem).to receive(:file?).with('testfile.rb').and_return(true)
           allow(PDK::Util).to receive(:module_root).and_return(File.join('my', 'module_root'))

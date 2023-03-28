@@ -19,7 +19,7 @@ describe PDK::Validate::Tasks::TasksNameValidator do
 
     let(:report) { PDK::Report.new }
 
-    after(:each) do
+    after do
       return_value
     end
 

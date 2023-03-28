@@ -4,7 +4,7 @@ require 'pdk/cli'
 describe 'PDK::CLI new test' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new test}m) }
 
-  before(:each) do
+  before do
     # Stop printing out the result
     allow(PDK::CLI::Util::UpdateManagerPrinter).to receive(:print_summary)
   end
@@ -28,7 +28,7 @@ describe 'PDK::CLI new test' do
   context 'when run from inside a module' do
     let(:root_dir) { '/path/to/test/module' }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:module_root).and_return(root_dir)
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
       allow(PDK::Util::RubyVersion).to receive(:use)
@@ -60,7 +60,7 @@ describe 'PDK::CLI new test' do
     end
 
     context 'and provided an invalid object name' do
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetStrings).to receive(:find_object).with('test-class').and_raise(PDK::Util::PuppetStrings::NoObjectError)
       end
 
@@ -80,12 +80,12 @@ describe 'PDK::CLI new test' do
     context 'and provided a valid object name' do
       let(:generator) { instance_double(PDK::Generate::PuppetClass, run: true) }
 
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetStrings).to receive(:find_object).with('test_class').and_return([PDK::Generate::PuppetClass, { 'name' => 'my_module::test_class' }])
       end
 
       context 'and the test type is specified with --unit' do
-        after(:each) do
+        after do
           PDK::CLI.run(['new', 'test', '--unit', 'test_class'])
         end
 
@@ -107,7 +107,7 @@ describe 'PDK::CLI new test' do
       end
 
       context 'and the test type is not specified' do
-        after(:each) do
+        after do
           PDK::CLI.run(['new', 'test', 'test_class'])
         end
 
@@ -130,7 +130,7 @@ describe 'PDK::CLI new test' do
     end
 
     context 'and provided a valid object name that PDK has no generator for' do
-      before(:each) do
+      before do
         allow(PDK::Util::PuppetStrings)
           .to receive(:find_object)
           .with('test_thing')

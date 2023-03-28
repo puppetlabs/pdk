@@ -8,7 +8,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
   let(:options) { {} }
   let(:tmpdir) { File.join('/', 'tmp', 'puppet-parser-validate') }
 
-  before(:each) do
+  before do
     allow(Dir).to receive(:mktmpdir).with('puppet-parser-validate').and_return(tmpdir)
     allow(PDK::Util::Filesystem).to receive(:remove_entry_secure).with(tmpdir)
   end
@@ -37,7 +37,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
 
   describe '.invoke' do
     context 'when the validator runs correctly' do
-      before(:each) do
+      before do
         allow(validator).to receive(:parse_targets).and_return([[], [], []]) # rubocop:disable RSpec/SubjectStub
       end
 
@@ -48,7 +48,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
     end
 
     context 'when the validator raises an exception' do
-      before(:each) do
+      before do
         allow(validator).to receive(:parse_targets).and_raise(PDK::CLI::FatalError) # rubocop:disable RSpec/SubjectStub
       end
 
@@ -62,12 +62,12 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
   end
 
   describe '.remove_validate_tmpdir' do
-    after(:each) do
+    after do
       validator.remove_validate_tmpdir
     end
 
     context 'when no temp dir has been created' do
-      before(:each) do
+      before do
         validator.instance_variable_set(:@validate_tmpdir, nil)
       end
 
@@ -77,12 +77,12 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
     end
 
     context 'when a temp dir has been created' do
-      before(:each) do
+      before do
         validator.validate_tmpdir
       end
 
       context 'and the path is a directory' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with(tmpdir).and_return(true)
         end
 
@@ -92,7 +92,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
       end
 
       context 'but the path is not a directory' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with(tmpdir).and_return(false)
         end
 
@@ -108,7 +108,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
 
     let(:targets) { ['target1', 'target2.pp'] }
 
-    before(:each) do
+    before do
       allow(Gem).to receive(:win_platform?).and_return(false)
     end
 
@@ -167,11 +167,11 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
       output
     end
 
-    before(:each) do
+    before do
       allow(report).to receive(:add_event)
     end
 
-    after(:each) do
+    after do
       parse_output
     end
 
@@ -309,7 +309,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
     subject { validator.null_file }
 
     context 'on a Windows host' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(true)
       end
 
@@ -317,7 +317,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
     end
 
     context 'on a POSIX host' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(false)
       end
 

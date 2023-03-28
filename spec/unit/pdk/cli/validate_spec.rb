@@ -11,7 +11,7 @@ describe 'Running `pdk validate` in a module' do
   let(:module_path) { '/path/to/testmodule' }
   let(:context) { PDK::Context::Module.new(module_path, module_path) }
 
-  before(:each) do
+  before do
     allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: ruby_version, gemset: { puppet: puppet_version })
     allow(PDK::Util::RubyVersion).to receive(:use)
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(hash_including(:puppet))
@@ -286,7 +286,7 @@ describe 'Running `pdk validate` in a module' do
       }
     end
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including('puppet-dev': true)).and_return(puppet_env)
       allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev).and_return(nil)
     end
@@ -382,7 +382,7 @@ describe 'Running `pdk validate` in a module' do
       }
     end
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including('puppet-version': puppet_version)).and_return(puppet_env)
     end
 
@@ -425,7 +425,7 @@ describe 'Running `pdk validate` in a module' do
       }
     end
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including('pe-version': pe_version)).and_return(puppet_env)
     end
 

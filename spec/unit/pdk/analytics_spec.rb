@@ -7,7 +7,7 @@ describe PDK::Analytics do
   let(:logger) { instance_double(Logger, debug: true) }
   let(:uuid) { SecureRandom.uuid }
 
-  before(:each) do
+  before do
     # We use a hard override to disable analytics for tests, but that obviously
     # interferes with these tests...
     allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(nil)
@@ -44,7 +44,7 @@ describe PDK::Analytics do
       end
 
       context 'when the client instantiation fails' do
-        before(:each) do
+        before do
           allow(described_class::Client::GoogleAnalytics).to receive(:new).and_raise(StandardError)
         end
 

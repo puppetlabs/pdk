@@ -28,7 +28,7 @@ describe 'PDK::CLI release' do
       )
     end
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:ensure_in_module!).and_return(nil)
       allow(PDK::Module::Release).to receive(:new).and_return(release_object)
       allow(PDK::Util).to receive(:exit_process).and_raise('exit_process mock should not be called')
@@ -83,7 +83,7 @@ describe 'PDK::CLI release' do
     let(:release) { PDK::CLI::Release }
 
     context 'With a module that is not forge ready' do
-      before(:each) do
+      before do
         allow(mock_metadata_obj).to receive(:forge_ready?).and_return(false)
         allow(mock_metadata_obj).to receive(:missing_fields).and_return(['mock_field'])
       end
@@ -95,7 +95,7 @@ describe 'PDK::CLI release' do
     end
 
     context 'With a module that is not pdk compatibler' do
-      before(:each) do
+      before do
         allow(release_object).to receive(:pdk_compatible?).and_return(false)
       end
 

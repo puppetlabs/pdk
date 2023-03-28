@@ -16,7 +16,7 @@ describe PDK::CLI::Util::UpdateManagerPrinter do
     manager
   end
 
-  before(:each) do
+  before do
     allow(PDK::Report.default_target).to receive(:puts)
 
     # Mock the updated_files so the update_manager can pretend to read and diff them

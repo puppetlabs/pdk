@@ -70,7 +70,7 @@ describe 'PDK::CLI::Remove::Config' do
       end
     end
 
-    before(:each) do
+    before do
       allow(PDK).to receive(:config).and_return(pdk_config)
       allow($stdout).to receive(:puts)
 
@@ -113,7 +113,7 @@ describe 'PDK::CLI::Remove::Config' do
     RSpec.shared_examples 'a removed setting with a default' do |setting_under_test, initial_value, expected_default_value|
       let(:setting_name) { setting_under_test }
 
-      before(:each) do
+      before do
         pdk_config.set(setting_name, initial_value)
       end
 
@@ -194,7 +194,7 @@ describe 'PDK::CLI::Remove::Config' do
         context 'with an item value which removes the last array item' do
           let(:setting_value) { 'quokka' }
 
-          before(:each) do
+          before do
             pdk_config.set(setting_name, ['quokka'], force: true)
           end
 
@@ -209,7 +209,7 @@ describe 'PDK::CLI::Remove::Config' do
         context 'with an item value which removes the second last array item' do
           let(:setting_value) { 'quokka' }
 
-          before(:each) do
+          before do
             pdk_config.set(setting_name, ['quokka', 'kangaroo'], force: true)
           end
 
@@ -235,7 +235,7 @@ describe 'PDK::CLI::Remove::Config' do
           # the setting_value is just ignored.
           let(:setting_value) { 'quokka' }
 
-          before(:each) do
+          before do
             pdk_config.set(setting_name, ['quokka'], force: true)
             expect(PDK.logger).to receive(:info).with(%r{Ignoring the item value .+ as --force has been set})
           end
@@ -247,7 +247,7 @@ describe 'PDK::CLI::Remove::Config' do
         context 'with an item value which removes the second last array item' do
           let(:setting_value) { 'quokka' }
 
-          before(:each) do
+          before do
             pdk_config.set(setting_name, ['quokka', 'kangaroo'], force: true)
             expect(PDK.logger).to receive(:info).with(%r{Ignoring the item value .+ as --force has been set})
           end

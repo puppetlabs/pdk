@@ -41,7 +41,7 @@ describe 'PDK::CLI update' do
     #              +- manifests
     #                 ....
     #
-    around(:each) do |example|
+    around do |example|
       # We need the real methods here
       # rubocop:disable PDK/FileUtilsMkdirP
       # rubocop:disable PDK/FileUtilsRMRF
@@ -79,7 +79,7 @@ describe 'PDK::CLI update' do
       # rubocop:enable PDK/FileUtilsRMRF
     end
 
-    before(:each) do
+    before do
       # Undo some of the mock_configuration mocking
       allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
       # Ensure the the module update never actually happens
@@ -99,7 +99,7 @@ describe 'PDK::CLI update' do
   context 'when run from inside a module' do
     let(:pdk_context) { PDK::Context::Module.new(module_root, module_root) }
 
-    before(:each) do
+    before do
       allow(PDK).to receive(:context).and_return(pdk_context)
       allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
@@ -107,7 +107,7 @@ describe 'PDK::CLI update' do
     end
 
     context 'and provided no flags' do
-      after(:each) do
+      after do
         PDK::CLI.run(['update'])
       end
 
@@ -133,11 +133,11 @@ describe 'PDK::CLI update' do
     end
 
     context 'and the module is pinned to tagged version of our template' do
-      after(:each) do
+      after do
         PDK::CLI.run(['update'])
       end
 
-      before(:each) do
+      before do
         allow(PDK::Module::Update).to receive(:new).with(module_root, any_args).and_return(updater)
         allow(updater).to receive(:run)
       end
@@ -150,7 +150,7 @@ describe 'PDK::CLI update' do
     end
 
     context 'and the --noop flag has been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['update', '--noop'])
       end
 
@@ -172,7 +172,7 @@ describe 'PDK::CLI update' do
     end
 
     context 'and the --force flag has been passed' do
-      after(:each) do
+      after do
         PDK::CLI.run(['update', '--force'])
       end
 
@@ -231,7 +231,7 @@ describe 'PDK::CLI update' do
   end
 
   context 'when run from inside an unconverted module' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(false)
     end

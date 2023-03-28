@@ -14,7 +14,7 @@ RSpec.shared_context 'mock configuration' do
     end
   end
 
-  before(:each) do
+  before do
     # The PDK.config method memoizes, so create a new read only config object every time
     allow(PDK).to receive(:config).and_return(new_config)
 

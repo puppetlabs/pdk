@@ -11,7 +11,7 @@ describe PDK::Module::Build do
   shared_context 'with mock metadata' do
     let(:mock_metadata) { PDK::Module::Metadata.new('name' => 'my-module') }
 
-    before(:each) do
+    before do
       allow(PDK::Module::Metadata).to receive(:from_file).with(anything).and_return(mock_metadata)
     end
   end
@@ -28,7 +28,7 @@ describe PDK::Module::Build do
   end
 
   describe '#initialize' do
-    before(:each) do
+    before do
       allow(Dir).to receive(:pwd).and_return(pwd)
     end
 
@@ -135,12 +135,12 @@ describe PDK::Module::Build do
     let(:instance) { described_class.new(module_dir: module_dir) }
     let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
 
-    before(:each) do
+    before do
       allow(instance).to receive(:ignored_files).and_return(PathSpec.new("/spec/\n"))
       allow(Find).to receive(:find).with(module_dir).and_yield(found_file)
     end
 
-    after(:each) do
+    after do
       instance.stage_module_in_build_dir
     end
 
@@ -177,7 +177,7 @@ describe PDK::Module::Build do
     let(:path_in_build_dir) { File.join(module_dir, 'pkg', release_name, 'test') }
     let(:release_name) { 'my-module-0.0.1' }
 
-    before(:each) do
+    before do
       allow(instance).to receive(:release_name).and_return(release_name)
     end
 
@@ -187,7 +187,7 @@ describe PDK::Module::Build do
           File.join(module_dir, relative_path).force_encoding(Encoding.find('filesystem')).encode('utf-8', invalid: :replace)
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with(path).and_return(true)
           allow(PDK::Util::Filesystem).to receive(:symlink?).with(path).and_return(false)
           allow(PDK::Util::Filesystem).to receive(:cp).with(path, anything, anything).and_return(true)
@@ -205,7 +205,7 @@ describe PDK::Module::Build do
     end
 
     context 'when the path is a directory' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(true)
         allow(PDK::Util::Filesystem).to receive(:stat).with(path_to_stage).and_return(instance_double(File::Stat, mode: 0o100755))
       end
@@ -217,7 +217,7 @@ describe PDK::Module::Build do
     end
 
     context 'when the path is a symlink' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
         allow(PDK::Util::Filesystem).to receive(:symlink?).with(path_to_stage).and_return(true)
       end
@@ -231,7 +231,7 @@ describe PDK::Module::Build do
     end
 
     context 'when the path is a regular file' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
         allow(PDK::Util::Filesystem).to receive(:symlink?).with(path_to_stage).and_return(false)
       end
@@ -319,7 +319,7 @@ describe PDK::Module::Build do
     end
     let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
 
-    before(:each) do
+    before do
       allow(instance).to receive(:ignored_files).and_return(PathSpec.new(ignore_patterns.join("\n")))
     end
 
@@ -349,7 +349,7 @@ describe PDK::Module::Build do
     end
     let(:available_files) { [] }
 
-    before(:each) do
+    before do
       available_files.each do |file|
         file_path = File.join(module_dir, file)
 
@@ -400,12 +400,12 @@ describe PDK::Module::Build do
     let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
     let(:instance) { described_class.new(module_dir: module_dir) }
 
-    before(:each) do
+    before do
       allow(File).to receive(:realdirpath) { |path| path }
     end
 
     context 'when no ignore file is present in the module' do
-      before(:each) do
+      before do
         allow(instance).to receive(:ignore_file).and_return(nil)
       end
 
@@ -417,7 +417,7 @@ describe PDK::Module::Build do
     end
 
     context 'when an ignore file is present in the module' do
-      before(:each) do
+      before do
         ignore_file_path = File.join(module_dir, '.pdkignore')
         ignore_file_content = "/vendor/\n"
 

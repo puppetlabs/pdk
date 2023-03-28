@@ -7,11 +7,11 @@ def on_windows
 end
 
 describe PDK::Util::Env do
-  before(:each) do
+  before do
     ENV[env_name] = env_val
   end
 
-  after(:each) do
+  after do
     ENV.delete(env_name)
   end
 
@@ -37,14 +37,14 @@ describe PDK::Util::Env do
   describe '[]=' do
     let(:new_val) { 'New PDK::Util::Env test value' }
 
-    before(:each) do
+    before do
       # Order is important here.
       ENV.delete(upcase_name)
       ENV[env_name] = env_val
       expect(described_class[env_name]).to eq(env_val)
     end
 
-    after(:each) do
+    after do
       ENV.delete(upcase_name)
     end
 

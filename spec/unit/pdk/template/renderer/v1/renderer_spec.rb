@@ -41,7 +41,7 @@ describe PDK::Template::Renderer::V1::Renderer do
         )
       end
 
-      before(:each) do
+      before do
         allow(renderer).to receive(:files_in_template).with(['/some/path/moduleroot']).and_return(file_in_template_response1)
         allow(renderer).to receive(:files_in_template).with(['/some/path/moduleroot', '/some/path/moduleroot_init']).and_return(file_in_template_response2)
         allow(renderer).to receive(:new_template_file).with(%r{manage\.erb}, Hash).and_return(template_file)
@@ -77,7 +77,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       end
 
       context 'and an error occurs during rendering' do
-        before(:each) do
+        before do
           allow(template_file).to receive(:render).and_raise(RuntimeError, 'mock error')
         end
 
@@ -105,7 +105,7 @@ describe PDK::Template::Renderer::V1::Renderer do
   end
 
   describe '.has_single_item?' do
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:exist?).with("#{template_root}/object_templates/missing.erb").and_return(false)
       allow(PDK::Util::Filesystem).to receive(:exist?).with("#{template_root}/object_templates/exists.erb").and_return(true)
     end
@@ -125,7 +125,7 @@ describe PDK::Template::Renderer::V1::Renderer do
     context 'given an item that does not exist' do
       let(:item_path) { 'missing.erb' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:file?).with("#{template_root}/object_templates/missing.erb").and_return(false)
       end
 
@@ -145,7 +145,7 @@ describe PDK::Template::Renderer::V1::Renderer do
         )
       end
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:file?).with("#{template_root}/object_templates/item.erb").and_return(true)
         allow(PDK::Util::Filesystem).to receive(:readable?).with("#{template_root}/object_templates/item.erb").and_return(true)
         allow(PDK::Util::Filesystem).to receive(:read_file).with("#{template_root}/object_templates/item.erb").and_return(item_content)
@@ -166,7 +166,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in an empty directory' do
         let(:dirs) { ['/the/file/is/here'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/the/file/is/here').and_return true
         end
 
@@ -178,7 +178,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in a non-existant directory' do
         let(:dirs) { ['/the/file/is/nothere'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/the/file/is/nothere').and_return false
         end
 
@@ -190,7 +190,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in a directory with a single file' do
         let(:dirs) { ['/here/moduleroot'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/here/moduleroot').and_return true
           allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
           allow(PDK::Util::Filesystem).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
@@ -204,7 +204,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in a directory with more than one file' do
         let(:dirs) { ['/here/moduleroot'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/here/moduleroot').and_return true
           allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
           allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename2').and_return true
@@ -219,7 +219,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in more than one directory with a file' do
         let(:dirs) { ['/path/to/templates/moduleroot', '/path/to/templates/moduleroot_init'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates').and_return true
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates/moduleroot').and_return true
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates/moduleroot_init').and_return true

@@ -63,7 +63,7 @@ describe PDK::Context do
     context 'with a path that does not exist' do
       let(:context_path) { 'does/not/exist' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(context_path).and_return(false)
       end
 
@@ -75,14 +75,14 @@ describe PDK::Context do
     context 'with a path that does exist' do
       let(:temp_context_path) { Dir.mktmpdir }
 
-      before(:each) do
+      before do
         # Stop any deep searching past the temp directory
         parent_path = PDK::Util::Filesystem.expand_path('..', temp_context_path)
         allow(PDK::Util::Filesystem).to receive(:directory?).and_call_original
         allow(PDK::Util::Filesystem).to receive(:directory?).with(parent_path).and_return(false)
       end
 
-      after(:each) do
+      after do
         FileUtils.rm_rf(temp_context_path) # rubocop:disable PDK/FileUtilsRMRF We need to call the real functions
       end
 
@@ -98,7 +98,7 @@ describe PDK::Context do
         let(:puppet_module_fixture_root) { File.join(temp_context_path, 'puppet_module') }
         let(:deep_dir_path) { File.join(puppet_module_fixture_root, 'manifests', 'foo', 'bar') }
 
-        before(:each) do
+        before do
           # Copy the module
           FileUtils.cp_r(puppet_module_fixture, temp_context_path)
           # Create deep directories
@@ -126,7 +126,7 @@ describe PDK::Context do
         let(:control_repo_fixture_root) { File.join(temp_context_path, 'control_repo') }
         let(:module_dir) { File.join(control_repo_fixture_root, 'site', 'profile', 'test') }
 
-        before(:each) do
+        before do
           # Copy the control repo
           FileUtils.cp_r(control_repo_fixture, temp_context_path)
           # Copy a module into control repo site dir
@@ -158,7 +158,7 @@ describe PDK::Context do
         end
 
         context 'and has the controlrepo feature flag' do
-          before(:each) { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
+          before { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
 
           context 'in the root of the control repo' do
             let(:context_path) { control_repo_fixture_root }
@@ -195,7 +195,7 @@ describe PDK::Context do
         let(:control_repo_fixture_root) { File.join(temp_context_path, 'control_repo') }
         let(:module_dir) { File.join(control_repo_fixture_root, 'site', 'profile', 'test') }
 
-        before(:each) do
+        before do
           # Copy the control repo
           FileUtils.cp_r(control_repo_fixture, temp_context_path)
           # Copy a module into control repo site dir
@@ -231,7 +231,7 @@ describe PDK::Context do
         end
 
         context 'and has the controlrepo feature flag' do
-          before(:each) { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
+          before { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
 
           context 'in the root of the control repo' do
             let(:context_path) { control_repo_fixture_root }

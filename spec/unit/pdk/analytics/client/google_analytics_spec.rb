@@ -39,14 +39,14 @@ describe PDK::Analytics::Client::GoogleAnalytics do
   let(:logger) { instance_double(Logger, debug: true) }
   let(:os_name) { 'CentOS 7' }
 
-  before(:each) do
+  before do
     allow(PDK::Analytics::Util).to receive(:fetch_os_async).and_return(instance_double(Concurrent::Future, value: os_name))
     allow(HTTPClient).to receive(:new).and_return(mock_httpclient)
     allow(Concurrent).to receive(:global_io_executor).and_return(executor)
   end
 
   describe '#screen_view' do
-    after(:each) do
+    after do
       client.finish
     end
 
@@ -72,7 +72,7 @@ describe PDK::Analytics::Client::GoogleAnalytics do
   end
 
   describe '#event' do
-    after(:each) do
+    after do
       client.finish
     end
 

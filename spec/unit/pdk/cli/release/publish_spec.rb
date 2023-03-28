@@ -42,7 +42,7 @@ describe 'PDK::CLI release publish' do
 
     let(:cli_args) { base_cli_args << '--forge-token=cli123' }
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:ensure_in_module!).and_return(nil)
       allow(PDK::Module::Release).to receive(:new).and_return(release_object)
       allow(PDK::Util).to receive(:exit_process).and_raise('exit_process mock should not be called')
@@ -92,7 +92,7 @@ describe 'PDK::CLI release publish' do
       end
 
       context 'when passed a forge-token via PDK_FORGE_TOKEN' do
-        before(:each) do
+        before do
           allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(true)
           allow(PDK::Util::Env).to receive(:[]).with('PDK_FORGE_TOKEN').and_return('env123')
         end
@@ -108,7 +108,7 @@ describe 'PDK::CLI release publish' do
     context 'when passed a forge-token on both the command line and via PDK_FORGE_TOKEN' do
       let(:cli_args) { base_cli_args << '--forge-token=cli123' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(true)
         allow(PDK::Util::Env).to receive(:[]).with('PDK_FORGE_TOKEN').and_return('env123')
       end

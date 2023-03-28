@@ -36,7 +36,7 @@ describe 'PDK::CLI::Set::Config' do
       end
     end
 
-    before(:each) do
+    before do
       allow(PDK).to receive(:config).and_return(pdk_config)
       allow($stdout).to receive(:puts)
     end
@@ -128,7 +128,7 @@ describe 'PDK::CLI::Set::Config' do
     context 'when appending a value to an existing array' do
       let(:setting_name) { 'user.foo' }
 
-      before(:each) do
+      before do
         pdk_config.user_config['foo'] = []
       end
 
@@ -165,7 +165,7 @@ describe 'PDK::CLI::Set::Config' do
       let(:setting_name) { 'user.foo' }
       let(:setting_value) { 'abc' }
 
-      before(:each) do
+      before do
         pdk_config.user_config['foo'] = ['abc', 123]
       end
 
@@ -191,7 +191,7 @@ describe 'PDK::CLI::Set::Config' do
       let(:setting_name) { 'user.foo.a.b.c' }
       let(:setting_value) { 'abc' }
 
-      before(:each) do
+      before do
         pdk_config.user_config['foo'] = { 'bar' => 'whizz' }
       end
 

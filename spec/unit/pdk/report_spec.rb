@@ -45,7 +45,7 @@ describe PDK::Report do
     end
 
     context 'and rendering the report as text' do
-      after(:each) do
+      after do
         report.write_text('target')
       end
 
@@ -77,7 +77,7 @@ describe PDK::Report do
           ]
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
         end
 
@@ -89,7 +89,7 @@ describe PDK::Report do
     end
 
     context 'and rendering the report as JUnit XML' do
-      after(:each) do
+      after do
         report.write_junit('target')
       end
 

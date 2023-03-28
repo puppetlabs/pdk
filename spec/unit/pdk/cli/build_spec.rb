@@ -6,7 +6,7 @@ describe 'PDK::CLI build' do
   let(:command_opts) { [] }
 
   shared_context 'exits cleanly' do
-    after(:each) do
+    after do
       PDK::CLI.run(['build'] + command_opts)
     end
   end
@@ -28,7 +28,7 @@ describe 'PDK::CLI build' do
   end
 
   context 'when run from inside a module' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
       allow(PDK::Module::Metadata).to receive(:from_file).with('metadata.json').and_return(mock_metadata_obj)
       allow(PDK::Module::Build).to receive(:new).with(anything).and_return(mock_builder)
@@ -61,7 +61,7 @@ describe 'PDK::CLI build' do
     end
 
     context 'and the module contains incomplete metadata' do
-      before(:each) do
+      before do
         allow(mock_metadata_obj).to receive(:forge_ready?).and_return(false)
         allow(mock_metadata_obj).to receive(:missing_fields).and_return(['operatingsystem_support', 'source'])
         allow(PDK::Module::Build).to receive(:new).with(any_args).and_return(mock_builder)
@@ -103,7 +103,7 @@ describe 'PDK::CLI build' do
     context 'and the module contains complete metadata' do
       include_context 'exits cleanly'
 
-      before(:each) do
+      before do
         allow(mock_metadata_obj).to receive(:forge_ready?).and_return(true)
         allow(PDK::Module::Build).to receive(:new).with(any_args).and_return(mock_builder)
       end
@@ -145,7 +145,7 @@ describe 'PDK::CLI build' do
     end
 
     context 'package already exists in the target dir' do
-      before(:each) do
+      before do
         allow(mock_builder).to receive(:package_already_exists?).and_return(true)
         allow(mock_builder).to receive(:module_pdk_compatible?).and_return(true)
       end
@@ -153,7 +153,7 @@ describe 'PDK::CLI build' do
       context 'user chooses to continue' do
         include_context 'exits cleanly'
 
-        before(:each) do
+        before do
           allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(true)
           allow(mock_builder).to receive(:package_file).and_return('testuser-testmodule')
         end
@@ -165,7 +165,7 @@ describe 'PDK::CLI build' do
       end
 
       context 'user chooses to cancel' do
-        before(:each) do
+        before do
           allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
           allow(mock_builder).to receive(:package_file).and_return('testuser-testmodule')
         end
@@ -180,7 +180,7 @@ describe 'PDK::CLI build' do
     end
 
     context 'and module is not pdk compatible' do
-      before(:each) do
+      before do
         allow(mock_builder).to receive(:package_already_exists?).and_return(false)
         allow(mock_builder).to receive(:module_pdk_compatible?).and_return(false)
       end
@@ -188,7 +188,7 @@ describe 'PDK::CLI build' do
       context 'user chooses to continue' do
         include_context 'exits cleanly'
 
-        before(:each) do
+        before do
           allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(true)
           allow(mock_builder).to receive(:package_file).and_return('testuser-testmodule')
         end
@@ -200,7 +200,7 @@ describe 'PDK::CLI build' do
       end
 
       context 'user chooses to cancel' do
-        before(:each) do
+        before do
           allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
           allow(mock_builder).to receive(:package_file).and_return('testuser-testmodule')
         end

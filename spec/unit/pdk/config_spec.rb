@@ -16,7 +16,7 @@ describe PDK::Config do
     allow(PDK::Util::Filesystem).to receive(:read_file).with(PDK::Util::Filesystem.expand_path(path)).and_return(content)
   end
 
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:file?).with(%r{pdk\.yaml}).and_call_original
     # Allow the JSON Schema documents to actually be read. Rspec matchers are LIFO
     allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original
@@ -45,7 +45,7 @@ describe PDK::Config do
       let(:repo_path) { File.join(FIXTURES_DIR, 'control_repo') }
       let(:repo_context) { PDK::Context::ControlRepo.new(repo_path, repo_path) }
 
-      before(:each) do
+      before do
         # Allow anything in the fixtures dir to actually be read
         allow(PDK::Util::Filesystem).to receive(:file?).with(%r{#{FIXTURES_DIR}}o).and_call_original
         allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{#{FIXTURES_DIR}}o).and_call_original
@@ -317,7 +317,7 @@ describe PDK::Config do
     let(:foo_file_content) { '{}' }
     let(:set_options) { {} }
 
-    before(:each) do
+    before do
       mock_file(root_file, root_file_content)
       mock_file(foo_file, foo_file_content)
       allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(anything)
@@ -564,7 +564,7 @@ describe PDK::Config do
         end
 
         context 'and the bolt configuration is unparsable' do
-          before(:each) do
+          before do
             allow(PDK::Config::YAML).to receive(:new).and_call_original
             allow(PDK::Config::YAML).to receive(:new)
               .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
@@ -632,7 +632,7 @@ describe PDK::Config do
         end
 
         context 'and the bolt configuration is unparsable' do
-          before(:each) do
+          before do
             allow(PDK::Config::YAML).to receive(:new).and_call_original
             allow(PDK::Config::YAML).to receive(:new)
               .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
@@ -658,7 +658,7 @@ describe PDK::Config do
   end
 
   describe '.analytics_config_interview!' do
-    before(:each) do
+    before do
       prompt = TTY::Prompt::Test.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
       prompt.input << ("#{responses.join("\r")}\r")

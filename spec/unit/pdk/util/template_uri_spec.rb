@@ -9,7 +9,7 @@ describe PDK::Util::TemplateURI do
 
   include_context 'mock configuration'
 
-  before(:each) do
+  before do
     PDK.config.set(['user', 'module_defaults', 'template-url'], nil)
     allow(PDK::Util).to receive(:module_root).and_return(nil)
     allow(PDK::Util).to receive(:package_install?).and_return(false)
@@ -28,7 +28,7 @@ describe PDK::Util::TemplateURI do
       context 'that contains the default template keyword' do
         let(:opts_or_uri) { 'pdk-default#1.2.3' }
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:package_install?).and_return(false)
         end
 
@@ -97,7 +97,7 @@ describe PDK::Util::TemplateURI do
       let(:opts_or_uri) { {} }
       let(:default_uri) { "#{described_class.default_template_uri}##{described_class.default_template_ref}" }
 
-      before :each do
+      before do
         allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
         allow(PDK::Util).to receive(:module_root).and_return(module_root)
         allow(PDK::Util).to receive(:development_mode?).and_return(false)
@@ -105,7 +105,7 @@ describe PDK::Util::TemplateURI do
 
       context 'when passed no options' do
         context 'and there are no metadata or answers' do
-          before(:each) do
+          before do
             allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(module_root, 'metadata.json')).and_return(false)
           end
 
@@ -115,7 +115,7 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'and there are only answers' do
-          before :each do
+          before do
             PDK.config.set(['user', 'module_defaults', 'template-url'], 'answer-templates')
             allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(module_root, 'metadata.json')).and_return(false)
           end
@@ -125,7 +125,7 @@ describe PDK::Util::TemplateURI do
           end
 
           context 'and the answer file template is invalid' do
-            before(:each) do
+            before do
               allow(described_class).to receive(:valid_template?).with(anything).and_call_original
               allow(described_class).to receive(:valid_template?).with({ uri: anything, type: anything, allow_fallback: true }).and_return(false)
             end
@@ -137,7 +137,7 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'and there are metadata and answers' do
-          before :each do
+          before do
             PDK.config.set(['user', 'module_defaults', 'template-url'], 'answer-templates')
           end
 
@@ -151,7 +151,7 @@ describe PDK::Util::TemplateURI do
       end
 
       context 'when there are metadata and answers' do
-        before :each do
+        before do
           PDK.config.set(['user', 'module_defaults', 'template-url'], 'answer-templates')
           allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(PDK::Util.module_root, 'metadata.json')).and_return(true)
           allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(PDK::Util.module_root, 'metadata.json')).and_return(mock_metadata)
@@ -289,7 +289,7 @@ describe PDK::Util::TemplateURI do
     subject(:default_uri) { described_class.default_template_uri }
 
     context 'when it is a package install' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:package_install?).and_return(true)
       end
 
@@ -300,7 +300,7 @@ describe PDK::Util::TemplateURI do
     end
 
     context 'when it is not a package install' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:package_install?).and_return(false)
       end
 
@@ -313,7 +313,7 @@ describe PDK::Util::TemplateURI do
   describe '.default_template_ref' do
     subject { described_class.default_template_ref(uri) }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:development_mode?).and_return(development_mode)
     end
 
@@ -444,7 +444,7 @@ describe PDK::Util::TemplateURI do
     end
 
     context 'when the answers file has saved template-url value' do
-      before(:each) do
+      before do
         PDK.config.set(['user', 'module_defaults', 'template-url'], answers_template_url)
       end
 
@@ -474,7 +474,7 @@ describe PDK::Util::TemplateURI do
     end
 
     context 'when the answers file has no saved template-url value' do
-      before(:each) do
+      before do
         PDK.config.set(['user', 'module_defaults', 'template-url'], nil)
       end
 
@@ -494,7 +494,7 @@ describe PDK::Util::TemplateURI do
         )
       end
 
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
         allow(PDK::Util).to receive(:development_mode?).and_return(false)
         allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
@@ -568,7 +568,7 @@ describe PDK::Util::TemplateURI do
         let(:template) { super().merge(uri: Addressable::URI.parse('/path/to/a/template')) }
 
         context 'that points to a git repository' do
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:repo?).with('/path/to/a/template').and_return(true)
           end
 
@@ -576,7 +576,7 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'that does not point to a git repository' do
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:repo?).with('/path/to/a/template').and_return(false)
           end
 
@@ -587,12 +587,12 @@ describe PDK::Util::TemplateURI do
           end
 
           context 'but does point to a directory' do
-            before(:each) do
+            before do
               allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/a/template').and_return(true)
             end
 
             context 'that contains a valid template' do
-              before(:each) do
+              before do
                 allow_template_dir('/path/to/a/template', true)
               end
 
@@ -600,7 +600,7 @@ describe PDK::Util::TemplateURI do
             end
 
             context 'that does not contain a valid template' do
-              before(:each) do
+              before do
                 allow_template_dir('/path/to/a/template', false)
               end
 
@@ -652,7 +652,7 @@ describe PDK::Util::TemplateURI do
     subject { described_class.new(url).metadata_format }
 
     context 'when running PDK from a package' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:package_install?).and_return(true)
         allow(PDK::Util).to receive(:pdk_package_basedir).and_return('/opt/puppetlabs/pdk')
       end
@@ -677,7 +677,7 @@ describe PDK::Util::TemplateURI do
     end
 
     context 'when not running PDK from a package' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:package_install?).and_return(false)
       end
 

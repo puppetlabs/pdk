@@ -65,7 +65,7 @@ describe PDK::Config::JSONSchemaNamespace, skip: true do
 
     describe '#to_h' do
       context 'with an unmanaged setting' do
-        before(:each) do
+        before do
           # Mimic an unmanaged setting, that is, a setting not in the schema
           # TODO: Perhaps we should subclass here instead of using instance_variable_set ?
           namespace.instance_variable_set(:@unmanaged_settings, 'extra_setting' => 'extra_value')

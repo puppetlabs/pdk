@@ -87,7 +87,7 @@ RSpec.configure do |c|
     analytics_config.unlink
   end
 
-  c.after(:each) do |e|
+  c.after do |e|
     # Dump stderr into error message to help with debugging if test failed
     if e.exception
       e.exception.message << "\nDumping stderr output:\n\n#{subject.stderr}\n" if subject.respond_to?(:stderr) && subject.stderr != ''

@@ -6,7 +6,7 @@ describe 'pdk console' do
   let(:module_path) { '/path/to/testmodule' }
   let(:context) { PDK::Context::Module.new(module_path, module_path) }
 
-  before(:each) do
+  before do
     allow_any_instance_of(PDK::Util::Bundler::BundleHelper).to receive(:gemfile_lock).and_return(File.join(FIXTURES_DIR, 'module_gemfile_lockfile'))
     allow(Bundler).to receive(:default_lockfile).and_return(File.join(FIXTURES_DIR, 'module_gemfile_lockfile'))
     allow(PDK::CLI::Util).to receive(:module_version_check).and_return(true)
@@ -14,7 +14,7 @@ describe 'pdk console' do
   end
 
   shared_context 'with a mocked rubygems response' do
-    before(:each) do
+    before do
       mock_fetcher = instance_double(Gem::SpecFetcher)
       allow(Gem::SpecFetcher).to receive(:fetcher).and_return(mock_fetcher)
 
@@ -39,7 +39,7 @@ describe 'pdk console' do
   context 'packaged install' do
     include_context 'packaged install'
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:ensure_in_module!).and_return(true)
       allow(PDK::Util).to receive(:in_module_root?).and_return(true)
       allow(PDK::Util::RubyVersion).to receive(:available_puppet_versions).and_return(versions)
@@ -67,7 +67,7 @@ describe 'pdk console' do
   end
 
   context 'not packaged install' do
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:ensure_in_module!).and_return(true)
       allow(PDK::Util).to receive(:in_module_root?).and_return(true)
     end
@@ -92,7 +92,7 @@ describe 'pdk console' do
   end
 
   describe 'not in a module' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:in_module_root?).and_return(false)
     end
 
@@ -102,7 +102,7 @@ describe 'pdk console' do
   end
 
   describe 'in a module' do
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:ensure_in_module!).and_return(true)
       allow(PDK::Util).to receive(:in_module_root?).and_return(true)
     end

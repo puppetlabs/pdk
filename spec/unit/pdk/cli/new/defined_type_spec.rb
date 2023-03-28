@@ -4,7 +4,7 @@ require 'pdk/cli'
 describe 'PDK::CLI new defined_type' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new defined_type}m) }
 
-  before(:each) do
+  before do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
 
     # Stop printing out the result
@@ -71,11 +71,11 @@ describe 'PDK::CLI new defined_type' do
       let(:generator_double) { instance_double(generator, run: true) }
       let(:generator_opts) { instance_of(Hash) }
 
-      before(:each) do
+      before do
         allow(generator).to receive(:new).with(anything, 'test_define', generator_opts).and_return(generator_double)
       end
 
-      after(:each) do
+      after do
         PDK::CLI.run(['new', 'defined_type', 'test_define'])
       end
 

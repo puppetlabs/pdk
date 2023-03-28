@@ -6,7 +6,7 @@ describe PDK::Bolt do
     # We use NUL here because that should never be a valid directory name. But it will work with RSpec mocking.
     let(:test_path) { '\x00path/test' }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
     end
 

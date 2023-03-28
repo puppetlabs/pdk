@@ -15,7 +15,7 @@ describe PDK::Module::UpdateManager do
   describe '#add_file' do
     let(:content) { "some content\n" }
 
-    before(:each) do
+    before do
       update_manager.add_file(dummy_file, content)
     end
 
@@ -39,7 +39,7 @@ describe PDK::Module::UpdateManager do
       end
 
       context 'but if the file can not be written to' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:write_file).with(dummy_file, anything).and_raise(Errno::EACCES)
         end
 
@@ -53,12 +53,12 @@ describe PDK::Module::UpdateManager do
   end
 
   describe '#remove_file' do
-    before(:each) do
+    before do
       update_manager.remove_file(dummy_file)
     end
 
     context 'when the file does not exist on disk' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(dummy_file).and_return(false)
       end
 
@@ -68,7 +68,7 @@ describe PDK::Module::UpdateManager do
     end
 
     context 'when the file exists on disk' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(dummy_file).and_return(true)
       end
 
@@ -86,7 +86,7 @@ describe PDK::Module::UpdateManager do
 
       context 'when syncing the changes' do
         context 'and the file exists' do
-          before(:each) do
+          before do
             allow(PDK::Util::Filesystem).to receive(:file?).with(dummy_file).and_return(true)
           end
 
@@ -97,7 +97,7 @@ describe PDK::Module::UpdateManager do
           end
 
           context 'but it fails to remove the file' do
-            before(:each) do
+            before do
               allow(PDK::Util::Filesystem).to receive(:rm).with(dummy_file).and_raise(StandardError, 'an unknown error')
             end
 
@@ -110,7 +110,7 @@ describe PDK::Module::UpdateManager do
         end
 
         context 'and the file does not exist' do
-          before(:each) do
+          before do
             allow(PDK::Util::Filesystem).to receive(:file?).with(dummy_file).and_return(false)
           end
 
@@ -142,14 +142,14 @@ describe PDK::Module::UpdateManager do
       EOS
     end
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:readable?).with(dummy_file).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(dummy_file).and_return(original_content)
       allow(PDK::Util::Filesystem).to receive(:stat).with(dummy_file).and_return(instance_double(File::Stat, mtime: Time.now - 60))
     end
 
     context 'when the file can not be opened for reading' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:readable?).with(dummy_file).and_return(false)
         update_manager.modify_file(dummy_file, new_content)
       end
@@ -173,7 +173,7 @@ describe PDK::Module::UpdateManager do
         EOS
       end
 
-      before(:each) do
+      before do
         update_manager.modify_file(dummy_file, new_content)
       end
 
@@ -204,7 +204,7 @@ describe PDK::Module::UpdateManager do
         end
 
         context 'but if the file can not be written to' do
-          before(:each) do
+          before do
             allow(PDK::Util::Filesystem).to receive(:write_file).with(dummy_file, anything).and_raise(Errno::EACCES)
           end
 
@@ -218,7 +218,7 @@ describe PDK::Module::UpdateManager do
     end
 
     context 'when the new file content matches the original content' do
-      before(:each) do
+      before do
         update_manager.modify_file(dummy_file, original_content)
       end
 
@@ -245,7 +245,7 @@ describe PDK::Module::UpdateManager do
   end
 
   describe '#clear!' do
-    before(:each) do
+    before do
       update_manager.add_file(dummy_file, 'content')
       update_manager.modify_file(dummy_file, 'content')
       update_manager.remove_file(dummy_file)

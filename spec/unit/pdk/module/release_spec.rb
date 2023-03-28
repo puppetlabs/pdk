@@ -22,7 +22,7 @@ describe PDK::Module::Release do
     )
   end
 
-  before(:each) do
+  before do
     # Mimic PDK being run in the root of a module in current working directory
     allow(PDK::Util).to receive(:find_upwards).and_return(nil)
     allow(PDK::Util).to receive(:in_module_root?).and_return(true)
@@ -49,7 +49,7 @@ describe PDK::Module::Release do
   end
 
   describe '#run' do
-    before(:each) do
+    before do
       # Stop any of the actual worker methods from running
       allow(instance).to receive(:run_validations)
       allow(instance).to receive(:run_documentation)
@@ -108,7 +108,7 @@ describe PDK::Module::Release do
       let(:options) { { force: false } }
 
       context 'and the module is not PDK compatible' do
-        before(:each) do
+        before do
           allow(instance).to receive(:pdk_compatible?).and_return(false)
         end
 
@@ -118,7 +118,7 @@ describe PDK::Module::Release do
       end
 
       context 'and the module is not Forge compatible' do
-        before(:each) do
+        before do
           allow(instance).to receive(:forge_compatible?).and_return(false)
         end
 
@@ -134,7 +134,7 @@ describe PDK::Module::Release do
       end
 
       context 'and missing the forge token' do
-        before(:each) do
+        before do
           allow(instance).to receive(:forge_upload_url).and_return('https://localhost')
         end
 
@@ -169,7 +169,7 @@ describe PDK::Module::Release do
     end
 
     context 'when skipping the build' do
-      before(:each) do
+      before do
         allow(instance).to receive(:skip_build?).and_return(true)
         allow(instance).to receive(:forge_upload_url).and_return('https://localhost')
         allow(instance).to receive(:forge_token).and_return('abc123')
@@ -189,7 +189,7 @@ describe PDK::Module::Release do
     end
 
     context 'when running the build helper' do
-      before(:each) do
+      before do
         allow(instance).to receive(:skip_build?).and_return(false)
         allow(instance).to receive(:forge_upload_url).and_return('https://localhost')
         allow(instance).to receive(:forge_token).and_return('abc123')
@@ -210,7 +210,7 @@ describe PDK::Module::Release do
   end
 
   describe '#write_module_metadata!' do
-    before(:each) do
+    before do
       expect(mock_metadata_object).to receive(:write!).and_return(nil)
     end
 
@@ -237,7 +237,7 @@ describe PDK::Module::Release do
     # Note that this test setup is quite fragile and indicates that the method
     # under test really needs to be refactored
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:validate_puppet_version_opts).and_return(nil)
       allow(PDK::CLI::Util).to receive(:module_version_check).and_return(nil)
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(gemset: {}, ruby_version: '1.2.3')
@@ -262,7 +262,7 @@ describe PDK::Module::Release do
     let(:command_stdout) { 'Success' }
     let(:command_exit_code) { 0 }
 
-    before(:each) do
+    before do
       expect(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
       expect(command).to receive(:execute!).and_return(stdout: command_stdout, exit_code: command_exit_code)
     end
@@ -287,7 +287,7 @@ describe PDK::Module::Release do
     let(:command_stdout) { 'Success' }
     let(:command_exit_code) { 0 }
 
-    before(:each) do
+    before do
       expect(PDK::CLI::Exec::Command).to receive(:new).with('dependency-checker', 'metadata.json').and_return(command)
       expect(command).to receive(:execute!).and_return(stdout: command_stdout, exit_code: command_exit_code)
     end
@@ -320,7 +320,7 @@ describe PDK::Module::Release do
     # Note that this test setup is quite fragile and indicates that the method
     # under test really needs to be refactored
 
-    before(:each) do
+    before do
       allow(instance).to receive(:forge_token).and_return('abc123')
       allow(instance).to receive(:forge_upload_url).and_return('https://badapi.puppetlabs.com/v3/releases')
       allow(PDK::Util::Filesystem).to receive(:file?).with(tarball_path).and_return(true)
@@ -333,7 +333,7 @@ describe PDK::Module::Release do
     end
 
     context 'when the tarball does not exist' do
-      before(:each) do
+      before do
         expect(PDK::Util::Filesystem).to receive(:file?).with(tarball_path).and_return(false)
       end
 
@@ -353,7 +353,7 @@ describe PDK::Module::Release do
   end
 
   describe '#validate_publish_options!' do
-    before(:each) do
+    before do
       allow(instance).to receive(:skip_publish?).and_return(false)
     end
 

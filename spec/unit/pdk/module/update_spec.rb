@@ -22,7 +22,7 @@ describe PDK::Module::Update do
   end
 
   shared_context 'with mock metadata' do
-    before(:each) do
+    before do
       allow(PDK::Module::Metadata).to receive(:from_file).with(module_path('metadata.json')).and_return(mock_metadata)
     end
   end
@@ -37,14 +37,14 @@ describe PDK::Module::Update do
     context 'when running from a package install' do
       include_context 'packaged install'
 
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:development_mode?).and_return(false)
       end
 
       context 'and the template-url is set to the pdk-default keyword' do
         let(:template_url) { 'pdk-default#1.0.0' }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Git).to receive(:tag?).with(any_args).and_return(true)
         end
 
@@ -57,7 +57,7 @@ describe PDK::Module::Update do
         context 'and the url fragment is set to a tag name' do
           let(:template_url) { "#{super()}#1.0.0" }
 
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
           end
 
@@ -67,7 +67,7 @@ describe PDK::Module::Update do
         context 'and the url fragment is set to the latest template tag' do
           let(:template_url) { super() + "##{PDK::TEMPLATE_REF}" }
 
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
           end
 
@@ -77,7 +77,7 @@ describe PDK::Module::Update do
         context 'and the url fragment is not set to a tag name' do
           let(:template_url) { "#{super()}#my_branch" }
 
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(false)
           end
 
@@ -92,7 +92,7 @@ describe PDK::Module::Update do
       context 'and the template-url is set to the pdk-default keyword' do
         let(:template_url) { 'pdk-default#1.0.0' }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Git).to receive(:tag?).with(any_args).and_return(true)
         end
 
@@ -105,7 +105,7 @@ describe PDK::Module::Update do
         context 'and the url fragment is set to a tag name' do
           let(:template_url) { "#{super()}#1.0.0" }
 
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
           end
 
@@ -115,7 +115,7 @@ describe PDK::Module::Update do
         context 'and the url fragment is set to the latest template tag' do
           let(:template_url) { super() + "##{PDK::TEMPLATE_REF}" }
 
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(true)
           end
 
@@ -125,7 +125,7 @@ describe PDK::Module::Update do
         context 'and the url fragment is not set to a tag name' do
           let(:template_url) { "#{super()}#my_branch" }
 
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:tag?).with(*template_url.split('#')).and_return(false)
           end
 
@@ -142,7 +142,7 @@ describe PDK::Module::Update do
 
     include_context 'with mock metadata'
 
-    before(:each) do
+    before do
       allow(instance).to receive(:stage_changes!)
       allow(instance).to receive(:print_summary)
       allow(instance).to receive(:new_version).and_return('1.4.0')
@@ -155,14 +155,14 @@ describe PDK::Module::Update do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
     end
 
-    after(:each) do
+    after do
       instance.run
     end
 
     context 'when the version is the same' do
       let(:options) { { noop: true } }
 
-      before(:each) do
+      before do
         allow(instance).to receive(:current_version).and_return('1.4.0')
       end
 
@@ -240,7 +240,7 @@ describe PDK::Module::Update do
         end
 
         context 'if the user chooses to continue' do
-          before(:each) do
+          before do
             allow(PDK::CLI::Util).to receive(:prompt_for_yes).and_return(true)
           end
 
@@ -254,7 +254,7 @@ describe PDK::Module::Update do
         end
 
         context 'if the user chooses not to continue' do
-          before(:each) do
+          before do
             allow(PDK::CLI::Util).to receive(:prompt_for_yes).and_return(false)
           end
 
@@ -282,7 +282,7 @@ describe PDK::Module::Update do
     end
 
     context 'when the metadata.json can not be read' do
-      before(:each) do
+      before do
         allow(PDK::Module::Metadata).to receive(:from_file).with(module_path('metadata.json')).and_raise(ArgumentError, 'some error')
       end
 
@@ -330,7 +330,7 @@ describe PDK::Module::Update do
     include_context 'with mock metadata'
 
     context 'when the default_template_ref specifies a tag' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:development_mode?).and_return(false)
       end
 
@@ -340,7 +340,7 @@ describe PDK::Module::Update do
     end
 
     context 'when the default_template_ref specifies a branch head' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:default_template_ref).and_return('main')
         allow(PDK::Util::Git).to receive(:ls_remote)
           .with(template_url, 'main')
@@ -372,7 +372,7 @@ describe PDK::Module::Update do
     end
     let(:template_url) { "https://github.com/puppetlabs/pdk-templates##{module_template_ref}" }
 
-    before(:each) do
+    before do
       allow(PDK::Util::TemplateURI).to receive(:new).and_call_original
       allow(PDK::Util::TemplateURI).to receive(:new).with(template_url).and_return(module_template_uri)
     end
@@ -387,17 +387,17 @@ describe PDK::Module::Update do
 
     context 'when template-ref is not specified' do
       context 'and the module is using the default template' do
-        before(:each) do
+        before do
           allow(module_template_uri).to receive(:default?).and_return(true)
         end
 
         context 'and the ref of the template is a tag' do
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:tag?).with(String, module_template_ref).and_return(true)
           end
 
           context 'and PDK is running from a package install' do
-            before(:each) do
+            before do
               allow(PDK::Util).to receive(:package_install?).and_return(true)
               allow(PDK::Util::Version).to receive(:git_ref).and_return('1234acb')
               allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('package', 'cachedir'))
@@ -409,7 +409,7 @@ describe PDK::Module::Update do
           end
 
           context 'and PDK is not running from a package install' do
-            before(:each) do
+            before do
               allow(PDK::Util).to receive(:package_install?).and_return(false)
             end
 
@@ -420,7 +420,7 @@ describe PDK::Module::Update do
         end
 
         context 'but the ref of the template is not a tag' do
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:tag?).with(String, module_template_ref).and_return(false)
           end
 
@@ -431,7 +431,7 @@ describe PDK::Module::Update do
       end
 
       context 'but the module is not using the default template' do
-        before(:each) do
+        before do
           allow(module_template_uri).to receive(:default?).and_return(false)
         end
 

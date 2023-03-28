@@ -4,7 +4,7 @@ require 'pdk/validate/yaml/yaml_syntax_validator'
 describe PDK::Validate::YAML::YAMLSyntaxValidator do
   let(:module_root) { File.join('path', 'to', 'test', 'module') }
 
-  before(:each) do
+  before do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
     allow(PDK::Util::Filesystem).to receive(:directory?).with(module_root).and_return(true)
   end
@@ -20,7 +20,7 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
 
     let(:report) { PDK::Report.new }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:directory?).with(target[:name]).and_return(target.fetch(:directory, false))
       allow(PDK::Util::Filesystem).to receive(:file?).with(target[:name]).and_return(target.fetch(:file, true))
       allow(PDK::Util::Filesystem).to receive(:readable?).with(target[:name]).and_return(target.fetch(:readable, true))

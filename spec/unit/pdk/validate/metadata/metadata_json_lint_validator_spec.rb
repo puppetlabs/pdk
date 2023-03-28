@@ -31,7 +31,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
         end
       end
 
-      before(:each) do
+      before do
         pwd = Gem.win_platform? ? 'C:/path/to/module' : '/path/to/module'
         allow(Pathname).to receive(:pwd).and_return(Pathname.new(pwd))
       end

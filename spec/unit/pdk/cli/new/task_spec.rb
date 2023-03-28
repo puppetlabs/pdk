@@ -4,7 +4,7 @@ require 'pdk/cli'
 describe 'PDK::CLI new task' do
   let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new task}m) }
 
-  before(:each) do
+  before do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
     # Stop printing out the result
     allow(PDK::CLI::Util::UpdateManagerPrinter).to receive(:print_summary)
@@ -70,7 +70,7 @@ describe 'PDK::CLI new task' do
       let(:generator_double) { instance_double(generator, run: true) }
       let(:generator_opts) { {} }
 
-      before(:each) do
+      before do
         allow(generator).to receive(:new).with(anything, 'test_task', hash_including(generator_opts)).and_return(generator_double)
       end
 

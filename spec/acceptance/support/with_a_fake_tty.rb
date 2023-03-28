@@ -1,5 +1,5 @@
 RSpec.shared_context 'with a fake TTY' do
-  around(:each) do |example|
+  around do |example|
     ENV['PDK_FRONTEND'] = 'INTERACTIVE'
     example.run
     ENV.delete('PDK_FRONTEND')

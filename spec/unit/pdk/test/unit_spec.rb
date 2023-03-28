@@ -9,7 +9,7 @@ describe PDK::Test::Unit do
   describe '.rake_bin' do
     subject { described_class.rake_bin }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
     end
 
@@ -56,7 +56,7 @@ describe PDK::Test::Unit do
   end
 
   describe '.setup' do
-    before(:each) do
+    before do
       mock_result = { stdout: 'some output', stderr: 'some error', exit_code: exit_code }
       allow(described_class).to receive(:rake).with('spec_prep', any_args).and_return(mock_result)
     end
@@ -89,7 +89,7 @@ describe PDK::Test::Unit do
   end
 
   describe '.tear_down' do
-    before(:each) do
+    before do
       mock_result = { stdout: 'some output', stderr: 'some error', exit_code: exit_code }
       allow(described_class).to receive(:rake).with('spec_clean', any_args).and_return(mock_result)
     end
@@ -154,7 +154,7 @@ describe PDK::Test::Unit do
   end
 
   describe '.cmd' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
     end
 
@@ -187,7 +187,7 @@ describe PDK::Test::Unit do
     let(:report) { PDK::Report.new }
     let(:duration) { 4.123 }
 
-    before(:each) do
+    before do
       allow(report).to receive(:add_event).with(%r{message \d})
     end
 
@@ -210,7 +210,7 @@ describe PDK::Test::Unit do
         } }
       end
 
-      after(:each) do
+      after do
         described_class.parse_output(report, json, duration)
       end
 
@@ -228,7 +228,7 @@ describe PDK::Test::Unit do
   # Allow any_instance stubbing of Commands
   # rubocop:disable RSpec/AnyInstance
   describe '.list' do
-    before(:each) do
+    before do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!)
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
@@ -280,7 +280,7 @@ describe PDK::Test::Unit do
     let(:report) { PDK::Report.new }
     let(:rspec_json_output) { '{}' }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!)
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
@@ -295,7 +295,7 @@ describe PDK::Test::Unit do
         described_class.invoke(report, options)
       end
 
-      before(:each) do
+      before do
         allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new)
           .and_return(command)
         allow(command).to receive(:execute!).and_return(exit_code: 0)
@@ -348,7 +348,7 @@ describe PDK::Test::Unit do
     end
 
     context 'configurable fixture cleaning' do
-      after(:each) do
+      after do
         described_class.invoke(report, options)
       end
 

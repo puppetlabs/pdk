@@ -8,7 +8,7 @@ describe PDK::Util::ChangelogGenerator do
     let(:command_exit_code) { 0 }
     let(:changelog_content) { 'foo' }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:github_changelog_generator_available!)
       allow(described_class).to receive(:changelog_content).and_return(changelog_content)
       expect(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
@@ -58,7 +58,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:changelog_content) { '' }
       let(:current_version) { '1.2.3' }
 
-      before(:each) do
+      before do
         allow(described_class).to receive(:changelog_content).and_return(changelog_content)
       end
 
@@ -197,7 +197,7 @@ describe PDK::Util::ChangelogGenerator do
   end
 
   describe '#latest_version' do
-    before(:each) do
+    before do
       allow(described_class).to receive(:changelog_content).and_return(changelog_content)
     end
 
@@ -311,7 +311,7 @@ describe PDK::Util::ChangelogGenerator do
 
     let(:command) { double(PDK::CLI::Exec::InteractiveCommand, :context= => nil) } # rubocop:disable RSpec/VerifiedDoubles
 
-    before(:each) do
+    before do
       expect(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
     end
 
@@ -319,7 +319,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:command_stdout) { '/path/to/gems/github_changelog_generator-1.15.2' }
       let(:command_exit_code) { 0 }
 
-      before(:each) do
+      before do
         expect(command).to receive(:execute!).and_return(stdout: command_stdout, exit_code: command_exit_code)
       end
 
@@ -332,7 +332,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:command_stderr) { 'Could not find gem \'github_changelog_generator\'.' }
       let(:command_exit_code) { 7 }
 
-      before(:each) do
+      before do
         expect(command).to receive(:execute!).and_return(stderr: command_stderr, exit_code: command_exit_code)
       end
 

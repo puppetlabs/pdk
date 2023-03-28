@@ -7,7 +7,7 @@ describe '`pdk test unit`' do
   let(:puppet_version) { '5.4.0' }
   let(:ruby_version) { '2.4.3' }
 
-  before(:each) do
+  before do
     allow(PDK::Util::RubyVersion).to receive(:use)
     allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(hash_including(:puppet))
   end
@@ -21,7 +21,7 @@ describe '`pdk test unit`' do
   end
 
   context 'when executing' do
-    before(:each) do
+    before do
       expect(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: ruby_version, gemset: { puppet: puppet_version })
       expect(PDK::Util::RubyVersion).to receive(:use).with(ruby_version)
       expect(PDK::CLI::Util).to receive(:ensure_in_module!).with(any_args).once
@@ -45,7 +45,7 @@ describe '`pdk test unit`' do
       end
 
       context 'when no tests are found' do
-        before(:each) do
+        before do
           expect(PDK::Test::Unit).to receive(:list).and_return([])
         end
 
@@ -68,7 +68,7 @@ describe '`pdk test unit`' do
           ]
         end
 
-        before(:each) do
+        before do
           expect(PDK::Test::Unit).to receive(:list).and_return(test_list)
         end
 
@@ -93,7 +93,7 @@ describe '`pdk test unit`' do
       end
 
       context 'when no tests are found' do
-        before(:each) do
+        before do
           expect(PDK::Test::Unit).to receive(:list).and_return([])
         end
 
@@ -110,7 +110,7 @@ describe '`pdk test unit`' do
              full_description: 'second_description' }]
         end
 
-        before(:each) do
+        before do
           expect(PDK::Test::Unit).to receive(:list).and_return(test_list)
         end
 
@@ -121,7 +121,7 @@ describe '`pdk test unit`' do
     context 'when running tests' do
       let(:reporter) { instance_double(PDK::Report, write_text: true) }
 
-      before(:each) do
+      before do
         allow(PDK::Report).to receive(:new).and_return(reporter)
       end
 
@@ -197,7 +197,7 @@ describe '`pdk test unit`' do
         end
 
         context 'with a format option' do
-          before(:each) do
+          before do
             expect(PDK::CLI::Util::OptionNormalizer).to receive(:report_formats).with(['text:results.txt']).and_return([{ method: :write_text, target: 'results.txt' }]).at_least(:twice)
             expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(tests: anything, interactive: false)).once.and_return(0)
           end
@@ -222,7 +222,7 @@ describe '`pdk test unit`' do
         context 'with specific tests passed in' do
           let(:tests) { '/path/to/file1,/path/to/file2' }
 
-          before(:each) do
+          before do
             expect(PDK::CLI::Util::OptionValidator).to receive(:comma_separated_list?).with(tests).and_return(true)
             expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(tests: anything, interactive: true)).once.and_return(0)
           end
@@ -247,7 +247,7 @@ describe '`pdk test unit`' do
       end
 
       context 'when tests fail' do
-        before(:each) do
+        before do
           expect(PDK::Test::Unit).to receive(:invoke).with(reporter, hash_with_defaults_including(tests: anything)).once.and_return(1)
         end
 
@@ -278,7 +278,7 @@ describe '`pdk test unit`' do
       }
     end
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including('puppet-dev': true)).and_return(puppet_env)
       allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev).and_return(nil)
       allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
@@ -343,7 +343,7 @@ describe '`pdk test unit`' do
       }
     end
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including('puppet-version': puppet_version)).and_return(puppet_env)
       allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
       allow(PDK::CLI::Util).to receive(:module_version_check)
@@ -389,7 +389,7 @@ describe '`pdk test unit`' do
       }
     end
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including('pe-version': pe_version)).and_return(puppet_env)
       allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
       allow(PDK::CLI::Util).to receive(:module_version_check)

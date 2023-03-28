@@ -163,7 +163,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
         ]
       end
 
-      before(:each) do
+      before do
         allow(report).to receive(:add_event)
       end
 

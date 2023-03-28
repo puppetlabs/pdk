@@ -64,7 +64,7 @@ describe PDK::Validate::InvokableValidator do
     let(:project_config_exists) { false }
 
     RSpec.shared_examples 'a parsed target list in an invalid context' do |expected_skipped_targets = nil|
-      before(:each) do
+      before do
         allow(validator).to receive(:valid_in_context?).and_return(false)
       end
 
@@ -79,7 +79,7 @@ describe PDK::Validate::InvokableValidator do
       end
     end
 
-    before(:each) do
+    before do
       allow(validator).to receive(:pattern).and_return(pattern)
       allow(PDK::Util).to receive(:canonical_path).and_wrap_original do |_m, *args|
         args[0]
@@ -95,7 +95,7 @@ describe PDK::Validate::InvokableValidator do
         let(:files) { [File.join('manifests', 'init.pp')] }
         let(:globbed_files) { files.map { |file| File.join(context_root, file) } }
 
-        before(:each) do
+        before do
           allow(validator).to receive(:allow_empty_targets?).and_return(false)
           allow(PDK::Util::Filesystem).to receive(:directory?).and_return(true)
           allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
@@ -108,7 +108,7 @@ describe PDK::Validate::InvokableValidator do
       end
 
       context 'when empty targets are allowed' do
-        before(:each) do
+        before do
           allow(validator).to receive(:allow_empty_targets?).and_return(true)
         end
 
@@ -134,7 +134,7 @@ describe PDK::Validate::InvokableValidator do
         ]
       end
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).and_return(true)
         allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
         allow(PDK::Util::Filesystem).to receive(:expand_path).with(context_root).and_return(context_root)
@@ -157,7 +157,7 @@ describe PDK::Validate::InvokableValidator do
       let(:targets2) { [File.join('target2', 'target.pp')] }
       let(:globbed_target2) { targets2.map { |target| File.join(context_root, target) } }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_target2)
         allow(PDK::Util::Filesystem).to receive(:directory?).with('target1.pp').and_return(false)
         allow(PDK::Util::Filesystem).to receive(:directory?).with('target2/').and_return(true)
@@ -190,7 +190,7 @@ describe PDK::Validate::InvokableValidator do
       let(:targets2) { [File.join('target2', 'target.pp')] }
       let(:globbed_target2) { targets2.map { |target| File.join(context_root, target) } }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_target2)
         allow(PDK::Util::Filesystem).to receive(:directory?).with('target1.pp').and_return(false)
         allow(PDK::Util::Filesystem).to receive(:directory?).with('target2/').and_return(true)
@@ -216,7 +216,7 @@ describe PDK::Validate::InvokableValidator do
       let(:pattern) { ['metadata.json', 'tasks/*.json'] }
       let(:targets) { ['target1.pp', 'target2/'] }
 
-      before(:each) do
+      before do
         # The glob simulates a module with a metadata.json
         allow(PDK::Util::Filesystem).to receive(:glob).with(File.join(context_root, 'metadata.json'), anything).and_return([File.join(context_root, 'metadata.json')])
         # The glob simulates a module without any tasks
@@ -249,7 +249,7 @@ describe PDK::Validate::InvokableValidator do
       let(:real_targets) { [File.join('target2', 'target.pp')] }
       let(:globbed_targets) { real_targets.map { |target| File.join(context_root, target) } }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_targets)
         allow(PDK::Util::Filesystem).to receive(:directory?).and_return(true)
         targets.map do |t|
@@ -281,7 +281,7 @@ describe PDK::Validate::InvokableValidator do
         []
       end
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:glob).with(File.join(context_root, validator.pattern), anything).and_return(globbed_target2)
         allow(PDK::Util::Filesystem).to receive(:directory?).with('target3/').and_return(true)
       end
@@ -296,7 +296,7 @@ describe PDK::Validate::InvokableValidator do
     context 'when given specific target that are not found' do
       let(:targets) { ['nonexistent.pp'] }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with('nonexistent.pp').and_return(false)
         allow(PDK::Util::Filesystem).to receive(:file?).with('nonexistent.pp').and_return(false)
       end
@@ -320,7 +320,7 @@ describe PDK::Validate::InvokableValidator do
     end
 
     context 'when specifying an ignore pattern' do
-      before(:each) do
+      before do
         allow(validator).to receive(:pattern_ignore).and_return('/plans/**/**.pp')
 
         allow(PDK::Util::Filesystem).to receive(:directory?).and_return(true)
@@ -346,7 +346,7 @@ describe PDK::Validate::InvokableValidator do
     end
 
     context 'when a project level configuration file contains a validate.ignore path' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).and_return(true)
         allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
         allow(PDK::Util::Filesystem).to receive(:expand_path).with(context_root).and_return(context_root)
@@ -395,7 +395,7 @@ describe PDK::Validate::InvokableValidator do
 
   describe '.spinner' do
     context 'when spinners are enabled' do
-      before(:each) do
+      before do
         allow(validator).to receive(:spinners_enabled?).and_return(true)
       end
 
@@ -409,7 +409,7 @@ describe PDK::Validate::InvokableValidator do
     end
 
     context 'when spinners are disabled' do
-      before(:each) do
+      before do
         allow(validator).to receive(:spinners_enabled?).and_return(false)
       end
 
@@ -424,7 +424,7 @@ describe PDK::Validate::InvokableValidator do
     let(:targets) { ['abc', '123'] }
     let(:validator_name) { 'mock-validator' }
 
-    before(:each) do
+    before do
       allow(validator).to receive(:name).and_return(validator_name)
     end
 
@@ -448,7 +448,7 @@ describe PDK::Validate::InvokableValidator do
     let(:targets) { ['abc', '123'] }
     let(:validator_name) { 'mock-validator' }
 
-    before(:each) do
+    before do
       allow(validator).to receive(:name).and_return(validator_name)
     end
 
@@ -470,7 +470,7 @@ describe PDK::Validate::InvokableValidator do
   describe '.contextual_pattern' do
     subject(:context_pattern) { validator.contextual_pattern(pattern_for_a_module) }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:file?).with(%r{.*environment\.conf}).and_call_original
       allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{.*environment\.conf}).and_call_original
       allow(PDK::Util::Filesystem).to receive(:file?).with(%r{.*pdk\.yaml}).and_call_original

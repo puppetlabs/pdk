@@ -6,7 +6,7 @@ require 'pdk/generate/module'
 require 'addressable'
 
 shared_context 'allow summary to be printed to stdout' do
-  before(:each) do
+  before do
     allow($stdout).to receive(:puts).with(a_string_matching(%r{\A-+\Z}))
     allow($stdout).to receive(:puts).with('SUMMARY')
     allow($stdout).to receive(:puts).with(a_string_matching(%r{\A\{.+\}\Z}m))
@@ -19,7 +19,7 @@ shared_context 'mock template dir' do
   let(:template_dir) { PDK::Template::TemplateDir.new(nil, nil, pdk_context, renderer) }
   let(:renderer) { instance_double(PDK::Template::Renderer::AbstractRenderer) }
 
-  before(:each) do
+  before do
     allow(PDK::Template).to receive(:with).with(anything, anything).and_yield(template_dir)
     allow(renderer).to receive(:render).and_yield(*yielded_file)
 
@@ -35,7 +35,7 @@ shared_context 'mock template dir' do
 end
 
 shared_context 'mock metadata.json' do
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:write_file)
       .with(a_string_matching(%r{metadata\.json\Z}), anything)
   end
@@ -55,7 +55,7 @@ describe PDK::Generate::Module do
       }
     end
 
-    before(:each) do
+    before do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
       allow(Dir).to receive(:chdir).with(target_dir).and_yield
     end
@@ -80,7 +80,7 @@ describe PDK::Generate::Module do
       let(:target_parent_writeable) { true }
       let(:yielded_file) { ['test_file_path', 'test_file_content', :manage] }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(target_dir).and_return(false)
         allow(PDK::Util).to receive(:make_tmpdir_name).with(anything).and_return(temp_target_dir)
         allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir)
@@ -153,7 +153,7 @@ describe PDK::Generate::Module do
           }
         end
 
-        before(:each) do
+        before do
           allow(template_dir).to receive(:metadata).and_return(template_metadata)
         end
 
@@ -184,7 +184,7 @@ describe PDK::Generate::Module do
       end
 
       context 'when the move to the target directory fails due to invalid permissions' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_raise(Errno::EACCES, 'permission denied')
         end
 
@@ -201,7 +201,7 @@ describe PDK::Generate::Module do
       context 'when a template-url is supplied on the command line' do
         let(:default_template_url) { 'https://github.com/puppetlabs/pdk-templates' }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
           allow(PDK::Util).to receive(:default_template_uri).and_return(Addressable::URI.parse(default_template_url))
         end
@@ -237,7 +237,7 @@ describe PDK::Generate::Module do
       end
 
       context 'when a template-url is not supplied on the command line' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir).and_return(0)
           allow(PDK::Util).to receive(:development_mode?).and_return(true)
         end
@@ -255,7 +255,7 @@ describe PDK::Generate::Module do
 
         context 'and no template-url answer exists' do
           context 'and pdk is installed from packages' do
-            before(:each) do
+            before do
               allow(PDK::Util).to receive(:package_install?).and_return(true)
               allow(PDK::Util).to receive(:package_cachedir).and_return('/tmp/package/cache')
             end
@@ -271,7 +271,7 @@ describe PDK::Generate::Module do
           end
 
           context 'and pdk is not installed from packages' do
-            before(:each) do
+            before do
               allow(PDK::Util).to receive(:package_install?).and_return(false)
             end
 
@@ -304,7 +304,7 @@ describe PDK::Generate::Module do
     let(:default_metadata) { {} }
     let(:options) { { module_name: module_name } }
 
-    before(:each) do
+    before do
       prompt = TTY::Prompt::Test.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
       prompt.input << ("#{responses.join("\r")}\r")
@@ -334,7 +334,7 @@ describe PDK::Generate::Module do
         ]
       end
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:file?).with('metadata.json').and_return(true)
       end
 
@@ -666,7 +666,7 @@ describe PDK::Generate::Module do
   describe '.prepare_metadata' do
     subject(:metadata) { described_class.prepare_metadata(options) }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:username_from_login).and_return('testlogin')
     end
 
@@ -683,7 +683,7 @@ describe PDK::Generate::Module do
     end
 
     context 'when there are no saved answers' do
-      before(:each) do
+      before do
         allow(described_class).to receive(:module_interview).with(any_args)
       end
 
@@ -703,7 +703,7 @@ describe PDK::Generate::Module do
     end
 
     context 'when an answer file exists with answers' do
-      before(:each) do
+      before do
         allow(described_class).to receive(:module_interview).with(any_args)
 
         PDK.config.set(['user', 'module_defaults', 'forge_username'], 'testuser123')
@@ -747,7 +747,7 @@ describe PDK::Generate::Module do
     end
 
     context 'when it fails to create a directory' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(anything).and_raise(SystemCallError, 'some message')
       end
 
@@ -762,7 +762,7 @@ describe PDK::Generate::Module do
   describe '.username_from_login' do
     subject { described_class.username_from_login }
 
-    before(:each) do
+    before do
       allow(Etc).to receive(:getlogin).and_return(login)
     end
 

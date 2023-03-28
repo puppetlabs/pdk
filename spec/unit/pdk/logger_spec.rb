@@ -21,7 +21,7 @@ describe PDK::Logger do
   end
 
   context 'with debug output enabled' do
-    before(:each) do
+    before do
       pdk_logger.enable_debug_output
     end
 

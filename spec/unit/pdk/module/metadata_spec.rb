@@ -11,7 +11,7 @@ describe PDK::Module::Metadata do
       }.to_json
     end
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(true)
     end
 
@@ -135,7 +135,7 @@ describe PDK::Module::Metadata do
   describe '#interview_for_forge!' do
     let(:metadata_instance) { described_class.new(metadata) }
 
-    after(:each) do
+    after do
       metadata_instance.interview_for_forge!
     end
 
@@ -183,7 +183,7 @@ describe PDK::Module::Metadata do
     end
 
     context 'when the metadata does not contain any requirements' do
-      before(:each) do
+      before do
         metadata.data.delete('requirements')
       end
 
@@ -195,7 +195,7 @@ describe PDK::Module::Metadata do
     end
 
     context 'when the metadata does not contain a puppet requirement' do
-      before(:each) do
+      before do
         metadata.data['requirements'] = [{ 'name' => 'not_puppet', 'version_requirement' => '1.0.0' }]
       end
 
@@ -207,7 +207,7 @@ describe PDK::Module::Metadata do
     end
 
     context 'when the puppet requirement does not have a version_requirement' do
-      before(:each) do
+      before do
         metadata.data['requirements'] = [{ 'name' => 'puppet' }]
       end
 
@@ -219,7 +219,7 @@ describe PDK::Module::Metadata do
     end
 
     context 'when the puppet requirement has a blank version_requirement' do
-      before(:each) do
+      before do
         metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '' }]
       end
 

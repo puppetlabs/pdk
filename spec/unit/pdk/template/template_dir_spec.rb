@@ -25,7 +25,7 @@ describe PDK::Template::TemplateDir do
     end
 
     context 'when a renderer could not be found' do
-      before(:each) do
+      before do
         expect(PDK::Template::Renderer).to receive(:instance).with(template_uri, template_path, pdk_context).and_return(nil)
       end
 
