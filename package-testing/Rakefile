@@ -8,9 +8,9 @@ namespace :acceptance do
     require 'beaker-hostgenerator'
 
     unless ENV.fetch('SHA', nil) || ENV.fetch('LOCAL_PKG', nil)
-      abort "SHA or LOCAL_PKG must be set:\n" \
-            "  SHA: git sha or tag of a pdk package build available on the server\n" \
-            '  LOCAL_PKG: path to a locally built package to use for testing'
+      abort "SHA or LOCAL_PKG must be set:\n  " \
+            "SHA: git sha or tag of a pdk package build available on the server\n  " \
+            'LOCAL_PKG: path to a locally built package to use for testing'
     end
 
     abort 'Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other.' if ENV.fetch('SHA', nil) && ENV.fetch('LOCAL_PKG', nil)
