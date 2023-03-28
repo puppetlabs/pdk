@@ -48,20 +48,20 @@ describe PDK do
 
     shared_examples 'an unset flag' do
       it 'does not have the flag set' do
-        expect(described_class.feature_flag?('setflag')).to eq(false)
+        expect(described_class.feature_flag?('setflag')).to be(false)
       end
     end
 
     shared_examples 'a set flag' do
       it 'has the flag set' do
-        expect(described_class.feature_flag?('setflag')).to eq(true)
+        expect(described_class.feature_flag?('setflag')).to be(true)
       end
     end
 
     shared_examples 'an unavailable flag' do
       it 'does not have the flag set' do
         # Even if the flag is set, if it's not available then it is always false
-        expect(described_class.feature_flag?('unavailable')).to eq(false)
+        expect(described_class.feature_flag?('unavailable')).to be(false)
       end
     end
 

@@ -17,7 +17,7 @@ describe PDK::Context::Module do
   describe '.pdk_compatible?' do
     it 'calls PDK::Util to determine compatibility' do
       expect(PDK::Util).to receive(:module_pdk_compatible?).with(context.root_path).and_return(true)
-      expect(context.pdk_compatible?).to eq(true)
+      expect(context.pdk_compatible?).to be(true)
     end
   end
 end

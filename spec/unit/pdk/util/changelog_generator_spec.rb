@@ -253,7 +253,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:changelog_content) { '' }
 
       it 'returns nil' do
-        expect(described_class.latest_version).to eq(nil)
+        expect(described_class.latest_version).to be_nil
       end
     end
 

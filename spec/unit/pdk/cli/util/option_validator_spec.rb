@@ -56,11 +56,11 @@ describe PDK::CLI::Util::OptionValidator do
     it { is_expected.to respond_to(:comma_separated_list?).with(1).argument }
 
     it 'returns true if the list is comma separated' do
-      expect(validator.comma_separated_list?('a,b,c')).to eq(true)
+      expect(validator.comma_separated_list?('a,b,c')).to be(true)
     end
 
     it 'returns false if the list is not comma separated' do
-      expect(validator.comma_separated_list?('a,b c,d')).to eq(false)
+      expect(validator.comma_separated_list?('a,b c,d')).to be(false)
     end
   end
 

@@ -120,7 +120,7 @@ describe PDK::Config do
 
     it 'traverses namespaces' do
       # The analytics is a child namespace of user
-      expect(config.get('user', 'analytics', 'disabled')).to eq(true)
+      expect(config.get('user', 'analytics', 'disabled')).to be(true)
     end
 
     it 'traverses setting hash values' do
@@ -326,7 +326,7 @@ describe PDK::Config do
     shared_examples 'a round-tripped setting' do
       it 'round-trips the setting value' do
         # First make sure the setting doesn't exist
-        expect(config.get(*setting)).to eq(nil)
+        expect(config.get(*setting)).to be_nil
         # Set the setting
         expect(config.set(setting, value)).to eq(value)
         # Get the new value

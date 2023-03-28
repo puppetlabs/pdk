@@ -276,7 +276,7 @@ describe PDK::Context do
     end
 
     it 'has a pdk_compatible? of false' do
-      expect(context.pdk_compatible?).to eq(false)
+      expect(context.pdk_compatible?).to be(false)
     end
 
     it 'has a display_name of nil' do

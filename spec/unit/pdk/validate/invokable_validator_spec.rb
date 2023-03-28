@@ -27,13 +27,13 @@ describe PDK::Validate::InvokableValidator do
       let(:validator_context) { nil }
 
       it 'defaults to false' do
-        expect(validator.valid_in_context?).to eq(false)
+        expect(validator.valid_in_context?).to be(false)
       end
     end
 
     context 'when given a context other than ::None' do
       it 'defaults to true' do
-        expect(validator.valid_in_context?).to eq(true)
+        expect(validator.valid_in_context?).to be(true)
       end
     end
   end
@@ -384,7 +384,7 @@ describe PDK::Validate::InvokableValidator do
   end
 
   it 'has an ignore_dotfiles? of true' do
-    expect(validator.ignore_dotfiles?).to eq(true)
+    expect(validator.ignore_dotfiles?).to be(true)
   end
 
   describe '.spinner_text' do
@@ -499,6 +499,6 @@ describe PDK::Validate::InvokableValidator do
   end
 
   it 'has an allow_empty_targets? of false' do
-    expect(validator.allow_empty_targets?).to eq(false)
+    expect(validator.allow_empty_targets?).to be(false)
   end
 end

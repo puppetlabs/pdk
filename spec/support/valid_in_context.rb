@@ -9,9 +9,9 @@ RSpec.shared_examples_for 'only valid in specified PDK contexts' do |*context_cl
         subject { described_class.new(pdk_context, {}).valid_in_context? }
 
         if context_class.include?(pdk_context.class)
-          it { is_expected.to eq(true) }
+          it { is_expected.to be(true) }
         else
-          it { is_expected.to eq(false) }
+          it { is_expected.to be(false) }
         end
       end
     end

@@ -430,7 +430,7 @@ describe PDK::Util do
     ['manifests', 'lib/puppet', 'lib/puppet_x', 'lib/facter', 'tasks', 'facts.d', 'functions', 'types'].each do |testcase|
       it "detects #{testcase} as being in the root of a module" do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
-        expect(described_class.in_module_root?(test_path)).to eq(true)
+        expect(described_class.in_module_root?(test_path)).to be(true)
       end
     end
 
@@ -438,13 +438,13 @@ describe PDK::Util do
     ['lib', 'Boltdir', 'puppet'].each do |testcase|
       it "detects #{testcase} as not being in the root of a module" do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
-        expect(described_class.in_module_root?(test_path)).to eq(false)
+        expect(described_class.in_module_root?(test_path)).to be(false)
       end
     end
 
     it 'detects metadata.json within the folder and determines that it is the root of a module' do
       allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(test_path, 'metadata.json')).and_return(true)
-      expect(described_class.in_module_root?(test_path)).to eq(true)
+      expect(described_class.in_module_root?(test_path)).to be(true)
     end
 
     it 'uses the current directory if a directory is not specified' do

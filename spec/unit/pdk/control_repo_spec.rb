@@ -93,7 +93,7 @@ describe PDK::ControlRepo do
     ['Puppetfile', 'environment.conf'].each do |testcase|
       it "detects #{testcase} as being in the root of a control repo" do
         allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(test_path, testcase)).and_return(true)
-        expect(described_class.control_repo_root?(test_path)).to eq(true)
+        expect(described_class.control_repo_root?(test_path)).to be(true)
       end
     end
 
@@ -101,7 +101,7 @@ describe PDK::ControlRepo do
     ['puppetfile', 'Environment.conf', 'Gemfile'].each do |testcase|
       it "detects #{testcase} as not being in the root of a control repo" do
         allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(test_path, testcase)).and_return(true)
-        expect(described_class.control_repo_root?(test_path)).to eq(false)
+        expect(described_class.control_repo_root?(test_path)).to be(false)
       end
     end
 

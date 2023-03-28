@@ -11,7 +11,7 @@ describe PDK::CLI::Util::CommandRedirector do
   let(:command) { 'foo' }
 
   it 'initially has no target command' do
-    expect(command_redirector.command).to eq(nil)
+    expect(command_redirector.command).to be_nil
   end
 
   it 'sets the target' do

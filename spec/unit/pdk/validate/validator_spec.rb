@@ -104,9 +104,9 @@ describe PDK::Validate::Validator do
     it 'indicates the validator is prepared' do
       # This test is a little fragile as it's using a private
       # instance variable
-      expect(validator.prepared).to eq(false)
+      expect(validator.prepared).to be(false)
       validator.prepare_invoke!
-      expect(validator.prepared).to eq(true)
+      expect(validator.prepared).to be(true)
     end
   end
 

@@ -232,7 +232,7 @@ describe PDK::Generate::Module do
 
         it 'clears the saved template-url answer if it is the default template' do
           described_class.invoke(invoke_opts.merge('template-url': default_template_url))
-          expect(PDK.config.get(['user', 'module_defaults', 'template-url'])).to eq(nil)
+          expect(PDK.config.get(['user', 'module_defaults', 'template-url'])).to be_nil
         end
       end
 

@@ -148,7 +148,7 @@ describe PDK::Util::PuppetVersion do
         end
 
         it 'exits cleanly' do
-          expect(described_class.fetch_puppet_dev).to eq(nil)
+          expect(described_class.fetch_puppet_dev).to be_nil
         end
       end
     end
@@ -197,7 +197,7 @@ describe PDK::Util::PuppetVersion do
         end
 
         it 'exits cleanly' do
-          expect(described_class.fetch_puppet_dev).to eq(nil)
+          expect(described_class.fetch_puppet_dev).to be_nil
         end
       end
 
@@ -241,7 +241,7 @@ describe PDK::Util::PuppetVersion do
         end
 
         it 'exits cleanly' do
-          expect(described_class.fetch_puppet_dev).to eq(nil)
+          expect(described_class.fetch_puppet_dev).to be_nil
         end
       end
     end

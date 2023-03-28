@@ -17,7 +17,7 @@ describe PDK::Context::ControlRepo do
   end
 
   it 'is PDK compatible' do
-    expect(context.pdk_compatible?).to eq(true)
+    expect(context.pdk_compatible?).to be(true)
   end
 
   describe '.module_paths' do
