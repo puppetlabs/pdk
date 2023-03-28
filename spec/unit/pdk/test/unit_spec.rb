@@ -397,7 +397,7 @@ describe PDK::Test::Unit do
       end
     end
 
-    context 'in parallel without examples' do
+    context 'in parallel without examples json output' do
       let(:rspec_json_output) do
         '{
           "examples":
