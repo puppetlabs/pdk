@@ -61,7 +61,7 @@ module PDK::CLI
           required:
             ":development":
               - gem: #{gem_name}
-                version: \"#{version}\"
+                version: "#{version}"
 
       EOF
                       )

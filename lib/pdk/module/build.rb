@@ -290,7 +290,7 @@ module PDK
                         PathSpec.new(PDK::Util::Filesystem.read_file(ignore_file, open_args: 'rb:UTF-8'))
                       end
 
-            ignored = ignored.add("\/#{File.basename(target_dir)}\/") if File.realdirpath(target_dir).start_with?(File.realdirpath(module_dir))
+            ignored = ignored.add("/#{File.basename(target_dir)}/") if File.realdirpath(target_dir).start_with?(File.realdirpath(module_dir))
 
             PDK::Module::DEFAULT_IGNORED.each { |r| ignored.add(r) }
 

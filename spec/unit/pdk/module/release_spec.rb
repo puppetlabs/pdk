@@ -390,7 +390,7 @@ describe PDK::Module::Release do
     { method: 'forge_token',         option_name: :'forge-token' },
     { method: 'forge_upload_url',    option_name: :'forge-upload-url' },
   ].each do |testcase|
-    describe "\##{testcase[:method]}" do
+    describe "##{testcase[:method]}" do
       context "when the #{testcase[:option_name]} options is set" do
         let(:options) { { testcase[:option_name] => 'a_value' } }
 

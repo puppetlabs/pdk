@@ -258,10 +258,10 @@ module PDK
         interview.add_questions(questions)
 
         if PDK::Util::Filesystem.file?('metadata.json')
-          puts format("\nWe need to update the metadata.json file for this module, so we\'re going to ask you %{count} " \
+          puts format("\nWe need to update the metadata.json file for this module, so we're going to ask you %{count} " \
                       "questions.\n", count: interview.num_questions)
         else
-          puts format("\nWe need to create the metadata.json file for this module, so we\'re going to ask you %{count} " \
+          puts format("\nWe need to create the metadata.json file for this module, so we're going to ask you %{count} " \
                       "questions.\n", count: interview.num_questions)
         end
 

@@ -290,7 +290,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
     context 'Parser encounters a Ruby error' do
       let(:targets) { ['ruby_error.pp'] }
       let(:validate_output) do
-        "C:/PWKit/Puppet/sys/ruby/lib/ruby/gems/2.4.0/gems/puppet-5.5.2-x64-mingw32/lib/puppet/environments.rb:38:in \`"\
+        'C:/PWKit/Puppet/sys/ruby/lib/ruby/gems/2.4.0/gems/puppet-5.5.2-x64-mingw32/lib/puppet/environments.rb:38:in `'\
           "get!': Could not find a directory environment named 'PUPPET_MASTER_SERVER=' anywhere in the path: "\
           "C:/ProgramData/PuppetLabs/code/environments. Does the directory exist? (Puppet::Environments::EnvironmentNotFound)\n"
       end
