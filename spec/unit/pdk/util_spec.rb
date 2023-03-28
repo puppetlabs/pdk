@@ -524,7 +524,7 @@ describe PDK::Util do
       text = '{"version": "3.6.0", "examples": []}{"version": "4.6.0", "examples": []}'
       expected = [{ 'version' => '3.6.0', 'examples' => [] }, { 'version' => '4.6.0', 'examples' => [] }]
 
-      expect(described_class.find_all_json_in(text)).to contain_exactly(*expected)
+      expect(described_class.find_all_json_in(text)).to match_array(expected)
     end
 
     it 'returns an empty array when there are no valid JSON documents' do
