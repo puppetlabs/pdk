@@ -8,7 +8,7 @@ describe 'Running `pdk new module`' do
     context 'and run without --skip-interview' do
       it 'continues to module interview' do
         expect(PDK::Generate::Module).to receive(:invoke)
-        expect(logger).to receive(:info).with(%r{Creating new module:})
+        expect(logger).to receive(:info).with(/Creating new module:/)
         PDK::CLI.run(['new', 'module'])
       end
 
@@ -27,7 +27,7 @@ describe 'Running `pdk new module`' do
 
     context 'and run with --skip-interview' do
       it 'exits with an error' do
-        expect(logger).to receive(:error).with(%r{must specify a module name}i)
+        expect(logger).to receive(:error).with(/must specify a module name/i)
 
         expect { PDK::CLI.run(['new', 'module', '--skip-interview']) }.to exit_nonzero
       end
@@ -47,7 +47,7 @@ describe 'Running `pdk new module`' do
 
   context 'when passed an invalid module name' do
     it 'informs the user that the module name is invalid' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{'123test'.*not.*valid module name}m))
+      expect(logger).to receive(:error).with(a_string_matching(/'123test'.*not.*valid module name/m))
 
       expect { PDK::CLI.run(['new', 'module', '123test']) }.to exit_nonzero
     end
@@ -215,7 +215,7 @@ describe 'Running `pdk new module`' do
 
     context 'and the --skip-interview and --full-interview flags have been passed' do
       it 'ignores full-interview and continues with a log message' do
-        expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --skip-interview.}i))
+        expect(logger).to receive(:info).with(a_string_matching(/Ignoring --full-interview and continuing with --skip-interview./i))
         expect(PDK::Generate::Module).to receive(:invoke).with(hash_including('skip-interview': true, 'full-interview': false))
 
         PDK::CLI.run(['new', 'module', '--skip-interview', '--full-interview', module_name])

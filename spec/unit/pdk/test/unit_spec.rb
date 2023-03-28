@@ -78,12 +78,12 @@ describe PDK::Test::Unit do
         expect($stderr).to receive(:puts).with('').twice
         expect($stderr).to receive(:puts).with('some output')
         expect($stderr).to receive(:puts).with('some error')
-        expect(logger).to receive(:error).with(a_string_matching(%r{spec_prep rake task failed}))
+        expect(logger).to receive(:error).with(a_string_matching(/spec_prep rake task failed/))
         expect(described_class).to receive(:tear_down)
 
         expect do
           described_class.setup
-        end.to raise_error(PDK::CLI::FatalError, %r{failed to prepare to run the unit tests}i)
+        end.to raise_error(PDK::CLI::FatalError, /failed to prepare to run the unit tests/i)
       end
     end
   end
@@ -111,11 +111,11 @@ describe PDK::Test::Unit do
         expect($stderr).to receive(:puts).with('').twice
         expect($stderr).to receive(:puts).with('some output')
         expect($stderr).to receive(:puts).with('some error')
-        expect(logger).to receive(:error).with(a_string_matching(%r{spec_clean rake task failed}))
+        expect(logger).to receive(:error).with(a_string_matching(/spec_clean rake task failed/))
 
         expect do
           described_class.tear_down
-        end.to raise_error(PDK::CLI::FatalError, %r{failed to clean up after running unit tests}i)
+        end.to raise_error(PDK::CLI::FatalError, /failed to clean up after running unit tests/i)
       end
     end
   end
@@ -188,7 +188,7 @@ describe PDK::Test::Unit do
     let(:duration) { 4.123 }
 
     before do
-      allow(report).to receive(:add_event).with(%r{message \d})
+      allow(report).to receive(:add_event).with(/message \d/)
     end
 
     context 'with messages' do
@@ -220,7 +220,7 @@ describe PDK::Test::Unit do
       end
 
       it 'prints the summary to stderr' do
-        expect($stderr).to receive(:puts).once.with(%r{Evaluated 30 tests in 4\.123 seconds})
+        expect($stderr).to receive(:puts).once.with(/Evaluated 30 tests in 4\.123 seconds/)
       end
     end
   end

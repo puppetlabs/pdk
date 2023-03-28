@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/cli'
 
 describe 'PDK::CLI new test' do
-  let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new test}m) }
+  let(:help_text) { a_string_matching(/^USAGE\s+pdk new test/m) }
 
   before do
     # Stop printing out the result
@@ -13,7 +13,7 @@ describe 'PDK::CLI new test' do
     include_context 'run outside module'
 
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
+      expect(logger).to receive(:error).with(a_string_matching(/must be run from inside a valid module/))
 
       expect { PDK::CLI.run(['new', 'test', 'my_object']) }.to exit_nonzero
     end
@@ -65,7 +65,7 @@ describe 'PDK::CLI new test' do
       end
 
       it 'exits with an error' do
-        expect(logger).to receive(:error).with(a_string_matching(%r{unable to find anything called "test-class"}i))
+        expect(logger).to receive(:error).with(a_string_matching(/unable to find anything called "test-class"/i))
 
         expect { PDK::CLI.run(['new', 'test', '--unit', 'test-class']) }.to exit_nonzero
       end
@@ -139,7 +139,7 @@ describe 'PDK::CLI new test' do
       end
 
       it 'exits with an error' do
-        expect(logger).to receive(:error).with(a_string_matching(%r{pdk does not support generating unit tests for "unsupported_thing"}i))
+        expect(logger).to receive(:error).with(a_string_matching(/pdk does not support generating unit tests for "unsupported_thing"/i))
 
         expect { PDK::CLI.run(['new', 'test', '--unit', 'test_thing']) }.to exit_nonzero
       end

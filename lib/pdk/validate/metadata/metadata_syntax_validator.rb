@@ -58,7 +58,7 @@ module PDK
             # String#dump here to unescape any escape characters like newlines.
             # We then strip out the surrounding quotes and the exclaimation
             # point that json_pure likes to put in exception messages.
-            sane_message = e.message.dump[%r{\A"(.+?)!?"\Z}, 1]
+            sane_message = e.message.dump[/\A"(.+?)!?"\Z/, 1]
 
             report.add_event(
               file: target,

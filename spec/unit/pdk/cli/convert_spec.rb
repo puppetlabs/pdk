@@ -4,7 +4,7 @@ require 'pdk/cli'
 describe 'PDK::CLI convert' do
   include_context 'mock configuration'
 
-  let(:help_text) { a_string_matching(%r{^USAGE\s+pdk convert}m) }
+  let(:help_text) { a_string_matching(/^USAGE\s+pdk convert/m) }
   let(:pdk_context) { PDK::Context::Module.new(module_root, module_root) }
   let(:module_root) { '/path/to/test/module' }
 
@@ -17,7 +17,7 @@ describe 'PDK::CLI convert' do
     include_context 'run outside module'
 
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{can only be run from inside a valid module directory}))
+      expect(logger).to receive(:error).with(a_string_matching(/can only be run from inside a valid module directory/))
 
       expect { PDK::CLI.run(['convert']) }.to exit_nonzero
     end
@@ -179,7 +179,7 @@ describe 'PDK::CLI convert' do
 
     context 'and the --force and --noop flags have been passed' do
       it 'exits with an error' do
-        expect(logger).to receive(:error).with(a_string_matching(%r{can not specify --noop and --force}i))
+        expect(logger).to receive(:error).with(a_string_matching(/can not specify --noop and --force/i))
 
         expect { PDK::CLI.run(['convert', '--noop', '--force']) }.to exit_nonzero
       end
@@ -235,7 +235,7 @@ describe 'PDK::CLI convert' do
       end
 
       it 'ignores full-interview and continues with a log message' do
-        expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --skip-interview.}i))
+        expect(logger).to receive(:info).with(a_string_matching(/Ignoring --full-interview and continuing with --skip-interview./i))
         expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including('skip-interview': true, 'full-interview': false))
       end
 
@@ -255,7 +255,7 @@ describe 'PDK::CLI convert' do
       end
 
       it 'ignores full-interview and continues with a log message' do
-        expect(logger).to receive(:info).with(a_string_matching(%r{Ignoring --full-interview and continuing with --force.}i))
+        expect(logger).to receive(:info).with(a_string_matching(/Ignoring --full-interview and continuing with --force./i))
         expect(PDK::Module::Convert).to receive(:invoke).with(module_root, hash_including(force: true, 'full-interview': false))
       end
 
@@ -276,7 +276,7 @@ describe 'PDK::CLI convert' do
         let(:args) { super() + ['--template-url', 'https://some/template'] }
 
         it 'exits with an error' do
-          msg = %r{can not specify --template-url and --default-template}i
+          msg = /can not specify --template-url and --default-template/i
           expect(logger).to receive(:error).with(a_string_matching(msg))
 
           expect { PDK::CLI.run(args) }.to exit_nonzero

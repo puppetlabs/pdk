@@ -7,9 +7,9 @@ require 'addressable'
 
 shared_context 'allow summary to be printed to stdout' do
   before do
-    allow($stdout).to receive(:puts).with(a_string_matching(%r{\A-+\Z}))
+    allow($stdout).to receive(:puts).with(a_string_matching(/\A-+\Z/))
     allow($stdout).to receive(:puts).with('SUMMARY')
-    allow($stdout).to receive(:puts).with(a_string_matching(%r{\A\{.+\}\Z}m))
+    allow($stdout).to receive(:puts).with(a_string_matching(/\A\{.+\}\Z/m))
     allow($stdout).to receive(:puts).with(no_args)
   end
 end
@@ -37,7 +37,7 @@ end
 shared_context 'mock metadata.json' do
   before do
     allow(PDK::Util::Filesystem).to receive(:write_file)
-      .with(a_string_matching(%r{metadata\.json\Z}), anything)
+      .with(a_string_matching(/metadata\.json\Z/), anything)
   end
 end
 
@@ -63,12 +63,12 @@ describe PDK::Generate::Module do
     context 'when the target module directory already exists' do
       it 'raises a FatalError' do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(target_dir).and_return(true)
-        expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
-        expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
+        expect(logger).not_to receive(:info).with(a_string_matching(/generated at path/i))
+        expect(logger).not_to receive(:info).with(a_string_matching(/In your new module directory, add classes with the 'pdk new class' command/i))
 
         expect do
           described_class.invoke(module_name: 'foo', target_dir: target_dir)
-        end.to raise_error(PDK::CLI::ExitWithError, %r{destination directory '.+' already exists}i)
+        end.to raise_error(PDK::CLI::ExitWithError, /destination directory '.+' already exists/i)
       end
     end
 
@@ -86,8 +86,8 @@ describe PDK::Generate::Module do
         allow(PDK::Util::Filesystem).to receive(:mv).with(temp_target_dir, target_dir)
         allow(PDK::Util::Version).to receive(:version_string).and_return('0.0.0')
         allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
-        allow(PDK::Util::Filesystem).to receive(:write_file).with(%r{pdk-test-writable}, anything) { raise Errno::EACCES unless target_parent_writeable }
-        allow(PDK::Util::Filesystem).to receive(:rm_f).with(%r{pdk-test-writable})
+        allow(PDK::Util::Filesystem).to receive(:write_file).with(/pdk-test-writable/, anything) { raise Errno::EACCES unless target_parent_writeable }
+        allow(PDK::Util::Filesystem).to receive(:rm_f).with(/pdk-test-writable/)
         allow(PDK::Util).to receive(:module_root).and_return(nil)
         allow(PDK::Util).to receive(:package_install?).and_return(false)
       end
@@ -96,12 +96,12 @@ describe PDK::Generate::Module do
         let(:target_parent_writeable) { false }
 
         it 'raises a FatalError' do
-          expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
-          expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
+          expect(logger).not_to receive(:info).with(a_string_matching(/generated at path/i))
+          expect(logger).not_to receive(:info).with(a_string_matching(/In your new module directory, add classes with the 'pdk new class' command/i))
 
           expect do
             described_class.invoke(invoke_opts)
-          end.to raise_error(PDK::CLI::FatalError, %r{you do not have permission to write to}i)
+          end.to raise_error(PDK::CLI::FatalError, /you do not have permission to write to/i)
         end
       end
 
@@ -166,7 +166,7 @@ describe PDK::Generate::Module do
           end
 
           expect(PDK::Util::Filesystem).to receive(:write_file)
-            .with(a_string_matching(%r{metadata\.json\Z}), include_metadata)
+            .with(a_string_matching(/metadata\.json\Z/), include_metadata)
 
           described_class.invoke(invoke_opts)
         end
@@ -189,12 +189,12 @@ describe PDK::Generate::Module do
         end
 
         it 'raises a FatalError' do
-          expect(logger).not_to receive(:info).with(a_string_matching(%r{generated at path}i))
-          expect(logger).not_to receive(:info).with(a_string_matching(%r{In your new module directory, add classes with the 'pdk new class' command}i))
+          expect(logger).not_to receive(:info).with(a_string_matching(/generated at path/i))
+          expect(logger).not_to receive(:info).with(a_string_matching(/In your new module directory, add classes with the 'pdk new class' command/i))
 
           expect do
             described_class.invoke(invoke_opts)
-          end.to raise_error(PDK::CLI::FatalError, %r{failed to move .+: permission denied}i)
+          end.to raise_error(PDK::CLI::FatalError, /failed to move .+: permission denied/i)
         end
       end
 
@@ -208,8 +208,8 @@ describe PDK::Generate::Module do
 
         it 'uses that template to generate the module' do
           expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('cli-template#main'), anything).and_yield(template_dir)
-          expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
-          expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
+          expect(logger).to receive(:info).with(a_string_matching(/generated at path/i))
+          expect(logger).to receive(:info).with(a_string_matching(/In your module directory, add classes with the 'pdk new class' command/i))
 
           described_class.invoke(invoke_opts.merge('template-url': 'cli-template'))
         end
@@ -246,8 +246,8 @@ describe PDK::Generate::Module do
           it 'uses the template-url from the answer file to generate the module' do
             PDK.config.set(['user', 'module_defaults', 'template-url'], 'answer-template')
             expect(PDK::Template).to receive(:with).with(Addressable::URI.parse('answer-template'), anything).and_yield(template_dir)
-            expect(logger).to receive(:info).with(a_string_matching(%r{generated at path}i))
-            expect(logger).to receive(:info).with(a_string_matching(%r{In your module directory, add classes with the 'pdk new class' command}i))
+            expect(logger).to receive(:info).with(a_string_matching(/generated at path/i))
+            expect(logger).to receive(:info).with(a_string_matching(/In your module directory, add classes with the 'pdk new class' command/i))
 
             described_class.invoke(invoke_opts)
           end
@@ -310,8 +310,8 @@ describe PDK::Generate::Module do
       prompt.input << ("#{responses.join("\r")}\r")
       prompt.input.rewind
 
-      allow($stdout).to receive(:puts).with(a_string_matching(%r{manually updating the metadata.json file}m))
-      allow($stdout).to receive(:puts).with(a_string_matching(%r{ask you \d+ questions}))
+      allow($stdout).to receive(:puts).with(a_string_matching(/manually updating the metadata.json file/m))
+      allow($stdout).to receive(:puts).with(a_string_matching(/ask you \d+ questions/))
       allow($stdout).to receive(:puts).with(no_args)
       allow(PDK::Util::Filesystem).to receive(:file?).with('metadata.json').and_return(false)
     end
@@ -566,7 +566,7 @@ describe PDK::Generate::Module do
       end
 
       it 'exits cleanly' do
-        allow(logger).to receive(:info).with(a_string_matching(%r{interview cancelled}i))
+        allow(logger).to receive(:info).with(a_string_matching(/interview cancelled/i))
         expect { interview_metadata }.to exit_zero
       end
     end
@@ -585,7 +585,7 @@ describe PDK::Generate::Module do
       end
 
       it 'exits cleanly' do
-        allow(logger).to receive(:info).with(a_string_matching(%r{Process cancelled; exiting.}i))
+        allow(logger).to receive(:info).with(a_string_matching(/Process cancelled; exiting./i))
         expect { interview_metadata }.to exit_zero
       end
     end
@@ -754,7 +754,7 @@ describe PDK::Generate::Module do
       it 'raises a FatalError' do
         expect do
           described_class.prepare_module_directory(path)
-        end.to raise_error(PDK::CLI::FatalError, %r{unable to create directory.+some message}i)
+        end.to raise_error(PDK::CLI::FatalError, /unable to create directory.+some message/i)
       end
     end
   end
@@ -786,7 +786,7 @@ describe PDK::Generate::Module do
       let(:login) { 'test_user' }
 
       it 'warns the user and returns the login with the characters removed' do
-        expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
+        expect(logger).to receive(:debug).with(a_string_matching(/not a valid forge username/i))
         expect(subject).to eq('testuser')
       end
     end
@@ -795,7 +795,7 @@ describe PDK::Generate::Module do
       let(:login) { 'Administrator' }
 
       it 'warns the user and returns the login with the characters downcased' do
-        expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
+        expect(logger).to receive(:debug).with(a_string_matching(/not a valid forge username/i))
         expect(subject).to eq('administrator')
       end
     end
@@ -804,7 +804,7 @@ describe PDK::Generate::Module do
       let(:login) { 'Αρίσταρχος ό Σάμιος' }
 
       it 'warns the user and returns the string "username"' do
-        expect(logger).to receive(:debug).with(a_string_matching(%r{not a valid forge username}i))
+        expect(logger).to receive(:debug).with(a_string_matching(/not a valid forge username/i))
         expect(subject).to eq('username')
       end
     end

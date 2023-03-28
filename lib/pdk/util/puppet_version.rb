@@ -157,7 +157,7 @@ module PDK
 
         # Split combined requirements like ">= 4.7.0 < 6.0.0" into their
         # component requirements [">= 4.7.0", "< 6.0.0"]
-        pattern = %r{#{Gem::Requirement::PATTERN_RAW}}o
+        pattern = /#{Gem::Requirement::PATTERN_RAW}/o
         requirement_strings = metadata_requirement['version_requirement'].scan(pattern).map do |req|
           req.compact.join(' ')
         end
@@ -182,7 +182,7 @@ module PDK
             # Some PE release have a .0 Z release, which causes problems when
             # the user specifies "X.Y" expecting to get the latest Z and
             # instead getting the oldest.
-            requirements << "!= #{pe_release['version'].gsub(%r{\.\d+\Z}, '')}" if pe_release['version'].end_with?('.0')
+            requirements << "!= #{pe_release['version'].gsub(/\.\d+\Z/, '')}" if pe_release['version'].end_with?('.0')
             {
               requirement: Gem::Requirement.create(requirements),
               gem_version: pe_release['puppet'],
@@ -209,7 +209,7 @@ module PDK
       end
 
       def requirement_from_forge_range(range_str)
-        Gem::Requirement.create("~> #{range_str.gsub(%r{\.x\Z}, '.0')}")
+        Gem::Requirement.create("~> #{range_str.gsub(/\.x\Z/, '.0')}")
       end
 
       def rubygems_puppet_versions

@@ -1,9 +1,9 @@
 require 'spec_helper_acceptance'
 
 describe 'pdk validate metadata', module_command: true do
-  let(:metadata_syntax_spinner) { %r{checking metadata syntax}i }
-  let(:module_style_spinner) { %r{checking module metadata style}i }
-  let(:task_style_spinner) { %r{checking task metadata style}i }
+  let(:metadata_syntax_spinner) { /checking metadata syntax/i }
+  let(:module_style_spinner) { /checking module metadata style/i }
+  let(:task_style_spinner) { /checking task metadata style/i }
 
   def broken_metadata
     JSON.parse(File.read('metadata.bak')).tap do |metadata|
@@ -33,7 +33,7 @@ describe 'pdk validate metadata', module_command: true do
 
       describe command('pdk validate metadata --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\(warning\): metadata-json-lint:.+open ended dependency}i) }
+        its(:stdout) { is_expected.to match(/\(warning\): metadata-json-lint:.+open ended dependency/i) }
         its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
 
         describe file('report.xml') do

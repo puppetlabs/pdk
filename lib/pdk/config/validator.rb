@@ -22,7 +22,7 @@ module PDK
       #   regex for a version 4 UUID.
       def self.uuid
         {
-          proc: ->(value) { value.match(%r{\A\h{8}(?:-\h{4}){3}-\h{12}\z}) },
+          proc: ->(value) { value.match(/\A\h{8}(?:-\h{4}){3}-\h{12}\z/) },
           message: 'must be a version 4 UUID',
         }
       end

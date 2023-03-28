@@ -134,7 +134,7 @@ describe PDK::Report do
           puppet_lint_suite = doc.elements['/testsuites/testsuite[@name="puppet-lint"]']
           # Strip whitespace out of element from document as it formats
           # differently to an element not part of a document.
-          testcase = puppet_lint_suite.elements['testcase'].to_s.gsub(%r{\s*\n\s*}, '')
+          testcase = puppet_lint_suite.elements['testcase'].to_s.gsub(/\s*\n\s*/, '')
 
           puppet_lint_suite.attributes['tests'] == '1' &&
             puppet_lint_suite.attributes['failures'] == '1' &&

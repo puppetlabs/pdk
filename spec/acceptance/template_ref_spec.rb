@@ -26,15 +26,15 @@ describe 'Specifying a template-ref' do
 
     describe command(create_cmd.join(' ')) do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{creating new module: foo}i) }
-      its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-      its(:stdout) { is_expected.to match(%r{\A\Z}) }
+      its(:stderr) { is_expected.to match(/creating new module: foo/i) }
+      its(:stderr) { is_expected.not_to match(/WARN|ERR/) }
+      its(:stdout) { is_expected.to match(/\A\Z/) }
 
       describe file('foo/metadata.json') do
         it { is_expected.to be_file }
 
         its(:content_as_json) do
-          is_expected.to include('template-ref' => match(%r{2\.3\.0}))
+          is_expected.to include('template-ref' => match(/2\.3\.0/))
         end
       end
     end
@@ -47,7 +47,7 @@ describe 'Specifying a template-ref' do
 
         describe file('metadata.json') do
           its(:content_as_json) do
-            is_expected.to include('template-ref' => match(%r{2\.4\.0}))
+            is_expected.to include('template-ref' => match(/2\.4\.0/))
           end
         end
       end

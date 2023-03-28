@@ -6,7 +6,7 @@ describe PDK::Logger do
 
   context 'by default' do
     it 'prints info messages to stdout' do
-      expect($stderr).to receive(:write).with(a_string_matching(%r{test message}))
+      expect($stderr).to receive(:write).with(a_string_matching(/test message/))
 
       pdk_logger.info('test message')
     end
@@ -26,7 +26,7 @@ describe PDK::Logger do
     end
 
     it 'prints debug messages to stdout' do
-      expect($stderr).to receive(:write).with(a_string_matching(%r{test debug message}))
+      expect($stderr).to receive(:write).with(a_string_matching(/test debug message/))
 
       pdk_logger.debug('test debug message')
     end

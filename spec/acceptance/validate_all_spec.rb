@@ -17,12 +17,12 @@ describe 'pdk validate', module_command: true do
 
     describe command('pdk validate') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{Running all available validators}i) }
-      its(:stderr) { is_expected.to match(%r{Checking metadata syntax}i) }
-      its(:stderr) { is_expected.to match(%r{Checking module metadata style}i) }
-      its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
-      its(:stderr) { is_expected.to match(%r{Checking Puppet manifest style}i) }
-      its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
+      its(:stderr) { is_expected.to match(/Running all available validators/i) }
+      its(:stderr) { is_expected.to match(/Checking metadata syntax/i) }
+      its(:stderr) { is_expected.to match(/Checking module metadata style/i) }
+      its(:stderr) { is_expected.to match(/Checking Puppet manifest syntax/i) }
+      its(:stderr) { is_expected.to match(/Checking Puppet manifest style/i) }
+      its(:stderr) { is_expected.to match(/Checking Ruby code style/i) }
     end
 
     context 'with a puppet syntax failure should still run all validators' do
@@ -41,11 +41,11 @@ describe 'pdk validate', module_command: true do
 
       describe command('pdk validate --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stderr) { is_expected.to match(%r{Running all available validators}i) }
-        its(:stderr) { is_expected.to match(%r{Checking metadata syntax}i) }
-        its(:stderr) { is_expected.to match(%r{Checking module metadata style}i) }
-        its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
-        its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
+        its(:stderr) { is_expected.to match(/Running all available validators/i) }
+        its(:stderr) { is_expected.to match(/Checking metadata syntax/i) }
+        its(:stderr) { is_expected.to match(/Checking module metadata style/i) }
+        its(:stderr) { is_expected.to match(/Checking Puppet manifest syntax/i) }
+        its(:stderr) { is_expected.to match(/Checking Ruby code style/i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -63,7 +63,7 @@ describe 'pdk validate', module_command: true do
               'name' => a_string_starting_with(init_pp),
             ).that_failed(
               'type' => 'Error',
-              'message' => a_string_matching(%r{This Name has no effect}i),
+              'message' => a_string_matching(/This Name has no effect/i),
             )
           end
 
@@ -73,7 +73,7 @@ describe 'pdk validate', module_command: true do
               'name' => a_string_starting_with(init_pp),
             ).that_failed(
               'type' => 'Error',
-              'message' => a_string_matching(%r{This Type-Name has no effect}i),
+              'message' => a_string_matching(/This Type-Name has no effect/i),
             )
           end
         end
@@ -81,14 +81,14 @@ describe 'pdk validate', module_command: true do
 
       describe command('pdk validate --parallel') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stderr) { is_expected.to match(%r{Running all available validators}i) }
-        its(:stderr) { is_expected.to match(%r{Checking metadata syntax}i) }
-        its(:stderr) { is_expected.to match(%r{Checking module metadata style}i) }
-        its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
-        its(:stdout) { is_expected.to match(%r{\(error\):.*This Name has no effect}i) }
-        its(:stdout) { is_expected.to match(%r{\(error\):.*This Type-Name has no effect}i) }
-        its(:stdout) { is_expected.to match(%r{\(error\):.*Language validation logged 2 errors}i) }
-        its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
+        its(:stderr) { is_expected.to match(/Running all available validators/i) }
+        its(:stderr) { is_expected.to match(/Checking metadata syntax/i) }
+        its(:stderr) { is_expected.to match(/Checking module metadata style/i) }
+        its(:stderr) { is_expected.to match(/Checking Puppet manifest syntax/i) }
+        its(:stdout) { is_expected.to match(/\(error\):.*This Name has no effect/i) }
+        its(:stdout) { is_expected.to match(/\(error\):.*This Type-Name has no effect/i) }
+        its(:stdout) { is_expected.to match(/\(error\):.*Language validation logged 2 errors/i) }
+        its(:stderr) { is_expected.to match(/Checking Ruby code style/i) }
       end
     end
 
@@ -99,7 +99,7 @@ describe 'pdk validate', module_command: true do
         end
 
         File.open(File.join('manifests', 'init.pp'), 'w') do |f|
-          f.puts <<-EOS.gsub(%r{^ {10}}, '')
+          f.puts <<-EOS.gsub(/^ {10}/, '')
             # pdk_in_gemfile
             class pdk_in_gemfile {}
           EOS
@@ -108,11 +108,11 @@ describe 'pdk validate', module_command: true do
 
       describe command('pdk validate') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{Running all available validators}i) }
-        its(:stderr) { is_expected.to match(%r{Checking metadata syntax}i) }
-        its(:stderr) { is_expected.to match(%r{Checking module metadata style}i) }
-        its(:stderr) { is_expected.to match(%r{Checking Puppet manifest syntax}i) }
-        its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
+        its(:stderr) { is_expected.to match(/Running all available validators/i) }
+        its(:stderr) { is_expected.to match(/Checking metadata syntax/i) }
+        its(:stderr) { is_expected.to match(/Checking module metadata style/i) }
+        its(:stderr) { is_expected.to match(/Checking Puppet manifest syntax/i) }
+        its(:stderr) { is_expected.to match(/Checking Ruby code style/i) }
       end
     end
   end

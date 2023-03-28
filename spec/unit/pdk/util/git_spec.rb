@@ -141,7 +141,7 @@ describe PDK::Util::Git do
 
         expect do
           described_class.ls_remote(repo, ref)
-        end.to raise_error(PDK::CLI::ExitWithError, %r{unable to access the template repository}i)
+        end.to raise_error(PDK::CLI::ExitWithError, /unable to access the template repository/i)
       end
     end
 

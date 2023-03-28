@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/cli'
 
 describe 'PDK::CLI new defined_type' do
-  let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new defined_type}m) }
+  let(:help_text) { a_string_matching(/^USAGE\s+pdk new defined_type/m) }
 
   before do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
@@ -42,7 +42,7 @@ describe 'PDK::CLI new defined_type' do
     let(:module_root) { nil }
     let(:args) { ['new', 'defined_type', 'test_define'] }
 
-    it_behaves_like 'it exits with an error', %r{must be run from inside a valid module}
+    it_behaves_like 'it exits with an error', /must be run from inside a valid module/
   end
 
   context 'when run from inside a module' do
@@ -63,7 +63,7 @@ describe 'PDK::CLI new defined_type' do
     context 'and provided an invalid defined type name' do
       let(:args) { ['new', 'defined_type', 'test-define'] }
 
-      it_behaves_like 'it exits with an error', %r{'test-define' is not a valid defined type name}
+      it_behaves_like 'it exits with an error', /'test-define' is not a valid defined type name/
     end
 
     context 'and provided a valid defined type name' do

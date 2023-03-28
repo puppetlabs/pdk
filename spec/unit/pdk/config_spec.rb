@@ -17,9 +17,9 @@ describe PDK::Config do
   end
 
   before do
-    allow(PDK::Util::Filesystem).to receive(:file?).with(%r{pdk\.yaml}).and_call_original
+    allow(PDK::Util::Filesystem).to receive(:file?).with(/pdk\.yaml/).and_call_original
     # Allow the JSON Schema documents to actually be read. Rspec matchers are LIFO
-    allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original
+    allow(PDK::Util::Filesystem).to receive(:file?).with(/_schema\.json/).and_call_original
   end
 
   describe '.system_config' do
@@ -47,8 +47,8 @@ describe PDK::Config do
 
       before do
         # Allow anything in the fixtures dir to actually be read
-        allow(PDK::Util::Filesystem).to receive(:file?).with(%r{#{FIXTURES_DIR}}o).and_call_original
-        allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{#{FIXTURES_DIR}}o).and_call_original
+        allow(PDK::Util::Filesystem).to receive(:file?).with(/#{FIXTURES_DIR}/o).and_call_original
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(/#{FIXTURES_DIR}/o).and_call_original
       end
 
       it 'has environment settings' do
@@ -546,7 +546,7 @@ describe PDK::Config do
         end
 
         it 'saves the disabled value to the analytics config file' do
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), %r{disabled: true})
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), /disabled: true/)
           config.user_config['analytics']['disabled']
         end
       end
@@ -559,7 +559,7 @@ describe PDK::Config do
         end
 
         it 'saves the disabled value to the analytics config file' do
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), %r{disabled: false})
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), /disabled: false/)
           config.user_config['analytics']['disabled']
         end
 
@@ -576,7 +576,7 @@ describe PDK::Config do
           end
 
           it 'saves the disabled value to the analytics config file' do
-            expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), %r{disabled: true})
+            expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), /disabled: true/)
             config.user_config['analytics']['disabled']
           end
         end
@@ -597,7 +597,7 @@ describe PDK::Config do
 
     def uuid_regex(uuid)
       # Depending on the YAML or JSON generator, it may, or may not have quotes
-      %r{user-id: (?:#{uuid}|'#{uuid}'|"#{uuid}")}
+      /user-id: (?:#{uuid}|'#{uuid}'|"#{uuid}")/
     end
 
     context 'default value' do

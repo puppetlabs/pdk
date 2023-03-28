@@ -72,7 +72,7 @@ module PDK
             files_in_template(dirs).each do |template_file, template_loc|
               template_file = template_file.to_s
               PDK.logger.debug(format("Rendering '%{template}'...", template: template_file))
-              dest_path = template_file.sub(%r{\.erb\Z}, '')
+              dest_path = template_file.sub(/\.erb\Z/, '')
               config = legacy_template_dir.config_for(dest_path)
 
               dest_status = if template_loc.start_with?(moduleroot_init)
@@ -117,7 +117,7 @@ module PDK
                 dirlocs << dir if PDK::Util::Filesystem.file?(template_path) && !PDK::Util::Filesystem.symlink?(template_path)
               end
               temp_paths.map do |template_path|
-                template_path.sub!(%r{\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
+                template_path.sub!(/\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}/, '')
               end
             end
             (temp_paths.zip dirlocs).to_h

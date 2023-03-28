@@ -18,7 +18,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
       let(:targets) { ['foo/metadata.json'] }
 
       it 'includes the path to the target in the spinner text' do
-        expect(spinner_text_for_targets).to match(%r{checking module metadata style \(#{Regexp.escape(targets.first)}\)}i)
+        expect(spinner_text_for_targets).to match(/checking module metadata style \(#{Regexp.escape(targets.first)}\)/i)
       end
     end
 
@@ -37,7 +37,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
       end
 
       it 'includes the path to the target relative to the PWD in the spinner text' do
-        expect(spinner_text_for_targets).to match(%r{checking module metadata style \(metadata\.json\)}i)
+        expect(spinner_text_for_targets).to match(/checking module metadata style \(metadata\.json\)/i)
       end
     end
   end
@@ -55,7 +55,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
     let(:targets) { ['target1', 'target2.json'] }
 
     it 'sets the output format as JSON' do
-      expect(command_args.join(' ')).to match(%r{--format json})
+      expect(command_args.join(' ')).to match(/--format json/)
     end
 
     it 'enables strict dependency check' do
@@ -82,7 +82,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
       let(:targets) { ['metadata.json', 'another.json'] }
 
       it 'raises an ArgumentError' do
-        expect { parse_output }.to raise_error(ArgumentError, a_string_matching(%r{more than 1 target provided}i))
+        expect { parse_output }.to raise_error(ArgumentError, a_string_matching(/more than 1 target provided/i))
       end
     end
 

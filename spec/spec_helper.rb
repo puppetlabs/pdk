@@ -98,7 +98,7 @@ end
 
 module OS
   def self.windows?
-    (%r{cygwin|mswin|mingw|bccwin|wince|emx} =~ RUBY_PLATFORM) != nil
+    (/cygwin|mswin|mingw|bccwin|wince|emx/ =~ RUBY_PLATFORM) != nil
   end
 
   def self.mac?

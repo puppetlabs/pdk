@@ -36,11 +36,11 @@ describe 'Running `pdk env`' do
 
       it 'outputs export commands for environment variables' do
         output_regexes = [
-          %r{export PDK_RESOLVED_PUPPET_VERSION="\d\.\d+\.\d+"},
-          %r{export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"},
-          %r{export GEM_HOME=.*},
-          %r{export GEM_PATH=.*},
-          %r{export PATH=.*},
+          /export PDK_RESOLVED_PUPPET_VERSION="\d\.\d+\.\d+"/,
+          /export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"/,
+          /export GEM_HOME=.*/,
+          /export GEM_PATH=.*/,
+          /export PATH=.*/,
         ]
 
         output_regexes.each do |regex|
@@ -54,11 +54,11 @@ describe 'Running `pdk env`' do
 
       it 'outputs export commands for environment variables' do
         output_regexes = [
-          %r{export PDK_RESOLVED_PUPPET_VERSION="\d\.\d+\.\d+"},
-          %r{export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"},
-          %r{export GEM_HOME=.*},
-          %r{export GEM_PATH=.*},
-          %r{export PATH=.*},
+          /export PDK_RESOLVED_PUPPET_VERSION="\d\.\d+\.\d+"/,
+          /export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"/,
+          /export GEM_HOME=.*/,
+          /export GEM_PATH=.*/,
+          /export PATH=.*/,
         ]
 
         output_regexes.each do |regex|

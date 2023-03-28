@@ -82,13 +82,13 @@ describe 'PDK::CLI::Remove::Config' do
 
     RSpec.shared_examples 'a missing name error' do
       it 'raises with missing name' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{name is required})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /name is required/)
       end
     end
 
     RSpec.shared_examples 'an un-removable setting error' do
       it 'raises with can not be removed' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{can not be removed})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /can not be removed/)
       end
     end
 
@@ -102,7 +102,7 @@ describe 'PDK::CLI::Remove::Config' do
         expect(pdk_config).to receive(:set).with(setting_name, anything, force: true).and_call_original
         # This is default log message regex, typically for strings and numbers.  Arrays
         # are complex so the actual test can set the required regex
-        log_msg_regex = %r{Removed .+ which had a value of} if log_msg_regex.nil?
+        log_msg_regex = /Removed .+ which had a value of/ if log_msg_regex.nil?
         expect(PDK.logger).to receive(:info).with(log_msg_regex)
 
         expect(run).to eq(0)
@@ -121,7 +121,7 @@ describe 'PDK::CLI::Remove::Config' do
         # Ensure that the config.set method is actually called for the setting we are changing
         expect(pdk_config).to receive(:set).with(setting_name, anything, force: true).and_call_original
         # Ensure that a log message occurs to state that this is now using the default value
-        expect(PDK.logger).to receive(:info).with(%r{as it using a default value of})
+        expect(PDK.logger).to receive(:info).with(/as it using a default value of/)
         # Ensure that the value is different than what we want to set it to
         expect(pdk_config.get(setting_name)).not_to eq(expected_default_value)
         expect(run).to eq(0)
@@ -134,7 +134,7 @@ describe 'PDK::CLI::Remove::Config' do
       let(:force_opt) { true }
 
       it 'logs a message that --force is ignored' do
-        expect(PDK.logger).to receive(:info).with(%r{Ignoring --force as the})
+        expect(PDK.logger).to receive(:info).with(/Ignoring --force as the/)
         run
       end
     end
@@ -183,11 +183,11 @@ describe 'PDK::CLI::Remove::Config' do
     context 'when removing an array type setting' do
       context 'without --force' do
         context 'without an item value' do
-          it_behaves_like 'a removed setting', SETTING_ARRAY_NONDEFAULT, [], %r{Cleared .+ which had a value of}
+          it_behaves_like 'a removed setting', SETTING_ARRAY_NONDEFAULT, [], /Cleared .+ which had a value of/
           # An empty array does not use the default value, only an undefined (or nil)
           # setting will trigger the default
           context 'which has a default value' do
-            include_examples 'a removed setting', SETTING_ARRAY_DEFAULT, [], %r{Cleared .+ which had a value of}
+            include_examples 'a removed setting', SETTING_ARRAY_DEFAULT, [], /Cleared .+ which had a value of/
           end
         end
 
@@ -198,11 +198,11 @@ describe 'PDK::CLI::Remove::Config' do
             pdk_config.set(setting_name, ['quokka'], force: true)
           end
 
-          it_behaves_like 'a removed setting', SETTING_ARRAY_NONDEFAULT, [], %r{Removed .+ from .+}
+          it_behaves_like 'a removed setting', SETTING_ARRAY_NONDEFAULT, [], /Removed .+ from .+/
           # An empty array does not use the default value, only an undefined (or nil)
           # setting will trigger the default
           context 'which has a default value' do
-            include_examples 'a removed setting', SETTING_ARRAY_DEFAULT, [], %r{Removed .+ from .+}
+            include_examples 'a removed setting', SETTING_ARRAY_DEFAULT, [], /Removed .+ from .+/
           end
         end
 
@@ -213,11 +213,11 @@ describe 'PDK::CLI::Remove::Config' do
             pdk_config.set(setting_name, ['quokka', 'kangaroo'], force: true)
           end
 
-          it_behaves_like 'a removed setting', SETTING_ARRAY_NONDEFAULT, ['kangaroo'], %r{Removed .+ from .+}
+          it_behaves_like 'a removed setting', SETTING_ARRAY_NONDEFAULT, ['kangaroo'], /Removed .+ from .+/
           # An empty array does not use the default value, only an undefined (or nil)
           # setting will trigger the default
           context 'which has a default value' do
-            include_examples 'a removed setting', SETTING_ARRAY_DEFAULT, ['kangaroo'], %r{Removed .+ from .+}
+            include_examples 'a removed setting', SETTING_ARRAY_DEFAULT, ['kangaroo'], /Removed .+ from .+/
           end
         end
       end
@@ -237,7 +237,7 @@ describe 'PDK::CLI::Remove::Config' do
 
           before do
             pdk_config.set(setting_name, ['quokka'], force: true)
-            expect(PDK.logger).to receive(:info).with(%r{Ignoring the item value .+ as --force has been set})
+            expect(PDK.logger).to receive(:info).with(/Ignoring the item value .+ as --force has been set/)
           end
 
           it_behaves_like 'a removed setting', SETTING_ARRAY_NONDEFAULT, nil
@@ -249,7 +249,7 @@ describe 'PDK::CLI::Remove::Config' do
 
           before do
             pdk_config.set(setting_name, ['quokka', 'kangaroo'], force: true)
-            expect(PDK.logger).to receive(:info).with(%r{Ignoring the item value .+ as --force has been set})
+            expect(PDK.logger).to receive(:info).with(/Ignoring the item value .+ as --force has been set/)
           end
 
           it_behaves_like 'a removed setting', SETTING_ARRAY_NONDEFAULT, nil

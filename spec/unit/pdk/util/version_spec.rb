@@ -12,13 +12,13 @@ describe PDK::Util::Version do
     before do
       allow(PDK::Util).to receive(:find_upwards).and_return('/tmp/package/PDK_VERSION')
       allow(PDK::Util::Filesystem).to receive(:exist?).with('/tmp/package/PDK_VERSION').and_return(false)
-      allow(PDK::Util::Filesystem).to receive(:directory?).with(%r{.git\Z}).and_return(true)
+      allow(PDK::Util::Filesystem).to receive(:directory?).with(/.git\Z/).and_return(true)
 
       result = instance_double(Hash)
       allow(result).to receive(:[]).with(:stdout).and_return('git_hash')
       allow(result).to receive(:[]).with(:exit_code).and_return(0)
 
-      allow(PDK::Util::Git).to receive(:git).with('--git-dir', %r{.git\Z}, 'describe', '--all', '--long', '--always').and_return(result)
+      allow(PDK::Util::Git).to receive(:git).with('--git-dir', /.git\Z/, 'describe', '--all', '--long', '--always').and_return(result)
     end
 
     describe '#git_ref' do
@@ -35,7 +35,7 @@ describe PDK::Util::Version do
       allow(PDK::Util).to receive(:find_upwards).and_return('/tmp/package/PDK_VERSION')
       allow(PDK::Util::Filesystem).to receive(:exist?).with('/tmp/package/PDK_VERSION').and_return(true)
       allow(PDK::Util::Filesystem).to receive(:read_file).with('/tmp/package/PDK_VERSION').and_return('0.1.2.3.4.pkg_hash')
-      allow(PDK::Util::Filesystem).to receive(:directory?).with(%r{.git\Z}).and_return(false)
+      allow(PDK::Util::Filesystem).to receive(:directory?).with(/.git\Z/).and_return(false)
       expect(PDK::CLI::Exec).not_to receive(:git)
     end
 

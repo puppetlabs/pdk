@@ -35,12 +35,12 @@ describe PDK::CLI::Util::UpdateManagerPrinter do
 
   shared_examples 'a summary printer' do |filename, future_tense, past_tense|
     it 'prints the files to be updated' do
-      expect(PDK::Report.default_target).to receive(:puts).with(%r{#{filename}})
+      expect(PDK::Report.default_target).to receive(:puts).with(/#{filename}/)
       print_summary
     end
 
     it 'prints the summary category using future tense' do
-      expect(PDK::Report.default_target).to receive(:puts).with(%r{-#{future_tense}-}i)
+      expect(PDK::Report.default_target).to receive(:puts).with(/-#{future_tense}-/i)
       print_summary
     end
 
@@ -48,7 +48,7 @@ describe PDK::CLI::Util::UpdateManagerPrinter do
       let(:summary_options) { { tense: :past } }
 
       it 'prints the summary category using past tense' do
-        expect(PDK::Report.default_target).to receive(:puts).with(%r{-#{past_tense}-}i)
+        expect(PDK::Report.default_target).to receive(:puts).with(/-#{past_tense}-/i)
         print_summary
       end
     end

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/cli'
 
 describe 'PDK::CLI build' do
-  let(:help_text) { a_string_matching(%r{^USAGE\s+pdk build}m) }
+  let(:help_text) { a_string_matching(/^USAGE\s+pdk build/m) }
   let(:command_opts) { [] }
 
   shared_context 'exits cleanly' do
@@ -15,7 +15,7 @@ describe 'PDK::CLI build' do
     include_context 'run outside module'
 
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
+      expect(logger).to receive(:error).with(a_string_matching(/must be run from inside a valid module/))
 
       expect { PDK::CLI.run(['build']) }.to exit_nonzero
     end
@@ -87,13 +87,13 @@ describe 'PDK::CLI build' do
         let(:command_opts) { ['--force'] }
 
         it 'outputs an warning and continues' do
-          expect(logger).to receive(:warn).with(a_string_matching(%r{fields in the metadata\.json: operatingsystem_support, source}im))
+          expect(logger).to receive(:warn).with(a_string_matching(/fields in the metadata\.json: operatingsystem_support, source/im))
 
           expect { PDK::CLI.run(['build'] + command_opts) }.not_to raise_error
         end
 
         it 'submits the command to analytics' do
-          expect(analytics).to receive(:screen_view).with('build', hash_including(cli_options: %r{force=true}, output_format: 'default', ruby_version: RUBY_VERSION))
+          expect(analytics).to receive(:screen_view).with('build', hash_including(cli_options: /force=true/, output_format: 'default', ruby_version: RUBY_VERSION))
 
           expect { PDK::CLI.run(['build'] + command_opts) }.not_to raise_error
         end
@@ -159,8 +159,8 @@ describe 'PDK::CLI build' do
         end
 
         it 'continue to build' do
-          expect(logger).to receive(:info).with(a_string_matching(%r{The file 'testuser-testmodule' already exists}i))
-          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Overwrite}i), default: false).and_return(true)
+          expect(logger).to receive(:info).with(a_string_matching(/The file 'testuser-testmodule' already exists/i))
+          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(/Overwrite/i), default: false).and_return(true)
         end
       end
 
@@ -171,8 +171,8 @@ describe 'PDK::CLI build' do
         end
 
         it 'cancel' do
-          expect(logger).to receive(:info).with(a_string_matching(%r{The file 'testuser-testmodule' already exists}i))
-          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Overwrite}i), default: false).and_return(false)
+          expect(logger).to receive(:info).with(a_string_matching(/The file 'testuser-testmodule' already exists/i))
+          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(/Overwrite/i), default: false).and_return(false)
 
           expect { PDK::CLI.run(['build'] + command_opts) }.to exit_zero
         end
@@ -194,8 +194,8 @@ describe 'PDK::CLI build' do
         end
 
         it 'continue to build' do
-          expect(logger).to receive(:info).with(a_string_matching(%r{This module is not compatible with PDK}))
-          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Continue build without converting}i)).and_return(true)
+          expect(logger).to receive(:info).with(a_string_matching(/This module is not compatible with PDK/))
+          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(/Continue build without converting/i)).and_return(true)
         end
       end
 
@@ -206,8 +206,8 @@ describe 'PDK::CLI build' do
         end
 
         it 'cancel' do
-          expect(logger).to receive(:info).with(a_string_matching(%r{This module is not compatible with PDK}))
-          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(%r{Continue build without converting}i)).and_return(false)
+          expect(logger).to receive(:info).with(a_string_matching(/This module is not compatible with PDK/))
+          expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(a_string_matching(/Continue build without converting/i)).and_return(false)
           expect { PDK::CLI.run(['build'] + command_opts) }.to exit_zero
         end
       end

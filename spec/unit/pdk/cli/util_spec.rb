@@ -9,7 +9,7 @@ describe PDK::CLI::Util do
   describe '.ensure_in_module!' do
     subject(:ensure_in_module) { described_class.ensure_in_module!(options) }
 
-    let(:error_msg) { a_string_matching(%r{no metadata\.json found}) }
+    let(:error_msg) { a_string_matching(/no metadata\.json found/) }
     let(:options) { {} }
 
     context 'when a metadata.json exists' do
@@ -118,7 +118,7 @@ describe PDK::CLI::Util do
       it 'does not raise an error' do
         expect do
           module_version_check
-        end.to raise_error(PDK::CLI::ExitWithError, %r{this module is not pdk compatible}i)
+        end.to raise_error(PDK::CLI::ExitWithError, /this module is not pdk compatible/i)
       end
     end
 
@@ -126,7 +126,7 @@ describe PDK::CLI::Util do
       let(:module_pdk_ver) { '1.2.0' }
 
       before do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{This module template is out of date. Run `pdk convert` to make it compatible with your version of PDK.}i))
+        expect(logger).to receive(:warn).with(a_string_matching(/This module template is out of date. Run `pdk convert` to make it compatible with your version of PDK./i))
       end
 
       it 'does not raise an error' do
@@ -138,7 +138,7 @@ describe PDK::CLI::Util do
       let(:module_pdk_ver) { '1.5.1' }
 
       before do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{This module is compatible with a newer version of PDK. Upgrade your version of PDK to ensure compatibility.}i))
+        expect(logger).to receive(:warn).with(a_string_matching(/This module is compatible with a newer version of PDK. Upgrade your version of PDK to ensure compatibility./i))
       end
 
       it 'does not raise an error' do
@@ -150,7 +150,7 @@ describe PDK::CLI::Util do
       let(:module_pdk_ver) { '1.3.1' }
 
       before do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{This module is compatible with an older version of PDK. Run `pdk update` to update it to your version of PDK.}i))
+        expect(logger).to receive(:warn).with(a_string_matching(/This module is compatible with an older version of PDK. Run `pdk update` to update it to your version of PDK./i))
       end
 
       it 'does not raise an error' do
@@ -161,12 +161,12 @@ describe PDK::CLI::Util do
 
   shared_examples_for 'it returns a puppet environment' do
     it 'notifies the user of the ruby version' do
-      expect(logger).to receive(:info).with(a_string_matching(%r{using ruby #{Regexp.escape(ruby_version)}}i))
+      expect(logger).to receive(:info).with(a_string_matching(/using ruby #{Regexp.escape(ruby_version)}/i))
       expect { puppet_env }.not_to raise_error
     end
 
     it 'notifies the user of the puppet version' do
-      expect(logger).to receive(:info).with(a_string_matching(%r{using puppet #{Regexp.escape(puppet_version)}}i))
+      expect(logger).to receive(:info).with(a_string_matching(/using puppet #{Regexp.escape(puppet_version)}/i))
       expect { puppet_env }.not_to raise_error
     end
 
@@ -369,7 +369,7 @@ describe PDK::CLI::Util do
 
       it 'warn the user about the deprecated version' do
         expect(logger).to receive(:warn)
-          .with(a_string_matching(%r{older than 5\.0\.0 is deprecated}))
+          .with(a_string_matching(/older than 5\.0\.0 is deprecated/))
 
         puppet_env
       end
@@ -407,7 +407,7 @@ describe PDK::CLI::Util do
       let(:options) { { 'template-ref': '1.9.1' } }
 
       it 'raises an error' do
-        expect { validate_template_opts }.to raise_error(PDK::CLI::ExitWithError, %r{--template-ref requires --template-url})
+        expect { validate_template_opts }.to raise_error(PDK::CLI::ExitWithError, /--template-ref requires --template-url/)
       end
     end
 
@@ -430,7 +430,7 @@ describe PDK::CLI::Util do
         let(:options) { { 'template-url': 'https://my/template#1.9.1' } }
 
         it 'raises an error' do
-          expect { validate_template_opts }.to raise_error(PDK::CLI::ExitWithError, %r{may not be used to specify paths containing #})
+          expect { validate_template_opts }.to raise_error(PDK::CLI::ExitWithError, /may not be used to specify paths containing #/)
         end
       end
     end
@@ -459,7 +459,7 @@ describe PDK::CLI::Util do
         end
 
         it 'warns about option precedence' do
-          expect(logger).to receive(:warn).with(%r{dev flag.*overrides.*environment}i)
+          expect(logger).to receive(:warn).with(/dev flag.*overrides.*environment/i)
 
           validate_puppet_version_opts
         end
@@ -469,7 +469,7 @@ describe PDK::CLI::Util do
         let(:options) { { 'puppet-version': cli_puppet_version, 'puppet-dev': true } }
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*option}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*flag.*and.*option/i)
         end
       end
 
@@ -479,7 +479,7 @@ describe PDK::CLI::Util do
         end
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*environment}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*flag.*and.*environment/i)
         end
       end
 
@@ -487,7 +487,7 @@ describe PDK::CLI::Util do
         let(:options) { { 'pe-version': cli_pe_version, 'puppet-dev': true } }
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*option}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*flag.*and.*option/i)
         end
       end
 
@@ -497,7 +497,7 @@ describe PDK::CLI::Util do
         end
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*flag.*and.*environment}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*flag.*and.*environment/i)
         end
       end
     end
@@ -517,7 +517,7 @@ describe PDK::CLI::Util do
         end
 
         it 'warns about option precedence' do
-          expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
+          expect(logger).to receive(:warn).with(/version option.*overrides.*environment/i)
 
           validate_puppet_version_opts
         end
@@ -527,7 +527,7 @@ describe PDK::CLI::Util do
         let(:options) { { 'puppet-version': cli_puppet_version, 'pe-version': cli_pe_version } }
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*option}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*option.*and.*option/i)
         end
       end
 
@@ -537,7 +537,7 @@ describe PDK::CLI::Util do
         end
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*option.*and.*environment/i)
         end
       end
     end
@@ -557,7 +557,7 @@ describe PDK::CLI::Util do
         end
 
         it 'warns about option precedence' do
-          expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
+          expect(logger).to receive(:warn).with(/version option.*overrides.*environment/i)
 
           validate_puppet_version_opts
         end
@@ -567,7 +567,7 @@ describe PDK::CLI::Util do
         let(:options) { { 'puppet-version': cli_puppet_version, 'pe-version': cli_pe_version } }
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*option}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*option.*and.*option/i)
         end
       end
 
@@ -577,7 +577,7 @@ describe PDK::CLI::Util do
         end
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*option.*and.*environment/i)
         end
       end
     end
@@ -599,7 +599,7 @@ describe PDK::CLI::Util do
         let(:options) { { 'puppet-version': cli_puppet_version } }
 
         it 'warns about option precedence' do
-          expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
+          expect(logger).to receive(:warn).with(/version option.*overrides.*environment/i)
 
           validate_puppet_version_opts
         end
@@ -611,7 +611,7 @@ describe PDK::CLI::Util do
         end
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*environment.*and.*environment}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*environment.*and.*environment/i)
         end
       end
 
@@ -619,7 +619,7 @@ describe PDK::CLI::Util do
         let(:options) { { 'pe-version': cli_pe_version } }
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*option.*and.*environment/i)
         end
       end
     end
@@ -641,7 +641,7 @@ describe PDK::CLI::Util do
         let(:options) { { 'pe-version': cli_pe_version } }
 
         it 'warns about option precedence' do
-          expect(logger).to receive(:warn).with(%r{version option.*overrides.*environment}i)
+          expect(logger).to receive(:warn).with(/version option.*overrides.*environment/i)
 
           validate_puppet_version_opts
         end
@@ -653,7 +653,7 @@ describe PDK::CLI::Util do
         end
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*environment.*and.*environment}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*environment.*and.*environment/i)
         end
       end
 
@@ -661,7 +661,7 @@ describe PDK::CLI::Util do
         let(:options) { { 'puppet-version': cli_puppet_version } }
 
         it 'exits with error' do
-          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, %r{cannot specify.*option.*and.*environment}i)
+          expect { validate_puppet_version_opts }.to raise_error(PDK::CLI::ExitWithError, /cannot specify.*option.*and.*environment/i)
         end
       end
     end

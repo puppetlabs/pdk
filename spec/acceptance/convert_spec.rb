@@ -13,7 +13,7 @@ describe 'pdk convert', module_command: true do
     describe command("#{pdk_convert_base} --force") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to have_no_output }
-      its(:stdout) { is_expected.to match(%r{no changes required}i) }
+      its(:stdout) { is_expected.to match(/no changes required/i) }
     end
 
     describe file('convert_report.txt') do
@@ -100,7 +100,7 @@ describe 'pdk convert', module_command: true do
     describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to have_no_output }
-      its(:stdout) { is_expected.to match(%r{No changes required}i) }
+      its(:stdout) { is_expected.to match(/No changes required/i) }
     end
 
     describe file('convert_report.txt') do
@@ -216,7 +216,7 @@ describe 'pdk convert', module_command: true do
 
       describe command("#{pdk_convert_base} --force --skip-interview --add-tests") do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.not_to match(%r{some_class_spec\.rb}m) }
+        its(:stderr) { is_expected.not_to match(/some_class_spec\.rb/m) }
       end
     end
 
@@ -245,17 +245,17 @@ describe 'pdk convert', module_command: true do
 
       describe command("#{pdk_convert_base} --force --skip-interview --add-tests") do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{#{Regexp.escape(class_path)}}m) }
-        its(:stdout) { is_expected.to match(%r{#{Regexp.escape(define_path)}}m) }
+        its(:stdout) { is_expected.to match(/#{Regexp.escape(class_path)}/m) }
+        its(:stdout) { is_expected.to match(/#{Regexp.escape(define_path)}/m) }
 
         describe file(class_path) do
           it { is_expected.to be_file }
-          its(:content) { is_expected.to match(%r{describe 'module_with_missing_tests::some_class'}m) }
+          its(:content) { is_expected.to match(/describe 'module_with_missing_tests::some_class'/m) }
         end
 
         describe file(define_path) do
           it { is_expected.to be_file }
-          its(:content) { is_expected.to match(%r{describe 'module_with_missing_tests::namespaced::some_define'}m) }
+          its(:content) { is_expected.to match(/describe 'module_with_missing_tests::namespaced::some_define'/m) }
         end
       end
     end

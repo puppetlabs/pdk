@@ -49,7 +49,7 @@ describe 'pdk remove config' do
     describe command('pdk remove config') do
       its(:exit_status) { is_expected.not_to eq 0 }
       its(:stdout) { is_expected.to have_no_output }
-      its(:stderr) { is_expected.to match(%r{Configuration name is required}) }
+      its(:stderr) { is_expected.to match(/Configuration name is required/) }
     end
 
     context 'with a setting that does not exist' do
@@ -58,7 +58,7 @@ describe 'pdk remove config' do
 
         its(:exit_status) { is_expected.to eq 0 }
         its(:stdout) { is_expected.to have_no_output }
-        its(:stderr) { is_expected.to match(%r{Could not remove 'user\.module_defaults\.mock' as it has not been set}) }
+        its(:stderr) { is_expected.to match(/Could not remove 'user\.module_defaults\.mock' as it has not been set/) }
       end
     end
 
@@ -67,8 +67,8 @@ describe 'pdk remove config' do
         include_context 'with a fake answer file', 'mock' => ['value', 'keep-value']
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=\["keep-value"\]}) }
-        its(:stderr) { is_expected.to match(%r{Removed 'value' from 'user\.module_defaults\.mock'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=\["keep-value"\]/) }
+        its(:stderr) { is_expected.to match(/Removed 'value' from 'user\.module_defaults\.mock'/) }
 
         it_behaves_like 'a saved JSON configuration file', 'mock' => ['keep-value']
       end
@@ -79,8 +79,8 @@ describe 'pdk remove config' do
         include_context 'with a fake answer file', 'mock' => ['value', 'keep-value']
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=$}) }
-        its(:stderr) { is_expected.to match(%r{Removed 'user\.module_defaults\.mock' which had a value of '\["value", "keep-value"\]}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=$/) }
+        its(:stderr) { is_expected.to match(/Removed 'user\.module_defaults\.mock' which had a value of '\["value", "keep-value"\]/) }
 
         it_behaves_like 'a saved JSON configuration file', {}
       end
@@ -91,8 +91,8 @@ describe 'pdk remove config' do
         include_context 'with a fake answer file', 'mock' => 1
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=$}) }
-        its(:stderr) { is_expected.to match(%r{Removed 'user\.module_defaults\.mock' which had a value of '1'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=$/) }
+        its(:stderr) { is_expected.to match(/Removed 'user\.module_defaults\.mock' which had a value of '1'/) }
 
         it_behaves_like 'a saved JSON configuration file', {}
       end
@@ -103,9 +103,9 @@ describe 'pdk remove config' do
         include_context 'with a fake answer file', 'mock' => 'value'
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=$}) }
-        its(:stderr) { is_expected.to match(%r{Ignoring --force as the setting is not multi-valued}) }
-        its(:stderr) { is_expected.to match(%r{Removed 'user\.module_defaults\.mock' which had a value of 'value'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=$/) }
+        its(:stderr) { is_expected.to match(/Ignoring --force as the setting is not multi-valued/) }
+        its(:stderr) { is_expected.to match(/Removed 'user\.module_defaults\.mock' which had a value of 'value'/) }
 
         it_behaves_like 'a saved JSON configuration file', {}
       end

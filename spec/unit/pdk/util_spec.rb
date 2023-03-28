@@ -55,7 +55,7 @@ describe PDK::Util do
       allow(PDK::Util::Filesystem).to receive(:directory?).with('/').and_return(true)
       allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/').and_return('/')
       allow(PDK::Util::Filesystem).to receive(:expand_path).with(actual_start_dir).and_return(actual_start_dir)
-      allow(PDK::Util::Filesystem).to receive(:file?).with(a_string_matching(%r{metadata\.json\Z})).and_return(false)
+      allow(PDK::Util::Filesystem).to receive(:file?).with(a_string_matching(/metadata\.json\Z/)).and_return(false)
     end
 
     context 'when start_dir is nil' do
@@ -117,7 +117,7 @@ describe PDK::Util do
         it 'raises a FatalError' do
           expect do
             described_class.canonical_path(path)
-          end.to raise_error(PDK::CLI::FatalError, %r{cannot resolve a full path}i)
+          end.to raise_error(PDK::CLI::FatalError, /cannot resolve a full path/i)
         end
       end
 
@@ -220,7 +220,7 @@ describe PDK::Util do
       it 'raises a FatalError' do
         expect do
           described_class.pdk_package_basedir
-        end.to raise_error(PDK::CLI::FatalError, %r{Package basedir requested for non-package install}i)
+        end.to raise_error(PDK::CLI::FatalError, /Package basedir requested for non-package install/i)
       end
     end
 
@@ -238,7 +238,7 @@ describe PDK::Util do
       it 'raises a FatalError' do
         expect do
           described_class.package_cachedir
-        end.to raise_error(PDK::CLI::FatalError, %r{Package basedir requested for non-package install}i)
+        end.to raise_error(PDK::CLI::FatalError, /Package basedir requested for non-package install/i)
       end
     end
 
@@ -554,7 +554,7 @@ describe PDK::Util do
       end
 
       it 'raises an ExitWithError exception' do
-        expect { -> { result }.call }.to raise_error(ArgumentError, %r{some error}i)
+        expect { -> { result }.call }.to raise_error(ArgumentError, /some error/i)
       end
     end
   end

@@ -11,9 +11,9 @@ module PackageHelpers
     end
 
     case host.platform
-    when %r{windows}
+    when /windows/
       install_windows_pdk_package(host)
-    when %r{osx}
+    when /osx/
       install_osx_pdk_package(host)
     else
       install_dev_pdk_package(host)
@@ -29,9 +29,9 @@ module PackageHelpers
     scp_to(host, ENV.fetch('LOCAL_PKG', nil), package)
 
     case host.platform
-    when %r{windows}
+    when /windows/
       generic_install_msi_on(host, package)
-    when %r{osx}
+    when /osx/
       package_volume_name = "pdk-#{ENV.fetch('SUITE_VERSION', nil)}"
       package_filename = "pdk-#{ENV.fetch('SUITE_VERSION', nil)}-1-installer.pkg"
       host.generic_install_dmg(package, package_volume_name, package_filename)
@@ -63,9 +63,9 @@ module PackageHelpers
     url = "http://#{ENV.fetch('BUILD_SERVER', nil)}/pdk/#{ENV.fetch('SHA', nil)}/artifacts/"
 
     case platform
-    when %r{windows}
+    when /windows/
       url += "windows/pdk-#{ENV.fetch('SUITE_VERSION', nil)}-x64.msi"
-    when %r{osx}
+    when /osx/
       version, arch = platform.split('-')[1, 2]
       url += "osx/#{version}/#{arch}/pdk-#{ENV.fetch('SUITE_VERSION', nil)}-1.osx#{version}.dmg"
     else

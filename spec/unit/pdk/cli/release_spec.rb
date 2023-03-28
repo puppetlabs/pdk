@@ -6,7 +6,7 @@ describe 'PDK::CLI release' do
     include_context 'run outside module'
 
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
+      expect(logger).to receive(:error).with(a_string_matching(/must be run from inside a valid module/))
       expect { PDK::CLI.run(['release']) }.to exit_nonzero
     end
   end
@@ -89,7 +89,7 @@ describe 'PDK::CLI release' do
       end
 
       it 'raises a warning' do
-        expect(PDK.logger).to receive(:warn).with(%r{mock_field})
+        expect(PDK.logger).to receive(:warn).with(/mock_field/)
         release.module_compatibility_checks!(release_object, opts)
       end
     end
@@ -100,7 +100,7 @@ describe 'PDK::CLI release' do
       end
 
       it 'raises a warning' do
-        expect(PDK.logger).to receive(:warn).with(%r{not compatible with PDK})
+        expect(PDK.logger).to receive(:warn).with(/not compatible with PDK/)
         release.module_compatibility_checks!(release_object, opts)
       end
     end

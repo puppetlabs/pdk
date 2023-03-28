@@ -41,7 +41,7 @@ end
 
 def to_title_case(value)
   # A quick method to TitleCase a string
-  value.gsub(%r{[a-zA-Z0-9]+}, &:capitalize).delete('-').delete('_')
+  value.gsub(/[a-zA-Z0-9]+/, &:capitalize).delete('-').delete('_')
 end
 
 def cri_to_powershell_hash(base_command)
@@ -96,7 +96,7 @@ def cri_to_powershell_hash(base_command)
       # Not all CRI options are explicit. Some are implicitly inside the usage text surrounded by angle brackets < >
       # Extract these from the usage text. Also these are positional
       position = 0
-      sub_command['usage']&.match(%r{(?:<([^>]+)>)}) do |match|
+      sub_command['usage']&.match(/(?:<([^>]+)>)/) do |match|
         pdk_name = match.captures[0]
         pwsh_name = to_title_case(pdk_name)
         options_hash[pwsh_name] = {

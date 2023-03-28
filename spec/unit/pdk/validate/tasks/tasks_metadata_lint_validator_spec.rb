@@ -27,7 +27,7 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
   describe '.spinner_text' do
     subject(:spinner_text) { described_class.new.spinner_text }
 
-    it { is_expected.to match(%r{Checking task metadata style}i) }
+    it { is_expected.to match(/Checking task metadata style/i) }
   end
 
   describe '.validate_target' do
@@ -94,7 +94,7 @@ describe PDK::Validate::Tasks::TasksMetadataLintValidator do
                                                      source: 'task-metadata-lint',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(%r{did not match the following type}i),
+                                                     message: a_string_matching(/did not match the following type/i),
                                                    })
         expect(return_value).to eq(1)
       end

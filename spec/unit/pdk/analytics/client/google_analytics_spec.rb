@@ -67,7 +67,7 @@ describe PDK::Analytics::Client::GoogleAnalytics do
     end
 
     it 'raises an error if an unknown custom dimension is specified' do
-      expect { client.screen_view('job_run', random_field: 'foo') }.to raise_error(%r{Unknown analytics key})
+      expect { client.screen_view('job_run', random_field: 'foo') }.to raise_error(/Unknown analytics key/)
     end
   end
 

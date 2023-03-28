@@ -30,7 +30,7 @@ describe PDK::Template::TemplateDir do
       end
 
       it 'raises a RuntimeError' do
-        expect { template_dir }.to raise_error(RuntimeError, %r{Could not find a compatible})
+        expect { template_dir }.to raise_error(RuntimeError, /Could not find a compatible/)
       end
     end
   end

@@ -40,11 +40,11 @@ namespace :acceptance do
     # If testing on OSX or Windows, SUITE_VERSION should be set to the build's version string (it forms part of the installer file naming)
     # If it's not set, it's possible to fall back to finding it on BUILD_SERVER if SHA is available
     # or in the package filename if LOCAL_PKG is being used.
-    unless ENV.fetch('SUITE_VERSION', nil) || test_target !~ %r{osx|win}
+    unless ENV.fetch('SUITE_VERSION', nil) || test_target !~ /osx|win/
       if ENV['LOCAL_PKG']
         $stderr.puts "SUITE_VERSION has not been set. Trying to determine it from the filename: '#{ENV.fetch('LOCAL_PKG', nil)}'"
 
-        ENV['SUITE_VERSION'] = %r{^pdk[-_](\d+\.\d+\.\d+\.\d+(.pre\d?)?(\.\d+\.g[a-f\d]+)?)}.match(File.basename(ENV.fetch('LOCAL_PKG', nil), '.dmg'))[1]
+        ENV['SUITE_VERSION'] = /^pdk[-_](\d+\.\d+\.\d+\.\d+(.pre\d?)?(\.\d+\.g[a-f\d]+)?)/.match(File.basename(ENV.fetch('LOCAL_PKG', nil), '.dmg'))[1]
 
         abort "Could not find a valid SUITE_VERSION in the filename: '#{ENV.fetch('LOCAL_PKG', nil)}'" unless ENV['SUITE_VERSION']
       else

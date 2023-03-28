@@ -28,7 +28,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       name: 'rubocop',
       cmd: 'rubocop',
     )
-    expect(validator.spinner_text_for_targets(nil)).to match(%r{ruby code style}i)
+    expect(validator.spinner_text_for_targets(nil)).to match(/ruby code style/i)
   end
 
   describe '.pattern' do

@@ -43,7 +43,7 @@ describe PDK::Util::TemplateURI do
         it 'raises a FatalError' do
           expect do
             template_uri
-          end.to raise_error(PDK::CLI::FatalError, %r{initialization with a non-uri string}i)
+          end.to raise_error(PDK::CLI::FatalError, /initialization with a non-uri string/i)
         end
       end
     end
@@ -144,7 +144,7 @@ describe PDK::Util::TemplateURI do
           it 'returns the metadata template' do
             allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
             allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
-            allow(PDK::Util::Filesystem).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:file?).with(/PDK_VERSION/).and_return(true)
             expect(template_uri.to_s).to eq('metadata-templates')
           end
         end
@@ -499,7 +499,7 @@ describe PDK::Util::TemplateURI do
         allow(PDK::Util).to receive(:development_mode?).and_return(false)
         allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
-        allow(PDK::Util::Filesystem).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(/PDK_VERSION/).and_return(true)
       end
 
       context 'that is a pdk-default keyword' do
@@ -612,7 +612,7 @@ describe PDK::Util::TemplateURI do
             let(:template) { super().merge(allow_fallback: false) }
 
             it 'raises a FatalError' do
-              expect { return_val }.to raise_error(PDK::CLI::FatalError, %r{unable to find a valid template}i)
+              expect { return_val }.to raise_error(PDK::CLI::FatalError, /unable to find a valid template/i)
             end
           end
         end

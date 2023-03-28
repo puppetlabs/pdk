@@ -43,25 +43,25 @@ describe 'PDK::CLI::Set::Config' do
 
     RSpec.shared_examples 'a missing name error' do
       it 'raises with missing name' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{name is required})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /name is required/)
       end
     end
 
     RSpec.shared_examples 'a missing value error' do
       it 'raises with missing value' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{value is required})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /value is required/)
       end
     end
 
     RSpec.shared_examples 'a failed conversion error' do
       it 'raises with failed conversion' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{error occured converting .* into a .*})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /error occured converting .* into a .*/)
       end
     end
 
     RSpec.shared_examples 'a un-settable setting error' do
       it 'raises with failed conversion' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{can not have a value set})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /can not have a value set/)
       end
     end
 
@@ -176,7 +176,7 @@ describe 'PDK::CLI::Set::Config' do
       end
 
       it 'logs an information message' do
-        expect(PDK.logger).to receive(:info).with(%r{No changes made .+ already contains value}im)
+        expect(PDK.logger).to receive(:info).with(/No changes made .+ already contains value/im)
         run
       end
 

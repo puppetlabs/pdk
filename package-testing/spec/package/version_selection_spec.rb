@@ -24,7 +24,7 @@ describe 'Test puppet & ruby version selection' do
 
       let(:expected_puppets) do
         gemspecs = shell("find #{install_dir(true)} -name 'puppet-#{test_case[:expected_puppet]}.*.gemspec'")
-        puppet_versions = gemspecs.stdout.lines.map { |r| r[%r{puppet-([\d.]+)(-.+?)?\.gemspec\Z}, 1] }
+        puppet_versions = gemspecs.stdout.lines.map { |r| r[/puppet-([\d.]+)(-.+?)?\.gemspec\Z/, 1] }
         puppet_versions.map { |r| Regexp.escape(r) }.join('|')
       end
 
@@ -34,14 +34,14 @@ describe 'Test puppet & ruby version selection' do
 
       describe command('pdk bundle exec puppet --version') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{using puppet (#{expected_puppets})}im) }
-        its(:stdout) { is_expected.to match(%r{^(#{expected_puppets})$}im) }
+        its(:stderr) { is_expected.to match(/using puppet (#{expected_puppets})/im) }
+        its(:stdout) { is_expected.to match(/^(#{expected_puppets})$/im) }
       end
 
       describe command('pdk bundle exec ruby --version') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{using ruby #{Regexp.escape(test_case[:expected_ruby])}[.0-9]*}im) }
-        its(:stdout) { is_expected.to match(%r{^ruby #{Regexp.escape(test_case[:expected_ruby])}[.0-9]*p}im) }
+        its(:stderr) { is_expected.to match(/using ruby #{Regexp.escape(test_case[:expected_ruby])}[.0-9]*/im) }
+        its(:stdout) { is_expected.to match(/^ruby #{Regexp.escape(test_case[:expected_ruby])}[.0-9]*p/im) }
       end
     end
   end

@@ -170,11 +170,11 @@ describe PDK::Module::Update do
         let(:changes) { true }
 
         it 'does add debug message' do
-          expect(logger).to receive(:debug).with(a_string_matching(%r{This module is already up to date with version 1.4.0 of the template}i))
+          expect(logger).to receive(:debug).with(a_string_matching(/This module is already up to date with version 1.4.0 of the template/i))
         end
 
         it 'doesn\'t add report with no changes' do
-          expect(PDK::Report.default_target).not_to receive(:puts).with(a_string_matching(%r{No changes required.}i))
+          expect(PDK::Report.default_target).not_to receive(:puts).with(a_string_matching(/No changes required./i))
         end
       end
 
@@ -182,11 +182,11 @@ describe PDK::Module::Update do
         let(:changes) { false }
 
         it 'does add debug message' do
-          expect(logger).to receive(:debug).with(a_string_matching(%r{This module is already up to date with version 1.4.0 of the template}))
+          expect(logger).to receive(:debug).with(a_string_matching(/This module is already up to date with version 1.4.0 of the template/))
         end
 
         it 'does add report with no changes' do
-          expect(PDK::Report.default_target).to receive(:puts).with(a_string_matching(%r{No changes required.}i))
+          expect(PDK::Report.default_target).to receive(:puts).with(a_string_matching(/No changes required./i))
         end
       end
     end
@@ -196,7 +196,7 @@ describe PDK::Module::Update do
       let(:template_url) { PDK::Util::TemplateURI.default_template_uri.metadata_format }
 
       it 'refers to the template as the default template' do
-        expect(logger).to receive(:info).with(a_string_matching(%r{using the default template}i))
+        expect(logger).to receive(:info).with(a_string_matching(/using the default template/i))
       end
     end
 
@@ -205,7 +205,7 @@ describe PDK::Module::Update do
       let(:template_url) { 'https://my/custom/template' }
 
       it 'refers to the template by its URL or path' do
-        expect(logger).to receive(:info).with(a_string_matching(%r{using the template at #{Regexp.escape(template_url)}}i))
+        expect(logger).to receive(:info).with(a_string_matching(/using the template at #{Regexp.escape(template_url)}/i))
       end
     end
 
@@ -287,7 +287,7 @@ describe PDK::Module::Update do
       end
 
       it 'raises an ExitWithError exception' do
-        expect { -> { result }.call }.to raise_error(PDK::CLI::ExitWithError, %r{some error}i)
+        expect { -> { result }.call }.to raise_error(PDK::CLI::ExitWithError, /some error/i)
       end
     end
   end

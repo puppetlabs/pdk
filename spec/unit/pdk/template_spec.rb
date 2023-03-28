@@ -10,7 +10,7 @@ describe PDK::Template do
       it 'raises an ArgumentError' do
         expect do
           described_class.with(template_uri, pdk_context)
-        end.to raise_error(ArgumentError, %r{must be passed a block}i)
+        end.to raise_error(ArgumentError, /must be passed a block/i)
       end
     end
 
@@ -20,7 +20,7 @@ describe PDK::Template do
       it 'raises an ArgumentError' do
         expect do
           described_class.with(template_uri, pdk_context) {}
-        end.to raise_error(ArgumentError, %r{must be passed a PDK::Util::TemplateURI}i)
+        end.to raise_error(ArgumentError, /must be passed a PDK::Util::TemplateURI/i)
       end
     end
 

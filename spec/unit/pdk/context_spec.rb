@@ -293,20 +293,20 @@ describe PDK::Context do
       let(:nested_context) { MockContext.new('path3', 'Mock3', child_context) }
 
       it 'writes to the debug log' do
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock1 context at path1})
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock1 context at path1/)
         parent_context.to_debug_log
       end
 
       it 'writes all contexts at this child and parents thereof to the debug log' do
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock2 context at path2})
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock1 context at path1})
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock2 context at path2/)
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock1 context at path1/)
         child_context.to_debug_log
       end
 
       it 'writes all contexts to the debug log if given a child context' do
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock3 context at path3})
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock2 context at path2})
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock1 context at path1})
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock3 context at path3/)
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock2 context at path2/)
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock1 context at path1/)
         nested_context.to_debug_log
       end
     end

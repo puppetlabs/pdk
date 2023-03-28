@@ -10,7 +10,7 @@ describe 'Running `pdk test`' do
     it do
       expect do
         PDK::CLI.run(['test'])
-      end.to output(%r{^USAGE\s+pdk test}m).to_stdout
+      end.to output(/^USAGE\s+pdk test/m).to_stdout
     end
   end
 end

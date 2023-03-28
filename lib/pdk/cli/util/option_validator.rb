@@ -5,7 +5,7 @@ module PDK
     module Util
       class OptionValidator
         def self.comma_separated_list?(list, _options = {})
-          (list =~ %r{^[\w-]+(?:,[\w-]+)+$}) ? true : false
+          (list =~ /^[\w-]+(?:,[\w-]+)+$/) ? true : false
         end
 
         # @return [Boolean] true if the fact name is valid
@@ -25,7 +25,7 @@ module PDK
         # Validate the module name against the regular expression in the
         # documentation: https://docs.puppet.com/puppet/4.10/modules_fundamentals.html#allowed-module-names
         def self.valid_module_name?(string)
-          !(string =~ %r{\A[a-z][a-z0-9_]*\Z}).nil?
+          !(string =~ /\A[a-z][a-z0-9_]*\Z/).nil?
         end
         singleton_class.send(:alias_method, :valid_task_name?, :valid_module_name?)
 
@@ -42,7 +42,7 @@ module PDK
         def self.valid_namespace?(string)
           return false if (string || '').split('::').last == 'init'
 
-          !(string =~ %r{\A([a-z][a-z0-9_]*)(::[a-z][a-z0-9_]*)*\Z}).nil?
+          !(string =~ /\A([a-z][a-z0-9_]*)(::[a-z][a-z0-9_]*)*\Z/).nil?
         end
         singleton_class.send(:alias_method, :valid_function_name?, :valid_namespace?)
 
@@ -58,7 +58,7 @@ module PDK
           metaparams = ['alias', 'audit', 'before', 'loglevel', 'noop', 'notify', 'require', 'schedule', 'stage', 'subscribe', 'tag'].freeze
           return false if reserved_words.include?(string) || metaparams.include?(string)
 
-          !(string =~ %r{\A[a-z][a-zA-Z0-9_]*\Z}).nil?
+          !(string =~ /\A[a-z][a-zA-Z0-9_]*\Z/).nil?
         end
       end
     end

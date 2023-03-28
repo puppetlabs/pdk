@@ -14,7 +14,7 @@ module PDK
         prefix = "pdk (#{severity}): "
         if msg.is_a?(Hash)
           if msg.fetch(:wrap, false)
-            wrap_pattern = %r{(.{1,#{WRAP_COLUMN_LIMIT - prefix.length}})(\s+|\Z)}
+            wrap_pattern = /(.{1,#{WRAP_COLUMN_LIMIT - prefix.length}})(\s+|\Z)/
             "#{prefix}#{msg[:text].gsub(wrap_pattern, "\\1\n#{' ' * prefix.length}")}\n"
           else
             "#{prefix}#{msg[:text]}\n"

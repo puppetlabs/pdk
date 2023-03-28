@@ -28,7 +28,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:command_exit_code) { 1 }
 
       it 'raises' do
-        expect { described_class.generate_changelog }.to raise_error(PDK::CLI::ExitWithError, %r{#{command_stdout}})
+        expect { described_class.generate_changelog }.to raise_error(PDK::CLI::ExitWithError, /#{command_stdout}/)
       end
     end
 
@@ -36,7 +36,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:changelog_content) { 'UNCATEGORIZED PRS; GO LABEL THEM' }
 
       it 'raises' do
-        expect { described_class.generate_changelog }.to raise_error(PDK::CLI::ExitWithError, %r{uncategorized Pull Requests})
+        expect { described_class.generate_changelog }.to raise_error(PDK::CLI::ExitWithError, /uncategorized Pull Requests/)
       end
     end
   end
@@ -337,7 +337,7 @@ describe PDK::Util::ChangelogGenerator do
       end
 
       it 'raises an error' do
-        expect { method }.to raise_error(PDK::CLI::ExitWithError, %r{not included})
+        expect { method }.to raise_error(PDK::CLI::ExitWithError, /not included/)
       end
     end
   end

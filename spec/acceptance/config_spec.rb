@@ -8,8 +8,8 @@ describe 'pdk config' do
     describe command('pdk config') do
       its(:exit_status) { is_expected.to eq 0 }
       # Should show the command help
-      its(:stdout) { is_expected.to match(%r{pdk config \[subcommand\] \[options\]}) }
-      its(:stderr) { is_expected.to match(%r{The 'pdk config' command is deprecated}) }
+      its(:stdout) { is_expected.to match(/pdk config \[subcommand\] \[options\]/) }
+      its(:stderr) { is_expected.to match(/The 'pdk config' command is deprecated/) }
     end
   end
 end

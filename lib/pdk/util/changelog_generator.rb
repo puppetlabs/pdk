@@ -4,7 +4,7 @@ module PDK
   module Util
     module ChangelogGenerator
       # Taken from the version regex in https://forgeapi.puppet.com/schemas/module.json
-      VERSION_REGEX = %r{^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$}.freeze
+      VERSION_REGEX = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/.freeze
       GEM = 'github_changelog_generator'.freeze
 
       # Raises if the github_changelog_generator is not available
@@ -93,16 +93,16 @@ module PDK
 
         # Check for meta headers in first two header line matches
         case data
-        when %r{^### Changed}
+        when /^### Changed/
           # Major Version bump
           version[0] += 1
           version[1] = 0
           version[2] = 0
-        when %r{^### Added}
+        when /^### Added/
           # Minor Version bump
           version[1] += 1
           version[2] = 0
-        when %r{^### Fixed}
+        when /^### Fixed/
           # Patch Version bump
           version[2] += 1
         end

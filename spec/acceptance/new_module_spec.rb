@@ -9,8 +9,8 @@ describe 'pdk new module' do
 
     describe command('pdk new module new_module --skip-interview') do
       its(:exit_status) { is_expected.to eq 0 }
-      its(:stderr) { is_expected.to match(%r{Creating new module: new_module}) }
-      its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
+      its(:stderr) { is_expected.to match(/Creating new module: new_module/) }
+      its(:stderr) { is_expected.not_to match(/WARN|ERR/) }
       its(:stdout) { is_expected.to have_no_output }
 
       describe file('new_module') do
@@ -22,7 +22,7 @@ describe 'pdk new module' do
 
         its(:content_as_json) do
           is_expected.to include(
-            'name' => match(%r{-new_module}),
+            'name' => match(/-new_module/),
             'template-ref' => match(%r{(main-)|(^(tags/)?(\d+)\.(\d+)\.(\d+))}),
             'operatingsystem_support' => include(
               'operatingsystem' => 'Debian',
@@ -34,17 +34,17 @@ describe 'pdk new module' do
 
       describe file(File.join('new_module', 'README.md')) do
         it { is_expected.to be_file }
-        it { is_expected.to contain(%r{# new_module}i) }
+        it { is_expected.to contain(/# new_module/i) }
       end
 
       describe file(File.join('new_module', 'CHANGELOG.md')) do
         it { is_expected.to be_file }
-        it { is_expected.to contain(%r{## Release 0.1.0}i) }
+        it { is_expected.to contain(/## Release 0.1.0/i) }
       end
 
       eol_check = '(Get-Content .\new_module\spec\spec_helper.rb -Delimiter [String].Empty) -Match "`r`n"'
       describe command(eol_check), if: Gem.win_platform? do
-        its(:stdout) { is_expected.to match(%r{\AFalse$}) }
+        its(:stdout) { is_expected.to match(/\AFalse$/) }
       end
     end
   end

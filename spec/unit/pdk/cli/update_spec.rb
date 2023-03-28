@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/cli'
 
 describe 'PDK::CLI update' do
-  let(:help_text) { a_string_matching(%r{^USAGE\s+pdk update}m) }
+  let(:help_text) { a_string_matching(/^USAGE\s+pdk update/m) }
   let(:updater) do
     instance_double(PDK::Module::Update, run: true, current_version: current_version, new_version: new_version, pinned_to_puppetlabs_template_tag?: pinned_to_tag, template_uri: template_uri)
   end
@@ -17,7 +17,7 @@ describe 'PDK::CLI update' do
     include_context 'run outside module'
 
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{can only be run from inside a valid module directory}))
+      expect(logger).to receive(:error).with(a_string_matching(/can only be run from inside a valid module directory/))
 
       expect { PDK::CLI.run(['update']) }.to exit_nonzero
     end
@@ -145,7 +145,7 @@ describe 'PDK::CLI update' do
       let(:pinned_to_tag) { true }
 
       it 'informs the user that the template is pinned' do
-        expect(logger).to receive(:info).with(a_string_matching(%r{module is currently pinned}i))
+        expect(logger).to receive(:info).with(a_string_matching(/module is currently pinned/i))
       end
     end
 
@@ -195,7 +195,7 @@ describe 'PDK::CLI update' do
 
     context 'and the --force and --noop flags have been passed' do
       it 'exits with an error' do
-        expect(logger).to receive(:error).with(a_string_matching(%r{can not specify --noop and --force}i))
+        expect(logger).to receive(:error).with(a_string_matching(/can not specify --noop and --force/i))
 
         expect { PDK::CLI.run(['update', '--noop', '--force']) }.to exit_nonzero
       end
@@ -212,8 +212,8 @@ describe 'PDK::CLI update' do
 
       context 'and the --force flag has not been passed' do
         it 'warns the user and then aborts' do
-          expect(logger).to receive(:warn).with(a_string_matching(%r{newer than your PDK version}i))
-          expect(logger).to receive(:error).with(a_string_matching(%r{update your PDK installation}i))
+          expect(logger).to receive(:warn).with(a_string_matching(/newer than your PDK version/i))
+          expect(logger).to receive(:error).with(a_string_matching(/update your PDK installation/i))
 
           expect { PDK::CLI.run(['update']) }.to exit_nonzero
         end
@@ -222,7 +222,7 @@ describe 'PDK::CLI update' do
       context 'and the --force flag has been passed' do
         it 'warns the user and then continues' do
           allow(PDK::Module::Update).to receive(:new).with(module_root, hash_including(force: true)).and_return(updater)
-          expect(logger).to receive(:warn).with(a_string_matching(%r{newer than your PDK version}i))
+          expect(logger).to receive(:warn).with(a_string_matching(/newer than your PDK version/i))
 
           PDK::CLI.run(['update', '--force'])
         end
@@ -238,7 +238,7 @@ describe 'PDK::CLI update' do
 
     context 'and provided no flags' do
       it 'raises ExitWithError' do
-        expect(logger).to receive(:error).with(a_string_matching(%r{This module does not appear to be PDK compatible}i))
+        expect(logger).to receive(:error).with(a_string_matching(/This module does not appear to be PDK compatible/i))
 
         expect { PDK::CLI.run(['update']) }.to exit_nonzero
       end

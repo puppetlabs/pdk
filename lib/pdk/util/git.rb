@@ -116,7 +116,7 @@ module PDK
           raise PDK::CLI::ExitWithError, format('Unable to access the template repository "%{repository}"', repository: repo)
         end
 
-        matching_refs = output[:stdout].split(%r{\r?\n}).map { |r| r.split("\t") }
+        matching_refs = output[:stdout].split(/\r?\n/).map { |r| r.split("\t") }
         matching_ref = matching_refs.find { |_sha, remote_ref| ["refs/tags/#{ref}", "refs/remotes/origin/#{ref}", "refs/heads/#{ref}"].include?(remote_ref) }
         raise PDK::CLI::ExitWithError, format('Unable to find a branch or tag named "%{ref}" in %{repo}', ref: ref, repo: repo) if matching_ref.nil?
 

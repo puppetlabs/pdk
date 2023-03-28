@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/cli'
 
 describe 'PDK::CLI new task' do
-  let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new task}m) }
+  let(:help_text) { a_string_matching(/^USAGE\s+pdk new task/m) }
 
   before do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
@@ -41,7 +41,7 @@ describe 'PDK::CLI new task' do
     let(:module_root) { nil }
     let(:args) { ['new', 'task', 'test_task'] }
 
-    it_behaves_like 'it exits with an error', %r{must be run from inside a valid module}
+    it_behaves_like 'it exits with an error', /must be run from inside a valid module/
   end
 
   context 'when run from inside a module' do
@@ -62,7 +62,7 @@ describe 'PDK::CLI new task' do
     context 'and provided an invalid task name' do
       let(:args) { ['new', 'task', 'test-task'] }
 
-      it_behaves_like 'it exits with an error', %r{'test-task' is not a valid task name}
+      it_behaves_like 'it exits with an error', /'test-task' is not a valid task name/
     end
 
     context 'and provided a valid task name' do

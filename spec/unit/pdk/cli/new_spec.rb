@@ -8,7 +8,7 @@ describe 'Running `pdk new`' do
     it do
       expect do
         PDK::CLI.run(['new'])
-      end.to output(%r{^USAGE\s+pdk new}m).to_stdout
+      end.to output(/^USAGE\s+pdk new/m).to_stdout
     end
   end
 end

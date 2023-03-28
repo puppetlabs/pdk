@@ -40,7 +40,7 @@ describe PDK::Template::Fetcher do
       it 'raises an ArgumentError' do
         expect do
           described_class.with(template_uri, fetcher_options)
-        end.to raise_error(ArgumentError, %r{must be passed a block}i)
+        end.to raise_error(ArgumentError, /must be passed a block/i)
       end
     end
 

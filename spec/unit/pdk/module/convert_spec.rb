@@ -30,7 +30,7 @@ describe PDK::Module::Convert do
 
   shared_context 'no changes in the summary' do
     before do
-      allow($stdout).to receive(:puts).with(%r{No changes required})
+      allow($stdout).to receive(:puts).with(/No changes required/)
     end
   end
 
@@ -42,31 +42,31 @@ describe PDK::Module::Convert do
 
   shared_context 'added files in the summary' do
     before do
-      allow($stdout).to receive(:puts).with(%r{-Files to be added-}i)
+      allow($stdout).to receive(:puts).with(/-Files to be added-/i)
     end
   end
 
   shared_context 'modified files in the summary' do
     before do
-      allow($stdout).to receive(:puts).with(%r{-Files to be modified-}i)
+      allow($stdout).to receive(:puts).with(/-Files to be modified-/i)
     end
   end
 
   shared_context 'removed files in the summary' do
     before do
-      allow($stdout).to receive(:puts).with(%r{-Files to be removed-}i)
+      allow($stdout).to receive(:puts).with(/-Files to be removed-/i)
     end
   end
 
   shared_context 'outputs a convert report' do
     before do
-      allow($stdout).to receive(:puts).with(%r{You can find detailed differences in convert_report.txt.})
+      allow($stdout).to receive(:puts).with(/You can find detailed differences in convert_report.txt./)
     end
   end
 
   shared_context 'completes a convert' do
     before do
-      allow($stdout).to receive(:puts).with(%r{-Convert completed-}i)
+      allow($stdout).to receive(:puts).with(/-Convert completed-/i)
     end
   end
 
@@ -184,11 +184,11 @@ describe PDK::Module::Convert do
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         allow(update_manager).to receive(:modify_file).with(module_path(template_files[:path]), template_files[:content])
-        allow($stdout).to receive(:puts).with(%r{1 files modified})
+        allow($stdout).to receive(:puts).with(/1 files modified/)
         allow(update_manager).to receive(:changed?).with('Gemfile').and_return(true)
         allow(update_manager).to receive(:remove_file).with(anything)
         allow(update_manager).to receive(:unlink_file).with(anything)
-        allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
+        allow($stdout).to receive(:puts).with(/You can find a report of differences in convert_report.txt./)
       end
 
       let(:modified_files) do
@@ -224,8 +224,8 @@ describe PDK::Module::Convert do
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         allow(update_manager).to receive(:modify_file).with(module_path(template_files[:path]), template_files[:content])
-        allow($stdout).to receive(:puts).with(%r{1 files modified})
-        allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
+        allow($stdout).to receive(:puts).with(/1 files modified/)
+        allow($stdout).to receive(:puts).with(/You can find a report of differences in convert_report.txt./)
       end
 
       let(:modified_files) do
@@ -402,8 +402,8 @@ describe PDK::Module::Convert do
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         allow(update_manager).to receive(:add_file).with(module_path(template_files[:path]), template_files[:content])
-        allow($stdout).to receive(:puts).with(%r{1 files added})
-        allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
+        allow($stdout).to receive(:puts).with(/1 files added/)
+        allow($stdout).to receive(:puts).with(/You can find a report of differences in convert_report.txt./)
       end
 
       context 'and run normally' do
@@ -586,7 +586,7 @@ describe PDK::Module::Convert do
           it 'exits with an error' do
             expect do
               described_class.new(module_root).update_metadata(metadata_path, template_metadata)
-            end.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not readable})
+            end.to raise_error(PDK::CLI::ExitWithError, /exists but it is not readable/)
           end
         end
       end
@@ -599,7 +599,7 @@ describe PDK::Module::Convert do
         it 'exits with an error' do
           expect do
             described_class.new(module_root).update_metadata(metadata_path, template_metadata)
-          end.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not a file})
+          end.to raise_error(PDK::CLI::ExitWithError, /exists but it is not a file/)
         end
       end
     end

@@ -21,7 +21,7 @@ describe PDK::Config::JSONSchemaSetting, skip: true do
     let(:namespace) { PDK::Config::Namespace.new }
 
     it 'raises' do
-      expect { setting }.to raise_error(%r{JSONSchemaNamespace})
+      expect { setting }.to raise_error(/JSONSchemaNamespace/)
     end
   end
 
@@ -52,7 +52,7 @@ describe PDK::Config::JSONSchemaSetting, skip: true do
       end
 
       it 'raises with an invalid value' do
-        expect { setting.validate!(123) }.to raise_error(ArgumentError, %r{spec_setting})
+        expect { setting.validate!(123) }.to raise_error(ArgumentError, /spec_setting/)
       end
     end
 

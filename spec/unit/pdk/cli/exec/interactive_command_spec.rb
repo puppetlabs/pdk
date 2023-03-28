@@ -28,7 +28,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
 
   describe '.add_spinner' do
     it 'raises an exception' do
-      expect { command.add_spinner('test') }.to raise_error %r{method.*not implemented}i
+      expect { command.add_spinner('test') }.to raise_error(/method.*not implemented/i)
     end
   end
 
@@ -36,19 +36,19 @@ describe PDK::CLI::Exec::InteractiveCommand do
     let(:spinner) { instance_double(TTY::Spinner) }
 
     it 'raises an exception' do
-      expect { command.register_spinner(spinner) }.to raise_error %r{method.*not implemented}i
+      expect { command.register_spinner(spinner) }.to raise_error(/method.*not implemented/i)
     end
   end
 
   describe '.timeout=' do
     it 'raises an exception' do
-      expect { command.timeout = 10 }.to raise_error %r{method.*not implemented}i
+      expect { command.timeout = 10 }.to raise_error(/method.*not implemented/i)
     end
   end
 
   describe '.timeout' do
     it 'raises an exception' do
-      expect { command.timeout }.to raise_error %r{method.*not implemented}i
+      expect { command.timeout }.to raise_error(/method.*not implemented/i)
     end
   end
 
@@ -56,7 +56,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
     let(:exec_group) { instance_double(Object) }
 
     it 'raises an exception' do
-      expect { command.exec_group = exec_group }.to raise_error %r{method.*not implemented}i
+      expect { command.exec_group = exec_group }.to raise_error(/method.*not implemented/i)
     end
   end
 

@@ -142,7 +142,7 @@ describe 'Running `pdk validate` in a module' do
     let(:invoked_validators) { ['puppet'] }
 
     it 'warns about unknown validators, invokes known validators, and exits zero' do
-      expect(logger).to receive(:warn).with(%r{Unknown validator 'bad-val'. Available validators: #{pretty_validator_names}}i)
+      expect(logger).to receive(:warn).with(/Unknown validator 'bad-val'. Available validators: #{pretty_validator_names}/i)
       expect(PDK::Validate).to receive(:invoke_validators_by_name).with(
         PDK::Context::AbstractContext,
         invoked_validators,
@@ -321,7 +321,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'with both --puppet-version and --puppet-dev' do
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-dev.*and.*--puppet-version}i))
+      expect(logger).to receive(:error).with(a_string_matching(/cannot specify.*--puppet-dev.*and.*--puppet-version/i))
 
       expect do
         PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--puppet-dev'])
@@ -339,7 +339,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'with both --pe-version and --puppet-dev' do
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--puppet-dev.*and.*--pe-version}i))
+      expect(logger).to receive(:error).with(a_string_matching(/cannot specify.*--puppet-dev.*and.*--pe-version/i))
 
       expect do
         PDK::CLI.run(['validate', '--pe-version', '2018.1', '--puppet-dev'])
@@ -357,7 +357,7 @@ describe 'Running `pdk validate` in a module' do
 
   context 'with both --puppet-version and --pe-version' do
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
+      expect(logger).to receive(:error).with(a_string_matching(/cannot specify.*--pe-version.*and.*--puppet-version/i))
 
       expect do
         PDK::CLI.run(['validate', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])

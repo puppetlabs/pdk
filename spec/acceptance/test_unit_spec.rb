@@ -19,26 +19,26 @@ describe 'pdk test unit', module_command: true do
 
     describe command('pdk test unit --list') do
       its(:exit_status) { is_expected.to eq 0 }
-      its(:stdout) { is_expected.to match(%r{No unit test files with examples were found}) }
+      its(:stdout) { is_expected.to match(/No unit test files with examples were found/) }
     end
 
     describe command('pdk test unit') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
-      its(:stdout) { is_expected.to match(%r{no examples found}i) }
-      its(:stdout) { is_expected.to match(%r{0 examples, 0 failures}i) }
+      its(:stderr) { is_expected.to match(/preparing to run the unit tests/i) }
+      its(:stdout) { is_expected.to match(/no examples found/i) }
+      its(:stdout) { is_expected.to match(/0 examples, 0 failures/i) }
     end
 
     describe command('pdk test unit --parallel') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
-      its(:stderr) { is_expected.to match(%r{No files for parallel_spec to run against}i) }
+      its(:stderr) { is_expected.to match(/preparing to run the unit tests/i) }
+      its(:stderr) { is_expected.to match(/No files for parallel_spec to run against/i) }
     end
 
     describe command('pdk test unit --parallel --format=text:test_output.txt') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
-      its(:stderr) { is_expected.to match(%r{No examples found}i) }
+      its(:stderr) { is_expected.to match(/preparing to run the unit tests/i) }
+      its(:stderr) { is_expected.to match(/No examples found/i) }
     end
 
     context 'with passing tests' do
@@ -59,19 +59,19 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit --list') do
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{Test Files:.*passing_spec.rb}m) }
+        its(:stdout) { is_expected.to match(/Test Files:.*passing_spec.rb/m) }
       end
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
-        its(:stdout) { is_expected.to match(%r{[1-9]\d* examples?.*0 failures}im) }
+        its(:stderr) { is_expected.to match(/preparing to run the unit tests/i) }
+        its(:stdout) { is_expected.to match(/[1-9]\d* examples?.*0 failures/im) }
       end
 
       describe command('pdk test unit --parallel') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
-        its(:stdout) { is_expected.to match(%r{[1-9]\d* examples?.*0 failures}im) }
+        its(:stderr) { is_expected.to match(/preparing to run the unit tests/i) }
+        its(:stdout) { is_expected.to match(/[1-9]\d* examples?.*0 failures/im) }
       end
     end
 
@@ -88,8 +88,8 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(%r{expected: true.*got: false}im) }
-        its(:stdout) { is_expected.to match(%r{1 examples?.*1 failures?}im) }
+        its(:stdout) { is_expected.to match(/expected: true.*got: false/im) }
+        its(:stdout) { is_expected.to match(/1 examples?.*1 failures?/im) }
       end
     end
 
@@ -107,7 +107,7 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{1 examples?.*0 failures.*1 pending}im) }
+        its(:stdout) { is_expected.to match(/1 examples?.*0 failures.*1 pending/im) }
       end
     end
 
@@ -128,13 +128,13 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit --list') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stderr) { is_expected.to match(%r{Unable to enumerate examples.*SyntaxError}m) }
+        its(:stderr) { is_expected.to match(/Unable to enumerate examples.*SyntaxError/m) }
       end
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(%r{An error occurred while loading.*syntax_spec.rb}) }
-        its(:stdout) { is_expected.to match(%r{SyntaxError}) }
+        its(:stdout) { is_expected.to match(/An error occurred while loading.*syntax_spec.rb/) }
+        its(:stdout) { is_expected.to match(/SyntaxError/) }
       end
     end
 
@@ -169,13 +169,13 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{[1-9]\d* examples?.*0 failures}im) }
+        its(:stdout) { is_expected.to match(/[1-9]\d* examples?.*0 failures/im) }
       end
 
       describe command('pdk test unit --parallel') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{[1-9]\d* processes for [1-9]\d* specs}m) }
-        its(:stdout) { is_expected.to match(%r{[1-9]\d* examples?.*0 failures}im) }
+        its(:stdout) { is_expected.to match(/[1-9]\d* processes for [1-9]\d* specs/m) }
+        its(:stdout) { is_expected.to match(/[1-9]\d* examples?.*0 failures/im) }
       end
     end
 
@@ -255,10 +255,10 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stderr) { is_expected.to match(%r{preparing to run the unit tests}i) }
+        its(:stderr) { is_expected.to match(/preparing to run the unit tests/i) }
         its(:stderr) { is_expected.to match(%r{Failed to clone git repository https://localhost/this/does/not/exist}) }
-        its(:stderr) { is_expected.not_to match(%r{Running unit tests\.}) }
-        its(:stderr) { is_expected.to match(%r{cleaning up after running unit tests}i) }
+        its(:stderr) { is_expected.not_to match(/Running unit tests\./) }
+        its(:stderr) { is_expected.to match(/cleaning up after running unit tests/i) }
       end
     end
   end

@@ -42,7 +42,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{file not specified}i)
+        expect { event }.to raise_error(ArgumentError, /file not specified/i)
       end
     end
 
@@ -54,7 +54,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{file must be a string}i)
+        expect { event }.to raise_error(ArgumentError, /file must be a string/i)
       end
     end
 
@@ -66,7 +66,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{file not specified}i)
+        expect { event }.to raise_error(ArgumentError, /file not specified/i)
       end
     end
 
@@ -78,7 +78,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{source not specified}i)
+        expect { event }.to raise_error(ArgumentError, /source not specified/i)
       end
     end
 
@@ -90,7 +90,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{source not specified}i)
+        expect { event }.to raise_error(ArgumentError, /source not specified/i)
       end
     end
 
@@ -102,7 +102,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{state not specified}i)
+        expect { event }.to raise_error(ArgumentError, /state not specified/i)
       end
     end
 
@@ -114,7 +114,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{state not specified}i)
+        expect { event }.to raise_error(ArgumentError, /state not specified/i)
       end
     end
 
@@ -152,12 +152,12 @@ describe PDK::Report::Event do
     context 'and passed a state that is not a String or Symbol' do
       let(:data) do
         {
-          state: %r{passed},
+          state: /passed/,
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{state must be a Symbol}i)
+        expect { event }.to raise_error(ArgumentError, /state must be a Symbol/i)
       end
     end
 
@@ -169,7 +169,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{Invalid state :maybe}i)
+        expect { event }.to raise_error(ArgumentError, /Invalid state :maybe/i)
       end
     end
 
@@ -209,7 +209,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{contain only the digits 0-9}i)
+        expect { event }.to raise_error(ArgumentError, /contain only the digits 0-9/i)
       end
     end
 
@@ -221,7 +221,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{must be an Integer or a String}i)
+        expect { event }.to raise_error(ArgumentError, /must be an Integer or a String/i)
       end
     end
 
@@ -277,7 +277,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{contain only the digits 0-9}i)
+        expect { event }.to raise_error(ArgumentError, /contain only the digits 0-9/i)
       end
     end
 
@@ -289,7 +289,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{must be an Integer or a String}i)
+        expect { event }.to raise_error(ArgumentError, /must be an Integer or a String/i)
       end
     end
 
@@ -317,7 +317,7 @@ describe PDK::Report::Event do
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{trace must be an Array}i)
+        expect { event }.to raise_error(ArgumentError, /trace must be an Array/i)
       end
     end
 
@@ -358,7 +358,7 @@ describe PDK::Report::Event do
 
   context 'when generating text output' do
     it 'contains the file name in the string' do
-      expect(text_event).to match(%r{testfile\.rb})
+      expect(text_event).to match(/testfile\.rb/)
     end
 
     context 'and a line number is provided' do
@@ -369,7 +369,7 @@ describe PDK::Report::Event do
       end
 
       it 'appends the line number to the file name' do
-        expect(text_event).to match(%r{testfile\.rb:123})
+        expect(text_event).to match(/testfile\.rb:123/)
       end
 
       context 'and a column number is provided' do
@@ -381,7 +381,7 @@ describe PDK::Report::Event do
         end
 
         it 'appends the column number to the line number' do
-          expect(text_event).to match(%r{testfile\.rb:123:456})
+          expect(text_event).to match(/testfile\.rb:123:456/)
         end
       end
 
@@ -408,7 +408,7 @@ describe PDK::Report::Event do
         end
 
         let(:expected_text) do
-          <<-END.gsub(%r{^ {12}}, '')
+          <<-END.gsub(/^ {12}/, '')
             failure: rspec: testfile.rb:4: test message
               spec description
               Failure/Error:
@@ -447,7 +447,7 @@ describe PDK::Report::Event do
       end
 
       it 'includes the upcased severity' do
-        expect(text_event).to match(%r{\(OK\):})
+        expect(text_event).to match(/\(OK\):/)
       end
     end
 
@@ -459,7 +459,7 @@ describe PDK::Report::Event do
       end
 
       it 'includes the validator' do
-        expect(text_event).to match(%r{my-validator})
+        expect(text_event).to match(/my-validator/)
       end
     end
 
@@ -483,7 +483,7 @@ describe PDK::Report::Event do
         end
 
         it 'includes the severity before the message' do
-          expect(text_event).to match(%r{\(CRITICAL\):.*test message})
+          expect(text_event).to match(/\(CRITICAL\):.*test message/)
         end
       end
     end

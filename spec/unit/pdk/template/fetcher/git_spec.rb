@@ -47,7 +47,7 @@ describe PDK::Template::Fetcher::Git do
       end
 
       it 'warns the user' do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{has a work-tree; skipping git reset.}i))
+        expect(logger).to receive(:warn).with(a_string_matching(/has a work-tree; skipping git reset./i))
         fetcher.fetch!
       end
 
@@ -93,13 +93,13 @@ describe PDK::Template::Fetcher::Git do
         end
 
         it 'logs the output of the git clone' do
-          expect(logger).to receive(:error).with(a_string_matching(%r{clone_stdout}))
-          expect(logger).to receive(:error).with(a_string_matching(%r{clone_stderr}))
+          expect(logger).to receive(:error).with(a_string_matching(/clone_stdout/))
+          expect(logger).to receive(:error).with(a_string_matching(/clone_stderr/))
           expect { fetcher.fetch! }.to raise_error(StandardError)
         end
 
         it 'raises a fatal error' do
-          expect { fetcher.fetch! }.to raise_error(PDK::CLI::FatalError, %r{Unable to clone git repository}i)
+          expect { fetcher.fetch! }.to raise_error(PDK::CLI::FatalError, /Unable to clone git repository/i)
         end
       end
 
@@ -137,13 +137,13 @@ describe PDK::Template::Fetcher::Git do
           end
 
           it 'logs the output of the git reset' do
-            expect(logger).to receive(:error).with(a_string_matching(%r{reset_stdout}))
-            expect(logger).to receive(:error).with(a_string_matching(%r{reset_stderr}))
+            expect(logger).to receive(:error).with(a_string_matching(/reset_stdout/))
+            expect(logger).to receive(:error).with(a_string_matching(/reset_stderr/))
             expect { fetcher.fetch! }.to raise_error(StandardError)
           end
 
           it 'raises a fatal error' do
-            expect { fetcher.fetch! }.to raise_error(PDK::CLI::FatalError, %r{Unable to checkout}i)
+            expect { fetcher.fetch! }.to raise_error(PDK::CLI::FatalError, /Unable to checkout/i)
           end
         end
       end
@@ -154,7 +154,7 @@ describe PDK::Template::Fetcher::Git do
         end
 
         it 'warns the user' do
-          expect(logger).to receive(:warn).with(a_string_matching(%r{uncommitted changes found}i))
+          expect(logger).to receive(:warn).with(a_string_matching(/uncommitted changes found/i))
           fetcher.fetch!
         end
 

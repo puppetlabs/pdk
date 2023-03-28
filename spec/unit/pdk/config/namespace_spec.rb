@@ -3,7 +3,7 @@ require 'pdk/config/namespace'
 
 def spec_simple_validator
   {
-    proc: ->(value) { value.match(%r{(bar|baz)}) },
+    proc: ->(value) { value.match(/(bar|baz)/) },
     message: 'must be bar or baz',
   }
 end
@@ -126,11 +126,11 @@ describe PDK::Config::Namespace do
 
     it 'raises ArgumentError if key is a mount name' do
       config.mount('invalid', PDK::Config::Namespace.new('invalid')) # rubocop:disable RSpec/DescribedClass No.
-      expect { config['invalid'] = 'baz' }.to raise_error(ArgumentError, %r{Namespace mounts can not be set a value})
+      expect { config['invalid'] = 'baz' }.to raise_error(ArgumentError, /Namespace mounts can not be set a value/)
     end
 
     it 'raises ArgumentError if the setting is not valid' do
-      expect { config['foo'] = 'not_valid' }.to raise_error(ArgumentError, %r{must be bar or baz})
+      expect { config['foo'] = 'not_valid' }.to raise_error(ArgumentError, /must be bar or baz/)
     end
   end
 

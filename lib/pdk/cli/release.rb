@@ -158,7 +158,7 @@ module PDK::CLI
           question: 'Please set the module version',
           help: 'This value is the version that will be used in the changelog generator and building of the module.',
           required: true,
-          validate_pattern: %r{(\*|\d+(\.\d+){0,2}(\.\*)?)$}i,
+          validate_pattern: /(\*|\d+(\.\d+){0,2}(\.\*)?)$/i,
           validate_message: 'The version format should be in the format x.y.z where x represents the major version, y the minor version and z the build number.',
         },
       ]

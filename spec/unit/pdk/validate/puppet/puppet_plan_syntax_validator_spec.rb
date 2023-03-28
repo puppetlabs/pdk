@@ -18,7 +18,7 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
       name: 'puppet-plan-syntax',
       cmd: 'puppet',
     )
-    expect(validator.spinner_text_for_targets(nil)).to match(%r{puppet plan syntax}i)
+    expect(validator.spinner_text_for_targets(nil)).to match(/puppet plan syntax/i)
   end
 
   describe '.pattern' do

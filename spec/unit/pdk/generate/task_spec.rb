@@ -91,7 +91,7 @@ describe PDK::Generate::Task do
       it 'raises ExitWithError' do
         expect do
           generator.check_preconditions
-        end.to raise_error(PDK::CLI::ExitWithError, %r{a task named '#{given_name}' already exists}i)
+        end.to raise_error(PDK::CLI::ExitWithError, /a task named '#{given_name}' already exists/i)
       end
     end
   end

@@ -196,7 +196,7 @@ describe PDK::Module::Build do
         it 'exits with an error' do
           expect do
             instance.stage_path(path)
-          end.to raise_error(PDK::CLI::ExitWithError, %r{can only include ASCII characters})
+          end.to raise_error(PDK::CLI::ExitWithError, /can only include ASCII characters/)
         end
       end
 
@@ -265,11 +265,11 @@ describe PDK::Module::Build do
     ]
 
     bad_paths = {
-      File.join('a' * 152, 'b' * 11, 'c' * 93) => %r{longer than 256}i,
-      File.join('a' * 152, 'b' * 10, 'c' * 92) => %r{could not be split}i,
-      File.join('a' * 162, 'b' * 10) => %r{could not be split}i,
-      File.join('a' * 10, 'b' * 110) => %r{could not be split}i,
-      'a' * 114 => %r{could not be split}i,
+      File.join('a' * 152, 'b' * 11, 'c' * 93) => /longer than 256/i,
+      File.join('a' * 152, 'b' * 10, 'c' * 92) => /could not be split/i,
+      File.join('a' * 162, 'b' * 10) => /could not be split/i,
+      File.join('a' * 10, 'b' * 110) => /could not be split/i,
+      'a' * 114 => /could not be split/i,
     }
 
     good_paths.each do |path|
@@ -304,7 +304,7 @@ describe PDK::Module::Build do
       it 'raises an error' do
         expect do
           instance.validate_path_encoding!(File.join('path', "\330\271to", 'file'))
-        end.to raise_error(ArgumentError, %r{can only include ASCII characters})
+        end.to raise_error(ArgumentError, /can only include ASCII characters/)
       end
     end
   end

@@ -8,7 +8,7 @@ describe 'Running `pdk module`' do
     it do
       expect do
         PDK::CLI.run(['module'])
-      end.to output(%r{^USAGE\s+pdk module}m).to_stdout
+      end.to output(/^USAGE\s+pdk module/m).to_stdout
     end
   end
 end

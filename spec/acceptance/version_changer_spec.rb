@@ -16,7 +16,7 @@ describe 'puppet version selection' do
 
         describe command("#{pre_cmd} pdk validate#{post_cmd}") do
           its(:exit_status) { is_expected.to eq(0) }
-          its(:stderr) { is_expected.to match(%r{#{gem}_GEM_VERSION is not supported by PDK}im) }
+          its(:stderr) { is_expected.to match(/#{gem}_GEM_VERSION is not supported by PDK/im) }
         end
       end
     end
@@ -29,7 +29,7 @@ describe 'puppet version selection' do
 
         describe file('Gemfile.lock') do
           it { is_expected.to exist }
-          its(:content) { is_expected.to match(%r{^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)}im) }
+          its(:content) { is_expected.to match(/^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)/im) }
         end
       end
     end
@@ -45,7 +45,7 @@ describe 'puppet version selection' do
         describe file('Gemfile.lock') do
           its(:exit_status) { is_expected.to eq(0) }
           it { is_expected.to exist }
-          its(:content) { is_expected.to match(%r{^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)}im) }
+          its(:content) { is_expected.to match(/^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)/im) }
         end
       end
     end

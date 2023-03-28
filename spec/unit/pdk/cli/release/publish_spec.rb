@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/cli'
 
 describe 'PDK::CLI release publish' do
-  let(:help_text) { a_string_matching(%r{^USAGE\s+pdk release publish}m) }
+  let(:help_text) { a_string_matching(/^USAGE\s+pdk release publish/m) }
   let(:base_cli_args) { ['release', 'publish'] }
 
   context 'when not run from inside a module' do
@@ -11,7 +11,7 @@ describe 'PDK::CLI release publish' do
     let(:cli_args) { base_cli_args }
 
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
+      expect(logger).to receive(:error).with(a_string_matching(/must be run from inside a valid module/))
 
       expect { PDK::CLI.run(cli_args) }.to exit_nonzero
     end
@@ -86,7 +86,7 @@ describe 'PDK::CLI release publish' do
       let(:cli_args) { base_cli_args }
 
       it 'exits with an error' do
-        expect(logger).to receive(:error).with(a_string_matching(%r{must supply a forge api token}i))
+        expect(logger).to receive(:error).with(a_string_matching(/must supply a forge api token/i))
 
         expect { PDK::CLI.run(cli_args) }.to exit_nonzero
       end

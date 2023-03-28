@@ -21,7 +21,7 @@ describe PDK::CLI::Util::CommandRedirector do
 
   it 'prints a query when run' do
     command_redirector.target_command('foo')
-    expect(prompt).to receive(:puts).with(a_string_matching(%r{Did you mean.*foo.*?}i))
+    expect(prompt).to receive(:puts).with(a_string_matching(/Did you mean.*foo.*?/i))
     expect(prompt).to receive(:yes?).with('-->')
     command_redirector.run
   end

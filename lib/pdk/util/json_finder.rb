@@ -57,7 +57,7 @@ module PDK
         matched_text = new_object ? @scanner.getch : ''
 
         until @scanner.eos?
-          text = @scanner.scan_until(%r{(?:(?<!\\)"|\{|\})})
+          text = @scanner.scan_until(/(?:(?<!\\)"|\{|\})/)
           unless text
             @scanner.terminate
             return nil
@@ -68,7 +68,7 @@ module PDK
           when '}'
             break
           when '"'
-            text = @scanner.scan_until(%r{(?<!\\)"})
+            text = @scanner.scan_until(/(?<!\\)"/)
             unless text
               @scanner.terminate
               return nil

@@ -271,7 +271,7 @@ module PDK
 
         raise ArgumentError, 'Line must be an Integer or a String representation of an Integer.' unless valid_types.include?(value.class)
 
-        raise ArgumentError, 'The line number can contain only the digits 0-9.' if value.is_a?(String) && value !~ %r{\A[0-9]+\Z}
+        raise ArgumentError, 'The line number can contain only the digits 0-9.' if value.is_a?(String) && value !~ /\A[0-9]+\Z/
 
         value.to_i
       end
@@ -292,7 +292,7 @@ module PDK
 
         raise ArgumentError, 'Column must be an Integer or a String representation of an Integer.' unless valid_types.include?(value.class)
 
-        raise ArgumentError, 'The column number can contain only the digits 0-9.' if value.is_a?(String) && value !~ %r{\A[0-9]+\Z}
+        raise ArgumentError, 'The column number can contain only the digits 0-9.' if value.is_a?(String) && value !~ /\A[0-9]+\Z/
 
         value.to_i
       end

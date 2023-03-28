@@ -30,7 +30,7 @@ describe PDK::Util::Filesystem do
 
       context 'when nil_on_error => false' do
         it 'raises the underlying error' do
-          expect { read_file }.to raise_error(Errno::EACCES, %r{some error})
+          expect { read_file }.to raise_error(Errno::EACCES, /some error/)
         end
       end
 
@@ -79,7 +79,7 @@ describe PDK::Util::Filesystem do
 
       context 'and the path is neither a String nor Pathname' do
         it 'raises an ArgumentError' do
-          expect { write_file }.to raise_error(ArgumentError, %r{String or Pathname})
+          expect { write_file }.to raise_error(ArgumentError, /String or Pathname/)
         end
       end
     end
@@ -88,7 +88,7 @@ describe PDK::Util::Filesystem do
       let(:content) { nil }
 
       it 'raises an ArgumentError' do
-        expect { write_file }.to raise_error(ArgumentError, %r{content must be a String})
+        expect { write_file }.to raise_error(ArgumentError, /content must be a String/)
       end
     end
   end

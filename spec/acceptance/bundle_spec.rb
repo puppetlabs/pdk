@@ -35,7 +35,7 @@ describe 'pdk bundle' do
 
     describe command('pdk bundle env') do
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{## Environment}) }
+      its(:stdout) { is_expected.to match(/## Environment/) }
     end
 
     # This test has been scoped to only execute when the following conditions are true
@@ -54,7 +54,7 @@ describe 'pdk bundle' do
         PTY.spawn(command) do |r, w, _pid|
           # Test that the startup message is displayed
           startup_message = r.gets
-          expect(startup_message).to match(%r{pdk \(INFO\): Using Ruby}im)
+          expect(startup_message).to match(/pdk \(INFO\): Using Ruby/im)
           r.gets
 
           # Issue a command and consume the output
@@ -63,7 +63,7 @@ describe 'pdk bundle' do
 
           # Test that the output is displayed
           dir = r.gets
-          expect(dir).to match(%r{bundle}im)
+          expect(dir).to match(/bundle/im)
         end
       end
     end
@@ -79,7 +79,7 @@ describe 'pdk bundle' do
 
       describe command('pdk bundle exec puppet-lint init.pp') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{double quoted string}im) }
+        its(:stdout) { is_expected.to match(/double quoted string/im) }
       end
     end
 
@@ -97,7 +97,7 @@ describe 'pdk bundle' do
 
       describe command('pdk bundle env') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stderr) { is_expected.to match(%r{error parsing `gemfile`}i) }
+        its(:stderr) { is_expected.to match(/error parsing `gemfile`/i) }
       end
     end
   end

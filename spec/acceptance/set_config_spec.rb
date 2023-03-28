@@ -49,7 +49,7 @@ describe 'pdk set config' do
     describe command('pdk set config') do
       its(:exit_status) { is_expected.not_to eq 0 }
       its(:stdout) { is_expected.to have_no_output }
-      its(:stderr) { is_expected.to match(%r{Configuration name is required}) }
+      its(:stderr) { is_expected.to match(/Configuration name is required/) }
     end
 
     context 'with a setting that does not exist' do
@@ -57,8 +57,8 @@ describe 'pdk set config' do
         include_context 'with a fake answer file'
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=value}) }
-        its(:stderr) { is_expected.to match(%r{Set initial value of 'user.module_defaults.mock' to 'value'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=value/) }
+        its(:stderr) { is_expected.to match(/Set initial value of 'user.module_defaults.mock' to 'value'/) }
 
         it_behaves_like 'a saved JSON configuration file', 'mock' => 'value'
 
@@ -72,8 +72,8 @@ describe 'pdk set config' do
         include_context 'with a fake answer file', 'mock' => []
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=\["value"\]}) }
-        its(:stderr) { is_expected.to match(%r{Added new value 'value' to 'user.module_defaults.mock'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=\["value"\]/) }
+        its(:stderr) { is_expected.to match(/Added new value 'value' to 'user.module_defaults.mock'/) }
 
         it_behaves_like 'a saved JSON configuration file', 'mock' => ['value']
       end
@@ -84,8 +84,8 @@ describe 'pdk set config' do
         include_context 'with a fake answer file', 'mock' => 1
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=value}) }
-        its(:stderr) { is_expected.to match(%r{Changed existing value of 'user.module_defaults.mock' from '1' to 'value'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=value/) }
+        its(:stderr) { is_expected.to match(/Changed existing value of 'user.module_defaults.mock' from '1' to 'value'/) }
 
         it_behaves_like 'a saved JSON configuration file', 'mock' => 'value'
       end
@@ -96,8 +96,8 @@ describe 'pdk set config' do
         include_context 'with a fake answer file', 'mock' => []
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=value}) }
-        its(:stderr) { is_expected.to match(%r{Set initial value of 'user.module_defaults.mock' to 'value'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=value/) }
+        its(:stderr) { is_expected.to match(/Set initial value of 'user.module_defaults.mock' to 'value'/) }
 
         it_behaves_like 'a saved JSON configuration file', 'mock' => 'value'
       end
@@ -108,8 +108,8 @@ describe 'pdk set config' do
         include_context 'with a fake answer file', 'mock' => []
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=1}) }
-        its(:stderr) { is_expected.to match(%r{Set initial value of 'user.module_defaults.mock' to '1'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=1/) }
+        its(:stderr) { is_expected.to match(/Set initial value of 'user.module_defaults.mock' to '1'/) }
 
         it_behaves_like 'a saved JSON configuration file', 'mock' => 1
       end
@@ -120,8 +120,8 @@ describe 'pdk set config' do
         include_context 'with a fake answer file', 'mock' => []
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=1}) }
-        its(:stderr) { is_expected.to match(%r{Set initial value of 'user.module_defaults.mock' to '1'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=1/) }
+        its(:stderr) { is_expected.to match(/Set initial value of 'user.module_defaults.mock' to '1'/) }
 
         it_behaves_like 'a saved JSON configuration file', 'mock' => 1
       end
@@ -133,7 +133,7 @@ describe 'pdk set config' do
 
         its(:exit_status) { is_expected.not_to eq 0 }
         its(:stdout) { is_expected.to have_no_output }
-        its(:stderr) { is_expected.to match(%r{Unknown type invalid_type_name}) }
+        its(:stderr) { is_expected.to match(/Unknown type invalid_type_name/) }
 
         it_behaves_like 'a saved JSON configuration file', 'mock' => 'old_value'
       end

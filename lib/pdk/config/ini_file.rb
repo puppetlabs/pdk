@@ -67,7 +67,6 @@ module PDK
       end
 
       # Adapted from https://raw.githubusercontent.com/puppetlabs/puppet/6c257fc7827989c2af2901f974666f0f23611153/lib/puppet/settings/ini_file.rb
-      # rubocop:disable Style/RegexpLiteral
       # rubocop:disable Style/PerlBackrefs
       # rubocop:disable Style/RedundantSelf
       # rubocop:disable Style/StringLiterals
@@ -180,7 +179,6 @@ module PDK
       # rubocop:enable Style/StringLiterals
       # rubocop:enable Style/RedundantSelf
       # rubocop:enable Style/PerlBackrefs
-      # rubocop:enable Style/RegexpLiteral
     end
   end
 end

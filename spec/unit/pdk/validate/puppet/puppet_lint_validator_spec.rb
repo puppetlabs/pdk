@@ -26,7 +26,7 @@ describe PDK::Validate::Puppet::PuppetLintValidator do
       name: 'puppet-lint',
       cmd: 'puppet-lint',
     )
-    expect(validator.spinner_text_for_targets(nil)).to match(%r{puppet manifest style}i)
+    expect(validator.spinner_text_for_targets(nil)).to match(/puppet manifest style/i)
   end
 
   describe '.pattern' do

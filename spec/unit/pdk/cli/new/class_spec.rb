@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/cli'
 
 describe 'PDK::CLI new class' do
-  let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new class}m) }
+  let(:help_text) { a_string_matching(/^USAGE\s+pdk new class/m) }
 
   before do
     # Stop printing out the result
@@ -13,7 +13,7 @@ describe 'PDK::CLI new class' do
     include_context 'run outside module'
 
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{must be run from inside a valid module}))
+      expect(logger).to receive(:error).with(a_string_matching(/must be run from inside a valid module/))
 
       expect { PDK::CLI.run(['new', 'class', 'test_class']) }.to exit_nonzero
     end
@@ -58,7 +58,7 @@ describe 'PDK::CLI new class' do
 
     context 'and provided an invalid class name' do
       it 'exits with an error' do
-        expect(logger).to receive(:error).with(a_string_matching(%r{'test-class' is not a valid class name}))
+        expect(logger).to receive(:error).with(a_string_matching(/'test-class' is not a valid class name/))
 
         expect { PDK::CLI.run(['new', 'class', 'test-class']) }.to exit_nonzero
       end

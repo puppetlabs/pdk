@@ -44,7 +44,7 @@ module PDK
         require 'tty/prompt'
 
         prompt = opts[:prompt] || TTY::Prompt.new(help_color: :cyan)
-        validator = proc { |value| [true, false].include?(value) || value =~ %r{\A(?:yes|y|no|n)\Z}i }
+        validator = proc { |value| [true, false].include?(value) || value =~ /\A(?:yes|y|no|n)\Z/i }
         response = nil
 
         begin

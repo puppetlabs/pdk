@@ -84,7 +84,7 @@ describe PDK::Validate::InvokableValidator do
       allow(PDK::Util).to receive(:canonical_path).and_wrap_original do |_m, *args|
         args[0]
       end
-      allow(PDK::Util::Filesystem).to receive(:file?).with(%r{.*pdk\.yaml}).and_return(project_config_exists)
+      allow(PDK::Util::Filesystem).to receive(:file?).with(/.*pdk\.yaml/).and_return(project_config_exists)
     end
 
     context 'when given no targets' do
@@ -350,7 +350,7 @@ describe PDK::Validate::InvokableValidator do
         allow(PDK::Util::Filesystem).to receive(:directory?).and_return(true)
         allow(PDK::Util::Filesystem).to receive(:glob).with(glob_pattern, anything).and_return(globbed_files)
         allow(PDK::Util::Filesystem).to receive(:expand_path).with(context_root).and_return(context_root)
-        allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{pdk.yaml}).and_return(project_ignore_yaml)
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(/pdk.yaml/).and_return(project_ignore_yaml)
       end
 
       let(:project_config_exists) { true }
@@ -429,8 +429,8 @@ describe PDK::Validate::InvokableValidator do
     end
 
     it 'logs a debug message per target' do
-      expect(PDK.logger).to receive(:debug).with(%r{#{targets[0]}})
-      expect(PDK.logger).to receive(:debug).with(%r{#{targets[1]}})
+      expect(PDK.logger).to receive(:debug).with(/#{targets[0]}/)
+      expect(PDK.logger).to receive(:debug).with(/#{targets[1]}/)
 
       validator.process_skipped(report, targets)
     end
@@ -453,8 +453,8 @@ describe PDK::Validate::InvokableValidator do
     end
 
     it 'logs a debug message per target' do
-      expect(PDK.logger).to receive(:debug).with(%r{#{targets[0]}})
-      expect(PDK.logger).to receive(:debug).with(%r{#{targets[1]}})
+      expect(PDK.logger).to receive(:debug).with(/#{targets[0]}/)
+      expect(PDK.logger).to receive(:debug).with(/#{targets[1]}/)
 
       validator.process_invalid(report, targets)
     end
@@ -471,9 +471,9 @@ describe PDK::Validate::InvokableValidator do
     subject(:context_pattern) { validator.contextual_pattern(pattern_for_a_module) }
 
     before do
-      allow(PDK::Util::Filesystem).to receive(:file?).with(%r{.*environment\.conf}).and_call_original
-      allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{.*environment\.conf}).and_call_original
-      allow(PDK::Util::Filesystem).to receive(:file?).with(%r{.*pdk\.yaml}).and_call_original
+      allow(PDK::Util::Filesystem).to receive(:file?).with(/.*environment\.conf/).and_call_original
+      allow(PDK::Util::Filesystem).to receive(:read_file).with(/.*environment\.conf/).and_call_original
+      allow(PDK::Util::Filesystem).to receive(:file?).with(/.*pdk\.yaml/).and_call_original
     end
 
     let(:pattern_for_a_module) { '*.pp' }

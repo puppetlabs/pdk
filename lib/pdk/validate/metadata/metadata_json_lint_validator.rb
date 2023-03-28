@@ -64,7 +64,7 @@ module PDK
                 # metadata-json-lint groups the offenses by type, so the type ends
                 # up being `warnings` or `errors`. We want to convert that to the
                 # singular noun for the event.
-                event_type = type[%r{\A(.+?)s?\Z}, 1]
+                event_type = type[/\A(.+?)s?\Z/, 1]
 
                 report.add_event(
                   file: targets.first,

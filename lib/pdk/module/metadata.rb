@@ -181,9 +181,9 @@ module PDK
         err = case modname
               when nil, '', :namespace_missing
                 'Field must be a dash-separated user name and module name.'
-              when %r{[^a-z0-9_]}i
+              when /[^a-z0-9_]/i
                 'Module name must contain only alphanumeric or underscore characters.'
-              when %r{^[^a-z]}i
+              when /^[^a-z]/i
                 'Module name must begin with a letter.'
               else
                 'Namespace must contain only alphanumeric characters.'

@@ -2,9 +2,9 @@ require 'spec_helper_acceptance'
 require 'fileutils'
 
 describe 'pdk validate puppet', module_command: true do
-  let(:epp_spinner_text) { %r{checking puppet EPP syntax}i }
-  let(:syntax_spinner_text) { %r{checking puppet manifest syntax}i }
-  let(:lint_spinner_text) { %r{checking puppet manifest style}i }
+  let(:epp_spinner_text) { /checking puppet EPP syntax/i }
+  let(:syntax_spinner_text) { /checking puppet manifest syntax/i }
+  let(:lint_spinner_text) { /checking puppet manifest style/i }
 
   include_context 'with a fake TTY'
 
@@ -20,7 +20,7 @@ describe 'pdk validate puppet', module_command: true do
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.not_to match(syntax_spinner_text) }
         its(:stderr) { is_expected.not_to match(lint_spinner_text) }
-        its(:stderr) { is_expected.to match(%r{no files matching.*found to validate}i) }
+        its(:stderr) { is_expected.to match(/no files matching.*found to validate/i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -51,7 +51,7 @@ describe 'pdk validate puppet', module_command: true do
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
-        its(:stderr) { is_expected.to match(%r{no files matching.*found to validate}i) }
+        its(:stderr) { is_expected.to match(/no files matching.*found to validate/i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -86,8 +86,8 @@ describe 'pdk validate puppet', module_command: true do
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
 
-        its(:stdout) { is_expected.to match(%r{\(warning\):.*Unrecognized escape sequence '\\\['}i) }
-        its(:stdout) { is_expected.to match(%r{\(warning\):.*Unrecognized escape sequence '\\\]'}i) }
+        its(:stdout) { is_expected.to match(/\(warning\):.*Unrecognized escape sequence '\\\['/i) }
+        its(:stdout) { is_expected.to match(/\(warning\):.*Unrecognized escape sequence '\\\]'/i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -104,8 +104,8 @@ describe 'pdk validate puppet', module_command: true do
               'classname' => 'puppet-syntax',
               'name' => a_string_starting_with(init_pp),
             ).that_failed(
-              'type' => a_string_matching(%r{warning}i),
-              'message' => a_string_matching(%r{unrecognized escape sequence '\\\['}i),
+              'type' => a_string_matching(/warning/i),
+              'message' => a_string_matching(/unrecognized escape sequence '\\\['/i),
             )
           end
 
@@ -114,8 +114,8 @@ describe 'pdk validate puppet', module_command: true do
               'classname' => 'puppet-syntax',
               'name' => a_string_starting_with(init_pp),
             ).that_failed(
-              'type' => a_string_matching(%r{warning}i),
-              'message' => a_string_matching(%r{unrecognized escape sequence '\\\]'}i),
+              'type' => a_string_matching(/warning/i),
+              'message' => a_string_matching(/unrecognized escape sequence '\\\]'/i),
             )
           end
 
@@ -131,8 +131,8 @@ describe 'pdk validate puppet', module_command: true do
               'classname' => a_string_starting_with('puppet-lint'),
               'name' => a_string_starting_with(init_pp),
             ).that_failed(
-              'type' => a_string_matching(%r{warning}i),
-              'message' => a_string_matching(%r{double quoted string containing no variables}i),
+              'type' => a_string_matching(/warning/i),
+              'message' => a_string_matching(/double quoted string containing no variables/i),
             )
           end
         end
@@ -153,7 +153,7 @@ describe 'pdk validate puppet', module_command: true do
 
       describe command('pdk validate puppet manifests\test') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\(warning\):.*class not documented.*\(#{Regexp.escape(File.join('manifests', 'test', 'test.pp'))}.+\)}i) }
+        its(:stdout) { is_expected.to match(/\(warning\):.*class not documented.*\(#{Regexp.escape(File.join('manifests', 'test', 'test.pp'))}.+\)/i) }
       end
     end
 
@@ -173,7 +173,7 @@ describe 'pdk validate puppet', module_command: true do
 
       describe command('pdk validate puppet') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{no files matching.*found to validate}i) }
+        its(:stderr) { is_expected.to match(/no files matching.*found to validate/i) }
       end
     end
 
@@ -190,7 +190,7 @@ describe 'pdk validate puppet', module_command: true do
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\(warning\):.*class not documented.*\(#{Regexp.escape(init_pp)}.+\)}i) }
+        its(:stdout) { is_expected.to match(/\(warning\):.*class not documented.*\(#{Regexp.escape(init_pp)}.+\)/i) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
@@ -252,9 +252,9 @@ describe 'pdk validate puppet', module_command: true do
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
 
-        its(:stdout) { is_expected.to match(%r{\(error\):.*This Name has no effect}i) }
-        its(:stdout) { is_expected.to match(%r{\(error\):.*This Type-Name has no effect}i) }
-        its(:stdout) { is_expected.to match(%r{\(error\):.*Language validation logged 2 errors}i) }
+        its(:stdout) { is_expected.to match(/\(error\):.*This Name has no effect/i) }
+        its(:stdout) { is_expected.to match(/\(error\):.*This Type-Name has no effect/i) }
+        its(:stdout) { is_expected.to match(/\(error\):.*Language validation logged 2 errors/i) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
@@ -272,7 +272,7 @@ describe 'pdk validate puppet', module_command: true do
               'name' => a_string_starting_with(init_pp),
             ).that_failed(
               'type' => 'Error',
-              'message' => a_string_matching(%r{This Name has no effect}i),
+              'message' => a_string_matching(/This Name has no effect/i),
             )
           end
 
@@ -282,7 +282,7 @@ describe 'pdk validate puppet', module_command: true do
               'name' => a_string_starting_with(init_pp),
             ).that_failed(
               'type' => 'Error',
-              'message' => a_string_matching(%r{This Type-Name has no effect}i),
+              'message' => a_string_matching(/This Type-Name has no effect/i),
             )
           end
         end
@@ -303,7 +303,7 @@ describe 'pdk validate puppet', module_command: true do
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(%r{autoload module layout.*\(#{Regexp.escape(example_pp)}.+\)}i) }
+        its(:stdout) { is_expected.to match(/autoload module layout.*\(#{Regexp.escape(example_pp)}.+\)/i) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
@@ -401,8 +401,8 @@ describe 'pdk validate puppet', module_command: true do
           its(:stderr) { is_expected.not_to match(epp_spinner_text) }
           its(:stderr) { is_expected.to match(syntax_spinner_text) }
           its(:stderr) { is_expected.to match(lint_spinner_text) }
-          its(:stdout) { is_expected.to match(%r{#{Regexp.escape(another_problem_pp)}}) }
-          its(:stdout) { is_expected.not_to match(%r{#{Regexp.escape(example_pp)}}) }
+          its(:stdout) { is_expected.to match(/#{Regexp.escape(another_problem_pp)}/) }
+          its(:stdout) { is_expected.not_to match(/#{Regexp.escape(example_pp)}/) }
 
           describe file('report.xml') do
             its(:content) { is_expected.to contain_valid_junit_xml }
@@ -445,12 +445,12 @@ describe 'pdk validate puppet', module_command: true do
 
       describe command('pdk validate puppet --auto-correct') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\(corrected\):.*double quoted string.*\(#{Regexp.escape(example_pp)}.*\)}i) }
+        its(:stdout) { is_expected.to match(/\(corrected\):.*double quoted string.*\(#{Regexp.escape(example_pp)}.*\)/i) }
       end
 
       describe command('pdk validate puppet') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(%r{no files matching.*found to validate}i) }
+        its(:stderr) { is_expected.to match(/no files matching.*found to validate/i) }
       end
     end
   end

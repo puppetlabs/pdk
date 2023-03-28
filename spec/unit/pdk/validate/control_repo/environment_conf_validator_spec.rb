@@ -15,7 +15,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
   describe '.spinner_text' do
     subject(:spinner_text) { validator.spinner_text }
 
-    it { is_expected.to match(%r{Checking Puppet Environment settings}i) }
+    it { is_expected.to match(/Checking Puppet Environment settings/i) }
   end
 
   it_behaves_like 'only valid in specified PDK contexts', PDK::Context::ControlRepo
@@ -129,7 +129,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                                                      source: validator.name,
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(%r{Invalid setting 'invalid'}),
+                                                     message: a_string_matching(/Invalid setting 'invalid'/),
                                                    })
         expect(return_value).to eq(1)
       end
@@ -141,7 +141,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                                                      source: validator.name,
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(%r{Invalid section 'invalid_section'}),
+                                                     message: a_string_matching(/Invalid section 'invalid_section'/),
                                                    })
         expect(return_value).to eq(1)
       end
@@ -153,7 +153,7 @@ describe PDK::Validate::ControlRepo::EnvironmentConfValidator do
                                                      source: validator.name,
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(%r{environment_timeout is set to 'foo' but should be}),
+                                                     message: a_string_matching(/environment_timeout is set to 'foo' but should be/),
                                                    })
         expect(return_value).to eq(1)
       end

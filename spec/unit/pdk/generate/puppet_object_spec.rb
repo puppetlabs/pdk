@@ -92,7 +92,7 @@ describe PDK::Generate::PuppetObject do
       it 'raises a fatal error' do
         expect do
           templated_object.module_name
-        end.to raise_error(PDK::CLI::FatalError, %r{'#{metadata_path}'.*not exist})
+        end.to raise_error(PDK::CLI::FatalError, /'#{metadata_path}'.*not exist/)
       end
     end
   end
@@ -164,7 +164,7 @@ describe PDK::Generate::PuppetObject do
       end
 
       it 'raises a fatal error' do
-        expect { |b| templated_object.with_templates(&b) }.to raise_error(PDK::CLI::FatalError, %r{Unable to find})
+        expect { |b| templated_object.with_templates(&b) }.to raise_error(PDK::CLI::FatalError, /Unable to find/)
       end
     end
   end
@@ -240,7 +240,7 @@ describe PDK::Generate::PuppetObject do
       end
 
       it 'raises an error' do
-        expect { templated_object.stage_changes(update_manager) }.to raise_error(PDK::CLI::ExitWithError, %r{'#{absolute_target_file}' already exists})
+        expect { templated_object.stage_changes(update_manager) }.to raise_error(PDK::CLI::ExitWithError, /'#{absolute_target_file}' already exists/)
       end
     end
 

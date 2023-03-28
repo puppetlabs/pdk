@@ -33,19 +33,19 @@ describe PDK::Module::Metadata do
     end
 
     it 'raises an ArgumentError if passed nil' do
-      expect { described_class.from_file(nil) }.to raise_error(ArgumentError, %r{no path to file}i)
+      expect { described_class.from_file(nil) }.to raise_error(ArgumentError, /no path to file/i)
     end
 
     it 'raises an ArgumentError if the file does not exist' do
       allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_json_path).and_return(false)
-      expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, %r{'#{metadata_json_path}'.*not exist})
+      expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, /'#{metadata_json_path}'.*not exist/)
     end
 
     it 'raises an ArgumentError if the file exists but is not readable' do
       allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_json_path).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_json_path).and_return(false)
 
-      expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, %r{Unable to open '#{metadata_json_path}'})
+      expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, /Unable to open '#{metadata_json_path}'/)
     end
 
     it 'raises an ArgumentError if the file contains invalid JSON' do
@@ -53,7 +53,7 @@ describe PDK::Module::Metadata do
       allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_json_path).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_json_path).and_return('{"foo": }')
 
-      expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, %r{Invalid JSON})
+      expect { described_class.from_file(metadata_json_path) }.to raise_error(ArgumentError, /Invalid JSON/)
     end
   end
 
@@ -69,15 +69,15 @@ describe PDK::Module::Metadata do
     end
 
     it 'errors when the provided name is not namespaced' do
-      expect { metadata.update!('name' => 'foo') }.to raise_error(ArgumentError, %r{Invalid 'name' field in metadata.json: field must be a dash-separated user name and module name}i)
+      expect { metadata.update!('name' => 'foo') }.to raise_error(ArgumentError, /Invalid 'name' field in metadata.json: field must be a dash-separated user name and module name/i)
     end
 
     it 'errors when the provided name contains non-alphanumeric characters' do
-      expect { metadata.update!('name' => 'foo-@bar') }.to raise_error(ArgumentError, %r{Invalid 'name' field in metadata.json: module name must contain only alphanumeric or underscore characters}i)
+      expect { metadata.update!('name' => 'foo-@bar') }.to raise_error(ArgumentError, /Invalid 'name' field in metadata.json: module name must contain only alphanumeric or underscore characters/i)
     end
 
     it 'errors when the provided name starts with a non-letter character' do
-      expect { metadata.update!('name' => 'foo-1bar') }.to raise_error(ArgumentError, %r{Invalid 'name' field in metadata.json: module name must begin with a letter}i)
+      expect { metadata.update!('name' => 'foo-1bar') }.to raise_error(ArgumentError, /Invalid 'name' field in metadata.json: module name must begin with a letter/i)
     end
 
     it 'converts user/module style names to user-module' do
@@ -190,7 +190,7 @@ describe PDK::Module::Metadata do
       it 'raises an ArgumentError' do
         expect do
           metadata.validate_puppet_version_requirement!
-        end.to raise_error(ArgumentError, %r{does not contain any requirements}i)
+        end.to raise_error(ArgumentError, /does not contain any requirements/i)
       end
     end
 
@@ -202,7 +202,7 @@ describe PDK::Module::Metadata do
       it 'raises an ArgumentError' do
         expect do
           metadata.validate_puppet_version_requirement!
-        end.to raise_error(ArgumentError, %r{does not contain a "puppet" requirement}i)
+        end.to raise_error(ArgumentError, /does not contain a "puppet" requirement/i)
       end
     end
 
@@ -214,7 +214,7 @@ describe PDK::Module::Metadata do
       it 'raises an ArgumentError' do
         expect do
           metadata.validate_puppet_version_requirement!
-        end.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
+        end.to raise_error(ArgumentError, /does not specify a "version_requirement"/i)
       end
     end
 
@@ -226,7 +226,7 @@ describe PDK::Module::Metadata do
       it 'raises an ArgumentError' do
         expect do
           metadata.validate_puppet_version_requirement!
-        end.to raise_error(ArgumentError, %r{does not specify a "version_requirement"}i)
+        end.to raise_error(ArgumentError, /does not specify a "version_requirement"/i)
       end
     end
   end

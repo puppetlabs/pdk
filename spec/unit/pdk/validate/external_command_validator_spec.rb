@@ -45,7 +45,7 @@ describe PDK::Validate::ExternalCommandValidator do
 
     context 'when the context has no bin path or Gemfile' do
       before do
-        allow(PDK::Util::Filesystem).to receive(:exist?).with(%r{#{validator_context.root_path}}).and_return(false)
+        allow(PDK::Util::Filesystem).to receive(:exist?).with(/#{validator_context.root_path}/).and_return(false)
         allow_any_instance_of(PDK::Util::Bundler::BundleHelper).to receive(:gemfile).and_return(nil) # rubocop:disable RSpec/AnyInstance BundleHelper needs a refactor
       end
 

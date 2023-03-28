@@ -16,7 +16,7 @@ describe '`pdk test unit`' do
 
   context 'with --help' do
     it do
-      expect { PDK::CLI.run(['test', 'unit', '--help']) }.to exit_zero.and output(%r{^USAGE\s+pdk test unit}m).to_stdout
+      expect { PDK::CLI.run(['test', 'unit', '--help']) }.to exit_zero.and output(/^USAGE\s+pdk test unit/m).to_stdout
     end
   end
 
@@ -49,7 +49,7 @@ describe '`pdk test unit`' do
           expect(PDK::Test::Unit).to receive(:list).and_return([])
         end
 
-        it { expect { test_unit_cmd.run_this(args) }.to output(%r{No unit test files with examples were found}m).to_stdout }
+        it { expect { test_unit_cmd.run_this(args) }.to output(/No unit test files with examples were found/m).to_stdout }
       end
 
       context 'when some tests are found' do
@@ -97,7 +97,7 @@ describe '`pdk test unit`' do
           expect(PDK::Test::Unit).to receive(:list).and_return([])
         end
 
-        it { expect { test_unit_cmd.run_this(args) }.to output(%r{No unit test files with examples were found}m).to_stdout }
+        it { expect { test_unit_cmd.run_this(args) }.to output(/No unit test files with examples were found/m).to_stdout }
       end
 
       context 'when some tests are found' do
@@ -318,7 +318,7 @@ describe '`pdk test unit`' do
 
   context 'when --puppet-version and --pe-version are specified' do
     it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(%r{cannot specify.*--pe-version.*and.*--puppet-version}i))
+      expect(logger).to receive(:error).with(a_string_matching(/cannot specify.*--pe-version.*and.*--puppet-version/i))
 
       expect do
         PDK::CLI.run(['test', 'unit', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])

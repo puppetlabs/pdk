@@ -11,7 +11,7 @@ describe PDK::Validate::Tasks::TasksNameValidator do
   describe '.spinner_text' do
     subject(:spinner_text) { described_class.new.spinner_text }
 
-    it { is_expected.to match(%r{checking task name}i) }
+    it { is_expected.to match(/checking task name/i) }
   end
 
   describe '.validate_target' do

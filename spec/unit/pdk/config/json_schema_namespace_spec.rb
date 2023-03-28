@@ -158,7 +158,7 @@ describe PDK::Config::JSONSchemaNamespace, skip: true do
 
     describe '#schema' do
       it 'raises PDK::Config::LoadError' do
-        expect { namespace.schema }.to raise_error(PDK::Config::LoadError, %r{JSON Error})
+        expect { namespace.schema }.to raise_error(PDK::Config::LoadError, /JSON Error/)
       end
     end
   end
@@ -167,7 +167,7 @@ describe PDK::Config::JSONSchemaNamespace, skip: true do
     let(:temp_schema_file) { 'path/that/can/not/exist/:;|' }
 
     it 'raises an error' do
-      expect { namespace.schema }.to raise_error(PDK::Config::LoadError, %r{File does not exist})
+      expect { namespace.schema }.to raise_error(PDK::Config::LoadError, /File does not exist/)
     end
 
     describe '#schema' do

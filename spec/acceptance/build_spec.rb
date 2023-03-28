@@ -39,8 +39,8 @@ describe 'pdk build', module_command: true do
       describe command('pdk build --force') do
         its(:exit_status) { is_expected.to eq(0) }
         its(:stdout) { is_expected.to have_no_output }
-        its(:stderr) { is_expected.not_to match(%r{WARN|ERR}) }
-        its(:stderr) { is_expected.to match(%r{Build of #{metadata['name']} has completed successfully}) }
+        its(:stderr) { is_expected.not_to match(/WARN|ERR/) }
+        its(:stderr) { is_expected.to match(/Build of #{metadata['name']} has completed successfully/) }
 
         pkg_file = File.join('pkg', "#{metadata['name']}-#{metadata['version']}.tar.gz")
 
@@ -54,9 +54,9 @@ describe 'pdk build', module_command: true do
               is_expected.to satisfy('show that all the files in the tarball have sane modes') do |output|
                 output.split("\n").all? do |line|
                   pattern = if line.start_with?('d')
-                              %r{\Adrwxr.xr.x } # directories should be at least 0755
+                              /\Adrwxr.xr.x / # directories should be at least 0755
                             else
-                              %r{\A-rw.r..r.. } # files should be at least 0644
+                              /\A-rw.r..r.. / # files should be at least 0644
                             end
                   line =~ pattern
                 end
@@ -81,8 +81,8 @@ describe 'pdk build', module_command: true do
       describe command('pdk build --force') do
         its(:exit_status) { is_expected.to eq(0) }
         its(:stdout) { is_expected.to have_no_output }
-        its(:stderr) { is_expected.to match(%r{WARN.+missing the following fields.+source}) }
-        its(:stderr) { is_expected.to match(%r{Build of #{metadata['name']} has completed successfully}) }
+        its(:stderr) { is_expected.to match(/WARN.+missing the following fields.+source/) }
+        its(:stderr) { is_expected.to match(/Build of #{metadata['name']} has completed successfully/) }
 
         describe file(File.join('pkg', "#{metadata['name']}-#{metadata['version']}.tar.gz")) do
           it { is_expected.to be_file }

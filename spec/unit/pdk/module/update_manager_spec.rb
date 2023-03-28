@@ -46,7 +46,7 @@ describe PDK::Module::UpdateManager do
         it 'exits with an error' do
           expect do
             update_manager.sync_changes!
-          end.to raise_error(PDK::CLI::ExitWithError, %r{You do not have permission to write to '#{Regexp.escape(dummy_file)}'})
+          end.to raise_error(PDK::CLI::ExitWithError, /You do not have permission to write to '#{Regexp.escape(dummy_file)}'/)
         end
       end
     end
@@ -104,7 +104,7 @@ describe PDK::Module::UpdateManager do
             it 'exits with an error' do
               expect do
                 update_manager.sync_changes!
-              end.to raise_error(PDK::CLI::ExitWithError, %r{Unable to remove '#{Regexp.escape(dummy_file)}': an unknown error})
+              end.to raise_error(PDK::CLI::ExitWithError, /Unable to remove '#{Regexp.escape(dummy_file)}': an unknown error/)
             end
           end
         end
@@ -126,7 +126,7 @@ describe PDK::Module::UpdateManager do
 
   describe '#modify_file' do
     let(:original_content) do
-      <<-EOS.gsub(%r{^ {8}}, '')
+      <<-EOS.gsub(/^ {8}/, '')
         line 1
         line 2
         line 3
@@ -134,7 +134,7 @@ describe PDK::Module::UpdateManager do
     end
 
     let(:new_content) do
-      <<-EOS.gsub(%r{^ {8}}, '')
+      <<-EOS.gsub(/^ {8}/, '')
         line 4
         line 2
         line 3
@@ -157,13 +157,13 @@ describe PDK::Module::UpdateManager do
       it 'exits with an error' do
         expect do
           update_manager.changes
-        end.to raise_error(PDK::CLI::ExitWithError, %r{Unable to open '#{Regexp.escape(dummy_file)}' for reading})
+        end.to raise_error(PDK::CLI::ExitWithError, /Unable to open '#{Regexp.escape(dummy_file)}' for reading/)
       end
     end
 
     context 'when the new file content differs from the original content' do
       let(:expected_diff) do
-        <<-EOS.chomp.gsub(%r{^ {10}}, '')
+        <<-EOS.chomp.gsub(/^ {10}/, '')
           @@ -1,4 +1,5 @@
           -line 1
           +line 4
@@ -187,8 +187,8 @@ describe PDK::Module::UpdateManager do
 
       it 'creates a diff of the changes' do
         diff_lines = update_manager.changes[:modified][dummy_file].split("\n")
-        expect(diff_lines[0]).to match(%r{\A--- #{Regexp.escape(dummy_file)}.+})
-        expect(diff_lines[1]).to match(%r{\A\+\+\+ #{Regexp.escape(dummy_file)}\.pdknew.+})
+        expect(diff_lines[0]).to match(/\A--- #{Regexp.escape(dummy_file)}.+/)
+        expect(diff_lines[1]).to match(/\A\+\+\+ #{Regexp.escape(dummy_file)}\.pdknew.+/)
         expect(diff_lines[2..].join("\n")).to eq(expected_diff)
       end
 
@@ -211,7 +211,7 @@ describe PDK::Module::UpdateManager do
           it 'exits with an error' do
             expect do
               update_manager.sync_changes!
-            end.to raise_error(PDK::CLI::ExitWithError, %r{You do not have permission to write to '#{Regexp.escape(dummy_file)}'})
+            end.to raise_error(PDK::CLI::ExitWithError, /You do not have permission to write to '#{Regexp.escape(dummy_file)}'/)
           end
         end
       end

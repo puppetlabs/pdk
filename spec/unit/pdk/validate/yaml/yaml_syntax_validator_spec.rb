@@ -12,7 +12,7 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
   describe '.spinner_text' do
     subject(:text) { described_class.new.spinner_text }
 
-    it { is_expected.to match(%r{\AChecking YAML syntax}i) }
+    it { is_expected.to match(/\AChecking YAML syntax/i) }
   end
 
   describe '.validate_target' do
@@ -87,7 +87,7 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
                                                      source: 'yaml-syntax',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(%r{\Afound character that cannot start}),
+                                                     message: a_string_matching(/\Afound character that cannot start/),
                                                      line: 2,
                                                      column: 1,
                                                    })
@@ -104,7 +104,7 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
                                                      source: 'yaml-syntax',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(%r{unspecified class: file}i),
+                                                     message: a_string_matching(/unspecified class: file/i),
                                                    })
         expect(return_value).to eq(1)
       end

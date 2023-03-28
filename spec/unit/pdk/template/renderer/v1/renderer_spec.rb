@@ -44,10 +44,10 @@ describe PDK::Template::Renderer::V1::Renderer do
       before do
         allow(renderer).to receive(:files_in_template).with(['/some/path/moduleroot']).and_return(file_in_template_response1)
         allow(renderer).to receive(:files_in_template).with(['/some/path/moduleroot', '/some/path/moduleroot_init']).and_return(file_in_template_response2)
-        allow(renderer).to receive(:new_template_file).with(%r{manage\.erb}, Hash).and_return(template_file)
-        allow(renderer).to receive(:new_template_file).with(%r{unmanaged\.erb}, Hash).and_return(template_file)
-        allow(renderer).to receive(:new_template_file).with(%r{delete\.erb}, Hash).and_return(template_file)
-        allow(renderer).to receive(:new_template_file).with(%r{init\.erb}, Hash).and_return(template_file)
+        allow(renderer).to receive(:new_template_file).with(/manage\.erb/, Hash).and_return(template_file)
+        allow(renderer).to receive(:new_template_file).with(/unmanaged\.erb/, Hash).and_return(template_file)
+        allow(renderer).to receive(:new_template_file).with(/delete\.erb/, Hash).and_return(template_file)
+        allow(renderer).to receive(:new_template_file).with(/init\.erb/, Hash).and_return(template_file)
 
         # Mock the sync.yml responses
         allow(renderer).to receive(:new_legacy_template_dir).and_return(legacy_template_dir)
@@ -82,7 +82,7 @@ describe PDK::Template::Renderer::V1::Renderer do
         end
 
         it 'raises a FatalError' do
-          expect { rendered_files }.to raise_error(PDK::CLI::FatalError, %r{Failed to render template})
+          expect { rendered_files }.to raise_error(PDK::CLI::FatalError, /Failed to render template/)
         end
       end
 
@@ -149,7 +149,7 @@ describe PDK::Template::Renderer::V1::Renderer do
         allow(PDK::Util::Filesystem).to receive(:file?).with("#{template_root}/object_templates/item.erb").and_return(true)
         allow(PDK::Util::Filesystem).to receive(:readable?).with("#{template_root}/object_templates/item.erb").and_return(true)
         allow(PDK::Util::Filesystem).to receive(:read_file).with("#{template_root}/object_templates/item.erb").and_return(item_content)
-        allow(renderer).to receive(:new_template_file).with(%r{item\.erb}, Hash).and_return(template_file) # This is fine
+        allow(renderer).to receive(:new_template_file).with(/item\.erb/, Hash).and_return(template_file) # This is fine
       end
 
       it 'returns the rendered content' do
@@ -157,7 +157,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       end
 
       it 'logs a message for the item' do
-        expect(PDK.logger).to receive(:debug).with(%r{Rendering .+item\.erb})
+        expect(PDK.logger).to receive(:debug).with(/Rendering .+item\.erb/)
         renderer.render_single_item(item_path, template_data_hash)
       end
     end

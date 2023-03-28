@@ -26,7 +26,7 @@ RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
       end
 
       it 'raises PDK::Config::LoadError' do
-        expect { subject.parse_file(subject.file) {} }.to raise_error(PDK::Config::LoadError, %r{error})
+        expect { subject.parse_file(subject.file) {} }.to raise_error(PDK::Config::LoadError, /error/)
       end
     end
 
@@ -109,7 +109,7 @@ RSpec.shared_examples 'a file based namespace with a schema' do |content|
 
   describe '#[]=' do
     it 'raises ArgumentError if the setting does not exist' do
-      expect { subject['does_not_exist_at_all'] = 'baz' }.to raise_error(ArgumentError, %r{Setting 'does_not_exist_at_all' does not exist})
+      expect { subject['does_not_exist_at_all'] = 'baz' }.to raise_error(ArgumentError, /Setting 'does_not_exist_at_all' does not exist/)
     end
   end
 
@@ -155,7 +155,7 @@ RSpec.shared_examples 'a yaml file based namespace' do
       let(:data) { "---\n\tfoo: bar" }
 
       it 'raises PDK::Config::LoadError' do
-        expect { yaml_config.parse_file(tempfile) {} }.to raise_error(PDK::Config::LoadError, %r{syntax error}i)
+        expect { yaml_config.parse_file(tempfile) {} }.to raise_error(PDK::Config::LoadError, /syntax error/i)
       end
     end
 
@@ -163,7 +163,7 @@ RSpec.shared_examples 'a yaml file based namespace' do
       let(:data) { "--- !ruby/object:File {}\n" }
 
       it 'raises PDK::Config::LoadError' do
-        expect { yaml_config.parse_file(tempfile) {} }.to raise_error(PDK::Config::LoadError, %r{unsupported class}i)
+        expect { yaml_config.parse_file(tempfile) {} }.to raise_error(PDK::Config::LoadError, /unsupported class/i)
       end
     end
   end
@@ -192,7 +192,7 @@ RSpec.shared_examples 'a json file based namespace' do
 
     context 'when there is no data stored' do
       it 'serializes to an empty JSON object' do
-        expect(serialized_data).to match(%r(^\{\n+\}$))
+        expect(serialized_data).to match(/^\{\n+\}$/)
       end
     end
 

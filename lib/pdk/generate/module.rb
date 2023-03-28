@@ -104,7 +104,7 @@ module PDK
         require 'etc'
 
         login = Etc.getlogin || ''
-        login_clean = login.downcase.gsub(%r{[^0-9a-z]}i, '')
+        login_clean = login.downcase.gsub(/[^0-9a-z]/i, '')
         login_clean = 'username' if login_clean.empty?
 
         if login_clean != login
@@ -157,7 +157,7 @@ module PDK
             question: 'If you have a name for your module, add it here.',
             help: 'This is the name that will be associated with your module, it should be relevant to the modules content.',
             required: true,
-            validate_pattern: %r{\A[a-z][a-z0-9_]*\Z}i,
+            validate_pattern: /\A[a-z][a-z0-9_]*\Z/i,
             validate_message: 'Module names must begin with a lowercase letter and can only include lowercase letters, numbers, and underscores.',
           },
           {
@@ -165,7 +165,7 @@ module PDK
             question: 'If you have a Puppet Forge username, add it here.',
             help: 'We can use this to upload your module to the Forge when it\'s complete.',
             required: true,
-            validate_pattern: %r{\A[a-z0-9]+\Z}i,
+            validate_pattern: /\A[a-z0-9]+\Z/i,
             validate_message: 'Forge usernames can only contain lowercase letters and numbers',
             default: opts[:username],
           },
@@ -174,7 +174,7 @@ module PDK
             question: 'What version is this module?',
             help: 'Puppet uses Semantic Versioning (semver.org) to version modules.',
             required: true,
-            validate_pattern: %r{\A[0-9]+\.[0-9]+\.[0-9]+}i,
+            validate_pattern: /\A[0-9]+\.[0-9]+\.[0-9]+/i,
             validate_message: 'Semantic Version numbers must be in the form MAJOR.MINOR.PATCH',
             default: metadata.data['version'],
             forge_only: true,
@@ -244,7 +244,7 @@ module PDK
         if opts[:only_ask]
           questions.reject! do |question|
             if ['module_name', 'forge_username'].include?(question[:name])
-              metadata.data['name'] && metadata.data['name'] =~ %r{\A[a-z0-9]+-[a-z][a-z0-9_]*\Z}i
+              metadata.data['name'] && metadata.data['name'] =~ /\A[a-z0-9]+-[a-z][a-z0-9_]*\Z/i
             else
               !opts[:only_ask].include?(question[:name])
             end

@@ -113,7 +113,7 @@ describe PDK::Module::Release do
         end
 
         it 'raises an error' do
-          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, %r{PDK compatible})
+          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, /PDK compatible/)
         end
       end
 
@@ -123,13 +123,13 @@ describe PDK::Module::Release do
         end
 
         it 'raises an error' do
-          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, %r{Forge compatible})
+          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, /Forge compatible/)
         end
       end
 
       context 'and missing the forge url' do
         it 'raises an error' do
-          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, %r{forge-upload-url})
+          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, /forge-upload-url/)
         end
       end
 
@@ -139,7 +139,7 @@ describe PDK::Module::Release do
         end
 
         it 'raises an error' do
-          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, %r{forge-token})
+          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, /forge-token/)
         end
       end
     end

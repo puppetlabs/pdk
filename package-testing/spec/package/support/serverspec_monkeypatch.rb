@@ -47,7 +47,7 @@ class Specinfra::Backend::BeakerExec
   end
 
   def prepend_env(cmd)
-    _, env, shell, command = cmd.match(%r{\Aenv (.+?)? (\S+) -c (.+)\Z}).to_a
+    _, env, shell, command = cmd.match(/\Aenv (.+?)? (\S+) -c (.+)\Z/).to_a
 
     output = if get_config(:run_as)
                ["sudo -u #{get_config(:run_as)}"]
