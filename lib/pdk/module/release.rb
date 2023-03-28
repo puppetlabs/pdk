@@ -19,7 +19,7 @@ module PDK
 
         if module_path.nil?
           module_path = PDK::Util.module_root
-          raise PDK::CLI::ExitWithError, format('The module release process requires a valid module path', module_path: module_path) if module_path.nil?
+          raise PDK::CLI::ExitWithError, 'The module release process requires a valid module path' if module_path.nil?
         end
         raise PDK::CLI::ExitWithError, format('%{module_path} is not a valid module', module_path: module_path) unless PDK::Util.in_module_root?(module_path)
 
