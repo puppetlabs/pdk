@@ -22,7 +22,7 @@ describe 'pdk remove config' do
       expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
 
       actual_content_raw = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8') { |f| f.read }
-      actual_json_content = ::JSON.parse(actual_content_raw)
+      actual_json_content = JSON.parse(actual_content_raw)
       expect(actual_json_content).to eq(new_json_content)
     end
   end
@@ -33,7 +33,7 @@ describe 'pdk remove config' do
       unless initial_content.nil?
         require 'json'
         fake_answer_file.binmode
-        fake_answer_file.write(::JSON.pretty_generate(initial_content))
+        fake_answer_file.write(JSON.pretty_generate(initial_content))
       end
       fake_answer_file.close
       ENV['PDK_ANSWER_FILE'] = fake_answer_file.path

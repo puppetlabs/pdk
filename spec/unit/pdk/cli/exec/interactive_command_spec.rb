@@ -80,7 +80,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
       end
 
       it "executes in parent process' bundler env" do
-        expect(::Bundler).not_to receive(:with_unbundled_env)
+        expect(Bundler).not_to receive(:with_unbundled_env)
 
         command.execute!
       end
