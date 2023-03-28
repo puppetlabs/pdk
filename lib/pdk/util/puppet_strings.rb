@@ -117,7 +117,7 @@ module PDK
         require 'pdk/generate'
 
         PDK::Generate.generators.find do |gen|
-          gen.const_defined?(:PUPPET_STRINGS_TYPE) && gen::PUPPET_STRINGS_TYPE == type
+          gen.const_defined?(:PUPPET_STRINGS_TYPE) && type == gen::PUPPET_STRINGS_TYPE
         end
       end
     end
