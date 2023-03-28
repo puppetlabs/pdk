@@ -120,7 +120,7 @@ module PDK
         return @default_to.call if default_block?
 
         # If there is a previous setting in the chain, use its default
-        @previous_setting.nil? ? nil : @previous_setting.default
+        @previous_setting&.default
       end
 
       private

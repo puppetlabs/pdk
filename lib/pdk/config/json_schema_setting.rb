@@ -44,7 +44,7 @@ module PDK
         end
         # ... otherwise call the settings chain default
         # and if that doesn't exist, just return nil
-        @previous_setting.nil? ? nil : @previous_setting.default
+        @previous_setting&.default
       end
     end
   end
