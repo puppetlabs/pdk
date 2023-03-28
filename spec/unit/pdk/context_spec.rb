@@ -152,7 +152,7 @@ describe PDK::Context do
         context 'in a module path of the control repo' do
           let(:context_path) { File.join(module_dir, 'manifests') }
 
-          it 'returns a Module Context ' do
+          it 'returns a Module Context' do
             expect_a_module_context(context, context_path, module_dir)
           end
         end
@@ -208,7 +208,7 @@ describe PDK::Context do
         context 'in the root of the control repo' do
           let(:context_path) { control_repo_fixture_root }
 
-          it 'returns a Module Context ' do
+          it 'returns a Module Context' do
             expect_a_module_context(context, context_path, control_repo_fixture_root)
           end
         end
@@ -216,7 +216,7 @@ describe PDK::Context do
         context 'in a non-module path of the control repo' do
           let(:context_path) { File.join(control_repo_fixture_root, 'data') }
 
-          it 'returns a Module Context ' do
+          it 'returns a Module Context' do
             expect_a_module_context(context, context_path, control_repo_fixture_root)
           end
         end
