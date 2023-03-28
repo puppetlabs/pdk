@@ -118,7 +118,7 @@ end
 def describe_base_command
   require 'pdk/cli'
 
-  base_command = PDK::CLI.instance_variable_get('@base_cmd')
+  base_command = PDK::CLI.instance_variable_get(:@base_cmd)
   describe_command(base_command)
 end
 

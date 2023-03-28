@@ -106,7 +106,7 @@ describe PDK::Util::RubyVersion do
     subject { described_class.versions }
 
     before(:each) do
-      described_class.instance_variable_set('@versions', nil)
+      described_class.instance_variable_set(:@versions, nil)
     end
 
     context 'when running from a package install' do

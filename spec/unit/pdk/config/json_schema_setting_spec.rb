@@ -109,7 +109,7 @@ describe PDK::Config::JSONSchemaSetting, skip: true do
         it 'evaluates the default in the settings chain' do
           # The namespace doesn't expose the settings hash directly, so need to use a bit of ruby
           # magic to get the private instance variable
-          previous_setting = namespace.instance_variable_get('@settings')['spec_setting']
+          previous_setting = namespace.instance_variable_get(:@settings)['spec_setting']
           setting.previous_setting = previous_setting
           expect(setting.default).to eq('namespace_default')
         end

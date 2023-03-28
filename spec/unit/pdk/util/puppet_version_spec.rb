@@ -50,8 +50,8 @@ describe PDK::Util::PuppetVersion do
     end
 
     after(:each) do
-      PDK::Util::RubyVersion.instance_variable_set('@instance', nil)
-      PDK::Util::RubyVersion.instance_variable_set('@active_ruby_version', nil)
+      PDK::Util::RubyVersion.instance_variable_set(:@instance, nil)
+      PDK::Util::RubyVersion.instance_variable_set(:@active_ruby_version, nil)
     end
   end
 

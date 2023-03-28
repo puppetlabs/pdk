@@ -19,7 +19,7 @@ class Specinfra::Backend::BeakerCygwin
   old_create_script = instance_method(:create_script)
 
   define_method(:create_script) do |cmd|
-    prepend_env(old_create_script.bind(self).call(cmd))
+    prepend_env(old_create_script.bind_call(self, cmd))
   end
 
   def prepend_env(script)
@@ -39,7 +39,7 @@ class Specinfra::Backend::BeakerExec
   old_build_command = instance_method(:build_command)
 
   define_method(:build_command) do |cmd|
-    prepend_env(old_build_command.bind(self).call(cmd))
+    prepend_env(old_build_command.bind_call(self, cmd))
   end
 
   def unescape(string)

@@ -61,7 +61,7 @@ describe PDK::Validate::Puppet::PuppetEPPValidator do
 
     context 'when no temp dir has been created' do
       before(:each) do
-        validator.instance_variable_set('@validate_tmpdir', nil)
+        validator.instance_variable_set(:@validate_tmpdir, nil)
       end
 
       it 'does not attempt to remove the directory' do
