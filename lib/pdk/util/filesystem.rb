@@ -96,7 +96,7 @@ module PDK
       module_function :remove_entry_secure
 
       def zero?(*args)
-        File.zero?(*args)
+        File.empty?(*args)
       end
       module_function :zero?
 
