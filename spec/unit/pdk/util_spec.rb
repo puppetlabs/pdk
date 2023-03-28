@@ -607,7 +607,7 @@ describe PDK::Util do
     end
 
     context 'is not in metadata' do
-      it { is_expected.to be nil }
+      it { is_expected.to be_nil }
     end
 
     context 'if there is a problem reading the metadata.json file' do

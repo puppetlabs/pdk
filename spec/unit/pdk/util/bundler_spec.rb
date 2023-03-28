@@ -298,7 +298,7 @@ RSpec.describe PDK::Util::Bundler do
           allow(PDK::Util).to receive(:find_upwards).with(%r{Gemfile$}).and_return(nil)
         end
 
-        it { is_expected.to be nil }
+        it { is_expected.to be_nil }
       end
     end
 

@@ -28,7 +28,7 @@ describe PDK::Validate do
 
     it 'all names can be found within the validator_hash' do
       described_class.validator_names.each do |name|
-        expect(described_class.validator_hash[name]).not_to be nil
+        expect(described_class.validator_hash[name]).not_to be_nil
       end
     end
   end
