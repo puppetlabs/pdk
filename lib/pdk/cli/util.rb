@@ -260,8 +260,9 @@ module PDK
         end
 
         safe_opts = [:'puppet-version', :'pe-version']
+        safe_bools = [true, false]
         redacted_opts = cmd_opts.map do |k, v|
-          value = if [true, false].include?(v) || safe_opts.include?(k)
+          value = if safe_bools.include?(v) || safe_opts.include?(k)
                     v
                   else
                     'redacted'
