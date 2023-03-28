@@ -30,7 +30,7 @@ describe PDK::Context do
     def expect_a_none_context(context, context_path)
       expect(context).to be_a(PDK::Context::None)
       expect(context.context_path).to eq(context_path)
-      expect(context.root_path).to eq(context.root_path)
+      expect(context.root_path).to eq(context_path)
       expect(context.parent_context).to be_nil
     end
 
