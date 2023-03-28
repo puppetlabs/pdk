@@ -206,8 +206,8 @@ module PDK
         else
           explicit_uri = nil
         end
-        metadata_uri = if PDK::Util.module_root && PDK::Util::Filesystem.file?(File.join(PDK::Util.module_root, 'metadata.json'))
-                         new(uri_safe(PDK::Util.module_metadata['template-url'])).uri if PDK::Util.module_metadata['template-url']
+        metadata_uri = if PDK::Util.module_root && PDK::Util::Filesystem.file?(File.join(PDK::Util.module_root, 'metadata.json')) && PDK::Util.module_metadata['template-url']
+                         new(uri_safe(PDK::Util.module_metadata['template-url'])).uri
                        end
         default_template_url = PDK.config.get_within_scopes('module_defaults.template-url')
         answers_uri = if [PACKAGED_TEMPLATE_KEYWORD, DEPRECATED_TEMPLATE_URL].include?(default_template_url)

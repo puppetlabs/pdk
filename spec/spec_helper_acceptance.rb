@@ -89,9 +89,7 @@ RSpec.configure do |c|
 
   c.after do |e|
     # Dump stderr into error message to help with debugging if test failed
-    if e.exception
-      e.exception.message << "\nDumping stderr output:\n\n#{subject.stderr}\n" if subject.respond_to?(:stderr) && subject.stderr != ''
-    end
+    e.exception.message << "\nDumping stderr output:\n\n#{subject.stderr}\n" if e.exception && (subject.respond_to?(:stderr) && subject.stderr != '')
 
     # recover bundle environment from serverspec munging
     bundler_env.each_key do |k|

@@ -24,9 +24,7 @@ module PDK::Util::Windows::Process
                    .map { |env_pair| env_pair.split('=', 2) }
     pairs.to_h
   ensure
-    if env_ptr && !env_ptr.null?
-      PDK.logger.debug 'FreeEnvironmentStringsW memory leak' if FreeEnvironmentStringsW(env_ptr) == PDK::Util::Windows::WIN32_FALSE
-    end
+    PDK.logger.debug 'FreeEnvironmentStringsW memory leak' if env_ptr && !env_ptr.null? && (FreeEnvironmentStringsW(env_ptr) == PDK::Util::Windows::WIN32_FALSE)
   end
   module_function :environment_hash
 

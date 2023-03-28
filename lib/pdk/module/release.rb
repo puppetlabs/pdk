@@ -61,8 +61,8 @@ module PDK
 
           # Check if the versions match
           latest_version = PDK::Util::ChangelogGenerator.latest_version
-          unless latest_version
-            raise PDK::CLI::ExitWithError, format('%{new_version} does not match %{latest_version}', new_version: new_version, latest_version: latest_version) if new_version != latest_version
+          if !latest_version && (new_version != latest_version)
+            raise PDK::CLI::ExitWithError, format('%{new_version} does not match %{latest_version}', new_version: new_version, latest_version: latest_version)
           end
         end
 

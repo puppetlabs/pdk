@@ -79,12 +79,10 @@ module PDK::CLI
         raise PDK::CLI::ExitWithError, format("The configuration item '%{name}' can not have a value set.", name: item_name) if current_value.is_a?(PDK::Config::Namespace)
 
         # If we're forcing the value, don't do any munging
-        unless force
-          # Check if the setting already exists
-          if current_value.is_a?(Array) && current_value.include?(item_value)
-            PDK.logger.info(format("No changes made to '%{name}' as it already contains value '%{to}'", name: item_name, to: item_value))
-            return 0
-          end
+        # Check if the setting already exists
+        if !force && (current_value.is_a?(Array) && current_value.include?(item_value))
+          PDK.logger.info(format("No changes made to '%{name}' as it already contains value '%{to}'", name: item_name, to: item_value))
+          return 0
         end
 
         new_value = PDK.config.set(item_name, item_value, force: opts[:force])
