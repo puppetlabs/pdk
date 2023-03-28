@@ -105,7 +105,7 @@ module PDK::CLI
         memo
       end
       # pass through all other args that are bound for puppet debugger
-      processed_args = opts.map { |e| e unless %r{\A-{2}puppet|pe-version|dev}.match?(e) }.compact
+      processed_args = opts.grep_v(%r{\A-{2}puppet|pe-version|dev})
       [args, processed_args]
     end
 
