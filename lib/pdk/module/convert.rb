@@ -256,7 +256,7 @@ module PDK
         require 'pdk/report'
 
         PDK::Report.default_target.puts(format("\n%{banner}", banner: generate_banner(banner_text, 40)))
-        summary_to_print = summary.map { |k, v| "#{v.length} files #{k}" unless v.empty? }.compact
+        summary_to_print = summary.filter_map { |k, v| "#{v.length} files #{k}" unless v.empty? }
         PDK::Report.default_target.puts(format("\n%{summary}\n\n", summary: "#{summary_to_print.join(', ')}."))
       end
 
