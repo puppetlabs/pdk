@@ -49,7 +49,7 @@ module PDK
                      Addressable::URI.parse(opts_or_uri)
                    end
                  rescue Addressable::URI::InvalidURIError
-                   raise PDK::CLI::FatalError, "PDK::Util::TemplateURI attempted initialization with a non-uri string: #{string}"
+                   raise PDK::CLI::FatalError, "PDK::Util::TemplateURI attempted initialization with a non-uri string: #{opts_or_uri}"
                  end
                when Addressable::URI
                  opts_or_uri.dup

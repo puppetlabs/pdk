@@ -3,7 +3,7 @@ require 'pdk'
 module PDK
   module Util
     module Bundler
-      class BundleHelper; end
+      # class BundleHelper; end
 
       def self.ensure_bundle!(gem_overrides = {})
         bundle = BundleHelper.new
