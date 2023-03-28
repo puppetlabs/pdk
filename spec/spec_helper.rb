@@ -41,7 +41,7 @@ analytics_config = nil
 FIXTURES_DIR = File.join(__dir__, 'fixtures')
 EMPTY_MODULE_ROOT = File.join(FIXTURES_DIR, 'module_root')
 
-RSpec.shared_context :stubbed_logger do
+RSpec.shared_context 'stubbed logger' do
   let(:logger) { instance_double('PDK::Logger').as_null_object }
 
   before(:each) do |example|
@@ -49,7 +49,7 @@ RSpec.shared_context :stubbed_logger do
   end
 end
 
-RSpec.shared_context :stubbed_analytics do
+RSpec.shared_context 'stubbed analytics' do
   let(:analytics) { PDK::Analytics::Client::Noop.new(logger: logger) }
 
   before(:each) do |example|
@@ -63,8 +63,8 @@ RSpec.configure do |c|
     metadata[:use_stubbed_analytics] = true unless metadata.key?(:use_stubbed_analytics)
   end
 
-  c.include_context :stubbed_logger
-  c.include_context :stubbed_analytics
+  c.include_context 'stubbed logger'
+  c.include_context 'stubbed analytics'
 
   c.before(:suite) do
     require 'yaml'

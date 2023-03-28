@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/generate/puppet_object'
 require 'addressable'
 
-shared_context :with_puppet_object_module_metadata do
+shared_context 'with puppet object module metadata' do
   let(:module_metadata) { '{"name": "testuser-test_module"}' }
 
   before(:each) do
@@ -77,7 +77,7 @@ describe PDK::Generate::PuppetObject do
 
   describe '#module_name' do
     context 'when the module metadata.json is available' do
-      include_context :with_puppet_object_module_metadata
+      include_context 'with puppet object module metadata'
 
       it 'can read the module name from the module metadata' do
         expect(templated_object.module_name).to eq('test_module')
@@ -199,7 +199,7 @@ describe PDK::Generate::PuppetObject do
   end
 
   describe '#stage_changes' do
-    include_context :with_puppet_object_module_metadata
+    include_context 'with puppet object module metadata'
 
     let(:source_file) { '/tmp/test_module/object_file' }
     let(:target_file) { 'object_file' }

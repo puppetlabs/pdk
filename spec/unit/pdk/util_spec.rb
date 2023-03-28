@@ -16,7 +16,7 @@ describe PDK::Util do
     )
   end
 
-  shared_context :with_version_file, version_file: true do
+  shared_context 'with version file', version_file: true do
     let(:version_file) { File.join('path', 'to', 'the', 'version', 'file') }
 
     before(:each) do
@@ -24,7 +24,7 @@ describe PDK::Util do
     end
   end
 
-  shared_context :without_version_file, version_file: false do
+  shared_context 'without version file', version_file: false do
     before(:each) do
       allow(PDK::Util::Version).to receive(:version_file).and_return(nil)
     end

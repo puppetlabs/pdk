@@ -3,7 +3,7 @@ require 'beaker-puppet'
 
 Dir['./spec/package/support/*.rb'].sort.each { |f| require f }
 
-RSpec.shared_context :set_path do
+RSpec.shared_context 'set path' do
   let(:path) { windows_node? ? nil : "#{install_dir}/bin:$PATH" }
 end
 

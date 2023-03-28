@@ -13,13 +13,13 @@ describe PDK::Config::Namespace do
 
   let(:config_options) { {} }
 
-  shared_context :with_a_nested_namespace do |name|
+  shared_context 'with a nested namespace' do |name|
     before(:each) do
       config.namespace(name)
     end
   end
 
-  shared_context :with_a_mounted_file do |name|
+  shared_context 'with a mounted file' do |name|
     before(:each) do
       path = PDK::Util::Filesystem.expand_path(File.join('path', 'to', name))
       allow(PDK::Util::Filesystem).to receive(:read_file).with(path, anything)
@@ -30,7 +30,7 @@ describe PDK::Config::Namespace do
     end
   end
 
-  shared_context :with_a_mounted_file_with_content do |name, content|
+  shared_context 'with a mounted file with content' do |name, content|
     before(:each) do
       path = PDK::Util::Filesystem.expand_path(File.join('path', 'to', name))
       allow(PDK::Util::Filesystem).to receive(:read_file).with(path).and_return(content)
@@ -165,7 +165,7 @@ describe PDK::Config::Namespace do
   describe '#resolve' do
     let(:config_options) { { persistent_defaults: false } }
 
-    include_context :with_a_mounted_file_with_content, 'mounted', '{"setting1": "value1"}'
+    include_context 'with a mounted file with content', 'mounted', '{"setting1": "value1"}'
 
     before(:each) do
       # Add a value with a default value
@@ -271,8 +271,8 @@ describe PDK::Config::Namespace do
   end
 
   describe '#name' do
-    include_context :with_a_nested_namespace, 'nested'
-    include_context :with_a_mounted_file, 'mounted'
+    include_context 'with a nested namespace', 'nested'
+    include_context 'with a mounted file', 'mounted'
 
     context 'on a root namespace' do
       it 'returns the name of the namespace' do
@@ -294,8 +294,8 @@ describe PDK::Config::Namespace do
   end
 
   describe '#to_h' do
-    include_context :with_a_nested_namespace, 'nested'
-    include_context :with_a_mounted_file, 'mounted'
+    include_context 'with a nested namespace', 'nested'
+    include_context 'with a mounted file', 'mounted'
 
     before(:each) do
       # Create the settings
@@ -328,8 +328,8 @@ describe PDK::Config::Namespace do
   end
 
   describe '#child_namespace?' do
-    include_context :with_a_nested_namespace, 'nested'
-    include_context :with_a_mounted_file, 'mounted'
+    include_context 'with a nested namespace', 'nested'
+    include_context 'with a mounted file', 'mounted'
 
     context 'on a root namespace' do
       it 'returns false' do
@@ -351,8 +351,8 @@ describe PDK::Config::Namespace do
   end
 
   describe '#include_in_parent?' do
-    include_context :with_a_nested_namespace, 'nested'
-    include_context :with_a_mounted_file, 'mounted'
+    include_context 'with a nested namespace', 'nested'
+    include_context 'with a mounted file', 'mounted'
 
     context 'on a root namespace' do
       it 'returns false' do
