@@ -151,16 +151,16 @@ module PDK
 
         example_results.each do |result, examples|
           # Translate rspec example results to JUnit XML testcase results
-          state = case result
-                  when 'passed' then :passed
-                  when 'failed' then :failure
-                  when 'pending' then :skipped
-                  end
+          state_map = {
+            'passed' => :passed,
+            'failed' => :failure,
+            'pending' => :skipped
+          }
 
           examples.each do |ex|
             report.add_event(
               source: 'rspec',
-              state: state,
+              state: state_map[result],
               file: ex['file_path'],
               line: ex['line_number'],
               test: ex['full_description'],
