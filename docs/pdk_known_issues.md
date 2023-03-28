@@ -25,11 +25,11 @@ pdk validate --puppet-version 7.22
 ```
 The above issue should no longer be present when using `--pe-version`
 
-### Install of pdk-2.7.0.0-1.el9.x86_64 conflicts with file from package <PACKAGE>
+### Install of pdk-2.7.0.0-1.el9.x86_64 conflicts with file from package
 
 When installing an el9 based package the user may see the following errors:
 
-```bash
+```
 file /usr/lib/.build-id/95/26c65fed0e95fbb6b988476cc811ca19d5c9c9 from install of pdk-2.7.0.0-1.el9.x86_64 conflicts with file from package libgcc-11.3.1-2.1.el9.x86_64
 file /usr/lib/.build-id/ab/d5d7149726b0410af7af2e9a59491942605ddd from install of pdk-2.7.0.0-1.el9.x86_64 conflicts with file from package libstdc++-11.3.1-2.1.el9.x86_64
 ```
