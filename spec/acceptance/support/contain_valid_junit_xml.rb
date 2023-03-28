@@ -1,7 +1,11 @@
 require 'rspec/xsd'
 
-class RSpec::XSD::Matcher
-  attr_reader :errors
+module RSpec
+  module XSD
+    class Matcher
+      attr_reader :errors
+    end
+  end
 end
 
 RSpec::Matchers.define :contain_valid_junit_xml do
