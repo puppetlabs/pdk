@@ -4,8 +4,6 @@ module PDK
   module Validate
     module Tasks
       class TasksMetadataLintValidator < InternalRubyValidator
-        FORGE_SCHEMA_URL = 'https://forgeapi.puppet.com/schemas/task.json'.freeze
-
         def name
           'task-metadata-lint'
         end
@@ -19,13 +17,12 @@ module PDK
         end
 
         def schema_file
-          require 'pdk/util/vendored_file'
+          require 'pdk/config'
 
-          schema = PDK::Util::VendoredFile.new('task.json', FORGE_SCHEMA_URL).read
+          path = PDK::Config.json_schema('task')
+          schema = PDK::Util::Filesystem.read_file(path)
 
           JSON.parse(schema)
-        rescue PDK::Util::VendoredFile::DownloadError => e
-          raise PDK::CLI::FatalError, e.message
         rescue JSON::ParserError
           raise PDK::CLI::FatalError, 'Failed to parse Task Metadata Schema file.'
         end

@@ -107,7 +107,7 @@ module PDK
       #
       # @return [JSON::Schema]
       def create_empty_schema
-        ::JSON::Schema.new({}, 'http://json-schema.org/draft-06/schema#')
+        ::JSON::Schema.new({}, 'http://json-schema.org/draft/schema#')
       end
 
       # Lazily retrieve the JSON schema from disk for this namespace
