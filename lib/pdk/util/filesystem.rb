@@ -35,8 +35,8 @@ module PDK
       end
       module_function :directory?
 
-      def mkdir_p(*args)
-        FileUtils.mkdir_p(*args)
+      def mkdir_p(*args, **kwargs)
+        FileUtils.mkdir_p(*args, **kwargs)
       end
       module_function :mkdir_p
 
@@ -75,18 +75,18 @@ module PDK
       end
       module_function :exist?
 
-      def rm(*args)
-        FileUtils.rm(*args)
+      def rm(*args, **kwargs)
+        FileUtils.rm(*args, **kwargs)
       end
       module_function :rm
 
-      def rm_f(*args)
-        FileUtils.rm_f(*args)
+      def rm_f(*args, **kwargs)
+        FileUtils.rm_f(*args, **kwargs)
       end
       module_function :rm_f
 
-      def rm_rf(*args)
-        FileUtils.rm_rf(*args)
+      def rm_rf(*args, **kwargs)
+        FileUtils.rm_rf(*args, **kwargs)
       end
       module_function :rm_rf
 
@@ -110,13 +110,13 @@ module PDK
       end
       module_function :symlink?
 
-      def cp(*args)
-        FileUtils.cp(*args)
+      def cp(*args, **kwargs)
+        FileUtils.cp(*args, **kwargs)
       end
       module_function :cp
 
-      def mv(*args)
-        FileUtils.mv(*args)
+      def mv(*args, **kwargs)
+        FileUtils.mv(*args, **kwargs)
       rescue Errno::ENOENT
         # PDK-1169 - FileUtils.mv raises Errno::ENOENT when moving files inside
         #            VMWare shared folders on Windows. So we need to catch this
