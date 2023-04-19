@@ -20,6 +20,8 @@ module PDK
 
         def initialize(*argv)
           require 'childprocess'
+
+          require 'pdk/monkey_patches'
           require 'tempfile'
 
           @argv = argv
