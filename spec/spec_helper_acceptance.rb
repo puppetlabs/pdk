@@ -77,6 +77,9 @@ RSpec.configure do |c|
     analytics_config.write(YAML.dump('disabled' => true))
     analytics_config.close
     ENV['PDK_ANALYTICS_CONFIG'] = analytics_config.path
+
+  # Remove PUPPET_GEM_VERSION if it exists in the test environment
+    ENV.delete('PUPPET_GEM_VERSION')
   end
 
   c.after(:suite) do
