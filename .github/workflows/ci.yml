@@ -37,6 +37,6 @@ jobs:
     secrets: "inherit"
     with:
       ruby_version: ${{ matrix.ruby_version }}
-      rake_task: 'acceptance:local_parallel'
+      rake_task: 'acceptance:local'
       runs_on: ${{ matrix.os }}
 
