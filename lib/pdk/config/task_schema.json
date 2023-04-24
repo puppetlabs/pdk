@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft/schema#",
+  "$schema": "http://json-schema.org/draft-06/schema#",
   "title": "Puppet Task Metadata",
   "description": "The metadata format for Puppet Tasks",
   "type": "object",

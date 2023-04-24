@@ -11,7 +11,7 @@ describe 'PDK::Config Schema Files' do
 
       it 'is a valid JSON schema document' do
         # The Schema Document specifies which schema version it uses
-        expect(schema['$schema']).to match(/draft/)
+        expect(schema['$schema']).to match(/draft-\d+/)
         metaschema = JSON::Validator.validator_for_name(schema['$schema']).metaschema
 
         expect(JSON::Validator.validate(metaschema, schema)).to be true
