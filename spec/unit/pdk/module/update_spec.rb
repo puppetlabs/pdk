@@ -341,7 +341,7 @@ describe PDK::Module::Update do
 
     context 'when the default_template_ref specifies a branch head' do
       before do
-        allow(PDK::Util).to receive(:default_template_ref).and_return('main')
+        stub_const('PDK::TEMPLATE_REF', '2.7.1')
         allow(PDK::Util::Git).to receive(:ls_remote)
           .with(template_url, 'main')
           .and_return('3cdd84e8f0aae30bf40d15556482fc8752899312')
