@@ -8,7 +8,7 @@ RSpec::Matchers.define(:exit_with_status) do |expected_status|
       block.call
     rescue SystemExit => e
       expectation_passed = values_match?(expected_status, e.status)
-    rescue
+    rescue StandardError
       nil
     end
 

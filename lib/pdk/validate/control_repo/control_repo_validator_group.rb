@@ -14,7 +14,7 @@ module PDK
 
         def validators
           [
-            EnvironmentConfValidator,
+            EnvironmentConfValidator
           ].freeze
         end
       end

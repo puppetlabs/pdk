@@ -11,7 +11,7 @@ module PDK
         def validators
           [
             TasksNameValidator,
-            TasksMetadataLintValidator,
+            TasksMetadataLintValidator
           ].freeze
         end
       end

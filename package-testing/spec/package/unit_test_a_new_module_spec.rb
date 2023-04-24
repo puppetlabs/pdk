@@ -26,7 +26,7 @@ describe 'Generate a module for unit testing' do
       let(:cwd) { module_name }
 
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{[1-9]\d* examples.*0 failures}im) }
+      its(:stdout) { is_expected.to match(/[1-9]\d* examples.*0 failures/im) }
     end
   end
 
@@ -36,7 +36,7 @@ describe 'Generate a module for unit testing' do
       let(:cwd) { module_name }
 
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{[1-9]\d* examples.*0 failures}im) }
+      its(:stdout) { is_expected.to match(/[1-9]\d* examples.*0 failures/im) }
     end
   end
 end

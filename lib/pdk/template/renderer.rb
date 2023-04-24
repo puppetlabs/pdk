@@ -14,6 +14,7 @@ module PDK
       # @return [AbstractRenderer, nil] An instance of an AbstractRenderer subclass. Returns nil if no renderer could be found
       def self.instance(template_uri, template_root, context)
         return V1.instance(template_root, template_uri, context) if V1.compatible?(template_root, context)
+
         nil
       end
 

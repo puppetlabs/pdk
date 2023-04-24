@@ -7,8 +7,7 @@ module PDK
         new(options).build
       end
 
-      attr_reader :module_dir
-      attr_reader :target_dir
+      attr_reader :module_dir, :target_dir
 
       def initialize(options = {})
         @module_dir = PDK::Util::Filesystem.expand_path(options[:module_dir] || Dir.pwd)
@@ -86,7 +85,7 @@ module PDK
       def release_name
         @release_name ||= [
           metadata['name'],
-          metadata['version'],
+          metadata['version']
         ].join('-')
       end
 
@@ -126,8 +125,8 @@ module PDK
           PDK::Util::Filesystem.cp(path, dest_path, preserve: true)
         end
       rescue ArgumentError => e
-        raise PDK::CLI::ExitWithError, '%{message} Rename the file or exclude it from the package ' \
-                                       'by adding it to the .pdkignore file in your module.' % { message: e.message }
+        raise PDK::CLI::ExitWithError, format('%{message} Rename the file or exclude it from the package ' \
+                                              'by adding it to the .pdkignore file in your module.', message: e.message)
       end
 
       # Check if the given path matches one of the patterns listed in the
@@ -137,7 +136,7 @@ module PDK
       #
       # @return [Boolean] true if the path matches and should be ignored.
       def ignored_path?(path)
-        path = path.to_s + '/' if PDK::Util::Filesystem.directory?(path)
+        path = "#{path}/" if PDK::Util::Filesystem.directory?(path)
 
         !ignored_files.match_paths([path], module_dir).empty?
       end
@@ -154,10 +153,8 @@ module PDK
         symlink_path = Pathname.new(path)
         module_path = Pathname.new(module_dir)
 
-        PDK.logger.warn 'Symlinks in modules are not supported and will not be included in the package. Please investigate symlink %{from} -> %{to}.' % {
-          from: symlink_path.relative_path_from(module_path),
-          to:   symlink_path.realpath.relative_path_from(module_path),
-        }
+        PDK.logger.warn format('Symlinks in modules are not supported and will not be included in the package. Please investigate symlink %{from} -> %{to}.',
+                               from: symlink_path.relative_path_from(module_path), to: symlink_path.realpath.relative_path_from(module_path))
       end
 
       # Checks if the path length will fit into the POSIX.1-1998 (ustar) tar
@@ -180,11 +177,7 @@ module PDK
       #
       # @return [nil]
       def validate_ustar_path!(path)
-        if path.bytesize > 256
-          raise ArgumentError, "The path '%{path}' is longer than 256 bytes." % {
-            path: path,
-          }
-        end
+        raise ArgumentError, format("The path '%{path}' is longer than 256 bytes.", path: path) if path.bytesize > 256
 
         if path.bytesize <= 100
           prefix = ''
@@ -196,6 +189,7 @@ module PDK
           loop do
             nxt = parts.pop || ''
             break if newpath.bytesize + 1 + nxt.bytesize >= 100
+
             newpath = File.join(nxt, newpath)
           end
 
@@ -206,9 +200,9 @@ module PDK
         return unless path.bytesize > 100 || prefix.bytesize > 155
 
         raise ArgumentError,
-              "'%{path}' could not be split at a directory separator into two " \
-              'parts, the first having a maximum length of 155 bytes and the ' \
-              'second having a maximum length of 100 bytes.' % { path: path }
+              format("'%{path}' could not be split at a directory separator into two " \
+                     'parts, the first having a maximum length of 155 bytes and the ' \
+                     'second having a maximum length of 100 bytes.', path: path)
       end
 
       # Checks if the path contains any non-ASCII characters.
@@ -224,10 +218,10 @@ module PDK
       #
       # @return [nil]
       def validate_path_encoding!(path)
-        return unless path =~ %r{[^\x00-\x7F]}
+        return unless /[^\x00-\x7F]/.match?(path)
 
-        raise ArgumentError, "'%{path}' can only include ASCII characters in its path or " \
-                             'filename in order to be compatible with a wide range of hosts.' % { path: path }
+        raise ArgumentError, format("'%{path}' can only include ASCII characters in its path or " \
+                                    'filename in order to be compatible with a wide range of hosts.', path: path)
       end
 
       # Creates a gzip compressed tarball of the build directory.
@@ -244,31 +238,24 @@ module PDK
         PDK::Util::Filesystem.rm_f(package_file)
 
         Dir.chdir(target_dir) do
-          begin
-            gz = Zlib::GzipWriter.new(File.open(package_file, 'wb')) # rubocop:disable PDK/FileOpen
-            tar = Minitar::Output.new(gz)
-            Find.find(release_name) do |entry|
-              entry_meta = {
-                name: entry,
-              }
+          gz = Zlib::GzipWriter.new(File.open(package_file, 'wb')) # rubocop:disable PDK/FileOpen
+          tar = Minitar::Output.new(gz)
+          Find.find(release_name) do |entry|
+            entry_meta = {
+              name: entry
+            }
 
-              orig_mode = PDK::Util::Filesystem.stat(entry).mode
-              min_mode = Minitar.dir?(entry) ? 0o755 : 0o644
+            orig_mode = PDK::Util::Filesystem.stat(entry).mode
+            min_mode = Minitar.dir?(entry) ? 0o755 : 0o644
 
-              entry_meta[:mode] = orig_mode | min_mode
+            entry_meta[:mode] = orig_mode | min_mode
 
-              if entry_meta[:mode] != orig_mode
-                PDK.logger.debug('Updated permissions of packaged \'%{entry}\' to %{new_mode}' % {
-                  entry: entry,
-                  new_mode: (entry_meta[:mode] & 0o7777).to_s(8),
-                })
-              end
+            PDK.logger.debug(format('Updated permissions of packaged \'%{entry}\' to %{new_mode}', entry: entry, new_mode: (entry_meta[:mode] & 0o7777).to_s(8))) if entry_meta[:mode] != orig_mode
 
-              Minitar.pack_file(entry_meta, tar)
-            end
-          ensure
-            tar.close
+            Minitar.pack_file(entry_meta, tar)
           end
+        ensure
+          tar.close
         end
       end
 
@@ -283,7 +270,7 @@ module PDK
         @ignore_file ||= [
           File.join(module_dir, '.pdkignore'),
           File.join(module_dir, '.pmtignore'),
-          File.join(module_dir, '.gitignore'),
+          File.join(module_dir, '.gitignore')
         ].find { |file| PDK::Util::Filesystem.file?(file) && PDK::Util::Filesystem.readable?(file) }
       end
 
@@ -303,9 +290,7 @@ module PDK
                         PathSpec.new(PDK::Util::Filesystem.read_file(ignore_file, open_args: 'rb:UTF-8'))
                       end
 
-            if File.realdirpath(target_dir).start_with?(File.realdirpath(module_dir))
-              ignored = ignored.add("\/#{File.basename(target_dir)}\/")
-            end
+            ignored = ignored.add("/#{File.basename(target_dir)}/") if File.realdirpath(target_dir).start_with?(File.realdirpath(module_dir))
 
             PDK::Module::DEFAULT_IGNORED.each { |r| ignored.add(r) }
 

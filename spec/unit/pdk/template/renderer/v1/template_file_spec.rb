@@ -6,7 +6,7 @@ describe PDK::Template::Renderer::V1::TemplateFile do
 
   let(:data) { { configs: { 'test' => 'value' }, some: 'value' } }
 
-  context '#config_for' do
+  describe '#config_for' do
     subject { template_file.config_for(filename) }
 
     let(:filename) { 'testfile' }
@@ -20,11 +20,11 @@ describe PDK::Template::Renderer::V1::TemplateFile do
       let(:data) do
         {
           configs: { 'test' => 'value' },
-          template_dir: instance_double(PDK::Template::Renderer::V1::LegacyTemplateDir),
+          template_dir: instance_double(PDK::Template::Renderer::V1::LegacyTemplateDir)
         }
       end
 
-      before(:each) do
+      before do
         allow(data[:template_dir]).to receive(:config_for).with(filename).and_return(a: 'value')
       end
 
@@ -36,7 +36,7 @@ describe PDK::Template::Renderer::V1::TemplateFile do
     let(:template_path) { '/path/to/some/file' }
 
     context 'that exists' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:file?).with(template_path).and_return(true)
         expect(PDK::Util::Filesystem).to receive(:readable?).with(template_path).and_return(true)
       end

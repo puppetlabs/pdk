@@ -9,14 +9,14 @@ describe PDK::CLI::Util::UpdateManagerPrinter do
   let(:update_manager) do
     manager = PDK::Module::UpdateManager.new
 
-    updated_files[:add_file].each { |path| manager.add_file(path, 'content') } unless updated_files[:add_file].nil?
-    updated_files[:modify_file].each { |path| manager.modify_file(path, 'new content') } unless updated_files[:modify_file].nil?
-    updated_files[:remove_file].each { |path| manager.remove_file(path) } unless updated_files[:remove_file].nil?
+    updated_files[:add_file]&.each { |path| manager.add_file(path, 'content') }
+    updated_files[:modify_file]&.each { |path| manager.modify_file(path, 'new content') }
+    updated_files[:remove_file]&.each { |path| manager.remove_file(path) }
 
     manager
   end
 
-  before(:each) do
+  before do
     allow(PDK::Report.default_target).to receive(:puts)
 
     # Mock the updated_files so the update_manager can pretend to read and diff them
@@ -35,12 +35,12 @@ describe PDK::CLI::Util::UpdateManagerPrinter do
 
   shared_examples 'a summary printer' do |filename, future_tense, past_tense|
     it 'prints the files to be updated' do
-      expect(PDK::Report.default_target).to receive(:puts).with(%r{#{filename}})
+      expect(PDK::Report.default_target).to receive(:puts).with(/#{filename}/)
       print_summary
     end
 
     it 'prints the summary category using future tense' do
-      expect(PDK::Report.default_target).to receive(:puts).with(%r{-#{future_tense}-}i)
+      expect(PDK::Report.default_target).to receive(:puts).with(/-#{future_tense}-/i)
       print_summary
     end
 
@@ -48,7 +48,7 @@ describe PDK::CLI::Util::UpdateManagerPrinter do
       let(:summary_options) { { tense: :past } }
 
       it 'prints the summary category using past tense' do
-        expect(PDK::Report.default_target).to receive(:puts).with(%r{-#{past_tense}-}i)
+        expect(PDK::Report.default_target).to receive(:puts).with(/-#{past_tense}-/i)
         print_summary
       end
     end

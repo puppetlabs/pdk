@@ -20,8 +20,9 @@ describe 'Basic usage in an air-gapped environment' do
 
       describe file(File.join(module_name, 'metadata.json')) do
         it { is_expected.to be_file }
+
         its(:content_as_json) do
-          is_expected.to include('template-url' => a_string_matching(%r{\Apdk-default#[\w\.-]+\Z}))
+          is_expected.to include('template-url' => a_string_matching(/\Apdk-default#[\w.-]+\Z/))
         end
       end
     end
@@ -41,12 +42,12 @@ describe 'Basic usage in an air-gapped environment' do
           it { is_expected.to be_file }
 
           describe 'the content of the file' do
-            subject { super().content.gsub(%r{^DEPENDENCIES.+?\n\n}m, '') }
+            subject { super().content.gsub(/^DEPENDENCIES.+?\n\n/m, '') }
 
             it 'is identical to the vendored lockfile' do
               vendored_lockfile = File.join(install_dir, 'share', 'cache', "Gemfile-#{ruby_version}.lock")
 
-              is_expected.to eq(file(vendored_lockfile).content.gsub(%r{^DEPENDENCIES.+?\n\n}m, ''))
+              expect(subject).to eq(file(vendored_lockfile).content.gsub(/^DEPENDENCIES.+?\n\n/m, ''))
             end
           end
         end

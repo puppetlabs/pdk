@@ -23,50 +23,50 @@ describe PDK::Module::Convert do
   end
 
   shared_context 'prompt to continue' do |value|
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(value)
     end
   end
 
   shared_context 'no changes in the summary' do
-    before(:each) do
-      allow($stdout).to receive(:puts).with(%r{No changes required})
+    before do
+      allow($stdout).to receive(:puts).with(/No changes required/)
     end
   end
 
   shared_context 'has changes in the summary' do
-    before(:each) do
+    before do
       allow($stdout).to receive(:puts).with("\n----------------------------------------")
     end
   end
 
   shared_context 'added files in the summary' do
-    before(:each) do
-      allow($stdout).to receive(:puts).with(%r{-Files to be added-}i)
+    before do
+      allow($stdout).to receive(:puts).with(/-Files to be added-/i)
     end
   end
 
   shared_context 'modified files in the summary' do
-    before(:each) do
-      allow($stdout).to receive(:puts).with(%r{-Files to be modified-}i)
+    before do
+      allow($stdout).to receive(:puts).with(/-Files to be modified-/i)
     end
   end
 
   shared_context 'removed files in the summary' do
-    before(:each) do
-      allow($stdout).to receive(:puts).with(%r{-Files to be removed-}i)
+    before do
+      allow($stdout).to receive(:puts).with(/-Files to be removed-/i)
     end
   end
 
   shared_context 'outputs a convert report' do
-    before(:each) do
-      allow($stdout).to receive(:puts).with(%r{You can find detailed differences in convert_report.txt.})
+    before do
+      allow($stdout).to receive(:puts).with(/You can find detailed differences in convert_report.txt./)
     end
   end
 
   shared_context 'completes a convert' do
-    before(:each) do
-      allow($stdout).to receive(:puts).with(%r{-Convert completed-}i)
+    before do
+      allow($stdout).to receive(:puts).with(/-Convert completed-/i)
     end
   end
 
@@ -93,7 +93,7 @@ describe PDK::Module::Convert do
     let(:removed_files) { Set.new }
     let(:modified_files) { {} }
 
-    before(:each) do
+    before do
       changes = { added: added_files, removed: removed_files, modified: modified_files }
 
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
@@ -114,22 +114,22 @@ describe PDK::Module::Convert do
     end
 
     context 'when an error is raised from TemplateDir', after_hook: false do
-      before(:each) do
+      before do
         allow(PDK::Template).to receive(:with)
           .with(any_args).and_raise(ArgumentError, 'The specified template is not a directory')
       end
 
       it 'reraises the error as a CLI error' do
-        expect {
+        expect do
           instance.run
-        }.to raise_error(PDK::CLI::ExitWithError, 'The specified template is not a directory')
+        end.to raise_error(PDK::CLI::ExitWithError, 'The specified template is not a directory')
       end
     end
 
     context 'when there are no changes to apply' do
       include_context 'no changes in the summary'
 
-      before(:each) do
+      before do
         allow(update_manager).to receive(:changes?).and_return(false)
         expect(template_dir).to receive(:render_new_module).and_return(nil)
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
@@ -140,15 +140,15 @@ describe PDK::Module::Convert do
       end
 
       context 'and it is to add tests' do
-        let(:options) { { :'add-tests' => true } }
+        let(:options) { { 'add-tests': true } }
 
-        before(:each) do
+        before do
           # Don't test output here
           allow($stdout).to receive(:puts).with(anything)
         end
 
         context 'and there are tests to add' do
-          before(:each) do
+          before do
             allow(instance).to receive(:missing_tests?).and_return(true)
           end
 
@@ -158,7 +158,7 @@ describe PDK::Module::Convert do
         end
 
         context 'and there are no tests to add' do
-          before(:each) do
+          before do
             allow(instance).to receive(:missing_tests?).and_return(false)
           end
 
@@ -176,7 +176,7 @@ describe PDK::Module::Convert do
       include_context 'prompt to continue', true
       include_context 'completes a convert'
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(module_path('/a/path/to/file')).and_return(true)
         allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
@@ -184,16 +184,16 @@ describe PDK::Module::Convert do
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         allow(update_manager).to receive(:modify_file).with(module_path(template_files[:path]), template_files[:content])
-        allow($stdout).to receive(:puts).with(%r{1 files modified})
+        allow($stdout).to receive(:puts).with(/1 files modified/)
         allow(update_manager).to receive(:changed?).with('Gemfile').and_return(true)
         allow(update_manager).to receive(:remove_file).with(anything)
         allow(update_manager).to receive(:unlink_file).with(anything)
-        allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
+        allow($stdout).to receive(:puts).with(/You can find a report of differences in convert_report.txt./)
       end
 
       let(:modified_files) do
         {
-          'Gemfile' => 'a diff',
+          'Gemfile' => 'a diff'
         }
       end
 
@@ -216,7 +216,7 @@ describe PDK::Module::Convert do
       include_context 'outputs a convert report'
       include_context 'completes a convert'
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(module_path('/a/path/to/file')).and_return(true)
         allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
@@ -224,13 +224,13 @@ describe PDK::Module::Convert do
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         allow(update_manager).to receive(:modify_file).with(module_path(template_files[:path]), template_files[:content])
-        allow($stdout).to receive(:puts).with(%r{1 files modified})
-        allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
+        allow($stdout).to receive(:puts).with(/1 files modified/)
+        allow($stdout).to receive(:puts).with(/You can find a report of differences in convert_report.txt./)
       end
 
       let(:modified_files) do
         {
-          'some/file' => 'a diff',
+          'some/file' => 'a diff'
         }
       end
 
@@ -253,10 +253,10 @@ describe PDK::Module::Convert do
           end
 
           context 'and it is to add tests' do
-            let(:options) { { :'add-tests' => true } }
+            let(:options) { { 'add-tests': true } }
 
             context 'and there are tests to add' do
-              before(:each) do
+              before do
                 allow(instance).to receive(:missing_tests?).and_return(true)
               end
 
@@ -266,7 +266,7 @@ describe PDK::Module::Convert do
             end
 
             context 'and there are no tests to add' do
-              before(:each) do
+              before do
                 allow(instance).to receive(:missing_tests?).and_return(false)
               end
 
@@ -324,10 +324,10 @@ describe PDK::Module::Convert do
         end
 
         context 'and it is to add tests' do
-          let(:options) { super().merge(:'add-tests' => true) }
+          let(:options) { super().merge('add-tests': true) }
 
           context 'and there are tests to add' do
-            before(:each) do
+            before do
               allow(instance).to receive(:missing_tests?).and_return(true)
             end
 
@@ -337,7 +337,7 @@ describe PDK::Module::Convert do
           end
 
           context 'and there are no tests to add' do
-            before(:each) do
+            before do
               allow(instance).to receive(:missing_tests?).and_return(false)
             end
 
@@ -358,7 +358,7 @@ describe PDK::Module::Convert do
       context 'and the files already exist' do
         include_context 'no changes in the summary'
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:exist?).with(module_path(template_files[:path])).and_return(true)
           allow(update_manager).to receive(:changes?).and_return(false)
         end
@@ -369,7 +369,7 @@ describe PDK::Module::Convert do
       end
 
       context 'and the files do not exist' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:exist?).with(module_path(template_files[:path])).and_return(false)
           allow(update_manager).to receive(:changes?).and_return(true)
           allow(update_manager).to receive(:add_file)
@@ -390,20 +390,20 @@ describe PDK::Module::Convert do
       let(:added_files) do
         Set.new(
           [{
-            path:    'path/to/file',
-            content: 'file contents',
-          }],
+            path: 'path/to/file',
+            content: 'file contents'
+          }]
         )
       end
 
-      before(:each) do
+      before do
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['path/to/file'])
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         allow(update_manager).to receive(:add_file).with(module_path(template_files[:path]), template_files[:content])
-        allow($stdout).to receive(:puts).with(%r{1 files added})
-        allow($stdout).to receive(:puts).with(%r{You can find a report of differences in convert_report.txt.})
+        allow($stdout).to receive(:puts).with(/1 files added/)
+        allow($stdout).to receive(:puts).with(/You can find a report of differences in convert_report.txt./)
       end
 
       context 'and run normally' do
@@ -477,15 +477,15 @@ describe PDK::Module::Convert do
 
     let(:options) { {} }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(false)
       allow(PDK::Util::Git).to receive(:repo?).and_call_original
     end
 
     context 'when a template-url is provided in the options' do
-      let(:options) { { :'template-url' => 'https://my/custom/template' } }
+      let(:options) { { 'template-url': 'https://my/custom/template' } }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Git).to receive(:repo?).with(options[:'template-url']).and_return(true)
       end
 
@@ -493,12 +493,12 @@ describe PDK::Module::Convert do
     end
 
     context 'when no template-url is provided in the options' do
-      before(:each) do
+      before do
         allow(PDK::Util::Git).to receive(:repo?).with(PDK::Util::TemplateURI.default_template_uri.metadata_format).and_return(true)
       end
 
       it do
-        is_expected.to eq(PDK::Util::TemplateURI.new(options))
+        expect(subject).to eq(PDK::Util::TemplateURI.new(options))
       end
     end
   end
@@ -512,37 +512,37 @@ describe PDK::Module::Convert do
     let(:template_metadata) do
       {
         'template-url' => 'http://my.test/template.git',
-        'template-ref' => 'v1.2.3',
+        'template-ref' => 'v1.2.3'
       }
     end
     let(:new_metadata_file) { StringIO.new }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(false)
     end
 
     context 'when the metadata file exists' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:exist?).with(metadata_path).and_return(true)
       end
 
       context 'and is a file' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_path).and_return(true)
         end
 
         context 'and is readable' do
-          before(:each) do
+          before do
             allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_path).and_return(true)
             allow(PDK::Util::Filesystem).to receive(:read_file).with(metadata_path).and_return(existing_metadata)
           end
 
           let(:existing_metadata) do
             {
-              'name'                    => 'testuser-testmodule',
-              'requirements'            => [],
+              'name' => 'testuser-testmodule',
+              'requirements' => [],
               'operatingsystem_support' => [],
-              'license'                 => nil,
+              'license' => nil
             }.to_json
           end
 
@@ -579,27 +579,27 @@ describe PDK::Module::Convert do
         end
 
         context 'and is not readable' do
-          before(:each) do
+          before do
             allow(PDK::Util::Filesystem).to receive(:readable?).with(metadata_path).and_return(false)
           end
 
           it 'exits with an error' do
-            expect {
+            expect do
               described_class.new(module_root).update_metadata(metadata_path, template_metadata)
-            }.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not readable})
+            end.to raise_error(PDK::CLI::ExitWithError, /exists but it is not readable/)
           end
         end
       end
 
       context 'and is not a file' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:file?).with(metadata_path).and_return(false)
         end
 
         it 'exits with an error' do
-          expect {
+          expect do
             described_class.new(module_root).update_metadata(metadata_path, template_metadata)
-          }.to raise_error(PDK::CLI::ExitWithError, %r{exists but it is not a file})
+          end.to raise_error(PDK::CLI::ExitWithError, /exists but it is not a file/)
         end
       end
     end
@@ -613,13 +613,13 @@ describe PDK::Module::Convert do
     subject { described_class.new(module_root, options).add_tests? }
 
     context 'when add-tests => true' do
-      let(:options) { { :'add-tests' => true } }
+      let(:options) { { 'add-tests': true } }
 
       it { is_expected.to be_truthy }
     end
 
     context 'when add-tests => false' do
-      let(:options) { { :'add-tests' => false } }
+      let(:options) { { 'add-tests': false } }
 
       it { is_expected.to be_falsey }
     end
@@ -628,7 +628,7 @@ describe PDK::Module::Convert do
   describe '#test_generators' do
     subject { described_class.new(module_root).test_generators }
 
-    before(:each) do
+    before do
       allow(PDK::Util::PuppetStrings).to receive(:all_objects).and_return(objects)
       allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util).to receive(:module_metadata).and_return(metadata)
@@ -640,7 +640,7 @@ describe PDK::Module::Convert do
       let(:objects) { [] }
 
       it 'returns an empty array' do
-        is_expected.to eq([])
+        expect(subject).to eq([])
       end
     end
 
@@ -650,18 +650,18 @@ describe PDK::Module::Convert do
           [
             PDK::Generate::PuppetClass, [
               { 'name' => 'foo' },
-              { 'name' => 'bar' },
+              { 'name' => 'bar' }
             ]
-          ],
+          ]
         ]
       end
 
       it 'returns an array of generators' do
-        is_expected.to all(be_an_instance_of(PDK::Generate::PuppetClass))
+        expect(subject).to all(be_an_instance_of(PDK::Generate::PuppetClass))
       end
 
       it 'instantiates all the generators as spec_only' do
-        is_expected.to all(have_attributes(spec_only?: true))
+        expect(subject).to all(have_attributes(spec_only?: true))
       end
     end
   end
@@ -672,7 +672,7 @@ describe PDK::Module::Convert do
     let(:instance) { described_class.new(module_root) }
     let(:metadata) { { 'name' => 'myuser-mymodule' } }
 
-    before(:each) do
+    before do
       allow(PDK::Util::PuppetStrings).to receive(:all_objects).and_return(objects)
       allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util).to receive(:module_metadata).and_return(metadata)
@@ -690,14 +690,14 @@ describe PDK::Module::Convert do
         [
           [
             PDK::Generate::PuppetClass, [
-              { 'name' => 'mymodule::foo' },
+              { 'name' => 'mymodule::foo' }
             ]
-          ],
+          ]
         ]
       end
 
       context 'when the spec file exists' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:exist?).with(File.join(module_root, 'spec/classes/foo_spec.rb')).and_return(true)
         end
 
@@ -705,7 +705,7 @@ describe PDK::Module::Convert do
       end
 
       context 'when the spec file does not exist' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:exist?).with(File.join(module_root, 'spec/classes/foo_spec.rb')).and_return(false)
         end
 
@@ -721,17 +721,17 @@ describe PDK::Module::Convert do
       [
         instance_double(
           PDK::Generate::PuppetClass,
-          template_files: {},
-        ),
+          template_files: {}
+        )
       ]
     end
 
-    before(:each) do
+    before do
       allow(instance).to receive(:test_generators).and_return(generators)
     end
 
     context 'when the generators can run' do
-      before(:each) do
+      before do
         generators.each do |g|
           allow(g).to receive(:can_run?).and_return(true)
         end
@@ -745,7 +745,7 @@ describe PDK::Module::Convert do
     end
 
     context 'when the generators can not run' do
-      before(:each) do
+      before do
         generators.each do |g|
           allow(g).to receive(:can_run?).and_return(false)
         end

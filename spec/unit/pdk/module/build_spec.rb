@@ -11,7 +11,7 @@ describe PDK::Module::Build do
   shared_context 'with mock metadata' do
     let(:mock_metadata) { PDK::Module::Metadata.new('name' => 'my-module') }
 
-    before(:each) do
+    before do
       allow(PDK::Module::Metadata).to receive(:from_file).with(anything).and_return(mock_metadata)
     end
   end
@@ -20,7 +20,7 @@ describe PDK::Module::Build do
     it 'creates a new PDK::Module::Build instance and calls #build' do
       build_double = instance_double(described_class, build: true)
 
-      expect(described_class).to receive(:new).with(module_dir: 'test').and_return(build_double)
+      expect(described_class).to receive(:new).with({ module_dir: 'test' }).and_return(build_double)
       expect(build_double).to receive(:build)
 
       described_class.invoke(module_dir: 'test')
@@ -28,7 +28,7 @@ describe PDK::Module::Build do
   end
 
   describe '#initialize' do
-    before(:each) do
+    before do
       allow(Dir).to receive(:pwd).and_return(pwd)
     end
 
@@ -36,60 +36,60 @@ describe PDK::Module::Build do
 
     context 'by default' do
       it 'uses the current working directory as the module directory' do
-        is_expected.to have_attributes(module_dir: pwd)
+        expect(subject).to have_attributes(module_dir: pwd)
       end
 
       it 'places the built packages in the pkg directory in the module' do
-        is_expected.to have_attributes(target_dir: File.join(pwd, 'pkg'))
+        expect(subject).to have_attributes(target_dir: File.join(pwd, 'pkg'))
       end
     end
 
     context 'if module_dir has been customised' do
       let(:initialize_options) do
         {
-          module_dir: File.join(root_dir, 'some', 'other', 'module'),
+          module_dir: File.join(root_dir, 'some', 'other', 'module')
         }
       end
 
       it 'uses the provided path as the module directory' do
-        is_expected.to have_attributes(module_dir: initialize_options[:module_dir])
+        expect(subject).to have_attributes(module_dir: initialize_options[:module_dir])
       end
 
       it 'places the built packages in the pkg directory in the module' do
-        is_expected.to have_attributes(target_dir: File.join(initialize_options[:module_dir], 'pkg'))
+        expect(subject).to have_attributes(target_dir: File.join(initialize_options[:module_dir], 'pkg'))
       end
     end
 
     context 'if target_dir has been customised' do
       let(:initialize_options) do
         {
-          :'target-dir' => File.join(root_dir, 'tmp'),
+          'target-dir': File.join(root_dir, 'tmp')
         }
       end
 
       it 'uses the current working directory as the module directory' do
-        is_expected.to have_attributes(module_dir: pwd)
+        expect(subject).to have_attributes(module_dir: pwd)
       end
 
       it 'places the built packages in the provided path' do
-        is_expected.to have_attributes(target_dir: initialize_options[:'target-dir'])
+        expect(subject).to have_attributes(target_dir: initialize_options[:'target-dir'])
       end
     end
 
     context 'if both module_dir and target_dir have been customised' do
       let(:initialize_options) do
         {
-          :'target-dir' => File.join(root_dir, 'var', 'cache'),
-          module_dir: File.join(root_dir, 'tmp', 'git', 'my-module'),
+          'target-dir': File.join(root_dir, 'var', 'cache'),
+          module_dir: File.join(root_dir, 'tmp', 'git', 'my-module')
         }
       end
 
       it 'uses the provided module_dir path as the module directory' do
-        is_expected.to have_attributes(module_dir: initialize_options[:module_dir])
+        expect(subject).to have_attributes(module_dir: initialize_options[:module_dir])
       end
 
       it 'places the built packages in the provided target_dir path' do
-        is_expected.to have_attributes(target_dir: initialize_options[:'target-dir'])
+        expect(subject).to have_attributes(target_dir: initialize_options[:'target-dir'])
       end
     end
   end
@@ -112,7 +112,7 @@ describe PDK::Module::Build do
   end
 
   describe '#package_file' do
-    subject { described_class.new(:'target-dir' => target_dir).package_file }
+    subject { described_class.new('target-dir': target_dir).package_file }
 
     let(:target_dir) { File.join(root_dir, 'tmp') }
 
@@ -122,7 +122,7 @@ describe PDK::Module::Build do
   end
 
   describe '#build_dir' do
-    subject { described_class.new(:'target-dir' => target_dir).build_dir }
+    subject { described_class.new('target-dir': target_dir).build_dir }
 
     let(:target_dir) { File.join(root_dir, 'tmp') }
 
@@ -135,12 +135,12 @@ describe PDK::Module::Build do
     let(:instance) { described_class.new(module_dir: module_dir) }
     let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
 
-    before(:each) do
+    before do
       allow(instance).to receive(:ignored_files).and_return(PathSpec.new("/spec/\n"))
       allow(Find).to receive(:find).with(module_dir).and_yield(found_file)
     end
 
-    after(:each) do
+    after do
       instance.stage_module_in_build_dir
     end
 
@@ -177,7 +177,7 @@ describe PDK::Module::Build do
     let(:path_in_build_dir) { File.join(module_dir, 'pkg', release_name, 'test') }
     let(:release_name) { 'my-module-0.0.1' }
 
-    before(:each) do
+    before do
       allow(instance).to receive(:release_name).and_return(release_name)
     end
 
@@ -187,16 +187,16 @@ describe PDK::Module::Build do
           File.join(module_dir, relative_path).force_encoding(Encoding.find('filesystem')).encode('utf-8', invalid: :replace)
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with(path).and_return(true)
           allow(PDK::Util::Filesystem).to receive(:symlink?).with(path).and_return(false)
           allow(PDK::Util::Filesystem).to receive(:cp).with(path, anything, anything).and_return(true)
         end
 
         it 'exits with an error' do
-          expect {
+          expect do
             instance.stage_path(path)
-          }.to raise_error(PDK::CLI::ExitWithError, %r{can only include ASCII characters})
+          end.to raise_error(PDK::CLI::ExitWithError, /can only include ASCII characters/)
         end
       end
 
@@ -205,7 +205,7 @@ describe PDK::Module::Build do
     end
 
     context 'when the path is a directory' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(true)
         allow(PDK::Util::Filesystem).to receive(:stat).with(path_to_stage).and_return(instance_double(File::Stat, mode: 0o100755))
       end
@@ -217,7 +217,7 @@ describe PDK::Module::Build do
     end
 
     context 'when the path is a symlink' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
         allow(PDK::Util::Filesystem).to receive(:symlink?).with(path_to_stage).and_return(true)
       end
@@ -231,7 +231,7 @@ describe PDK::Module::Build do
     end
 
     context 'when the path is a regular file' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path_to_stage).and_return(false)
         allow(PDK::Util::Filesystem).to receive(:symlink?).with(path_to_stage).and_return(false)
       end
@@ -245,9 +245,9 @@ describe PDK::Module::Build do
         let(:path_to_stage) { File.join(*['thing'] * 30) }
 
         it 'exits with an error' do
-          expect {
+          expect do
             instance.stage_path(path_to_stage)
-          }.to raise_error(PDK::CLI::ExitWithError)
+          end.to raise_error(PDK::CLI::ExitWithError)
         end
       end
     end
@@ -261,15 +261,15 @@ describe PDK::Module::Build do
       File.join('a' * 151, *['qwer'] * 19, 'bla'),
       File.join('/', 'a' * 49, 'b' * 50),
       File.join('a' * 49, "#{'b' * 50}x"),
-      File.join("#{'a' * 49}x", 'b' * 50),
+      File.join("#{'a' * 49}x", 'b' * 50)
     ]
 
     bad_paths = {
-      File.join('a' * 152, 'b' * 11, 'c' * 93) => %r{longer than 256}i,
-      File.join('a' * 152, 'b' * 10, 'c' * 92) => %r{could not be split}i,
-      File.join('a' * 162, 'b' * 10)           => %r{could not be split}i,
-      File.join('a' * 10, 'b' * 110)           => %r{could not be split}i,
-      'a' * 114                                => %r{could not be split}i,
+      File.join('a' * 152, 'b' * 11, 'c' * 93) => /longer than 256/i,
+      File.join('a' * 152, 'b' * 10, 'c' * 92) => /could not be split/i,
+      File.join('a' * 162, 'b' * 10) => /could not be split/i,
+      File.join('a' * 10, 'b' * 110) => /could not be split/i,
+      'a' * 114 => /could not be split/i
     }
 
     good_paths.each do |path|
@@ -294,17 +294,17 @@ describe PDK::Module::Build do
 
     context 'when passed a path containing only ASCII characters' do
       it 'does not raise an error' do
-        expect {
+        expect do
           instance.validate_path_encoding!(File.join('path', 'to', 'file'))
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
 
     context 'when passed a path containing non-ASCII characters' do
       it 'raises an error' do
-        expect {
+        expect do
           instance.validate_path_encoding!(File.join('path', "\330\271to", 'file'))
-        }.to raise_error(ArgumentError, %r{can only include ASCII characters})
+        end.to raise_error(ArgumentError, /can only include ASCII characters/)
       end
     end
   end
@@ -314,25 +314,25 @@ describe PDK::Module::Build do
     let(:ignore_patterns) do
       [
         '/vendor/',
-        'foo',
+        'foo'
       ]
     end
     let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
 
-    before(:each) do
+    before do
       allow(instance).to receive(:ignored_files).and_return(PathSpec.new(ignore_patterns.join("\n")))
     end
 
     it 'returns false for paths not matched by the patterns' do
-      expect(instance.ignored_path?(File.join(module_dir, 'bar'))).to be_falsey
+      expect(instance).not_to be_ignored_path(File.join(module_dir, 'bar'))
     end
 
     it 'returns true for paths matched by the patterns' do
-      expect(instance.ignored_path?(File.join(module_dir, 'foo'))).to be_truthy
+      expect(instance).to be_ignored_path(File.join(module_dir, 'foo'))
     end
 
     it 'returns true for children of ignored parent directories' do
-      expect(instance.ignored_path?(File.join(module_dir, 'vendor', 'test'))).to be_truthy
+      expect(instance).to be_ignored_path(File.join(module_dir, 'vendor', 'test'))
     end
   end
 
@@ -344,12 +344,12 @@ describe PDK::Module::Build do
       [
         '.pdkignore',
         '.pmtignore',
-        '.gitignore',
+        '.gitignore'
       ]
     end
     let(:available_files) { [] }
 
-    before(:each) do
+    before do
       available_files.each do |file|
         file_path = File.join(module_dir, file)
 
@@ -373,21 +373,21 @@ describe PDK::Module::Build do
       let(:available_files) { ['.gitignore'] }
 
       it 'returns the path to the .gitignore file' do
-        is_expected.to eq(File.join(module_dir, '.gitignore'))
+        expect(subject).to eq(File.join(module_dir, '.gitignore'))
       end
 
       context 'and .pmtignore is present' do
         let(:available_files) { ['.gitignore', '.pmtignore'] }
 
         it 'returns the path to the .pmtignore file' do
-          is_expected.to eq(File.join(module_dir, '.pmtignore'))
+          expect(subject).to eq(File.join(module_dir, '.pmtignore'))
         end
 
         context 'and .pdkignore is present' do
           let(:available_files) { possible_files }
 
           it 'returns the path to the .pdkignore file' do
-            is_expected.to eq(File.join(module_dir, '.pdkignore'))
+            expect(subject).to eq(File.join(module_dir, '.pdkignore'))
           end
         end
       end
@@ -400,24 +400,24 @@ describe PDK::Module::Build do
     let(:module_dir) { File.join(root_dir, 'tmp', 'my-module') }
     let(:instance) { described_class.new(module_dir: module_dir) }
 
-    before(:each) do
+    before do
       allow(File).to receive(:realdirpath) { |path| path }
     end
 
     context 'when no ignore file is present in the module' do
-      before(:each) do
+      before do
         allow(instance).to receive(:ignore_file).and_return(nil)
       end
 
       it 'returns a PathSpec object with the target dir' do
-        is_expected.to be_a(PathSpec)
-        is_expected.not_to be_empty
-        is_expected.to match('pkg/')
+        expect(subject).to be_a(PathSpec)
+        expect(subject).not_to be_empty
+        expect(subject).to match('pkg/')
       end
     end
 
     context 'when an ignore file is present in the module' do
-      before(:each) do
+      before do
         ignore_file_path = File.join(module_dir, '.pdkignore')
         ignore_file_content = "/vendor/\n"
 
@@ -426,8 +426,8 @@ describe PDK::Module::Build do
       end
 
       it 'returns a PathSpec object populated by the ignore file' do
-        is_expected.to be_a(PathSpec)
-        is_expected.to have_attributes(specs: array_including(an_instance_of(PathSpec::GitIgnoreSpec)))
+        expect(subject).to be_a(PathSpec)
+        expect(subject).to have_attributes(specs: array_including(an_instance_of(PathSpec::GitIgnoreSpec)))
       end
     end
   end

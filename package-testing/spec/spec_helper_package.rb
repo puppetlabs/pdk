@@ -3,7 +3,7 @@ require 'beaker-puppet'
 
 Dir['./spec/package/support/*.rb'].sort.each { |f| require f }
 
-RSpec.shared_context :set_path do
+RSpec.shared_context 'set path' do
   let(:path) { windows_node? ? nil : "#{install_dir}/bin:$PATH" }
 end
 
@@ -31,7 +31,7 @@ RSpec.configure do |c|
   end
   # rubocop:enable RSpec/BeforeAfterAll
 
-  c.after(:each) do
+  c.after do
     cmd = if windows_node?
             command('rm -Recurse -Force $env:LOCALAPPDATA/PDK/Cache/ruby')
           else

@@ -6,10 +6,10 @@ describe 'Running pdk module build' do
 
   describe 'when called' do
     it do
-      expect(logger).to receive(:warn).with(%r{Modules are built using the 'pdk build' command}i)
-      expect {
-        PDK::CLI.run(%w[module build])
-      }.to exit_nonzero
+      expect(logger).to receive(:warn).with(/Modules are built using the 'pdk build' command/i)
+      expect do
+        PDK::CLI.run(['module', 'build'])
+      end.to exit_nonzero
     end
   end
 end

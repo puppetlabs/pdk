@@ -13,7 +13,7 @@ describe 'pdk convert', module_command: true do
     describe command("#{pdk_convert_base} --force") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to have_no_output }
-      its(:stdout) { is_expected.to match(%r{no changes required}i) }
+      its(:stdout) { is_expected.to match(/no changes required/i) }
     end
 
     describe file('convert_report.txt') do
@@ -27,10 +27,10 @@ describe 'pdk convert', module_command: true do
     before(:all) do
       FileUtils.rm_f 'metadata.json'
       File.open('.sync.yml', 'w') do |f|
-        f.puts <<-EOS
----
-.project:
-  unmanaged: true
+        f.puts <<~EOS
+          ---
+          .project:
+            unmanaged: true
         EOS
       end
     end
@@ -56,10 +56,10 @@ describe 'pdk convert', module_command: true do
     before(:all) do
       FileUtils.rm_f 'metadata.json'
       File.open('.sync.yml', 'w') do |f|
-        f.puts <<-EOS
----
-.project:
-  unmanaged: true
+        f.puts <<~EOS
+          ---
+          .project:
+            unmanaged: true
         EOS
       end
     end
@@ -85,10 +85,10 @@ describe 'pdk convert', module_command: true do
 
     before(:all) do
       File.open('.sync.yml', 'w') do |f|
-        f.puts <<-EOS
----
-.gitignore:
-  unmanaged: true
+        f.puts <<~EOS
+          ---
+          .gitignore:
+            unmanaged: true
         EOS
       end
 
@@ -100,7 +100,7 @@ describe 'pdk convert', module_command: true do
     describe command("#{pdk_convert_base} --force --skip-interview") do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to have_no_output }
-      its(:stdout) { is_expected.to match(%r{No changes required}i) }
+      its(:stdout) { is_expected.to match(/No changes required/i) }
     end
 
     describe file('convert_report.txt') do
@@ -113,10 +113,10 @@ describe 'pdk convert', module_command: true do
 
     before(:all) do
       File.open('.sync.yml', 'w') do |f|
-        f.puts <<-EOS
----
-.travis.yml:
-  delete: true
+        f.puts <<~EOS
+          ---
+          .travis.yml:
+            delete: true
         EOS
       end
     end
@@ -147,6 +147,7 @@ describe 'pdk convert', module_command: true do
       its(:exit_status) { is_expected.to eq(0) }
       its(:stderr) { is_expected.to have_no_output }
       its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/README\.md}mi) }
+
       describe file('README.md') do
         it { is_expected.to be_file }
       end
@@ -156,8 +157,8 @@ describe 'pdk convert', module_command: true do
   context 'when converting to the default template' do
     include_context 'in a new module', 'non_default_template'
 
-    around(:each) do |example|
-      old_answer_file = ENV['PDK_ANSWER_FILE']
+    around do |example|
+      old_answer_file = ENV.fetch('PDK_ANSWER_FILE', nil)
       ENV['PDK_ANSWER_FILE'] = File.expand_path(File.join('..', 'non_default_template_answers.json'))
       example.run
       ENV['PDK_ANSWER_FILE'] = old_answer_file
@@ -215,7 +216,7 @@ describe 'pdk convert', module_command: true do
 
       describe command("#{pdk_convert_base} --force --skip-interview --add-tests") do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.not_to match(%r{some_class_spec\.rb}m) }
+        its(:stderr) { is_expected.not_to match(/some_class_spec\.rb/m) }
       end
     end
 
@@ -244,17 +245,17 @@ describe 'pdk convert', module_command: true do
 
       describe command("#{pdk_convert_base} --force --skip-interview --add-tests") do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{#{Regexp.escape(class_path)}}m) }
-        its(:stdout) { is_expected.to match(%r{#{Regexp.escape(define_path)}}m) }
+        its(:stdout) { is_expected.to match(/#{Regexp.escape(class_path)}/m) }
+        its(:stdout) { is_expected.to match(/#{Regexp.escape(define_path)}/m) }
 
         describe file(class_path) do
           it { is_expected.to be_file }
-          its(:content) { is_expected.to match(%r{describe 'module_with_missing_tests::some_class'}m) }
+          its(:content) { is_expected.to match(/describe 'module_with_missing_tests::some_class'/m) }
         end
 
         describe file(define_path) do
           it { is_expected.to be_file }
-          its(:content) { is_expected.to match(%r{describe 'module_with_missing_tests::namespaced::some_define'}m) }
+          its(:content) { is_expected.to match(/describe 'module_with_missing_tests::namespaced::some_define'/m) }
         end
       end
     end

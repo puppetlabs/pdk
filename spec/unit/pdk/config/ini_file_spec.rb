@@ -4,12 +4,12 @@ require 'pdk/config/ini_file'
 require 'pdk/config/ini_file_setting'
 
 RSpec.shared_examples 'an ini file based namespace reader' do |content, expected_settings|
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
   end
 
   describe '#parse_file' do
-    before(:each) do
+    before do
       expect(ini_config).to receive(:load_data).and_return(content)
     end
 
@@ -46,7 +46,7 @@ describe PDK::Config::IniFile do
   it_behaves_like 'a file based namespace without a schema'
 
   context 'when the file contains invalid data' do
-    before(:each) do
+    before do
       # Note this isn't the best testing method, however there isn't really a way to craft an ini file to
       # actually raise an error.
       allow_any_instance_of(PDK::Config::IniFileSetting).to receive(:validate!).and_call_original # rubocop:disable RSpec/AnyInstance

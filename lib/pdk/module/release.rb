@@ -8,9 +8,7 @@ module PDK
         new(module_path, options).run
       end
 
-      attr_reader :options
-
-      attr_reader :module_path
+      attr_reader :options, :module_path
 
       def initialize(module_path, options = {})
         @options = options
@@ -21,9 +19,10 @@ module PDK
 
         if module_path.nil?
           module_path = PDK::Util.module_root
-          raise PDK::CLI::ExitWithError, 'The module release process requires a valid module path' % { module_path: module_path } if module_path.nil?
+          raise PDK::CLI::ExitWithError, 'The module release process requires a valid module path' if module_path.nil?
         end
-        raise PDK::CLI::ExitWithError, '%{module_path} is not a valid module' % { module_path: module_path } unless PDK::Util.in_module_root?(module_path)
+        raise PDK::CLI::ExitWithError, format('%{module_path} is not a valid module', module_path: module_path) unless PDK::Util.in_module_root?(module_path)
+
         @module_path = module_path
       end
 
@@ -41,24 +40,17 @@ module PDK
 
         run_validations(options) unless skip_validation?
 
-        PDK.logger.info 'Releasing %{module_name} - from version %{module_version}' % {
-          module_name:    module_metadata.data['name'],
-          module_version: module_metadata.data['version'],
-        }
+        PDK.logger.info format('Releasing %{module_name} - from version %{module_version}', module_name: module_metadata.data['name'], module_version: module_metadata.data['version'])
 
         PDK::Util::ChangelogGenerator.generate_changelog unless skip_changelog?
 
         # Calculate the new module version
         new_version = specified_version
-        if new_version.nil? && !skip_changelog?
-          new_version = PDK::Util::ChangelogGenerator.compute_next_version(module_metadata.data['version'])
-        end
+        new_version = PDK::Util::ChangelogGenerator.compute_next_version(module_metadata.data['version']) if new_version.nil? && !skip_changelog?
         new_version = module_metadata.data['version'] if new_version.nil?
 
         if new_version != module_metadata.data['version']
-          PDK.logger.info 'Updating version to %{module_version}' % {
-            module_version: new_version,
-          }
+          PDK.logger.info format('Updating version to %{module_version}', module_version: new_version)
 
           # Set the new version in metadata file
           module_metadata.data['version'] = new_version
@@ -69,8 +61,8 @@ module PDK
 
           # Check if the versions match
           latest_version = PDK::Util::ChangelogGenerator.latest_version
-          unless latest_version
-            raise PDK::CLI::ExitWithError, '%{new_version} does not match %{latest_version}' % { new_version: new_version, latest_version: latest_version } if new_version != latest_version
+          if !latest_version && (new_version != latest_version)
+            raise PDK::CLI::ExitWithError, format('%{new_version} does not match %{latest_version}', new_version: new_version, latest_version: latest_version)
           end
         end
 
@@ -102,6 +94,7 @@ module PDK
 
       def default_package_filename
         return @default_tarball_filename unless @default_tarball_filename.nil?
+
         builder = PDK::Module::Build.new(module_dir: module_path)
         @default_tarball_filename = builder.package_file
       end
@@ -127,7 +120,7 @@ module PDK
         docs_command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, 'exec', 'puppet', 'strings', 'generate', '--format', 'markdown', '--out', 'REFERENCE.md')
         docs_command.context = :module
         result = docs_command.execute!
-        raise PDK::CLI::ExitWithError, 'An error occured generating the module documentation: %{stdout}' % { stdout: result[:stdout] } unless result[:exit_code].zero?
+        raise PDK::CLI::ExitWithError, format('An error occured generating the module documentation: %{stdout}', stdout: result[:stdout]) unless result[:exit_code].zero?
       end
 
       def run_dependency_checker(_opts)
@@ -138,7 +131,7 @@ module PDK
         dep_command.context = :module
         result = dep_command.execute!
 
-        raise PDK::CLI::ExitWithError, 'An error occured checking the module dependencies: %{stdout}' % { stdout: result[:stdout] } unless result[:exit_code].zero?
+        raise PDK::CLI::ExitWithError, format('An error occured checking the module dependencies: %{stdout}', stdout: result[:stdout]) unless result[:exit_code].zero?
       end
 
       # @return [String] Path to the built tarball
@@ -148,7 +141,7 @@ module PDK
 
       def run_publish(_opts, tarball_path)
         validate_publish_options!
-        raise PDK::CLI::ExitWithError, 'Module tarball %{tarball_path} does not exist' % { tarball_path: tarball_path } unless PDK::Util::Filesystem.file?(tarball_path)
+        raise PDK::CLI::ExitWithError, format('Module tarball %{tarball_path} does not exist', tarball_path: tarball_path) unless PDK::Util::Filesystem.file?(tarball_path)
 
         # TODO: Replace this code when the upload functionality is added to the forge ruby gem
         require 'base64'
@@ -158,19 +151,20 @@ module PDK
         uri = URI(forge_upload_url)
         require 'net/http'
         request = Net::HTTP::Post.new(uri.path)
-        request['Authorization'] = 'Bearer ' + forge_token
+        request['Authorization'] = "Bearer #{forge_token}"
         request['Content-Type'] = 'application/json'
         data = { file: file_data }
 
         request.body = data.to_json
 
         require 'openssl'
-        use_ssl = uri.class == URI::HTTPS
+        use_ssl = uri.instance_of?(URI::HTTPS)
         response = Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
           http.request(request)
         end
 
-        raise PDK::CLI::ExitWithError, 'Error uploading to Puppet Forge: %{result}' % { result: response.body } unless response.is_a?(Net::HTTPSuccess)
+        raise PDK::CLI::ExitWithError, format('Error uploading to Puppet Forge: %{result}', result: response.body) unless response.is_a?(Net::HTTPSuccess)
+
         PDK.logger.info 'Publish to Forge was successful'
       end
 
@@ -235,7 +229,7 @@ module PDK
         !skip_publish?
       end
 
-      #:nocov:
+      # :nocov:
       # These are just convenience methods and are tested elsewhere
       def forge_compatible?
         module_metadata.forge_ready?
@@ -247,7 +241,7 @@ module PDK
         builder = PDK::Module::Build.new(module_dir: module_path)
         @pdk_compatible = builder.module_pdk_compatible?
       end
-      #:nocov:
+      # :nocov:
 
       private
 

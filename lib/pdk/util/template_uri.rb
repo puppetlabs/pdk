@@ -3,7 +3,7 @@ require 'pdk'
 module PDK
   module Util
     class TemplateURI
-      SCP_PATTERN = %r{\A(?!\w+://)(?:(?<user>.+?)@)?(?<host>[^:/]+):(?<path>.+)\z}
+      SCP_PATTERN = %r{\A(?!\w+://)(?:(?<user>.+?)@)?(?<host>[^:/]+):(?<path>.+)\z}.freeze
 
       PACKAGED_TEMPLATE_KEYWORD = 'pdk-default'.freeze
       DEPRECATED_TEMPLATE_URL = 'https://github.com/puppetlabs/pdk-module-template'.freeze
@@ -11,8 +11,8 @@ module PDK
 
       LEGACY_PACKAGED_TEMPLATE_PATHS = {
         'windows' => 'file:///C:/Program Files/Puppet Labs/DevelopmentKit/share/cache/pdk-templates.git',
-        'macos'   => 'file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git',
-        'linux'   => 'file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git',
+        'macos' => 'file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git',
+        'linux' => 'file:///opt/puppetlabs/pdk/share/cache/pdk-templates.git'
       }.freeze
 
       # XXX Previously
@@ -37,9 +37,10 @@ module PDK
       def initialize(opts_or_uri)
         require 'addressable'
         # If a uri string is passed, skip the valid uri finding code.
-        @uri = if opts_or_uri.is_a?(self.class)
+        @uri = case opts_or_uri
+               when self.class
                  opts_or_uri.uri
-               elsif opts_or_uri.is_a?(String)
+               when String
                  begin
                    uri, ref = opts_or_uri.split('#', 2)
                    if PDK::Util::TemplateURI.packaged_template?(uri)
@@ -48,9 +49,9 @@ module PDK
                      Addressable::URI.parse(opts_or_uri)
                    end
                  rescue Addressable::URI::InvalidURIError
-                   raise PDK::CLI::FatalError, 'PDK::Util::TemplateURI attempted initialization with a non-uri string: {string}' % { string: opts_or_uri }
+                   raise PDK::CLI::FatalError, "PDK::Util::TemplateURI attempted initialization with a non-uri string: #{opts_or_uri}"
                  end
-               elsif opts_or_uri.is_a?(Addressable::URI)
+               when Addressable::URI
                  opts_or_uri.dup
                else
                  PDK::Util::TemplateURI.first_valid_uri(PDK::Util::TemplateURI.templates(opts_or_uri))
@@ -110,7 +111,7 @@ module PDK
         require 'addressable'
 
         if uri.is_a?(Addressable::URI) && uri.fragment
-          human_readable(uri.to_s.chomp('#' + uri.fragment))
+          human_readable(uri.to_s.chomp("##{uri.fragment}"))
         else
           human_readable(uri.to_s)
         end
@@ -149,7 +150,7 @@ module PDK
       #
       # @returns String
       def self.uri_safe(string)
-        url = (Gem.win_platform? && string =~ %r{^[a-zA-Z][\|:]}) ? "/#{string}" : string
+        url = Gem.win_platform? && string =~ /^[a-zA-Z][|:]/ ? "/#{string}" : string
         parse_scp_url(url)
       end
 
@@ -159,7 +160,7 @@ module PDK
       #
       # @returns String
       def self.human_readable(string)
-        (Gem.win_platform? && string =~ %r{^\/[a-zA-Z][\|:]}) ? string[1..-1] : string
+        Gem.win_platform? && string =~ %r{^/[a-zA-Z][|:]} ? string[1..] : string
       end
 
       def self.parse_scp_url(url)
@@ -178,10 +179,7 @@ module PDK
         return url unless Pathname.new(url).relative? && scp_url
 
         uri = Addressable::URI.new(scheme: 'ssh', user: scp_url[:user], host: scp_url[:host], path: scp_url[:path])
-        PDK.logger.warn '%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}' % {
-          scp_uri: url,
-          rfc_uri: uri.to_s,
-        }
+        PDK.logger.warn format('%{scp_uri} appears to be an SCP style URL; it will be converted to an RFC compliant URI: %{rfc_uri}', scp_uri: url, rfc_uri: uri.to_s)
 
         uri.to_s
       end
@@ -208,22 +206,14 @@ module PDK
         else
           explicit_uri = nil
         end
-        metadata_uri = if PDK::Util.module_root && PDK::Util::Filesystem.file?(File.join(PDK::Util.module_root, 'metadata.json'))
-                         if PDK::Util.module_metadata['template-url']
-                           new(uri_safe(PDK::Util.module_metadata['template-url'])).uri
-                         else
-                           nil
-                         end
-                       else
-                         nil
+        metadata_uri = if PDK::Util.module_root && PDK::Util::Filesystem.file?(File.join(PDK::Util.module_root, 'metadata.json')) && PDK::Util.module_metadata['template-url']
+                         new(uri_safe(PDK::Util.module_metadata['template-url'])).uri
                        end
         default_template_url = PDK.config.get_within_scopes('module_defaults.template-url')
         answers_uri = if [PACKAGED_TEMPLATE_KEYWORD, DEPRECATED_TEMPLATE_URL].include?(default_template_url)
                         Addressable::URI.parse(default_template_uri)
                       elsif default_template_url
                         new(uri_safe(default_template_url)).uri
-                      else
-                        nil
                       end
         default_uri = default_template_uri.uri
         default_uri.fragment = default_template_ref(default_template_uri)
@@ -257,6 +247,7 @@ module PDK
         found_template = templates_array.find { |t| valid_template?(t) }
 
         raise PDK::CLI::FatalError, 'Unable to find a valid module template to use.' if found_template.nil?
+
         found_template[:uri]
       end
 
@@ -267,6 +258,7 @@ module PDK
         return false if template[:uri].nil? || !template[:uri].is_a?(Addressable::URI)
 
         return true if PDK::Util::Git.repo?(bare_uri(template[:uri]))
+
         path = human_readable(template[:uri].path)
         if PDK::Util::Filesystem.directory?(path)
           # We know that it's not a git repository, but it's a valid path on disk
@@ -278,11 +270,7 @@ module PDK
           end
         end
 
-        unless template[:allow_fallback]
-          raise PDK::CLI::FatalError, 'Unable to find a valid template at %{uri}' % {
-            uri: template[:uri].to_s,
-          }
-        end
+        raise PDK::CLI::FatalError, format('Unable to find a valid template at %{uri}', uri: template[:uri].to_s) unless template[:allow_fallback]
 
         false
       end

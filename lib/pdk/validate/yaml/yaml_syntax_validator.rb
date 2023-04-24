@@ -17,14 +17,12 @@ module PDK
         def pattern
           [
             '**/*.yaml',
-            '**/*.yml',
+            '**/*.yml'
           ].tap do |pat|
             if context.is_a?(PDK::Context::ControlRepo)
-              pat.concat(
-                [
-                  '**/*.eyaml',
-                  '**/*.eyml',
-                ],
+              pat.push(
+                '**/*.eyaml',
+                '**/*.eyml'
               )
             else
               pat
@@ -33,9 +31,7 @@ module PDK
         end
 
         def spinner_text
-          'Checking YAML syntax (%{patterns}).' % {
-            patterns: pattern.join(' '),
-          }
+          format('Checking YAML syntax (%{patterns}).', patterns: pattern.join(' '))
         end
 
         def validate_target(report, target)
@@ -43,50 +39,45 @@ module PDK
 
           unless PDK::Util::Filesystem.readable?(target)
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              message:  'Could not be read.',
+              message: 'Could not be read.'
             )
             return 1
           end
 
           begin
-            ::YAML.safe_load(PDK::Util::Filesystem.read_file(target), YAML_ALLOWLISTED_CLASSES, [], true)
+            ::YAML.safe_load(PDK::Util::Filesystem.read_file(target), permitted_classes: YAML_ALLOWLISTED_CLASSES, permitted_symbols: [], aliases: true)
 
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :passed,
-              severity: 'ok',
+              file: target,
+              source: name,
+              state: :passed,
+              severity: 'ok'
             )
-            return 0
+            0
           rescue Psych::SyntaxError => e
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              line:     e.line,
-              column:   e.column,
-              message:  '%{problem} %{context}' % {
-                problem: e.problem,
-                context: e.context,
-              },
+              line: e.line,
+              column: e.column,
+              message: format('%{problem} %{context}', problem: e.problem, context: e.context)
             )
-            return 1
+            1
           rescue Psych::DisallowedClass => e
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              message:  'Unsupported class: %{message}' % {
-                message: e.message,
-              },
+              message: format('Unsupported class: %{message}', message: e.message)
             )
-            return 1
+            1
           end
         end
       end

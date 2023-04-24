@@ -6,13 +6,13 @@ describe 'Running `pdk env`' do
   let(:command_result) { { exit_code: 0 } }
 
   context 'when it calls env successfully' do
-    after(:each) do
-      expect {
+    after do
+      expect do
         PDK::CLI.run(command_args)
-      }.to exit_zero
+      end.to exit_zero
     end
 
-    before(:each) do
+    before do
       allow(PDK::Util::RubyVersion).to receive(:gem_home).and_return('/opt/puppetlabs/pdk/share/cache/ruby/2.4.0')
       allow(PDK::Util::RubyVersion).to receive(:gem_path).and_return('/opt/puppetlabs/pdk/private/ruby/2.4.3/lib')
       allow(PDK::Util::RubyVersion).to receive(:bin_path).and_return('/opt/puppetlabs/pdk/private/ruby/2.4.3/bin')
@@ -30,17 +30,17 @@ describe 'Running `pdk env`' do
         expect(analytics).to receive(:screen_view).with(
           'env',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
       end
 
       it 'outputs export commands for environment variables' do
         output_regexes = [
-          %r{export PDK_RESOLVED_PUPPET_VERSION="\d\.\d+\.\d+"},
-          %r{export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"},
-          %r{export GEM_HOME=.*},
-          %r{export GEM_PATH=.*},
-          %r{export PATH=.*},
+          /export PDK_RESOLVED_PUPPET_VERSION="\d\.\d+\.\d+"/,
+          /export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"/,
+          /export GEM_HOME=.*/,
+          /export GEM_PATH=.*/,
+          /export PATH=.*/
         ]
 
         output_regexes.each do |regex|
@@ -50,15 +50,15 @@ describe 'Running `pdk env`' do
     end
 
     context 'and called with a puppet version' do
-      let(:command_args) { super() + %w[--puppet-version=6] }
+      let(:command_args) { super() + ['--puppet-version=6'] }
 
       it 'outputs export commands for environment variables' do
         output_regexes = [
-          %r{export PDK_RESOLVED_PUPPET_VERSION="\d\.\d+\.\d+"},
-          %r{export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"},
-          %r{export GEM_HOME=.*},
-          %r{export GEM_PATH=.*},
-          %r{export PATH=.*},
+          /export PDK_RESOLVED_PUPPET_VERSION="\d\.\d+\.\d+"/,
+          /export PDK_RESOLVED_RUBY_VERSION="\d\.\d+\.\d+"/,
+          /export GEM_HOME=.*/,
+          /export GEM_PATH=.*/,
+          /export PATH=.*/
         ]
 
         output_regexes.each do |regex|

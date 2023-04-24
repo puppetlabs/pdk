@@ -12,7 +12,7 @@ module PDK
     end
 
     def self.build_client(opts = {})
-      opts[:logger] ||= ::Logger.new(STDERR)
+      opts[:logger] ||= ::Logger.new($stderr)
       opts[:client] ||= :noop
 
       if opts[:disabled]

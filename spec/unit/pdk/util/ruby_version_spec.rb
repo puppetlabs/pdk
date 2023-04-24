@@ -16,11 +16,11 @@ describe PDK::Util::RubyVersion do
     let(:packaged_rubies) do
       {
         '2.4.4' => '2.4.0',
-        '2.1.9' => '2.1.0',
+        '2.1.9' => '2.1.0'
       }
     end
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(true)
       allow(PDK::Util).to receive(:pdk_package_basedir).and_return(pdk_package_basedir)
       allow(PDK::Util).to receive(:package_cachedir).and_return(package_cachedir)
@@ -29,7 +29,7 @@ describe PDK::Util::RubyVersion do
   end
 
   shared_context 'is not a package install' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(false)
       bundler_basedir = File.join('/', 'usr', 'lib', 'ruby', 'gems', '2.1.0', 'gems', 'bundler-1.16.1', 'lib')
       allow(instance).to receive(:bundler_basedir).and_return(bundler_basedir)
@@ -47,7 +47,7 @@ describe PDK::Util::RubyVersion do
           let(:instance) { described_class.new(ruby_version) }
 
           it "returns the path to the bin dir for the vendored Ruby #{ruby_version}" do
-            is_expected.to eq(File.join(pdk_package_basedir, 'private', 'ruby', ruby_version, 'bin'))
+            expect(subject).to eq(File.join(pdk_package_basedir, 'private', 'ruby', ruby_version, 'bin'))
           end
         end
       end
@@ -57,7 +57,7 @@ describe PDK::Util::RubyVersion do
       include_context 'is not a package install'
 
       it 'returns the path to the bin dir for the running ruby' do
-        is_expected.to eq(RbConfig::CONFIG['bindir'])
+        expect(subject).to eq(RbConfig::CONFIG['bindir'])
       end
     end
   end
@@ -68,13 +68,13 @@ describe PDK::Util::RubyVersion do
     context 'when running from a package install' do
       include_context 'is a package install'
 
-      before(:each) do
+      before do
         allow(described_class).to receive(:versions).and_return(packaged_rubies)
         allow(described_class).to receive(:default_ruby_version).and_return('2.4.4')
       end
 
       it 'includes the path to the packaged ruby cachedir' do
-        is_expected.to include(File.join(package_cachedir, 'ruby', described_class.versions[described_class.active_ruby_version]))
+        expect(subject).to include(File.join(package_cachedir, 'ruby', described_class.versions[described_class.active_ruby_version]))
       end
     end
 
@@ -83,7 +83,7 @@ describe PDK::Util::RubyVersion do
 
       it 'returns the gem path relative to bundler' do
         path = File.absolute_path(File.join('/', 'usr', 'lib', 'ruby', 'gems', '2.1.0'))
-        is_expected.to eq(path)
+        expect(subject).to eq(path)
       end
     end
   end
@@ -93,26 +93,26 @@ describe PDK::Util::RubyVersion do
 
     let(:cachedir) { File.join('/', 'path', 'to', 'user', 'cache') }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:cachedir).and_return(cachedir)
     end
 
     it 'returns a Ruby version specific path under the user cachedir' do
-      is_expected.to eq(File.join(cachedir, 'ruby', described_class.versions[described_class.active_ruby_version]))
+      expect(subject).to eq(File.join(cachedir, 'ruby', described_class.versions[described_class.active_ruby_version]))
     end
   end
 
   describe '.versions' do
     subject { described_class.versions }
 
-    before(:each) do
-      described_class.instance_variable_set('@versions', nil)
+    before do
+      described_class.instance_variable_set(:@versions, nil)
     end
 
     context 'when running from a package install' do
       include_context 'is a package install'
 
-      before(:each) do
+      before do
         basedir = File.join('/', 'basedir')
         ruby_dirs = ['2.1.9', '2.4.4'].map { |r| File.join(basedir, 'private', 'ruby', r) }
         allow(PDK::Util).to receive(:pdk_package_basedir).and_return(basedir)
@@ -120,7 +120,7 @@ describe PDK::Util::RubyVersion do
       end
 
       it 'returns the Ruby versions included in the package' do
-        is_expected.to eq('2.1.9' => '2.1.0', '2.4.4' => '2.4.0')
+        expect(subject).to eq('2.1.9' => '2.1.0', '2.4.4' => '2.4.0')
       end
     end
 
@@ -129,10 +129,10 @@ describe PDK::Util::RubyVersion do
 
       it 'returns the running Ruby version' do
         running_ruby = {
-          RbConfig::CONFIG['RUBY_PROGRAM_VERSION'] => RbConfig::CONFIG['ruby_version'],
+          RbConfig::CONFIG['RUBY_PROGRAM_VERSION'] => RbConfig::CONFIG['ruby_version']
         }
 
-        is_expected.to eq(running_ruby)
+        expect(subject).to eq(running_ruby)
       end
     end
   end
@@ -169,7 +169,7 @@ describe PDK::Util::RubyVersion do
       results
     end
 
-    before(:each) do
+    before do
       allow(instance).to receive(:gem_path).and_return(gem_path)
       allow(PDK::Util::Filesystem).to receive(:glob).with(gem_path_pattern).and_return(gem_path_results.keys)
       allow(instance).to receive(:gem_home).and_return(gem_home)
@@ -181,11 +181,11 @@ describe PDK::Util::RubyVersion do
     end
 
     it 'does not return versions for similarly named gems' do
-      is_expected.not_to include(Gem::Version.new('1.0.0'))
+      expect(subject).not_to include(Gem::Version.new('1.0.0'))
     end
 
     it 'returns an ordered list of Puppet gem versions' do
-      is_expected.to eq([Gem::Version.new('5.3.0'), Gem::Version.new('4.10.10')])
+      expect(subject).to eq([Gem::Version.new('5.3.0'), Gem::Version.new('4.10.10')])
     end
   end
 end

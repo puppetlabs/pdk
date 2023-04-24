@@ -18,9 +18,7 @@ RSpec::Matchers.define :have_junit_testcase do
 
     case @status
     when :pass
-      testcases.reject! do |testcase|
-        testcase.has_elements?
-      end
+      testcases.reject!(&:has_elements?)
     when :skip
       testcases.reject! do |testcase|
         testcase.elements.to_a('skipped').empty?

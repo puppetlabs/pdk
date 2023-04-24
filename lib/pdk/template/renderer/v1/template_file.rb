@@ -20,9 +20,7 @@ module PDK
           def initialize(template_file, data = {})
             @template_file = template_file
 
-            if data.key?(:configs)
-              @configs = data[:configs]
-            end
+            @configs = data[:configs] if data.key?(:configs)
 
             super(data)
           end
@@ -65,11 +63,9 @@ module PDK
           #
           # @api private
           def template_content
-            if PDK::Util::Filesystem.file?(@template_file) && PDK::Util::Filesystem.readable?(@template_file)
-              return PDK::Util::Filesystem.read_file(@template_file)
-            end
+            return PDK::Util::Filesystem.read_file(@template_file) if PDK::Util::Filesystem.file?(@template_file) && PDK::Util::Filesystem.readable?(@template_file)
 
-            raise ArgumentError, "'%{template}' is not a readable file" % { template: @template_file }
+            raise ArgumentError, format("'%{template}' is not a readable file", template: @template_file)
           end
 
           # Renders the content of the template file as an ERB template.
@@ -82,7 +78,7 @@ module PDK
           def render_erb
             require 'erb'
 
-            renderer = ERB.new(template_content, nil, '-')
+            renderer = ERB.new(template_content, trim_mode: '-')
             renderer.filename = @template_file
             renderer.result(binding)
           end

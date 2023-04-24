@@ -5,7 +5,7 @@ module PDK
     module Util
       class OptionValidator
         def self.comma_separated_list?(list, _options = {})
-          (list =~ %r{^[\w\-]+(?:,[\w\-]+)+$}) ? true : false
+          /^[\w-]+(?:,[\w-]+)+$/.match?(list)
         end
 
         # @return [Boolean] true if the fact name is valid
@@ -17,9 +17,7 @@ module PDK
           vals = val.is_a?(Array) ? val : [val]
           invalid_entries = vals.reject { |e| valid_entries.include?(e) }
 
-          unless invalid_entries.empty?
-            raise ArgumentError, 'Error: the following values are invalid: %{invalid_entries}' % { invalid_entries: invalid_entries }
-          end
+          raise ArgumentError, format('Error: the following values are invalid: %{invalid_entries}', invalid_entries: invalid_entries) unless invalid_entries.empty?
 
           val
         end
@@ -27,7 +25,7 @@ module PDK
         # Validate the module name against the regular expression in the
         # documentation: https://docs.puppet.com/puppet/4.10/modules_fundamentals.html#allowed-module-names
         def self.valid_module_name?(string)
-          !(string =~ %r{\A[a-z][a-z0-9_]*\Z}).nil?
+          !(string =~ /\A[a-z][a-z0-9_]*\Z/).nil?
         end
         singleton_class.send(:alias_method, :valid_task_name?, :valid_module_name?)
 
@@ -44,7 +42,7 @@ module PDK
         def self.valid_namespace?(string)
           return false if (string || '').split('::').last == 'init'
 
-          !(string =~ %r{\A([a-z][a-z0-9_]*)(::[a-z][a-z0-9_]*)*\Z}).nil?
+          !(string =~ /\A([a-z][a-z0-9_]*)(::[a-z][a-z0-9_]*)*\Z/).nil?
         end
         singleton_class.send(:alias_method, :valid_function_name?, :valid_namespace?)
 
@@ -56,11 +54,11 @@ module PDK
         # The parameter should also not be a reserved word or overload
         # a metaparameter.
         def self.valid_param_name?(string)
-          reserved_words = %w[trusted facts server_facts title name].freeze
-          metaparams = %w[alias audit before loglevel noop notify require schedule stage subscribe tag].freeze
+          reserved_words = ['trusted', 'facts', 'server_facts', 'title', 'name'].freeze
+          metaparams = ['alias', 'audit', 'before', 'loglevel', 'noop', 'notify', 'require', 'schedule', 'stage', 'subscribe', 'tag'].freeze
           return false if reserved_words.include?(string) || metaparams.include?(string)
 
-          !(string =~ %r{\A[a-z][a-zA-Z0-9_]*\Z}).nil?
+          !(string =~ /\A[a-z][a-zA-Z0-9_]*\Z/).nil?
         end
       end
     end

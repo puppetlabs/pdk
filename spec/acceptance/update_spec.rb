@@ -13,7 +13,7 @@ describe 'pdk update', module_command: true do
       describe command('pdk update') do
         its(:exit_status) { is_expected.to eq(0) }
         its(:stderr) { is_expected.to have_no_output }
-        its(:stdout) { is_expected.to match(%r{No changes required.}i) }
+        its(:stdout) { is_expected.to match(/No changes required./i) }
 
         describe file('update_report.txt') do
           it { is_expected.not_to be_file }
@@ -36,7 +36,7 @@ describe 'pdk update', module_command: true do
         its(:exit_status) { is_expected.to eq(0) }
         its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/\.travis\.yml}mi) }
         its(:stdout) { is_expected.to match(%r{-+files to be modified-+\n.*/metadata\.json}mi) }
-        its(:stderr) { is_expected.to match(%r{updating \w+?-update using the default template}i) }
+        its(:stderr) { is_expected.to match(/updating \w+?-update using the default template/i) }
 
         describe file('update_report.txt') do
           it { is_expected.to be_file }
@@ -51,7 +51,7 @@ describe 'pdk update', module_command: true do
         its(:exit_status) { is_expected.to eq(0) }
         its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/\.travis\.yml}mi) }
         its(:stdout) { is_expected.to match(%r{-+files to be modified-+\n.*/metadata\.json}mi) }
-        its(:stderr) { is_expected.to match(%r{updating \w+?-update using the default template}i) }
+        its(:stderr) { is_expected.to match(/updating \w+?-update using the default template/i) }
 
         describe file('update_report.txt') do
           it { is_expected.to be_file }
@@ -71,7 +71,7 @@ describe 'pdk update', module_command: true do
       describe command('pdk update --force') do
         its(:exit_status) { is_expected.to eq(0) }
         its(:stderr) { is_expected.to have_no_output }
-        its(:stdout) { is_expected.to match(%r{no changes required}i) }
+        its(:stdout) { is_expected.to match(/no changes required/i) }
 
         describe file('README.md') do
           it { is_expected.not_to be_file }

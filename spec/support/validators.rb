@@ -8,10 +8,10 @@ class MockSuccessValidator < PDK::Validate::Validator
 
   def invoke(report)
     report.add_event(
-      file:     'pass.txt',
-      source:   name,
-      state:    :passed,
-      severity: 'ok',
+      file: 'pass.txt',
+      source: name,
+      state: :passed,
+      severity: 'ok'
     )
 
     0
@@ -41,11 +41,11 @@ class MockFailedValidator < PDK::Validate::Validator
 
   def invoke(report)
     report.add_event(
-      file:     'fail.txt',
-      source:   name,
-      state:    :failure,
+      file: 'fail.txt',
+      source: name,
+      state: :failure,
       severity: 'error',
-      message:  'Mock Failure',
+      message: 'Mock Failure'
     )
 
     1
@@ -60,11 +60,11 @@ class MockAnotherFailedValidator < PDK::Validate::Validator
 
   def invoke(report)
     report.add_event(
-      file:     'another_fail.txt',
-      source:   name,
-      state:    :failure,
+      file: 'another_fail.txt',
+      source: name,
+      state: :failure,
       severity: 'error',
-      message:  'Another Mock Failure',
+      message: 'Another Mock Failure'
     )
 
     2
@@ -75,7 +75,7 @@ RSpec::Matchers.define :have_number_of_events do |state, expected_count|
   def get_event_count(report, state)
     count = 0
     report.events.each do |_source, events|
-      count += events.select { |event| event.state == state }.count
+      count += events.count { |event| event.state == state }
     end
 
     count

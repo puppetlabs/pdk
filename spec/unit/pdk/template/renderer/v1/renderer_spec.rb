@@ -16,38 +16,38 @@ describe PDK::Template::Renderer::V1::Renderer do
       let(:render_options) { {} }
       let(:file_in_template_response1) do
         {
-          'manage.erb'    => File.join(template_root, 'moduleroot'),
+          'manage.erb' => File.join(template_root, 'moduleroot'),
           'unmanaged.erb' => File.join(template_root, 'moduleroot'),
-          'delete.erb'    => File.join(template_root, 'moduleroot'),
+          'delete.erb' => File.join(template_root, 'moduleroot')
         }
       end
 
       let(:file_in_template_response2) do
         file_in_template_response1.merge(
-          'init.erb' => File.join(template_root, 'moduleroot_init'),
+          'init.erb' => File.join(template_root, 'moduleroot_init')
         )
       end
 
       let(:template_file) do
         instance_double(
-          'PDK::Template::Renderer::V1::TemplateFile',
-          render: 'rendered value',
+          PDK::Template::Renderer::V1::TemplateFile,
+          render: 'rendered value'
         )
       end
 
       let(:legacy_template_dir) do
         instance_double(
-          'PDK::Template::Renderer::V1::LegacyTemplateDir',
+          PDK::Template::Renderer::V1::LegacyTemplateDir
         )
       end
 
-      before(:each) do
+      before do
         allow(renderer).to receive(:files_in_template).with(['/some/path/moduleroot']).and_return(file_in_template_response1)
         allow(renderer).to receive(:files_in_template).with(['/some/path/moduleroot', '/some/path/moduleroot_init']).and_return(file_in_template_response2)
-        allow(renderer).to receive(:new_template_file).with(%r{manage\.erb}, Hash).and_return(template_file)
-        allow(renderer).to receive(:new_template_file).with(%r{unmanaged\.erb}, Hash).and_return(template_file)
-        allow(renderer).to receive(:new_template_file).with(%r{delete\.erb}, Hash).and_return(template_file)
-        allow(renderer).to receive(:new_template_file).with(%r{init\.erb}, Hash).and_return(template_file)
+        allow(renderer).to receive(:new_template_file).with(/manage\.erb/, Hash).and_return(template_file)
+        allow(renderer).to receive(:new_template_file).with(/unmanaged\.erb/, Hash).and_return(template_file)
+        allow(renderer).to receive(:new_template_file).with(/delete\.erb/, Hash).and_return(template_file)
+        allow(renderer).to receive(:new_template_file).with(/init\.erb/, Hash).and_return(template_file)
 
         # Mock the sync.yml responses
         allow(renderer).to receive(:new_legacy_template_dir).and_return(legacy_template_dir)
@@ -69,7 +69,7 @@ describe PDK::Template::Renderer::V1::Renderer do
         expected_result = [
           { dest_path: 'manage',    dest_content: 'rendered value', dest_status: :manage },
           { dest_path: 'unmanaged', dest_content: nil,              dest_status: :unmanage },
-          { dest_path: 'delete',    dest_content: nil,              dest_status: :delete },
+          { dest_path: 'delete',    dest_content: nil,              dest_status: :delete }
         ]
         result = rendered_files
 
@@ -77,12 +77,12 @@ describe PDK::Template::Renderer::V1::Renderer do
       end
 
       context 'and an error occurs during rendering' do
-        before(:each) do
+        before do
           allow(template_file).to receive(:render).and_raise(RuntimeError, 'mock error')
         end
 
         it 'raises a FatalError' do
-          expect { rendered_files }.to raise_error(PDK::CLI::FatalError, %r{Failed to render template})
+          expect { rendered_files }.to raise_error(PDK::CLI::FatalError, /Failed to render template/)
         end
       end
 
@@ -94,7 +94,7 @@ describe PDK::Template::Renderer::V1::Renderer do
             { dest_path: 'manage',    dest_content: 'rendered value', dest_status: :manage },
             { dest_path: 'unmanaged', dest_content: nil,              dest_status: :unmanage },
             { dest_path: 'delete',    dest_content: nil,              dest_status: :delete },
-            { dest_path: 'init',      dest_content: 'rendered value', dest_status: :init },
+            { dest_path: 'init',      dest_content: 'rendered value', dest_status: :init }
           ]
           result = rendered_files
 
@@ -105,7 +105,7 @@ describe PDK::Template::Renderer::V1::Renderer do
   end
 
   describe '.has_single_item?' do
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:exist?).with("#{template_root}/object_templates/missing.erb").and_return(false)
       allow(PDK::Util::Filesystem).to receive(:exist?).with("#{template_root}/object_templates/exists.erb").and_return(true)
     end
@@ -125,7 +125,7 @@ describe PDK::Template::Renderer::V1::Renderer do
     context 'given an item that does not exist' do
       let(:item_path) { 'missing.erb' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:file?).with("#{template_root}/object_templates/missing.erb").and_return(false)
       end
 
@@ -140,16 +140,16 @@ describe PDK::Template::Renderer::V1::Renderer do
 
       let(:template_file) do
         instance_double(
-          'PDK::Template::Renderer::V1::TemplateFile',
-          render: 'rendered value',
+          PDK::Template::Renderer::V1::TemplateFile,
+          render: 'rendered value'
         )
       end
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:file?).with("#{template_root}/object_templates/item.erb").and_return(true)
         allow(PDK::Util::Filesystem).to receive(:readable?).with("#{template_root}/object_templates/item.erb").and_return(true)
         allow(PDK::Util::Filesystem).to receive(:read_file).with("#{template_root}/object_templates/item.erb").and_return(item_content)
-        allow(renderer).to receive(:new_template_file).with(%r{item\.erb}, Hash).and_return(template_file) # rubocop:disable RSpec/SubjectStub This is fine
+        allow(renderer).to receive(:new_template_file).with(/item\.erb/, Hash).and_return(template_file) # This is fine
       end
 
       it 'returns the rendered content' do
@@ -157,7 +157,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       end
 
       it 'logs a message for the item' do
-        expect(PDK.logger).to receive(:debug).with(%r{Rendering .+item\.erb})
+        expect(PDK.logger).to receive(:debug).with(/Rendering .+item\.erb/)
         renderer.render_single_item(item_path, template_data_hash)
       end
     end
@@ -166,7 +166,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in an empty directory' do
         let(:dirs) { ['/the/file/is/here'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/the/file/is/here').and_return true
         end
 
@@ -178,7 +178,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in a non-existant directory' do
         let(:dirs) { ['/the/file/is/nothere'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/the/file/is/nothere').and_return false
         end
 
@@ -190,7 +190,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in a directory with a single file' do
         let(:dirs) { ['/here/moduleroot'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/here/moduleroot').and_return true
           allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
           allow(PDK::Util::Filesystem).to receive(:glob).with('/here/moduleroot/**/*', File::FNM_DOTMATCH).and_return ['/here/moduleroot/filename']
@@ -204,7 +204,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in a directory with more than one file' do
         let(:dirs) { ['/here/moduleroot'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/here/moduleroot').and_return true
           allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename').and_return true
           allow(PDK::Util::Filesystem).to receive(:file?).with('/here/moduleroot/filename2').and_return true
@@ -219,7 +219,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       context 'when passing in more than one directory with a file' do
         let(:dirs) { ['/path/to/templates/moduleroot', '/path/to/templates/moduleroot_init'] }
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates').and_return true
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates/moduleroot').and_return true
           allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/templates/moduleroot_init').and_return true

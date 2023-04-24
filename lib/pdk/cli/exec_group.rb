@@ -37,8 +37,8 @@ module PDK
       # @param block [Block] A block of ruby to execute
       #
       # @api private
-      def register(&_block)
-        raise PDK::CLI::FatalError, 'No block registered' unless block_given?
+      def register(&block)
+        raise PDK::CLI::FatalError, 'No block registered' unless block
       end
 
       # The return code of running all registered blocks
@@ -95,6 +95,7 @@ module PDK
       def exit_code
         @threads.each(&:join)
         return 0 if @exit_codes.empty?
+
         @exit_codes.max
       end
     end

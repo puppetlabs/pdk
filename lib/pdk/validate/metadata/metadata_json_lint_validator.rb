@@ -19,9 +19,7 @@ module PDK
         end
 
         def spinner_text_for_targets(targets)
-          'Checking module metadata style (%{targets}).' % {
-            targets: PDK::Util.targets_relative_to_pwd(targets.flatten).join(' '),
-          }
+          format('Checking module metadata style (%{targets}).', targets: PDK::Util.targets_relative_to_pwd(targets.flatten).join(' '))
         end
 
         def pattern
@@ -54,27 +52,27 @@ module PDK
 
           if json_data.empty?
             report.add_event(
-              file:     targets.first,
-              source:   name,
-              state:    :passed,
-              severity: :ok,
+              file: targets.first,
+              source: name,
+              state: :passed,
+              severity: :ok
             )
           else
             json_data.delete('result')
-            json_data.keys.each do |type|
+            json_data.each_key do |type|
               json_data[type].each do |offense|
                 # metadata-json-lint groups the offenses by type, so the type ends
                 # up being `warnings` or `errors`. We want to convert that to the
                 # singular noun for the event.
-                event_type = type[%r{\A(.+?)s?\Z}, 1]
+                event_type = type[/\A(.+?)s?\Z/, 1]
 
                 report.add_event(
-                  file:     targets.first,
-                  source:   name,
-                  message:  offense['msg'],
-                  test:     offense['check'],
+                  file: targets.first,
+                  source: name,
+                  message: offense['msg'],
+                  test: offense['check'],
                   severity: event_type,
-                  state:    :failure,
+                  state: :failure
                 )
               end
             end

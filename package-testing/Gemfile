@@ -1,31 +1,16 @@
-source ENV['GEM_SOURCE'] || 'https://rubygems.org'
+source ENV.fetch('GEM_SOURCE', nil) || 'https://rubygems.org'
 
-def location_for(place_or_version, fake_version = nil)
-  git_url_regex = %r{\A(?<url>(https?|git)[:@][^#]*)(#(?<branch>.*))?}
-  file_url_regex = %r{\Afile:\/\/(?<path>.*)}
-
-  if place_or_version && (git_url = place_or_version.match(git_url_regex))
-    [fake_version, { git: git_url[:url], branch: git_url[:branch], require: false }].compact
-  elsif place_or_version && (file_url = place_or_version.match(file_url_regex))
-    ['>= 0', { path: File.expand_path(file_url[:path]), require: false }]
-  else
-    [place_or_version, { require: false }]
-  end
-end
-
-gem 'beaker', '~> 4.38'
+gem 'beaker', '~> 4.39'
 gem 'beaker-abs', '~> 0.11.0'
-gem 'beaker-hostgenerator', '~> 1.18.0'
+gem 'beaker-hostgenerator', '~> 1.18.1'
 gem 'beaker-puppet', '= 1.29.0'
 gem 'beaker-rspec', '= 7.1.0'
 gem 'beaker-vmpooler', '= 1.4.0'
 gem 'nokogiri', '~> 1.13.6'
-gem 'rake', '~> 12.3', '>= 12.3.3'
+gem 'rake'
 
 # net-ping has a implicit dependency on win32-security
-if File::ALT_SEPARATOR
-  gem 'win32-security', require: false
-end
+gem 'win32-security', require: false if File::ALT_SEPARATOR
 
 group :development do
   gem 'pry-byebug', '~> 3.4'

@@ -6,7 +6,7 @@ module PDK
 
     # @return [Array<String>] the list of supported report formats.
     def self.formats
-      @report_formats ||= %w[junit text].freeze
+      @report_formats ||= ['junit', 'text'].freeze
     end
 
     # @return [Symbol] the method name of the default report format.
@@ -60,9 +60,9 @@ module PDK
         testsuite = REXML::Element.new('testsuite')
         testsuite.attributes['name'] = testsuite_name
         testsuite.attributes['tests'] = testcases.length
-        testsuite.attributes['errors'] = testcases.select(&:error?).length
-        testsuite.attributes['failures'] = testcases.select(&:failure?).length
-        testsuite.attributes['skipped'] = testcases.select(&:skipped?).length
+        testsuite.attributes['errors'] = testcases.count(&:error?)
+        testsuite.attributes['failures'] = testcases.count(&:failure?)
+        testsuite.attributes['skipped'] = testcases.count(&:skipped?)
         testsuite.attributes['time'] = 0
         testsuite.attributes['timestamp'] = Time.now.strftime('%Y-%m-%dT%H:%M:%S')
         testsuite.attributes['hostname'] = Socket.gethostname

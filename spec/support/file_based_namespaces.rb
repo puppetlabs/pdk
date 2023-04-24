@@ -1,12 +1,11 @@
-# rubocop:disable RSpec/NamedSubject This is a shared example, you don't know what the name of the subject is
 RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
   end
 
   describe '#parse_file' do
     context 'when the file contains valid data' do
-      before(:each) do
+      before do
         expect(subject).to receive(:load_data).and_return(content)
       end
 
@@ -22,30 +21,30 @@ RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
     end
 
     context 'when the file is deleted mid-read' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:read_file).with(subject.file).and_raise(Errno::ENOENT, 'error')
       end
 
       it 'raises PDK::Config::LoadError' do
-        expect { subject.parse_file(subject.file) {} }.to raise_error(PDK::Config::LoadError, %r{error})
+        expect { subject.parse_file(subject.file) {} }.to raise_error(PDK::Config::LoadError, /error/)
       end
     end
 
     context 'when the file is unreadable' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:read_file).with(subject.file).and_raise(Errno::EACCES)
       end
 
       it 'raises PDK::Config::LoadError' do
-        expect {
+        expect do
           subject.parse_file(subject.file) {}
-        }.to raise_error(PDK::Config::LoadError, "Unable to open #{subject.file} for reading")
+        end.to raise_error(PDK::Config::LoadError, "Unable to open #{subject.file} for reading")
       end
     end
   end
 
   context 'when serializing deserializing data' do
-    before(:each) do
+    before do
       expect(subject).to receive(:load_data).and_return(content)
     end
 
@@ -64,14 +63,14 @@ end
 #   * foo is included in the schema
 #   * extra_setting is NOT included in the schema
 RSpec.shared_examples 'a file based namespace with a schema' do |content|
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
     allow(subject).to receive(:load_data).and_return(content)
   end
 
   describe '#parse_file' do
     context 'when the file does not exist or is unreadable' do
-      before(:each) do
+      before do
         allow(subject).to receive(:load_data).and_return(nil)
       end
 
@@ -110,7 +109,7 @@ RSpec.shared_examples 'a file based namespace with a schema' do |content|
 
   describe '#[]=' do
     it 'raises ArgumentError if the setting does not exist' do
-      expect { subject['does_not_exist_at_all'] = 'baz' }.to raise_error(ArgumentError, %r{Setting 'does_not_exist_at_all' does not exist})
+      expect { subject['does_not_exist_at_all'] = 'baz' }.to raise_error(ArgumentError, /Setting 'does_not_exist_at_all' does not exist/)
     end
   end
 
@@ -122,13 +121,13 @@ RSpec.shared_examples 'a file based namespace with a schema' do |content|
 end
 
 RSpec.shared_examples 'a file based namespace without a schema' do
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
   end
 
   describe '#parse_file' do
     context 'when the file does not exist or is unreadable' do
-      before(:each) do
+      before do
         allow(subject).to receive(:load_data).and_return(nil)
       end
 
@@ -147,7 +146,7 @@ RSpec.shared_examples 'a file based namespace without a schema' do
 end
 
 RSpec.shared_examples 'a yaml file based namespace' do
-  before(:each) do
+  before do
     allow(PDK::Util::Filesystem).to receive(:mkdir_p)
   end
 
@@ -156,7 +155,7 @@ RSpec.shared_examples 'a yaml file based namespace' do
       let(:data) { "---\n\tfoo: bar" }
 
       it 'raises PDK::Config::LoadError' do
-        expect { yaml_config.parse_file(tempfile) {} }.to raise_error(PDK::Config::LoadError, %r{syntax error}i)
+        expect { yaml_config.parse_file(tempfile) {} }.to raise_error(PDK::Config::LoadError, /syntax error/i)
       end
     end
 
@@ -164,7 +163,7 @@ RSpec.shared_examples 'a yaml file based namespace' do
       let(:data) { "--- !ruby/object:File {}\n" }
 
       it 'raises PDK::Config::LoadError' do
-        expect { yaml_config.parse_file(tempfile) {} }.to raise_error(PDK::Config::LoadError, %r{unsupported class}i)
+        expect { yaml_config.parse_file(tempfile) {} }.to raise_error(PDK::Config::LoadError, /unsupported class/i)
       end
     end
   end
@@ -193,7 +192,7 @@ RSpec.shared_examples 'a json file based namespace' do
 
     context 'when there is no data stored' do
       it 'serializes to an empty JSON object' do
-        expect(serialized_data).to match(%r(^\{[\n]+\}$))
+        expect(serialized_data).to match(/^\{\n+\}$/)
       end
     end
 
@@ -206,4 +205,3 @@ RSpec.shared_examples 'a json file based namespace' do
     end
   end
 end
-# rubocop:enable RSpec/NamedSubject

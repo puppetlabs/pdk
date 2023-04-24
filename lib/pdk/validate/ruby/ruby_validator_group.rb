@@ -10,7 +10,7 @@ module PDK
 
         def validators
           [
-            RubyRubocopValidator,
+            RubyRubocopValidator
           ].freeze
         end
       end

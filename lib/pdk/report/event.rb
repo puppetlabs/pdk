@@ -194,13 +194,9 @@ module PDK
       # @raise [ArgumentError] if the value is nil, an empty String, or not
       #   a String.
       def sanitise_file(value)
-        if value.nil? || (value.is_a?(String) && value.empty?)
-          raise ArgumentError, 'File not specified.'
-        end
+        raise ArgumentError, 'File not specified.' if value.nil? || (value.is_a?(String) && value.empty?)
 
-        unless value.is_a?(String)
-          raise ArgumentError, 'File must be a String.'
-        end
+        raise ArgumentError, 'File must be a String.' unless value.is_a?(String)
 
         require 'pathname'
         require 'pdk/util'
@@ -234,22 +230,13 @@ module PDK
       # @raise [ArgumentError] if the value is nil, an empty String, or not
       #   a String or Symbol representation of a valid state.
       def sanitise_state(value)
-        if value.nil? || (value.is_a?(String) && value.empty?)
-          raise ArgumentError, 'State not specified.'
-        end
+        raise ArgumentError, 'State not specified.' if value.nil? || (value.is_a?(String) && value.empty?)
 
         value = value.to_sym if value.is_a?(String)
-        unless value.is_a?(Symbol)
-          raise ArgumentError, 'State must be a Symbol, not %{type}' % { type: value.class }
-        end
+        raise ArgumentError, format('State must be a Symbol, not %{type}', type: value.class) unless value.is_a?(Symbol)
 
         valid_states = [:passed, :error, :failure, :skipped]
-        unless valid_states.include?(value)
-          raise ArgumentError, 'Invalid state %{state}. Valid states are: %{valid}.' % {
-            state: value.inspect,
-            valid: valid_states.map(&:inspect).join(', '),
-          }
-        end
+        raise ArgumentError, format('Invalid state %{state}. Valid states are: %{valid}.', state: value.inspect, valid: valid_states.map(&:inspect).join(', ')) unless valid_states.include?(value)
 
         value
       end
@@ -263,9 +250,7 @@ module PDK
       #
       # @raise [ArgumentError] if the value is nil or an empty String.
       def sanitise_source(value)
-        if value.nil? || (value.is_a?(String) && value.empty?)
-          raise ArgumentError, 'Source not specified.'
-        end
+        raise ArgumentError, 'Source not specified.' if value.nil? || (value.is_a?(String) && value.empty?)
 
         value.to_s
       end
@@ -284,13 +269,9 @@ module PDK
           valid_types << Fixnum # rubocop:disable Lint/UnifiedInteger
         end
 
-        unless valid_types.include?(value.class)
-          raise ArgumentError, 'Line must be an Integer or a String representation of an Integer.'
-        end
+        raise ArgumentError, 'Line must be an Integer or a String representation of an Integer.' unless valid_types.include?(value.class)
 
-        if value.is_a?(String) && value !~ %r{\A[0-9]+\Z}
-          raise ArgumentError, 'The line number can contain only the digits 0-9.'
-        end
+        raise ArgumentError, 'The line number can contain only the digits 0-9.' if value.is_a?(String) && value !~ /\A[0-9]+\Z/
 
         value.to_i
       end
@@ -309,13 +290,9 @@ module PDK
           valid_types << Fixnum # rubocop:disable Lint/UnifiedInteger
         end
 
-        unless valid_types.include?(value.class)
-          raise ArgumentError, 'Column must be an Integer or a String representation of an Integer.'
-        end
+        raise ArgumentError, 'Column must be an Integer or a String representation of an Integer.' unless valid_types.include?(value.class)
 
-        if value.is_a?(String) && value !~ %r{\A[0-9]+\Z}
-          raise ArgumentError, 'The column number can contain only the digits 0-9.'
-        end
+        raise ArgumentError, 'The column number can contain only the digits 0-9.' if value.is_a?(String) && value !~ /\A[0-9]+\Z/
 
         value.to_i
       end
@@ -331,14 +308,12 @@ module PDK
 
         valid_types = [Array]
 
-        unless valid_types.include?(value.class)
-          raise ArgumentError, 'Trace must be an Array of stack trace lines.'
-        end
+        raise ArgumentError, 'Trace must be an Array of stack trace lines.' unless valid_types.include?(value.class)
 
         # Drop any stacktrace lines that include '/gems/' in the path or
         # are the original rspec binstub lines
         value.reject do |line|
-          (line =~ %r{/gems/}) || (line =~ %r{bin/rspec:})
+          line.include?('/gems/') || line.include?('bin/rspec:')
         end
       end
 

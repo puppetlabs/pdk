@@ -8,7 +8,7 @@ describe 'pdk get config' do
     describe command('pdk get config') do
       its(:exit_status) { is_expected.to eq 0 }
       # This setting should appear in all pdk versions
-      its(:stdout) { is_expected.to match(%r{user\.analytics\.user-id=}) }
+      its(:stdout) { is_expected.to match(/user\.analytics\.user-id=/) }
       its(:stderr) { is_expected.to have_no_output }
     end
 
@@ -23,18 +23,20 @@ describe 'pdk get config' do
       its(:exit_status) { is_expected.to eq 0 }
       # There should be two configuration items returned
       its(:stdout) { expect(is_expected.target.split("\n").count).to eq(2) }
+
       its(:stdout) do
         result = is_expected.target.split("\n").sort
         expect(result[0]).to match('user.analytics.disabled=true')
-        expect(result[1]).to match(%r{user.analytics.user-id=.+})
+        expect(result[1]).to match(/user.analytics.user-id=.+/)
       end
+
       its(:stderr) { is_expected.to have_no_output }
     end
 
     describe command('pdk get config does.not.exist') do
       its(:exit_status) { is_expected.not_to eq(0) }
       its(:stdout) { is_expected.to have_no_output }
-      its(:stderr) { is_expected.to match(%r{does\.not\.exist}) }
+      its(:stderr) { is_expected.to match(/does\.not\.exist/) }
     end
   end
 end

@@ -15,7 +15,7 @@ module PDK
         def pattern_ignore; end
 
         def spinner_text_for_targets(_targets)
-          'Checking Puppet plan syntax (%{pattern}).' % { pattern: pattern.join(' ') }
+          format('Checking Puppet plan syntax (%{pattern}).', pattern: pattern.join(' '))
         end
 
         def parse_options(targets)

@@ -6,52 +6,41 @@ describe PDK::Bolt do
     # We use NUL here because that should never be a valid directory name. But it will work with RSpec mocking.
     let(:test_path) { '\x00path/test' }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
     end
 
     # Directories which indicate a bolt project
-    %w[
-      Boltdir
-    ].each do |testcase|
+    ['Boltdir'].each do |testcase|
       it "detects the directory #{testcase} as being the root of a bolt project" do
         path = File.join(test_path, testcase)
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path).and_return(true)
-        expect(described_class.bolt_project_root?(path)).to eq(true)
+        expect(described_class.bolt_project_root?(path)).to be(true)
       end
     end
 
     # Directories which do not indicate a bolt project
-    %w[
-      boltdir
-      Boltdir/something
-    ].each do |testcase|
+    ['boltdir', 'Boltdir/something'].each do |testcase|
       it "detects the directory #{testcase} as not being the root of a bolt project" do
         path = File.join(test_path, testcase)
         allow(PDK::Util::Filesystem).to receive(:directory?).with(path).and_return(true)
-        expect(described_class.bolt_project_root?(path)).to eq(false)
+        expect(described_class.bolt_project_root?(path)).to be(false)
       end
     end
 
     # Files which indicate a bolt project
-    %w[
-      bolt.yaml
-    ].each do |testcase|
+    ['bolt.yaml'].each do |testcase|
       it "detects ./#{testcase} as being in the root of a bolt project" do
         allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(test_path, testcase)).and_return(true)
-        expect(described_class.bolt_project_root?(test_path)).to eq(true)
+        expect(described_class.bolt_project_root?(test_path)).to be(true)
       end
     end
 
     # Files which do not indicate a bolt project
-    %w[
-      Puppetfile
-      environment.conf
-      metadata.json
-    ].each do |testcase|
+    ['Puppetfile', 'environment.conf', 'metadata.json'].each do |testcase|
       it "detects ./#{testcase} as not being in the root of a bolt project" do
         allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(test_path, testcase)).and_return(true)
-        expect(described_class.bolt_project_root?(test_path)).to eq(false)
+        expect(described_class.bolt_project_root?(test_path)).to be(false)
       end
     end
 

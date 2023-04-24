@@ -3,7 +3,7 @@ require 'pdk/config/json_schema_namespace'
 
 def load_and_ignore(namespace)
   namespace.schema
-rescue StandardError # rubocop:disable Lint/HandleExceptions In this I don't want to handle the error
+rescue StandardError
   # Do nothing
 end
 
@@ -65,7 +65,7 @@ describe PDK::Config::JSONSchemaNamespace, skip: true do
 
     describe '#to_h' do
       context 'with an unmanaged setting' do
-        before(:each) do
+        before do
           # Mimic an unmanaged setting, that is, a setting not in the schema
           # TODO: Perhaps we should subclass here instead of using instance_variable_set ?
           namespace.instance_variable_set(:@unmanaged_settings, 'extra_setting' => 'extra_value')
@@ -158,7 +158,7 @@ describe PDK::Config::JSONSchemaNamespace, skip: true do
 
     describe '#schema' do
       it 'raises PDK::Config::LoadError' do
-        expect { namespace.schema }.to raise_error(PDK::Config::LoadError, %r{JSON Error})
+        expect { namespace.schema }.to raise_error(PDK::Config::LoadError, /JSON Error/)
       end
     end
   end
@@ -167,7 +167,7 @@ describe PDK::Config::JSONSchemaNamespace, skip: true do
     let(:temp_schema_file) { 'path/that/can/not/exist/:;|' }
 
     it 'raises an error' do
-      expect { namespace.schema }.to raise_error(PDK::Config::LoadError, %r{File does not exist})
+      expect { namespace.schema }.to raise_error(PDK::Config::LoadError, /File does not exist/)
     end
 
     describe '#schema' do

@@ -3,7 +3,7 @@ require 'pdk/util/puppet_strings'
 
 describe PDK::Util::PuppetStrings do
   describe '.puppet' do
-    before(:each) do
+    before do
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!).with('puppet')
       allow(PDK::Util).to receive(:module_root).and_return(module_root)
       allow(PDK::Util::RubyVersion).to receive(:bin_path).and_return(ruby_path)
@@ -13,19 +13,19 @@ describe PDK::Util::PuppetStrings do
     let(:ruby_path) { File.join('path', 'to', 'ruby') }
     let(:mock_command) do
       instance_double(PDK::CLI::Exec::Command,
-                      :'context=' => true,
-                      :add_spinner => true)
+                      'context=': true,
+                      add_spinner: true)
     end
-    let(:command_args) { %w[some args] }
+    let(:command_args) { ['some', 'args'] }
 
     context 'on Windows' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(true)
 
         allow(PDK::CLI::Exec::Command).to receive(:new).with(
           File.join(ruby_path, 'ruby.exe'),
           File.join(module_root, 'bin', 'puppet'),
-          *command_args,
+          *command_args
         ).and_return(mock_command)
       end
 
@@ -43,12 +43,12 @@ describe PDK::Util::PuppetStrings do
     end
 
     context 'on nix' do
-      before(:each) do
+      before do
         allow(Gem).to receive(:win_platform?).and_return(false)
 
         allow(PDK::CLI::Exec::Command).to receive(:new).with(
           File.join(module_root, 'bin', 'puppet'),
-          *command_args,
+          *command_args
         ).and_return(mock_command)
       end
 
@@ -67,7 +67,7 @@ describe PDK::Util::PuppetStrings do
   end
 
   describe '.generate_hash' do
-    before(:each) do
+    before do
       allow(described_class).to receive(:puppet)
         .with('strings', 'generate', '--format', 'json').and_return(result)
     end
@@ -76,14 +76,14 @@ describe PDK::Util::PuppetStrings do
       let(:result) do
         {
           exit_code: 1,
-          stderr:    'some error text',
+          stderr: 'some error text'
         }
       end
 
       it 'raises a PDK::Util::PuppetStrings::RunError' do
-        expect {
+        expect do
           described_class.generate_hash
-        }.to raise_error(described_class::RunError, 'some error text')
+        end.to raise_error(described_class::RunError, 'some error text')
       end
     end
 
@@ -91,14 +91,14 @@ describe PDK::Util::PuppetStrings do
       let(:result) do
         {
           exit_code: 0,
-          stdout:    'bleh]',
+          stdout: 'bleh]'
         }
       end
 
       it 'raises a PDK::Util::PuppetStrings::RunError' do
-        expect {
+        expect do
           described_class.generate_hash
-        }.to raise_error(described_class::RunError, 'Unable to parse puppet-strings output')
+        end.to raise_error(described_class::RunError, 'Unable to parse puppet-strings output')
       end
     end
 
@@ -106,7 +106,7 @@ describe PDK::Util::PuppetStrings do
       let(:result) do
         {
           exit_code: 0,
-          stdout:    '{ "puppet_classes": [] }',
+          stdout: '{ "puppet_classes": [] }'
         }
       end
 
@@ -117,7 +117,7 @@ describe PDK::Util::PuppetStrings do
   end
 
   describe '.find_object' do
-    before(:each) do
+    before do
       allow(described_class).to receive(:generate_hash)
         .and_return(puppet_strings_data)
       allow(PDK::Util).to receive(:module_metadata).and_return(metadata_hash)
@@ -125,7 +125,7 @@ describe PDK::Util::PuppetStrings do
 
     let(:metadata_hash) do
       {
-        'name' => 'myuser-mymodule',
+        'name' => 'myuser-mymodule'
       }
     end
 
@@ -133,14 +133,14 @@ describe PDK::Util::PuppetStrings do
       let(:puppet_strings_data) do
         {
           'puppet_classes' => [],
-          'defined_types' => [],
+          'defined_types' => []
         }
       end
 
       it 'raises PDK::Util::PuppetStrings::NoObjectError' do
-        expect {
+        expect do
           described_class.find_object('my_object')
-        }.to raise_error(described_class::NoObjectError)
+        end.to raise_error(described_class::NoObjectError)
       end
     end
 
@@ -150,8 +150,8 @@ describe PDK::Util::PuppetStrings do
           {
             'puppet_classes' => [],
             'defined_types' => [
-              { 'name' => 'mymodule::my_object' },
-            ],
+              { 'name' => 'mymodule::my_object' }
+            ]
           }
         end
 
@@ -167,15 +167,15 @@ describe PDK::Util::PuppetStrings do
             'puppet_classes' => [],
             'defined_types' => [],
             'data_types' => [
-              { 'name' => 'mymodule::my_object' },
-            ],
+              { 'name' => 'mymodule::my_object' }
+            ]
           }
         end
 
         it 'raises PDK::Util::PuppetStrings::NoGeneratorError' do
-          expect {
+          expect do
             described_class.find_object('my_object')
-          }.to raise_error(described_class::NoGeneratorError, 'data_types')
+          end.to raise_error(described_class::NoGeneratorError, 'data_types')
         end
       end
     end
@@ -184,7 +184,7 @@ describe PDK::Util::PuppetStrings do
   describe '.all_objects' do
     subject(:result) { described_class.all_objects }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:generate_hash).and_return(puppet_strings_data)
     end
 
@@ -200,8 +200,8 @@ describe PDK::Util::PuppetStrings do
       let(:puppet_strings_data) do
         {
           'data_types' => [
-            { 'name' => 'mymodule::my_object' },
-          ],
+            { 'name' => 'mymodule::my_object' }
+          ]
         }
       end
 
@@ -214,11 +214,11 @@ describe PDK::Util::PuppetStrings do
       let(:puppet_strings_data) do
         {
           'puppet_classes' => [
-            { 'name' => 'mymodule::my_class' },
+            { 'name' => 'mymodule::my_class' }
           ],
           'defined_types' => [
-            { 'name' => 'mymodule::my_define' },
-          ],
+            { 'name' => 'mymodule::my_define' }
+          ]
         }
       end
 
@@ -226,8 +226,8 @@ describe PDK::Util::PuppetStrings do
         expect(result).to eq(
           [
             [PDK::Generate::DefinedType, [{ 'name' => 'mymodule::my_define' }]],
-            [PDK::Generate::PuppetClass, [{ 'name' => 'mymodule::my_class' }]],
-          ],
+            [PDK::Generate::PuppetClass, [{ 'name' => 'mymodule::my_class' }]]
+          ]
         )
       end
     end

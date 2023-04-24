@@ -2,9 +2,9 @@ require 'spec_helper'
 require 'pdk/cli'
 
 describe 'PDK::CLI new task' do
-  let(:help_text) { a_string_matching(%r{^USAGE\s+pdk new task}m) }
+  let(:help_text) { a_string_matching(/^USAGE\s+pdk new task/m) }
 
-  before(:each) do
+  before do
     allow(PDK::Util).to receive(:module_root).and_return(module_root)
     # Stop printing out the result
     allow(PDK::CLI::Util::UpdateManagerPrinter).to receive(:print_summary)
@@ -39,16 +39,16 @@ describe 'PDK::CLI new task' do
   context 'when not run from inside a module' do
     include_context 'run outside module'
     let(:module_root) { nil }
-    let(:args) { %w[new task test_task] }
+    let(:args) { ['new', 'task', 'test_task'] }
 
-    it_behaves_like 'it exits with an error', %r{must be run from inside a valid module}
+    it_behaves_like 'it exits with an error', /must be run from inside a valid module/
   end
 
   context 'when run from inside a module' do
     let(:module_root) { '/path/to/test/module' }
 
     context 'and not provided with a name for the new task' do
-      let(:args) { %w[new task] }
+      let(:args) { ['new', 'task'] }
 
       it_behaves_like 'it exits non-zero and prints the help text'
     end
@@ -60,9 +60,9 @@ describe 'PDK::CLI new task' do
     end
 
     context 'and provided an invalid task name' do
-      let(:args) { %w[new task test-task] }
+      let(:args) { ['new', 'task', 'test-task'] }
 
-      it_behaves_like 'it exits with an error', %r{'test-task' is not a valid task name}
+      it_behaves_like 'it exits with an error', /'test-task' is not a valid task name/
     end
 
     context 'and provided a valid task name' do
@@ -70,30 +70,30 @@ describe 'PDK::CLI new task' do
       let(:generator_double) { instance_double(generator, run: true) }
       let(:generator_opts) { {} }
 
-      before(:each) do
+      before do
         allow(generator).to receive(:new).with(anything, 'test_task', hash_including(generator_opts)).and_return(generator_double)
       end
 
       it 'generates the task' do
         expect(generator_double).to receive(:run)
 
-        PDK::CLI.run(%w[new task test_task])
+        PDK::CLI.run(['new', 'task', 'test_task'])
       end
 
       it 'submits the command to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'new_task',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
 
-        PDK::CLI.run(%w[new task test_task])
+        PDK::CLI.run(['new', 'task', 'test_task'])
       end
 
       context 'and provided a description for the task' do
         let(:generator_opts) do
           {
-            description: 'test_task description',
+            description: 'test_task description'
           }
         end
 
@@ -106,9 +106,9 @@ describe 'PDK::CLI new task' do
         it 'submits the command to analytics' do
           expect(analytics).to receive(:screen_view).with(
             'new_task',
-            cli_options:   'description=redacted',
+            cli_options: 'description=redacted',
             output_format: 'default',
-            ruby_version:  RUBY_VERSION,
+            ruby_version: RUBY_VERSION
           )
 
           PDK::CLI.run(['new', 'task', 'test_task', '--description', 'test_task description'])

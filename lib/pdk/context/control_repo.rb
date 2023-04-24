@@ -26,6 +26,7 @@ module PDK
       # @return [Array[String]] The modulepath setting for this control repository
       def module_paths
         return @module_paths unless @module_paths.nil?
+
         value = environment_conf['modulepath'] || ''
         # We have to use a hardcoded value here because File::PATH_SEPARATOR is ';' on Windows.
         # As the environment.conf is only used on Puppet Server, it's always ':'
@@ -41,12 +42,12 @@ module PDK
                                                  .select { |path| PDK::Util::Filesystem.directory?(PDK::Util::Filesystem.expand_path(File.join(root_path, path))) }
       end
 
-      #:nocov:
+      # :nocov:
       # @see PDK::Context::AbstractContext.display_name
       def display_name
         'a Control Repository context'
       end
-      #:nocov:
+      # :nocov:
 
       private
 

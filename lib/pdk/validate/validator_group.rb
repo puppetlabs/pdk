@@ -32,13 +32,14 @@ module PDK
     class ValidatorGroup < Validator
       # @see PDK::Validate::Validator.spinner_text
       def spinner_text
-        'Running %{name} validators ...' % { name: name }
+        format('Running %{name} validators ...', name: name)
       end
 
       # @see PDK::Validate::Validator.spinner
       def spinner
         return nil unless spinners_enabled?
         return @spinner unless @spinner.nil?
+
         require 'pdk/cli/util/spinner'
 
         @spinner = TTY::Spinner::Multi.new("[:spinner] #{spinner_text}", PDK::CLI::Util.spinner_opts_for_platform)
@@ -46,6 +47,7 @@ module PDK
         # Register the child spinners
         validator_instances.each do |instance|
           next if instance.spinner.nil?
+
           @spinner.register(instance.spinner)
         end
 
@@ -58,13 +60,14 @@ module PDK
       # @see PDK::Validate::Validator.prepare_invoke!
       def prepare_invoke!
         return if @prepared
+
         super
 
         # Force the spinner to be registered etc.
         spinner
 
         # Prepare child validators
-        validator_instances.each { |instance| instance.prepare_invoke! }
+        validator_instances.each(&:prepare_invoke!)
         nil
       end
 
@@ -97,7 +100,7 @@ module PDK
       # @api private
       def validator_instances
         @validator_instances ||= validators.map { |klass| klass.new(context, options.merge(parent_validator: self)) }
-                                           .select { |instance| instance.valid_in_context? }
+                                           .select(&:valid_in_context?)
       end
     end
   end

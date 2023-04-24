@@ -2,10 +2,9 @@ require 'spec_helper'
 require 'pdk/config/setting'
 
 describe PDK::Config::Setting do
-  subject(:namespace) { PDK::Config::Namespace.new('rspec') }
-
   subject(:config_setting) { described_class.new(name, namespace) }
 
+  let(:namespace) { PDK::Config::Namespace.new('rspec') }
   let(:name) { 'my_config_setting' }
 
   describe '#qualified_name' do
@@ -29,7 +28,7 @@ describe PDK::Config::Setting do
   describe '#value=' do
     let(:new_value) { 'new' }
 
-    before(:each) do
+    before do
       allow(config_setting).to receive(:validate!) # rubocop:disable RSpec/SubjectStub Ignore
     end
 
@@ -45,7 +44,7 @@ describe PDK::Config::Setting do
     end
 
     context 'when validate fails' do
-      before(:each) do
+      before do
         expect(config_setting).to receive(:validate!).and_raise(ArgumentError, 'Mock Validation Error') # rubocop:disable RSpec/SubjectStub Ignore
       end
 
@@ -131,7 +130,7 @@ describe PDK::Config::Setting do
     end
 
     context 'when there is a passing validator' do
-      before(:each) do
+      before do
         config_setting.validate(proc: ->(_) { true }, message: 'always passes')
       end
 
@@ -141,7 +140,7 @@ describe PDK::Config::Setting do
     end
 
     context 'when there is a failing validator' do
-      before(:each) do
+      before do
         config_setting.validate(proc: ->(_) { false }, message: 'always fails')
       end
 
@@ -151,7 +150,7 @@ describe PDK::Config::Setting do
     end
 
     context 'when there are multiple validators' do
-      before(:each) do
+      before do
         config_setting.validate(proc: ->(_) { true }, message: 'always passes')
         config_setting.validate(proc: ->(_) { false }, message: 'always fails 1')
         config_setting.validate(proc: ->(_) { false }, message: 'always fails 2')
@@ -185,7 +184,7 @@ describe PDK::Config::Setting do
     end
 
     context 'when there is a default value Proc for the setting' do
-      before(:each) do
+      before do
         config_setting.default_to { 'a value' }
       end
 
@@ -195,14 +194,14 @@ describe PDK::Config::Setting do
     end
 
     context 'when there is a settings chain' do
-      before(:each) do
+      before do
         child_config_setting = described_class.new('child_setting', namespace)
         child_config_setting.default_to { 'a child value' }
         config_setting.previous_setting = child_config_setting
       end
 
       context 'and there is a default value Proc for the setting' do
-        before(:each) do
+        before do
           config_setting.default_to { 'a value' }
         end
 

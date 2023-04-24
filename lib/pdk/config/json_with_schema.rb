@@ -8,6 +8,7 @@ module PDK
       # @see PDK::Config::Namespace.parse_file
       def parse_file(filename)
         raise unless block_given?
+
         data = load_data(filename)
         data = '{}' if data.nil? || data.empty?
         require 'json'
@@ -19,10 +20,7 @@ module PDK
           # Ensure the parsed document is actually valid
           validate_document!(@raw_data)
         rescue ::JSON::Schema::ValidationError => e
-          raise PDK::Config::LoadError, 'The configuration file %{filename} is not valid: %{message}' % {
-            filename: filename,
-            message:  e.message,
-          }
+          raise PDK::Config::LoadError, format('The configuration file %{filename} is not valid: %{message}', filename: filename, message: e.message)
         end
 
         schema_property_names.each do |key|

@@ -4,7 +4,7 @@ require 'pdk/cli/exec/command'
 describe PDK::CLI::Exec::Command do
   subject(:command) { described_class.new('/bin/echo', 'foo') }
 
-  before(:each) do
+  before do
     allow(PDK::CLI::Util).to receive(:ci_environment?).and_return(false)
   end
 
@@ -28,7 +28,7 @@ describe PDK::CLI::Exec::Command do
 
   describe '.add_spinner' do
     context 'without --debug' do
-      before(:each) do
+      before do
         allow(logger).to receive(:debug?).and_return(false)
         allow($stderr).to receive(:isatty).and_return(true)
         command.add_spinner('message')
@@ -38,7 +38,7 @@ describe PDK::CLI::Exec::Command do
     end
 
     context 'with --debug' do
-      before(:each) do
+      before do
         allow(logger).to receive(:debug?).and_return(true)
         command.add_spinner('message')
       end
@@ -47,7 +47,7 @@ describe PDK::CLI::Exec::Command do
     end
 
     context 'when run non-interactive' do
-      before(:each) do
+      before do
         allow($stderr).to receive(:isatty).and_return(false)
         command.add_spinner('message')
       end
@@ -57,10 +57,10 @@ describe PDK::CLI::Exec::Command do
   end
 
   describe '.register_spinner' do
-    let(:spinner) { instance_double('spinner') }
+    let(:spinner) { instance_double(TTY::Spinner) }
 
     context 'without --debug' do
-      before(:each) do
+      before do
         allow(logger).to receive(:debug?).and_return(false)
         allow($stderr).to receive(:isatty).and_return(true)
         command.register_spinner(spinner)
@@ -70,7 +70,7 @@ describe PDK::CLI::Exec::Command do
     end
 
     context 'with --debug' do
-      before(:each) do
+      before do
         allow(logger).to receive(:debug?).and_return(true)
         command.register_spinner(spinner)
       end
@@ -79,7 +79,7 @@ describe PDK::CLI::Exec::Command do
     end
 
     context 'when run non-interactive' do
-      before(:each) do
+      before do
         allow($stderr).to receive(:isatty).and_return(false)
         command.register_spinner(spinner)
       end
@@ -89,10 +89,10 @@ describe PDK::CLI::Exec::Command do
   end
 
   describe '.execute!' do
-    let(:process) { instance_double('ChildProcess.build(*@argv)') }
-    let(:io) { instance_double('ChildProcess.io') }
+    let(:process) { instance_double(ChildProcess::AbstractProcess) }
+    let(:io) { instance_double(ChildProcess::AbstractIO) }
 
-    before(:each) do
+    before do
       expect(ChildProcess).to receive(:build).with('/bin/echo', 'foo').and_return(process)
       allow(process).to receive(:leader=)
       allow(io).to receive(:stdout=)
@@ -102,7 +102,7 @@ describe PDK::CLI::Exec::Command do
     end
 
     context 'when running in the :system context' do
-      before(:each) do
+      before do
         command.context = :system
         expect(process).to receive(:start).with(no_args)
         allow(process).to receive(:exit_code).and_return 0
@@ -115,7 +115,7 @@ describe PDK::CLI::Exec::Command do
     context 'when running in the :module context' do
       let(:environment) { {} }
 
-      before(:each) do
+      before do
         command.context = :module
         expect(process).to receive(:start).with(no_args)
         allow(PDK::Util).to receive(:module_root).with(no_args).and_return('/invalid_path')

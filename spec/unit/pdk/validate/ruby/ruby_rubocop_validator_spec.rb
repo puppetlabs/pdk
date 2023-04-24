@@ -26,9 +26,9 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
   it 'defines the ExternalCommandValidator attributes' do
     expect(validator).to have_attributes(
       name: 'rubocop',
-      cmd:  'rubocop',
+      cmd: 'rubocop'
     )
-    expect(validator.spinner_text_for_targets(nil)).to match(%r{ruby code style}i)
+    expect(validator.spinner_text_for_targets(nil)).to match(/ruby code style/i)
   end
 
   describe '.pattern' do
@@ -57,7 +57,7 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
   describe '.parse_options' do
     subject(:command_args) { validator.parse_options(targets) }
 
-    let(:targets) { %w[target1 target2] }
+    let(:targets) { ['target1', 'target2'] }
 
     context 'when auto-correct is enabled' do
       let(:options) { { auto_correct: true } }
@@ -88,15 +88,15 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
 
     def mock_offense(severity, message, cop_name, corrected, line, column)
       OpenStruct.new(
-        severity:    OpenStruct.new(name: severity),
-        message:     message,
-        cop_name:    cop_name,
-        corrected?:  corrected,
-        line:        line,
-        last_line:   line,
+        severity: OpenStruct.new(name: severity),
+        message: message,
+        cop_name: cop_name,
+        corrected?: corrected,
+        line: line,
+        last_line: line,
         real_column: column,
         last_column: column,
-        location:    OpenStruct.new(length: 0),
+        location: OpenStruct.new(length: 0)
       )
     end
 
@@ -104,9 +104,9 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       let(:rubocop_json) { 'this is not JSON' }
 
       it 'does not add any events to the report' do
-        expect {
+        expect do
           parse_output
-        }.to raise_error(PDK::Validate::ParseOutputError, 'this is not JSON')
+        end.to raise_error(PDK::Validate::ParseOutputError, 'this is not JSON')
       end
     end
 
@@ -119,17 +119,17 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
     end
 
     context 'when the rubocop output has no offenses for a file' do
-      before(:each) do
+      before do
         rubocop_report.file_finished(test_file, [])
       end
 
       it 'adds a passing event to the report' do
-        expect(report).to receive(:add_event).with(
-          file:     test_file,
-          source:   validator.name,
-          state:    :passed,
-          severity: :ok,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: test_file,
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: :ok
+                                                   })
 
         parse_output
       end
@@ -138,25 +138,25 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
     context 'when the rubocop output has an offense for a file' do
       let(:offenses) do
         [
-          mock_offense('error', 'test message', 'Test/Cop', false, 1, 2),
+          mock_offense('error', 'test message', 'Test/Cop', false, 1, 2)
         ]
       end
 
-      before(:each) do
+      before do
         rubocop_report.file_finished(test_file, offenses)
       end
 
       it 'adds a failure event to the report' do
-        expect(report).to receive(:add_event).with(
-          file:     test_file,
-          source:   validator.name,
-          state:    :failure,
-          severity: 'error',
-          message:  'test message',
-          line:     1,
-          column:   2,
-          test:     'Test/Cop',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: test_file,
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: 'test message',
+                                                     line: 1,
+                                                     column: 2,
+                                                     test: 'Test/Cop'
+                                                   })
 
         parse_output
       end
@@ -164,21 +164,21 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       context 'when rubocop has corrected the offense' do
         let(:offenses) do
           [
-            mock_offense('error', 'test message', 'Test/Cop', true, 1, 2),
+            mock_offense('error', 'test message', 'Test/Cop', true, 1, 2)
           ]
         end
 
         it 'changes the severity of the event to "corrected"' do
-          expect(report).to receive(:add_event).with(
-            file:     test_file,
-            source:   validator.name,
-            state:    :failure,
-            severity: 'corrected',
-            message:  'test message',
-            line:     1,
-            column:   2,
-            test:     'Test/Cop',
-          )
+          expect(report).to receive(:add_event).with({
+                                                       file: test_file,
+                                                       source: validator.name,
+                                                       state: :failure,
+                                                       severity: 'corrected',
+                                                       message: 'test message',
+                                                       line: 1,
+                                                       column: 2,
+                                                       test: 'Test/Cop'
+                                                     })
 
           parse_output
         end
@@ -189,14 +189,14 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       let(:test_files) do
         {
           File.join('spec', 'spec_helper.rb') => [],
-          File.join('lib', 'fail.rb')         => [
+          File.join('lib', 'fail.rb') => [
             mock_offense('error', 'correctable error', 'Test/Cop', true, 1, 2),
-            mock_offense('warning', 'uncorrectable thing', 'Test/Cop2', false, 3, 4),
-          ],
+            mock_offense('warning', 'uncorrectable thing', 'Test/Cop2', false, 3, 4)
+          ]
         }
       end
 
-      before(:each) do
+      before do
         test_files.each do |file, offenses|
           rubocop_report.file_finished(file, offenses)
         end
@@ -204,42 +204,42 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
       end
 
       it 'adds a passing event to the report for the file with no offenses' do
-        expect(report).to receive(:add_event).with(
-          file:     File.join('spec', 'spec_helper.rb'),
-          source:   validator.name,
-          state:    :passed,
-          severity: :ok,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: File.join('spec', 'spec_helper.rb'),
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: :ok
+                                                   })
 
         parse_output
       end
 
       it 'adds a corrected failure event to the report for the file with offenses' do
-        expect(report).to receive(:add_event).with(
-          file:     File.join('lib', 'fail.rb'),
-          source:   validator.name,
-          state:    :failure,
-          severity: 'corrected',
-          message:  'correctable error',
-          line:     1,
-          column:   2,
-          test:     'Test/Cop',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: File.join('lib', 'fail.rb'),
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'corrected',
+                                                     message: 'correctable error',
+                                                     line: 1,
+                                                     column: 2,
+                                                     test: 'Test/Cop'
+                                                   })
 
         parse_output
       end
 
       it 'adds a failure event to the report for the file with offenses' do
-        expect(report).to receive(:add_event).with(
-          file:     File.join('lib', 'fail.rb'),
-          source:   validator.name,
-          state:    :failure,
-          severity: 'warning',
-          message:  'uncorrectable thing',
-          line:     3,
-          column:   4,
-          test:     'Test/Cop2',
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: File.join('lib', 'fail.rb'),
+                                                     source: validator.name,
+                                                     state: :failure,
+                                                     severity: 'warning',
+                                                     message: 'uncorrectable thing',
+                                                     line: 3,
+                                                     column: 4,
+                                                     test: 'Test/Cop2'
+                                                   })
 
         parse_output
       end

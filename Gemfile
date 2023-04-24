@@ -4,13 +4,12 @@ source 'https://rubygems.org'
 gemspec
 
 group :development do
-  gem 'github_changelog_generator', '~> 1.15.2'
   gem 'ruby-prof'
   gem 'yard'
 
+  gem 'fuubar'
   gem 'pry'
   gem 'pry-stack_explorer'
-  gem 'fuubar'
 end
 
 group :test do
@@ -19,9 +18,9 @@ group :test do
   gem 'parallel_tests'
   gem 'rake'
   gem 'rspec', '~> 3.0'
-  gem 'rubocop', '~> 1.28.0', require: false
-  gem 'rubocop-rspec', '~> 2.0.1', require: false
-  gem 'rubocop-performance', '~> 1.9.1', require: false
+  gem 'rubocop', '~> 1.48', require: false
+  gem 'rubocop-performance', '~> 1.16', require: false
+  gem 'rubocop-rspec', '~> 2.19', require: false
   gem 'simplecov-console'
 end
 
@@ -33,16 +32,4 @@ end
 
 group :acceptance_ci do
   gem 'puppetlabs_spec_helper'
-end
-
-# Evaluate Gemfile.local and ~/.gemfile if they exist
-extra_gemfiles = [
-  "#{__FILE__}.local",
-  File.join(Dir.home, '.gemfile'),
-]
-
-extra_gemfiles.each do |gemfile|
-  if File.file?(gemfile) && File.readable?(gemfile)
-    eval(File.read(gemfile), binding) # rubocop:disable Security/Eval
-  end
 end

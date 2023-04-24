@@ -32,12 +32,12 @@ describe PDK::Template::Fetcher::Git do
     let(:ref) { 'main' }
     let(:full_ref) { '123456789abcdef' }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Git).to receive(:describe).and_return('git-ref')
     end
 
     context 'given a work tree' do
-      before(:each) do
+      before do
         allow(PDK::Util::Git).to receive(:work_tree?).with(uri_path).and_return(true)
       end
 
@@ -47,7 +47,7 @@ describe PDK::Template::Fetcher::Git do
       end
 
       it 'warns the user' do
-        expect(logger).to receive(:warn).with(a_string_matching(%r{has a work-tree; skipping git reset.}i))
+        expect(logger).to receive(:warn).with(a_string_matching(/has a work-tree; skipping git reset./i))
         fetcher.fetch!
       end
 
@@ -71,7 +71,7 @@ describe PDK::Template::Fetcher::Git do
       let(:tmp_dir) { File.join('/', 'path', 'to', 'workdir') }
       let(:actual_tmp_dir) { File.join('/', 'actual', 'path', 'to', 'workdir') }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Git).to receive(:work_tree?).with(uri_path).and_return(false)
 
         # tmp_dir doesn't actually exist so mock it out
@@ -88,30 +88,30 @@ describe PDK::Template::Fetcher::Git do
       end
 
       context 'and the git clone fails' do
-        before(:each) do
+        before do
           expect(PDK::Util::Git).to receive(:git).with('clone', anything, tmp_dir).and_return(exit_code: 1, stdout: 'clone_stdout', stderr: 'clone_stderr')
         end
 
         it 'logs the output of the git clone' do
-          expect(logger).to receive(:error).with(a_string_matching(%r{clone_stdout}))
-          expect(logger).to receive(:error).with(a_string_matching(%r{clone_stderr}))
+          expect(logger).to receive(:error).with(a_string_matching(/clone_stdout/))
+          expect(logger).to receive(:error).with(a_string_matching(/clone_stderr/))
           expect { fetcher.fetch! }.to raise_error(StandardError)
         end
 
         it 'raises a fatal error' do
-          expect { fetcher.fetch! }.to raise_error(PDK::CLI::FatalError, %r{Unable to clone git repository}i)
+          expect { fetcher.fetch! }.to raise_error(PDK::CLI::FatalError, /Unable to clone git repository/i)
         end
       end
 
       context 'when the template workdir is clean' do
-        before(:each) do
+        before do
           allow(PDK::Util::Git).to receive(:work_dir_clean?).with(tmp_dir).and_return(true)
           allow(Dir).to receive(:chdir).with(tmp_dir).and_yield
           allow(PDK::Util::Git).to receive(:ls_remote).with(tmp_dir, ref).and_return(full_ref)
         end
 
         context 'and the git reset succeeds' do
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', full_ref).and_return(exit_code: 0)
           end
 
@@ -132,29 +132,29 @@ describe PDK::Template::Fetcher::Git do
         end
 
         context 'and the git reset fails' do
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:git).with('reset', '--hard', full_ref).and_return(exit_code: 1, stdout: 'reset_stdout', stderr: 'reset_stderr')
           end
 
           it 'logs the output of the git reset' do
-            expect(logger).to receive(:error).with(a_string_matching(%r{reset_stdout}))
-            expect(logger).to receive(:error).with(a_string_matching(%r{reset_stderr}))
+            expect(logger).to receive(:error).with(a_string_matching(/reset_stdout/))
+            expect(logger).to receive(:error).with(a_string_matching(/reset_stderr/))
             expect { fetcher.fetch! }.to raise_error(StandardError)
           end
 
           it 'raises a fatal error' do
-            expect { fetcher.fetch! }.to raise_error(PDK::CLI::FatalError, %r{Unable to checkout}i)
+            expect { fetcher.fetch! }.to raise_error(PDK::CLI::FatalError, /Unable to checkout/i)
           end
         end
       end
 
       context 'when the template workdir is not clean' do
-        before(:each) do
+        before do
           allow(PDK::Util::Git).to receive(:work_dir_clean?).with(tmp_dir).and_return(false)
         end
 
         it 'warns the user' do
-          expect(logger).to receive(:warn).with(a_string_matching(%r{uncommitted changes found}i))
+          expect(logger).to receive(:warn).with(a_string_matching(/uncommitted changes found/i))
           fetcher.fetch!
         end
 

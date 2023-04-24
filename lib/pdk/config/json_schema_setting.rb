@@ -8,6 +8,7 @@ module PDK
       # @see PDK::Config::Setting.initialize
       def initialize(_name, namespace, _initial_value)
         raise 'The JSONSchemaSetting object can only be created within the JSONSchemaNamespace' unless namespace.is_a?(PDK::Config::JSONSchemaNamespace)
+
         super
       end
 
@@ -24,10 +25,7 @@ module PDK
           # ... add validate it
           namespace.validate_document!(new_document)
         rescue ::JSON::Schema::ValidationError => e
-          raise ArgumentError, '%{key} %{message}' % {
-            key:     qualified_name,
-            message: e.message,
-          }
+          raise ArgumentError, format('%{key} %{message}', key: qualified_name, message: e.message)
         end
       end
 
@@ -46,7 +44,7 @@ module PDK
         end
         # ... otherwise call the settings chain default
         # and if that doesn't exist, just return nil
-        @previous_setting.nil? ? nil : @previous_setting.default
+        @previous_setting&.default
       end
     end
   end

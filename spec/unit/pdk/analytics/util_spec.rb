@@ -10,12 +10,12 @@ describe PDK::Analytics::Util do
 
     let(:executor) { Concurrent.new_io_executor }
 
-    before(:each) do
+    before do
       allow(Concurrent).to receive(:global_io_executor).and_return(executor)
       allow(Facter).to receive(:value).with('os').and_return(os_hash)
     end
 
-    after(:each) do
+    after do
       executor.shutdown
       executor.wait_for_termination(0.25)
     end

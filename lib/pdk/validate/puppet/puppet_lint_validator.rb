@@ -17,7 +17,7 @@ module PDK
         end
 
         def spinner_text_for_targets(_targets)
-          'Checking Puppet manifest style (%{pattern}).' % { pattern: pattern.join(' ') }
+          format('Checking Puppet manifest style (%{pattern}).', pattern: pattern.join(' '))
         end
 
         def parse_options(targets)
@@ -40,24 +40,24 @@ module PDK
           # events to the report for any target not listed in the JSON output.
           targets.reject { |target| json_data.any? { |j| j['path'] == target } }.each do |target|
             report.add_event(
-              file:     target,
-              source:   name,
+              file: target,
+              source: name,
               severity: 'ok',
-              state:    :passed,
+              state: :passed
             )
           end
 
           json_data.each do |offense|
-            report.add_event(
-              file:     offense['path'],
-              source:   name,
-              line:     offense['line'],
-              column:   offense['column'],
-              message:  offense['message'],
-              test:     offense['check'],
-              severity: (offense['kind'] == 'fixed') ? 'corrected' : offense['kind'],
-              state:    :failure,
-            )
+            report.add_event({
+                               file: offense['path'],
+                               source: name,
+                               line: offense['line'],
+                               column: offense['column'],
+                               message: offense['message'],
+                               test: offense['check'],
+                               severity: offense['kind'] == 'fixed' ? 'corrected' : offense['kind'],
+                               state: :failure
+                             })
           end
         end
       end

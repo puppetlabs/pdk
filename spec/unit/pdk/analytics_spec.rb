@@ -7,7 +7,7 @@ describe PDK::Analytics do
   let(:logger) { instance_double(Logger, debug: true) }
   let(:uuid) { SecureRandom.uuid }
 
-  before(:each) do
+  before do
     # We use a hard override to disable analytics for tests, but that obviously
     # interferes with these tests...
     allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(nil)
@@ -18,13 +18,13 @@ describe PDK::Analytics do
 
     let(:options) do
       {
-        logger:      logger,
-        client:      :google_analytics,
-        disabled:    disabled,
-        user_id:     uuid,
-        app_name:    'pdk',
+        logger: logger,
+        client: :google_analytics,
+        disabled: disabled,
+        user_id: uuid,
+        app_name: 'pdk',
         app_version: PDK::VERSION,
-        app_id:      '1',
+        app_id: '1'
       }
     end
 
@@ -32,7 +32,7 @@ describe PDK::Analytics do
       let(:disabled) { true }
 
       it 'returns an instance of the Noop client' do
-        is_expected.to be_an_instance_of(described_class::Client::Noop)
+        expect(subject).to be_an_instance_of(described_class::Client::Noop)
       end
     end
 
@@ -40,16 +40,16 @@ describe PDK::Analytics do
       let(:disabled) { false }
 
       it 'returns an instance of the GoogleAnalytics client' do
-        is_expected.to be_an_instance_of(described_class::Client::GoogleAnalytics)
+        expect(subject).to be_an_instance_of(described_class::Client::GoogleAnalytics)
       end
 
       context 'when the client instantiation fails' do
-        before(:each) do
+        before do
           allow(described_class::Client::GoogleAnalytics).to receive(:new).and_raise(StandardError)
         end
 
         it 'returns an instance of the Noop client' do
-          is_expected.to be_an_instance_of(described_class::Client::Noop)
+          expect(subject).to be_an_instance_of(described_class::Client::Noop)
         end
       end
     end

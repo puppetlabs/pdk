@@ -38,6 +38,7 @@ module PDK
       # @see PDK::Validate::Validator.prepare_invoke!
       def prepare_invoke!
         return if @prepared
+
         super
 
         # Register the spinner
@@ -63,6 +64,7 @@ module PDK
         # targets. For example, using rubocop with no targets, will allow rubocop to determine the
         # target list using it's .rubocop.yml file
         return [[], [], []] if requested_targets.empty? && allow_empty_targets?
+
         # If no targets are specified, then we will run validations from the base context directory.
         targets = requested_targets.empty? ? [context.root_path] : requested_targets
         targets.map! { |r| r.gsub(File::ALT_SEPARATOR, File::SEPARATOR) } if File::ALT_SEPARATOR
@@ -72,7 +74,7 @@ module PDK
 
         skipped = []
         invalid = []
-        matched = targets.map { |target|
+        matched = targets.filter_map do |target|
           if pattern.nil?
             target
           else
@@ -87,16 +89,14 @@ module PDK
               target_list = target_list.reject { |file| ignore_list.match(file) }
 
               if target_list.flatten.empty?
-                PDK.logger.info('Validator \'%{validator}\' skipped for \'%{target}\'. No files matching \'%{pattern}\' found to validate.' % { validator: name, target: target, pattern: pattern })
+                PDK.logger.info(format('Validator \'%{validator}\' skipped for \'%{target}\'. No files matching \'%{pattern}\' found to validate.', validator: name, target: target, pattern: pattern))
 
                 skipped << target
               end
 
               target_list
             elsif PDK::Util::Filesystem.file?(target)
-              if Array(pattern).include? target
-                target
-              elsif Array(pattern).any? { |p| PDK::Util::Filesystem.fnmatch(PDK::Util::Filesystem.expand_path(p), PDK::Util::Filesystem.expand_path(target), File::FNM_DOTMATCH) }
+              if (Array(pattern).include? target) || fnmatch?(pattern, target)
                 target
               else
                 skipped << target
@@ -107,8 +107,15 @@ module PDK
               next
             end
           end
-        }.compact.flatten.uniq
+        end.flatten.uniq
         [matched, skipped, invalid]
+      end
+
+      # Matches a target against a pattern
+      # @param pattern [String, Array[String]] The pattern to match against
+      # @return [Boolean]
+      def fnmatch?(pattern, target)
+        Array(pattern).any? { |p| PDK::Util::Filesystem.fnmatch(PDK::Util::Filesystem.expand_path(p), PDK::Util::Filesystem.expand_path(target), File::FNM_DOTMATCH) }
       end
 
       # Whether the target parsing ignores "dotfiles" (e.g. .gitignore or .pdkignore) which are considered hidden files in POSIX
@@ -121,13 +128,14 @@ module PDK
       # @see PDK::Validate::Validator.spinner_text
       # @abstract
       def spinner_text
-        'Running %{name} validator ...' % { name: name }
+        format('Running %{name} validator ...', name: name)
       end
 
       # @see PDK::Validate::Validator.spinner
       def spinner
         return nil unless spinners_enabled?
         return @spinner unless @spinner.nil?
+
         require 'pdk/cli/util/spinner'
 
         @spinner = TTY::Spinner.new("[:spinner] #{spinner_text}", PDK::CLI::Util.spinner_opts_for_platform)
@@ -138,13 +146,13 @@ module PDK
       # @param skipped [Array[String]] The list of skipped targets
       def process_skipped(report, skipped = [])
         skipped.each do |skipped_target|
-          PDK.logger.debug('%{validator}: Skipped \'%{target}\'. Target does not contain any files to validate (%{pattern}).' % { validator: name, target: skipped_target, pattern: pattern })
+          PDK.logger.debug(format('%{validator}: Skipped \'%{target}\'. Target does not contain any files to validate (%{pattern}).', validator: name, target: skipped_target, pattern: pattern))
           report.add_event(
-            file:     skipped_target,
-            source:   name,
-            message:  'Target does not contain any files to validate (%{pattern}).' % { pattern: pattern },
+            file: skipped_target,
+            source: name,
+            message: format('Target does not contain any files to validate (%{pattern}).', pattern: pattern),
             severity: :info,
-            state:    :skipped,
+            state: :skipped
           )
         end
       end
@@ -154,13 +162,13 @@ module PDK
       # @param invalid [Array[String]] The list of invalid targets
       def process_invalid(report, invalid = [])
         invalid.each do |invalid_target|
-          PDK.logger.debug('%{validator}: Skipped \'%{target}\'. Target file not found.' % { validator: name, target: invalid_target })
+          PDK.logger.debug(format('%{validator}: Skipped \'%{target}\'. Target file not found.', validator: name, target: invalid_target))
           report.add_event(
-            file:     invalid_target,
-            source:   name,
-            message:  'File does not exist.',
+            file: invalid_target,
+            source: name,
+            message: 'File does not exist.',
             severity: :error,
-            state:    :error,
+            state: :error
           )
         end
       end
@@ -187,7 +195,8 @@ module PDK
       def contextual_pattern(module_pattern)
         module_pattern = [module_pattern] unless module_pattern.is_a?(Array)
         return module_pattern unless context.is_a?(PDK::Context::ControlRepo)
-        context.actualized_module_paths.map { |mod_path| module_pattern.map { |pat_path| mod_path + '/*/' + pat_path } }.flatten
+
+        context.actualized_module_paths.map { |mod_path| module_pattern.map { |pat_path| "#{mod_path}/*/#{pat_path}" } }.flatten
       end
 
       private
@@ -195,10 +204,11 @@ module PDK
       # Helper method to collate the default ignored paths
       # @return [PathSpec] Paths to ignore
       def ignore_pathspec
-        ignore_pathspec = if context.is_a?(PDK::Context::Module)
+        ignore_pathspec = case context
+                          when PDK::Context::Module
                             require 'pdk/module'
                             PDK::Module.default_ignored_pathspec(ignore_dotfiles?)
-                          elsif context.is_a?(PDK::Context::ControlRepo)
+                          when PDK::Context::ControlRepo
                             require 'pdk/control_repo'
                             PDK::ControlRepo.default_ignored_pathspec(ignore_dotfiles?)
                           else

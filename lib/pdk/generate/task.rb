@@ -9,14 +9,15 @@ module PDK
 
       def template_files
         return {} if spec_only?
+
         {
-          'task.erb' => File.join('tasks', task_name + '.sh'),
+          'task.erb' => File.join('tasks', "#{task_name}.sh")
         }
       end
 
       def template_data
         {
-          name: object_name,
+          name: object_name
         }
       end
 
@@ -29,17 +30,17 @@ module PDK
         super
 
         error = "A task named '%{name}' already exists in this module; defined in %{file}"
-        allowed_extensions = %w[.md .conf]
+        allowed_extensions = ['.md', '.conf']
 
-        PDK::Util::Filesystem.glob(File.join(context.root_path, 'tasks', task_name + '.*')).each do |file|
+        PDK::Util::Filesystem.glob(File.join(context.root_path, 'tasks', "#{task_name}.*")).each do |file|
           next if allowed_extensions.include?(File.extname(file))
 
-          raise PDK::CLI::ExitWithError, error % { name: task_name, file: file }
+          raise PDK::CLI::ExitWithError, format(error, name: task_name, file: file)
         end
       end
 
       def non_template_files
-        task_metadata_file = File.join('tasks', task_name + '.json')
+        task_metadata_file = File.join('tasks', "#{task_name}.json")
         { task_metadata_file => JSON.pretty_generate(task_metadata) }
       end
 
@@ -52,15 +53,15 @@ module PDK
       #
       # @api private
       def task_name
-        (object_name == module_name) ? 'init' : object_name
+        object_name == module_name ? 'init' : object_name
       end
 
       def task_metadata
         {
           puppet_task_version: 1,
-          supports_noop:       false,
-          description:         options.fetch(:description, 'A short description of this task'),
-          parameters:          {},
+          supports_noop: false,
+          description: options.fetch(:description, 'A short description of this task'),
+          parameters: {}
         }
       end
     end

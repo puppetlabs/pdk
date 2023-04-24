@@ -6,7 +6,7 @@ module PDK
     WRAP_COLUMN_LIMIT = 78
 
     def initialize
-      super(STDERR)
+      super($stderr)
       @sent_messages = {}
 
       # TODO: Decide on output format.
@@ -14,7 +14,7 @@ module PDK
         prefix = "pdk (#{severity}): "
         if msg.is_a?(Hash)
           if msg.fetch(:wrap, false)
-            wrap_pattern = %r{(.{1,#{WRAP_COLUMN_LIMIT - prefix.length}})(\s+|\Z)}
+            wrap_pattern = /(.{1,#{WRAP_COLUMN_LIMIT - prefix.length}})(\s+|\Z)/
             "#{prefix}#{msg[:text].gsub(wrap_pattern, "\\1\n#{' ' * prefix.length}")}\n"
           else
             "#{prefix}#{msg[:text]}\n"
@@ -30,6 +30,7 @@ module PDK
     def warn_once(*args)
       hash = args.inspect.hash
       return if (@sent_messages[::Logger::WARN] ||= {}).key?(hash)
+
       @sent_messages[::Logger::WARN][hash] = true
       warn(*args)
     end

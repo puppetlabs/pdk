@@ -4,10 +4,8 @@ module PDK
   module CLI
     module Exec
       class Command
-        attr_reader :argv
-        attr_reader :context
-        attr_accessor :timeout
-        attr_accessor :environment
+        attr_reader :argv, :context
+        attr_accessor :timeout, :environment
         attr_writer :exec_group
 
         # The spinner for this command.
@@ -22,6 +20,8 @@ module PDK
 
         def initialize(*argv)
           require 'childprocess'
+
+          require 'pdk/monkey_patches'
           require 'tempfile'
 
           @argv = argv
@@ -56,9 +56,7 @@ module PDK
         end
 
         def context=(new_context)
-          unless [:system, :module, :pwd].include?(new_context)
-            raise ArgumentError, "Expected execution context to be :system or :module but got '%{context}'." % { context: new_context }
-          end
+          raise ArgumentError, format("Expected execution context to be :system or :module but got '%{context}'.", context: new_context) unless [:system, :module, :pwd].include?(new_context)
 
           @context = new_context
         end
@@ -67,6 +65,7 @@ module PDK
           require 'pdk/cli/util'
 
           return unless PDK::CLI::Util.interactive?
+
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
@@ -77,6 +76,7 @@ module PDK
           require 'pdk/cli/util'
 
           return unless PDK::CLI::Util.interactive?
+
           @success_message = opts.delete(:success)
           @failure_message = opts.delete(:failure)
 
@@ -96,7 +96,7 @@ module PDK
         #   :duration => Float : Number seconds it took to execute
         def execute!
           # Start spinning if configured.
-          @spinner.auto_spin if @spinner
+          @spinner&.auto_spin
 
           # Set env for child process
           resolved_env_for_command.each { |k, v| @process.environment[k] = v }
@@ -106,7 +106,7 @@ module PDK
             mod_root = PDK::Util.module_root
 
             unless mod_root
-              @spinner.error if @spinner
+              @spinner&.error
 
               raise PDK::CLI::FatalError, 'Current working directory is not part of a module. (No metadata.json was found.)'
             end
@@ -132,15 +132,11 @@ module PDK
             stdout: @stdout.read,
             stderr: @stderr.read,
             exit_code: @process.exit_code,
-            duration: @duration,
+            duration: @duration
           }
 
-          PDK.logger.debug 'STDOUT: %{output}' % {
-            output: process_data[:stdout].empty? ? 'N/A' : "\n#{process_data[:stdout]}",
-          }
-          PDK.logger.debug 'STDERR: %{output}' % {
-            output: process_data[:stderr].empty? ? 'N/A' : "\n#{process_data[:stderr]}",
-          }
+          PDK.logger.debug format('STDOUT: %{output}', output: process_data[:stdout].empty? ? 'N/A' : "\n#{process_data[:stdout]}")
+          PDK.logger.debug format('STDERR: %{output}', output: process_data[:stderr].empty? ? 'N/A' : "\n#{process_data[:stderr]}")
 
           process_data
         ensure
@@ -157,10 +153,8 @@ module PDK
                                  'or set the PDK_PUPPET_VERSION environment variable instead'
           end
 
-          %w[FACTER HIERA].each do |gem|
-            if PDK::Util::Env["#{gem}_GEM_VERSION"]
-              PDK.logger.warn_once '%{varname} is not supported by PDK.' % { varname: "#{gem}_GEM_VERSION" }
-            end
+          ['FACTER', 'HIERA'].each do |gem|
+            PDK.logger.warn_once format('%{varname} is not supported by PDK.', varname: "#{gem}_GEM_VERSION") if PDK::Util::Env["#{gem}_GEM_VERSION"]
           end
         end
 
@@ -196,7 +190,7 @@ module PDK
               PDK::Util::RubyVersion.gem_paths_raw.map { |gem_path_raw| File.join(gem_path_raw, 'bin') },
               package_binpath,
               PDK::Util.package_install? ? PDK::Util::Git.git_paths : nil,
-              PDK::Util::Env['PATH'],
+              PDK::Util::Env['PATH']
             ].compact.flatten.join(File::PATH_SEPARATOR)
           end
 
@@ -230,7 +224,7 @@ module PDK
         def run_process!
           command_string = argv.join(' ')
 
-          PDK.logger.debug("Executing '%{command}'" % { command: command_string })
+          PDK.logger.debug(format("Executing '%{command}'", command: command_string))
 
           if context == :module
             PDK.logger.debug('Command environment:')
@@ -244,7 +238,7 @@ module PDK
           begin
             @process.start
           rescue ChildProcess::LaunchError => e
-            raise PDK::CLI::FatalError, "Failed to execute '%{command}': %{message}" % { command: command_string, message: e.message }
+            raise PDK::CLI::FatalError, format("Failed to execute '%{command}': %{message}", command: command_string, message: e.message)
           end
 
           if timeout
@@ -260,13 +254,13 @@ module PDK
 
           @duration = Time.now - start_time
 
-          PDK.logger.debug("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})" %
-            { command: command_string, duration_in_seconds: @duration, exit_code: @process.exit_code })
+          PDK.logger.debug(format("Execution of '%{command}' complete (duration: %{duration_in_seconds}s; exit code: %{exit_code})", command: command_string, duration_in_seconds: @duration,
+                                                                                                                                     exit_code: @process.exit_code))
         end
 
         private
 
-        #:nocov:
+        # :nocov:
         # These are just bundler helper methods and are tested via the public run_process_in_clean_env! method
         def run_process_with_unbundled_env!
           # Bundler 2.1.0 or greater
@@ -274,9 +268,9 @@ module PDK
             run_process!
           end
         end
-        #:nocov:
+        # :nocov:
 
-        #:nocov:
+        # :nocov:
         # These are just bundler helper methods and are tested via the public run_process_in_clean_env! method
         def run_process_with_clean_env!
           # Bundler 2.0.2 or less
@@ -284,7 +278,7 @@ module PDK
             run_process!
           end
         end
-        #:nocov:
+        # :nocov:
       end
     end
   end

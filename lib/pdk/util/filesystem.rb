@@ -14,19 +14,20 @@ module PDK
         # Make sure all written files have a trailing newline.
         content += "\n" unless content[-1] == "\n"
 
-        File.open(path, 'wb') { |f| f.write(content) }
+        File.binwrite(path, content)
       end
       module_function :write_file
 
       def read_file(file, nil_on_error: false, open_args: 'r')
         File.read(file, open_args: Array(open_args))
-      rescue => e
+      rescue StandardError => e
         raise e unless nil_on_error
+
         nil
       end
       module_function :read_file
 
-      #:nocov:
+      # :nocov:
       # These methods just wrap core Ruby functionality and
       # can be ignored for code coverage
       def directory?(*args)
@@ -34,8 +35,8 @@ module PDK
       end
       module_function :directory?
 
-      def mkdir_p(*args)
-        FileUtils.mkdir_p(*args)
+      def mkdir_p(*args, **kwargs)
+        FileUtils.mkdir_p(*args, **kwargs)
       end
       module_function :mkdir_p
 
@@ -74,18 +75,18 @@ module PDK
       end
       module_function :exist?
 
-      def rm(*args)
-        FileUtils.rm(*args)
+      def rm(*args, **kwargs)
+        FileUtils.rm(*args, **kwargs)
       end
       module_function :rm
 
-      def rm_f(*args)
-        FileUtils.rm_f(*args)
+      def rm_f(*args, **kwargs)
+        FileUtils.rm_f(*args, **kwargs)
       end
       module_function :rm_f
 
-      def rm_rf(*args)
-        FileUtils.rm_rf(*args)
+      def rm_rf(*args, **kwargs)
+        FileUtils.rm_rf(*args, **kwargs)
       end
       module_function :rm_rf
 
@@ -95,7 +96,7 @@ module PDK
       module_function :remove_entry_secure
 
       def zero?(*args)
-        File.zero?(*args)
+        File.empty?(*args)
       end
       module_function :zero?
 
@@ -109,13 +110,13 @@ module PDK
       end
       module_function :symlink?
 
-      def cp(*args)
-        FileUtils.cp(*args)
+      def cp(*args, **kwargs)
+        FileUtils.cp(*args, **kwargs)
       end
       module_function :cp
 
-      def mv(*args)
-        FileUtils.mv(*args)
+      def mv(*args, **kwargs)
+        FileUtils.mv(*args, **kwargs)
       rescue Errno::ENOENT
         # PDK-1169 - FileUtils.mv raises Errno::ENOENT when moving files inside
         #            VMWare shared folders on Windows. So we need to catch this
@@ -132,7 +133,7 @@ module PDK
         end
       end
       module_function :mv
-      #:nocov:
+      # :nocov:
     end
   end
 end

@@ -9,7 +9,7 @@ describe PDK::Test::Unit do
   describe '.rake_bin' do
     subject { described_class.rake_bin }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
     end
 
@@ -56,7 +56,7 @@ describe PDK::Test::Unit do
   end
 
   describe '.setup' do
-    before(:each) do
+    before do
       mock_result = { stdout: 'some output', stderr: 'some error', exit_code: exit_code }
       allow(described_class).to receive(:rake).with('spec_prep', any_args).and_return(mock_result)
     end
@@ -65,9 +65,9 @@ describe PDK::Test::Unit do
       let(:exit_code) { 0 }
 
       it 'does not raise an error' do
-        expect {
+        expect do
           described_class.setup
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
 
@@ -78,18 +78,18 @@ describe PDK::Test::Unit do
         expect($stderr).to receive(:puts).with('').twice
         expect($stderr).to receive(:puts).with('some output')
         expect($stderr).to receive(:puts).with('some error')
-        expect(logger).to receive(:error).with(a_string_matching(%r{spec_prep rake task failed}))
+        expect(logger).to receive(:error).with(a_string_matching(/spec_prep rake task failed/))
         expect(described_class).to receive(:tear_down)
 
-        expect {
+        expect do
           described_class.setup
-        }.to raise_error(PDK::CLI::FatalError, %r{failed to prepare to run the unit tests}i)
+        end.to raise_error(PDK::CLI::FatalError, /failed to prepare to run the unit tests/i)
       end
     end
   end
 
   describe '.tear_down' do
-    before(:each) do
+    before do
       mock_result = { stdout: 'some output', stderr: 'some error', exit_code: exit_code }
       allow(described_class).to receive(:rake).with('spec_clean', any_args).and_return(mock_result)
     end
@@ -98,9 +98,9 @@ describe PDK::Test::Unit do
       let(:exit_code) { 0 }
 
       it 'does not raise an error' do
-        expect {
+        expect do
           described_class.tear_down
-        }.not_to raise_error
+        end.not_to raise_error
       end
     end
 
@@ -111,11 +111,11 @@ describe PDK::Test::Unit do
         expect($stderr).to receive(:puts).with('').twice
         expect($stderr).to receive(:puts).with('some output')
         expect($stderr).to receive(:puts).with('some error')
-        expect(logger).to receive(:error).with(a_string_matching(%r{spec_clean rake task failed}))
+        expect(logger).to receive(:error).with(a_string_matching(/spec_clean rake task failed/))
 
-        expect {
+        expect do
           described_class.tear_down
-        }.to raise_error(PDK::CLI::FatalError, %r{failed to clean up after running unit tests}i)
+        end.to raise_error(PDK::CLI::FatalError, /failed to clean up after running unit tests/i)
       end
     end
   end
@@ -123,22 +123,22 @@ describe PDK::Test::Unit do
   describe '.merge_json_results' do
     let(:results) do
       [{ 'messages' => ['message 1', 'message 2'],
-         'examples' => %w[example example example],
+         'examples' => ['example', 'example', 'example'],
          'summary' => {
            'example_count' => 40,
            'failure_count' => 7,
            'pending_count' => 12,
-           'duration' => 30,
+           'duration' => 30
          } },
        {
          'messages' => ['message 2', 'message 3'],
-         'examples' => %w[example example example],
+         'examples' => ['example', 'example', 'example'],
          'summary' => {
            'example_count' => 30,
            'failure_count' => 4,
            'pending_count' => 6,
-           'duration' => 40,
-         },
+           'duration' => 40
+         }
        }]
     end
 
@@ -154,7 +154,7 @@ describe PDK::Test::Unit do
   end
 
   describe '.cmd' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
     end
 
@@ -187,8 +187,8 @@ describe PDK::Test::Unit do
     let(:report) { PDK::Report.new }
     let(:duration) { 4.123 }
 
-    before(:each) do
-      allow(report).to receive(:add_event).with(%r{message \d})
+    before do
+      allow(report).to receive(:add_event).with(/message \d/)
     end
 
     context 'with messages' do
@@ -204,13 +204,13 @@ describe PDK::Test::Unit do
       let(:json) do
         { 'summary' => {
           'example_count' => 30,
-          'duration'      => 32,
+          'duration' => 32,
           'failure_count' => 2,
-          'pending_count' => 6,
+          'pending_count' => 6
         } }
       end
 
-      after(:each) do
+      after do
         described_class.parse_output(report, json, duration)
       end
 
@@ -220,7 +220,7 @@ describe PDK::Test::Unit do
       end
 
       it 'prints the summary to stderr' do
-        expect($stderr).to receive(:puts).once.with(%r{Evaluated 30 tests in 4\.123 seconds})
+        expect($stderr).to receive(:puts).once.with(/Evaluated 30 tests in 4\.123 seconds/)
       end
     end
   end
@@ -228,7 +228,7 @@ describe PDK::Test::Unit do
   # Allow any_instance stubbing of Commands
   # rubocop:disable RSpec/AnyInstance
   describe '.list' do
-    before(:each) do
+    before do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!)
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
@@ -252,8 +252,8 @@ describe PDK::Test::Unit do
           {
             file_path: './path/to/test',
             id: './path/to/test[1:1:1]',
-            full_description: 'a bunch of useful descriptive words',
-          },
+            full_description: 'a bunch of useful descriptive words'
+          }
         ]
 
         expect(described_class.list).to eq(expected_result)
@@ -280,7 +280,7 @@ describe PDK::Test::Unit do
     let(:report) { PDK::Report.new }
     let(:rspec_json_output) { '{}' }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
       allow(PDK::Util::Bundler).to receive(:ensure_binstubs!)
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
@@ -295,7 +295,7 @@ describe PDK::Test::Unit do
         described_class.invoke(report, options)
       end
 
-      before(:each) do
+      before do
         allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new)
           .and_return(command)
         allow(command).to receive(:execute!).and_return(exit_code: 0)
@@ -306,8 +306,8 @@ describe PDK::Test::Unit do
       let(:command) do
         instance_double(
           PDK::CLI::Exec::InteractiveCommand,
-          :context=     => true,
-          :environment= => true,
+          :context= => true,
+          :environment= => true
         )
       end
 
@@ -348,7 +348,7 @@ describe PDK::Test::Unit do
     end
 
     context 'configurable fixture cleaning' do
-      after(:each) do
+      after do
         described_class.invoke(report, options)
       end
 
@@ -374,8 +374,8 @@ describe PDK::Test::Unit do
       context 'when enabled' do
         let(:options) do
           {
-            :'clean-fixtures' => true,
-            :tests            => 'testmod_spec.rb',
+            'clean-fixtures': true,
+            tests: 'testmod_spec.rb'
           }
         end
 
@@ -387,7 +387,7 @@ describe PDK::Test::Unit do
       context 'when disabled' do
         let(:options) do
           {
-            tests: 'testmod_spec.rb',
+            tests: 'testmod_spec.rb'
           }
         end
 
@@ -397,7 +397,7 @@ describe PDK::Test::Unit do
       end
     end
 
-    context 'in parallel without examples' do
+    context 'in parallel without examples json output' do
       let(:rspec_json_output) do
         '{
           "examples":

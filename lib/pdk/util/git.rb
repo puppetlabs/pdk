@@ -3,10 +3,7 @@ require 'pdk'
 module PDK
   module Util
     class GitError < StandardError
-      attr_reader :stdout
-      attr_reader :stderr
-      attr_reader :exit_code
-      attr_reader :args
+      attr_reader :stdout, :stderr, :exit_code, :args
 
       def initialze(args, result)
         @args = args
@@ -14,12 +11,12 @@ module PDK
         @stderr = result[:stderr]
         @exit_code = result[:exit_code]
 
-        super('Git command failed: git %{args}' % { args: args.join(' ') })
+        super(format('Git command failed: git %{args}', args: args.join(' ')))
       end
     end
 
     module Git
-      GIT_QUERY_CACHE_TTL ||= 10
+      GIT_QUERY_CACHE_TTL = 10
 
       def self.git_bindir
         @git_dir ||= File.join('private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
@@ -67,6 +64,7 @@ module PDK
       def self.repo?(maybe_repo)
         result = cached_git_query(maybe_repo, :repo?)
         return result unless result.nil?
+
         result = if PDK::Util::Filesystem.directory?(maybe_repo)
                    # Use boolean shortcircuiting here. The mostly likely type of git repo
                    # is a "normal" repo with a working tree. Bare repos do not have work tree
@@ -90,6 +88,7 @@ module PDK
 
       def self.work_tree?(path)
         return false unless PDK::Util::Filesystem.directory?(path)
+
         result = cached_git_query(path, :work_tree?)
         return result unless result.nil?
 
@@ -100,30 +99,27 @@ module PDK
       end
 
       def self.work_dir_clean?(repo)
-        raise PDK::CLI::ExitWithError, 'Unable to locate git work dir "%{workdir}"' % { workdir: repo } unless PDK::Util::Filesystem.directory?(repo)
-        raise PDK::CLI::ExitWithError, 'Unable to locate git dir "%{gitdir}"' % { gitdir: repo } unless PDK::Util::Filesystem.directory?(File.join(repo, '.git'))
+        raise PDK::CLI::ExitWithError, format('Unable to locate git work dir "%{workdir}"', workdir: repo) unless PDK::Util::Filesystem.directory?(repo)
+        raise PDK::CLI::ExitWithError, format('Unable to locate git dir "%{gitdir}"', gitdir: repo) unless PDK::Util::Filesystem.directory?(File.join(repo, '.git'))
 
         git('--work-tree', repo, '--git-dir', File.join(repo, '.git'), 'status', '--untracked-files=no', '--porcelain', repo)[:stdout].empty?
       end
 
       def self.ls_remote(repo, ref)
-        if PDK::Util::Filesystem.directory?(repo)
-          repo = 'file://' + repo
-        end
+        repo = "file://#{repo}" if PDK::Util::Filesystem.directory?(repo)
 
         output = git('ls-remote', '--refs', repo, ref)
 
         unless output[:exit_code].zero?
           PDK.logger.error output[:stdout]
           PDK.logger.error output[:stderr]
-          raise PDK::CLI::ExitWithError, 'Unable to access the template repository "%{repository}"' % {
-            repository: repo,
-          }
+          raise PDK::CLI::ExitWithError, format('Unable to access the template repository "%{repository}"', repository: repo)
         end
 
-        matching_refs = output[:stdout].split(%r{\r?\n}).map { |r| r.split("\t") }
-        matching_ref = matching_refs.find { |_sha, remote_ref| remote_ref == "refs/tags/#{ref}" || remote_ref == "refs/remotes/origin/#{ref}" || remote_ref == "refs/heads/#{ref}" }
-        raise PDK::CLI::ExitWithError, 'Unable to find a branch or tag named "%{ref}" in %{repo}' % { ref: ref, repo: repo } if matching_ref.nil?
+        matching_refs = output[:stdout].split(/\r?\n/).map { |r| r.split("\t") }
+        matching_ref = matching_refs.find { |_sha, remote_ref| ["refs/tags/#{ref}", "refs/remotes/origin/#{ref}", "refs/heads/#{ref}"].include?(remote_ref) }
+        raise PDK::CLI::ExitWithError, format('Unable to find a branch or tag named "%{ref}" in %{repo}', ref: ref, repo: repo) if matching_ref.nil?
+
         matching_ref.first
       end
 
@@ -131,6 +127,7 @@ module PDK
         args = ['--git-dir', path, 'describe', '--all', '--long', '--always', ref].compact
         result = git(*args)
         raise PDK::Util::GitError, args, result unless result[:exit_code].zero?
+
         result[:stdout].strip
       end
 
@@ -148,14 +145,12 @@ module PDK
 
       def self.cached_git_query(repo, query)
         # TODO: Not thread safe
-        if @git_repo_expire_cache.nil?
+        if @git_repo_expire_cache.nil? || Time.now > @git_repo_expire_cache
           @git_repo_expire_cache = Time.now + GIT_QUERY_CACHE_TTL # Expire the cache every GIT_QUERY_CACHE_TTL seconds
-          @git_repo_cache = {}
-        elsif Time.now > @git_repo_expire_cache
-          @git_repo_expire_cache = Time.now + GIT_QUERY_CACHE_TTL
           @git_repo_cache = {}
         end
         return nil if @git_repo_cache[repo].nil?
+
         @git_repo_cache[repo][query]
       end
       private_class_method :cached_git_query

@@ -25,8 +25,8 @@ module PDK
         require 'pdk/util/ruby_version'
 
         {
-          gem_version: 'file://%{path}' % { path: puppet_dev_path },
-          ruby_version: PDK::Util::RubyVersion.latest_ruby_version,
+          gem_version: format('file://%{path}', path: puppet_dev_path),
+          ruby_version: PDK::Util::RubyVersion.latest_ruby_version
         }
       end
 
@@ -39,9 +39,7 @@ module PDK
       def latest_available
         latest = find_gem(Gem::Requirement.create('>= 0'))
 
-        if latest.nil?
-          raise ArgumentError, 'Unable to find a Puppet gem in current Ruby environment or from Rubygems.org.'
-        end
+        raise ArgumentError, 'Unable to find a Puppet gem in current Ruby environment or from Rubygems.org.' if latest.nil?
 
         latest
       end
@@ -69,7 +67,7 @@ module PDK
 
           PDK.logger.error clone_result[:stdout]
           PDK.logger.error clone_result[:stderr]
-          raise PDK::CLI::FatalError, "Unable to clone git repository from '%{repo}'." % { repo: DEFAULT_PUPPET_DEV_URL }
+          raise PDK::CLI::FatalError, format("Unable to clone git repository from '%{repo}'.", repo: DEFAULT_PUPPET_DEV_URL)
         end
 
         # Fetch Updates from remote repository
@@ -78,7 +76,7 @@ module PDK
         unless fetch_result[:exit_code].zero?
           PDK.logger.error fetch_result[:stdout]
           PDK.logger.error fetch_result[:stderr]
-          raise PDK::CLI::FatalError, "Unable to fetch from git remote at '%{repo}'." % { repo: DEFAULT_PUPPET_DEV_URL }
+          raise PDK::CLI::FatalError, format("Unable to fetch from git remote at '%{repo}'.", repo: DEFAULT_PUPPET_DEV_URL)
         end
 
         # Reset local repo to latest
@@ -89,7 +87,7 @@ module PDK
 
         PDK.logger.error reset_result[:stdout]
         PDK.logger.error reset_result[:stderr]
-        raise PDK::CLI::FatalError, "Unable to update git repository at '%{cachedir}'." % { cachedir: puppet_dev_path }
+        raise PDK::CLI::FatalError, format("Unable to update git repository at '%{cachedir}'.", cachedir: puppet_dev_path)
       end
 
       def find_gem_for(version_str)
@@ -108,18 +106,12 @@ module PDK
         latest_requirement = Gem::Requirement.create(requirement_string)
         latest_available_gem = find_gem(latest_requirement)
 
-        if latest_available_gem.nil?
-          raise ArgumentError, 'Unable to find a Puppet gem matching %{requirement}.' % {
-            requirement: latest_requirement,
-          }
-        end
+        raise ArgumentError, format('Unable to find a Puppet gem matching %{requirement}.', requirement: latest_requirement) if latest_available_gem.nil?
 
         # Only issue this warning if they requested an exact version that isn't available.
         if version.segments.length == 3
-          PDK.logger.warn('Puppet %{requested_version} is not available, activating %{found_version} instead.' % {
-            requested_version: version_str,
-            found_version:     latest_available_gem[:gem_version].version,
-          })
+          PDK.logger.warn(format('Puppet %{requested_version} is not available, activating %{found_version} instead.', requested_version: version_str,
+                                                                                                                       found_version: latest_available_gem[:gem_version].version))
         end
 
         latest_available_gem
@@ -134,20 +126,13 @@ module PDK
         safe_versions = {
           2023 => '7.23.0',
           2021 => '7.23.0',
-          2019 => '6.29.0',
+          2019 => '6.29.0'
         }
 
         gem_version = safe_versions[version.segments[0]]
-        if gem_version.nil?
-          raise ArgumentError, 'Unable to map Puppet Enterprise version %{pe_version} to a Puppet version.' % {
-            pe_version: version_str,
-          }
-        end
+        raise ArgumentError, format('Unable to map Puppet Enterprise version %{pe_version} to a Puppet version.', pe_version: version_str) if gem_version.nil?
 
-        PDK.logger.info 'Puppet Enterprise %{pe_version} maps to Puppet %{puppet_version}.' % {
-          pe_version:     version_str,
-          puppet_version: gem_version,
-        }
+        PDK.logger.info format('Puppet Enterprise %{pe_version} maps to Puppet %{puppet_version}.', pe_version: version_str, puppet_version: gem_version)
 
         find_gem_for(gem_version)
       end
@@ -172,7 +157,7 @@ module PDK
 
         # Split combined requirements like ">= 4.7.0 < 6.0.0" into their
         # component requirements [">= 4.7.0", "< 6.0.0"]
-        pattern = %r{#{Gem::Requirement::PATTERN_RAW}}
+        pattern = /#{Gem::Requirement::PATTERN_RAW}/o
         requirement_strings = metadata_requirement['version_requirement'].scan(pattern).map do |req|
           req.compact.join(' ')
         end
@@ -186,31 +171,29 @@ module PDK
       def parse_specified_version(version_str)
         Gem::Version.new(version_str)
       rescue ArgumentError
-        raise ArgumentError, '%{version} is not a valid version number.' % {
-          version: version_str,
-        }
+        raise ArgumentError, format('%{version} is not a valid version number.', version: version_str)
       end
 
       def pe_version_map
-        @pe_version_map ||= fetch_pe_version_map.map { |version_map|
+        @pe_version_map ||= fetch_pe_version_map.map do |version_map|
           maps = version_map['versions'].map do |pe_release|
             requirements = ["= #{pe_release['version']}"]
 
             # Some PE release have a .0 Z release, which causes problems when
             # the user specifies "X.Y" expecting to get the latest Z and
             # instead getting the oldest.
-            requirements << "!= #{pe_release['version'].gsub(%r{\.\d+\Z}, '')}" if pe_release['version'].end_with?('.0')
+            requirements << "!= #{pe_release['version'].gsub(/\.\d+\Z/, '')}" if pe_release['version'].end_with?('.0')
             {
               requirement: Gem::Requirement.create(requirements),
-              gem_version: pe_release['puppet'],
+              gem_version: pe_release['puppet']
             }
           end
 
           maps << {
             requirement: requirement_from_forge_range(version_map['release']),
-            gem_version: version_map['versions'].find { |r| r['version'] == version_map['latest'] }['puppet'],
+            gem_version: version_map['versions'].find { |r| r['version'] == version_map['latest'] }['puppet']
           }
-        }.flatten
+        end.flatten
       end
 
       def fetch_pe_version_map
@@ -226,7 +209,7 @@ module PDK
       end
 
       def requirement_from_forge_range(range_str)
-        Gem::Requirement.create("~> #{range_str.gsub(%r{\.x\Z}, '.0')}")
+        Gem::Requirement.create("~> #{range_str.gsub(/\.x\Z/, '.0')}")
       end
 
       def rubygems_puppet_versions
@@ -236,7 +219,7 @@ module PDK
             spec_tuple.name == 'puppet' && Gem::Platform.match(spec_tuple.platform)
           end
           puppet_versions = puppet_tuples.map { |name, _| name.version }.uniq
-          puppet_versions.sort { |a, b| b <=> a }
+          puppet_versions.sort.reverse
         end
       end
 

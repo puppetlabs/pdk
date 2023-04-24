@@ -60,15 +60,15 @@ module PDK
         Puppet::PuppetValidatorGroup,
         Ruby::RubyValidatorGroup,
         Tasks::TasksValidatorGroup,
-        YAML::YAMLValidatorGroup,
-      ].map { |klass| [klass.new.name, klass] }.to_h.freeze
+        YAML::YAMLValidatorGroup
+      ].to_h { |klass| [klass.new.name, klass] }.freeze
     end
 
     def self.invoke_validators_by_name(context, names, parallel = false, options = {})
       instances = names.select { |name| validator_names.include?(name) }
                        .map { |name| validator_hash[name].new(context, options) }
-                       .select { |instance| instance.valid_in_context? }
-                       .each { |instance| instance.prepare_invoke! }
+                       .select(&:valid_in_context?)
+                       .each(&:prepare_invoke!)
       report = PDK::Report.new
 
       # Nothing to validate then nothing to do.
@@ -76,9 +76,9 @@ module PDK
 
       require 'pdk/cli/exec_group'
       exec_group = PDK::CLI::ExecGroup.create(
-        'Validating module using %{num_of_threads} threads' % { num_of_threads: instances.count },
+        format('Validating module using %{num_of_threads} threads', num_of_threads: instances.count),
         { parallel: parallel },
-        options,
+        options
       )
 
       instances.each do |validator|

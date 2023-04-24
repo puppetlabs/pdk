@@ -3,24 +3,24 @@ require 'pdk/config/namespace'
 
 def spec_simple_validator
   {
-    proc:    ->(value) { value.match(%r{(bar|baz)}) },
-    message: 'must be bar or baz',
+    proc: ->(value) { value.match(/(bar|baz)/) },
+    message: 'must be bar or baz'
   }
 end
 
 describe PDK::Config::Namespace do
-  subject(:config) { described_class.new('config', config_options) }
+  subject(:config) { described_class.new('config', **config_options) }
 
   let(:config_options) { {} }
 
-  shared_context :with_a_nested_namespace do |name|
-    before(:each) do
+  shared_context 'with a nested namespace' do |name|
+    before do
       config.namespace(name)
     end
   end
 
-  shared_context :with_a_mounted_file do |name|
-    before(:each) do
+  shared_context 'with a mounted file' do |name|
+    before do
       path = PDK::Util::Filesystem.expand_path(File.join('path', 'to', name))
       allow(PDK::Util::Filesystem).to receive(:read_file).with(path, anything)
       allow(PDK::Util::Filesystem).to receive(:write_file).with(path, anything)
@@ -30,8 +30,8 @@ describe PDK::Config::Namespace do
     end
   end
 
-  shared_context :with_a_mounted_file_with_content do |name, content|
-    before(:each) do
+  shared_context 'with a mounted file with content' do |name, content|
+    before do
       path = PDK::Util::Filesystem.expand_path(File.join('path', 'to', name))
       allow(PDK::Util::Filesystem).to receive(:read_file).with(path).and_return(content)
       allow(PDK::Util::Filesystem).to receive(:file?).and_call_original
@@ -44,7 +44,7 @@ describe PDK::Config::Namespace do
   end
 
   describe '#[]' do
-    before(:each) do
+    before do
       config.setting('foo')
       config[:foo] = 'bar'
     end
@@ -73,7 +73,7 @@ describe PDK::Config::Namespace do
     context 'when persistent_defaults is true' do
       let(:config_options) { { persistent_defaults: true } }
 
-      before(:each) do
+      before do
         # Add a value with a default value
         config.setting('spec_test') do
           default_to { 'spec_default' }
@@ -89,7 +89,7 @@ describe PDK::Config::Namespace do
     context 'when persistent_defaults is false' do
       let(:config_options) { { persistent_defaults: false } }
 
-      before(:each) do
+      before do
         # Add a value with a default value
         config.setting('spec_test') do
           default_to { 'spec_default' }
@@ -104,7 +104,7 @@ describe PDK::Config::Namespace do
   end
 
   describe '#[]=' do
-    before(:each) do
+    before do
       config.setting('foo') { validate spec_simple_validator }
       config[:foo] = 'bar'
     end
@@ -126,16 +126,16 @@ describe PDK::Config::Namespace do
 
     it 'raises ArgumentError if key is a mount name' do
       config.mount('invalid', PDK::Config::Namespace.new('invalid')) # rubocop:disable RSpec/DescribedClass No.
-      expect { config['invalid'] = 'baz' }.to raise_error(ArgumentError, %r{Namespace mounts can not be set a value})
+      expect { config['invalid'] = 'baz' }.to raise_error(ArgumentError, /Namespace mounts can not be set a value/)
     end
 
     it 'raises ArgumentError if the setting is not valid' do
-      expect { config['foo'] = 'not_valid' }.to raise_error(ArgumentError, %r{must be bar or baz})
+      expect { config['foo'] = 'not_valid' }.to raise_error(ArgumentError, /must be bar or baz/)
     end
   end
 
   describe '#fetch' do
-    before(:each) do
+    before do
       config.setting('foo')
       config[:foo] = 'bar'
     end
@@ -165,9 +165,9 @@ describe PDK::Config::Namespace do
   describe '#resolve' do
     let(:config_options) { { persistent_defaults: false } }
 
-    include_context :with_a_mounted_file_with_content, 'mounted', '{"setting1": "value1"}'
+    include_context 'with a mounted file with content', 'mounted', '{"setting1": "value1"}'
 
-    before(:each) do
+    before do
       # Add a value with a default value
       config.setting('spec_test') do
         default_to { 'spec_default' }
@@ -219,7 +219,7 @@ describe PDK::Config::Namespace do
   end
 
   describe '#namespace' do
-    before(:each) do
+    before do
       config.namespace('test')
     end
 
@@ -243,7 +243,7 @@ describe PDK::Config::Namespace do
   describe '#mount' do
     let(:new_namespace) { described_class.new }
 
-    before(:each) do
+    before do
       config.mount('test_mount', new_namespace)
     end
 
@@ -261,7 +261,7 @@ describe PDK::Config::Namespace do
   end
 
   describe '#setting' do
-    before(:each) do
+    before do
       config.setting('my_value') { default_to { 'foo' } }
     end
 
@@ -271,8 +271,8 @@ describe PDK::Config::Namespace do
   end
 
   describe '#name' do
-    include_context :with_a_nested_namespace, 'nested'
-    include_context :with_a_mounted_file, 'mounted'
+    include_context 'with a nested namespace', 'nested'
+    include_context 'with a mounted file', 'mounted'
 
     context 'on a root namespace' do
       it 'returns the name of the namespace' do
@@ -294,10 +294,10 @@ describe PDK::Config::Namespace do
   end
 
   describe '#to_h' do
-    include_context :with_a_nested_namespace, 'nested'
-    include_context :with_a_mounted_file, 'mounted'
+    include_context 'with a nested namespace', 'nested'
+    include_context 'with a mounted file', 'mounted'
 
-    before(:each) do
+    before do
       # Create the settings
       config.setting('in_root')
       config.setting('nil_setting')
@@ -328,47 +328,47 @@ describe PDK::Config::Namespace do
   end
 
   describe '#child_namespace?' do
-    include_context :with_a_nested_namespace, 'nested'
-    include_context :with_a_mounted_file, 'mounted'
+    include_context 'with a nested namespace', 'nested'
+    include_context 'with a mounted file', 'mounted'
 
     context 'on a root namespace' do
       it 'returns false' do
-        expect(config.child_namespace?).to be_falsey
+        expect(config).not_to be_child_namespace
       end
     end
 
     context 'on a nested namespace' do
       it 'returns true' do
-        expect(config['nested'].child_namespace?).to be_truthy
+        expect(config['nested']).to be_child_namespace
       end
     end
 
     context 'on a mounted file' do
       it 'returns true' do
-        expect(config['mounted'].child_namespace?).to be_truthy
+        expect(config['mounted']).to be_child_namespace
       end
     end
   end
 
   describe '#include_in_parent?' do
-    include_context :with_a_nested_namespace, 'nested'
-    include_context :with_a_mounted_file, 'mounted'
+    include_context 'with a nested namespace', 'nested'
+    include_context 'with a mounted file', 'mounted'
 
     context 'on a root namespace' do
       it 'returns false' do
-        expect(config.include_in_parent?).to be_falsey
+        expect(config).not_to be_include_in_parent
       end
     end
 
     context 'on a nested namespace' do
       it 'returns true' do
-        expect(config['nested'].include_in_parent?).to be_truthy
+        expect(config['nested']).to be_include_in_parent
       end
     end
 
     context 'on a mounted file' do
       it 'returns true' do
-        expect(config['mounted'].include_in_parent?).to be_falsey
+        expect(config['mounted']).not_to be_include_in_parent
       end
     end
   end

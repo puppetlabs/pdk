@@ -1,11 +1,13 @@
 require:
   - rubocop-rspec
+  - rubocop-performance
   - ./ext/rubocop.rb
 inherit_from: .rubocop_todo.yml
 
 AllCops:
   TargetRubyVersion: 2.7
   NewCops: enable
+  SuggestExtensions: false
   Exclude:
     # binstubs, and other utilities
     - bin/**/*
@@ -16,144 +18,40 @@ AllCops:
     - package-testing/vendor/**/.*
     - tmp/**/*
 
-Layout/HeredocIndentation:
-  Description: The `squiggly` style would be preferable, but is only available from ruby 2.3. We'll enable this when we can.
-  Enabled: False
-
-# Metrics, excludes complexity and sizing metrics for now, as ruby's defaults are very strict
-Metrics/AbcSize:
-  Enabled: False
-
-Metrics/BlockLength:
-  Description: rspec uses long describe blocks, so allow long blocks under spec/
-  Enabled: False
-  Exclude:
-    - 'spec/**/*.rb'
-
-Metrics/ClassLength:
-  Enabled: False
-
-Metrics/CyclomaticComplexity:
-  Enabled: False
-
+# Layout
 Layout/LineLength:
   Description: People have wide screens, use them.
   Max: 200
 
-Metrics/MethodLength:
-  Enabled: False
-
-Metrics/ModuleLength:
-  Enabled: False
-
-Metrics/ParameterLists:
-  Enabled: False
-
-Metrics/PerceivedComplexity:
-  Enabled: False
-
-# RSpec cops
+# RSpec
 RSpec/BeforeAfterAll:
   Description: Beware of using after(:all) as it may cause state to leak between tests. A necessary evil in acceptance testing.
   Exclude:
     - 'spec/acceptance/**/*.rb'
     - 'package-testing/spec/package/**/*.rb'
 
-RSpec/DescribeClass:
-  Description: This cop does not account for rspec-puppet, and beaker-rspec usage.
-  Enabled: False
-
-RSpec/HookArgument:
-  Description: Prefer explicit :each argument, matching existing module's style
-  EnforcedStyle: each
-
 RSpec/NestedGroups:
   Description: Nested groups can lead to cleaner tests with less duplication
   Max: 10
 
-RSpec/ExampleLength:
-  Description: Forcing short examples leads to the creation of one-time use let() helpers
-  Enabled: False
-
 RSpec/MessageSpies:
   EnforcedStyle: receive
 
-RSpec/ScatteredSetup:
-  Enabled: False
-
-# Style Cops
-Style/AsciiComments:
-  Description: Names, non-english speaking communities.
-  Enabled: False
-
-Style/BlockDelimiters:
-  Description: Prefer braces for chaining. Mostly an aesthetical choice. Better to be consistent then.
-  EnforcedStyle: braces_for_chaining
-
-Style/ClassAndModuleChildren:
-  Description: Compact style reduces the required amount of indentation.
-  EnforcedStyle: compact
-
-Style/EmptyElse:
-  Description: Enforce against empty else clauses, but allow `nil` for clarity.
-  EnforcedStyle: empty
-
-Style/FormatString:
-  Description: Following the main puppet project's style, prefer the % format format.
-  EnforcedStyle: percent
-
-Style/FormatStringToken:
-  Description: Following the main puppet project's style, prefer the simpler template tokens over annotated ones.
-  EnforcedStyle: template
-
-Style/IfUnlessModifier:
-  Description: Post-fix `if` modifiers are hard to parse for newcomers. We don't want to encourage them. Post-fix `unless` modifiers could be nice in some cases, but the Cop doesn't differentiate.
-  Enabled: false
-
-Style/Lambda:
-  Description: Prefer the keyword for easier discoverability.
-  EnforcedStyle: literal
-
-Style/MethodCalledOnDoEndBlock:
-  Enabled: true
-
-Style/RegexpLiteral:
-  Description: Community preference. See https://github.com/voxpupuli/modulesync_config/issues/168
-  EnforcedStyle: percent_r
-
-Style/SymbolProc:
-  Description: SymbolProc notation is not discoverable
-  Enabled: false
-
-Style/TernaryParentheses:
-  Description: Checks for use of parentheses around ternary conditions. Enforce parentheses on complex expressions for better readability, but seriously consider breaking it up.
-  EnforcedStyle: require_parentheses_when_complex
-
-Style/TrailingCommaInArguments:
-  Description: Prefer always trailing comma on multiline argument lists. This makes diffs, and re-ordering nicer.
-  EnforcedStyleForMultiline: comma
-
-Style/TrailingCommaInArrayLiteral:
-  Description: Prefer always trailing comma on multiline literals. This makes diffs, and re-ordering nicer.
-  EnforcedStyleForMultiline: comma
-
-Style/TrailingCommaInHashLiteral:
-  Description: Prefer always trailing comma on multiline literals. This makes diffs, and re-ordering nicer.
-  EnforcedStyleForMultiline: comma
-
-Style/SymbolArray:
-  Description: Using percent style obscures symbolic intent of array's contents.
-  Enabled: true
+Style/WordArray:
   EnforcedStyle: brackets
 
-# Enforce LF line endings, even when on Windows
-Layout/EndOfLine:
-  EnforcedStyle: lf
+Style/SymbolArray:
+  EnforcedStyle: brackets
 
-# The duplicate gem detection in Gemfile is broken for if-else statements
-Bundler/DuplicatedGem:
-  Enabled: false
+Style/FormatStringToken:
+  EnforcedStyle: template
 
+# Metrics
+Metrics/ParameterLists:
+  Description: 6 is the current highest count. Lets not go over that.
+  Max: 6
+
+# PDK
 PDK/FileFilePredicate:
   Exclude:
     - lib/pdk/util/filesystem.rb

@@ -25,15 +25,13 @@ module PDK
         end
 
         def spinner_text_for_targets(_targets)
-          'Checking Ruby code style (%{pattern}).' % { pattern: pattern }
+          format('Checking Ruby code style (%{pattern}).', pattern: pattern)
         end
 
         def parse_options(targets)
           cmd_options = ['--format', 'json']
 
-          if options[:auto_correct]
-            cmd_options << '--auto-correct'
-          end
+          cmd_options << '--auto-correct' if options[:auto_correct]
 
           cmd_options.concat(targets)
         end
@@ -51,9 +49,10 @@ module PDK
 
           json_data['files'].each do |file_info|
             next unless file_info.key?('offenses')
+
             result = {
               file: file_info['path'],
-              source: 'rubocop',
+              source: 'rubocop'
             }
 
             if file_info['offenses'].empty?
@@ -62,13 +61,13 @@ module PDK
               file_info['offenses'].each do |offense|
                 report.add_event(
                   result.merge(
-                    line:     offense['location']['line'],
-                    column:   offense['location']['column'],
-                    message:  offense['message'],
+                    line: offense['location']['line'],
+                    column: offense['location']['column'],
+                    message: offense['message'],
                     severity: offense['corrected'] ? 'corrected' : offense['severity'],
-                    test:     offense['cop_name'],
-                    state:    :failure,
-                  ),
+                    test: offense['cop_name'],
+                    state: :failure
+                  )
                 )
               end
             end

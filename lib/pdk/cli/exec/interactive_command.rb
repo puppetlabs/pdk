@@ -5,13 +5,7 @@ module PDK
     module Exec
       class InteractiveCommand < Command
         def initialize(*argv)
-          @argv = argv
-
-          # Default to running things in the system context.
-          @context = :system
-
-          # Extra environment vars to add to base set.
-          @environment = {}
+          super(*argv)
         end
 
         def register_spinner(_spinner, _opts = {})
@@ -42,9 +36,7 @@ module PDK
           if [:module, :pwd].include?(context)
             mod_root = PDK::Util.module_root
 
-            unless mod_root
-              raise PDK::CLI::FatalError, 'Current working directory is not part of a module. (No metadata.json was found.)'
-            end
+            raise PDK::CLI::FatalError, 'Current working directory is not part of a module. (No metadata.json was found.)' unless mod_root
 
             unless context == :pwd || Dir.pwd == mod_root
               orig_workdir = Dir.pwd
@@ -61,7 +53,7 @@ module PDK
             stdout: nil,
             stderr: nil,
             exit_code: result[:exit_code],
-            duration: result[:duration],
+            duration: result[:duration]
           }
         ensure
           Dir.chdir(orig_workdir) if orig_workdir
@@ -72,7 +64,7 @@ module PDK
         # TODO: debug logging
         def run_process!
           command_string = argv.join(' ')
-          PDK.logger.debug("Executing '%{command}' interactively" % { command: command_string })
+          PDK.logger.debug(format("Executing '%{command}' interactively", command: command_string))
 
           if context == :module
             PDK.logger.debug('Command environment:')
@@ -88,13 +80,8 @@ module PDK
           exit_code = child_status.exitstatus
           duration = Time.now - start_time
 
-          PDK.logger.debug("Execution of '%{command}' complete (duration: \
-                              %{duration_in_seconds}s; exit code: %{exit_code})" %
-                              {
-                                command: command_string,
-                                exit_code: exit_code,
-                                duration_in_seconds: duration,
-                              })
+          PDK.logger.debug(format("Execution of '%{command}' complete (duration: \
+                              %{duration_in_seconds}s; exit code: %{exit_code})", command: command_string, exit_code: exit_code, duration_in_seconds: duration))
 
           { exit_code: exit_code, duration: duration }
         end

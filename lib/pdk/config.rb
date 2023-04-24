@@ -24,12 +24,12 @@ module PDK
     def initialize(options = nil)
       options = {} if options.nil?
       @config_options = {
-        'system.path'                 => PDK::Config.system_config_path,
+        'system.path' => PDK::Config.system_config_path,
         'system.module_defaults.path' => PDK::Config.system_answers_path,
-        'user.path'                   => PDK::Config.user_config_path,
-        'user.module_defaults.path'   => PDK::AnswerFile.default_answer_file_path,
-        'user.analytics.path'         => PDK::Config.analytics_config_path,
-        'context'                     => PDK.context,
+        'user.path' => PDK::Config.user_config_path,
+        'user.module_defaults.path' => PDK::AnswerFile.default_answer_file_path,
+        'user.analytics.path' => PDK::Config.analytics_config_path,
+        'context' => PDK.context
       }.merge(options)
     end
 
@@ -91,9 +91,7 @@ module PDK
     def project_config
       context = @config_options['context']
       @project ||= PDK::Config::Namespace.new('project') do
-        if context.is_a?(PDK::Context::ControlRepo)
-          mount :environment, PDK::ControlRepo.environment_conf_as_config(File.join(context.root_path, 'environment.conf'))
-        end
+        mount :environment, PDK::ControlRepo.environment_conf_as_config(File.join(context.root_path, 'environment.conf')) if context.is_a?(PDK::Context::ControlRepo)
 
         mount :validate, PDK::Config::YAML.new('validate', file: File.join(context.root_path, 'pdk.yaml'), persistent_defaults: true) do
           setting 'ignore' do
@@ -124,9 +122,10 @@ module PDK
       return nil if root.nil? || root.empty?
 
       if keys.empty?
-        if root.is_a?(Array)
+        case root
+        when Array
           name = root
-        elsif root.is_a?(String)
+        when String
           name = split_key_string(root)
         else
           return nil
@@ -135,7 +134,7 @@ module PDK
         name = [root].concat(keys)
       end
 
-      get_within_scopes(name[1..-1], [name[0]])
+      get_within_scopes(name[1..], [name[0]])
     end
 
     # Returns a configuration setting by name, using scope precedence rules. If no scopes are passed, then all scopes are queried using the default precedence rules
@@ -143,8 +142,8 @@ module PDK
     # @scopes [Nil, Array[String]] The list of scopes, in order, to query in turn for the setting_name. Invalid or missing scopes are ignored.
     # @return [PDK::Config::Namespace, Object, nil] The value of the configuration setting. Returns nil if it does no exist
     def get_within_scopes(setting_name, scopes = nil)
-      raise ArgumentError, 'Expected an Array but got \'%{klass}\' for scopes' % { klass: scopes.class } unless scopes.nil? || scopes.is_a?(Array)
-      raise ArgumentError, 'Expected an Array or String but got \'%{klass}\' for setting_name' % { klass: setting_name.class } unless setting_name.is_a?(Array) || setting_name.is_a?(String)
+      raise ArgumentError, format('Expected an Array but got \'%{klass}\' for scopes', klass: scopes.class) unless scopes.nil? || scopes.is_a?(Array)
+      raise ArgumentError, format('Expected an Array or String but got \'%{klass}\' for setting_name', klass: setting_name.class) unless setting_name.is_a?(Array) || setting_name.is_a?(String)
 
       setting_arr = setting_name.is_a?(String) ? split_key_string(setting_name) : setting_name
       all_scope_names = all_scopes.keys
@@ -165,6 +164,7 @@ module PDK
     # @yield [PDK::Config::Namespace, Object] The value of the configuration setting. Does not yield if the setting does not exist or is nil
     def with_scoped_value(setting_name, scopes = nil)
       raise ArgumentError, 'must be passed a block' unless block_given?
+
       value = get_within_scopes(setting_name, scopes)
       yield value unless value.nil?
     end
@@ -179,24 +179,23 @@ module PDK
     # @return [Object] The new value of the configuration setting
     def set(key, value, options = {})
       options = {
-        force: false,
+        force: false
       }.merge(options)
 
       names = key.is_a?(String) ? split_key_string(key) : key
       raise ArgumentError, 'Invalid configuration names' if names.nil? || !names.is_a?(Array) || names.empty?
+
       scope_name = names[0]
-      raise ArgumentError, "Unknown configuration root '%{name}'" % { name: scope_name } if all_scopes[scope_name].nil?
-      deep_set_object(value, options[:force], send(all_scopes[scope_name]), *names[1..-1])
+      raise ArgumentError, format("Unknown configuration root '%{name}'", name: scope_name) if all_scopes[scope_name].nil?
+
+      deep_set_object(value, options[:force], send(all_scopes[scope_name]), *names[1..])
     end
 
     def self.bolt_analytics_config
       file = PDK::Util::Filesystem.expand_path('~/.puppetlabs/bolt/analytics.yaml')
       PDK::Config::YAML.new(file: file)
     rescue PDK::Config::LoadError => e
-      PDK.logger.debug 'Unable to load %{file}: %{message}' % {
-        file:    file,
-        message: e.message,
-      }
+      PDK.logger.debug format('Unable to load %{file}: %{message}', file: file, message: e.message)
       PDK::Config::YAML.new
     end
 
@@ -222,7 +221,7 @@ module PDK
 
     # return nil if not exist
     def self.json_schema(name)
-      File.join(json_schemas_path, name + '_schema.json')
+      File.join(json_schemas_path, "#{name}_schema.json")
     end
 
     def self.analytics_config_exist?
@@ -235,24 +234,21 @@ module PDK
       return unless PDK::CLI::Util.interactive?
 
       pre_message =
-        'PDK collects anonymous usage information to help us understand how ' \
-        'it is being used and make decisions on how to improve it. You can ' \
-        'find out more about what data we collect and how it is used in the ' \
-        "PDK documentation at %{url}.\n" % { url: 'https://puppet.com/docs/pdk/latest/pdk_install.html' }
+        format('PDK collects anonymous usage information to help us understand how ' \
+               'it is being used and make decisions on how to improve it. You can ' \
+               'find out more about what data we collect and how it is used in the ' \
+               "PDK documentation at %{url}.\n", url: 'https://puppet.com/docs/pdk/latest/pdk_install.html')
       post_message =
-        'You can opt in or out of the usage data collection at any time by ' \
-        'editing the analytics configuration file at %{path} and changing ' \
-        "the '%{key}' value." % {
-          path: PDK::Config.analytics_config_path,
-        key:  'disabled',
-        }
+        format('You can opt in or out of the usage data collection at any time by ' \
+               'editing the analytics configuration file at %{path} and changing ' \
+               "the '%{key}' value.", path: PDK::Config.analytics_config_path, key: 'disabled')
 
       questions = [
         {
-          name:     'enabled',
+          name: 'enabled',
           question: 'Do you consent to the collection of anonymous PDK usage information?',
-          type:     :yes,
-        },
+          type: :yes
+        }
       ]
 
       require 'pdk/cli/util/interview'
@@ -265,9 +261,9 @@ module PDK
 
       if answers.nil?
         PDK.logger.info 'No answer given, opting out of analytics collection.'
-        PDK.config.set(%w[user analytics disabled], true)
+        PDK.config.set(['user', 'analytics', 'disabled'], true)
       else
-        PDK.config.set(%w[user analytics disabled], !answers['enabled'])
+        PDK.config.set(['user', 'analytics', 'disabled'], !answers['enabled'])
       end
 
       PDK.logger.info(text: post_message, wrap: true)
@@ -275,7 +271,7 @@ module PDK
 
     private
 
-    #:nocov: This is a private method and is tested elsewhere
+    # :nocov: This is a private method and is tested elsewhere
     def traverse_object(object, *names)
       return nil if object.nil? || !object.respond_to?(:[])
       return nil if names.nil?
@@ -289,25 +285,27 @@ module PDK
       value = object[name]
       if names.empty?
         return value if value.is_a?(PDK::Config::Namespace)
+
         # Duplicate arrays and hashes so that they are isolated from changes being made
-        (value.is_a?(Hash) || value.is_a?(Array)) ? value.dup : value
+        value.is_a?(Hash) || value.is_a?(Array) ? value.dup : value
       else
         traverse_object(value, *names)
       end
     end
-    #:nocov:
+    # :nocov:
 
-    #:nocov: This is a private method and is tested elsewhere
+    # :nocov: This is a private method and is tested elsewhere
     # Takes a string representation of a setting and splits into its constituent setting parts e.g.
     # 'user.a.b.c' becomes ['user', 'a', 'b', 'c']
     # @return [Array[String]] The string split into each setting name as an array
     def split_key_string(key)
-      raise ArgumentError, 'Expected a String but got \'%{klass}\'' % { klass: key.class } unless key.is_a?(String)
+      raise ArgumentError, format('Expected a String but got \'%{klass}\'', klass: key.class) unless key.is_a?(String)
+
       key.split('.')
     end
-    #:nocov:
+    # :nocov:
 
-    #:nocov:
+    # :nocov:
     # Returns all known scope names and their associated method name to call, to query the scope
     # Note - Order is important. This dictates the resolution precedence order (topmost is processed first)
     # @return [Hash[String, Symbol]] A hash of the scope name then method name to call to query the scope (as a Symbol)
@@ -315,12 +313,12 @@ module PDK
       # Note - Order is important. This dictates the resolution precedence order (topmost is processed first)
       {
         'project' => :project_config,
-        'user'    => :user_config,
-        'system'  => :system_config,
+        'user' => :user_config,
+        'system' => :system_config
       }.freeze
     end
 
-    #:nocov: This is a private method and is tested elsewhere
+    # :nocov: This is a private method and is tested elsewhere
     # Deeply traverses an object tree via `[]` and sets the last
     # element to the value specified.
     #
@@ -333,9 +331,7 @@ module PDK
       current_value = namespace[name]
 
       # If the next thing in the traversal chain is another namespace, set the value using that child namespace.
-      if current_value.is_a?(PDK::Config::Namespace)
-        return deep_set_object(value, force, current_value, *names)
-      end
+      return deep_set_object(value, force, current_value, *names) if current_value.is_a?(PDK::Config::Namespace)
 
       # We're at the end of the name traversal
       if names.empty?
@@ -378,11 +374,11 @@ module PDK
         return value
       end
 
-      raise ArgumentError, "Unable to set '%{key}' to '%{value}' as it is not a Hash" % { key: namespace.name + '.' + name, value: hash_value } unless current_value.is_a?(Hash)
+      raise ArgumentError, format("Unable to set '%{key}' to '%{value}' as it is not a Hash", key: "#{namespace.name}.#{name}", value: hash_value) unless current_value.is_a?(Hash)
 
       namespace[name] = current_value.merge(hash_value)
       value
     end
-    #:nocov:
+    # :nocov:
   end
 end

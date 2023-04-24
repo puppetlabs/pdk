@@ -7,28 +7,24 @@ namespace :acceptance do
   task :hostgen do
     require 'beaker-hostgenerator'
 
-    unless ENV['SHA'] || ENV['LOCAL_PKG']
-      abort "SHA or LOCAL_PKG must be set:\n" \
-        "  SHA: git sha or tag of a pdk package build available on the server\n" \
-        '  LOCAL_PKG: path to a locally built package to use for testing'
+    unless ENV.fetch('SHA', nil) || ENV.fetch('LOCAL_PKG', nil)
+      abort "SHA or LOCAL_PKG must be set:\n  " \
+            "SHA: git sha or tag of a pdk package build available on the server\n  " \
+            'LOCAL_PKG: path to a locally built package to use for testing'
     end
 
-    if ENV['SHA'] && ENV['LOCAL_PKG']
-      abort 'Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other.'
-    end
+    abort 'Both SHA and LOCAL_PKG are set, these vars are mutually exclusive. Set only one or the other.' if ENV.fetch('SHA', nil) && ENV.fetch('LOCAL_PKG', nil)
 
-    if ENV['LOCAL_PKG'] && !File.exist?(ENV['LOCAL_PKG'])
-      abort "LOCAL_PKG is set to '#{ENV['LOCAL_PKG']}' but that file does not exist."
-    end
+    abort "LOCAL_PKG is set to '#{ENV.fetch('LOCAL_PKG', nil)}' but that file does not exist." if ENV.fetch('LOCAL_PKG', nil) && !File.exist?(ENV.fetch('LOCAL_PKG', nil))
 
-    test_target = ENV['TEST_TARGET']
+    test_target = ENV.fetch('TEST_TARGET', nil)
     abort 'TEST_TARGET must be set to a beaker-hostgenerator string for a workstation host e.g. "redhat7-64workstation."' unless test_target
 
     # to use this beaker suite outside of Puppet Inc, set BUILD_SERVER to the hostname of a build server that uses the directory hierarchy beaker assumes
     ENV['BUILD_SERVER'] ||= 'builds.delivery.puppetlabs.net'
 
-    if ENV['SHA'] && ENV['SHA'] == 'latest'
-      page = Nokogiri::HTML(open("https://#{ENV['BUILD_SERVER']}/pdk?C=M&O=D"))
+    if ENV.fetch('SHA', nil) && ENV.fetch('SHA', nil) == 'latest'
+      page = Nokogiri::HTML(open("https://#{ENV.fetch('BUILD_SERVER', nil)}/pdk?C=M&O=D"))
 
       table_rows = page.xpath('//tr[td]').select do |r|
         r.css('a').attribute('href').value =~ %r{\A[0-9a-f]+/.*?\Z}
@@ -44,18 +40,16 @@ namespace :acceptance do
     # If testing on OSX or Windows, SUITE_VERSION should be set to the build's version string (it forms part of the installer file naming)
     # If it's not set, it's possible to fall back to finding it on BUILD_SERVER if SHA is available
     # or in the package filename if LOCAL_PKG is being used.
-    unless ENV['SUITE_VERSION'] || test_target !~ %r{osx|win}
+    unless ENV.fetch('SUITE_VERSION', nil) || test_target !~ /osx|win/
       if ENV['LOCAL_PKG']
-        $stderr.puts "SUITE_VERSION has not been set. Trying to determine it from the filename: '#{ENV['LOCAL_PKG']}'"
+        $stderr.puts "SUITE_VERSION has not been set. Trying to determine it from the filename: '#{ENV.fetch('LOCAL_PKG', nil)}'"
 
-        ENV['SUITE_VERSION'] = %r{^pdk[-_](\d+\.\d+\.\d+\.\d+(.pre\d?)?(\.\d+\.g[a-f\d]+)?)}.match(File.basename(ENV['LOCAL_PKG'], '.dmg'))[1]
+        ENV['SUITE_VERSION'] = /^pdk[-_](\d+\.\d+\.\d+\.\d+(.pre\d?)?(\.\d+\.g[a-f\d]+)?)/.match(File.basename(ENV.fetch('LOCAL_PKG', nil), '.dmg'))[1]
 
-        unless ENV['SUITE_VERSION']
-          abort "Could not find a valid SUITE_VERSION in the filename: '#{ENV['LOCAL_PKG']}'"
-        end
+        abort "Could not find a valid SUITE_VERSION in the filename: '#{ENV.fetch('LOCAL_PKG', nil)}'" unless ENV['SUITE_VERSION']
       else
-        metadata_url = "http://#{ENV['BUILD_SERVER']}/pdk/#{ENV['SHA']}/artifacts/#{ENV['SHA']}.build_metadata.json"
-        $stderr.puts "SUITE_VERSION has not been set. Fetching it from build metadata for '#{ENV['SHA']}' at '#{metadata_url}'"
+        metadata_url = "http://#{ENV.fetch('BUILD_SERVER', nil)}/pdk/#{ENV.fetch('SHA', nil)}/artifacts/#{ENV.fetch('SHA', nil)}.build_metadata.json"
+        $stderr.puts "SUITE_VERSION has not been set. Fetching it from build metadata for '#{ENV.fetch('SHA', nil)}' at '#{metadata_url}'"
 
         begin
           ENV['SUITE_VERSION'] = JSON.parse(URI.parse(metadata_url).read)['version']
@@ -64,7 +58,7 @@ namespace :acceptance do
         end
       end
 
-      $stderr.puts "Resolved SUITE_VERSION to '#{ENV['SUITE_VERSION']}'"
+      $stderr.puts "Resolved SUITE_VERSION to '#{ENV.fetch('SUITE_VERSION', nil)}'"
     end
 
     puts "Generating beaker hosts using TEST_TARGET value #{test_target}"
@@ -82,7 +76,7 @@ namespace :acceptance do
   desc 'Run acceptance tests against a pdk package'
   RSpec::Core::RakeTask.new(:package) do |t|
     t.rspec_opts = ['--format documentation']
-    t.pattern = ENV['RSPEC_PATTERN'] || 'spec/package/**/*_spec.rb'
+    t.pattern = ENV.fetch('RSPEC_PATTERN', nil) || 'spec/package/**/*_spec.rb'
   end
   task package: [:hostgen]
 

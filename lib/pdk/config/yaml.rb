@@ -8,6 +8,7 @@ module PDK
     class YAML < Namespace
       def parse_file(filename)
         raise unless block_given?
+
         data = load_data(filename)
         return if data.nil? || data.empty?
 
@@ -22,15 +23,9 @@ module PDK
 
         data.each { |k, v| yield k, PDK::Config::Setting.new(k, self, v) }
       rescue Psych::SyntaxError => e
-        raise PDK::Config::LoadError, 'Syntax error when loading %{file}: %{error}' % {
-          file:  filename,
-          error: "#{e.problem} #{e.context}",
-        }
+        raise PDK::Config::LoadError, format('Syntax error when loading %{file}: %{error}', file: filename, error: "#{e.problem} #{e.context}")
       rescue Psych::DisallowedClass => e
-        raise PDK::Config::LoadError, 'Unsupported class in %{file}: %{error}' % {
-          file:  filename,
-          error: e.message,
-        }
+        raise PDK::Config::LoadError, format('Unsupported class in %{file}: %{error}', file: filename, error: e.message)
       end
 
       # Serializes object data into a YAML string.

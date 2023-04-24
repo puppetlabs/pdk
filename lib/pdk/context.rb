@@ -20,9 +20,7 @@ module PDK
 
         # Puppet Module detection
         metadata_file = File.join(current, 'metadata.json')
-        if PDK::Util::Filesystem.file?(metadata_file) || PDK::Util.in_module_root?(context_path)
-          return PDK::Context::Module.new(current, context_path)
-        end
+        return PDK::Context::Module.new(current, context_path) if PDK::Util::Filesystem.file?(metadata_file) || PDK::Util.in_module_root?(context_path)
 
         previous = current
         current = PDK::Util::Filesystem.expand_path('..', current)
@@ -82,6 +80,7 @@ module PDK
           PDK.logger.debug("Detected #{current.display_name} at #{current.root_path.nil? ? current.context_path : current.root_path}")
           current = current.parent_context
           break if current.nil?
+
           depth += 1
           # Circuit breaker in case there are circular references
           break if depth > 20
@@ -89,11 +88,11 @@ module PDK
         nil
       end
 
-      #:nocov: There's nothing to test here
+      # :nocov: There's nothing to test here
       def to_s
         "#<#{self.class}:#{object_id}>#{context_path}"
       end
-      #:nocov:
+      # :nocov:
     end
   end
 end

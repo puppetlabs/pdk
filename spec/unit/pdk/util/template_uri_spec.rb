@@ -9,8 +9,8 @@ describe PDK::Util::TemplateURI do
 
   include_context 'mock configuration'
 
-  before(:each) do
-    PDK.config.set(%w[user module_defaults template-url], nil)
+  before do
+    PDK.config.set(['user', 'module_defaults', 'template-url'], nil)
     allow(PDK::Util).to receive(:module_root).and_return(nil)
     allow(PDK::Util).to receive(:package_install?).and_return(false)
   end
@@ -28,7 +28,7 @@ describe PDK::Util::TemplateURI do
       context 'that contains the default template keyword' do
         let(:opts_or_uri) { 'pdk-default#1.2.3' }
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:package_install?).and_return(false)
         end
 
@@ -41,9 +41,9 @@ describe PDK::Util::TemplateURI do
         let(:opts_or_uri) { 'https://' }
 
         it 'raises a FatalError' do
-          expect {
+          expect do
             template_uri
-          }.to raise_error(PDK::CLI::FatalError, %r{initialization with a non-uri string}i)
+          end.to raise_error(PDK::CLI::FatalError, /initialization with a non-uri string/i)
         end
       end
     end
@@ -67,8 +67,8 @@ describe PDK::Util::TemplateURI do
     context 'with options' do
       let(:opts_or_uri) do
         {
-          :'template-url' => 'https://github.com/my/pdk-templates.git',
-          :'template-ref' => 'custom',
+          'template-url': 'https://github.com/my/pdk-templates.git',
+          'template-ref': 'custom'
         }
       end
 
@@ -87,17 +87,17 @@ describe PDK::Util::TemplateURI do
         instance_double(
           PDK::Module::Metadata,
           data: {
-            'pdk-version'  => pdk_version,
+            'pdk-version' => pdk_version,
             'template-url' => template_url,
-            'template-ref' => template_ref,
-          },
+            'template-ref' => template_ref
+          }
         )
       end
 
       let(:opts_or_uri) { {} }
       let(:default_uri) { "#{described_class.default_template_uri}##{described_class.default_template_ref}" }
 
-      before :each do
+      before do
         allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
         allow(PDK::Util).to receive(:module_root).and_return(module_root)
         allow(PDK::Util).to receive(:development_mode?).and_return(false)
@@ -105,7 +105,7 @@ describe PDK::Util::TemplateURI do
 
       context 'when passed no options' do
         context 'and there are no metadata or answers' do
-          before(:each) do
+          before do
             allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(module_root, 'metadata.json')).and_return(false)
           end
 
@@ -115,8 +115,8 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'and there are only answers' do
-          before :each do
-            PDK.config.set(%w[user module_defaults template-url], 'answer-templates')
+          before do
+            PDK.config.set(['user', 'module_defaults', 'template-url'], 'answer-templates')
             allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(module_root, 'metadata.json')).and_return(false)
           end
 
@@ -125,9 +125,9 @@ describe PDK::Util::TemplateURI do
           end
 
           context 'and the answer file template is invalid' do
-            before(:each) do
+            before do
               allow(described_class).to receive(:valid_template?).with(anything).and_call_original
-              allow(described_class).to receive(:valid_template?).with(uri: anything, type: anything, allow_fallback: true).and_return(false)
+              allow(described_class).to receive(:valid_template?).with({ uri: anything, type: anything, allow_fallback: true }).and_return(false)
             end
 
             it 'returns the default template' do
@@ -137,28 +137,28 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'and there are metadata and answers' do
-          before :each do
-            PDK.config.set(%w[user module_defaults template-url], 'answer-templates')
+          before do
+            PDK.config.set(['user', 'module_defaults', 'template-url'], 'answer-templates')
           end
 
           it 'returns the metadata template' do
             allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
             allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
-            allow(PDK::Util::Filesystem).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+            allow(PDK::Util::Filesystem).to receive(:file?).with(/PDK_VERSION/).and_return(true)
             expect(template_uri.to_s).to eq('metadata-templates')
           end
         end
       end
 
       context 'when there are metadata and answers' do
-        before :each do
-          PDK.config.set(%w[user module_defaults template-url], 'answer-templates')
+        before do
+          PDK.config.set(['user', 'module_defaults', 'template-url'], 'answer-templates')
           allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(PDK::Util.module_root, 'metadata.json')).and_return(true)
           allow(PDK::Module::Metadata).to receive(:from_file).with(File.join(PDK::Util.module_root, 'metadata.json')).and_return(mock_metadata)
         end
 
         context 'and passed template-url' do
-          let(:opts_or_uri) { { :'template-url' => 'cli-templates' } }
+          let(:opts_or_uri) { { 'template-url': 'cli-templates' } }
 
           it 'returns the specified template' do
             expect(template_uri.to_s).to eq('cli-templates#main')
@@ -166,7 +166,7 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'and passed windows template-url' do
-          let(:opts_or_uri) { { :'template-url' => 'C:\\cli-templates' } }
+          let(:opts_or_uri) { { 'template-url': 'C:\\cli-templates' } }
 
           it 'returns the specified template' do
             allow(Gem).to receive(:win_platform?).and_return(true)
@@ -175,7 +175,7 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'and passed template-url and template-ref' do
-          let(:opts_or_uri) { { :'template-url' => 'cli-templates', :'template-ref' => 'cli-ref' } }
+          let(:opts_or_uri) { { 'template-url': 'cli-templates', 'template-ref': 'cli-ref' } }
 
           it 'returns the specified template and ref' do
             uri = Addressable::URI.parse('cli-templates')
@@ -289,7 +289,7 @@ describe PDK::Util::TemplateURI do
     subject(:default_uri) { described_class.default_template_uri }
 
     context 'when it is a package install' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:package_install?).and_return(true)
       end
 
@@ -300,7 +300,7 @@ describe PDK::Util::TemplateURI do
     end
 
     context 'when it is not a package install' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:package_install?).and_return(false)
       end
 
@@ -313,7 +313,7 @@ describe PDK::Util::TemplateURI do
   describe '.default_template_ref' do
     subject { described_class.default_template_ref(uri) }
 
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:development_mode?).and_return(development_mode)
     end
 
@@ -324,7 +324,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { true }
 
         it 'returns main' do
-          is_expected.to eq('main')
+          expect(subject).to eq('main')
         end
       end
 
@@ -332,7 +332,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { false }
 
         it 'returns main' do
-          is_expected.to eq('main')
+          expect(subject).to eq('main')
         end
       end
     end
@@ -344,7 +344,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { false }
 
         it 'returns the built-in TEMPLATE_REF' do
-          is_expected.to eq(PDK::TEMPLATE_REF)
+          expect(subject).to eq(PDK::TEMPLATE_REF)
         end
       end
 
@@ -352,7 +352,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { true }
 
         it 'returns main' do
-          is_expected.to eq('main')
+          expect(subject).to eq('main')
         end
       end
     end
@@ -364,7 +364,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { false }
 
         it 'returns the built-in TEMPLATE_REF' do
-          is_expected.to eq(PDK::TEMPLATE_REF)
+          expect(subject).to eq(PDK::TEMPLATE_REF)
         end
       end
 
@@ -372,7 +372,7 @@ describe PDK::Util::TemplateURI do
         let(:development_mode) { true }
 
         it 'returns main' do
-          is_expected.to eq('main')
+          expect(subject).to eq('main')
         end
       end
     end
@@ -384,7 +384,7 @@ describe PDK::Util::TemplateURI do
     let(:options) { {} }
 
     context 'when provided a template-url' do
-      subject(:cli_template_uri) { described_class.templates(:'template-url' => template_url).first[:uri] }
+      subject(:cli_template_uri) { described_class.templates('template-url': template_url).first[:uri] }
 
       context 'that is a ssh:// URL without a port' do
         let(:template_url) { 'ssh://git@github.com/1234/repo.git' }
@@ -392,10 +392,10 @@ describe PDK::Util::TemplateURI do
         it 'parses into an Addressable::URI without port set' do
           expect(cli_template_uri).to have_attributes(
             scheme: 'ssh',
-            user:   'git',
-            host:   'github.com',
-            port:   nil,
-            path:   '/1234/repo.git',
+            user: 'git',
+            host: 'github.com',
+            port: nil,
+            path: '/1234/repo.git'
           )
         end
       end
@@ -406,10 +406,10 @@ describe PDK::Util::TemplateURI do
         it 'parses into an Addressable::URI with port set' do
           expect(cli_template_uri).to have_attributes(
             scheme: 'ssh',
-            user:   'git',
-            host:   'github.com',
-            port:   1234,
-            path:   '/user/repo.git',
+            user: 'git',
+            host: 'github.com',
+            port: 1234,
+            path: '/user/repo.git'
           )
         end
       end
@@ -420,10 +420,10 @@ describe PDK::Util::TemplateURI do
         it 'parses into an Addressable::URI without port set' do
           expect(cli_template_uri).to have_attributes(
             scheme: 'ssh',
-            user:   'git',
-            host:   'github.com',
-            port:   nil,
-            path:   '/user/repo.git',
+            user: 'git',
+            host: 'github.com',
+            port: nil,
+            path: '/user/repo.git'
           )
         end
       end
@@ -434,28 +434,28 @@ describe PDK::Util::TemplateURI do
         it 'parses the numeric part as part of the path' do
           expect(cli_template_uri).to have_attributes(
             scheme: 'ssh',
-            user:   'git',
-            host:   'github.com',
-            port:   nil,
-            path:   '/1234/repo.git',
+            user: 'git',
+            host: 'github.com',
+            port: nil,
+            path: '/1234/repo.git'
           )
         end
       end
     end
 
     context 'when the answers file has saved template-url value' do
-      before(:each) do
-        PDK.config.set(%w[user module_defaults template-url], answers_template_url)
+      before do
+        PDK.config.set(['user', 'module_defaults', 'template-url'], answers_template_url)
       end
 
       context 'that is the deprecated pdk-module-template' do
         let(:answers_template_url) { 'https://github.com/puppetlabs/pdk-module-template' }
 
         it 'converts it to the new default template URL' do
-          is_expected.to include(
-            type:           'PDK answers',
-            uri:            Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'),
-            allow_fallback: true,
+          expect(subject).to include(
+            type: 'PDK answers',
+            uri: Addressable::URI.parse('https://github.com/puppetlabs/pdk-templates'),
+            allow_fallback: true
           )
         end
       end
@@ -464,22 +464,22 @@ describe PDK::Util::TemplateURI do
         let(:answers_template_url) { 'https://github.com/my/pdk-template' }
 
         it 'uses the template as specified' do
-          is_expected.to include(
-            type:           'PDK answers',
-            uri:            Addressable::URI.parse(answers_template_url),
-            allow_fallback: true,
+          expect(subject).to include(
+            type: 'PDK answers',
+            uri: Addressable::URI.parse(answers_template_url),
+            allow_fallback: true
           )
         end
       end
     end
 
     context 'when the answers file has no saved template-url value' do
-      before(:each) do
-        PDK.config.set(%w[user module_defaults template-url], nil)
+      before do
+        PDK.config.set(['user', 'module_defaults', 'template-url'], nil)
       end
 
       it 'does not include a PDK answers template option' do
-        is_expected.not_to include(type: 'PDK answers', uri: anything, allow_fallback: true)
+        expect(subject).not_to include(type: 'PDK answers', uri: anything, allow_fallback: true)
       end
     end
 
@@ -488,18 +488,18 @@ describe PDK::Util::TemplateURI do
         instance_double(
           PDK::Module::Metadata,
           data: {
-            'pdk-version'  => PDK::VERSION,
-            'template-url' => metadata_url,
-          },
+            'pdk-version' => PDK::VERSION,
+            'template-url' => metadata_url
+          }
         )
       end
 
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
         allow(PDK::Util).to receive(:development_mode?).and_return(false)
         allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
-        allow(PDK::Util::Filesystem).to receive(:file?).with(%r{PDK_VERSION}).and_return(true)
+        allow(PDK::Util::Filesystem).to receive(:file?).with(/PDK_VERSION/).and_return(true)
       end
 
       context 'that is a pdk-default keyword' do
@@ -507,10 +507,10 @@ describe PDK::Util::TemplateURI do
         let(:expected_uri) { described_class.default_template_addressable_uri.tap { |obj| obj.fragment = 'main' } }
 
         it 'converts the keyword to the default template' do
-          is_expected.to include(
+          expect(subject).to include(
             type: 'metadata.json',
             uri: expected_uri,
-            allow_fallback: true,
+            allow_fallback: true
           )
         end
       end
@@ -519,15 +519,15 @@ describe PDK::Util::TemplateURI do
         let(:metadata_url) { 'git@github.com:puppetlabs/pdk-templates.git' }
 
         it 'converts the URL to and ssh:// URI' do
-          is_expected.to include(
+          expect(subject).to include(
             type: 'metadata.json',
-            uri:  Addressable::URI.new(
+            uri: Addressable::URI.new(
               scheme: 'ssh',
-              user:   'git',
-              host:   'github.com',
-              path:   '/puppetlabs/pdk-templates.git',
+              user: 'git',
+              host: 'github.com',
+              path: '/puppetlabs/pdk-templates.git'
             ),
-            allow_fallback: true,
+            allow_fallback: true
           )
         end
       end
@@ -568,7 +568,7 @@ describe PDK::Util::TemplateURI do
         let(:template) { super().merge(uri: Addressable::URI.parse('/path/to/a/template')) }
 
         context 'that points to a git repository' do
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:repo?).with('/path/to/a/template').and_return(true)
           end
 
@@ -576,7 +576,7 @@ describe PDK::Util::TemplateURI do
         end
 
         context 'that does not point to a git repository' do
-          before(:each) do
+          before do
             allow(PDK::Util::Git).to receive(:repo?).with('/path/to/a/template').and_return(false)
           end
 
@@ -587,12 +587,12 @@ describe PDK::Util::TemplateURI do
           end
 
           context 'but does point to a directory' do
-            before(:each) do
+            before do
               allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/a/template').and_return(true)
             end
 
             context 'that contains a valid template' do
-              before(:each) do
+              before do
                 allow_template_dir('/path/to/a/template', true)
               end
 
@@ -600,7 +600,7 @@ describe PDK::Util::TemplateURI do
             end
 
             context 'that does not contain a valid template' do
-              before(:each) do
+              before do
                 allow_template_dir('/path/to/a/template', false)
               end
 
@@ -612,7 +612,7 @@ describe PDK::Util::TemplateURI do
             let(:template) { super().merge(allow_fallback: false) }
 
             it 'raises a FatalError' do
-              expect { return_val }.to raise_error(PDK::CLI::FatalError, %r{unable to find a valid template}i)
+              expect { return_val }.to raise_error(PDK::CLI::FatalError, /unable to find a valid template/i)
             end
           end
         end
@@ -652,7 +652,7 @@ describe PDK::Util::TemplateURI do
     subject { described_class.new(url).metadata_format }
 
     context 'when running PDK from a package' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:package_install?).and_return(true)
         allow(PDK::Util).to receive(:pdk_package_basedir).and_return('/opt/puppetlabs/pdk')
       end
@@ -677,7 +677,7 @@ describe PDK::Util::TemplateURI do
     end
 
     context 'when not running PDK from a package' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:package_install?).and_return(false)
       end
 

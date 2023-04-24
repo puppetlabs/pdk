@@ -4,24 +4,19 @@ require 'json'
 
 describe PDK::Util::PuppetVersion do
   let(:cache_versions) do
-    %w[6.29.0 7.23.0]
+    ['6.29.0', '7.23.0']
   end
 
   let(:rubygems_versions) do
-    %w[
-      7.23.0
-      6.29.0
-    ]
+    ['7.23.0', '6.29.0']
   end
 
   let(:forge_version_map) do
-    # rubocop:disable PDK/FileOpen
-    JSON.parse(File.open(File.join(RSpec.configuration.root, 'fixtures', 'pe_versions.json')).read)
-    # rubocop:enable PDK/FileOpen
+    JSON.parse(PDK::Util::Filesystem.read_file(File.join(RSpec.configuration.root, 'fixtures', 'pe_versions.json')))
   end
 
   shared_context 'with a mocked rubygems response' do
-    before(:each) do
+    before do
       mock_fetcher = instance_double(Gem::SpecFetcher)
       allow(Gem::SpecFetcher).to receive(:fetcher).and_return(mock_fetcher)
       mock_response = rubygems_versions.map do |version|
@@ -34,14 +29,14 @@ describe PDK::Util::PuppetVersion do
 
   # TODO: use existing shared context from spec/support/packaged_install.rb
   shared_context 'is not a package install' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(false)
     end
   end
 
   # TODO: use existing shared context from spec/support/packaged_install.rb
   shared_context 'is a package install' do
-    before(:each) do
+    before do
       allow(PDK::Util).to receive(:package_install?).and_return(true)
       allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.5.9' => '2.5.0', '2.7.7' => '2.7.0')
 
@@ -54,9 +49,9 @@ describe PDK::Util::PuppetVersion do
       allow(instance277).to receive(:available_puppet_versions).and_return(versions277)
     end
 
-    after(:each) do
-      PDK::Util::RubyVersion.instance_variable_set('@instance', nil)
-      PDK::Util::RubyVersion.instance_variable_set('@active_ruby_version', nil)
+    after do
+      PDK::Util::RubyVersion.instance_variable_set(:@instance, nil)
+      PDK::Util::RubyVersion.instance_variable_set(:@active_ruby_version, nil)
     end
   end
 
@@ -64,7 +59,7 @@ describe PDK::Util::PuppetVersion do
     subject { described_class.latest_available }
 
     let(:expected_version) do
-      versions.sort { |a, b| b <=> a }.first
+      versions.max
     end
 
     context 'when running from a package install' do
@@ -86,7 +81,7 @@ describe PDK::Util::PuppetVersion do
 
   describe '.fetch_puppet_dev' do
     context 'if puppet source has already been fetched' do
-      before(:each) do
+      before do
         allow(described_class.instance).to receive(:puppet_dev_fetched?).and_return(true)
       end
 
@@ -111,7 +106,7 @@ describe PDK::Util::PuppetVersion do
     end
 
     context 'if puppet source is not cloned yet' do
-      before(:each) do
+      before do
         allow(PDK::Util::Git).to receive(:remote_repo?).with(anything).and_return(false)
       end
 
@@ -120,21 +115,21 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 1,
+            exit_code: 1
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return(File.join('path', 'to'))
           allow(PDK::Util::Git).to receive(:git).with('clone', anything, anything).and_return(clone_results)
         end
 
         it 'raises an error' do
-          expect(logger).to receive(:error).with(a_string_matching(%r{foo}))
-          expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
-          expect {
+          expect(logger).to receive(:error).with(a_string_matching(/foo/))
+          expect(logger).to receive(:error).with(a_string_matching(/bar/))
+          expect do
             described_class.fetch_puppet_dev
-          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to clone git repository}i))
+          end.to raise_error(PDK::CLI::FatalError, a_string_matching(/Unable to clone git repository/i))
         end
       end
 
@@ -143,23 +138,23 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 0,
+            exit_code: 0
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return(File.join('path', 'to'))
           allow(PDK::Util::Git).to receive(:git).with('clone', anything, anything).and_return(clone_results)
         end
 
         it 'exits cleanly' do
-          expect(described_class.fetch_puppet_dev).to eq(nil)
+          expect(described_class.fetch_puppet_dev).to be_nil
         end
       end
     end
 
     context 'if puppet source is already cloned' do
-      before(:each) do
+      before do
         allow(PDK::Util::Git).to receive(:remote_repo?).with(anything).and_return(true)
       end
 
@@ -168,21 +163,21 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 1,
+            exit_code: 1
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(fetch_results)
         end
 
         it 'raises an error' do
-          expect(logger).to receive(:error).with(a_string_matching(%r{foo}))
-          expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
-          expect {
+          expect(logger).to receive(:error).with(a_string_matching(/foo/))
+          expect(logger).to receive(:error).with(a_string_matching(/bar/))
+          expect do
             described_class.fetch_puppet_dev
-          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to fetch from git remote at}i))
+          end.to raise_error(PDK::CLI::FatalError, a_string_matching(/Unable to fetch from git remote at/i))
         end
       end
 
@@ -191,18 +186,18 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 0,
+            exit_code: 0
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(fetch_results)
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/main').and_return(exit_code: 0)
         end
 
         it 'exits cleanly' do
-          expect(described_class.fetch_puppet_dev).to eq(nil)
+          expect(described_class.fetch_puppet_dev).to be_nil
         end
       end
 
@@ -211,22 +206,22 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 1,
+            exit_code: 1
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(exit_code: 0)
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/main').and_return(reset_results)
         end
 
         it 'raises an error' do
-          expect(logger).to receive(:error).with(a_string_matching(%r{foo}))
-          expect(logger).to receive(:error).with(a_string_matching(%r{bar}))
-          expect {
+          expect(logger).to receive(:error).with(a_string_matching(/foo/))
+          expect(logger).to receive(:error).with(a_string_matching(/bar/))
+          expect do
             described_class.fetch_puppet_dev
-          }.to raise_error(PDK::CLI::FatalError, a_string_matching(%r{Unable to update git repository}i))
+          end.to raise_error(PDK::CLI::FatalError, a_string_matching(/Unable to update git repository/i))
         end
       end
 
@@ -235,18 +230,18 @@ describe PDK::Util::PuppetVersion do
           {
             stdout: 'foo',
             stderr: 'bar',
-            exit_code: 0,
+            exit_code: 0
           }
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util).to receive(:cachedir).and_return('/path/to/')
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'fetch', 'origin').and_return(exit_code: 0)
           allow(PDK::Util::Git).to receive(:git).with('-C', anything, 'reset', '--hard', 'origin/main').and_return(reset_results)
         end
 
         it 'exits cleanly' do
-          expect(described_class.fetch_puppet_dev).to eq(nil)
+          expect(described_class.fetch_puppet_dev).to be_nil
         end
       end
     end
@@ -258,17 +253,17 @@ describe PDK::Util::PuppetVersion do
 
       context 'and passed an invalid version number' do
         it 'raises an ArgumentError' do
-          expect {
+          expect do
             described_class.find_gem_for('irving')
-          }.to raise_error(ArgumentError, %r{not a valid version number}i)
+          end.to raise_error(ArgumentError, /not a valid version number/i)
         end
       end
 
       context 'and passed only a major version' do
         it 'returns the latest version matching the major version' do
           expected_result = {
-            gem_version:  Gem::Version.new('6.29.0'),
-            ruby_version: '2.5.9',
+            gem_version: Gem::Version.new('6.29.0'),
+            ruby_version: '2.5.9'
           }
           expect(described_class.find_gem_for('6')).to eq(expected_result)
         end
@@ -277,8 +272,8 @@ describe PDK::Util::PuppetVersion do
       context 'and passed only a major and minor version' do
         it 'returns the latest patch version for the major and minor version' do
           expected_result = {
-            gem_version:  Gem::Version.new('6.29.0'),
-            ruby_version: '2.5.9',
+            gem_version: Gem::Version.new('6.29.0'),
+            ruby_version: '2.5.9'
           }
           expect(described_class.find_gem_for('6.29')).to eq(expected_result)
         end
@@ -286,17 +281,17 @@ describe PDK::Util::PuppetVersion do
 
       it 'returns the specified version if it exists in the cache' do
         expected_result = {
-          gem_version:  Gem::Version.new('6.29.0'),
-          ruby_version: '2.5.9',
+          gem_version: Gem::Version.new('6.29.0'),
+          ruby_version: '2.5.9'
         }
         expect(described_class.find_gem_for('6.29.0')).to eq(expected_result)
       end
 
       context 'and the specified version does not exist in the cache' do
         it 'raises an ArgumentError if no version can be found' do
-          expect {
+          expect do
             described_class.find_gem_for('1.0.0')
-          }.to raise_error(ArgumentError, %r{unable to find a puppet gem matching}i)
+          end.to raise_error(ArgumentError, /unable to find a puppet gem matching/i)
         end
       end
     end
@@ -307,16 +302,16 @@ describe PDK::Util::PuppetVersion do
 
       def result(version)
         {
-          gem_version:  Gem::Version.new(version),
-          ruby_version: PDK::Util::RubyVersion.default_ruby_version,
+          gem_version: Gem::Version.new(version),
+          ruby_version: PDK::Util::RubyVersion.default_ruby_version
         }
       end
 
       context 'and passed an invalid version number' do
         it 'raises an ArgumentError' do
-          expect {
+          expect do
             described_class.find_gem_for('irving')
-          }.to raise_error(ArgumentError, %r{not a valid version number}i)
+          end.to raise_error(ArgumentError, /not a valid version number/i)
         end
       end
 
@@ -339,11 +334,11 @@ describe PDK::Util::PuppetVersion do
   end
 
   describe '.from_pe_version' do
-    before(:each) do
+    before do
       allow(described_class.instance).to receive(:fetch_pe_version_map).and_return(forge_version_map)
     end
 
-    after(:each) do
+    after do
       # Clear memoization of the version map between specs
       described_class.instance.instance_variable_set(:@pe_version_map, nil)
     end
@@ -355,16 +350,16 @@ describe PDK::Util::PuppetVersion do
         safe_versions = {
           2023 => {
             'puppet' => '7.23.0',
-            'ruby' => '2.7.7',
+            'ruby' => '2.7.7'
           },
           2021 => {
             'puppet' => '7.23.0',
-            'ruby' => '2.7.7',
+            'ruby' => '2.7.7'
           },
           2019 => {
             'puppet' => '6.29.0',
-            'ruby' => '2.5.9',
-          },
+            'ruby' => '2.5.9'
+          }
         }
 
         parsed_version = Gem::Version.new(pe_version)
@@ -374,13 +369,13 @@ describe PDK::Util::PuppetVersion do
         if cache_versions.include?(version_info['puppet'])
           gem_version = version_info['puppet']
         else
-          requirement = Gem::Requirement.create("~> #{version_info['puppet'].gsub(%r{\.\d+\Z}, '.0')}")
+          requirement = Gem::Requirement.create("~> #{version_info['puppet'].gsub(/\.\d+\Z/, '.0')}")
           gem_version = cache_versions.find { |r| requirement.satisfied_by? Gem::Version.new(r) }
         end
 
         {
-          gem_version:  Gem::Version.new(gem_version),
-          ruby_version: version_info['ruby'],
+          gem_version: Gem::Version.new(gem_version),
+          ruby_version: version_info['ruby']
         }
       end
 
@@ -400,15 +395,15 @@ describe PDK::Util::PuppetVersion do
       end
 
       it 'raises an ArgumentError if given an unknown PE version' do
-        expect {
+        expect do
           described_class.from_pe_version('9999.1.1')
-        }.to raise_error(ArgumentError, %r{unable to map puppet enterprise version}i)
+        end.to raise_error(ArgumentError, /unable to map puppet enterprise version/i)
       end
 
       it 'raises an ArgumentError if given an invalid version string' do
-        expect {
+        expect do
           described_class.from_pe_version('irving')
-        }.to raise_error(ArgumentError, %r{not a valid version number}i)
+        end.to raise_error(ArgumentError, /not a valid version number/i)
       end
     end
 
@@ -420,24 +415,24 @@ describe PDK::Util::PuppetVersion do
         safe_versions = {
           2023 => {
             'puppet' => '7.23.0',
-            'ruby' => '2.7.7',
+            'ruby' => '2.7.7'
           },
           2021 => {
             'puppet' => '7.23.0',
-            'ruby' => '2.7.7',
+            'ruby' => '2.7.7'
           },
           2019 => {
             'puppet' => '6.29.0',
-            'ruby' => '2.5.9',
-          },
+            'ruby' => '2.5.9'
+          }
         }
 
         parsed_version = Gem::Version.new(pe_version)
         version_info = safe_versions[parsed_version.segments[0]]
 
         {
-          gem_version:  Gem::Version.new(version_info['puppet']),
-          ruby_version: PDK::Util::RubyVersion.default_ruby_version,
+          gem_version: Gem::Version.new(version_info['puppet']),
+          ruby_version: PDK::Util::RubyVersion.default_ruby_version
         }
       end
 
@@ -457,15 +452,15 @@ describe PDK::Util::PuppetVersion do
       end
 
       it 'raises an ArgumentError if given an unknown PE version' do
-        expect {
+        expect do
           described_class.from_pe_version('9999.1.1')
-        }.to raise_error(ArgumentError, %r{unable to map puppet enterprise version}i)
+        end.to raise_error(ArgumentError, /unable to map puppet enterprise version/i)
       end
 
       it 'raises an ArgumentError if given an invalid version string' do
-        expect {
+        expect do
           described_class.from_pe_version('irving')
-        }.to raise_error(ArgumentError, %r{not a valid version number}i)
+        end.to raise_error(ArgumentError, /not a valid version number/i)
       end
     end
   end
@@ -483,7 +478,7 @@ describe PDK::Util::PuppetVersion do
     end
 
     context 'with a pinned version requirement' do
-      before(:each) do
+      before do
         metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '4.10.10' }]
       end
 
@@ -495,24 +490,24 @@ describe PDK::Util::PuppetVersion do
     end
 
     context 'with an invalid version requirement' do
-      before(:each) do
+      before do
         metadata.data['requirements'] = [{ 'name' => 'puppet', 'version_requirement' => '' }]
       end
 
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           described_class.from_module_metadata(metadata)
-        }.to raise_error(ArgumentError)
+        end.to raise_error(ArgumentError)
       end
     end
 
     context 'when module has no metadata.json' do
-      before(:each) do
+      before do
         allow(PDK::Util).to receive(:find_upwards).with('metadata.json').and_return(nil)
       end
 
       it 'logs a warning' do
-        expect(logger).to receive(:warn).with(%r{no metadata\.json present}i)
+        expect(logger).to receive(:warn).with(/no metadata\.json present/i)
 
         described_class.from_module_metadata
       end

@@ -15,6 +15,7 @@ module PDK
       # @see PDK::Config::Namespace.parse_file
       def parse_file(filename)
         raise unless block_given?
+
         data = load_data(filename)
         return if data.nil? || data.empty?
 
@@ -39,11 +40,13 @@ module PDK
         lines = ''
         data.each do |name, value|
           next if value.nil?
+
           if value.is_a?(Hash)
             # Hashes are an INI section
             lines += "\n[#{name}]\n"
             value.each do |child_name, child_value|
               next if child_value.nil?
+
               lines += "#{child_name} = #{munge_serialized_value(child_value)}\n"
             end
           else
@@ -59,12 +62,11 @@ module PDK
       def munge_serialized_value(value)
         value = value.to_s unless value.is_a?(String)
         # Add enclosing quotes if there's a space in the value
-        value = '"' + value + '"' if value.include?(' ')
+        value = "\"#{value}\"" if value.include?(' ')
         value
       end
 
       # Adapted from https://raw.githubusercontent.com/puppetlabs/puppet/6c257fc7827989c2af2901f974666f0f23611153/lib/puppet/settings/ini_file.rb
-      # rubocop:disable Style/RegexpLiteral
       # rubocop:disable Style/PerlBackrefs
       # rubocop:disable Style/RedundantSelf
       # rubocop:disable Style/StringLiterals
@@ -177,7 +179,6 @@ module PDK
       # rubocop:enable Style/StringLiterals
       # rubocop:enable Style/RedundantSelf
       # rubocop:enable Style/PerlBackrefs
-      # rubocop:enable Style/RegexpLiteral
     end
   end
 end

@@ -22,18 +22,9 @@ module PDK
     autoload :VendoredFile, 'pdk/util/vendored_file'
     autoload :Version, 'pdk/util/version'
 
-    MODULE_FOLDERS = %w[
-      manifests
-      lib/puppet
-      lib/puppet_x
-      lib/facter
-      tasks
-      facts.d
-      functions
-      types
-    ].freeze
+    MODULE_FOLDERS = ['manifests', 'lib/puppet', 'lib/puppet_x', 'lib/facter', 'tasks', 'facts.d', 'functions', 'types'].freeze
 
-    #:nocov:
+    # :nocov:
     # This method just wraps core Ruby functionality and
     # can be ignored for code coverage
 
@@ -41,7 +32,7 @@ module PDK
     def exit_process(exit_code)
       exit exit_code
     end
-    #:nocov:
+    # :nocov:
 
     # Searches upwards from current working directory for the given target file.
     #
@@ -57,6 +48,7 @@ module PDK
       until !PDK::Util::Filesystem.directory?(current) || current == previous
         filename = File.join(current, target)
         return filename if PDK::Util::Filesystem.file?(filename)
+
         previous = current
         current = PDK::Util::Filesystem.expand_path('..', current)
       end
@@ -84,9 +76,8 @@ module PDK
     # @return [String] Canonical path
     def canonical_path(path)
       if Gem.win_platform?
-        unless PDK::Util::Filesystem.exist?(path)
-          raise PDK::CLI::FatalError, "Cannot resolve a full path to '%{path}', as it does not currently exist." % { path: path }
-        end
+        raise PDK::CLI::FatalError, format("Cannot resolve a full path to '%{path}', as it does not currently exist.", path: path) unless PDK::Util::Filesystem.exist?(path)
+
         PDK::Util::Windows::File.get_long_pathname(path)
       else
         PDK::Util::Filesystem.expand_path(path)
@@ -115,6 +106,7 @@ module PDK
 
     def pdk_package_basedir
       raise PDK::CLI::FatalError, 'Package basedir requested for non-package install.' unless package_install?
+
       require 'pdk/util/version'
 
       File.dirname(PDK::Util::Version.version_file)
@@ -152,6 +144,7 @@ module PDK
       return @system_configdir = File.join(File::SEPARATOR, 'opt', 'puppetlabs', 'pdk', 'config') unless Gem.win_platform?
 
       return @system_configdir = File.join(PDK::Util::Env['ProgramData'], 'PuppetLabs', 'PDK') unless PDK::Util::Env['ProgramData'].nil?
+
       @system_configdir = File.join(PDK::Util::Env['AllUsersProfile'], 'PuppetLabs', 'PDK')
     end
     module_function :system_configdir
@@ -166,8 +159,6 @@ module PDK
         File.dirname(metadata_path)
       elsif in_module_root?
         Dir.pwd
-      else
-        nil
       end
     end
     module_function :module_root
@@ -263,9 +254,10 @@ module PDK
     # @return [Object] duplicate of the original object
     #   the current working dir does not appear to be within a module.
     def deep_duplicate(object)
-      if object.is_a?(Array)
+      case object
+      when Array
         object.map { |item| deep_duplicate(item) }
-      elsif object.is_a?(Hash)
+      when Hash
         hash = object.dup
         hash.each_pair { |key, value| hash[key] = deep_duplicate(value) }
         hash

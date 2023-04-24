@@ -3,9 +3,9 @@ require 'pdk'
 module PDK
   module Util
     module Bundler
-      class BundleHelper; end
+      # class BundleHelper; end
 
-      def self.ensure_bundle!(gem_overrides = nil)
+      def self.ensure_bundle!(gem_overrides = {})
         bundle = BundleHelper.new
 
         # This will default ensure_bundle! to re-resolving everything to latest
@@ -17,7 +17,7 @@ module PDK
         end
 
         unless bundle.gemfile?
-          PDK.logger.debug("No Gemfile found in '%{cwd}'. Skipping bundler management." % { cwd: Dir.pwd })
+          PDK.logger.debug(format("No Gemfile found in '%{cwd}'. Skipping bundler management.", cwd: Dir.pwd))
           return
         end
 
@@ -44,9 +44,7 @@ module PDK
         # If there are missing dependencies after updating the lockfile, let `bundle install`
         # go out and get them. If the specified puppet gem version points to a remote location
         # or local filepath, then run bundle install as well.
-        if !bundle.installed?(gem_overrides) || (gem_overrides[:puppet] && gem_overrides[:puppet].start_with?('file://', 'git://', 'https://'))
-          bundle.install!(gem_overrides)
-        end
+        bundle.install!(gem_overrides) if !bundle.installed?(gem_overrides) || gem_overrides[:puppet]&.start_with?('file://', 'git://', 'https://')
 
         mark_as_bundled!(bundle.gemfile, gem_overrides)
       end
@@ -81,6 +79,7 @@ module PDK
 
         def gemfile_lock
           return if gemfile.nil?
+
           @gemfile_lock ||= File.join(File.dirname(gemfile), 'Gemfile.lock')
         end
 
@@ -115,20 +114,16 @@ module PDK
             # Subsequent 'bundle install' will still pick up any new dependencies.
             vendored_lockfiles = [
               File.join(PDK::Util.package_cachedir, "Gemfile-#{PDK::Util::RubyVersion.active_ruby_version}.lock"),
-              File.join(PDK::Util.package_cachedir, 'Gemfile.lock'),
+              File.join(PDK::Util.package_cachedir, 'Gemfile.lock')
             ]
 
             vendored_gemfile_lock = vendored_lockfiles.find do |lockfile|
               PDK::Util::Filesystem.exist?(lockfile)
             end
 
-            unless vendored_gemfile_lock
-              raise PDK::CLI::FatalError, 'Vendored Gemfile.lock (%{source}) not found.' % {
-                source: vendored_gemfile_lock,
-              }
-            end
+            raise PDK::CLI::FatalError, format('Vendored Gemfile.lock (%{source}) not found.', source: vendored_gemfile_lock) unless vendored_gemfile_lock
 
-            PDK.logger.debug('Using vendored Gemfile.lock from %{source}.' % { source: vendored_gemfile_lock })
+            PDK.logger.debug(format('Using vendored Gemfile.lock from %{source}.', source: vendored_gemfile_lock))
             PDK::Util::Filesystem.cp(vendored_gemfile_lock, File.join(PDK::Util.module_root, 'Gemfile.lock'))
           else
             argv = ['lock']
@@ -211,6 +206,7 @@ module PDK
 
         def binstubs!(gems)
           raise PDK::CLI::FatalError, 'Unable to install requested binstubs as the Gemfile is missing' if gemfile.nil?
+
           binstub_dir = File.join(File.dirname(gemfile), 'bin')
           return true if gems.all? { |gem| PDK::Util::Filesystem.file?(File.join(binstub_dir, gem)) }
 
@@ -218,7 +214,7 @@ module PDK
           result = cmd.execute!
 
           unless result[:exit_code].zero?
-            PDK.logger.fatal("Failed to generate binstubs for '%{gems}':\n%{output}" % { gems: gems.join(' '), output: result.values_at(:stdout, :stderr).join("\n") }) unless PDK.logger.debug?
+            PDK.logger.fatal(format("Failed to generate binstubs for '%{gems}':\n%{output}", gems: gems.join(' '), output: result.values_at(:stdout, :stderr).join("\n"))) unless PDK.logger.debug?
             raise PDK::CLI::FatalError, 'Unable to install requested binstubs.'
           end
 

@@ -33,13 +33,14 @@ module PDK
           @scanner.getch until @scanner.peek(1) == '{' || @scanner.eos?
 
           (@objects ||= []) << begin
-                                 JSON.parse(read_object(true) || '')
-                               rescue JSON::ParserError
-                                 nil
-                               end
+            JSON.parse(read_object(true) || '')
+          rescue JSON::ParserError
+            nil
+          end
         end
 
         return [] if @objects.nil?
+
         @objects = @objects.compact
       end
 
@@ -56,7 +57,7 @@ module PDK
         matched_text = new_object ? @scanner.getch : ''
 
         until @scanner.eos?
-          text = @scanner.scan_until(%r{(?:(?<!\\)"|\{|\})})
+          text = @scanner.scan_until(/(?:(?<!\\)"|\{|\})/)
           unless text
             @scanner.terminate
             return nil
@@ -67,7 +68,7 @@ module PDK
           when '}'
             break
           when '"'
-            text = @scanner.scan_until(%r{(?<!\\)"})
+            text = @scanner.scan_until(/(?<!\\)"/)
             unless text
               @scanner.terminate
               return nil

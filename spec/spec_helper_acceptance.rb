@@ -50,15 +50,14 @@ analytics_config = nil
 # from within pdk during spec tests, we have to manually re-add the global gem path :(
 bundler_spec = Gem::Specification.find_by_name('bundler')
 bundler_path = bundler_spec.gem_dir
-ENV['GEM_PATH'] = [ENV['GEM_PATH'], File.absolute_path(File.join(bundler_path, '..', '..')).to_s].compact.join(File::PATH_SEPARATOR)
+ENV['GEM_PATH'] = [ENV.fetch('GEM_PATH', nil), File.absolute_path(File.join(bundler_path, '..', '..')).to_s].compact.join(File::PATH_SEPARATOR)
 
 # Save bundle environment from being purged by specinfra. This needs to be repeated for every example, as specinfra does not correctly reset the environment after a `describe command()` block
 # presumably https://github.com/mizzy/specinfra/blob/79b62b37909545b67b7492574a97c300fb1dc91e/lib/specinfra/backend/exec.rb#L143-L165
 bundler_env = {}
-keys = %w[BUNDLER_EDITOR BUNDLE_BIN_PATH BUNDLE_GEMFILE
-          RUBYOPT GEM_HOME GEM_PATH GEM_CACHE]
+keys = ['BUNDLER_EDITOR', 'BUNDLE_BIN_PATH', 'BUNDLE_GEMFILE', 'RUBYOPT', 'GEM_HOME', 'GEM_PATH', 'GEM_CACHE']
 keys.each do |k|
-  bundler_env[k] = ENV[k] if ENV.key? k
+  bundler_env[k] = ENV.fetch(k, nil) if ENV.key? k
 end
 
 # dup to avoid pollution from specinfra
@@ -78,6 +77,9 @@ RSpec.configure do |c|
     analytics_config.write(YAML.dump('disabled' => true))
     analytics_config.close
     ENV['PDK_ANALYTICS_CONFIG'] = analytics_config.path
+
+    # Remove PUPPET_GEM_VERSION if it exists in the test environment
+    ENV.delete('PUPPET_GEM_VERSION')
   end
 
   c.after(:suite) do
@@ -88,14 +90,12 @@ RSpec.configure do |c|
     analytics_config.unlink
   end
 
-  c.after(:each) do |e|
+  c.after do |e|
     # Dump stderr into error message to help with debugging if test failed
-    if e.exception
-      e.exception.message << "\nDumping stderr output:\n\n#{subject.stderr}\n" if subject.respond_to?(:stderr) && subject.stderr != ''
-    end
+    e.exception.message << "\nDumping stderr output:\n\n#{subject.stderr}\n" if e.exception && (subject.respond_to?(:stderr) && subject.stderr != '')
 
     # recover bundle environment from serverspec munging
-    bundler_env.keys.each do |k|
+    bundler_env.each_key do |k|
       ENV[k] = bundler_env[k]
     end
   end

@@ -9,7 +9,7 @@ describe 'C100545 - Generate a module, add a gem to it, and validate it' do
 
   context 'when a new gem dependency has been added to the Gemfile' do
     before(:all) do
-      shell("echo \"gem \'nothing\'\" >> #{File.join(module_name, 'Gemfile')}")
+      shell("echo \"gem 'nothing'\" >> #{File.join(module_name, 'Gemfile')}")
     end
 
     describe command('pdk validate') do
@@ -26,7 +26,7 @@ describe 'C100545 - Generate a module, add a gem to it, and validate it' do
 
         it 'differs from the vendored lockfile' do
           vendored_lockfile = File.join(install_dir, 'share', 'cache', 'Gemfile.lock')
-          is_expected.not_to eq(file(vendored_lockfile).content)
+          expect(subject).not_to eq(file(vendored_lockfile).content)
         end
       end
     end

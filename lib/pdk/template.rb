@@ -37,12 +37,8 @@ module PDK
     #
     # @api public
     def self.with(uri, context)
-      unless block_given?
-        raise ArgumentError, '%{class_name}.with must be passed a block.' % { class_name: name }
-      end
-      unless uri.is_a? PDK::Util::TemplateURI
-        raise ArgumentError, '%{class_name}.with must be passed a PDK::Util::TemplateURI, got a %{uri_type}' % { uri_type: uri.class, class_name: name }
-      end
+      raise ArgumentError, format('%{class_name}.with must be passed a block.', class_name: name) unless block_given?
+      raise ArgumentError, format('%{class_name}.with must be passed a PDK::Util::TemplateURI, got a %{uri_type}', uri_type: uri.class, class_name: name) unless uri.is_a? PDK::Util::TemplateURI
 
       Fetcher.with(uri) do |fetcher|
         template_dir = TemplateDir.instance(uri, fetcher.path, context)

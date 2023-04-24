@@ -7,10 +7,10 @@ describe 'pdk remove config' do
   shared_examples 'a saved configuration file' do |new_content|
     it 'saves the setting' do
       # Force the command to run if not already
-      subject.exit_status # rubocop:disable RSpec/NamedSubject We don't actually know the name here
-      expect(File).to exist(ENV['PDK_ANSWER_FILE'])
+      subject.exit_status
+      expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
 
-      actual_content = File.open(ENV['PDK_ANSWER_FILE'], 'rb:utf-8') { |f| f.read }
+      actual_content = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8', &:read)
       expect(actual_content).to eq(new_content)
     end
   end
@@ -18,11 +18,11 @@ describe 'pdk remove config' do
   shared_examples 'a saved JSON configuration file' do |new_json_content|
     it 'saves the setting' do
       # Force the command to run if not already
-      subject.exit_status # rubocop:disable RSpec/NamedSubject We don't actually know the name here
-      expect(File).to exist(ENV['PDK_ANSWER_FILE'])
+      subject.exit_status
+      expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
 
-      actual_content_raw = File.open(ENV['PDK_ANSWER_FILE'], 'rb:utf-8') { |f| f.read }
-      actual_json_content = ::JSON.parse(actual_content_raw)
+      actual_content_raw = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8', &:read)
+      actual_json_content = JSON.parse(actual_content_raw)
       expect(actual_json_content).to eq(new_json_content)
     end
   end
@@ -33,14 +33,14 @@ describe 'pdk remove config' do
       unless initial_content.nil?
         require 'json'
         fake_answer_file.binmode
-        fake_answer_file.write(::JSON.pretty_generate(initial_content))
+        fake_answer_file.write(JSON.pretty_generate(initial_content))
       end
       fake_answer_file.close
       ENV['PDK_ANSWER_FILE'] = fake_answer_file.path
     end
 
     after(:all) do
-      File.delete(ENV['PDK_ANSWER_FILE']) if File.exist?(ENV['PDK_ANSWER_FILE']) # rubocop:disable PDK/FileDelete,PDK/FileExistPredicate Need actual file calls here
+      FileUtils.rm_f(ENV.fetch('PDK_ANSWER_FILE', nil)) # Need actual file calls here
       ENV.delete('PDK_ANSWER_FILE')
     end
   end
@@ -49,7 +49,7 @@ describe 'pdk remove config' do
     describe command('pdk remove config') do
       its(:exit_status) { is_expected.not_to eq 0 }
       its(:stdout) { is_expected.to have_no_output }
-      its(:stderr) { is_expected.to match(%r{Configuration name is required}) }
+      its(:stderr) { is_expected.to match(/Configuration name is required/) }
     end
 
     context 'with a setting that does not exist' do
@@ -58,7 +58,7 @@ describe 'pdk remove config' do
 
         its(:exit_status) { is_expected.to eq 0 }
         its(:stdout) { is_expected.to have_no_output }
-        its(:stderr) { is_expected.to match(%r{Could not remove 'user\.module_defaults\.mock' as it has not been set}) }
+        its(:stderr) { is_expected.to match(/Could not remove 'user\.module_defaults\.mock' as it has not been set/) }
       end
     end
 
@@ -67,8 +67,8 @@ describe 'pdk remove config' do
         include_context 'with a fake answer file', 'mock' => ['value', 'keep-value']
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=\["keep-value"\]}) }
-        its(:stderr) { is_expected.to match(%r{Removed 'value' from 'user\.module_defaults\.mock'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=\["keep-value"\]/) }
+        its(:stderr) { is_expected.to match(/Removed 'value' from 'user\.module_defaults\.mock'/) }
 
         it_behaves_like 'a saved JSON configuration file', 'mock' => ['keep-value']
       end
@@ -79,8 +79,8 @@ describe 'pdk remove config' do
         include_context 'with a fake answer file', 'mock' => ['value', 'keep-value']
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=$}) }
-        its(:stderr) { is_expected.to match(%r{Removed 'user\.module_defaults\.mock' which had a value of '\["value", "keep-value"\]}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=$/) }
+        its(:stderr) { is_expected.to match(/Removed 'user\.module_defaults\.mock' which had a value of '\["value", "keep-value"\]/) }
 
         it_behaves_like 'a saved JSON configuration file', {}
       end
@@ -91,8 +91,8 @@ describe 'pdk remove config' do
         include_context 'with a fake answer file', 'mock' => 1
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=$}) }
-        its(:stderr) { is_expected.to match(%r{Removed 'user\.module_defaults\.mock' which had a value of '1'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=$/) }
+        its(:stderr) { is_expected.to match(/Removed 'user\.module_defaults\.mock' which had a value of '1'/) }
 
         it_behaves_like 'a saved JSON configuration file', {}
       end
@@ -103,9 +103,9 @@ describe 'pdk remove config' do
         include_context 'with a fake answer file', 'mock' => 'value'
 
         its(:exit_status) { is_expected.to eq 0 }
-        its(:stdout) { is_expected.to match(%r{user.module_defaults.mock=$}) }
-        its(:stderr) { is_expected.to match(%r{Ignoring --force as the setting is not multi-valued}) }
-        its(:stderr) { is_expected.to match(%r{Removed 'user\.module_defaults\.mock' which had a value of 'value'}) }
+        its(:stdout) { is_expected.to match(/user.module_defaults.mock=$/) }
+        its(:stderr) { is_expected.to match(/Ignoring --force as the setting is not multi-valued/) }
+        its(:stderr) { is_expected.to match(/Removed 'user\.module_defaults\.mock' which had a value of 'value'/) }
 
         it_behaves_like 'a saved JSON configuration file', {}
       end

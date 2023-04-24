@@ -13,9 +13,7 @@ module PDK
         end
 
         def spinner_text
-          'Checking metadata syntax (%{patterns}).' % {
-            patterns: pattern.join(' '),
-          }
+          format('Checking metadata syntax (%{patterns}).', patterns: pattern.join(' '))
         end
 
         def invoke(report)
@@ -40,7 +38,7 @@ module PDK
               source: name,
               state: :failure,
               severity: 'error',
-              message: 'Could not be read.',
+              message: 'Could not be read.'
             )
             return 1
           end
@@ -49,27 +47,27 @@ module PDK
             JSON.parse(PDK::Util::Filesystem.read_file(target))
 
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :passed,
-              severity: 'ok',
+              file: target,
+              source: name,
+              state: :passed,
+              severity: 'ok'
             )
-            return 0
+            0
           rescue JSON::ParserError => e
             # Because the message contains a raw segment of the file, we use
             # String#dump here to unescape any escape characters like newlines.
             # We then strip out the surrounding quotes and the exclaimation
             # point that json_pure likes to put in exception messages.
-            sane_message = e.message.dump[%r{\A"(.+?)!?"\Z}, 1]
+            sane_message = e.message.dump[/\A"(.+?)!?"\Z/, 1]
 
             report.add_event(
-              file:     target,
-              source:   name,
-              state:    :failure,
+              file: target,
+              source: name,
+              state: :failure,
               severity: 'error',
-              message:  sane_message,
+              message: sane_message
             )
-            return 1
+            1
           end
         end
       end

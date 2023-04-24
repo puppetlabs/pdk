@@ -22,8 +22,8 @@ describe 'pdk validate ruby', module_command: true do
 
       describe command('pdk validate ruby') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(%r{useless assignment.*\(#{Regexp.escape(spec_violation_rb)}.*\)}i) }
-        its(:stderr) { is_expected.to match(%r{Checking Ruby code style}i) }
+        its(:stdout) { is_expected.to match(/useless assignment.*\(#{Regexp.escape(spec_violation_rb)}.*\)/i) }
+        its(:stderr) { is_expected.to match(/Checking Ruby code style/i) }
       end
 
       # Make use of the offending file above to test that target selection works
@@ -32,7 +32,7 @@ describe 'pdk validate ruby', module_command: true do
         describe command("pdk validate ruby #{File.join('spec', 'spec_helper.rb')}") do
           its(:exit_status) { is_expected.to eq(0) }
           its(:stdout) { is_expected.to have_no_output }
-          its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
+          its(:stderr) { is_expected.to match(/checking ruby code style/i) }
         end
       end
 
@@ -53,33 +53,33 @@ describe 'pdk validate ruby', module_command: true do
 
         describe command("pdk validate ruby #{File.join('spec', 'fixtures')}") do
           its(:exit_status) { is_expected.not_to eq(0) }
-          its(:stdout) { is_expected.to match(%r{#{Regexp.escape(another_violation_rb)}}) }
-          its(:stdout) { is_expected.not_to match(%r{#{Regexp.escape(spec_violation_rb)}}) }
-          its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
+          its(:stdout) { is_expected.to match(/#{Regexp.escape(another_violation_rb)}/) }
+          its(:stdout) { is_expected.not_to match(/#{Regexp.escape(spec_violation_rb)}/) }
+          its(:stderr) { is_expected.to match(/checking ruby code style/i) }
         end
 
         describe command('pdk validate ruby --format junit') do
           its(:exit_status) { is_expected.not_to eq(0) }
-          its(:stderr) { is_expected.to match(%r{checking ruby code style}i) }
+          its(:stderr) { is_expected.to match(/checking ruby code style/i) }
           its(:stdout) { is_expected.to contain_valid_junit_xml }
 
           its(:stdout) do
             is_expected.to have_junit_testsuite('rubocop').with_attributes(
               'failures' => a_value >= 1,
-              'tests'    => a_value >= 2,
+              'tests' => a_value >= 2
             )
           end
 
           its(:stdout) do
             is_expected.to have_junit_testcase.in_testsuite('rubocop').with_attributes(
               'classname' => 'rubocop',
-              'name'      => File.join('spec', 'spec_helper.rb'),
+              'name' => File.join('spec', 'spec_helper.rb')
             ).that_passed
           end
 
           its(:stdout) do
             is_expected.not_to have_junit_testcase.in_testsuite('rubocop').with_attributes(
-              'name' => a_string_starting_with(File.join('spec', 'fixtures')),
+              'name' => a_string_starting_with(File.join('spec', 'fixtures'))
             )
           end
         end
@@ -100,7 +100,7 @@ describe 'pdk validate ruby', module_command: true do
 
       describe command('pdk validate ruby --auto-correct') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{\(corrected\):.*space inside (\{|\}) missing.*\(test\.rb.*\)}i) }
+        its(:stdout) { is_expected.to match(/\(corrected\):.*space inside (\{|\}) missing.*\(test\.rb.*\)/i) }
       end
 
       describe command('pdk validate ruby') do

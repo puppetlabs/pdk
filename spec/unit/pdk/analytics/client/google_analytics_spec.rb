@@ -11,26 +11,26 @@ describe PDK::Analytics::Client::GoogleAnalytics do
 
   let(:options) do
     {
-      logger:      logger,
-      app_name:    'pdk',
-      app_id:      'UA-xxxx-1',
+      logger: logger,
+      app_name: 'pdk',
+      app_id: 'UA-xxxx-1',
       app_version: PDK::VERSION,
-      user_id:     uuid,
+      user_id: uuid
     }
   end
 
   let(:uuid) { SecureRandom.uuid }
   let(:base_params) do
     {
-      v:   described_class::PROTOCOL_VERSION,
-      an:  options[:app_name],
-      av:  options[:app_version],
+      v: described_class::PROTOCOL_VERSION,
+      an: options[:app_name],
+      av: options[:app_version],
       cid: options[:user_id],
       tid: options[:app_id],
       aiid: options[:app_installer],
-      ul:  Locale.current.to_rfc,
+      ul: Locale.current.to_rfc,
       aip: true,
-      cd1: os_name,
+      cd1: os_name
     }
   end
   let(:mock_httpclient) { instance_double(HTTPClient) }
@@ -39,14 +39,14 @@ describe PDK::Analytics::Client::GoogleAnalytics do
   let(:logger) { instance_double(Logger, debug: true) }
   let(:os_name) { 'CentOS 7' }
 
-  before(:each) do
+  before do
     allow(PDK::Analytics::Util).to receive(:fetch_os_async).and_return(instance_double(Concurrent::Future, value: os_name))
     allow(HTTPClient).to receive(:new).and_return(mock_httpclient)
     allow(Concurrent).to receive(:global_io_executor).and_return(executor)
   end
 
   describe '#screen_view' do
-    after(:each) do
+    after do
       client.finish
     end
 
@@ -67,12 +67,12 @@ describe PDK::Analytics::Client::GoogleAnalytics do
     end
 
     it 'raises an error if an unknown custom dimension is specified' do
-      expect { client.screen_view('job_run', random_field: 'foo') }.to raise_error(%r{Unknown analytics key})
+      expect { client.screen_view('job_run', random_field: 'foo') }.to raise_error(/Unknown analytics key/)
     end
   end
 
   describe '#event' do
-    after(:each) do
+    after do
       client.finish
     end
 

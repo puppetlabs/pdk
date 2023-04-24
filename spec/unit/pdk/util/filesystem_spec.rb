@@ -10,7 +10,7 @@ describe PDK::Util::Filesystem do
     let(:nil_on_error) { false }
 
     context 'when given a path to a readable file' do
-      before(:each) do
+      before do
         allow(File).to receive(:read).with(path, anything).and_return('some content')
       end
 
@@ -24,13 +24,13 @@ describe PDK::Util::Filesystem do
     end
 
     context 'when given a path to an unreadable file' do
-      before(:each) do
+      before do
         allow(File).to receive(:read).with(path, anything).and_raise(Errno::EACCES, 'some error')
       end
 
       context 'when nil_on_error => false' do
         it 'raises the underlying error' do
-          expect { read_file }.to raise_error(Errno::EACCES, %r{some error})
+          expect { read_file }.to raise_error(Errno::EACCES, /some error/)
         end
       end
 
@@ -54,9 +54,8 @@ describe PDK::Util::Filesystem do
     let(:dummy_file) { StringIO.new }
     let(:path) { nil }
 
-    before(:each) do
-      allow(File).to receive(:open).and_call_original
-      allow(File).to receive(:open).with(path, 'wb').and_yield(dummy_file)
+    before do
+      allow(File).to receive(:binwrite).with(path, "#{content}\n")
     end
 
     context 'when content is a String' do
@@ -80,7 +79,7 @@ describe PDK::Util::Filesystem do
 
       context 'and the path is neither a String nor Pathname' do
         it 'raises an ArgumentError' do
-          expect { write_file }.to raise_error(ArgumentError, %r{String or Pathname})
+          expect { write_file }.to raise_error(ArgumentError, /String or Pathname/)
         end
       end
     end
@@ -89,7 +88,7 @@ describe PDK::Util::Filesystem do
       let(:content) { nil }
 
       it 'raises an ArgumentError' do
-        expect { write_file }.to raise_error(ArgumentError, %r{content must be a String})
+        expect { write_file }.to raise_error(ArgumentError, /content must be a String/)
       end
     end
   end

@@ -16,9 +16,7 @@ RSpec::Matchers.define :have_xpath do |path|
         retval = false
 
         @expected_attributes.each do |key, value|
-          unless values_match?(value, node.attributes[key])
-            retval = true
-          end
+          retval = true unless values_match?(value, node.attributes[key])
         end
 
         retval

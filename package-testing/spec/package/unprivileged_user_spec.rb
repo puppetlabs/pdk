@@ -5,25 +5,21 @@ describe 'Running PDK as an unprivileged user' do
 
   before(:all) do
     hosts.each do |host|
-      next if host.platform =~ %r{windows}
+      next if host.platform.include?('windows')
 
       host.user_present('testuser')
 
       case host.platform
-      when %r{osx}
+      when /osx/
         on(host, 'createhomedir -c -u testuser')
       else
         on(host, 'getent passwd testuser') do |result|
           _, _, uid, gid, _, homedir, = result.stdout.strip.split(':')
-          unless directory_exists_on(host, homedir)
-            on(host, "mkdir #{homedir} && chown #{uid}:#{gid} #{homedir}")
-          end
+          on(host, "mkdir #{homedir} && chown #{uid}:#{gid} #{homedir}") unless directory_exists_on(host, homedir)
         end
       end
 
-      if file_exists_on(host, '/etc/sudoers')
-        on(host, 'sed -i -e \'s/\srequiretty/!requiretty/g\' /etc/sudoers')
-      end
+      on(host, 'sed -i -e \'s/\srequiretty/!requiretty/g\' /etc/sudoers') if file_exists_on(host, '/etc/sudoers')
     end
   end
 
@@ -56,7 +52,7 @@ describe 'Running PDK as an unprivileged user' do
       let(:cwd) { module_name }
 
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{[1-9]\d* examples.*0 failures}im) }
+      its(:stdout) { is_expected.to match(/[1-9]\d* examples.*0 failures/im) }
     end
   end
 
@@ -65,7 +61,7 @@ describe 'Running PDK as an unprivileged user' do
       let(:cwd) { module_name }
 
       its(:exit_status) { is_expected.to eq(0) }
-      its(:stdout) { is_expected.to match(%r{[1-9]\d* examples.*0 failures}im) }
+      its(:stdout) { is_expected.to match(/[1-9]\d* examples.*0 failures/im) }
     end
   end
 end

@@ -31,23 +31,19 @@ module PDK
         end
 
         def use(version)
-          if versions.key?(version)
-            @active_ruby_version = version
-          else
-            raise ArgumentError, 'Unknown Ruby version "%{ruby_version}"' % {
-              ruby_version: version,
-            }
-          end
+          raise ArgumentError, format('Unknown Ruby version "%{ruby_version}"', ruby_version: version) unless versions.key?(version)
+
+          @active_ruby_version = version
         end
 
         def scan_for_packaged_rubies
           require 'pdk/util'
 
           ruby_basedir = File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', '*')
-          PDK::Util::Filesystem.glob(ruby_basedir).sort.map { |ruby_dir|
+          PDK::Util::Filesystem.glob(ruby_basedir).sort.map do |ruby_dir|
             version = File.basename(ruby_dir)
-            [version, version.split('.').take(2).concat(['0']).join('.')]
-          }.reverse.to_h
+            [version, version.split('.').take(2).push('0').join('.')]
+          end.reverse.to_h
         end
 
         def default_ruby_version
@@ -71,7 +67,7 @@ module PDK
         end
 
         def latest_ruby_version
-          versions.keys.sort { |a, b| Gem::Version.new(b) <=> Gem::Version.new(a) }.first
+          versions.keys.min { |a, b| Gem::Version.new(b) <=> Gem::Version.new(a) }
         end
 
         def versions
@@ -111,7 +107,7 @@ module PDK
           [
             File.join(PDK::Util.pdk_package_basedir, 'private', 'ruby', ruby_version, 'lib', 'ruby', 'gems', versions[ruby_version]),
             File.join(PDK::Util.package_cachedir, 'ruby', versions[ruby_version]),
-            File.join(PDK::Util.pdk_package_basedir, 'private', 'puppet', 'ruby', versions[ruby_version]),
+            File.join(PDK::Util.pdk_package_basedir, 'private', 'puppet', 'ruby', versions[ruby_version])
           ]
         else
           # This allows the subprocess to find the 'bundler' gem, which isn't
@@ -155,7 +151,7 @@ module PDK
           puppet_specs << spec if spec.name == 'puppet'
         end
 
-        @available_puppet_versions = puppet_specs.map(&:version).sort { |a, b| b <=> a }
+        @available_puppet_versions = puppet_specs.map(&:version).sort.reverse
       end
 
       private

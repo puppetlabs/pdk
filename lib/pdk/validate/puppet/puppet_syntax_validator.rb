@@ -5,16 +5,16 @@ module PDK
     module Puppet
       class PuppetSyntaxValidator < ExternalCommandValidator
         # In Puppet >= 5.3.4, the error context formatting was changed to facilitate localization
-        ERROR_CONTEXT = %r{(?:file:\s(?<file>.+?)|line:\s(?<line>.+?)|column:\s(?<column>.+?))}
+        ERROR_CONTEXT = /(?:file:\s(?<file>.+?)|line:\s(?<line>.+?)|column:\s(?<column>.+?))/.freeze
         # In Puppet < 5.3.3, the error context was formatted in these variations:
         #   - "at file_path:line_num:col_num"
         #   - "at file_path:line_num"
         #   - "at line line_num"
         #   - "in file_path"
-        ERROR_CONTEXT_LEGACY = %r{(?:at\sline\s(?<line>\d+)|at\s(?<file>.+?):(?<line>\d+):(?<column>\d+)|at\s(?<file>.+?):(?<line>\d+)|in\s(?<file>.+?))}
+        ERROR_CONTEXT_LEGACY = /(?:at\sline\s(?<line>\d+)|at\s(?<file>.+?):(?<line>\d+):(?<column>\d+)|at\s(?<file>.+?):(?<line>\d+)|in\s(?<file>.+?))/.freeze
 
-        PUPPET_LOGGER_PREFIX = %r{^(debug|info|notice|warning|error|alert|critical):\s.+?$}i
-        PUPPET_SYNTAX_PATTERN = %r{^
+        PUPPET_LOGGER_PREFIX = /^(debug|info|notice|warning|error|alert|critical):\s.+?$/i.freeze
+        PUPPET_SYNTAX_PATTERN = /^
           (?<severity>.+?):\s
           (?<message>.+?)
           (?:
@@ -22,7 +22,7 @@ module PDK
             \s#{ERROR_CONTEXT_LEGACY}| # attempt to match the old " at file:line:column" location
             $                                               # handle cases where the output has no location
           )
-        $}x
+        $/x.freeze
 
         def name
           'puppet-syntax'
@@ -41,7 +41,7 @@ module PDK
         end
 
         def spinner_text_for_targets(_targets)
-          'Checking Puppet manifest syntax (%{pattern}).' % { pattern: pattern.join(' ') }
+          format('Checking Puppet manifest syntax (%{pattern}).', pattern: pattern.join(' '))
         end
 
         def parse_options(targets)
@@ -80,7 +80,7 @@ module PDK
         def parse_output(report, result, targets)
           # Due to PUP-7504, we will have to programmatically construct the json
           # object from the text output for now.
-          output = result[:stderr].split(%r{\r?\n}).reject { |entry| entry.empty? }
+          output = result[:stderr].split(/\r?\n/).reject(&:empty?)
 
           results_data = []
           output.each do |offense|
@@ -91,12 +91,12 @@ module PDK
           # puppet parser validate does not include files without problems in its
           # output, so we need to go through the list of targets and add passing
           # events to the report for any target not listed in the output.
-          targets.reject { |target| results_data.any? { |j| j[:file] =~ %r{#{target}} } }.each do |target|
+          targets.reject { |target| results_data.any? { |j| j[:file] =~ /#{target}/ } }.each do |target|
             report.add_event(
-              file:     target,
-              source:   name,
+              file: target,
+              source: name,
               severity: :ok,
-              state:    :passed,
+              state: :passed
             )
           end
 
@@ -109,17 +109,15 @@ module PDK
           sanitize_console_output(offense)
 
           offense_data = {
-            source:  name,
-            state:  :failure,
+            source: name,
+            state: :failure
           }
 
           if offense.match(PUPPET_LOGGER_PREFIX)
             attributes = offense.match(PUPPET_SYNTAX_PATTERN)
 
-            unless attributes.nil?
-              attributes.names.each do |name|
-                offense_data[name.to_sym] = attributes[name] unless attributes[name].nil?
-              end
+            attributes&.names&.each do |name|
+              offense_data[name.to_sym] = attributes[name] unless attributes[name].nil?
             end
           else
             offense_data[:message] = offense
@@ -129,7 +127,7 @@ module PDK
         end
 
         def sanitize_console_output(line)
-          line.gsub!(%r{\e\[([;\d]+)?m}, '')
+          line.gsub!(/\e\[([;\d]+)?m/, '')
         end
       end
     end

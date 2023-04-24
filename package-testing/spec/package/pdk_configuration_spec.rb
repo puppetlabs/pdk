@@ -9,7 +9,7 @@ describe 'Using the PDK configuration commands' do
   def host_system_configdir(host)
     # This emulates the PDK::Util.system_configdir method
     # Ugh ... The double backslash escaping makes me sad :_(
-    (host.platform =~ %r{windows}) ? 'C:\\\\ProgramData\\\\PuppetLabs\\\\PDK' : '/opt/puppetlabs/pdk/config'
+    host.platform.include?('windows') ? 'C:\\\\ProgramData\\\\PuppetLabs\\\\PDK' : '/opt/puppetlabs/pdk/config'
   end
 
   def windows_path(path)
@@ -19,25 +19,25 @@ describe 'Using the PDK configuration commands' do
 
   def host_user_configdir(host)
     # This emulates the PDK::Util.configdir method
-    if host.platform =~ %r{windows}
+    if host.platform.include?('windows')
       # Ugh... The double backslash escaping makes me REALLY sad :_(
-      windows_path(env_var(host, 'LOCALAPPDATA')) + '\\\\PDK'
+      "#{windows_path(env_var(host, 'LOCALAPPDATA'))}\\\\PDK"
     else
       dir = env_var(host, 'XDG_CONFIG_HOME')
-      dir.nil? ? env_var(host, 'HOME') + '/.config/pdk' : dir + '/.config/pdk'
+      dir.nil? ? "#{env_var(host, 'HOME')}/.config/pdk" : "#{dir}/.config/pdk"
     end
   end
 
   def host_system_config_file(host)
     # This emulates the PDK::Config.system_config_path method
     system_dir = host_system_configdir(host)
-    (host.platform =~ %r{windows}) ? system_dir + '\\\\system_config.json' : system_dir + '/system_config.json'
+    host.platform.include?('windows') ? "#{system_dir}\\\\system_config.json" : "#{system_dir}/system_config.json"
   end
 
   def host_user_config_file(host)
     # This emulates the PDK::Config.user_config_path method
     user_dir = host_user_configdir(host)
-    (host.platform =~ %r{windows}) ? user_dir + '\\\\user_config.json' : user_dir + '/user_config.json'
+    host.platform.include?('windows') ? "#{user_dir}\\\\user_config.json" : "#{user_dir}/user_config.json"
   end
 
   before(:all) do

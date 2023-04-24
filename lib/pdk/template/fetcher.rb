@@ -13,6 +13,7 @@ module PDK
       # @return [PDK::Template::Fetcher::AbstractTemplateFetcher] An instance of a class which implements the AbstractFetcher class
       def self.instance(uri, options = {})
         return Git.new(uri, options) if Git.fetchable?(uri, options)
+
         Local.new(uri, options)
       end
 
@@ -35,7 +36,8 @@ module PDK
       # @raise [ArgumentError] If no block is given to this method.
       # @return [void]
       def self.with(uri, options = {})
-        raise ArgumentError, '%{class_name}.with must be passed a block.' % { class_name: name } unless block_given?
+        raise ArgumentError, format('%{class_name}.with must be passed a block.', class_name: name) unless block_given?
+
         fetcher = instance(uri, options)
 
         begin
@@ -78,7 +80,7 @@ module PDK
           @metadata = {
             'pdk-version' => PDK::Util::Version.version_string,
             'template-url' => nil,
-            'template-ref' => nil,
+            'template-ref' => nil
           }
           @fetched = false
           @temporary = false

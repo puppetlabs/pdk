@@ -4,7 +4,7 @@ require 'pdk/cli/exec/interactive_command'
 describe PDK::CLI::Exec::InteractiveCommand do
   subject(:command) { described_class.new('/bin/echo', 'foo') }
 
-  before(:each) do
+  before do
     allow(PDK::CLI::Util).to receive(:ci_environment?).and_return(false)
   end
 
@@ -28,35 +28,35 @@ describe PDK::CLI::Exec::InteractiveCommand do
 
   describe '.add_spinner' do
     it 'raises an exception' do
-      expect { command.add_spinner('test') }.to raise_error %r{method.*not implemented}i
+      expect { command.add_spinner('test') }.to raise_error(/method.*not implemented/i)
     end
   end
 
   describe '.register_spinner' do
-    let(:spinner) { instance_double('spinner') }
+    let(:spinner) { instance_double(TTY::Spinner) }
 
     it 'raises an exception' do
-      expect { command.register_spinner(spinner) }.to raise_error %r{method.*not implemented}i
+      expect { command.register_spinner(spinner) }.to raise_error(/method.*not implemented/i)
     end
   end
 
   describe '.timeout=' do
     it 'raises an exception' do
-      expect { command.timeout = 10 }.to raise_error %r{method.*not implemented}i
+      expect { command.timeout = 10 }.to raise_error(/method.*not implemented/i)
     end
   end
 
   describe '.timeout' do
     it 'raises an exception' do
-      expect { command.timeout }.to raise_error %r{method.*not implemented}i
+      expect { command.timeout }.to raise_error(/method.*not implemented/i)
     end
   end
 
   describe '.exec_group=' do
-    let(:exec_group) { instance_double('exec_group') }
+    let(:exec_group) { instance_double(Object) }
 
     it 'raises an exception' do
-      expect { command.exec_group = exec_group }.to raise_error %r{method.*not implemented}i
+      expect { command.exec_group = exec_group }.to raise_error(/method.*not implemented/i)
     end
   end
 
@@ -66,7 +66,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
     let(:exitstatus) { 0 }
     let(:child_status) { instance_double(Process::Status, exitstatus: exitstatus) }
 
-    before(:each) do
+    before do
       # rubocop:disable RSpec/SubjectStub
       allow(command).to receive(:resolved_env_for_command).and_return(environment)
       allow(command).to receive(:system) # Kernel is a mixed-in module
@@ -75,12 +75,12 @@ describe PDK::CLI::Exec::InteractiveCommand do
     end
 
     context 'when running in the :system context' do
-      before(:each) do
+      before do
         command.context = :system
       end
 
       it "executes in parent process' bundler env" do
-        expect(::Bundler).not_to receive(:with_unbundled_env)
+        expect(Bundler).not_to receive(:with_unbundled_env)
 
         command.execute!
       end
@@ -103,7 +103,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
     end
 
     context 'when running in the :module context' do
-      before(:each) do
+      before do
         command.context = :module
         allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
       end
@@ -142,7 +142,7 @@ describe PDK::CLI::Exec::InteractiveCommand do
     end
 
     context 'when running in the :pwd context' do
-      before(:each) do
+      before do
         command.context = :pwd
         allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
       end

@@ -8,7 +8,7 @@ describe PDK::Util::ChangelogGenerator do
     let(:command_exit_code) { 0 }
     let(:changelog_content) { 'foo' }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:github_changelog_generator_available!)
       allow(described_class).to receive(:changelog_content).and_return(changelog_content)
       expect(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
@@ -28,7 +28,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:command_exit_code) { 1 }
 
       it 'raises' do
-        expect { described_class.generate_changelog }.to raise_error(PDK::CLI::ExitWithError, %r{#{command_stdout}})
+        expect { described_class.generate_changelog }.to raise_error(PDK::CLI::ExitWithError, /#{command_stdout}/)
       end
     end
 
@@ -36,7 +36,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:changelog_content) { 'UNCATEGORIZED PRS; GO LABEL THEM' }
 
       it 'raises' do
-        expect { described_class.generate_changelog }.to raise_error(PDK::CLI::ExitWithError, %r{uncategorized Pull Requests})
+        expect { described_class.generate_changelog }.to raise_error(PDK::CLI::ExitWithError, /uncategorized Pull Requests/)
       end
     end
   end
@@ -46,7 +46,7 @@ describe PDK::Util::ChangelogGenerator do
       [
         '1.x',
         '1',
-        'a.b.c',
+        'a.b.c'
       ].each do |testcase|
         it "raises for #{testcase}" do
           expect { described_class.compute_next_version(testcase) }.to raise_error(StandardError)
@@ -58,7 +58,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:changelog_content) { '' }
       let(:current_version) { '1.2.3' }
 
-      before(:each) do
+      before do
         allow(described_class).to receive(:changelog_content).and_return(changelog_content)
       end
 
@@ -197,7 +197,7 @@ describe PDK::Util::ChangelogGenerator do
   end
 
   describe '#latest_version' do
-    before(:each) do
+    before do
       allow(described_class).to receive(:changelog_content).and_return(changelog_content)
     end
 
@@ -241,7 +241,7 @@ describe PDK::Util::ChangelogGenerator do
           ### Fixed
 
           - something tiny
-          EOT
+        EOT
       end
 
       it 'return the top most version' do
@@ -253,7 +253,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:changelog_content) { '' }
 
       it 'returns nil' do
-        expect(described_class.latest_version).to eq(nil)
+        expect(described_class.latest_version).to be_nil
       end
     end
 
@@ -297,7 +297,7 @@ describe PDK::Util::ChangelogGenerator do
           ### Fixed
 
           - something tiny
-          EOT
+        EOT
       end
 
       it 'returns the latest version' do
@@ -311,7 +311,7 @@ describe PDK::Util::ChangelogGenerator do
 
     let(:command) { double(PDK::CLI::Exec::InteractiveCommand, :context= => nil) } # rubocop:disable RSpec/VerifiedDoubles
 
-    before(:each) do
+    before do
       expect(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
     end
 
@@ -319,7 +319,7 @@ describe PDK::Util::ChangelogGenerator do
       let(:command_stdout) { '/path/to/gems/github_changelog_generator-1.15.2' }
       let(:command_exit_code) { 0 }
 
-      before(:each) do
+      before do
         expect(command).to receive(:execute!).and_return(stdout: command_stdout, exit_code: command_exit_code)
       end
 
@@ -332,12 +332,12 @@ describe PDK::Util::ChangelogGenerator do
       let(:command_stderr) { 'Could not find gem \'github_changelog_generator\'.' }
       let(:command_exit_code) { 7 }
 
-      before(:each) do
+      before do
         expect(command).to receive(:execute!).and_return(stderr: command_stderr, exit_code: command_exit_code)
       end
 
       it 'raises an error' do
-        expect { method }.to raise_error(PDK::CLI::ExitWithError, %r{not included})
+        expect { method }.to raise_error(PDK::CLI::ExitWithError, /not included/)
       end
     end
   end

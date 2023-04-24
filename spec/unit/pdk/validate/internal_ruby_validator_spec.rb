@@ -11,7 +11,7 @@ describe PDK::Validate::InternalRubyValidator do
   let(:parsed_targets) { [targets, skipped_targets, invalid_targets] }
   let(:report) { PDK::Report.new }
 
-  before(:each) do
+  before do
     allow(validator).to receive(:name).and_return('mock_name')
     allow(validator).to receive(:parse_targets).and_return(parsed_targets)
   end
@@ -40,7 +40,7 @@ describe PDK::Validate::InternalRubyValidator do
     let(:skipped_targets) { ['skipped'] }
     let(:invalid_targets) { ['invalid'] }
 
-    before(:each) do
+    before do
       # Order is important! Keep the default response at the top
       allow(validator).to receive(:validate_target).with(report, anything).and_return(nil)
       allow(validator).to receive(:validate_target).with(report, 'success').and_return(0)
@@ -127,7 +127,7 @@ describe PDK::Validate::InternalRubyValidator do
     end
 
     context 'with successful, failed and missing validations' do
-      let(:targets) { %w[success fail2 fail1 missing] }
+      let(:targets) { ['success', 'fail2', 'fail1', 'missing'] }
 
       it 'calls before_validation' do
         expect(validator).to receive(:before_validation).and_call_original

@@ -6,21 +6,21 @@ describe 'Running `pdk bundle`' do
   let(:command_result) { { exit_code: 0 } }
 
   context 'when it calls bundler successfully' do
-    after(:each) do
-      expect {
+    after do
+      expect do
         PDK::CLI.run(command_args)
-      }.to exit_zero
+      end.to exit_zero
     end
 
-    before(:each) do
+    before do
       mock_command = instance_double(
         PDK::CLI::Exec::InteractiveCommand,
-        :context=           => true,
+        :context= => true,
         :update_environment => true,
-        :execute!           => command_result,
+        :execute! => command_result
       )
       allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new)
-        .with(PDK::CLI::Exec.bundle_bin, *(command_args[1..-1] || []))
+        .with(PDK::CLI::Exec.bundle_bin, *(command_args[1..] || []))
         .and_return(mock_command)
 
       allow(PDK::Util).to receive(:module_root)
@@ -37,19 +37,19 @@ describe 'Running `pdk bundle`' do
         expect(analytics).to receive(:screen_view).with(
           'bundle',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
       end
     end
 
     context 'and called with a bundler subcommand that is not "exec"' do
-      let(:command_args) { super() + %w[config something] }
+      let(:command_args) { super() + ['config', 'something'] }
 
       it 'includes only the subcommand in the screen view name sent to analytics' do
         expect(analytics).to receive(:screen_view).with(
           'bundle_config',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
       end
     end
@@ -61,7 +61,7 @@ describe 'Running `pdk bundle`' do
         expect(analytics).to receive(:screen_view).with(
           'bundle_exec_rspec',
           output_format: 'default',
-          ruby_version:  RUBY_VERSION,
+          ruby_version: RUBY_VERSION
         )
       end
     end

@@ -12,7 +12,7 @@ describe 'PDK::CLI::Set::Config' do
       {
         type: type_opt,
         as: as_opt,
-        force: force_opt,
+        force: force_opt
       }
     end
     let(:setting_name) { nil }
@@ -24,44 +24,44 @@ describe 'PDK::CLI::Set::Config' do
     # Note, this class name needs to be unqiue in the ENTIRE rspec suite!
     class MockEmptyConfig < PDK::Config
       def user_config
-        @user_config ||= PDK::Config::Namespace.new('user') { ; }
+        @user_config ||= PDK::Config::Namespace.new('user') {}
       end
 
       def system_config
-        @system_config ||= PDK::Config::Namespace.new('system') { ; }
+        @system_config ||= PDK::Config::Namespace.new('system') {}
       end
 
       def project_config
-        @project_config ||= PDK::Config::Namespace.new('project') { ; }
+        @project_config ||= PDK::Config::Namespace.new('project') {}
       end
     end
 
-    before(:each) do
+    before do
       allow(PDK).to receive(:config).and_return(pdk_config)
       allow($stdout).to receive(:puts)
     end
 
     RSpec.shared_examples 'a missing name error' do
       it 'raises with missing name' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{name is required})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /name is required/)
       end
     end
 
     RSpec.shared_examples 'a missing value error' do
       it 'raises with missing value' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{value is required})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /value is required/)
       end
     end
 
     RSpec.shared_examples 'a failed conversion error' do
       it 'raises with failed conversion' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{error occured converting .* into a .*})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /error occured converting .* into a .*/)
       end
     end
 
     RSpec.shared_examples 'a un-settable setting error' do
       it 'raises with failed conversion' do
-        expect { run }.to raise_error(PDK::CLI::ExitWithError, %r{can not have a value set})
+        expect { run }.to raise_error(PDK::CLI::ExitWithError, /can not have a value set/)
       end
     end
 
@@ -128,7 +128,7 @@ describe 'PDK::CLI::Set::Config' do
     context 'when appending a value to an existing array' do
       let(:setting_name) { 'user.foo' }
 
-      before(:each) do
+      before do
         pdk_config.user_config['foo'] = []
       end
 
@@ -165,7 +165,7 @@ describe 'PDK::CLI::Set::Config' do
       let(:setting_name) { 'user.foo' }
       let(:setting_value) { 'abc' }
 
-      before(:each) do
+      before do
         pdk_config.user_config['foo'] = ['abc', 123]
       end
 
@@ -176,7 +176,7 @@ describe 'PDK::CLI::Set::Config' do
       end
 
       it 'logs an information message' do
-        expect(PDK.logger).to receive(:info).with(%r{No changes made .+ already contains value}im)
+        expect(PDK.logger).to receive(:info).with(/No changes made .+ already contains value/im)
         run
       end
 
@@ -191,7 +191,7 @@ describe 'PDK::CLI::Set::Config' do
       let(:setting_name) { 'user.foo.a.b.c' }
       let(:setting_value) { 'abc' }
 
-      before(:each) do
+      before do
         pdk_config.user_config['foo'] = { 'bar' => 'whizz' }
       end
 

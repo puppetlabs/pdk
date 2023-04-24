@@ -8,18 +8,13 @@ module PDK
         TRACKING_URL      = 'https://google-analytics.com/collect'.freeze
         CUSTOM_DIMENSIONS = {
           operating_system: :cd1,
-          output_format:    :cd2,
-          ruby_version:     :cd3,
-          cli_options:      :cd4,
-          env_vars:         :cd5,
+          output_format: :cd2,
+          ruby_version: :cd3,
+          cli_options: :cd4,
+          env_vars: :cd5
         }.freeze
 
-        attr_reader :user_id
-        attr_reader :logger
-        attr_reader :app_name
-        attr_reader :app_id
-        attr_reader :app_version
-        attr_reader :app_installer
+        attr_reader :user_id, :logger, :app_name, :app_id, :app_version, :app_installer
 
         def initialize(opts)
           # lazy-load expensive gem code
@@ -42,14 +37,14 @@ module PDK
 
         def screen_view(screen, **kwargs)
           custom_dimensions = walk_keys(kwargs) do |k|
-            CUSTOM_DIMENSIONS[k] || raise("Unknown analytics key '%{key}'" % { key: k })
+            CUSTOM_DIMENSIONS[k] || raise(format("Unknown analytics key '%{key}'", key: k))
           end
 
           screen_view_params = {
             # Type
-            t:  'screenview',
+            t: 'screenview',
             # Screen Name
-            cd: screen,
+            cd: screen
           }.merge(custom_dimensions)
 
           submit(base_params.merge(screen_view_params))
@@ -57,16 +52,16 @@ module PDK
 
         def event(category, action, label: nil, value: nil, **kwargs)
           custom_dimensions = walk_keys(kwargs) do |k|
-            CUSTOM_DIMENSIONS[k] || raise("Unknown analytics key '%{key}'" % { key: k })
+            CUSTOM_DIMENSIONS[k] || raise(format("Unknown analytics key '%{key}'", key: k))
           end
 
           event_params = {
             # Type
-            t:  'event',
+            t: 'event',
             # Event Category
             ec: category,
             # Event Action
-            ea: action,
+            ea: action
           }.merge(custom_dimensions)
 
           # Event Label
@@ -95,23 +90,23 @@ module PDK
           require 'locale'
 
           {
-            v:    PROTOCOL_VERSION,
+            v: PROTOCOL_VERSION,
             # Client ID
-            cid:  user_id,
+            cid: user_id,
             # Tracking ID
-            tid:  app_id,
+            tid: app_id,
             # Application Name
-            an:   app_name,
+            an: app_name,
             # Application Version
-            av:   app_version,
+            av: app_version,
             # Application Installer ID
             aiid: app_installer,
             # Anonymize IPs
-            aip:  true,
+            aip: true,
             # User locale
-            ul:   Locale.current.to_rfc,
+            ul: Locale.current.to_rfc,
             # Custom Dimension 1 (Operating System)
-            cd1:  @os.value,
+            cd1: @os.value
           }
         end
 
@@ -128,12 +123,13 @@ module PDK
         private
 
         def walk_keys(data, &block)
-          if data.is_a?(Hash)
+          case data
+          when Hash
             data.each_with_object({}) do |(k, v), acc|
               v = walk_keys(v, &block)
               acc[yield(k)] = v
             end
-          elsif data.is_a?(Array)
+          when Array
             data.map { |v| walk_keys(v, &block) }
           else
             data

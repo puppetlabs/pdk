@@ -12,15 +12,15 @@ describe PDK::Config::IniFileSetting do
     let(:namespace) { PDK::Config::Namespace.new }
 
     it 'raises' do
-      expect { setting }.to raise_error(%r{IniFile Namespace})
+      expect { setting }.to raise_error(/IniFile Namespace/)
     end
   end
 
   context 'with invalid initial value' do
-    let(:initial_value) { %w[abc 123] }
+    let(:initial_value) { ['abc', '123'] }
 
     it 'raises' do
-      expect { setting }.to raise_error(ArgumentError, %r{spec_setting})
+      expect { setting }.to raise_error(ArgumentError, /spec_setting/)
     end
   end
 
@@ -36,7 +36,7 @@ describe PDK::Config::IniFileSetting do
 
   RSpec.shared_examples 'an error raising validator' do |value_type_name, value|
     it "raises for #{value_type_name}" do
-      expect { setting.validate!(value) }.to raise_error(ArgumentError, %r{spec_setting})
+      expect { setting.validate!(value) }.to raise_error(ArgumentError, /spec_setting/)
     end
   end
 
@@ -49,7 +49,7 @@ describe PDK::Config::IniFileSetting do
 
     context 'with invalid values' do
       include_examples 'an error raising validator', 'Symbol', :value
-      include_examples 'an error raising validator', 'Array', %w[abc 123]
+      include_examples 'an error raising validator', 'Array', ['abc', '123']
       include_examples 'an error raising validator', 'Nested hash', 'foo' => { 'bar' => 'baz' }
       include_examples 'an error raising validator', 'Float', 1.0
     end

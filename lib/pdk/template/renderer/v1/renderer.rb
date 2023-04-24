@@ -21,7 +21,7 @@ module PDK
             template_file = single_item_path(relative_file_path)
             return nil unless PDK::Util::Filesystem.file?(template_file) && PDK::Util::Filesystem.readable?(template_file)
 
-            PDK.logger.debug("Rendering '%{template}'..." % { template: template_file })
+            PDK.logger.debug(format("Rendering '%{template}'...", template: template_file))
             new_template_file(template_file, template_data_hash).render
           end
 
@@ -30,34 +30,34 @@ module PDK
           # @param item_path [String] The path of the single item to render
           # @return [String]
           # @api private
-          #:nocov:
+          # :nocov:
           def single_item_path(item_path)
             File.join(template_root, 'object_templates', item_path)
           end
-          #:nocov:
+          # :nocov:
 
           # Helper method used during testing
-          #:nocov:
+          # :nocov:
           # @api private
           def new_template_file(template_file, template_data_hash)
             TemplateFile.new(template_file, template_data_hash)
           end
-          #:nocov:
+          # :nocov:
 
           # Helper method used during testing
-          #:nocov:
+          # :nocov:
           # @api private
           def new_legacy_template_dir(context, uri, path, module_metadata = {})
             LegacyTemplateDir.new(context, uri, path, module_metadata)
           end
-          #:nocov:
+          # :nocov:
 
           # Renders a new module
           #
           # @param options [Hash{Object => Object}] A list of options to pass through to the renderer. See PDK::Template::TemplateDir helper methods for other options
           # @see #render
           # @api private
-          #:nocov: This is tested in acceptance and packaging tests
+          # :nocov: This is tested in acceptance and packaging tests
           def render_module(options = {})
             require 'pdk/template/renderer/v1/template_file'
 
@@ -71,8 +71,8 @@ module PDK
 
             files_in_template(dirs).each do |template_file, template_loc|
               template_file = template_file.to_s
-              PDK.logger.debug("Rendering '%{template}'..." % { template: template_file })
-              dest_path = template_file.sub(%r{\.erb\Z}, '')
+              PDK.logger.debug(format("Rendering '%{template}'...", template: template_file))
+              dest_path = template_file.sub(/\.erb\Z/, '')
               config = legacy_template_dir.config_for(dest_path)
 
               dest_status = if template_loc.start_with?(moduleroot_init)
@@ -88,9 +88,9 @@ module PDK
               else
                 begin
                   dest_content = new_template_file(File.join(template_loc, template_file), configs: config, template_dir: legacy_template_dir).render
-                rescue => error
-                  error_msg = "Failed to render template '%{template}'\n" \
-                              '%{exception}: %{message}' % { template: template_file, exception: error.class, message: error.message }
+                rescue StandardError => e
+                  error_msg = format("Failed to render template '%{template}'\n" \
+                                     '%{exception}: %{message}', template: template_file, exception: e.class, message: e.message)
                   raise PDK::CLI::FatalError, error_msg
                 end
               end
@@ -98,7 +98,7 @@ module PDK
               yield dest_path, dest_content, dest_status
             end
           end
-          #:nocov:
+          # :nocov:
 
           # Returns all files in the given template directories
           #
@@ -111,17 +111,16 @@ module PDK
             temp_paths = []
             dirlocs = []
             dirs.each do |dir|
-              raise ArgumentError, "The directory '%{dir}' doesn't exist" % { dir: dir } unless PDK::Util::Filesystem.directory?(dir)
+              raise ArgumentError, format("The directory '%{dir}' doesn't exist", dir: dir) unless PDK::Util::Filesystem.directory?(dir)
+
               temp_paths += PDK::Util::Filesystem.glob(File.join(dir, *glob_suffix), File::FNM_DOTMATCH).select do |template_path|
-                if PDK::Util::Filesystem.file?(template_path) && !PDK::Util::Filesystem.symlink?(template_path)
-                  dirlocs << dir
-                end
+                dirlocs << dir if PDK::Util::Filesystem.file?(template_path) && !PDK::Util::Filesystem.symlink?(template_path)
               end
               temp_paths.map do |template_path|
-                template_path.sub!(%r{\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}}, '')
+                template_path.sub!(/\A#{Regexp.escape(dir)}#{Regexp.escape(File::SEPARATOR)}/, '')
               end
             end
-            Hash[temp_paths.zip dirlocs]
+            (temp_paths.zip dirlocs).to_h
           end
         end
       end

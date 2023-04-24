@@ -16,10 +16,10 @@ describe PDK::Config do
     allow(PDK::Util::Filesystem).to receive(:read_file).with(PDK::Util::Filesystem.expand_path(path)).and_return(content)
   end
 
-  before(:each) do
-    allow(PDK::Util::Filesystem).to receive(:file?).with(%r{pdk\.yaml}).and_call_original
+  before do
+    allow(PDK::Util::Filesystem).to receive(:file?).with(/pdk\.yaml/).and_call_original
     # Allow the JSON Schema documents to actually be read. Rspec matchers are LIFO
-    allow(PDK::Util::Filesystem).to receive(:file?).with(%r{_schema\.json}).and_call_original
+    allow(PDK::Util::Filesystem).to receive(:file?).with(/_schema\.json/).and_call_original
   end
 
   describe '.system_config' do
@@ -45,10 +45,10 @@ describe PDK::Config do
       let(:repo_path) { File.join(FIXTURES_DIR, 'control_repo') }
       let(:repo_context) { PDK::Context::ControlRepo.new(repo_path, repo_path) }
 
-      before(:each) do
+      before do
         # Allow anything in the fixtures dir to actually be read
-        allow(PDK::Util::Filesystem).to receive(:file?).with(%r{#{FIXTURES_DIR}}).and_call_original
-        allow(PDK::Util::Filesystem).to receive(:read_file).with(%r{#{FIXTURES_DIR}}).and_call_original
+        allow(PDK::Util::Filesystem).to receive(:file?).with(/#{FIXTURES_DIR}/o).and_call_original
+        allow(PDK::Util::Filesystem).to receive(:read_file).with(/#{FIXTURES_DIR}/o).and_call_original
       end
 
       it 'has environment settings' do
@@ -99,12 +99,12 @@ describe PDK::Config do
 
     context 'given different setting name types' do
       it 'uses multiple parameters for the setting name' do
-        setting_name = %w[system setting child child_setting]
+        setting_name = ['system', 'setting', 'child', 'child_setting']
         expect(config.get(*setting_name)).to eq('child_setting_value')
       end
 
       it 'uses an Array for the setting name' do
-        setting_name = %w[system setting child child_setting]
+        setting_name = ['system', 'setting', 'child', 'child_setting']
         expect(config.get(setting_name)).to eq('child_setting_value')
       end
 
@@ -120,7 +120,7 @@ describe PDK::Config do
 
     it 'traverses namespaces' do
       # The analytics is a child namespace of user
-      expect(config.get('user', 'analytics', 'disabled')).to eq(true)
+      expect(config.get('user', 'analytics', 'disabled')).to be(true)
     end
 
     it 'traverses setting hash values' do
@@ -136,7 +136,7 @@ describe PDK::Config do
     end
 
     context 'given a setting name that does not exist' do
-      let(:names) { %w[system setting missing_child child_setting] }
+      let(:names) { ['system', 'setting', 'missing_child', 'child_setting'] }
 
       it 'returns nil' do
         expect(config.get(*names)).to be_nil
@@ -144,7 +144,7 @@ describe PDK::Config do
     end
 
     context 'given a root name that does not exist' do
-      let(:names) { %w[missing analytics disabled] }
+      let(:names) { ['missing', 'analytics', 'disabled'] }
 
       it 'returns nil' do
         expect(config.get(*names)).to be_nil
@@ -180,7 +180,7 @@ describe PDK::Config do
 
     context 'with different setting_name inputs' do
       let(:setting_name_as_string) { 'foo.bar.baz' }
-      let(:setting_name_as_array) { %w[foo bar baz] }
+      let(:setting_name_as_array) { ['foo', 'bar', 'baz'] }
 
       let(:user_value) { 'something' }
       let(:user_config_content) { "{\"foo\":{\"bar\":{\"baz\":\"#{user_value}\"}}}" }
@@ -246,25 +246,25 @@ describe PDK::Config do
     end
 
     context 'given both user and system scopes' do
-      let(:scopes) { %w[user system] }
+      let(:scopes) { ['user', 'system'] }
 
       it_behaves_like 'a setting resolver', nil, 'user', 'system', 'user'
     end
 
     context 'given user, system and non-existent scopes' do
-      let(:scopes) { %w[user does_not_exist system] }
+      let(:scopes) { ['user', 'does_not_exist', 'system'] }
 
       it_behaves_like 'a setting resolver', nil, 'user', 'system', 'user'
     end
 
     context 'given only a system scope' do
-      let(:scopes) { %w[system] }
+      let(:scopes) { ['system'] }
 
       it_behaves_like 'a setting resolver', nil, nil, 'system', 'system'
     end
 
     context 'given system and then user scopes (non-default order)' do
-      let(:scopes) { %w[system user] }
+      let(:scopes) { ['system', 'user'] }
 
       it_behaves_like 'a setting resolver', nil, 'user', 'system', 'system'
     end
@@ -300,11 +300,11 @@ describe PDK::Config do
       end
 
       def system_config
-        @system_config ||= PDK::Config::Namespace.new('system') { ; }
+        @system_config ||= PDK::Config::Namespace.new('system') {}
       end
 
       def project_config
-        @system_config ||= PDK::Config::Namespace.new('project') { ; }
+        @system_config ||= PDK::Config::Namespace.new('project') {}
       end
     end
 
@@ -317,7 +317,7 @@ describe PDK::Config do
     let(:foo_file_content) { '{}' }
     let(:set_options) { {} }
 
-    before(:each) do
+    before do
       mock_file(root_file, root_file_content)
       mock_file(foo_file, foo_file_content)
       allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(anything)
@@ -326,7 +326,7 @@ describe PDK::Config do
     shared_examples 'a round-tripped setting' do
       it 'round-trips the setting value' do
         # First make sure the setting doesn't exist
-        expect(config.get(*setting)).to eq(nil)
+        expect(config.get(*setting)).to be_nil
         # Set the setting
         expect(config.set(setting, value)).to eq(value)
         # Get the new value
@@ -358,12 +358,12 @@ describe PDK::Config do
     end
 
     it 'takes an Array for the setting name' do
-      config.set(%w[user foo whizz], value)
-      expect(config.get(%w[user foo whizz])).to eq(value)
+      config.set(['user', 'foo', 'whizz'], value)
+      expect(config.get(['user', 'foo', 'whizz'])).to eq(value)
     end
 
     context 'given a root name that does not exist' do
-      let(:names) { %w[missing analytics disabled] }
+      let(:names) { ['missing', 'analytics', 'disabled'] }
 
       it 'raises an error' do
         expect { config.set(names, value) }.to raise_error(ArgumentError)
@@ -371,23 +371,23 @@ describe PDK::Config do
     end
 
     it 'raises an error when setting a value to a namespace mount' do
-      expect { config.set(%w[user foo], value) }.to raise_error(ArgumentError)
+      expect { config.set(['user', 'foo'], value) }.to raise_error(ArgumentError)
     end
 
     context 'given a plain root setting' do
-      let(:setting) { %w[user setting] }
+      let(:setting) { ['user', 'setting'] }
 
       it_behaves_like 'a round-tripped setting'
     end
 
     context 'given a plain nested setting' do
-      let(:setting) { %w[user foo setting] }
+      let(:setting) { ['user', 'foo', 'setting'] }
 
       it_behaves_like 'a round-tripped setting'
     end
 
     context 'given a hash root setting that doesn\'t already exist' do
-      let(:setting) { %w[user bar baz setting] }
+      let(:setting) { ['user', 'bar', 'baz', 'setting'] }
       let(:new_file_content) { "{\n  \"bar\": {\n    \"baz\": {\n      \"setting\": \"mock_value\"\n    }\n  }\n}" }
 
       it_behaves_like 'a round-tripped setting'
@@ -395,7 +395,7 @@ describe PDK::Config do
       it 'can be accessed via a normal hash syntax' do
         config.set(setting, value)
 
-        expect(config.get(%w[user bar baz setting])).to eq(value)
+        expect(config.get(['user', 'bar', 'baz', 'setting'])).to eq(value)
       end
 
       it 'saves to the root file' do
@@ -410,7 +410,7 @@ describe PDK::Config do
     end
 
     context 'given a hash nested setting that doesn\'t already exist' do
-      let(:setting) { %w[user foo bar baz setting] }
+      let(:setting) { ['user', 'foo', 'bar', 'baz', 'setting'] }
       let(:new_file_content) { "{\n  \"bar\": {\n    \"baz\": {\n      \"setting\": \"mock_value\"\n    }\n  }\n}" }
 
       it_behaves_like 'a round-tripped setting'
@@ -418,40 +418,40 @@ describe PDK::Config do
       it 'can be accessed via a normal hash syntax' do
         config.set(setting, value)
 
-        expect(config.get(%w[user foo bar])).to eq('baz' => { 'setting' => value })
-        expect(config.get(%w[user foo bar baz setting])).to eq(value)
+        expect(config.get(['user', 'foo', 'bar'])).to eq('baz' => { 'setting' => value })
+        expect(config.get(['user', 'foo', 'bar', 'baz', 'setting'])).to eq(value)
       end
 
       it_behaves_like 'a new setting file', "{\n  \"bar\": {\n    \"baz\": {\n      \"setting\": \"mock_value\"\n    }\n  }\n}"
     end
 
     context 'given a hash nested setting that already partially exists' do
-      let(:setting) { %w[user foo bar baz setting] }
+      let(:setting) { ['user', 'foo', 'bar', 'baz', 'setting'] }
       let(:foo_file_content) { '{ "bar": { "existing_setting": "exists" }}' }
 
       it 'can be accessed via a normal hash syntax' do
         # The old setting should exist
-        expect(config.get(%w[user foo bar])).to eq('existing_setting' => 'exists')
+        expect(config.get(['user', 'foo', 'bar'])).to eq('existing_setting' => 'exists')
 
         config.set(setting, value)
 
         # Should still contain the old setting
-        expect(config.get(%w[user foo bar])).to eq('baz' => { 'setting' => 'mock_value' }, 'existing_setting' => 'exists')
+        expect(config.get(['user', 'foo', 'bar'])).to eq('baz' => { 'setting' => 'mock_value' }, 'existing_setting' => 'exists')
         # Should contain the new setting
-        expect(config.get(%w[user foo bar baz setting])).to eq(value)
+        expect(config.get(['user', 'foo', 'bar', 'baz', 'setting'])).to eq(value)
       end
 
       it_behaves_like 'a new setting file', "{\n  \"bar\": {\n    \"existing_setting\": \"exists\",\n    \"baz\": {\n      \"setting\": \"mock_value\"\n    }\n  }\n}"
     end
 
     context 'given a hash nested setting that already exists as an Array' do
-      let(:setting) { %w[user foo bar baz setting] }
+      let(:setting) { ['user', 'foo', 'bar', 'baz', 'setting'] }
       let(:foo_file_content) { '{ "bar": [] }' }
 
       context 'without forcing the change' do
         it 'raises an error' do
           # The old setting should exist
-          expect(config.get(%w[user foo bar])).to eq([])
+          expect(config.get(['user', 'foo', 'bar'])).to eq([])
 
           expect { config.set(setting, value) }.to raise_error(ArgumentError)
         end
@@ -462,12 +462,12 @@ describe PDK::Config do
 
         it 'uses the new setting' do
           # The old setting should exist
-          expect(config.get(%w[user foo bar])).to eq([])
+          expect(config.get(['user', 'foo', 'bar'])).to eq([])
 
           config.set(setting, value, set_options)
 
           # Should contain only new setting
-          expect(config.get(%w[user foo bar baz setting])).to eq(value)
+          expect(config.get(['user', 'foo', 'bar', 'baz', 'setting'])).to eq(value)
         end
 
         it_behaves_like 'a new setting file', "{\n  \"bar\": {\n    \"baz\": {\n      \"setting\": \"mock_value\"\n    }\n  }\n}"
@@ -475,13 +475,13 @@ describe PDK::Config do
     end
 
     context 'given a setting that already exists as an non-empty Array' do
-      let(:setting) { %w[user foo bar] }
+      let(:setting) { ['user', 'foo', 'bar'] }
       let(:foo_file_content) { '{ "bar": ["abc", "def"] }' }
 
       context 'without forcing the change' do
         it 'appends the new value' do
           config.set(setting, value, set_options)
-          expect(config.get(%w[user foo bar])).to eq(['abc', 'def', value])
+          expect(config.get(['user', 'foo', 'bar'])).to eq(['abc', 'def', value])
         end
 
         it_behaves_like 'a new setting file', "{\n  \"bar\": [\n    \"abc\",\n    \"def\",\n    \"mock_value\"\n  ]\n}"
@@ -492,7 +492,7 @@ describe PDK::Config do
 
         it 'uses the new value' do
           config.set(setting, value, set_options)
-          expect(config.get(%w[user foo bar])).to eq(value)
+          expect(config.get(['user', 'foo', 'bar'])).to eq(value)
         end
 
         it_behaves_like 'a new setting file', "{\n  \"bar\": \"mock_value\"\n}"
@@ -500,14 +500,14 @@ describe PDK::Config do
     end
 
     context 'given a setting that already has the value in the Array' do
-      let(:setting) { %w[user foo bar] }
+      let(:setting) { ['user', 'foo', 'bar'] }
       let(:foo_file_content) { "{ \"bar\": [\"abc\", \"#{value}\"] }" }
 
       context 'without forcing the change' do
         it 'does not append the new value' do
           expect(PDK::Util::Filesystem).not_to receive(:write_file).with(PDK::Util::Filesystem.expand_path(foo_file), anything)
           config.set(setting, value, set_options)
-          expect(config.get(%w[user foo bar])).to eq(['abc', value])
+          expect(config.get(['user', 'foo', 'bar'])).to eq(['abc', value])
         end
       end
 
@@ -516,7 +516,7 @@ describe PDK::Config do
 
         it 'uses the new value' do
           config.set(setting, value, set_options)
-          expect(config.get(%w[user foo bar])).to eq(value)
+          expect(config.get(['user', 'foo', 'bar'])).to eq(value)
         end
 
         it_behaves_like 'a new setting file', "{\n  \"bar\": \"mock_value\"\n}"
@@ -546,7 +546,7 @@ describe PDK::Config do
         end
 
         it 'saves the disabled value to the analytics config file' do
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), %r{disabled: true})
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), /disabled: true/)
           config.user_config['analytics']['disabled']
         end
       end
@@ -559,12 +559,12 @@ describe PDK::Config do
         end
 
         it 'saves the disabled value to the analytics config file' do
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), %r{disabled: false})
+          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), /disabled: false/)
           config.user_config['analytics']['disabled']
         end
 
         context 'and the bolt configuration is unparsable' do
-          before(:each) do
+          before do
             allow(PDK::Config::YAML).to receive(:new).and_call_original
             allow(PDK::Config::YAML).to receive(:new)
               .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
@@ -576,7 +576,7 @@ describe PDK::Config do
           end
 
           it 'saves the disabled value to the analytics config file' do
-            expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), %r{disabled: true})
+            expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), /disabled: true/)
             config.user_config['analytics']['disabled']
           end
         end
@@ -597,7 +597,7 @@ describe PDK::Config do
 
     def uuid_regex(uuid)
       # Depending on the YAML or JSON generator, it may, or may not have quotes
-      %r{user-id: (?:#{uuid}|'#{uuid}'|\"#{uuid}\")}
+      /user-id: (?:#{uuid}|'#{uuid}'|"#{uuid}")/
     end
 
     context 'default value' do
@@ -632,7 +632,7 @@ describe PDK::Config do
         end
 
         context 'and the bolt configuration is unparsable' do
-          before(:each) do
+          before do
             allow(PDK::Config::YAML).to receive(:new).and_call_original
             allow(PDK::Config::YAML).to receive(:new)
               .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
@@ -658,10 +658,10 @@ describe PDK::Config do
   end
 
   describe '.analytics_config_interview!' do
-    before(:each) do
+    before do
       prompt = TTY::Prompt::Test.new
       allow(TTY::Prompt).to receive(:new).and_return(prompt)
-      prompt.input << responses.join("\r") + "\r"
+      prompt.input << ("#{responses.join("\r")}\r")
       prompt.input.rewind
 
       allow(PDK::CLI::Util).to receive(:interactive?).and_return(true)
@@ -674,7 +674,7 @@ describe PDK::Config do
 
       it 'sets user.analytics.disabled to false' do
         described_class.analytics_config_interview!
-        expect(PDK.config.get(%w[user analytics disabled])).to be_falsey
+        expect(PDK.config.get(['user', 'analytics', 'disabled'])).to be_falsey
       end
     end
 
@@ -683,7 +683,7 @@ describe PDK::Config do
 
       it 'sets user.analytics.disabled to true' do
         described_class.analytics_config_interview!
-        expect(PDK.config.get(%w[user analytics disabled])).to be_truthy
+        expect(PDK.config.get(['user', 'analytics', 'disabled'])).to be_truthy
       end
     end
 
@@ -692,7 +692,7 @@ describe PDK::Config do
 
       it 'sets user.analytics.disabled to false' do
         described_class.analytics_config_interview!
-        expect(PDK.config.get(%w[user analytics disabled])).to be_falsey
+        expect(PDK.config.get(['user', 'analytics', 'disabled'])).to be_falsey
       end
     end
 
@@ -701,7 +701,7 @@ describe PDK::Config do
 
       it 'sets user.analytics.disabled to true' do
         described_class.analytics_config_interview!
-        expect(PDK.config.get(%w[user analytics disabled])).to be_truthy
+        expect(PDK.config.get(['user', 'analytics', 'disabled'])).to be_truthy
       end
     end
   end

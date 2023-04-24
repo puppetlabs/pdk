@@ -7,7 +7,7 @@ describe PDK::Template::TemplateDir do
   let(:template_uri) { PDK::Util::TemplateURI.new(PDK::Util::TemplateURI::PDK_TEMPLATE_URL) }
   let(:template_path) { '/some/path' }
   let(:pdk_context) { PDK::Context::None.new(nil) }
-  let(:renderer) { instance_double('PDK::Template::Renderer::AbstractRenderer') }
+  let(:renderer) { instance_double(PDK::Template::Renderer::AbstractRenderer) }
 
   describe '#instance' do
     it 'creates a TemplateDir object' do
@@ -25,12 +25,12 @@ describe PDK::Template::TemplateDir do
     end
 
     context 'when a renderer could not be found' do
-      before(:each) do
+      before do
         expect(PDK::Template::Renderer).to receive(:instance).with(template_uri, template_path, pdk_context).and_return(nil)
       end
 
       it 'raises a RuntimeError' do
-        expect { template_dir }.to raise_error(RuntimeError, %r{Could not find a compatible})
+        expect { template_dir }.to raise_error(RuntimeError, /Could not find a compatible/)
       end
     end
   end

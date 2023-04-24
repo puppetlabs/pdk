@@ -13,7 +13,7 @@ describe PDK::Validate::Validator do
       TTY::Spinner,
       auto_spin: nil,
       success: nil,
-      error: nil,
+      error: nil
     )
   end
 
@@ -65,7 +65,7 @@ describe PDK::Validate::Validator do
     end
 
     context 'with a TTY::Spinner instance' do
-      before(:each) do
+      before do
         allow(validator).to receive(:spinner).and_return(mock_spinner) # rubocop:disable RSpec/SubjectStub This is fine
       end
 
@@ -84,7 +84,7 @@ describe PDK::Validate::Validator do
     end
 
     context 'with a TTY::Spinner instance' do
-      before(:each) do
+      before do
         allow(validator).to receive(:spinner).and_return(mock_spinner) # rubocop:disable RSpec/SubjectStub This is fine
       end
 
@@ -104,9 +104,9 @@ describe PDK::Validate::Validator do
     it 'indicates the validator is prepared' do
       # This test is a little fragile as it's using a private
       # instance variable
-      expect(validator.prepared).to eq(false)
+      expect(validator.prepared).to be(false)
       validator.prepare_invoke!
-      expect(validator.prepared).to eq(true)
+      expect(validator.prepared).to be(true)
     end
   end
 
@@ -114,7 +114,7 @@ describe PDK::Validate::Validator do
     let(:report) { PDK::Report.new }
     let(:validator_name) { 'mock-validator' }
 
-    before(:each) do
+    before do
       allow(validator).to receive(:name).and_return(validator_name) # rubocop:disable RSpec/SubjectStub This is fine
     end
 

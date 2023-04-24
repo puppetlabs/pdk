@@ -11,7 +11,7 @@ describe PDK::Generate::Task do
   let(:options) { {} }
   let(:expected_name) { given_name }
 
-  before(:each) do
+  before do
     allow(instance).to receive(:module_name).and_return(module_name)
   end
 
@@ -59,7 +59,7 @@ describe PDK::Generate::Task do
     let(:given_name) { 'test_task' }
     let(:task_files) { [] }
 
-    before(:each) do
+    before do
       allow(PDK::Util::Filesystem).to receive(:glob).with(File.join(module_dir, 'tasks', "#{given_name}.*")).and_return(task_files)
     end
 
@@ -89,9 +89,9 @@ describe PDK::Generate::Task do
       let(:task_files) { [File.join(module_dir, 'tasks', "#{given_name}.ps1")] }
 
       it 'raises ExitWithError' do
-        expect {
+        expect do
           generator.check_preconditions
-        }.to raise_error(PDK::CLI::ExitWithError, %r{a task named '#{given_name}' already exists}i)
+        end.to raise_error(PDK::CLI::ExitWithError, /a task named '#{given_name}' already exists/i)
       end
     end
   end
@@ -105,9 +105,9 @@ describe PDK::Generate::Task do
       it 'writes the metadata with a sample description' do
         expected_content = {
           'puppet_task_version' => 1,
-          'supports_noop'       => false,
-          'description'         => 'A short description of this task',
-          'parameters'          => {},
+          'supports_noop' => false,
+          'description' => 'A short description of this task',
+          'parameters' => {}
         }
 
         expect(generator.non_template_files).to include('tasks/test_task.json' => JSON.pretty_generate(expected_content))
@@ -120,9 +120,9 @@ describe PDK::Generate::Task do
       it 'writes the metadata with a sample description' do
         expected_content = {
           'puppet_task_version' => 1,
-          'supports_noop'       => false,
-          'description'         => 'This is a test task',
-          'parameters'          => {},
+          'supports_noop' => false,
+          'description' => 'This is a test task',
+          'parameters' => {}
         }
 
         expect(generator.non_template_files).to include('tasks/test_task.json' => JSON.pretty_generate(expected_content))

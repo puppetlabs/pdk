@@ -16,6 +16,7 @@ module PDK
         # @see PDK::Template::Fetcher::AbstractTemplateFetcher.fetch!
         def fetch!
           return if fetched
+
           super
 
           @path = uri.shell_path

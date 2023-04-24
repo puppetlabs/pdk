@@ -2,7 +2,7 @@ require 'pdk'
 
 module PDK
   module ControlRepo
-    CONTROL_REPO_FILES = %w[environment.conf Puppetfile].freeze
+    CONTROL_REPO_FILES = ['environment.conf', 'Puppetfile'].freeze
 
     DEFAULT_IGNORED = [
       '/pkg/',
@@ -11,7 +11,7 @@ module PDK
       # Strictly speaking this isn't default but if people have tricked older PDK into thinking that a
       # Control Repo is a module, they may have recursive symlinks in spec/fixtures/modules
       '/spec/fixtures/modules/',
-      '/vendor/',
+      '/vendor/'
     ].freeze
 
     # Returns path to the root of the Control Repo being worked on.
@@ -38,10 +38,9 @@ module PDK
                File.dirname(environment_conf_path)
              elsif control_repo_root?(Dir.pwd)
                Dir.pwd
-             else
-               nil
              end
       return path if path.nil? || !strict_check
+
       PDK::Bolt.bolt_project_root?(path) ? nil : path
     end
     module_function :find_control_repo_root

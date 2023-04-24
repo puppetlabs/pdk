@@ -1,6 +1,5 @@
 require 'bundler/gem_tasks'
 require 'puppet_litmus/rake_tasks' if Bundler.rubygems.find_name('puppet_litmus').any?
-require 'puppetlabs_spec_helper/tasks/fixtures' if Bundler.rubygems.find_name('puppetlabs_spec_helper').any?
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 
@@ -10,8 +9,8 @@ if File.exist?(build_defs_file)
     require 'yaml'
     @build_defaults ||= YAML.load_file(build_defs_file)
   rescue StandardError => e
-    STDERR.puts "Unable to load yaml from #{build_defs_file}:"
-    STDERR.puts e
+    $stderr.puts "Unable to load yaml from #{build_defs_file}:"
+    $stderr.puts e
   end
   @packaging_url  = @build_defaults['packaging_url']
   @packaging_repo = @build_defaults['packaging_repo']
@@ -72,7 +71,7 @@ namespace :acceptance do
 end
 
 RuboCop::RakeTask.new(:rubocop) do |task|
-  task.options = %w[-D -S -E]
+  task.options = ['-D', '-S', '-E']
 end
 
 task(:binstubs) do
@@ -87,9 +86,9 @@ begin
     require 'pdk/version'
     config.future_release = "v#{PDK::VERSION}"
     config.header = "# Changelog\n\n" \
-      "All changes to this repo will be documented in this file.\n" \
-      "See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.\n"
-    config.include_labels = %w[enhancement bug]
+                    "All changes to this repo will be documented in this file.\n" \
+                    "See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.\n"
+    config.include_labels = ['enhancement', 'bug']
     config.user = 'puppetlabs'
     config.project = 'pdk'
     config.issues = false

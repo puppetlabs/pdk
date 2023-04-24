@@ -96,10 +96,7 @@ module PDK
         @validators.each do |validator|
           next if validator[:proc].call(value)
 
-          raise ArgumentError, '%{key} %{message}' % {
-            key:     qualified_name,
-            message: validator[:message],
-          }
+          raise ArgumentError, format('%{key} %{message}', key: qualified_name, message: validator[:message])
         end
       end
 
@@ -110,7 +107,8 @@ module PDK
       #
       # @return [nil]
       def default_to(&block)
-        raise ArgumentError, 'must be passed a block' unless block_given?
+        raise ArgumentError, 'must be passed a block' unless block
+
         @default_to = block
       end
 
@@ -120,8 +118,9 @@ module PDK
       #   {#default_to}, or `nil` if the setting has no default.
       def default
         return @default_to.call if default_block?
+
         # If there is a previous setting in the chain, use its default
-        @previous_setting.nil? ? nil : @previous_setting.default
+        @previous_setting&.default
       end
 
       private

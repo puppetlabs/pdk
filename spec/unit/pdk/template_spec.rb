@@ -8,9 +8,9 @@ describe PDK::Template do
   describe '.with' do
     context 'when not passed a block' do
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           described_class.with(template_uri, pdk_context)
-        }.to raise_error(ArgumentError, %r{must be passed a block}i)
+        end.to raise_error(ArgumentError, /must be passed a block/i)
       end
     end
 
@@ -18,9 +18,9 @@ describe PDK::Template do
       let(:template_uri) { 'string uri' }
 
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           described_class.with(template_uri, pdk_context) {}
-        }.to raise_error(ArgumentError, %r{must be passed a PDK::Util::TemplateURI}i)
+        end.to raise_error(ArgumentError, /must be passed a PDK::Util::TemplateURI/i)
       end
     end
 
@@ -31,11 +31,11 @@ describe PDK::Template do
           template_uri,
           nil,
           pdk_context,
-          instance_double('PDK::Template::Renderer::AbstractRenderer'),
+          instance_double(PDK::Template::Renderer::AbstractRenderer)
         )
       end
 
-      before(:each) do
+      before do
         expect(PDK::Template::Fetcher).to receive(:with).with(template_uri).and_yield(fetcher)
         allow(PDK::Template::TemplateDir).to receive(:instance).with(template_uri, anything, pdk_context).and_return(template_dir)
       end

@@ -14,7 +14,7 @@ describe PDK::Validate::ValidatorGroup do
 
   describe '.spinner' do
     context 'when spinners are enabled' do
-      before(:each) do
+      before do
         allow(validator_group).to receive(:spinners_enabled?).and_return(true)
         allow(validator_group).to receive(:validators).and_return([MockSuccessValidator])
       end
@@ -37,7 +37,7 @@ describe PDK::Validate::ValidatorGroup do
     end
 
     context 'when spinners are disabled' do
-      before(:each) do
+      before do
         allow(validator_group).to receive(:spinners_enabled?).and_return(false)
       end
 
@@ -48,7 +48,7 @@ describe PDK::Validate::ValidatorGroup do
   end
 
   describe '.prepare_invoke!' do
-    before(:each) do
+    before do
       allow(validator_group).to receive(:validators).and_return([MockSuccessValidator])
     end
 
@@ -66,7 +66,7 @@ describe PDK::Validate::ValidatorGroup do
   describe '.invoke' do
     let(:report) { PDK::Report.new }
 
-    before(:each) do
+    before do
       allow(validator_group).to receive(:validators).and_return([MockSuccessValidator])
     end
 
@@ -97,7 +97,7 @@ describe PDK::Validate::ValidatorGroup do
     end
 
     context 'for both succesful and failed validators' do
-      before(:each) do
+      before do
         allow(validator_group).to receive(:validators).and_return([MockSuccessValidator, MockFailedValidator, MockAnotherFailedValidator])
       end
 
@@ -123,13 +123,13 @@ describe PDK::Validate::ValidatorGroup do
   end
 
   describe '.validator_instances' do
-    before(:each) do
+    before do
       allow(validator_group).to receive(:validators).and_return(
         [
           MockSuccessValidator,
           PDK::Validate::Validator,
-          MockNoContextValidator,
-        ],
+          MockNoContextValidator
+        ]
       )
     end
 

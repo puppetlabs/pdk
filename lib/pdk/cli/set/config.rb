@@ -1,119 +1,121 @@
-module PDK::CLI
-  module Set
-    module Config
-      ALLOWED_TYPE_NAMES = %w[array boolean number string].freeze
+module PDK
+  module CLI
+    module Set
+      module Config
+        ALLOWED_TYPE_NAMES = ['array', 'boolean', 'number', 'string'].freeze
 
-      # :nocov:
-      def self.pretty_allowed_names
-        ALLOWED_TYPE_NAMES.map { |name| "'#{name}'" }.join(', ')
-      end
-      # :nocov:
-
-      def self.transform_value(type_name, value)
-        normalized_name = type_name.downcase.strip
-        unless ALLOWED_TYPE_NAMES.include?(normalized_name)
-          raise PDK::CLI::ExitWithError, 'Unknown type %{type_name}. Expected one of %{allowed}' % { type_name: type_name, allowed: pretty_allowed_names }
+        # :nocov:
+        def self.pretty_allowed_names
+          ALLOWED_TYPE_NAMES.map { |name| "'#{name}'" }.join(', ')
         end
+        # :nocov:
 
-        # Short circuit string conversions as it's trivial
-        if normalized_name == 'string'
-          raise PDK::CLI::ExitWithError, 'An error occured converting \'%{value}\' into a %{type_name}' % { value: value.nil? ? 'nil' : value, type_name: type_name } unless value.is_a?(String)
-          return value
-        end
-
-        begin
-          case normalized_name
-          when 'array'
-            convert_to_array(value)
-          when 'boolean'
-            convert_to_boolean(value)
-          when 'number'
-            convert_to_number(value)
-          else
-            value
+        def self.transform_value(type_name, value)
+          normalized_name = type_name.downcase.strip
+          unless ALLOWED_TYPE_NAMES.include?(normalized_name)
+            raise PDK::CLI::ExitWithError, format('Unknown type %{type_name}. Expected one of %{allowed}', type_name: type_name, allowed: pretty_allowed_names)
           end
-        rescue ArgumentError, TypeError
-          raise PDK::CLI::ExitWithError, 'An error occured converting \'%{value}\' into a %{type_name}' % { value: value.nil? ? 'nil' : value, type_name: type_name }
+
+          # Short circuit string conversions as it's trivial
+          if normalized_name == 'string'
+            raise PDK::CLI::ExitWithError, format('An error occured converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name: type_name) unless value.is_a?(String)
+
+            return value
+          end
+
+          begin
+            case normalized_name
+            when 'array'
+              convert_to_array(value)
+            when 'boolean'
+              convert_to_boolean(value)
+            when 'number'
+              convert_to_number(value)
+            else
+              value
+            end
+          rescue ArgumentError, TypeError
+            raise PDK::CLI::ExitWithError, format('An error occured converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name: type_name)
+          end
         end
-      end
 
-      def self.convert_to_array(value)
-        return [] if value.nil?
-        value.is_a?(Array) ? value : [value]
-      end
-      private_class_method :convert_to_array
+        def self.convert_to_array(value)
+          return [] if value.nil?
 
-      def self.convert_to_boolean(value)
-        string_val = value.to_s.strip.downcase
+          value.is_a?(Array) ? value : [value]
+        end
+        private_class_method :convert_to_array
 
-        return true  if %w[yes true -1 1].include?(string_val)
-        return false if %w[no false 0].include?(string_val)
+        def self.convert_to_boolean(value)
+          string_val = value.to_s.strip.downcase
 
-        raise ArgumentError
-      end
-      private_class_method :convert_to_boolean
+          return true  if ['yes', 'true', '-1', '1'].include?(string_val)
+          return false if ['no', 'false', '0'].include?(string_val)
 
-      def self.convert_to_number(value)
-        float_val = Float(value)
-        # Return an Integer if this is actually and Integer, otherwise return the float
-        (float_val.truncate == float_val) ? float_val.truncate : float_val
-      end
-      private_class_method :convert_to_number
+          raise ArgumentError
+        end
+        private_class_method :convert_to_boolean
 
-      def self.run(opts, args)
-        item_name = (args.count > 0) ? args[0] : nil
-        item_value = (args.count > 1) ? args[1] : nil
+        def self.convert_to_number(value)
+          float_val = Float(value)
+          # Return an Integer if this is actually and Integer, otherwise return the float
+          float_val.truncate == float_val ? float_val.truncate : float_val
+        end
+        private_class_method :convert_to_number
 
-        opts[:type] = opts[:as] if opts[:type].nil? && !opts[:as].nil?
-        force = opts[:force] || false
+        def self.run(opts, args)
+          item_name = args.count.positive? ? args[0] : nil
+          item_value = args.count > 1 ? args[1] : nil
 
-        # Transform the value if we need to
-        item_value = PDK::CLI::Set::Config.transform_value(opts[:type], item_value) unless opts[:type].nil?
+          opts[:type] = opts[:as] if opts[:type].nil? && !opts[:as].nil?
+          force = opts[:force] || false
 
-        raise PDK::CLI::ExitWithError, 'Configuration name is required' if item_name.nil?
-        raise PDK::CLI::ExitWithError, 'Configuration value is required. If you wish to remove a value use \'pdk remove config\'' if item_value.nil?
+          # Transform the value if we need to
+          item_value = PDK::CLI::Set::Config.transform_value(opts[:type], item_value) unless opts[:type].nil?
 
-        current_value = PDK.config.get(item_name)
-        raise PDK::CLI::ExitWithError, "The configuration item '%{name}' can not have a value set." % { name: item_name } if current_value.is_a?(PDK::Config::Namespace)
+          raise PDK::CLI::ExitWithError, 'Configuration name is required' if item_name.nil?
+          raise PDK::CLI::ExitWithError, 'Configuration value is required. If you wish to remove a value use \'pdk remove config\'' if item_value.nil?
 
-        # If we're forcing the value, don't do any munging
-        unless force
+          current_value = PDK.config.get(item_name)
+          raise PDK::CLI::ExitWithError, format("The configuration item '%{name}' can not have a value set.", name: item_name) if current_value.is_a?(PDK::Config::Namespace)
+
+          # If we're forcing the value, don't do any munging
           # Check if the setting already exists
-          if current_value.is_a?(Array) && current_value.include?(item_value)
-            PDK.logger.info("No changes made to '%{name}' as it already contains value '%{to}'" % { name: item_name, to: item_value })
+          if !force && (current_value.is_a?(Array) && current_value.include?(item_value))
+            PDK.logger.info(format("No changes made to '%{name}' as it already contains value '%{to}'", name: item_name, to: item_value))
             return 0
           end
-        end
 
-        new_value = PDK.config.set(item_name, item_value, force: opts[:force])
-        if current_value.nil? || force
-          PDK.logger.info("Set initial value of '%{name}' to '%{to}'" % { name: item_name, to: new_value })
-        elsif current_value.is_a?(Array)
-          # Arrays have a special output format
-          PDK.logger.info("Added new value '%{to}' to '%{name}'" % { name: item_name, to: item_value })
-        else
-          PDK.logger.info("Changed existing value of '%{name}' from '%{from}' to '%{to}'" % { name: item_name, from: current_value, to: new_value })
-        end
+          new_value = PDK.config.set(item_name, item_value, force: opts[:force])
+          if current_value.nil? || force
+            PDK.logger.info(format("Set initial value of '%{name}' to '%{to}'", name: item_name, to: new_value))
+          elsif current_value.is_a?(Array)
+            # Arrays have a special output format
+            PDK.logger.info(format("Added new value '%{to}' to '%{name}'", name: item_name, to: item_value))
+          else
+            PDK.logger.info(format("Changed existing value of '%{name}' from '%{from}' to '%{to}'", name: item_name, from: current_value, to: new_value))
+          end
 
-        # Same output as `get config`
-        $stdout.puts '%{name}=%{value}' % { name: item_name, value: PDK.config.get(item_name) }
-        0
+          # Same output as `get config`
+          $stdout.puts format('%{name}=%{value}', name: item_name, value: PDK.config.get(item_name))
+          0
+        end
       end
     end
-  end
 
-  @set_config_cmd = @set_cmd.define_command do
-    name 'config'
-    usage 'config [name] [value]'
-    summary 'Set or update the configuration for <name>'
+    @set_config_cmd = @set_cmd.define_command do
+      name 'config'
+      usage 'config [name] [value]'
+      summary 'Set or update the configuration for <name>'
 
-    option :f, :force, 'Force the configuration setting to be overwitten.', argument: :forbidden
+      option :f, :force, 'Force the configuration setting to be overwitten.', argument: :forbidden
 
-    option :t, :type, 'The type of value to set. Acceptable values: %{values}' % { values: PDK::CLI::Set::Config.pretty_allowed_names }, argument: :required
-    option nil, :as, 'Alias of --type', argument: :required
+      option :t, :type, format('The type of value to set. Acceptable values: %{values}', values: PDK::CLI::Set::Config.pretty_allowed_names), argument: :required
+      option nil, :as, 'Alias of --type', argument: :required
 
-    run do |opts, args, _cmd|
-      exit PDK::CLI::Set::Config.run(opts, args)
+      run do |opts, args, _cmd|
+        exit PDK::CLI::Set::Config.run(opts, args)
+      end
     end
   end
 end

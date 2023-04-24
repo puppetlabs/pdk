@@ -8,7 +8,7 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
   let(:options) { {} }
   let(:tmpdir) { File.join('/', 'tmp', 'puppet-plan-parser-validate') }
 
-  before(:each) do
+  before do
     allow(Dir).to receive(:mktmpdir).with('puppet-plan-parser-validate').and_return(tmpdir)
     allow(PDK::Util::Filesystem).to receive(:remove_entry_secure).with(tmpdir)
   end
@@ -16,9 +16,9 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
   it 'defines the ExternalCommandValidator attributes' do
     expect(validator).to have_attributes(
       name: 'puppet-plan-syntax',
-      cmd:  'puppet',
+      cmd: 'puppet'
     )
-    expect(validator.spinner_text_for_targets(nil)).to match(%r{puppet plan syntax}i)
+    expect(validator.spinner_text_for_targets(nil)).to match(/puppet plan syntax/i)
   end
 
   describe '.pattern' do
@@ -37,7 +37,7 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
 
   describe '.invoke' do
     context 'when the validator runs correctly' do
-      before(:each) do
+      before do
         allow(validator).to receive(:parse_targets).and_return([[], [], []]) # rubocop:disable RSpec/SubjectStub
       end
 
@@ -48,31 +48,31 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
     end
 
     context 'when the validator raises an exception' do
-      before(:each) do
+      before do
         allow(validator).to receive(:parse_targets).and_raise(PDK::CLI::FatalError) # rubocop:disable RSpec/SubjectStub
       end
 
       it 'cleans up the temp dir after invoking' do
         expect(validator).to receive(:remove_validate_tmpdir) # rubocop:disable RSpec/SubjectStub
-        expect {
+        expect do
           validator.invoke(PDK::Report.new)
-        }.to raise_error(PDK::CLI::FatalError)
+        end.to raise_error(PDK::CLI::FatalError)
       end
     end
   end
 
   describe '.remove_validate_tmpdir' do
-    after(:each) do
+    after do
       validator.remove_validate_tmpdir
     end
 
     context 'when a temp dir has been created' do
-      before(:each) do
+      before do
         validator.validate_tmpdir
       end
 
       context 'and the path is a directory' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with(tmpdir).and_return(true)
         end
 
@@ -82,7 +82,7 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
       end
 
       context 'but the path is not a directory' do
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:directory?).with(tmpdir).and_return(false)
         end
 
@@ -96,14 +96,14 @@ describe PDK::Validate::Puppet::PuppetPlanSyntaxValidator do
   describe '.parse_options' do
     subject(:command_args) { validator.parse_options(targets) }
 
-    let(:targets) { %w[target1 target2.pp] }
+    let(:targets) { ['target1', 'target2.pp'] }
 
-    before(:each) do
+    before do
       allow(Gem).to receive(:win_platform?).and_return(false)
     end
 
     it 'invokes `puppet parser validate --tasks`' do
-      expect(command_args.first(3)).to eq(%w[parser validate --tasks])
+      expect(command_args.first(3)).to eq(['parser', 'validate', '--tasks'])
     end
   end
 end

@@ -2,7 +2,7 @@ require 'spec_helper'
 require 'pdk/util/git'
 
 describe PDK::Util::Git do
-  before(:each) do
+  before do
     described_class.clear_cached_information
   end
 
@@ -12,12 +12,12 @@ describe PDK::Util::Git do
     let(:maybe_repo) { 'pdk-templates' }
 
     context 'when maybe_repo is a directory' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(maybe_repo).and_return(true)
       end
 
       context 'when maybe_repo is a bare repository' do
-        before(:each) do
+        before do
           allow(described_class).to receive(:git_with_env).with(hash_including('GIT_DIR' => maybe_repo), 'rev-parse', '--is-bare-repository').and_return(result)
           # A bare repo does not have a working tree
           allow(described_class).to receive(:work_tree?).and_return(false)
@@ -49,7 +49,7 @@ describe PDK::Util::Git do
       end
 
       context 'when maybe_repo has a working tree' do
-        before(:each) do
+        before do
           allow(described_class).to receive(:git).with('rev-parse', '--is-inside-work-tree').and_return(result)
           # A bare repo does not have a working tree
           allow(described_class).to receive(:bare_repo?).and_return(false)
@@ -83,7 +83,7 @@ describe PDK::Util::Git do
       end
 
       context 'when maybe_repo has neither a working tree or a bare repository' do
-        before(:each) do
+        before do
           allow(described_class).to receive(:bare_repo?).and_return(false)
           allow(described_class).to receive(:work_tree?).and_return(false)
         end
@@ -93,7 +93,7 @@ describe PDK::Util::Git do
     end
 
     context 'when maybe_repo is not a directory' do
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(maybe_repo).and_return(false)
         allow(described_class).to receive(:git).with('ls-remote', '--exit-code', maybe_repo).and_return(result)
       end
@@ -122,7 +122,7 @@ describe PDK::Util::Git do
     let(:repo) { 'https://github.com/puppetlabs/pdk-templates' }
     let(:ref) { 'main' }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:git).with('ls-remote', '--refs', repo, ref).and_return(git_result)
     end
 
@@ -130,8 +130,8 @@ describe PDK::Util::Git do
       let(:git_result) do
         {
           exit_code: 1,
-          stdout:    'some stdout text',
-          stderr:    'some stderr text',
+          stdout: 'some stdout text',
+          stderr: 'some stderr text'
         }
       end
 
@@ -139,9 +139,9 @@ describe PDK::Util::Git do
         expect(logger).to receive(:error).with(git_result[:stdout])
         expect(logger).to receive(:error).with(git_result[:stderr])
 
-        expect {
+        expect do
           described_class.ls_remote(repo, ref)
-        }.to raise_error(PDK::CLI::ExitWithError, %r{unable to access the template repository}i)
+        end.to raise_error(PDK::CLI::ExitWithError, /unable to access the template repository/i)
       end
     end
 
@@ -149,15 +149,15 @@ describe PDK::Util::Git do
       let(:git_result) do
         {
           exit_code: 0,
-          stdout:    [
+          stdout: [
             "main-sha\trefs/heads/main",
-            "mainful-sha\trefs/heads/mainful",
-          ].join("\n"),
+            "mainful-sha\trefs/heads/mainful"
+          ].join("\n")
         }
       end
 
       it 'returns only the SHA for the exact ref match' do
-        is_expected.to eq('main-sha')
+        expect(subject).to eq('main-sha')
       end
     end
   end

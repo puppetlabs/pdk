@@ -48,14 +48,14 @@ module PDK
 
       def self.parallel_with_no_tests?(ran_in_parallel, json_result, result)
         ran_in_parallel && json_result.empty? &&
-          ((!result[:exit_code].zero? && result[:stderr].strip =~ %r{Pass files or folders to run$}) ||
-           result[:stderr].strip =~ %r{No files for parallel_spec to run against$})
+          ((!result[:exit_code].zero? && result[:stderr].strip =~ /Pass files or folders to run$/) ||
+           result[:stderr].strip =~ /No files for parallel_spec to run against$/)
       end
 
       def self.print_failure(result, exception)
         $stderr.puts ''
-        result[:stdout].each_line { |line| $stderr.puts line.rstrip } unless result[:stdout].nil?
-        result[:stderr].each_line { |line| $stderr.puts line.rstrip } unless result[:stderr].nil?
+        result[:stdout]&.each_line { |line| $stderr.puts line.rstrip }
+        result[:stderr]&.each_line { |line| $stderr.puts line.rstrip }
         $stderr.puts ''
         raise PDK::CLI::FatalError, exception
       end
@@ -122,7 +122,7 @@ module PDK
           result[:exit_code] = 0
         end
 
-        raise PDK::CLI::FatalError, 'Unit test output did not contain a valid JSON result: %{output}' % { output: result[:stdout] } if json_result.nil? || json_result.empty?
+        raise PDK::CLI::FatalError, format('Unit test output did not contain a valid JSON result: %{output}', output: result[:stdout]) if json_result.nil? || json_result.empty?
 
         json_result = merge_json_results(json_result) if options[:parallel]
 
@@ -135,38 +135,38 @@ module PDK
 
       def self.parse_output(report, json_data, duration)
         # Output messages to stderr.
-        json_data['messages'] && json_data['messages'].each { |msg| $stderr.puts msg }
+        json_data['messages']&.each { |msg| $stderr.puts msg }
 
         example_results = {
           # Only possibilities are passed, failed, pending:
           # https://github.com/rspec/rspec-core/blob/main/lib/rspec/core/example.rb#L548
           'passed' => [],
           'failed' => [],
-          'pending' => [],
+          'pending' => []
         }
 
-        json_data['examples'] && json_data['examples'].each do |ex|
+        json_data['examples']&.each do |ex|
           example_results[ex['status']] << ex if example_results.key?(ex['status'])
         end
 
         example_results.each do |result, examples|
           # Translate rspec example results to JUnit XML testcase results
-          state = case result
-                  when 'passed' then :passed
-                  when 'failed' then :failure
-                  when 'pending' then :skipped
-                  end
+          state_map = {
+            'passed' => :passed,
+            'failed' => :failure,
+            'pending' => :skipped
+          }
 
           examples.each do |ex|
             report.add_event(
               source: 'rspec',
-              state: state,
+              state: state_map[result],
               file: ex['file_path'],
               line: ex['line_number'],
               test: ex['full_description'],
               severity: ex['status'],
               message: ex['pending_message'] || (ex['exception'] && ex['exception']['message']) || nil,
-              trace: (ex['exception'] && ex['exception']['backtrace']) || nil,
+              trace: (ex['exception'] && ex['exception']['backtrace']) || nil
             )
           end
         end
@@ -174,12 +174,8 @@ module PDK
         return unless json_data['summary']
 
         # TODO: standardize summary output
-        $stderr.puts '  ' << 'Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.' % {
-          total: json_data['summary']['example_count'],
-          duration: duration,
-          failures: json_data['summary']['failure_count'],
-          pending: json_data['summary']['pending_count'],
-        }
+        $stderr.puts '  ' << (format('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.', total: json_data['summary']['example_count'], duration: duration,
+                                                                                                                                   failures: json_data['summary']['failure_count'], pending: json_data['summary']['pending_count'])) # rubocop:disable Layout/LineLength
       end
 
       def self.merge_json_results(json_data)
@@ -191,6 +187,7 @@ module PDK
         message_set = Set.new
         json_data.each do |json|
           next unless json['messages']
+
           message_set |= json['messages']
         end
         merged_json_result['messages'] = message_set.to_a
@@ -199,6 +196,7 @@ module PDK
         all_examples = []
         json_data.each do |json|
           next unless json['examples']
+
           all_examples.concat json['examples']
         end
         merged_json_result['examples'] = all_examples
@@ -207,10 +205,11 @@ module PDK
         summary_hash = {
           'example_count' => 0,
           'failure_count' => 0,
-          'pending_count' => 0,
+          'pending_count' => 0
         }
         json_data.each do |json|
           next unless json['summary']
+
           summary_hash['example_count'] += json['summary']['example_count']
           summary_hash['failure_count'] += json['summary']['failure_count']
           summary_hash['pending_count'] += json['summary']['pending_count']
@@ -233,12 +232,13 @@ module PDK
         output = rake('spec_list_json', 'Finding unit tests.', environment)
 
         rspec_json = PDK::Util.find_first_json_in(output[:stdout])
-        raise PDK::CLI::FatalError, 'Failed to find valid JSON in output from rspec: %{output}' % { output: output[:stdout] } unless rspec_json
+        raise PDK::CLI::FatalError, format('Failed to find valid JSON in output from rspec: %{output}', output: output[:stdout]) unless rspec_json
+
         if rspec_json['examples'].empty?
           rspec_message = rspec_json['messages'][0]
           return [] if rspec_message == 'No examples found.'
 
-          raise PDK::CLI::FatalError, 'Unable to enumerate examples. rspec reported: %{message}' % { message: rspec_message }
+          raise PDK::CLI::FatalError, format('Unable to enumerate examples. rspec reported: %{message}', message: rspec_message)
         else
           examples = []
           rspec_json['examples'].each do |example|

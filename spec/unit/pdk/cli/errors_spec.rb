@@ -5,7 +5,7 @@ describe PDK::CLI::FatalError do # rubocop:disable RSpec/MultipleDescribes
   subject(:error) { described_class.new }
 
   it 'has a default error message' do
-    expect(error.message).to match(%r{an unexpected error has occurred}i)
+    expect(error.message).to match(/an unexpected error has occurred/i)
   end
 
   it 'has a default non-zero exit code' do

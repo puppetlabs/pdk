@@ -7,7 +7,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
   it 'defines the base validator attributes' do
     expect(validator).to have_attributes(
       name: 'metadata-json-lint',
-      cmd:  'metadata-json-lint',
+      cmd: 'metadata-json-lint'
     )
   end
 
@@ -18,7 +18,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
       let(:targets) { ['foo/metadata.json'] }
 
       it 'includes the path to the target in the spinner text' do
-        expect(spinner_text_for_targets).to match(%r{checking module metadata style \(#{Regexp.escape(targets.first)}\)}i)
+        expect(spinner_text_for_targets).to match(/checking module metadata style \(#{Regexp.escape(targets.first)}\)/i)
       end
     end
 
@@ -31,13 +31,13 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
         end
       end
 
-      before(:each) do
+      before do
         pwd = Gem.win_platform? ? 'C:/path/to/module' : '/path/to/module'
         allow(Pathname).to receive(:pwd).and_return(Pathname.new(pwd))
       end
 
       it 'includes the path to the target relative to the PWD in the spinner text' do
-        expect(spinner_text_for_targets).to match(%r{checking module metadata style \(metadata\.json\)}i)
+        expect(spinner_text_for_targets).to match(/checking module metadata style \(metadata\.json\)/i)
       end
     end
   end
@@ -52,10 +52,10 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
   describe '.parse_options' do
     subject(:command_args) { validator.parse_options(targets) }
 
-    let(:targets) { %w[target1 target2.json] }
+    let(:targets) { ['target1', 'target2.json'] }
 
     it 'sets the output format as JSON' do
-      expect(command_args.join(' ')).to match(%r{--format json})
+      expect(command_args.join(' ')).to match(/--format json/)
     end
 
     it 'enables strict dependency check' do
@@ -82,7 +82,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
       let(:targets) { ['metadata.json', 'another.json'] }
 
       it 'raises an ArgumentError' do
-        expect { parse_output }.to raise_error(ArgumentError, a_string_matching(%r{more than 1 target provided}i))
+        expect { parse_output }.to raise_error(ArgumentError, a_string_matching(/more than 1 target provided/i))
       end
     end
 
@@ -90,12 +90,12 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
       let(:metadata_json_lint_output) { '' }
 
       it 'adds a passing event for the target to the report' do
-        expect(report).to receive(:add_event).with(
-          file:     targets.first,
-          source:   validator.name,
-          state:    :passed,
-          severity: :ok,
-        )
+        expect(report).to receive(:add_event).with({
+                                                     file: targets.first,
+                                                     source: validator.name,
+                                                     state: :passed,
+                                                     severity: :ok
+                                                   })
 
         parse_output
       end
@@ -105,9 +105,9 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
       let(:metadata_json_lint_output) { 'some unhandled error' }
 
       it 'adds an error event for the target to the report' do
-        expect {
+        expect do
           parse_output
-        }.to raise_error(PDK::Validate::ParseOutputError, 'some unhandled error')
+        end.to raise_error(PDK::Validate::ParseOutputError, 'some unhandled error')
       end
     end
 
@@ -119,14 +119,14 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
         allow(report).to receive(:add_event)
 
         errors.each do |error|
-          expect(report).to receive(:add_event).with(
-            file:     targets.first,
-            source:   validator.name,
-            message:  error['msg'],
-            test:     error['check'],
-            severity: 'error',
-            state:    :failure,
-          )
+          expect(report).to receive(:add_event).with({
+                                                       file: targets.first,
+                                                       source: validator.name,
+                                                       message: error['msg'],
+                                                       test: error['check'],
+                                                       severity: 'error',
+                                                       state: :failure
+                                                     })
         end
 
         parse_output
@@ -136,14 +136,14 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
         allow(report).to receive(:add_event)
 
         warnings.each do |warning|
-          expect(report).to receive(:add_event).with(
-            file:     targets.first,
-            source:   validator.name,
-            message:  warning['msg'],
-            test:     warning['check'],
-            severity: 'warning',
-            state:    :failure,
-          )
+          expect(report).to receive(:add_event).with({
+                                                       file: targets.first,
+                                                       source: validator.name,
+                                                       message: warning['msg'],
+                                                       test: warning['check'],
+                                                       severity: 'warning',
+                                                       state: :failure
+                                                     })
         end
 
         parse_output

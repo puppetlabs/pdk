@@ -5,7 +5,7 @@ require 'json'
 modules = [
   'puppetlabs/puppetlabs-motd',
   'puppetlabs/puppetlabs-concat',
-  'puppetlabs/puppetlabs-inifile',
+  'puppetlabs/puppetlabs-inifile'
 ]
 
 describe 'Updating an existing module' do
@@ -31,7 +31,7 @@ describe 'Updating an existing module' do
 
             sync_yaml['Gemfile'][gem_type].each_key do |group|
               sync_yaml['Gemfile'][gem_type][group].select! do |gem|
-                gem['gem'] =~ %r{\Apuppet-module-(?:posix|win)-system}
+                gem['gem'] =~ /\Apuppet-module-(?:posix|win)-system/
               end
             end
           end
@@ -53,7 +53,7 @@ describe 'Updating an existing module' do
           subject { super().stdout.split("\n") }
 
           it 'does not output any unexpected errors' do
-            is_expected.to all(match(%r{\((?:info|warning|error)\): (?:puppet-lint|rubocop|task-metadata-lint|task-name|puppet-epp)}i))
+            expect(subject).to all(match(/\((?:info|warning|error)\): (?:puppet-lint|rubocop|task-metadata-lint|task-name|puppet-epp)/i))
           end
         end
       end
@@ -62,7 +62,7 @@ describe 'Updating an existing module' do
         let(:cwd) { repo_dir }
 
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{0 failures}m) }
+        its(:stdout) { is_expected.to match(/0 failures/m) }
       end
 
       # Parallel tests gem is currently broken on Windows.
@@ -70,7 +70,7 @@ describe 'Updating an existing module' do
         let(:cwd) { repo_dir }
 
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{0 failures}m) }
+        its(:stdout) { is_expected.to match(/0 failures/m) }
       end
 
       describe command('pdk build --force') do

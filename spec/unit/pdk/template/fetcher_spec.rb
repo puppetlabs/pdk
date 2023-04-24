@@ -19,7 +19,7 @@ describe PDK::Template::Fetcher do
     context 'given any other uri' do
       let(:template_uri) { PDK::Util::TemplateURI.new('/some/path') }
 
-      before(:each) do
+      before do
         allow(PDK::Template::Fetcher::Git).to receive(:fetchable?).and_return(false)
       end
 
@@ -32,15 +32,15 @@ describe PDK::Template::Fetcher do
   describe '.with' do
     let(:fetcher) { PDK::Template::Fetcher::AbstractFetcher.new(template_uri, fetcher_options) }
 
-    before(:each) do
+    before do
       allow(described_class).to receive(:instance).with(template_uri, fetcher_options).and_return(fetcher)
     end
 
     context 'when not passed a block' do
       it 'raises an ArgumentError' do
-        expect {
+        expect do
           described_class.with(template_uri, fetcher_options)
-        }.to raise_error(ArgumentError, %r{must be passed a block}i)
+        end.to raise_error(ArgumentError, /must be passed a block/i)
       end
     end
 
@@ -55,7 +55,7 @@ describe PDK::Template::Fetcher do
     end
 
     context 'when the fetch is temporary' do
-      before(:each) do
+      before do
         allow(fetcher).to receive(:temporary).and_return(true)
       end
 
@@ -66,7 +66,7 @@ describe PDK::Template::Fetcher do
     end
 
     context 'when the fetch is not temporary' do
-      before(:each) do
+      before do
         allow(fetcher).to receive(:temporary).and_return(false)
       end
 
@@ -78,7 +78,7 @@ describe PDK::Template::Fetcher do
   end
 
   describe PDK::Template::Fetcher::AbstractFetcher do
-    subject(:fetcher) { PDK::Template::Fetcher::AbstractFetcher.new(template_uri, fetcher_options) }
+    subject(:fetcher) { described_class.new(template_uri, fetcher_options) }
 
     it 'responds to uri' do
       expect(fetcher.uri).to eq(template_uri)
@@ -100,7 +100,7 @@ describe PDK::Template::Fetcher do
       expect(fetcher.metadata).to include(
         'pdk-version' => anything,
         'template-url' => nil,
-        'template-ref' => nil,
+        'template-ref' => nil
       )
     end
 

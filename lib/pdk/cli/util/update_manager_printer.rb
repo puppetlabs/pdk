@@ -14,7 +14,7 @@ module PDK
           require 'pdk/report'
 
           options = {
-            tense: :future,
+            tense: :future
           }.merge(options)
 
           footer = false
@@ -23,7 +23,7 @@ module PDK
             next if files.empty?
 
             PDK::Report.default_target.puts('')
-            PDK::Report.default_target.puts(generate_banner("Files #{(options[:tense] == :future) ? 'to be ' : ''}#{category}", 40))
+            PDK::Report.default_target.puts(generate_banner("Files #{options[:tense] == :future ? 'to be ' : ''}#{category}", 40))
             PDK::Report.default_target.puts(files.map(&:to_s).join("\n"))
             footer = true
           end
@@ -34,7 +34,7 @@ module PDK
           end
         end
 
-        #:nocov: Tested as part of the public methods
+        # :nocov: Tested as part of the public methods
         # Returns a hash, summarizing the contents of the Update Manager object
         # @param update_manager [PDK::Module::UpdateManager] The object to create a summary of
         #
@@ -75,7 +75,7 @@ module PDK
           banner
         end
         private_class_method :generate_banner
-        #:nocov:
+        # :nocov:
       end
     end
   end

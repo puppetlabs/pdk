@@ -10,7 +10,7 @@ describe PDK::Module::Release do
     {
       'name' => 'mock-module',
       'version' => '1.0.0',
-      'pdk-version' => 'mock',
+      'pdk-version' => 'mock'
     }
   end
   let(:mock_metadata_object) do
@@ -18,11 +18,11 @@ describe PDK::Module::Release do
       PDK::Module::Metadata,
       data: metadata_hash,
       forge_ready?: true,
-      write!: nil,
+      write!: nil
     )
   end
 
-  before(:each) do
+  before do
     # Mimic PDK being run in the root of a module in current working directory
     allow(PDK::Util).to receive(:find_upwards).and_return(nil)
     allow(PDK::Util).to receive(:in_module_root?).and_return(true)
@@ -49,7 +49,7 @@ describe PDK::Module::Release do
   end
 
   describe '#run' do
-    before(:each) do
+    before do
       # Stop any of the actual worker methods from running
       allow(instance).to receive(:run_validations)
       allow(instance).to receive(:run_documentation)
@@ -62,12 +62,12 @@ describe PDK::Module::Release do
     context 'when skipping everything' do
       let(:options) do
         {
-          :'skip-validation'    => true,
-          :'skip-changelog'     => true,
-          :'skip-documentation' => true,
-          :'skip-dependency'    => true,
-          :'skip-build'         => true,
-          :'skip-publish'       => true,
+          'skip-validation': true,
+          'skip-changelog': true,
+          'skip-documentation': true,
+          'skip-dependency': true,
+          'skip-build': true,
+          'skip-publish': true
         }
       end
 
@@ -86,9 +86,9 @@ describe PDK::Module::Release do
     context 'when skipping nothing and forcing the release' do
       let(:options) do
         {
-          :force              => true,
-          :'forge-upload-url' => 'https://localhost/api',
-          :'forge-token'      => '12345',
+          force: true,
+          'forge-upload-url': 'https://localhost/api',
+          'forge-token': '12345'
         }
       end
 
@@ -108,45 +108,45 @@ describe PDK::Module::Release do
       let(:options) { { force: false } }
 
       context 'and the module is not PDK compatible' do
-        before(:each) do
+        before do
           allow(instance).to receive(:pdk_compatible?).and_return(false)
         end
 
         it 'raises an error' do
-          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, %r{PDK compatible})
+          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, /PDK compatible/)
         end
       end
 
       context 'and the module is not Forge compatible' do
-        before(:each) do
+        before do
           allow(instance).to receive(:forge_compatible?).and_return(false)
         end
 
         it 'raises an error' do
-          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, %r{Forge compatible})
+          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, /Forge compatible/)
         end
       end
 
       context 'and missing the forge url' do
         it 'raises an error' do
-          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, %r{forge-upload-url})
+          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, /forge-upload-url/)
         end
       end
 
       context 'and missing the forge token' do
-        before(:each) do
+        before do
           allow(instance).to receive(:forge_upload_url).and_return('https://localhost')
         end
 
         it 'raises an error' do
-          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, %r{forge-token})
+          expect { instance.run }.to raise_error(PDK::CLI::ExitWithError, /forge-token/)
         end
       end
     end
 
     context 'when detecting the version number' do
       let(:new_version) { '2.0.0' }
-      let(:options) { { :'skip-publish' => true } }
+      let(:options) { { 'skip-publish': true } }
 
       it 'returns a new version from Changelog Generator' do
         expect(PDK::Util::ChangelogGenerator).to receive(:latest_version).and_return('2.0.0')
@@ -169,7 +169,7 @@ describe PDK::Module::Release do
     end
 
     context 'when skipping the build' do
-      before(:each) do
+      before do
         allow(instance).to receive(:skip_build?).and_return(true)
         allow(instance).to receive(:forge_upload_url).and_return('https://localhost')
         allow(instance).to receive(:forge_token).and_return('abc123')
@@ -189,7 +189,7 @@ describe PDK::Module::Release do
     end
 
     context 'when running the build helper' do
-      before(:each) do
+      before do
         allow(instance).to receive(:skip_build?).and_return(false)
         allow(instance).to receive(:forge_upload_url).and_return('https://localhost')
         allow(instance).to receive(:forge_token).and_return('abc123')
@@ -210,7 +210,7 @@ describe PDK::Module::Release do
   end
 
   describe '#write_module_metadata!' do
-    before(:each) do
+    before do
       expect(mock_metadata_object).to receive(:write!).and_return(nil)
     end
 
@@ -237,7 +237,7 @@ describe PDK::Module::Release do
     # Note that this test setup is quite fragile and indicates that the method
     # under test really needs to be refactored
 
-    before(:each) do
+    before do
       allow(PDK::CLI::Util).to receive(:validate_puppet_version_opts).and_return(nil)
       allow(PDK::CLI::Util).to receive(:module_version_check).and_return(nil)
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(gemset: {}, ruby_version: '1.2.3')
@@ -262,7 +262,7 @@ describe PDK::Module::Release do
     let(:command_stdout) { 'Success' }
     let(:command_exit_code) { 0 }
 
-    before(:each) do
+    before do
       expect(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
       expect(command).to receive(:execute!).and_return(stdout: command_stdout, exit_code: command_exit_code)
     end
@@ -287,7 +287,7 @@ describe PDK::Module::Release do
     let(:command_stdout) { 'Success' }
     let(:command_exit_code) { 0 }
 
-    before(:each) do
+    before do
       expect(PDK::CLI::Exec::Command).to receive(:new).with('dependency-checker', 'metadata.json').and_return(command)
       expect(command).to receive(:execute!).and_return(stdout: command_stdout, exit_code: command_exit_code)
     end
@@ -320,7 +320,7 @@ describe PDK::Module::Release do
     # Note that this test setup is quite fragile and indicates that the method
     # under test really needs to be refactored
 
-    before(:each) do
+    before do
       allow(instance).to receive(:forge_token).and_return('abc123')
       allow(instance).to receive(:forge_upload_url).and_return('https://badapi.puppetlabs.com/v3/releases')
       allow(PDK::Util::Filesystem).to receive(:file?).with(tarball_path).and_return(true)
@@ -333,7 +333,7 @@ describe PDK::Module::Release do
     end
 
     context 'when the tarball does not exist' do
-      before(:each) do
+      before do
         expect(PDK::Util::Filesystem).to receive(:file?).with(tarball_path).and_return(false)
       end
 
@@ -353,7 +353,7 @@ describe PDK::Module::Release do
   end
 
   describe '#validate_publish_options!' do
-    before(:each) do
+    before do
       allow(instance).to receive(:skip_publish?).and_return(false)
     end
 
@@ -388,9 +388,9 @@ describe PDK::Module::Release do
     { method: 'specified_version',   option_name: :version },
     { method: 'specified_package',   option_name: :file },
     { method: 'forge_token',         option_name: :'forge-token' },
-    { method: 'forge_upload_url',    option_name: :'forge-upload-url' },
+    { method: 'forge_upload_url',    option_name: :'forge-upload-url' }
   ].each do |testcase|
-    describe "\##{testcase[:method]}" do
+    describe "##{testcase[:method]}" do
       context "when the #{testcase[:option_name]} options is set" do
         let(:options) { { testcase[:option_name] => 'a_value' } }
 

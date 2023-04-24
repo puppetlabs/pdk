@@ -2,138 +2,135 @@ require 'spec_helper'
 require 'pdk/report/event'
 
 describe PDK::Report::Event do
-  subject(:junit_event) { event.to_junit }
-
-  subject(:text_event) { event.to_text }
-
   subject { event }
 
+  let(:junit_event) { event.to_junit }
   let(:event) { described_class.new(default_data.merge(data)) }
-
   let(:default_data) do
     {
-      file:   'testfile.rb',
+      file: 'testfile.rb',
       source: 'test-validator',
-      state:  :passed,
+      state: :passed
     }
   end
-
   let(:data) { {} }
+
+  let(:text_event) { event.to_text }
 
   context 'when validating arguments' do
     context 'and passed an absolute path to the file being tested' do
-      before(:each) do
+      before do
         expect(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
       end
 
       let(:data) do
         {
-          file: '/path/to/test/module/lib/some/file.rb',
+          file: '/path/to/test/module/lib/some/file.rb'
         }
       end
 
       it 'converts the path to one relative to the module root' do
-        is_expected.to have_attributes(file: 'lib/some/file.rb')
+        expect(subject).to have_attributes(file: 'lib/some/file.rb')
       end
     end
 
     context 'and not passed a file path' do
       let(:data) do
         {
-          file: nil,
+          file: nil
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{file not specified}i)
+        expect { event }.to raise_error(ArgumentError, /file not specified/i)
       end
     end
 
     context 'and passed a file path that is not a String' do
       let(:data) do
         {
-          file: ['/path/to/test/module/lib/some/file.rb'],
+          file: ['/path/to/test/module/lib/some/file.rb']
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{file must be a string}i)
+        expect { event }.to raise_error(ArgumentError, /file must be a string/i)
       end
     end
 
     context 'and passed an empty string as the file path' do
       let(:data) do
         {
-          file: '',
+          file: ''
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{file not specified}i)
+        expect { event }.to raise_error(ArgumentError, /file not specified/i)
       end
     end
 
     context 'and not passed a source' do
       let(:data) do
         {
-          source: nil,
+          source: nil
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{source not specified}i)
+        expect { event }.to raise_error(ArgumentError, /source not specified/i)
       end
     end
 
     context 'and passed an empty string as the source' do
       let(:data) do
         {
-          source: '',
+          source: ''
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{source not specified}i)
+        expect { event }.to raise_error(ArgumentError, /source not specified/i)
       end
     end
 
     context 'and not passed a state' do
       let(:data) do
         {
-          state: nil,
+          state: nil
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{state not specified}i)
+        expect { event }.to raise_error(ArgumentError, /state not specified/i)
       end
     end
 
     context 'and passed an empty string as the state' do
       let(:data) do
         {
-          state: '',
+          state: ''
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{state not specified}i)
+        expect { event }.to raise_error(ArgumentError, /state not specified/i)
       end
     end
 
     methods = [:pass, :error, :failure, :skipped]
 
     {
-      passed:  :pass,
-      error:   :error,
+      passed: :pass,
+      error: :error,
       failure: :failure,
-      skipped: :skipped,
+      skipped: :skipped
     }.each do |state_sym, state_method|
       [state_sym, state_sym.to_s].each do |state|
         context "and passed #{state.inspect} as the state" do
           let(:data) do
             {
-              state: state,
+              state: state
             }
           end
 
@@ -155,31 +152,31 @@ describe PDK::Report::Event do
     context 'and passed a state that is not a String or Symbol' do
       let(:data) do
         {
-          state: %r{passed},
+          state: /passed/
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{state must be a Symbol}i)
+        expect { event }.to raise_error(ArgumentError, /state must be a Symbol/i)
       end
     end
 
     context 'and passed an unknown state' do
       let(:data) do
         {
-          state: :maybe,
+          state: :maybe
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{Invalid state :maybe}i)
+        expect { event }.to raise_error(ArgumentError, /Invalid state :maybe/i)
       end
     end
 
     context 'and passed an Integer line number' do
       let(:data) do
         {
-          line: 123,
+          line: 123
         }
       end
 
@@ -191,7 +188,7 @@ describe PDK::Report::Event do
     context 'and passed a String line number containing only digits' do
       let(:data) do
         {
-          line: '123',
+          line: '123'
         }
       end
 
@@ -207,31 +204,31 @@ describe PDK::Report::Event do
     context 'and passed a String line number containing non-digit characters' do
       let(:data) do
         {
-          line: 'line 123',
+          line: 'line 123'
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{contain only the digits 0-9}i)
+        expect { event }.to raise_error(ArgumentError, /contain only the digits 0-9/i)
       end
     end
 
     context 'and passed a line number that is not a String or Integer' do
       let(:data) do
         {
-          line: [123],
+          line: [123]
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{must be an Integer or a String}i)
+        expect { event }.to raise_error(ArgumentError, /must be an Integer or a String/i)
       end
     end
 
     context 'and passed a nil line number' do
       let(:data) do
         {
-          line: nil,
+          line: nil
         }
       end
 
@@ -247,7 +244,7 @@ describe PDK::Report::Event do
     context 'and passed an Integer column number' do
       let(:data) do
         {
-          column: 456,
+          column: 456
         }
       end
 
@@ -259,7 +256,7 @@ describe PDK::Report::Event do
     context 'and passed a String column number containing only digits' do
       let(:data) do
         {
-          column: 456,
+          column: 456
         }
       end
 
@@ -275,31 +272,31 @@ describe PDK::Report::Event do
     context 'and passed a String column number containing non-digit characters' do
       let(:data) do
         {
-          column: 'column 456',
+          column: 'column 456'
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{contain only the digits 0-9}i)
+        expect { event }.to raise_error(ArgumentError, /contain only the digits 0-9/i)
       end
     end
 
     context 'and passed a column number that is not a String or Integer' do
       let(:data) do
         {
-          column: [456],
+          column: [456]
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{must be an Integer or a String}i)
+        expect { event }.to raise_error(ArgumentError, /must be an Integer or a String/i)
       end
     end
 
     context 'and passed a nil column number' do
       let(:data) do
         {
-          column: nil,
+          column: nil
         }
       end
 
@@ -315,12 +312,12 @@ describe PDK::Report::Event do
     context 'and passed a trace that is not an Array' do
       let(:data) do
         {
-          trace: 'test',
+          trace: 'test'
         }
       end
 
       it 'raises an ArgumentError' do
-        expect { event }.to raise_error(ArgumentError, %r{trace must be an Array}i)
+        expect { event }.to raise_error(ArgumentError, /trace must be an Array/i)
       end
     end
 
@@ -331,8 +328,8 @@ describe PDK::Report::Event do
             'lib/myfile.rb: test',
             'bin/rspec: this should not exist',
             'vendor/bundle/gems/test.rb: nor should this',
-            'bin/rspec-foo: this should though',
-          ],
+            'bin/rspec-foo: this should though'
+          ]
         }
       end
 
@@ -351,7 +348,7 @@ describe PDK::Report::Event do
       it 'includes the other lines' do
         expected_lines = [
           a_string_matching(%r{lib/myfile}),
-          a_string_matching(%r{bin/rspec-foo}),
+          a_string_matching(%r{bin/rspec-foo})
         ]
 
         expect(event).to have_attributes(trace: include(*expected_lines))
@@ -361,42 +358,42 @@ describe PDK::Report::Event do
 
   context 'when generating text output' do
     it 'contains the file name in the string' do
-      expect(text_event).to match(%r{testfile\.rb})
+      expect(text_event).to match(/testfile\.rb/)
     end
 
     context 'and a line number is provided' do
       let(:data) do
         {
-          line: 123,
+          line: 123
         }
       end
 
       it 'appends the line number to the file name' do
-        expect(text_event).to match(%r{testfile\.rb:123})
+        expect(text_event).to match(/testfile\.rb:123/)
       end
 
       context 'and a column number is provided' do
         let(:data) do
           {
-            line:   123,
-            column: 456,
+            line: 123,
+            column: 456
           }
         end
 
         it 'appends the column number to the line number' do
-          expect(text_event).to match(%r{testfile\.rb:123:456})
+          expect(text_event).to match(/testfile\.rb:123:456/)
         end
       end
 
       context 'it includes a snippet of the file for rspec events' do
         let(:data) do
           {
-            line:     4,
-            source:   'rspec',
-            message:  'test message',
+            line: 4,
+            source: 'rspec',
+            message: 'test message',
             severity: 'failure',
-            test:     'spec description',
-            state:    :failure,
+            test: 'spec description',
+            state: :failure
           }
         end
 
@@ -406,12 +403,12 @@ describe PDK::Report::Event do
             'line 2',
             'line 3',
             'line 4',
-            'line 5',
+            'line 5'
           ].join("\n")
         end
 
         let(:expected_text) do
-          <<-END.gsub(%r{^ {12}}, '')
+          <<-END.gsub(/^ {12}/, '')
             failure: rspec: testfile.rb:4: test message
               spec description
               Failure/Error:
@@ -423,7 +420,7 @@ describe PDK::Report::Event do
           END
         end
 
-        before(:each) do
+        before do
           allow(PDK::Util::Filesystem).to receive(:read_file).with('testfile.rb').and_return(file_content)
           allow(PDK::Util::Filesystem).to receive(:file?).with('testfile.rb').and_return(true)
           allow(PDK::Util).to receive(:module_root).and_return(File.join('my', 'module_root'))
@@ -445,31 +442,31 @@ describe PDK::Report::Event do
     context 'and a severity is provided' do
       let(:data) do
         {
-          severity: 'ok',
+          severity: 'ok'
         }
       end
 
       it 'includes the upcased severity' do
-        expect(text_event).to match(%r{\(OK\):})
+        expect(text_event).to match(/\(OK\):/)
       end
     end
 
     context 'and a validator is provided' do
       let(:data) do
         {
-          source: 'my-validator',
+          source: 'my-validator'
         }
       end
 
       it 'includes the validator' do
-        expect(text_event).to match(%r{my-validator})
+        expect(text_event).to match(/my-validator/)
       end
     end
 
     context 'and a message is provided' do
       let(:data) do
         {
-          message: 'test message',
+          message: 'test message'
         }
       end
 
@@ -480,13 +477,13 @@ describe PDK::Report::Event do
       context 'and a severity is provided' do
         let(:data) do
           {
-            message:  'test message',
-            severity: 'critical',
+            message: 'test message',
+            severity: 'critical'
           }
         end
 
         it 'includes the severity before the message' do
-          expect(text_event).to match(%r{\(CRITICAL\):.*test message})
+          expect(text_event).to match(/\(CRITICAL\):.*test message/)
         end
       end
     end
@@ -500,7 +497,7 @@ describe PDK::Report::Event do
     context 'and a test name is provided' do
       let(:data) do
         {
-          test: 'test-method',
+          test: 'test-method'
         }
       end
 
@@ -516,7 +513,7 @@ describe PDK::Report::Event do
     context 'and a line number is provided' do
       let(:data) do
         {
-          line: 123,
+          line: 123
         }
       end
 
@@ -528,7 +525,7 @@ describe PDK::Report::Event do
     context 'and a column number is provided' do
       let(:data) do
         {
-          column: 456,
+          column: 456
         }
       end
 
@@ -540,8 +537,8 @@ describe PDK::Report::Event do
     context 'and both line and column numbers are provided' do
       let(:data) do
         {
-          line:   123,
-          column: 456,
+          line: 123,
+          column: 456
         }
       end
 
@@ -559,7 +556,7 @@ describe PDK::Report::Event do
     context 'for a skipped test case' do
       let(:data) do
         {
-          state: :skipped,
+          state: :skipped
         }
       end
 
@@ -574,11 +571,11 @@ describe PDK::Report::Event do
     context 'for a failing test case' do
       let(:data) do
         {
-          state:     :failure,
-          line:      123,
-          column:    456,
+          state: :failure,
+          line: 123,
+          column: 456,
           severity: 'critical',
-          message:  'some message',
+          message: 'some message'
         }
       end
 

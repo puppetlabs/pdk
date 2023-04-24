@@ -8,7 +8,7 @@ describe 'pdk get' do
     describe command('pdk get') do
       its(:exit_status) { is_expected.to eq 0 }
       # Should show the command help
-      its(:stdout) { is_expected.to match(%r{pdk get \[subcommand\] \[options\]}) }
+      its(:stdout) { is_expected.to match(/pdk get \[subcommand\] \[options\]/) }
       its(:stderr) { is_expected.to have_no_output }
     end
   end

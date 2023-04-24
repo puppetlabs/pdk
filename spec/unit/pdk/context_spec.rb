@@ -4,7 +4,7 @@ require 'tmpdir'
 require 'fileutils'
 
 class MockContext < PDK::Context::AbstractContext
-  def initialize(context_path, prefix, parent_context = nil)
+  def initialize(context_path, prefix, parent_context = nil) # rubocop:disable Lint/MissingSuper
     @prefix = prefix
     @parent_context = parent_context
     @root_path = context_path
@@ -30,7 +30,7 @@ describe PDK::Context do
     def expect_a_none_context(context, context_path)
       expect(context).to be_a(PDK::Context::None)
       expect(context.context_path).to eq(context_path)
-      expect(context.root_path).to eq(context.root_path)
+      expect(context.root_path).to eq(context_path)
       expect(context.parent_context).to be_nil
     end
 
@@ -63,7 +63,7 @@ describe PDK::Context do
     context 'with a path that does not exist' do
       let(:context_path) { 'does/not/exist' }
 
-      before(:each) do
+      before do
         allow(PDK::Util::Filesystem).to receive(:directory?).with(context_path).and_return(false)
       end
 
@@ -75,15 +75,15 @@ describe PDK::Context do
     context 'with a path that does exist' do
       let(:temp_context_path) { Dir.mktmpdir }
 
-      before(:each) do
+      before do
         # Stop any deep searching past the temp directory
         parent_path = PDK::Util::Filesystem.expand_path('..', temp_context_path)
         allow(PDK::Util::Filesystem).to receive(:directory?).and_call_original
         allow(PDK::Util::Filesystem).to receive(:directory?).with(parent_path).and_return(false)
       end
 
-      after(:each) do
-        FileUtils.rm_rf(temp_context_path) if Dir.exist?(temp_context_path) # rubocop:disable PDK/DirExistPredicate,PDK/FileUtilsRMRF We need to call the real functions
+      after do
+        FileUtils.rm_rf(temp_context_path) # rubocop:disable PDK/FileUtilsRMRF We need to call the real functions
       end
 
       context 'and is empty' do
@@ -98,7 +98,7 @@ describe PDK::Context do
         let(:puppet_module_fixture_root) { File.join(temp_context_path, 'puppet_module') }
         let(:deep_dir_path) { File.join(puppet_module_fixture_root, 'manifests', 'foo', 'bar') }
 
-        before(:each) do
+        before do
           # Copy the module
           FileUtils.cp_r(puppet_module_fixture, temp_context_path)
           # Create deep directories
@@ -126,7 +126,7 @@ describe PDK::Context do
         let(:control_repo_fixture_root) { File.join(temp_context_path, 'control_repo') }
         let(:module_dir) { File.join(control_repo_fixture_root, 'site', 'profile', 'test') }
 
-        before(:each) do
+        before do
           # Copy the control repo
           FileUtils.cp_r(control_repo_fixture, temp_context_path)
           # Copy a module into control repo site dir
@@ -152,13 +152,13 @@ describe PDK::Context do
         context 'in a module path of the control repo' do
           let(:context_path) { File.join(module_dir, 'manifests') }
 
-          it 'returns a Module Context ' do
+          it 'returns a Module Context' do
             expect_a_module_context(context, context_path, module_dir)
           end
         end
 
         context 'and has the controlrepo feature flag' do
-          before(:each) { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
+          before { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
 
           context 'in the root of the control repo' do
             let(:context_path) { control_repo_fixture_root }
@@ -195,7 +195,7 @@ describe PDK::Context do
         let(:control_repo_fixture_root) { File.join(temp_context_path, 'control_repo') }
         let(:module_dir) { File.join(control_repo_fixture_root, 'site', 'profile', 'test') }
 
-        before(:each) do
+        before do
           # Copy the control repo
           FileUtils.cp_r(control_repo_fixture, temp_context_path)
           # Copy a module into control repo site dir
@@ -208,7 +208,7 @@ describe PDK::Context do
         context 'in the root of the control repo' do
           let(:context_path) { control_repo_fixture_root }
 
-          it 'returns a Module Context ' do
+          it 'returns a Module Context' do
             expect_a_module_context(context, context_path, control_repo_fixture_root)
           end
         end
@@ -216,7 +216,7 @@ describe PDK::Context do
         context 'in a non-module path of the control repo' do
           let(:context_path) { File.join(control_repo_fixture_root, 'data') }
 
-          it 'returns a Module Context ' do
+          it 'returns a Module Context' do
             expect_a_module_context(context, context_path, control_repo_fixture_root)
           end
         end
@@ -231,7 +231,7 @@ describe PDK::Context do
         end
 
         context 'and has the controlrepo feature flag' do
-          before(:each) { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
+          before { allow(PDK).to receive(:feature_flag?).with('controlrepo').and_return(true) }
 
           context 'in the root of the control repo' do
             let(:context_path) { control_repo_fixture_root }
@@ -276,7 +276,7 @@ describe PDK::Context do
     end
 
     it 'has a pdk_compatible? of false' do
-      expect(context.pdk_compatible?).to eq(false)
+      expect(context.pdk_compatible?).to be(false)
     end
 
     it 'has a display_name of nil' do
@@ -293,20 +293,20 @@ describe PDK::Context do
       let(:nested_context) { MockContext.new('path3', 'Mock3', child_context) }
 
       it 'writes to the debug log' do
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock1 context at path1})
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock1 context at path1/)
         parent_context.to_debug_log
       end
 
       it 'writes all contexts at this child and parents thereof to the debug log' do
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock2 context at path2})
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock1 context at path1})
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock2 context at path2/)
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock1 context at path1/)
         child_context.to_debug_log
       end
 
       it 'writes all contexts to the debug log if given a child context' do
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock3 context at path3})
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock2 context at path2})
-        expect(PDK.logger).to receive(:debug).with(%r{Detected a Mock1 context at path1})
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock3 context at path3/)
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock2 context at path2/)
+        expect(PDK.logger).to receive(:debug).with(/Detected a Mock1 context at path1/)
         nested_context.to_debug_log
       end
     end

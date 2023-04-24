@@ -14,7 +14,7 @@ RSpec.shared_examples('it requires running from inside a module', module_command
 
     describe command(top_level_description) do
       its(:exit_status) { is_expected.not_to eq(0) }
-      its(:stderr) { is_expected.to match(%r{a valid module}i) }
+      its(:stderr) { is_expected.to match(/a valid module/i) }
       its(:stdout) { is_expected.to have_no_output }
     end
   end

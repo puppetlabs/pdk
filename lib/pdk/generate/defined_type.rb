@@ -25,12 +25,12 @@ module PDK
         define_name_parts = object_name.split('::')
         # drop the module name if the object name contains multiple parts
         define_name_parts.delete_at(0) if define_name_parts.length > 1
-        files = { 'defined_type_spec.erb' => File.join('spec', 'defines', *define_name_parts) + '_spec.rb' }
+        files = { 'defined_type_spec.erb' => "#{File.join('spec', 'defines', *define_name_parts)}_spec.rb" }
         return files if spec_only?
 
-        define_name_parts = object_name.split('::')[1..-1]
+        define_name_parts = object_name.split('::')[1..]
         define_name_parts << 'init' if define_name_parts.empty?
-        files['defined_type.erb'] = File.join('manifests', *define_name_parts) + '.pp'
+        files['defined_type.erb'] = "#{File.join('manifests', *define_name_parts)}.pp"
 
         files
       end
