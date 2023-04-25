@@ -81,26 +81,6 @@ end
 task default: :spec
 
 begin
-  require 'github_changelog_generator/task'
-  GitHubChangelogGenerator::RakeTask.new :changelog do |config|
-    require 'pdk/version'
-    config.future_release = "v#{PDK::VERSION}"
-    config.header = "# Changelog\n\n" \
-                    "All changes to this repo will be documented in this file.\n" \
-                    "See the [release notes](https://puppet.com/docs/pdk/latest/release_notes.html) for a high-level summary.\n"
-    config.include_labels = ['enhancement', 'bug']
-    config.user = 'puppetlabs'
-    config.project = 'pdk'
-    config.issues = false
-  end
-rescue LoadError
-  desc 'Install github_changelog_generator to get access to automatic changelog generation'
-  task :changelog do
-    raise 'Install github_changelog_generator to get access to automatic changelog generation'
-  end
-end
-
-begin
   require 'yard'
 
   YARD::Rake::YardocTask.new do |t|
