@@ -163,4 +163,5 @@ PDK encourages community contributions. See the [CONTRIBUTING.md](CONTRIBUTING.m
 
 ## Contact Information
 
-To contact us with questions: [pdk-maintainers@puppet.com](mailto:pdk-maintainers@puppet.com)
+* [For reporting bugs](https://github.com/puppetlabs/pdk/blob/main/CONTRIBUTING.md#reporting-bugs)
+* To contact us with questions, [join the Puppet Community on Slack](https://slack.puppet.com/)
