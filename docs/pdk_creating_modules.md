@@ -142,7 +142,6 @@ writing, validating, and testing Puppet code. 
 |`.sync.yml`|File to customize the PDK template in use.|
 |`./tasks`|Directory containing task files and task metadata files for any tasks you create with the `pdk new task`command.|
 |`./templates`|Directory containing any ERB or EPP templates. Required when building a module to upload to the Forge.|
-|`.travis.yml`|File containing configuration for cloud-based testing on Linux and Mac OS X. See the [travis-ci](http://travis-ci.org/) docs for more information.|
 |`.vscode`|Directory containing configuration for Visual Studio code.|
 |`.yardopts`|File containing the default configuration for Puppet Strings.|
 

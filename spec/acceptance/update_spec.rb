@@ -29,35 +29,24 @@ describe 'pdk update', module_command: true do
         File.open('metadata.json', 'w') do |f|
           f.puts metadata.to_json
         end
-        FileUtils.rm('.travis.yml')
       end
 
       describe command('pdk update --noop') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/\.travis\.yml}mi) }
         its(:stdout) { is_expected.to match(%r{-+files to be modified-+\n.*/metadata\.json}mi) }
         its(:stderr) { is_expected.to match(/updating \w+?-update using the default template/i) }
 
         describe file('update_report.txt') do
           it { is_expected.to be_file }
-        end
-
-        describe file('.travis.yml') do
-          it { is_expected.not_to be_file }
         end
       end
 
       describe command('pdk update --force') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(%r{-+files to be added-+\n.*/\.travis\.yml}mi) }
         its(:stdout) { is_expected.to match(%r{-+files to be modified-+\n.*/metadata\.json}mi) }
         its(:stderr) { is_expected.to match(/updating \w+?-update using the default template/i) }
 
         describe file('update_report.txt') do
-          it { is_expected.to be_file }
-        end
-
-        describe file('.travis.yml') do
           it { is_expected.to be_file }
         end
       end
