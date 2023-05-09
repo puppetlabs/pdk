@@ -89,7 +89,7 @@ describe 'pdk test unit', module_command: true do
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
         its(:stdout) { is_expected.to match(/expected: true.*got: false/im) }
-        its(:stdout) { is_expected.to match(/1 examples?.*1 failures?/im) }
+        its(:stdout) { is_expected.to match(/2 examples?.*1 failures?/im) }
       end
     end
 
@@ -107,7 +107,7 @@ describe 'pdk test unit', module_command: true do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(/1 examples?.*0 failures.*1 pending/im) }
+        its(:stdout) { is_expected.to match(/2 examples?.*0 failures.*1 pending/im) }
       end
     end
 
