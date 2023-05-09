@@ -3,11 +3,16 @@ require 'beaker-puppet'
 
 Dir['./spec/package/support/*.rb'].sort.each { |f| require f }
 
-RSpec.shared_context 'set path' do
-  let(:path) { windows_node? ? nil : "#{install_dir}/bin:$PATH" }
-end
+include SpecUtils # rubocop:disable Style/MixinUsage
 
 set :env, PDK_DISABLE_ANALYTICS: 'true'
+
+bin_path = SpecUtils.windows_node? ? 'bin$PATH' : 'bin:$PATH'
+set :path, "#{SpecUtils.install_dir}/#{bin_path}"
+
+hosts.each do |host|
+  install_pdk_on(host)
+end
 
 RSpec.configure do |c|
   c.include SpecUtils
@@ -18,8 +23,6 @@ RSpec.configure do |c|
       PackageHelpers.install_pdk_on(host)
     end
   end
-
-  c.include_context :set_path
 
   # rubocop:disable RSpec/BeforeAfterAll
   c.before(:all) do
