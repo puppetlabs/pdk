@@ -5,7 +5,13 @@ module PDK
     module Exec
       class InteractiveCommand < Command
         def initialize(*argv)
-          super(*argv)
+          @argv = argv
+
+          # Default to running things in the system context.
+          @context = :system
+
+          # Extra environment vars to add to base set.
+          @environment = {}
         end
 
         def register_spinner(_spinner, _opts = {})
