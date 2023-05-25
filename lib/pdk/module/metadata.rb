@@ -119,7 +119,7 @@ module PDK
       def to_json(*_args)
         require 'json'
 
-        JSON.pretty_generate(@data.dup.delete_if { |_key, value| value.nil? })
+        JSON.pretty_generate(@data.dup.delete_if { |_key, value| value.nil? }) # rubocop:disable Style/CollectionCompact
       end
 
       def write!(path)
