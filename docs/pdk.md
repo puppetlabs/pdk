@@ -60,11 +60,11 @@ validate, and test modules.
       </p>
       <p>Testing Puppet code
             <ul>
-                <li><a class="xref" href="https://github.com/rodjek/puppet-lint" target="_blank">puppet-lint</a>, included in PDK, validates Puppet code against the recommended language style guide.</li>
+                <li><a class="xref" href="https://github.com/puppetlabs/puppet-lint" target="_blank">puppet-lint</a>, included in PDK, validates Puppet code against the recommended language style guide.</li>
                 <li><a class="xref" href="https://github.com/voxpupuli/metadata-json-lint" target="_blank">metadata-json-lint</a>, included in PDK, validates your module metadata file.</li>
                 <li><a class="xref" href="http://rspec-puppet.com/" target="_blank">rspec-puppet</a>, included in PDK, provides an RSpec test framework for Puppet.</li>
-                <li><a class="xref" href="https://github.com/mcanevet/rspec-puppet-facts#rspec-puppet-facts" target="_blank">rspec-puppet-facts</a>, included in PDK, provides support for running rspec tests for your module's supported operating systems.</li>
-                <li><a class="xref" href="http://batsov.com/rubocop" target="_blank">Rubocop</a>, a Ruby code analyzer.</li>
+                <li><a class="xref" href="https://github.com/voxpupuli/rspec-puppet-facts" target="_blank">rspec-puppet-facts</a>, included in PDK, provides support for running rspec tests for your module's supported operating systems.</li>
+                <li><a class="xref" href="https://rubocop.org/" target="_blank">Rubocop</a>, a Ruby code analyzer.</li>
                 <li><a class="xref" href="https://www.youtube.com/watch?v=GgNrxLfoDF8" target="_blank">Introduction to testing Puppet code</a>: a talk by David Schmitt.</li>
             </ul>
       </p>
