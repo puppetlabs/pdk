@@ -39,4 +39,3 @@ jobs:
       ruby_version: ${{ matrix.ruby_version }}
       rake_task: 'acceptance:local'
       runs_on: ${{ matrix.os }}
-
