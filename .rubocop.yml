@@ -167,3 +167,6 @@ PDK/FileUtilsRemoveEntrySecure:
   Exclude:
     - lib/pdk/util/filesystem.rb
     - spec/acceptance/**/*.rb
+
+RSpec/SharedExamples:
+  Enabled: false

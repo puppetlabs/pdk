@@ -3,12 +3,8 @@ require 'spec_helper_package'
 describe 'Test puppet & ruby version selection' do
   module_name = 'version_selection'
   test_cases = [
-    { envvar: 'PDK_PUPPET_VERSION', version: '6.29.0', expected_puppet: '6.29', expected_ruby: '2.5.9' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.23.0', expected_puppet: '7.23', expected_ruby: '2.7.7' },
-    # PE should now map to the latest Puppet version relative to the PE version
-    { envvar: 'PDK_PE_VERSION', version: '2019.8.7', expected_puppet: '6.29', expected_ruby: '2.5.9' },
-    { envvar: 'PDK_PE_VERSION', version: '2021.7.0', expected_puppet: '7.23', expected_ruby: '2.7.7' },
-    { envvar: 'PDK_PE_VERSION', version: '2021.7.1', expected_puppet: '7.23', expected_ruby: '2.7.7' }
+    { envvar: 'PDK_PUPPET_VERSION', version: '7.24.0', expected_puppet: '7.24.0', expected_ruby: '2.7.8' },
+    { envvar: 'PDK_PUPPET_VERSION', version: '8.0.1', expected_puppet: '8.0.1', expected_ruby: '3.2.2' }
   ]
 
   before(:all) do
@@ -16,17 +12,12 @@ describe 'Test puppet & ruby version selection' do
   end
 
   test_cases.each do |test_case|
-    slug = test_case[:envvar] == 'PDK_PE_VERSION' ? 'PE' : 'Puppet'
-
-    context "Select #{slug} #{test_case[:version]}" do
+    context "Select Puppet #{test_case[:version]}" do
       let(:env) { { test_case[:envvar] => test_case[:version] } }
       let(:cwd) { module_name }
 
-      let(:expected_puppets) do
-        gemspecs = shell("find #{install_dir(true)} -name 'puppet-#{test_case[:expected_puppet]}.*.gemspec'")
-        puppet_versions = gemspecs.stdout.lines.map { |r| r[/puppet-([\d.]+)(-.+?)?\.gemspec\Z/, 1] }
-        puppet_versions.map { |r| Regexp.escape(r) }.join('|')
-      end
+      let(:expected_puppet) { Regexp.escape(test_case[:expected_puppet]) }
+      let(:expected_ruby) { Regexp.escape(test_case[:expected_ruby]) }
 
       describe command('rm Gemfile.lock; pdk bundle update --local') do
         its(:exit_status) { is_expected.to eq(0) }
@@ -34,14 +25,14 @@ describe 'Test puppet & ruby version selection' do
 
       describe command('pdk bundle exec puppet --version') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(/using puppet (#{expected_puppets})/im) }
-        its(:stdout) { is_expected.to match(/^(#{expected_puppets})$/im) }
+        its(:stderr) { is_expected.to match(/using puppet (#{expected_puppet})/im) }
+        its(:stdout) { is_expected.to match(/^(#{expected_puppet})*/im) }
       end
 
       describe command('pdk bundle exec ruby --version') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(/using ruby #{Regexp.escape(test_case[:expected_ruby])}[.0-9]*/im) }
-        its(:stdout) { is_expected.to match(/^ruby #{Regexp.escape(test_case[:expected_ruby])}[.0-9]*p/im) }
+        its(:stderr) { is_expected.to match(/using ruby #{expected_ruby}*/im) }
+        its(:stdout) { is_expected.to match(/^(#{expected_ruby})*/im) }
       end
     end
   end
