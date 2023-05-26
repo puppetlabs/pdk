@@ -89,16 +89,25 @@ describe 'puppet version selection' do
         its(:stderr) { is_expected.not_to match(%r{Using Puppet file://}i) }
       end
 
-      # Note that there is no guarantee that the main branch of puppet is compatible with the PDK under test
-      # so we can only test that the validate command is using the expected puppet gem location
-      describe command('pdk validate --puppet-dev') do
-        its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
-      end
+      context 'when PDK_PUPPET_VERSION is set' do
+        around do |example|
+          pdk_puppet_version = ENV.fetch('PDK_PUPPET_VERSION', nil)
+          ENV['PDK_PUPPET_VERSION'] = nil
+          example.run
+          ENV['PDK_PUPPET_VERSION'] = pdk_puppet_version
+        end
 
-      # Note that there is no guarantee that the main branch of puppet is compatible with the PDK under test
-      # so we can only test that the test command is using the expected puppet gem location
-      describe command('pdk test unit --puppet-dev') do
-        its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
+        # Note that there is no guarantee that the main branch of puppet is compatible with the PDK under test
+        # so we can only test that the validate command is using the expected puppet gem location
+        describe command('pdk validate --puppet-dev') do
+          its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
+        end
+
+        # Note that there is no guarantee that the main branch of puppet is compatible with the PDK under test
+        # so we can only test that the test command is using the expected puppet gem location
+        describe command('pdk test unit --puppet-dev') do
+          its(:stderr) { is_expected.to match(%r{Using Puppet file://}i) }
+        end
       end
     end
   end

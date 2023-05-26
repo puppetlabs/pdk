@@ -108,34 +108,6 @@ describe 'pdk convert', module_command: true do
     end
   end
 
-  context 'when deleting a file' do
-    include_context 'in a new module', 'deleted_file', template: template_repo
-
-    before(:all) do
-      File.open('.sync.yml', 'w') do |f|
-        f.puts <<~EOS
-          ---
-          .travis.yml:
-            delete: true
-        EOS
-      end
-    end
-
-    describe command("#{pdk_convert_base} --force --skip-interview") do
-      its(:exit_status) { is_expected.to eq(0) }
-      its(:stderr) { is_expected.to have_no_output }
-      its(:stdout) { is_expected.to match(%r{-+files to be removed-+\n.*/\.travis.yml}mi) }
-    end
-
-    describe file('.travis.yml') do
-      it { is_expected.not_to be_file }
-    end
-
-    describe file('convert_report.txt') do
-      it { is_expected.not_to be_file }
-    end
-  end
-
   context 'when an init-only templated file is missing' do
     include_context 'in a new module', 'init_missing', template: template_repo
 

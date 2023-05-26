@@ -42,7 +42,6 @@ changes.
 |`Rakefile`|File containing configuration for the Ruby infrastructure. Used in CI and for backwards compatibility.|
 |`.rspec`|File containing the default configuration for RSpec.|
 |`.rubocop.yml`|File containing recommended settings for Ruby style checking.|
-|`.travis.yml`|File containing configuration for cloud-based testing on Linux and Mac OS X. See [travis-ci](http://travis-ci.org/) for more information.|
 |`.yardopts`|File containing configuration for [YARD](https://yardoc.org/) for source files, extra files, and formatting options that you want to use to generate your documentation.|
 
 ## Convert a module

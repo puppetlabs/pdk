@@ -4,9 +4,17 @@ module PDK
   module CLI
     module Exec
       class InteractiveCommand < Command
+        # rubocop :disable Lint/MissingSuper
         def initialize(*argv)
-          super(*argv)
+          @argv = argv
+
+          # Default to running things in the system context.
+          @context = :system
+
+          # Extra environment vars to add to base set.
+          @environment = {}
         end
+        # rubocop :enable Lint/MissingSuper
 
         def register_spinner(_spinner, _opts = {})
           raise 'This method is not implemented for PDK::CLI::Exec::InteractiveCommand'

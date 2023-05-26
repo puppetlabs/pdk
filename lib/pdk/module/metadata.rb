@@ -81,7 +81,7 @@ module PDK
           OPERATING_SYSTEMS[os_name]
         end.flatten,
         'requirements' => [
-          { 'name' => 'puppet', 'version_requirement' => '>= 6.21.0 < 8.0.0' }
+          { 'name' => 'puppet', 'version_requirement' => '>= 7.24 < 9.0.0' }
         ]
       }.freeze
 
@@ -119,7 +119,7 @@ module PDK
       def to_json(*_args)
         require 'json'
 
-        JSON.pretty_generate(@data.dup.delete_if { |_key, value| value.nil? })
+        JSON.pretty_generate(@data.dup.delete_if { |_key, value| value.nil? }) # rubocop:disable Style/CollectionCompact
       end
 
       def write!(path)
