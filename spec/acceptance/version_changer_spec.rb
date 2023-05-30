@@ -34,22 +34,6 @@ describe 'puppet version selection' do
       end
     end
 
-    # PE mapping test have been marked as pending due to an issue with concurrent-ruby versions in
-    # older Puppet gems. This is being tracked and will be resolved in a future version.
-    { '2021.7.1' => '7.20.0' }.each do |pe_version, puppet_version|
-      xcontext "when requesting --pe-version #{pe_version}" do
-        describe command("pdk validate --pe-version #{pe_version}") do
-          its(:exit_status) { is_expected.to eq(0) }
-        end
-
-        describe file('Gemfile.lock') do
-          its(:exit_status) { is_expected.to eq(0) }
-          it { is_expected.to exist }
-          its(:content) { is_expected.to match(/^\s+puppet \(#{Regexp.escape(puppet_version)}(\)|-)/im) }
-        end
-      end
-    end
-
     describe 'puppet-dev uses the correct puppet env' do
       before(:all) do
         File.open(File.join('manifests', 'init.pp'), 'w') do |f|
