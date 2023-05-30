@@ -153,7 +153,6 @@ module PDK
     require 'pdk/cli/test'
     require 'pdk/cli/update'
     require 'pdk/cli/validate'
-    require 'pdk/cli/module'
     require 'pdk/cli/console'
     require 'pdk/cli/release'
     require 'pdk/cli/remove'
