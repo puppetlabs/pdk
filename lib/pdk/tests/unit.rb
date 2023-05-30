@@ -95,7 +95,7 @@ module PDK
         # Ref - https://github.com/puppetlabs/pdk/issues/828
         tests = tests.tr('\\', '/') unless tests.nil?
 
-        environment = { 'CI_SPEC_OPTIONS' => '--format j' }
+        environment = {}
         environment['PUPPET_GEM_VERSION'] = options[:puppet] if options[:puppet]
         spinner_msg = options[:parallel] ? 'Running unit tests in parallel.' : 'Running unit tests.'
 
@@ -109,6 +109,17 @@ module PDK
           return result[:exit_code]
         end
 
+        # Run interactive_rake for documentation output when utilising verbose option.
+        if (options[:verbose]) && (options[:format])
+          environment['CI_SPEC_OPTIONS'] = '--format documentation'
+          result = interactive_rake(cmd(tests, options), environment)
+          # Caveat: Report will not be written to format option(s) file(s) when there are event failures.
+          return result[:exit_code] unless (result[:exit_code]).zero?
+
+          spinner_msg = "Exporting unit tests -> #{options[:format]}"
+        end
+
+        environment['CI_SPEC_OPTIONS'] = '--format j'
         result = rake(cmd(tests, options), spinner_msg, environment)
 
         json_result = if options[:parallel]
