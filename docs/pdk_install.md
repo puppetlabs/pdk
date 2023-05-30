@@ -345,8 +345,7 @@ For every successful command line invocation of PDK, we collect:
     `customized`, or `default`. For customized files, we do not record what
     changed, only that it was changed in the `.sync.yml` file.
 
-> **Note:** All arguments and non-Boolean option values, except `--puppet-version`
-and `--pe-version` are redacted in our collected data.
+> **Note:** All arguments and non-Boolean option values, except `--puppet-version` are redacted in our collected data
 
 Invalid commands are submitted as a distinct analytics events with the arguments
 and option values redacted.
