@@ -102,7 +102,7 @@ module PDK
 
     def self.puppet_version_options(dsl)
       dsl.option nil, 'puppet-version', 'Puppet version to run tests or validations against.', argument: :required
-      dsl.option nil, 'pe-version', 'Puppet Enterprise version to run tests or validations against.', argument: :required
+      dsl.option nil, 'pe-version', '(Deprecated) Puppet Enterprise version to run tests or validations against.', argument: :required
     end
 
     def self.puppet_dev_option(dsl)

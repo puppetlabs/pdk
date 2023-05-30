@@ -213,6 +213,11 @@ module PDK
           raise PDK::CLI::ExitWithError, format('You cannot specify a %{first} and %{second} at the same time.', first: offending[0], second: offending[1])
         end
 
+        # We want to mark setting the PE as deprecated.
+        if opts[:'pe-version'] || PDK::Util::Env['PDK_PE_VERSION']
+          PDK.logger.warn('Specifying a Puppet Enterprise version is now deprecated and will be removed in a future version. Please use --puppet-version or PDK_PUPPET_VERSION instead.')
+        end
+
         if puppet_dev_specs.size == 2
           warning_str = 'Puppet dev flag from command line: "--puppet-dev" '
           warning_str += 'overrides value from environment: "PDK_PUPPET_DEV=true". You should not specify both.'
