@@ -10,7 +10,7 @@ module PDK
     @release_cmd = @base_cmd.define_command do
       name 'release'
       usage 'release [options]'
-      summary '(Experimental) Release a module to the Puppet Forge.'
+      summary '(Deprecated) Release a module to the Puppet Forge.'
 
       flag nil, :force,                'Release the module automatically, with no prompts.'
       flag nil, :'skip-validation',    'Skips the module validation check.'
@@ -27,7 +27,7 @@ module PDK
              argument: :optional
 
       option nil, :version, 'Update the module to the specified version prior to release. When not specified, the new version will be computed from the Changelog where possible.',
-             argument: :required
+             argument: :optional
 
       option nil, :file, 'Path to the built module to push to the Forge. This option can only be used when --skip-build is also used. Defaults to pkg/<module version>.tar.gz',
              argument: :required

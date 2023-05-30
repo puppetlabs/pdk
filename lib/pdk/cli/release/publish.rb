@@ -1,11 +1,9 @@
-require 'pdk/cli/release'
-
 module PDK
   module CLI
     @release_publish_cmd = @release_cmd.define_command do
       name 'publish'
       usage 'publish [options] <tarball>'
-      summary '(Experimental) Publishes the module <tarball> to the Forge.'
+      summary '(Deprecated) Publishes the module <tarball> to the Forge.'
 
       flag nil, :force,                'Publish the module automatically, with no prompts.'
 

@@ -149,6 +149,7 @@ module PDK
     require 'pdk/cli/env'
     require 'pdk/cli/get'
     require 'pdk/cli/new'
+    require 'pdk/cli/publish'
     require 'pdk/cli/set'
     require 'pdk/cli/test'
     require 'pdk/cli/update'

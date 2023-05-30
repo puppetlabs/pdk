@@ -5,7 +5,7 @@ module PDK
     @release_prep_cmd = @release_cmd.define_command do
       name 'prep'
       usage 'prep [options]'
-      summary '(Experimental) Performs all the pre-release checks to ensure module is ready to be released'
+      summary '(Deprecated) Performs all the pre-release checks to ensure module is ready to be released'
 
       flag nil, :force,                'Prepare the module automatically, with no prompts.'
       flag nil, :'skip-validation',    'Skips the module validation check.'
