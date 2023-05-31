@@ -10,10 +10,6 @@ set :env, PDK_DISABLE_ANALYTICS: 'true'
 bin_path = SpecUtils.windows_node? ? 'bin$PATH' : 'bin:$PATH'
 set :path, "#{SpecUtils.install_dir}/#{bin_path}"
 
-hosts.each do |host|
-  install_pdk_on(host)
-end
-
 RSpec.configure do |c|
   c.include SpecUtils
   c.extend SpecUtils
