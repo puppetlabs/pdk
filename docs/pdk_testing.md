@@ -107,15 +107,9 @@ send your validation output to a file in either JUnit or text format.
     ```
 
     To validate against a specific version of Puppet or PE, add the
-    `--puppet-version` or `--pe-version` option flag.
+    `--puppet-version` option flag.
 
-    For example, to validate against PE 2018.1, run:
-
-    ```no-highlight
-    pdk validate --pe-version 2018.1
-    ```
-
-    To validate against Puppet 5.5.12, run:
+    For example. To validate against Puppet 5.5.12, run:
 
     ```no-highlight
     pdk validate --puppet-version 5.5.12
@@ -209,16 +203,10 @@ correctly performs the functions you expect it to.
     pdk test unit --tests=<TEST1>,<TEST2>
     ```
 
-    To unit test against a specific version of Puppet or PE, add a version
+    To unit test against a specific version of Puppet, add a version
     option flag.
 
-    For example, to test against against PE 2018.1, run:
-
-    ```no-highlight
-    pdk test unit --pe-version 2018.1
-    ```
-
-    To test against Puppet 5.5.12, run:
+    For example. To test against Puppet 5.5.12, run:
 
     ```no-highlight
     pdk test unit --puppet-version 5.5.12

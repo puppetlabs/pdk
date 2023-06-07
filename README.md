@@ -112,12 +112,11 @@ This command runs all available unit tests.
 ### `pdk console` command
 The pdk console command executes a session of the puppet debugger when inside a module and allows for exploration of puppet code.  See the official [puppet debugger site](https://www.puppet-debugger.com) for more info and the official docs [site here.](https://docs.puppet-debugger.com)
 
-To use, execute `pdk console` from inside your module directory.  You can also supply the `--puppet-version` or `--pe-version` or `--puppet-dev` to swap out the puppet version when using the console.
+To use, execute `pdk console` from inside your module directory.  You can also supply the `--puppet-version` or `--puppet-dev` to swap out the puppet version when using the console.
 
 Example (from within a module):
 
 * `pdk console --puppet-version=5`
-* `pdk console --pe-version=2018.1`
 
 The `pdk console` command will also pass through any puppet debugger arguments you wish to use.
 

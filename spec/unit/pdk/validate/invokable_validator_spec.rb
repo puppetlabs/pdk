@@ -167,7 +167,7 @@ describe PDK::Validate::InvokableValidator do
           allow(PDK::Util::Filesystem).to receive(:expand_path).with(t).and_return(File.join(context_root, t))
         end
 
-        Array[validator.pattern].flatten.map do |p|
+        [validator.pattern].flatten.map do |p|
           allow(PDK::Util::Filesystem).to receive(:expand_path).with(p).and_return(File.join(context_root, p))
         end
       end
@@ -200,7 +200,7 @@ describe PDK::Validate::InvokableValidator do
           allow(PDK::Util::Filesystem).to receive(:expand_path).with(t).and_return(File.join(context_root, t))
         end
 
-        Array[validator.pattern].flatten.map do |p|
+        [validator.pattern].flatten.map do |p|
           allow(PDK::Util::Filesystem).to receive(:expand_path).with(p).and_return(File.join(context_root, p))
         end
       end
@@ -229,7 +229,7 @@ describe PDK::Validate::InvokableValidator do
           allow(PDK::Util::Filesystem).to receive(:expand_path).with(t).and_return(File.join(context_root, t))
         end
 
-        Array[validator.pattern].flatten.map do |p|
+        [validator.pattern].flatten.map do |p|
           allow(PDK::Util::Filesystem).to receive(:expand_path).with(p).and_return(File.join(context_root, p))
         end
       end
@@ -259,7 +259,7 @@ describe PDK::Validate::InvokableValidator do
           expect(PDK::Util).to receive(:canonical_path).with(t.upcase).and_return(t)
         end
 
-        Array[validator.pattern].flatten.map do |p|
+        [validator.pattern].flatten.map do |p|
           allow(PDK::Util::Filesystem).to receive(:expand_path).with(p).and_return(File.join(context_root, p))
         end
       end

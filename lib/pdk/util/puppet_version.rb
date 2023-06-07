@@ -174,40 +174,6 @@ module PDK
         raise ArgumentError, format('%{version} is not a valid version number.', version: version_str)
       end
 
-      def pe_version_map
-        @pe_version_map ||= fetch_pe_version_map.map do |version_map|
-          maps = version_map['versions'].map do |pe_release|
-            requirements = ["= #{pe_release['version']}"]
-
-            # Some PE release have a .0 Z release, which causes problems when
-            # the user specifies "X.Y" expecting to get the latest Z and
-            # instead getting the oldest.
-            requirements << "!= #{pe_release['version'].gsub(/\.\d+\Z/, '')}" if pe_release['version'].end_with?('.0')
-            {
-              requirement: Gem::Requirement.create(requirements),
-              gem_version: pe_release['puppet']
-            }
-          end
-
-          maps << {
-            requirement: requirement_from_forge_range(version_map['release']),
-            gem_version: version_map['versions'].find { |r| r['version'] == version_map['latest'] }['puppet']
-          }
-        end.flatten
-      end
-
-      def fetch_pe_version_map
-        require 'pdk/util/vendored_file'
-
-        map = PDK::Util::VendoredFile.new('pe_versions.json', PE_VERSIONS_URL).read
-
-        JSON.parse(map)
-      rescue PDK::Util::VendoredFile::DownloadError => e
-        raise PDK::CLI::FatalError, e.message
-      rescue JSON::ParserError
-        raise PDK::CLI::FatalError, 'Failed to parse Puppet Enterprise version map file.'
-      end
-
       def requirement_from_forge_range(range_str)
         Gem::Requirement.create("~> #{range_str.gsub(/\.x\Z/, '.0')}")
       end

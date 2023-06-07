@@ -117,18 +117,6 @@ describe 'pdk console' do
       expect { console_cmd.run(['--puppet-version=7', '--run-once', '--quiet', '--execute=$foo = 123']) }.to exit_zero
     end
 
-    it 'can pass --pe-version' do
-      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with({ 'pe-version': '2023.0' }, true).and_return(gemset: { puppet: '7.23.0' }, ruby_version: '2.7.7')
-      allow(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet: '7.23.0')
-      command = instance_double(PDK::CLI::Exec::InteractiveCommand)
-      allow(PDK::Util::RubyVersion).to receive(:versions).and_return('2.7.7' => '2.7.0')
-      allow(command).to receive(:context=).with(:pwd)
-      allow(command).to receive(:update_environment).with({ 'PUPPET_GEM_VERSION' => '7.23.0' })
-      allow(command).to receive(:execute!).and_return(exit_code: 0)
-      allow(PDK::CLI::Exec::InteractiveCommand).to receive(:new).and_return(command)
-      expect { console_cmd.run(['--pe-version=2023.0', '--run-once', '--quiet', '--execute=$foo = 123']) }.to exit_zero
-    end
-
     it 'can pass --puppet-dev' do
       allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with({ 'puppet-dev': '' }, true)
                                                                 .and_return(gemset: { puppet: 'file:///home/user1/.pdk/cache/src/puppet' }, ruby_version: '2.7.7')

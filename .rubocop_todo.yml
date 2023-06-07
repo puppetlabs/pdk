@@ -57,7 +57,7 @@ Metrics/MethodLength:
 # Offense count: 5
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ModuleLength:
-  Max: 195
+  Max: 200
 
 # Offense count: 45
 # Configuration parameters: AllowedMethods, AllowedPatterns.
@@ -199,7 +199,6 @@ Style/Documentation:
 Style/FrozenStringLiteralComment:
   Enabled: false
 
-# Offense count: 4
 Style/OpenStructUse:
   Exclude:
     - 'lib/pdk/template/renderer/v1/template_file.rb'

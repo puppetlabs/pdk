@@ -316,24 +316,6 @@ describe '`pdk test unit`' do
     end
   end
 
-  context 'when --puppet-version and --pe-version are specified' do
-    it 'exits with an error' do
-      expect(logger).to receive(:error).with(a_string_matching(/cannot specify.*--pe-version.*and.*--puppet-version/i))
-
-      expect do
-        PDK::CLI.run(['test', 'unit', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
-      end.to exit_nonzero
-    end
-
-    it 'does not submit the command to analytics' do
-      expect(analytics).not_to receive(:screen_view)
-
-      expect do
-        PDK::CLI.run(['test', 'unit', '--puppet-version', '4.10.10', '--pe-version', '2018.1.1'])
-      end.to exit_nonzero
-    end
-  end
-
   context 'with --puppet-version' do
     let(:puppet_version) { '5.3' }
     let(:puppet_env) do
@@ -376,52 +358,6 @@ describe '`pdk test unit`' do
 
       expect do
         test_unit_cmd.run_this(["--puppet-version=#{puppet_version}"])
-      end.to exit_zero
-    end
-  end
-
-  context 'with --pe-version' do
-    let(:pe_version) { '2017.2' }
-    let(:puppet_env) do
-      {
-        ruby_version: '2.1.9',
-        gemset: { puppet: '4.10.9' }
-      }
-    end
-
-    before do
-      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).with(hash_including('pe-version': pe_version)).and_return(puppet_env)
-      allow(PDK::Test::Unit).to receive(:invoke).and_return(0)
-      allow(PDK::CLI::Util).to receive(:module_version_check)
-      allow(PDK::Util).to receive(:module_root).and_return(EMPTY_MODULE_ROOT)
-    end
-
-    it 'activates resolved puppet version' do
-      expect(PDK::Util::Bundler).to receive(:ensure_bundle!).with(puppet_env[:gemset])
-
-      expect do
-        test_unit_cmd.run_this(["--pe-version=#{pe_version}"])
-      end.to exit_zero
-    end
-
-    it 'activates resolved ruby version' do
-      expect(PDK::Util::RubyVersion).to receive(:use).with(puppet_env[:ruby_version])
-
-      expect do
-        test_unit_cmd.run_this(["--pe-version=#{pe_version}"])
-      end.to exit_zero
-    end
-
-    it 'submits the command to analytics' do
-      expect(analytics).to receive(:screen_view).with(
-        'test_unit',
-        cli_options: "pe-version=#{pe_version}",
-        output_format: 'default',
-        ruby_version: RUBY_VERSION
-      )
-
-      expect do
-        test_unit_cmd.run_this(["--pe-version=#{pe_version}"])
       end.to exit_zero
     end
   end
