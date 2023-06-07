@@ -3,9 +3,9 @@ module PDK
     @bundle_cmd = @base_cmd.define_command do
       name 'bundle'
       usage 'bundle [bundler_options]'
-      summary '(Experimental) Command pass-through to bundler'
+      summary 'Command pass-through to bundler'
       description <<~EOF
-        [experimental] For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.
+        For advanced users, pdk bundle runs arbitrary commands in the bundler environment that pdk manages.
         Careless use of this command can lead to errors that pdk can't help recover from.
       EOF
       skip_option_parsing
