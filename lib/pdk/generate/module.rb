@@ -126,9 +126,15 @@ module PDK
         PDK.config.with_scoped_value('module_defaults.author') { |val| defaults['author'] = val }
         PDK.config.with_scoped_value('module_defaults.license') { |val| defaults['license'] = val }
         defaults['license'] = opts[:license] if opts.key?(:license)
+        PDK.config.with_scoped_value('module_defaults.operatingsystem_support') { |val| defaults['operatingsystem_support'] = val }
 
         metadata = PDK::Module::Metadata.new(defaults)
-        module_interview(metadata, opts) unless opts[:'skip-interview']
+
+        if opts[:'skip-interview']
+          metadata.data['operatingsystem_support'] = metadata.data['operatingsystem_support'].map { |val| PDK::Module::Metadata::OPERATING_SYSTEMS[val] }.flatten
+        else
+          module_interview(metadata, opts)
+        end
 
         metadata
       end
@@ -200,7 +206,7 @@ module PDK
             required: true,
             type: :multi_select,
             choices: PDK::Module::Metadata::OPERATING_SYSTEMS,
-            default: PDK::Module::Metadata::DEFAULT_OPERATING_SYSTEMS.map do |os_name|
+            default: metadata.data['operatingsystem_support'] do |os_name|
               # tty-prompt uses a 1-index
               PDK::Module::Metadata::OPERATING_SYSTEMS.keys.index(os_name) + 1
             end

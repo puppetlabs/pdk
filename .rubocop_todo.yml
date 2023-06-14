@@ -31,7 +31,7 @@ Lint/EmptyBlock:
 # Offense count: 113
 # Configuration parameters: AllowedMethods, AllowedPatterns, CountRepeatedAttributes.
 Metrics/AbcSize:
-  Max: 109
+  Max: 110
 
 # Offense count: 27
 # Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns, inherit_mode.
@@ -42,7 +42,7 @@ Metrics/BlockLength:
 # Offense count: 16
 # Configuration parameters: CountComments, CountAsOne.
 Metrics/ClassLength:
-  Max: 253
+  Max: 260
 
 # Offense count: 53
 # Configuration parameters: AllowedMethods, AllowedPatterns.
