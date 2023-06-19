@@ -112,7 +112,10 @@ module PDK
         # This checks if the version listed in the module's metadata is older
         # than the installed PDK, and advises the user to run pdk update.
         elsif Gem::Version.new(PDK::VERSION) > Gem::Version.new(module_pdk_ver)
-          PDK.logger.warn 'This module is compatible with an older version of PDK. Run `pdk update` to update it to your version of PDK.'
+          message = 'This module is compatible with an older version of PDK.'
+          message = 'Module templates older than 3.0.0 my experience issues.' if Gem::Version.new(module_pdk_ver) < Gem::Version.new('3.0.0')
+
+          PDK.logger.warn "#{message} Run `pdk update` to update it to the latest version."
         end
       end
       module_function :module_version_check
@@ -120,13 +123,10 @@ module PDK
       def check_for_deprecated_puppet(version)
         return unless version.is_a?(Gem::Version)
 
-        deprecated_below = Gem::Version.new('5.0.0')
+        deprecated_below = Gem::Version.new('7.0.0')
         return unless version < deprecated_below
 
-        deprecated_msg =
-          format('Support for Puppet versions older than %{version} is ' \
-                 'deprecated and will be removed in a future version of PDK.', version: deprecated_below.to_s)
-        PDK.logger.warn(deprecated_msg)
+        raise PDK::CLI::ExitWithError, "Support for Puppet versions older than #{deprecated_below} has been removed from PDK."
       end
       module_function :check_for_deprecated_puppet
 
