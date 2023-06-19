@@ -3,8 +3,8 @@ require 'spec_helper_package'
 describe 'Test puppet & ruby version selection' do
   module_name = 'version_selection'
   test_cases = [
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.24.0', expected_puppet: '7.24.0', expected_ruby: '2.7.8' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '8.0.1', expected_puppet: '8.0.1', expected_ruby: '3.2.2' }
+    { envvar: 'PDK_PUPPET_VERSION', version: '7.25.0', expected_puppet: '7.25.0', expected_ruby: '2.7.8' },
+    { envvar: 'PDK_PUPPET_VERSION', version: '8.1.0', expected_puppet: '8.1.0', expected_ruby: '3.2.2' }
   ]
 
   before(:all) do
