@@ -108,7 +108,7 @@ describe PDK::CLI::Util do
     subject(:module_version_check) { described_class.module_version_check }
 
     before do
-      stub_const('PDK::VERSION', '1.5.0')
+      stub_const('PDK::VERSION', '3.0.0')
       allow(PDK::Util).to receive(:module_pdk_version).and_return(module_pdk_ver)
     end
 
@@ -135,7 +135,7 @@ describe PDK::CLI::Util do
     end
 
     context 'if module version is newer than installed version' do
-      let(:module_pdk_ver) { '1.5.1' }
+      let(:module_pdk_ver) { '3.1.0' }
 
       before do
         expect(logger).to receive(:warn).with(a_string_matching(/This module is compatible with a newer version of PDK. Upgrade your version of PDK to ensure compatibility./i))
@@ -147,10 +147,10 @@ describe PDK::CLI::Util do
     end
 
     context 'if module version is older than installed version' do
-      let(:module_pdk_ver) { '1.3.1' }
+      let(:module_pdk_ver) { '2.7.1' }
 
       before do
-        expect(logger).to receive(:warn).with(a_string_matching(/This module is compatible with an older version of PDK. Run `pdk update` to update it to your version of PDK./i))
+        expect(logger).to receive(:warn).with(a_string_matching(/Module templates older than 3.0.0 my experience issues. Run `pdk update` to update it to the latest version./i))
       end
 
       it 'does not raise an error' do
@@ -232,9 +232,9 @@ describe PDK::CLI::Util do
     end
 
     context 'when puppet-version has been set' do
-      let(:options) { { 'puppet-version': '4.10.10' } }
-      let(:ruby_version) { '2.1.9' }
-      let(:puppet_version) { '4.10.10' }
+      let(:options) { { 'puppet-version': '8' } }
+      let(:ruby_version) { '3.2.2' }
+      let(:puppet_version) { '8' }
 
       before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
@@ -245,8 +245,8 @@ describe PDK::CLI::Util do
 
     context 'when PDK_PUPPET_VERSION has been set' do
       let(:options) { {} }
-      let(:ruby_version) { '2.1.9' }
-      let(:puppet_version) { '4.10.10' }
+      let(:ruby_version) { '3.2.2' }
+      let(:puppet_version) { '8.1.0' }
 
       before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
@@ -263,8 +263,8 @@ describe PDK::CLI::Util do
         let(:context) { PDK::Context::Module.new(nil, nil) }
 
         context 'and a puppet version can be found in the module metadata' do
-          let(:ruby_version) { '2.4.3' }
-          let(:puppet_version) { '5.3.0' }
+          let(:ruby_version) { '3.2.2' }
+          let(:puppet_version) { '8.1.0' }
 
           before do
             allow(PDK::Util::PuppetVersion).to receive(:from_module_metadata).and_return(version_result)
@@ -279,8 +279,8 @@ describe PDK::CLI::Util do
         end
 
         context 'and there is no puppet version in the module metadata' do
-          let(:ruby_version) { '2.4.3' }
-          let(:puppet_version) { '5.5.1' }
+          let(:ruby_version) { '3.2.2' }
+          let(:puppet_version) { '8.1.0' }
 
           before do
             allow(PDK::Util::PuppetVersion).to receive(:from_module_metadata).and_return(nil)
@@ -294,8 +294,8 @@ describe PDK::CLI::Util do
       context 'in a Control Repo Context' do
         let(:context) { PDK::Context::ControlRepo.new(nil, nil) }
 
-        let(:ruby_version) { '2.4.3' }
-        let(:puppet_version) { '5.3.0' }
+        let(:ruby_version) { '3.2.2' }
+        let(:puppet_version) { '8.1.0' }
 
         before do
           expect(PDK::Util::PuppetVersion).to receive(:latest_available).and_return(version_result)
@@ -319,7 +319,7 @@ describe PDK::CLI::Util do
       end
     end
 
-    context 'when the Puppet version is older than 5.0.0' do
+    context 'when the Puppet version is older than 7.0.0' do
       let(:options) { { 'puppet-version': '4.10.10' } }
       let(:ruby_version) { '2.1.9' }
       let(:puppet_version) { '4.10.10' }
@@ -328,18 +328,15 @@ describe PDK::CLI::Util do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
       end
 
-      it 'warn the user about the deprecated version' do
-        expect(logger).to receive(:warn)
-          .with(a_string_matching(/older than 5\.0\.0 is deprecated/))
-
-        puppet_env
+      it 'rases a PDK::CLI::ExitWithError' do
+        expect { puppet_env }.to raise_error(PDK::CLI::ExitWithError, /Support for Puppet versions older than 7.0.0 has been removed from PDK./)
       end
     end
 
-    context 'when the Puppet version is at least 5.0.0' do
-      let(:options) { { 'puppet-version': '5.0.0' } }
-      let(:ruby_version) { '2.4.5' }
-      let(:puppet_version) { '5.0.0' }
+    context 'when the Puppet version is at least 7.0.0' do
+      let(:options) { { 'puppet-version': '7.0.0' } }
+      let(:ruby_version) { '2.7.8' }
+      let(:puppet_version) { '7.0.0' }
 
       before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
