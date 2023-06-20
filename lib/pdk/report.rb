@@ -6,7 +6,7 @@ module PDK
 
     # @return [Array<String>] the list of supported report formats.
     def self.formats
-      @report_formats ||= ['junit', 'text'].freeze
+      @report_formats ||= ['junit', 'text', 'json', 'yaml'].freeze
     end
 
     # @return [Symbol] the method name of the default report format.
@@ -117,5 +117,46 @@ module PDK
         target << report.join("\n") << "\n"
       end
     end
+
+    # Renders the report as JSON
+    #
+    # This report is designed to output all events, including passing events as JSON.
+    # @param target [#write] an IO object that the report will be written to.
+    def write_json(target = self.class.default_target)
+      require 'json'
+
+      report = {
+        'pdk-version' => PDK::VERSION,
+        'timestamp'   => Time.now.utc.iso8601,
+        'events'      => events.map { |_, tool_events| tool_events.map(&:to_hash) }.flatten,
+      }
+
+      if target.is_a?(String)
+        PDK::Util::Filesystem.write_file(target, JSON.pretty_generate(report))
+      else
+        target << JSON.pretty_generate(report)
+      end
+    end
+
+    # Renders the report as YAML
+    #
+    # This report is designed to output all events, including passing events as YAML.
+    # @param target [#write] an IO object that the report will be written to.
+    def write_yaml(target = self.class.default_target)
+      require 'yaml'
+
+      report = {
+        'pdk-version' => PDK::VERSION,
+        'timestamp'   => Time.now.utc.iso8601,
+        'events'      => events.map { |_, tool_events| tool_events.map(&:to_hash) }.flatten,
+      }
+
+      if target.is_a?(String)
+        PDK::Util::Filesystem.write_file(target, YAML.dump(report))
+      else
+        target << YAML.dump(report)
+      end
+    end
+
   end
 end

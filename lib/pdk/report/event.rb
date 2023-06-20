@@ -157,6 +157,22 @@ module PDK
         testcase
       end
 
+      # Renders the event as a HASH.
+      # @return [Hash] The rendered event.
+      def to_hash
+        {
+          'file'     => file,
+          'line'     => line,
+          'column'   => column,
+          'source'   => source,
+          'message'  => message,
+          'severity' => severity,
+          'test'     => test,
+          'state'    => state,
+          'trace'    => trace,
+        }
+      end
+
       private
 
       # Processes the data hash used to initialise the event, validating and
