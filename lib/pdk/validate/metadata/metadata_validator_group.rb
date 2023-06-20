@@ -11,7 +11,8 @@ module PDK
         def validators
           [
             MetadataSyntaxValidator,
-            MetadataJSONLintValidator
+            MetadataJSONLintValidator,
+            MetadataDependencyValidator,
           ].freeze
         end
       end
