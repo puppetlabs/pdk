@@ -1,5 +1,6 @@
 require 'pdk'
 require 'uri'
+require_relative './pre_build'
 
 module PDK
   module Module
@@ -27,6 +28,8 @@ module PDK
       end
 
       def run
+        extend PreBuild
+
         # Pre-release checks
         unless force?
           raise PDK::CLI::ExitWithError, 'The module is not PDK compatible' if requires_pdk_compatibility? && !pdk_compatible?
@@ -38,7 +41,7 @@ module PDK
         # it'll fail anyway.
         validate_publish_options!
 
-        run_validations(options) unless skip_validation?
+        self.run_validations(options) unless skip_validation?
 
         PDK.logger.info format('Releasing %{module_name} - from version %{module_version}', module_name: module_metadata.data['name'], module_version: module_metadata.data['version'])
 
@@ -47,7 +50,7 @@ module PDK
         # Calculate the new module version
         new_version = specified_version
         new_version = PDK::Util::ChangelogGenerator.compute_next_version(module_metadata.data['version']) if new_version.nil? && !skip_changelog?
-        new_version = module_metadata.data['version'] if new_version.nil?
+        new_version = module_metadata.data['version'] if new_version.nil? || !new_version
 
         if new_version != module_metadata.data['version']
           PDK.logger.info format('Updating version to %{module_version}', module_version: new_version)
@@ -66,9 +69,9 @@ module PDK
           end
         end
 
-        run_documentation(options) unless skip_documentation?
+        self.run_documentation(options) unless skip_documentation?
 
-        run_dependency_checker(options) unless skip_dependency?
+        self.run_dependency_checker(options) unless skip_dependency?
 
         if skip_build?
           # Even if we're skipping the build, we still need the name of the tarball
@@ -99,40 +102,6 @@ module PDK
         @default_tarball_filename = builder.package_file
       end
 
-      def run_validations(opts)
-        # TODO: Surely I can use a pre-existing class for this?
-        PDK::CLI::Util.validate_puppet_version_opts(opts)
-
-        PDK::CLI::Util.module_version_check
-
-        puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
-        PDK::Util::PuppetVersion.fetch_puppet_dev if opts[:'puppet-dev']
-        PDK::Util::RubyVersion.use(puppet_env[:ruby_version])
-
-        PDK::Util::Bundler.ensure_bundle!(puppet_env[:gemset])
-
-        validator_exit_code, = PDK::Validate.invoke_validators_by_name(PDK.context, PDK::Validate.validator_names, false, options)
-        raise PDK::CLI::ExitWithError, 'An error occured during validation' unless validator_exit_code.zero?
-      end
-
-      def run_documentation(_opts)
-        PDK.logger.info 'Updating documentation using puppet strings'
-        docs_command = PDK::CLI::Exec::InteractiveCommand.new(PDK::CLI::Exec.bundle_bin, 'exec', 'puppet', 'strings', 'generate', '--format', 'markdown', '--out', 'REFERENCE.md')
-        docs_command.context = :module
-        result = docs_command.execute!
-        raise PDK::CLI::ExitWithError, format('An error occured generating the module documentation: %{stdout}', stdout: result[:stdout]) unless result[:exit_code].zero?
-      end
-
-      def run_dependency_checker(_opts)
-        # run dependency-checker and output dependent modules list
-        PDK.logger.info 'Running dependency checks'
-
-        dep_command = PDK::CLI::Exec::Command.new('dependency-checker', 'metadata.json')
-        dep_command.context = :module
-        result = dep_command.execute!
-
-        raise PDK::CLI::ExitWithError, format('An error occured checking the module dependencies: %{stdout}', stdout: result[:stdout]) unless result[:exit_code].zero?
-      end
 
       # @return [String] Path to the built tarball
       def run_build(opts)
@@ -161,6 +130,16 @@ module PDK
         use_ssl = uri.instance_of?(URI::HTTPS)
         response = Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
           http.request(request)
+        end
+
+        unless response.is_a?(Net::HTTPSuccess)
+          PDK.logger.debug "Puppet Forge response: #{response.body}"
+
+          if response.is_a?(Net::HTTPUnauthorized)
+            raise PDK::CLI::ExitWithError, "Authentication failure when uploading to Puppet Forge: #{JSON.parse(response.body)['error']}"
+          else
+            raise PDK::CLI::ExitWithError "Error uploading to Puppet Forge: #{JSON.parse(response.body)['message']}"
+          end
         end
 
         raise PDK::CLI::ExitWithError, format('Error uploading to Puppet Forge: %{result}', result: response.body) unless response.is_a?(Net::HTTPSuccess)
