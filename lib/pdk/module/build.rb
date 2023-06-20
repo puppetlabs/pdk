@@ -1,4 +1,5 @@
 require 'pdk'
+require_relative './pre_build'
 
 module PDK
   module Module
@@ -10,6 +11,7 @@ module PDK
       attr_reader :module_dir, :target_dir
 
       def initialize(options = {})
+        @options = options
         @module_dir = PDK::Util::Filesystem.expand_path(options[:module_dir] || Dir.pwd)
         @target_dir = PDK::Util::Filesystem.expand_path(options[:'target-dir'] || File.join(module_dir, 'pkg'))
       end
@@ -33,6 +35,10 @@ module PDK
       #
       # @return [String] The path to the built package file.
       def build
+        extend PreBuild
+        self.run_documentation unless @options[:'skip-documentation']
+        self.run_validations(@options) unless @options[:'skip-validation']
+
         create_build_dir
 
         stage_module_in_build_dir
