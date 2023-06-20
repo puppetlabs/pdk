@@ -9,8 +9,10 @@ module PDK
              'The target directory where you want PDK to write the package.',
              argument: :required, default: File.join(Dir.pwd, 'pkg')
 
-      option nil, 'force', 'Skips the prompts and builds the module package.'
-
+      flag nil, :force,                     'Skips the prompts and builds the module package.'
+      flag nil, :'skip-documentation',      'Skips the documentation update.'
+      flag nil, :'skip-validation',         'Skips the module validation check.'
+ 
       run do |opts, _args, _cmd|
         require 'pdk/module/build'
         require 'pdk/module/metadata'
