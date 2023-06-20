@@ -16,6 +16,7 @@ module PDK
     module Metadata
       autoload :MetadataJSONLintValidator, 'pdk/validate/metadata/metadata_json_lint_validator'
       autoload :MetadataSyntaxValidator, 'pdk/validate/metadata/metadata_syntax_validator'
+      autoload :MetadataDependencyValidator, 'pdk/validate/metadata/metadata_dependency_validator'
       autoload :MetadataValidatorGroup, 'pdk/validate/metadata/metadata_validator_group'
     end
 
