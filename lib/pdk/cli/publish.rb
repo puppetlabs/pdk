@@ -6,7 +6,7 @@ require 'pdk/module/build'
 
 module PDK
   module CLI
-    @publish_cmd = @base_cmd.define_command do # rubocop:disable Metrics/BlockLength
+    @publish_cmd = @base_cmd.define_command do
       name 'publish'
       usage 'publish [options] <tarball>'
       summary 'Publishes the module to the Forge.'

@@ -36,8 +36,8 @@ module PDK
       # @return [String] The path to the built package file.
       def build
         extend PreBuild
-        self.run_documentation unless @options[:'skip-documentation']
-        self.run_validations(@options) unless @options[:'skip-validation']
+        run_documentation unless @options[:'skip-documentation']
+        run_validations(@options) unless @options[:'skip-validation']
 
         create_build_dir
 
