@@ -41,7 +41,7 @@ module PDK
         # it'll fail anyway.
         validate_publish_options!
 
-        self.run_validations(options) unless skip_validation?
+        run_validations(options) unless skip_validation?
 
         PDK.logger.info format('Releasing %{module_name} - from version %{module_version}', module_name: module_metadata.data['name'], module_version: module_metadata.data['version'])
 
@@ -69,9 +69,9 @@ module PDK
           end
         end
 
-        self.run_documentation(options) unless skip_documentation?
+        run_documentation(options) unless skip_documentation?
 
-        self.run_dependency_checker(options) unless skip_dependency?
+        run_dependency_checker(options) unless skip_dependency?
 
         if skip_build?
           # Even if we're skipping the build, we still need the name of the tarball
@@ -102,7 +102,6 @@ module PDK
         @default_tarball_filename = builder.package_file
       end
 
-
       # @return [String] Path to the built tarball
       def run_build(opts)
         PDK::Module::Build.invoke(opts.dup)
@@ -124,6 +123,7 @@ module PDK
         request['Content-Type'] = 'application/json'
         data = { file: file_data }
 
+        require 'json'
         request.body = data.to_json
 
         require 'openssl'
@@ -134,15 +134,11 @@ module PDK
 
         unless response.is_a?(Net::HTTPSuccess)
           PDK.logger.debug "Puppet Forge response: #{response.body}"
+          raise PDK::CLI::ExitWithError, "Authentication failure when uploading to Puppet Forge: #{JSON.parse(response.body)['error']}" if response.is_a?(Net::HTTPUnauthorized)
 
-          if response.is_a?(Net::HTTPUnauthorized)
-            raise PDK::CLI::ExitWithError, "Authentication failure when uploading to Puppet Forge: #{JSON.parse(response.body)['error']}"
-          else
-            raise PDK::CLI::ExitWithError "Error uploading to Puppet Forge: #{JSON.parse(response.body)['message']}"
-          end
+          raise PDK::CLI::ExitWithError "Error uploading to Puppet Forge: #{JSON.parse(response.body)['message']}"
+
         end
-
-        raise PDK::CLI::ExitWithError, format('Error uploading to Puppet Forge: %{result}', result: response.body) unless response.is_a?(Net::HTTPSuccess)
 
         PDK.logger.info 'Publish to Forge was successful'
       end

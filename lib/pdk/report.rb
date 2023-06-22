@@ -127,8 +127,8 @@ module PDK
 
       report = {
         'pdk-version' => PDK::VERSION,
-        'timestamp'   => Time.now.utc.iso8601,
-        'events'      => events.map { |_, tool_events| tool_events.map(&:to_hash) }.flatten,
+        'timestamp' => Time.now.utc.iso8601,
+        'events' => events.map { |_, tool_events| tool_events.map(&:to_hash) }.flatten
       }
 
       if target.is_a?(String)
@@ -147,8 +147,8 @@ module PDK
 
       report = {
         'pdk-version' => PDK::VERSION,
-        'timestamp'   => Time.now.utc.iso8601,
-        'events'      => events.map { |_, tool_events| tool_events.map(&:to_hash) }.flatten,
+        'timestamp' => Time.now.utc.iso8601,
+        'events' => events.map { |_, tool_events| tool_events.map(&:to_hash) }.flatten
       }
 
       if target.is_a?(String)
@@ -157,6 +157,5 @@ module PDK
         target << YAML.dump(report)
       end
     end
-
   end
 end

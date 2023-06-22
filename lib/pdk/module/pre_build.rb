@@ -3,6 +3,8 @@ require 'pdk'
 module PDK
   module Module
     module PreBuild
+      module_function
+
       def run_validations(opts)
         PDK::CLI::Util.validate_puppet_version_opts(opts)
 
@@ -16,13 +18,13 @@ module PDK
 
         validator_exit_code, report = PDK::Validate.invoke_validators_by_name(PDK.context, PDK::Validate.validator_names, false, opts)
         report_formats = if opts[:format]
-                   PDK::CLI::Util::OptionNormalizer.report_formats(opts[:format])
-                 else
-                   [{
-                     method: PDK::Report.default_format,
-                     target: PDK::Report.default_target
-                   }]
-                 end
+                           PDK::CLI::Util::OptionNormalizer.report_formats(opts[:format])
+                         else
+                           [{
+                             method: PDK::Report.default_format,
+                             target: PDK::Report.default_target
+                           }]
+                         end
 
         report_formats.each do |format|
           report.send(format[:method], format[:target])
