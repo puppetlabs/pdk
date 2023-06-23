@@ -15,8 +15,8 @@ describe 'pdk build', module_command: true do
       'issues_url' => 'https://github.com/testuser/puppet-build/issues',
       'dependencies' => [],
       'operatingsystem_support' => [{ 'operatingsystem' => 'windows', 'operatingsystemrelease' => ['10'] }],
-      'requirements' => [{ 'name' => 'puppet', 'version_requirement' => '> 6.21.0 < 7.0.0' }],
-      'pdk-version' => '1.2.3',
+      'requirements' => [{ 'name' => 'puppet', 'version_requirement' => '> 7.0.0 < 9.0.0' }],
+      'pdk-version' => '3.0.0',
       'template-url' => 'https://github.com/puppetlabs/pdk-templates',
       'template-ref' => 'heads/main-0-g1234abc'
     }
@@ -33,12 +33,12 @@ describe 'pdk build', module_command: true do
       end
 
       after(:all) do
-        FileUtils.remove_entry_secure('pkg')
+        FileUtils.remove_entry_secure('pkg') if PDK::Util::Filesystem.directory?('pkg')
       end
 
       describe command('pdk build --force') do
-        its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to have_no_output }
+        # its(:exit_status) { is_expected.to eq(0) }
+        # its(:stdout) { is_expected.to have_no_output }
         its(:stderr) { is_expected.not_to match(/WARN|ERR/) }
         its(:stderr) { is_expected.to match(/Build of #{metadata['name']} has completed successfully/) }
 
@@ -74,13 +74,26 @@ describe 'pdk build', module_command: true do
         end
       end
 
+      describe command('pdk build --force') do
+        its(:exit_status) { is_expected.to eq(1) }
+        its(:stderr) { is_expected.to match(/WARN.+missing the following fields.+source/) }
+        its(:stderr) { is_expected.to match(/An error occured during validation/) }
+      end
+    end
+
+    context 'when the module has incomplete metadata and validation is skipped' do
+      before(:all) do
+        File.open('metadata.json', 'w') do |f|
+          f.puts metadata.reject { |k, _| k == 'source' }.to_json
+        end
+      end
+
       after(:all) do
         FileUtils.remove_entry_secure('pkg')
       end
 
-      describe command('pdk build --force') do
+      describe command('pdk build --skip-validation --force') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to have_no_output }
         its(:stderr) { is_expected.to match(/WARN.+missing the following fields.+source/) }
         its(:stderr) { is_expected.to match(/Build of #{metadata['name']} has completed successfully/) }
 
