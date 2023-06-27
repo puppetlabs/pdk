@@ -7,7 +7,7 @@ The `pdk build` command performs a series of checks on your module and builds a
 `tar.gz` package so that you can upload your module to the Forge. To learn more
 about publishing your module to the Forge, see the documentation about
 [publishing your
-module](https://puppet.com/docs/puppet/4.9/modules_publishing.html#removing-symlinks-from-your-module). 
+module](https://www.puppet.com/docs/puppet/latest/modules_publishing.html#modules_publishing_prep-publishing-remove-symlinks). 
 
 When you run the `pdk build` command, PDK checks your module metadata, looks for
 any symlinks, and excludes from the package any files listed in the `.gitignore`
