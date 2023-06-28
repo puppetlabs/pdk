@@ -110,5 +110,5 @@ To resolve this issue you can either:
 
 * Set the version requirement to 1.15.2 in your `sync.yml`.
 
-After completing the step of your choice, you will need to run `pdk update` to ensure that you
+After completing the step of your choice, you will need to run `pdk update` to ensure that your
 Gemfile is updated accordingly.
