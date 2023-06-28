@@ -32,13 +32,40 @@ rm -rf ~/.pdk/cache
 Remove-Item -Path $ENV:USERPROFILE\AppData\Local\PDK\cache -Recurse -Force
 ```
 
-#### Remove older versions of PDK (optional)
+### Remove older versions of PDK (optional)
 
 To be extra sure that you will have a smooth upgrade, you can remove your existing PDK installation.
 
 Given that PDK can be installed through a variety of different methods, please consult the documentation
 of the package provider for uninstallation steps.
 
+### Remove the legacy PowerShell module (Windows only)
+
+Versions of PDK prior to 3.0.0 used a PowerShell module to execute the application. This has now been removed as we
+have transitioned to using a batch file as the entry point.
+
+To avoid conflicts when running PDK you should ensure that the PowerShell module has been removed.
+Additionally, if you will need to close and restart any open PowerShell sessions.
+
+If it hasn't, it can easily be removed with a few simple steps:
+
+#### Check if your new install still references the module
+
+From a new PowerShell session, run the following command:
+
+```
+Get-Command -name PDK
+```
+
+#### Check that the module has been removed from the $MODULEPATH
+
+From a new PowerShell session run the following command:
+
+```
+Get-ChildItem -Path 'C:\Program Files\WindowsPowerShell\Modules\'
+```
+
+If the `PuppetDevelopmentKit` module is listed in the output, it can safely be removed.
 
 ### Update your modules
 
@@ -83,11 +110,9 @@ To resolve the issue you can either:
   optional:
     ":development":
     - gem: racc
-      version: '~> 1.4.0'#
+      version: '~> 1.4.0'
       condition: if Gem::Requirement.create(['>= 2.7.0', '< 3.0.0']).satisfied_by?(Gem::Version.new(RUBY_VERSION.dup))
 ```
-
-Note: If you opt for manually adding the version requirement to your gem file, you will need
 
 #### `github_changelog_enerator` errors with Ruby 2.7.8 and PDK 3.0.0
 
