@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'pdk/cli'
 
-describe 'pdk console' do
+describe 'pdk console', skip: 'Temporarily disabled (CONT-1154)' do
   let(:console_cmd) { PDK::CLI.instance_variable_get(:@console_cmd) }
   let(:module_path) { '/path/to/testmodule' }
   let(:context) { PDK::Context::Module.new(module_path, module_path) }

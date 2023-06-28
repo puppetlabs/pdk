@@ -20,7 +20,6 @@ PDK includes the following tools:
 |facterdb|A gem that contains facts for Operating Systems.| N |
 |metadata-json-lint|Validates and lints `metadata.json` files in modules against Puppet module metadata style guidelines.| N |
 |pdk|Tool to generate and test modules and module content, such as classes, from the command line.| Y |
-|puppet-debugger|Provides a REPL based debugger console.| N |
 |puppet-lint|Checks your Puppet code against the recommendations in the Puppet language style guide.| Y |
 |puppet-syntax|Checks for correct syntax in Puppet manifests, templates, and Hiera YAML.| N |
 |puppetlabs_spec_helper|Provides classes, methods, and Rake tasks to help with spec testing Puppet code.| Y |
@@ -106,51 +105,6 @@ pdk test unit
 ```
 
 This command runs all available unit tests.
-
-## Experimental features
-
-### `pdk console` command
-The pdk console command executes a session of the puppet debugger when inside a module and allows for exploration of puppet code.  See the official [puppet debugger site](https://www.puppet-debugger.com) for more info and the official docs [site here.](https://docs.puppet-debugger.com)
-
-To use, execute `pdk console` from inside your module directory.  You can also supply the `--puppet-version` or `--puppet-dev` to swap out the puppet version when using the console.
-
-Example (from within a module):
-
-* `pdk console --puppet-version=5`
-
-The `pdk console` command will also pass through any puppet debugger arguments you wish to use.
-
-Example:
-
-* `pdk console  --no-facterdb`
-* `pdk console --play https://gist.github.com/logicminds/4f6bcfd723c92aad1f01f6a800319fa4`
-* `pdk console -e "md5('sdfasdfasdf')" --run-once --quiet`
-
-Use `pdk console -h` for a further explanation of pass through arguments.
-
-If you receive the following error you do not have the puppet-debugger gem installed.
-
-```
-pdk console -h
-Error: Unknown Puppet subcommand 'debugger'
-See 'puppet help' for help on available puppet subcommands
-```
-
-To fix this you will need to add the following entry to your .sync.yml file and run pdk update:
-
-```
-Gemfile:
-  required:
-    ":development":
-      - gem: puppet-debugger
-        version: "~> 0.14"
-```  
-
-**NOTE**: The puppet-debugger gem has been added to the [puppet-module-* gems](https://github.com/puppetlabs/puppet-module-gems/pull/117), so once you get the gem update you no longer need the .sync.yml entry.
-
-### `pdk bundle` command
-
-This command executes arbitrary commands in a bundler context within the module you're currently working on. Arguments to this command are passed straight through to bundler. This command is experimental  and can lead to errors that can't be resolved by PDK itself.
 
 ## Module Compatibility
 
