@@ -153,7 +153,7 @@ module PDK
     require 'pdk/cli/test'
     require 'pdk/cli/update'
     require 'pdk/cli/validate'
-    require 'pdk/cli/console'
+    # require 'pdk/cli/console' Temporarily disabled while we work on the puppet-debugger gem. It will be back soon! (CONT-1154)
     require 'pdk/cli/release'
     require 'pdk/cli/remove'
 
