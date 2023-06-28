@@ -10,7 +10,7 @@ By default, PDK installs to the following locations:
 -   On Windows systems: `C:\Program Files\Puppet Labs\DevelopmentKit`
 
 
-PDK uses the latest versions pf Puppet 7 and 8 available at the time of release.
+PDK uses the latest versions of Puppet 7 and 8 available at the time of release.
 Modules created with PDK work with all Puppet and Ruby version combinations currently under maintenance.
 See [open source Puppet](https://puppet.com/docs/puppet/latest/about_agent.html) and
 [Puppet Enterprise](https://www.puppet.com/docs/pe/2023.0/getting_support_for_pe.html#getting_support_for_pe) lifecycle pages for details.
