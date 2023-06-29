@@ -150,7 +150,7 @@ describe PDK::CLI::Util do
       let(:module_pdk_ver) { '2.7.1' }
 
       before do
-        expect(logger).to receive(:warn).with(a_string_matching(/Module templates older than 3.0.0 my experience issues. Run `pdk update` to update it to the latest version./i))
+        expect(logger).to receive(:warn).with(a_string_matching(/Module templates older than 3.0.0 may experience issues. Run `pdk update` to update it to the latest version./i))
       end
 
       it 'does not raise an error' do
