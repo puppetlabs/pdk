@@ -2,4 +2,4 @@
 
 ## PDK 3.0.0
 
-TBA
+For more information about upgrading your PDK installation, see [Upgrading PDK](pdk_upgrading.md).
