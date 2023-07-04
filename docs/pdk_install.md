@@ -10,7 +10,7 @@ By default, PDK installs to the following locations:
 -   On Windows systems: `C:\Program Files\Puppet Labs\DevelopmentKit`
 
 
-PDK uses Puppet 6 and 7.
+PDK uses the latest versions of Puppet 7 and 8 available at the time of release.
 Modules created with PDK work with all Puppet and Ruby version combinations currently under maintenance.
 See [open source Puppet](https://puppet.com/docs/puppet/latest/about_agent.html) and
 [Puppet Enterprise](https://www.puppet.com/docs/pe/2023.0/getting_support_for_pe.html#getting_support_for_pe) lifecycle pages for details.
@@ -255,15 +255,6 @@ instructions.
 2.  Open a new PowerShell window to re-source your profile and make PDK
     available to your PATH.
 
-
-**Result:**
-
-On PowerShell 4.0 or later, PDK loads automatically and `pdk` commands are
-available to the prompt.
-
-> **Tip:** If you encounter execution policy restriction errors when you try to
-run `pdk` commands, see [troubleshooting](pdk_troubleshooting.md) for help.
-
 #### What to do next:
 
 To upgrade PDK to the most recent release, run `choco upgrade pdk`
@@ -279,15 +270,6 @@ Download and install the PDK package for Windows systems.
 
 3.  Open a new PowerShell window to re-source your profile and make PDK
     available to your PATH.
-
-
-**Result:**
-
-On PowerShell 4.0 or later, PDK loads automatically and `pdk` commands are
-available to the prompt.
-
-> **Tip:** If you encounter execution policy restriction errors when you try to
-run `pdk` commands, see [troubleshooting](pdk_troubleshooting.md) for help.
 
 ## Setting up PDK behind a proxy
 

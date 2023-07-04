@@ -7,42 +7,133 @@ Upgrade PDK using the same method you used to originally install it. See the PDK
 [installation](pdk_install.md) instructions for your platform for details.
 Then, update your modules to integrate any module template changes.
 
-## Update a module with template changes
+## Upgrading to PDK 3.0.0
 
-Update your module to keep it current with PDK or custom module template
-changes. 
+### Clear the local PDK cache
 
-> **Before you begin**
-> Ensure that the module you are updating is compatible with PDK version 1.3.0 or
-later. If the module was created with versions of PDK earlier than 1.3.0,
-convert the module to the current template with the pdk convert command. See [converting modules](pdk_converting_modules.md) for more
-information.
+When PDK encounters a module with non standard dependencies (added by you or the module author),
+it will cache gems in your user profile.
 
-The `pdk update` function updates your module based on the template you used
-when you created or converted your module. If there have been any changes to
-that template, PDK updates your module to incorporate them.
+On Linux systems the cache can be found in `~/.pdk/cache` and on Windows systems it can be
+found in `$ENV:USERPROFILE\AppData\Local\PDK\cache`.
 
-To check for template changes without making changes, run `update` with the
-`--noop` option. This option runs the command in "no operation" mode, which
-shows what changes would be made, but doesn't actually make them.
+Sometimes gems installed in the cache by older version of PDK can cause conflicts.
+For that reason we recommend clearing the cache before you install PDK 3.0.0.
 
-1.  From the command line, change into the module's directory with `cd
-    <MODULE_NAME>`
+#### On Linux/MacOS
 
-2.  Run the update command: `pdk update`
+```
+rm -rf ~/.pdk/cache
+```
 
-3.  If any module metadata is missing, respond to PDK prompts to provide
-    metadata information.
+#### On Windows
 
-4.  Confirm the change summary PDK displays and either continue or cancel the
-    update. 
+```
+Remove-Item -Path $ENV:USERPROFILE\AppData\Local\PDK\cache -Recurse -Force
+```
 
+### Remove older versions of PDK (optional)
 
-**Result:**
+To be extra sure that you will have a smooth upgrade, you can remove your existing PDK installation.
 
-Whether you confirm or cancel changes, PDK generates a detailed change report,
-`update_report.txt`, in the top directory of the module. This report is updated
-every time you run the `update` command.
+Given that PDK can be installed through a variety of different methods, please consult the documentation
+of the package provider for uninstallation steps.
 
-If you confirm changes, PDK applies the reported changes to the module.
+### Remove the legacy PowerShell module (Windows only)
 
+Versions of PDK prior to 3.0.0 used a PowerShell module to execute the application. This has now been removed as we
+have transitioned to using a batch file as the entry point.
+
+To avoid conflicts when running PDK you should ensure that the PowerShell module has been removed.
+Additionally, if you will need to close and restart any open PowerShell sessions.
+
+If it hasn't, it can easily be removed with a few simple steps:
+
+#### Check if your new install still references the module
+
+From a new PowerShell session, run the following command:
+
+```
+Get-Command -name PDK
+```
+
+#### Check that the module has been removed from the $MODULEPATH
+
+From a new PowerShell session run the following command:
+
+```
+Get-ChildItem -Path 'C:\Program Files\WindowsPowerShell\Modules\'
+```
+
+If the `PuppetDevelopmentKit` module is listed in the output, it can safely be removed.
+
+### Update your modules
+
+PDK 3.0.0 removes support for Puppet 6 and Ruby 2.5.9. Before upgrading you should ensure that your modules
+are compatible with later Puppet and Ruby releases.
+
+Here are the versions of Puppet and Ruby that are included versions in PDK 3.0.0:
+
+* Puppet 8 and Ruby 3.2.2
+* Puppet 7 and Ruby 2.7.8
+
+Once you are satisfied that your modules will support the versions listed above, you should ensure that your
+modules also have the changes from the latest PDK templates.
+
+To do this, simply run `pdk update` inside a module and follow the prompts.
+
+### Troubleshooting issues after upgrading
+
+#### `racc` errors with Ruby 2.7.8 and PDK 3.0.0
+
+You may encounter the following error after upgrading to PDK 3.0.0
+
+```
+  bolt was resolved to 3.23.1, which depends on
+    r10k was resolved to 3.15.4, which depends on
+      gettext-setup was resolved to 1.1.0, which depends on
+        gettext was resolved to 3.4.4, which depends on
+          racc
+```
+
+This happens because newer versions of racc are native gems and therefore require some compilation on installation.
+
+At this time, PDK cannot support all Gems with native extensions.
+
+##### Resolution
+
+To resolve the issue you can either:
+* Run `pdk update`.
+* Manually add the following requirement to your `.sync.yml` and run `pdk update`.
+
+```
+  optional:
+    ":development":
+    - gem: racc
+      version: '~> 1.4.0'
+      condition: if Gem::Requirement.create(['>= 2.7.0', '< 3.0.0']).satisfied_by?(Gem::Version.new(RUBY_VERSION.dup))
+```
+
+#### `github_changelog_enerator` errors with Ruby 2.7.8 and PDK 3.0.0
+
+You may encounter the following error after upgrading to PDK 3.0.0
+
+```
+   github_changelog_generator was resolved to 1.16.4, which depends on
+    async-http-faraday was resolved to 0.12.0, which depends on
+      async-http was resolved to 0.60.2, which depends on
+        async-io was resolved to 1.35.0, which depends on
+          async was resolved to 2.6.2, which depends on
+            io-event
+```
+
+##### Resolution
+
+To resolve this issue you can either:
+
+* Remove github_changelog_generator from your `.sync.yml` and use another solution for changelog generation.
+
+* Set the version requirement to 1.15.2 in your `sync.yml`.
+
+After completing the step of your choice, you will need to run `pdk update` to ensure that your
+Gemfile is updated accordingly.
