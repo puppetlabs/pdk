@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v3.0.0](https://github.com/puppetlabs/pdk/tree/v3.0.0) - 2023-07-04
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.7.1...v3.0.0)
+
+### Added
+
+- (CONT-1053) Update bundle command [#1255](https://github.com/puppetlabs/pdk/pull/1255) ([chelnak](https://github.com/chelnak))
+- (ISS-1123) Verbose output w/ junit file [#1246](https://github.com/puppetlabs/pdk/pull/1246) ([coreymbe](https://github.com/coreymbe))
+- Take "operatingsystem_support" parameter from answer.json [#1165](https://github.com/puppetlabs/pdk/pull/1165) ([me-minus](https://github.com/me-minus))
+
+### Changed
+- (CONT-1134) Bump PDK Templates REF [#1264](https://github.com/puppetlabs/pdk/pull/1264) ([chelnak](https://github.com/chelnak))
+- (CONT-1154) Disable console command [#1263](https://github.com/puppetlabs/pdk/pull/1263) ([chelnak](https://github.com/chelnak))
+- (CONT-1130) Bump PDK gem version [#1260](https://github.com/puppetlabs/pdk/pull/1260) ([chelnak](https://github.com/chelnak))
+- (CONT-1027) Deprecate pe-version option [#1252](https://github.com/puppetlabs/pdk/pull/1252) ([chelnak](https://github.com/chelnak))
+- (CONT-1025) Remove module command [#1250](https://github.com/puppetlabs/pdk/pull/1250) ([chelnak](https://github.com/chelnak))
+- (CONT-1024) Remove config command [#1249](https://github.com/puppetlabs/pdk/pull/1249) ([chelnak](https://github.com/chelnak))
+- (CONT-755) - Bump gem version [#1240](https://github.com/puppetlabs/pdk/pull/1240) ([chelnak](https://github.com/chelnak))
+- (CONT-755) Ruby 3 / Puppet 8 support [#1230](https://github.com/puppetlabs/pdk/pull/1230) ([chelnak](https://github.com/chelnak))
+
+### Fixed
+
+- (CONT-1069) Update compatibility handling [#1259](https://github.com/puppetlabs/pdk/pull/1259) ([chelnak](https://github.com/chelnak))
+- (CONT-935) Fix issues with PDK package and tests [#1248](https://github.com/puppetlabs/pdk/pull/1248) ([chelnak](https://github.com/chelnak))
+
 ## [v2.7.1](https://github.com/puppetlabs/pdk/tree/v2.7.1) - 2023-03-24
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.7.0...v2.7.1)
