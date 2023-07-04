@@ -37,6 +37,8 @@ Metrics/AbcSize:
 # Configuration parameters: CountComments, CountAsOne, AllowedMethods, AllowedPatterns, inherit_mode.
 # AllowedMethods: refine
 Metrics/BlockLength:
+  Exclude:
+    - lib/pdk/cli/console.rb
   Max: 105
 
 # Offense count: 16
