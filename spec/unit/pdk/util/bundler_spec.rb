@@ -60,8 +60,7 @@ RSpec.describe PDK::Util::Bundler do
 
       context 'when there is an existing Gemfile.lock' do
         before do
-          allow(bundle_helper).to receive(:locked?).and_return(true)
-          allow(bundle_helper).to receive(:installed?).and_return(true)
+          allow(bundle_helper).to receive_messages(locked?: true, installed?: true)
         end
 
         it 'updates Gemfile.lock using default sources' do
@@ -83,8 +82,7 @@ RSpec.describe PDK::Util::Bundler do
 
       context 'when there is no Gemfile.lock' do
         before do
-          allow(bundle_helper).to receive(:locked?).and_return(false)
-          allow(bundle_helper).to receive(:installed?).and_return(true)
+          allow(bundle_helper).to receive_messages(locked?: false, installed?: true)
           allow(bundle_helper).to receive(:update_lock!).with(any_args)
         end
 
@@ -97,10 +95,8 @@ RSpec.describe PDK::Util::Bundler do
 
       context 'when there are missing gems' do
         before do
-          allow(bundle_helper).to receive(:locked?).and_return(true)
+          allow(bundle_helper).to receive_messages(locked?: true, installed?: false)
           allow(bundle_helper).to receive(:update_lock!)
-
-          allow(bundle_helper).to receive(:installed?).and_return(false)
         end
 
         it 'installs missing gems' do
@@ -112,10 +108,8 @@ RSpec.describe PDK::Util::Bundler do
 
       context 'when there are no missing gems' do
         before do
-          allow(bundle_helper).to receive(:locked?).and_return(true)
+          allow(bundle_helper).to receive_messages(locked?: true, installed?: true)
           allow(bundle_helper).to receive(:update_lock!)
-
-          allow(bundle_helper).to receive(:installed?).and_return(true)
         end
 
         it 'does not try to install missing gems' do
@@ -127,9 +121,8 @@ RSpec.describe PDK::Util::Bundler do
 
       context 'when everything goes well' do
         before do
-          allow(bundle_helper).to receive(:locked?).and_return(true)
+          allow(bundle_helper).to receive_messages(locked?: true, installed?: true)
           allow(bundle_helper).to receive(:update_lock!)
-          allow(bundle_helper).to receive(:installed?).and_return(true)
         end
 
         it 'marks gemfile as bundled' do

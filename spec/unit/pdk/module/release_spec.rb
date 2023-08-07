@@ -24,8 +24,7 @@ describe PDK::Module::Release do
 
   before do
     # Mimic PDK being run in the root of a module in current working directory
-    allow(PDK::Util).to receive(:find_upwards).and_return(nil)
-    allow(PDK::Util).to receive(:in_module_root?).and_return(true)
+    allow(PDK::Util).to receive_messages(find_upwards: nil, in_module_root?: true)
     allow(Dir).to receive(:pwd).and_return(module_root)
     allow(PDK::Util::ChangelogGenerator).to receive(:changelog_content).and_return('This is a changelog')
 
@@ -170,9 +169,7 @@ describe PDK::Module::Release do
 
     context 'when skipping the build' do
       before do
-        allow(instance).to receive(:skip_build?).and_return(true)
-        allow(instance).to receive(:forge_upload_url).and_return('https://localhost')
-        allow(instance).to receive(:forge_token).and_return('abc123')
+        allow(instance).to receive_messages(skip_build?: true, forge_upload_url: 'https://localhost', forge_token: 'abc123')
       end
 
       it 'uses the default package filename when a file is not specified to publish' do
@@ -190,9 +187,7 @@ describe PDK::Module::Release do
 
     context 'when running the build helper' do
       before do
-        allow(instance).to receive(:skip_build?).and_return(false)
-        allow(instance).to receive(:forge_upload_url).and_return('https://localhost')
-        allow(instance).to receive(:forge_token).and_return('abc123')
+        allow(instance).to receive_messages(skip_build?: false, forge_upload_url: 'https://localhost', forge_token: 'abc123')
       end
 
       it 'uses the built tarball to publish' do
@@ -238,9 +233,7 @@ describe PDK::Module::Release do
     # under test really needs to be refactored
 
     before do
-      allow(PDK::CLI::Util).to receive(:validate_puppet_version_opts).and_return(nil)
-      allow(PDK::CLI::Util).to receive(:module_version_check).and_return(nil)
-      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(gemset: {}, ruby_version: '1.2.3')
+      allow(PDK::CLI::Util).to receive_messages(validate_puppet_version_opts: nil, module_version_check: nil, puppet_from_opts_or_env: { gemset: {}, ruby_version: '1.2.3' })
       allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev).and_return(nil)
       allow(PDK::Util::RubyVersion).to receive(:use).and_return(nil)
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!).and_return(nil)
@@ -321,8 +314,7 @@ describe PDK::Module::Release do
     # under test really needs to be refactored
 
     before do
-      allow(instance).to receive(:forge_token).and_return('abc123')
-      allow(instance).to receive(:forge_upload_url).and_return('https://badapi.puppetlabs.com/v3/releases')
+      allow(instance).to receive_messages(forge_token: 'abc123', forge_upload_url: 'https://badapi.puppetlabs.com/v3/releases')
       allow(PDK::Util::Filesystem).to receive(:file?).with(tarball_path).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(tarball_path, Hash).and_return('tarball_contents')
       allow(Net::HTTP).to receive(:start).and_return(http_response)
@@ -358,21 +350,17 @@ describe PDK::Module::Release do
     end
 
     it 'raises when missing the forge upload url' do
-      allow(instance).to receive(:forge_upload_url).and_return(nil)
-      allow(instance).to receive(:forge_token).and_return('abc123')
+      allow(instance).to receive_messages(forge_upload_url: nil, forge_token: 'abc123')
       expect { instance.validate_publish_options! }.to raise_error(PDK::CLI::ExitWithError)
     end
 
     it 'raises when missing the forge token' do
-      allow(instance).to receive(:forge_upload_url).and_return('https://localhost')
-      allow(instance).to receive(:forge_token).and_return(nil)
+      allow(instance).to receive_messages(forge_upload_url: 'https://localhost', forge_token: nil)
       expect { instance.validate_publish_options! }.to raise_error(PDK::CLI::ExitWithError)
     end
 
     it 'does not raise when publishing is skipped' do
-      allow(instance).to receive(:skip_publish?).and_return(true)
-      allow(instance).to receive(:forge_upload_url).and_return(nil)
-      allow(instance).to receive(:forge_token).and_return(nil)
+      allow(instance).to receive_messages(skip_publish?: true, forge_upload_url: nil, forge_token: nil)
       expect { instance.validate_publish_options! }.not_to raise_error
     end
   end

@@ -12,8 +12,7 @@ describe PDK::Validate::ExternalCommandValidator do
   let(:report) { PDK::Report.new }
 
   before do
-    allow(validator).to receive(:name).and_return('mock_name')
-    allow(validator).to receive(:parse_targets).and_return(parsed_targets)
+    allow(validator).to receive_messages(name: 'mock_name', parse_targets: parsed_targets)
   end
 
   describe '.spinner' do
@@ -249,10 +248,9 @@ describe PDK::Validate::ExternalCommandValidator do
 
       before do
         # Disable the spinners
-        allow(validator).to receive(:spinners_enabled?).and_return(false)
+        allow(validator).to receive_messages(spinners_enabled?: false, invoke_style: :per_target)
         allow(PDK::Util::Bundler).to receive(:ensure_binstubs!).and_return(nil)
         # Force a command per target to test the execution grouping
-        allow(validator).to receive(:invoke_style).and_return(:per_target)
         allow(PDK::CLI::Exec::Command).to receive(:new).and_return(success_command, fail_command2, fail_command1)
       end
 

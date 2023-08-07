@@ -105,8 +105,7 @@ describe PDK::CLI::Exec::Command do
       before do
         command.context = :system
         expect(process).to receive(:start).with(no_args)
-        allow(process).to receive(:exit_code).and_return 0
-        allow(process).to receive(:environment).and_return({})
+        allow(process).to receive_messages(exit_code: 0, environment: {})
       end
 
       it { expect { command.execute! }.not_to raise_error }

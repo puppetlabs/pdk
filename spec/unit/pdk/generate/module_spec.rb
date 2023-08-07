@@ -24,8 +24,7 @@ shared_context 'mock template dir' do
     allow(renderer).to receive(:render).and_yield(*yielded_file)
 
     allow(test_template_path).to receive(:+).with(anything).and_return(test_template_path)
-    allow(test_template_path).to receive(:dirname).and_return(test_template_path)
-    allow(test_template_path).to receive(:relative?).and_return(true)
+    allow(test_template_path).to receive_messages(dirname: test_template_path, relative?: true)
     # TODO: This is overkill. e.g. this breaks using 'require 'pry'; binding.pry'.
     allow(Pathname).to receive(:new).with(anything).and_return(test_template_path)
     allow(PDK::Util::Filesystem).to receive(:write_file)
@@ -88,8 +87,7 @@ describe PDK::Generate::Module do
         allow(described_class).to receive(:prepare_module_directory).with(temp_target_dir)
         allow(PDK::Util::Filesystem).to receive(:write_file).with(/pdk-test-writable/, anything) { raise Errno::EACCES unless target_parent_writeable }
         allow(PDK::Util::Filesystem).to receive(:rm_f).with(/pdk-test-writable/)
-        allow(PDK::Util).to receive(:module_root).and_return(nil)
-        allow(PDK::Util).to receive(:package_install?).and_return(false)
+        allow(PDK::Util).to receive_messages(module_root: nil, package_install?: false)
       end
 
       context 'when the parent directory of the target is not writable' do
@@ -256,8 +254,7 @@ describe PDK::Generate::Module do
         context 'and no template-url answer exists' do
           context 'and pdk is installed from packages' do
             before do
-              allow(PDK::Util).to receive(:package_install?).and_return(true)
-              allow(PDK::Util).to receive(:package_cachedir).and_return('/tmp/package/cache')
+              allow(PDK::Util).to receive_messages(package_install?: true, package_cachedir: '/tmp/package/cache')
             end
 
             it 'uses the vendored template url' do

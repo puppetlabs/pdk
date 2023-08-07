@@ -33,7 +33,7 @@ module PDK
 
         output = changelog_content
 
-        raise PDK::CLI::ExitWithError, format('The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details', changelog_file: changelog_file) if output.include?('UNCATEGORIZED PRS; GO LABEL THEM') # rubocop:disable Metrics/LineLength
+        raise PDK::CLI::ExitWithError, format('The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details', changelog_file: changelog_file) if output.include?('UNCATEGORIZED PRS; GO LABEL THEM') # rubocop:disable Layout/LineLength
 
         output
       end

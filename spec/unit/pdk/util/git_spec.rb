@@ -84,8 +84,7 @@ describe PDK::Util::Git do
 
       context 'when maybe_repo has neither a working tree or a bare repository' do
         before do
-          allow(described_class).to receive(:bare_repo?).and_return(false)
-          allow(described_class).to receive(:work_tree?).and_return(false)
+          allow(described_class).to receive_messages(bare_repo?: false, work_tree?: false)
         end
 
         it { is_expected.to be_falsey }

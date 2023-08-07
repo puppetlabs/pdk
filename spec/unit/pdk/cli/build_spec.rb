@@ -62,8 +62,7 @@ describe 'PDK::CLI build' do
 
     context 'and the module contains incomplete metadata' do
       before do
-        allow(mock_metadata_obj).to receive(:forge_ready?).and_return(false)
-        allow(mock_metadata_obj).to receive(:missing_fields).and_return(['operatingsystem_support', 'source'])
+        allow(mock_metadata_obj).to receive_messages(forge_ready?: false, missing_fields: ['operatingsystem_support', 'source'])
         allow(PDK::Module::Build).to receive(:new).with(any_args).and_return(mock_builder)
       end
 
@@ -146,8 +145,7 @@ describe 'PDK::CLI build' do
 
     context 'package already exists in the target dir' do
       before do
-        allow(mock_builder).to receive(:package_already_exists?).and_return(true)
-        allow(mock_builder).to receive(:module_pdk_compatible?).and_return(true)
+        allow(mock_builder).to receive_messages(package_already_exists?: true, module_pdk_compatible?: true)
       end
 
       context 'user chooses to continue' do
@@ -181,8 +179,7 @@ describe 'PDK::CLI build' do
 
     context 'and module is not pdk compatible' do
       before do
-        allow(mock_builder).to receive(:package_already_exists?).and_return(false)
-        allow(mock_builder).to receive(:module_pdk_compatible?).and_return(false)
+        allow(mock_builder).to receive_messages(package_already_exists?: false, module_pdk_compatible?: false)
       end
 
       context 'user chooses to continue' do

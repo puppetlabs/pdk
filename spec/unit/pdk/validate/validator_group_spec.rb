@@ -15,8 +15,7 @@ describe PDK::Validate::ValidatorGroup do
   describe '.spinner' do
     context 'when spinners are enabled' do
       before do
-        allow(validator_group).to receive(:spinners_enabled?).and_return(true)
-        allow(validator_group).to receive(:validators).and_return([MockSuccessValidator])
+        allow(validator_group).to receive_messages(spinners_enabled?: true, validators: [MockSuccessValidator])
       end
 
       it 'returns a TTY Multi Spinner with spinner text' do

@@ -101,9 +101,7 @@ describe 'PDK::CLI update' do
 
     before do
       allow(PDK).to receive(:context).and_return(pdk_context)
-      allow(PDK::Util).to receive(:module_root).and_return(module_root)
-      allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
-      allow(PDK::Util).to receive(:module_pdk_version).and_return(module_pdk_version)
+      allow(PDK::Util).to receive_messages(module_root: module_root, module_pdk_compatible?: true, module_pdk_version: module_pdk_version)
     end
 
     context 'and provided no flags' do
@@ -232,8 +230,7 @@ describe 'PDK::CLI update' do
 
   context 'when run from inside an unconverted module' do
     before do
-      allow(PDK::Util).to receive(:module_root).and_return(module_root)
-      allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(false)
+      allow(PDK::Util).to receive_messages(module_root: module_root, module_pdk_compatible?: false)
     end
 
     context 'and provided no flags' do
