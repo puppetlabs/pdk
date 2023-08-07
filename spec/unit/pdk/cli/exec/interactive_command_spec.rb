@@ -68,9 +68,8 @@ describe PDK::CLI::Exec::InteractiveCommand do
 
     before do
       # rubocop:disable RSpec/SubjectStub
-      allow(command).to receive(:resolved_env_for_command).and_return(environment)
+      allow(command).to receive_messages(resolved_env_for_command: environment, child_status: child_status)
       allow(command).to receive(:system) # Kernel is a mixed-in module
-      allow(command).to receive(:child_status).and_return(child_status)
       # rubocop:enable RSpec/SubjectStub
     end
 

@@ -398,9 +398,8 @@ describe PDK::Module::Update do
 
           context 'and PDK is running from a package install' do
             before do
-              allow(PDK::Util).to receive(:package_install?).and_return(true)
+              allow(PDK::Util).to receive_messages(package_install?: true, package_cachedir: File.join('package', 'cachedir'))
               allow(PDK::Util::Version).to receive(:git_ref).and_return('1234acb')
-              allow(PDK::Util).to receive(:package_cachedir).and_return(File.join('package', 'cachedir'))
             end
 
             it 'returns the default ref' do

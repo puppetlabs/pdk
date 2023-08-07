@@ -18,8 +18,7 @@ describe PDK::Util::VendoredFile do
     let(:gem_vendored_content) { 'gem file content' }
 
     before do
-      allow(PDK::Util).to receive(:package_cachedir).and_return(package_cachedir)
-      allow(PDK::Util).to receive(:cachedir).and_return(cachedir)
+      allow(PDK::Util).to receive_messages(package_cachedir: package_cachedir, cachedir: cachedir)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(package_vendored_path).and_return(package_vendored_content)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(gem_vendored_path).and_return(gem_vendored_content)
     end
@@ -66,8 +65,7 @@ describe PDK::Util::VendoredFile do
         context 'and the download succeeded' do
           before do
             allow(mock_http).to receive(:request).with(mock_request).and_return(mock_response)
-            allow(mock_response).to receive(:code).and_return('200')
-            allow(mock_response).to receive(:body).and_return(gem_vendored_content)
+            allow(mock_response).to receive_messages(code: '200', body: gem_vendored_content)
             allow(PDK::Util::Filesystem).to receive(:mkdir_p).with(File.dirname(gem_vendored_path))
             allow(PDK::Util::Filesystem).to receive(:write_file).with(any_args)
           end
@@ -87,8 +85,7 @@ describe PDK::Util::VendoredFile do
         context 'and the download failed' do
           before do
             allow(mock_http).to receive(:request).with(anything).and_return(mock_response)
-            allow(mock_response).to receive(:code).and_return('404')
-            allow(mock_response).to receive(:message).and_return('file not found')
+            allow(mock_response).to receive_messages(code: '404', message: 'file not found')
           end
 
           it 'raises a DownloadError' do

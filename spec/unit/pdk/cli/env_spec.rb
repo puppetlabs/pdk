@@ -13,10 +13,8 @@ describe 'Running `pdk env`' do
     end
 
     before do
-      allow(PDK::Util::RubyVersion).to receive(:gem_home).and_return('/opt/puppetlabs/pdk/share/cache/ruby/2.4.0')
-      allow(PDK::Util::RubyVersion).to receive(:gem_path).and_return('/opt/puppetlabs/pdk/private/ruby/2.4.3/lib')
-      allow(PDK::Util::RubyVersion).to receive(:bin_path).and_return('/opt/puppetlabs/pdk/private/ruby/2.4.3/bin')
-      allow(PDK::Util::RubyVersion).to receive(:gem_paths_raw).and_return(['/opt/puppetlabs/pdk/private/ruby/2.4.3/lib'])
+      allow(PDK::Util::RubyVersion).to receive_messages(gem_home: '/opt/puppetlabs/pdk/share/cache/ruby/2.4.0', gem_path: '/opt/puppetlabs/pdk/private/ruby/2.4.3/lib',
+                                                        bin_path: '/opt/puppetlabs/pdk/private/ruby/2.4.3/bin', gem_paths_raw: ['/opt/puppetlabs/pdk/private/ruby/2.4.3/lib'])
       allow(PDK::Util::Env).to receive(:[]).and_call_original
       allow(PDK::Util::Env).to receive(:[]).with('PATH').and_return('/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin')
 

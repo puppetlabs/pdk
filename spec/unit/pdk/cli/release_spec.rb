@@ -84,8 +84,7 @@ describe 'PDK::CLI release' do
 
     context 'With a module that is not forge ready' do
       before do
-        allow(mock_metadata_obj).to receive(:forge_ready?).and_return(false)
-        allow(mock_metadata_obj).to receive(:missing_fields).and_return(['mock_field'])
+        allow(mock_metadata_obj).to receive_messages(forge_ready?: false, missing_fields: ['mock_field'])
       end
 
       it 'raises a warning' do

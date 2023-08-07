@@ -11,8 +11,7 @@ describe PDK::Util::TemplateURI do
 
   before do
     PDK.config.set(['user', 'module_defaults', 'template-url'], nil)
-    allow(PDK::Util).to receive(:module_root).and_return(nil)
-    allow(PDK::Util).to receive(:package_install?).and_return(false)
+    allow(PDK::Util).to receive_messages(module_root: nil, package_install?: false)
   end
 
   describe '.new' do
@@ -99,8 +98,7 @@ describe PDK::Util::TemplateURI do
 
       before do
         allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
-        allow(PDK::Util).to receive(:module_root).and_return(module_root)
-        allow(PDK::Util).to receive(:development_mode?).and_return(false)
+        allow(PDK::Util).to receive_messages(module_root: module_root, development_mode?: false)
       end
 
       context 'when passed no options' do
@@ -495,8 +493,7 @@ describe PDK::Util::TemplateURI do
       end
 
       before do
-        allow(PDK::Util).to receive(:module_root).and_return('/path/to/module')
-        allow(PDK::Util).to receive(:development_mode?).and_return(false)
+        allow(PDK::Util).to receive_messages(module_root: '/path/to/module', development_mode?: false)
         allow(PDK::Module::Metadata).to receive(:from_file).with('/path/to/module/metadata.json').and_return(mock_metadata)
         allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/module/metadata.json').and_return(true)
         allow(PDK::Util::Filesystem).to receive(:file?).with(/PDK_VERSION/).and_return(true)
@@ -653,8 +650,7 @@ describe PDK::Util::TemplateURI do
 
     context 'when running PDK from a package' do
       before do
-        allow(PDK::Util).to receive(:package_install?).and_return(true)
-        allow(PDK::Util).to receive(:pdk_package_basedir).and_return('/opt/puppetlabs/pdk')
+        allow(PDK::Util).to receive_messages(package_install?: true, pdk_package_basedir: '/opt/puppetlabs/pdk')
       end
 
       context 'and using the packaged windows template' do

@@ -12,8 +12,7 @@ describe PDK::Validate::InternalRubyValidator do
   let(:report) { PDK::Report.new }
 
   before do
-    allow(validator).to receive(:name).and_return('mock_name')
-    allow(validator).to receive(:parse_targets).and_return(parsed_targets)
+    allow(validator).to receive_messages(name: 'mock_name', parse_targets: parsed_targets)
   end
 
   describe '.prepare_invoke!' do

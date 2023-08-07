@@ -25,8 +25,7 @@ describe PDK::Generate::PuppetObject do
 
   before do
     stub_const('PDK::Generate::PuppetObject::OBJECT_TYPE', object_type)
-    allow(PDK::Util).to receive(:package_install?).and_return(false)
-    allow(PDK::Util).to receive(:module_root).and_return(module_dir)
+    allow(PDK::Util).to receive_messages(package_install?: false, module_root: module_dir)
   end
 
   describe '#spec_only?' do
@@ -133,9 +132,7 @@ describe PDK::Generate::PuppetObject do
 
     before do
       # Mock required PuppetObject methods
-      allow(templated_object).to receive(:friendly_name).and_return('spec_object')
-      allow(templated_object).to receive(:template_files).and_return('source' => 'target')
-      allow(templated_object).to receive(:templates).and_return(templates)
+      allow(templated_object).to receive_messages(friendly_name: 'spec_object', template_files: { 'source' => 'target' }, templates: templates)
 
       allow(PDK::Template).to receive(:with) # An unknown uri will not yield
       allow(PDK::Template).to receive(:with).with(uri_of('expected1'), pdk_context).and_yield(expected1_template_dir)
@@ -213,12 +210,9 @@ describe PDK::Generate::PuppetObject do
 
     before do
       # Mock required PuppetObject methods
-      allow(templated_object).to receive(:template_files).and_return(template_files)
-      allow(templated_object).to receive(:template_data).and_return({})
-      allow(templated_object).to receive(:friendly_name).and_return('spec_object')
-      allow(templated_object).to receive(:non_template_files).and_return(non_template_files)
+      allow(templated_object).to receive_messages(template_files: template_files, template_data: {}, friendly_name: 'spec_object', non_template_files: non_template_files,
+                                                  update_manager_instance: update_manager)
       # Mock external objects
-      allow(templated_object).to receive(:update_manager_instance).and_return(update_manager)
       allow(templated_object).to receive(:with_templates).and_yield(template_dir)
       # Mock rendering of the template file
       allow(template_dir).to receive(:render_single_item).and_return('mock response')

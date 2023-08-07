@@ -21,9 +21,7 @@ describe PDK::Util::RubyVersion do
     end
 
     before do
-      allow(PDK::Util).to receive(:package_install?).and_return(true)
-      allow(PDK::Util).to receive(:pdk_package_basedir).and_return(pdk_package_basedir)
-      allow(PDK::Util).to receive(:package_cachedir).and_return(package_cachedir)
+      allow(PDK::Util).to receive_messages(package_install?: true, pdk_package_basedir: pdk_package_basedir, package_cachedir: package_cachedir)
       allow(described_class).to receive(:scan_for_packaged_rubies).and_return(packaged_rubies)
     end
   end
@@ -69,8 +67,7 @@ describe PDK::Util::RubyVersion do
       include_context 'is a package install'
 
       before do
-        allow(described_class).to receive(:versions).and_return(packaged_rubies)
-        allow(described_class).to receive(:default_ruby_version).and_return('2.4.4')
+        allow(described_class).to receive_messages(versions: packaged_rubies, default_ruby_version: '2.4.4')
       end
 
       it 'includes the path to the packaged ruby cachedir' do
@@ -170,9 +167,8 @@ describe PDK::Util::RubyVersion do
     end
 
     before do
-      allow(instance).to receive(:gem_path).and_return(gem_path)
+      allow(instance).to receive_messages(gem_path: gem_path, gem_home: gem_home)
       allow(PDK::Util::Filesystem).to receive(:glob).with(gem_path_pattern).and_return(gem_path_results.keys)
-      allow(instance).to receive(:gem_home).and_return(gem_home)
       allow(PDK::Util::Filesystem).to receive(:glob).with(gem_home_pattern).and_return(gem_home_results.keys)
 
       gem_path_results.merge(gem_home_results).each do |spec_path, spec_definition|
