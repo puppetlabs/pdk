@@ -56,7 +56,7 @@ Runs Ruby style checks. Use `rake rubocop:auto_correct` to fix the easy ones.
 
 ## acceptance:local
 
-Runs acceptance tests on the current pdk code. These tests are executed on commits and pull requests to this repo using both travis and appveyor.
+Runs acceptance tests on the current pdk code. These tests are executed on commits and pull requests to this repo using appveyor.
 
 # Testing packages
 
