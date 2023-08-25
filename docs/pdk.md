@@ -34,6 +34,7 @@ validate, and test modules.
             <li><a class="xref" href="customizing_module_config.md">Customizing module configuration</a></li>
             <li><a class="xref" href="pdk_building_module_packages.md">Building a module package</a></li>
         </ul>
+    </p>
     <p>Testing modules
         <ul>
             <li><a class="xref" href="pdk_testing.md#validating-modules">Validating module syntax and style</a></li>
