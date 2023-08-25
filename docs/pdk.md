@@ -34,7 +34,6 @@ validate, and test modules.
             <li><a class="xref" href="customizing_module_config.md">Customizing module configuration</a></li>
             <li><a class="xref" href="pdk_building_module_packages.md">Building a module package</a></li>
         </ul>
-    </p>
     <p>Testing modules
         <ul>
             <li><a class="xref" href="pdk_testing.md#validating-modules">Validating module syntax and style</a></li>
@@ -49,7 +48,7 @@ validate, and test modules.
     </p>
    </td>
    <td>
-      <p>Learning to write Puppet code
+      <p>Learning to write Puppet® code
             <ul>
                 <li><a class="xref" href="https://puppet.com/docs/puppet/latest/modules_fundamentals.html" target="_blank">Module fundamentals</a></li>
                 <li><a class="xref" href="https://puppet.com/docs/puppet/latest/bgtm.html" target="_blank">Beginner's guide to writing modules</a></li>

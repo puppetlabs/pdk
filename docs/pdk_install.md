@@ -307,7 +307,7 @@ below about opting out.
 
 We collect these values for every analytics event:
 
--   A random non-identifying user ID. This ID is shared with Bolt analytics, if
+-   A random non-identifying user ID. This ID is shared with Puppet Bolt® analytics, if
     you've installed Bolt and enabled analytics.
 -   PDK installation method (`package` or `gem`).
 -   Version of PDK.
