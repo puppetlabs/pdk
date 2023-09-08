@@ -29,7 +29,7 @@ the converted module.
 ![Diagram of PDK commands in the development workflow.](pdk-workflow.png)
 
 When you validate and run unit tests on your module, you can check it against
-specific versions of Puppet and PE. This can help you ensure compatibility with
+specific versions of Puppet and Puppet Enterprise® (PE). This can help you ensure compatibility with
 multiple versions of Puppet and make upgrades smoother. 
 
 PDK can unit test code that it generates, but for any other code you add, you'll
