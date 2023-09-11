@@ -1,7 +1,7 @@
 require 'spec_helper_acceptance'
 require 'fileutils'
 
-describe 'pdk test unit', module_command: true do
+describe 'pdk test unit', :module_command do
   include_context 'with a fake TTY'
 
   shared_context 'with spec file' do |filename, content|

@@ -1,7 +1,7 @@
 require 'spec_helper_acceptance'
 require 'fileutils'
 
-describe 'pdk validate puppet', module_command: true do
+describe 'pdk validate puppet', :module_command do
   let(:epp_spinner_text) { /checking puppet EPP syntax/i }
   let(:syntax_spinner_text) { /checking puppet manifest syntax/i }
   let(:lint_spinner_text) { /checking puppet manifest style/i }

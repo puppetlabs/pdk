@@ -16,7 +16,7 @@ describe PDK::Util do
     )
   end
 
-  shared_context 'with version file', version_file: true do
+  shared_context 'with version file', :version_file do
     let(:version_file) { File.join('path', 'to', 'the', 'version', 'file') }
 
     before do
@@ -154,7 +154,7 @@ describe PDK::Util do
       it { is_expected.to be false }
     end
 
-    context 'when a version file is present', version_file: true do
+    context 'when a version file is present', :version_file do
       it { is_expected.to be true }
     end
   end
@@ -200,7 +200,7 @@ describe PDK::Util do
       it { is_expected.to be true }
     end
 
-    context 'when a version file is present', version_file: true do
+    context 'when a version file is present', :version_file do
       it { is_expected.to be false }
     end
 
@@ -224,7 +224,7 @@ describe PDK::Util do
       end
     end
 
-    context 'when the PDK was installed from a native package', version_file: true do
+    context 'when the PDK was installed from a native package', :version_file do
       it 'returns the directory where the version file is located' do
         expect(subject).to eq(File.dirname(version_file))
       end
@@ -242,7 +242,7 @@ describe PDK::Util do
       end
     end
 
-    context 'when the PDK was installed from a native package', version_file: true do
+    context 'when the PDK was installed from a native package', :version_file do
       it 'returns the path to the share/cache directory in the package' do
         expect(subject).to eq(File.join(File.dirname(version_file), 'share', 'cache'))
       end

@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk new provider', module_command: true do
+describe 'pdk new provider', :module_command do
   def update_module!
     command('pdk update --force').exit_status
   end

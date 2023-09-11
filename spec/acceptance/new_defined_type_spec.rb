@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk new defined_type', module_command: true do
+describe 'pdk new defined_type', :module_command do
   shared_examples 'it creates a defined type' do |options|
     describe file(options[:manifest]) do
       it { is_expected.to be_file }

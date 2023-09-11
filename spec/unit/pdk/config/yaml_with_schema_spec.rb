@@ -4,7 +4,7 @@ require 'tempfile'
 
 # Note that the JSON Schema Gem is too unreliable for testing right now.
 # For the moment, all tests are skipped here.
-describe PDK::Config::YAMLWithSchema, skip: true do
+describe PDK::Config::YAMLWithSchema, :skip do
   subject(:yaml_config) { described_class.new(file: tempfile, schema_file: temp_schema_file) }
 
   let(:tempfile) do

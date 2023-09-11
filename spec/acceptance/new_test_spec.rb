@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk new test', module_command: true do
+describe 'pdk new test', :module_command do
   context 'in a new module' do
     include_context 'in a new module', 'new_unit_test'
 

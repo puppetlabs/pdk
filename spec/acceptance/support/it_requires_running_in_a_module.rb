@@ -1,6 +1,6 @@
 require 'fileutils'
 
-RSpec.shared_examples('it requires running from inside a module', module_command: true) do
+RSpec.shared_examples('it requires running from inside a module', :module_command) do
   context 'when run outside of a module' do
     before(:all) do
       Dir.mkdir('empty_test_dir')

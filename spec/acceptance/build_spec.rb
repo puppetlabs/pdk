@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk build', module_command: true do
+describe 'pdk build', :module_command do
   context 'when run inside of a module' do
     include_context 'in a new module', 'build'
 

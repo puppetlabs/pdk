@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk new function', module_command: true do
+describe 'pdk new function', :module_command do
   shared_examples 'it creates a function' do |_options|
     context 'in a new module' do
       include_context 'in a new module', 'new_function'

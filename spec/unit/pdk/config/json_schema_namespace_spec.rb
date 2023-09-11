@@ -9,7 +9,7 @@ end
 
 # Note that the JSON Schema Gem is too unreliable for testing right now.
 # For the moment, all tests are skipped here.
-describe PDK::Config::JSONSchemaNamespace, skip: true do
+describe PDK::Config::JSONSchemaNamespace, :skip do
   subject(:namespace) { described_class.new('spec', schema_file: temp_schema_file) }
 
   let(:temp_schema_file) do

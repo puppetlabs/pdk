@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk validate', module_command: true do
+describe 'pdk validate', :module_command do
   include_context 'with a fake TTY'
 
   context 'when run inside of a module' do

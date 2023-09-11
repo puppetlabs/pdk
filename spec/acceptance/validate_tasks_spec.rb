@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk validate tasks', module_command: true do
+describe 'pdk validate tasks', :module_command do
   let(:task_style_spinner) { /checking task metadata style/i }
   let(:task_name_spinner) { /checking task name/i }
 

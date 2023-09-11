@@ -6,7 +6,7 @@ require 'spec_helper_acceptance'
 template_repo = 'https://github.com/puppetlabs/pdk-templates'
 pdk_convert_base = "pdk convert --template-url=#{template_repo}"
 
-describe 'pdk convert', module_command: true do
+describe 'pdk convert', :module_command do
   context 'with a fresh module' do
     include_context 'in a new module', 'clean_module', template: template_repo
 
