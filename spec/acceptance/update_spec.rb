@@ -5,7 +5,7 @@ require 'spec_helper_acceptance'
 # key).
 template_repo = 'https://github.com/puppetlabs/pdk-templates'
 
-describe 'pdk update', module_command: true do
+describe 'pdk update', :module_command do
   context 'when run inside of a module' do
     include_context 'in a new module', 'update', template: template_repo
 

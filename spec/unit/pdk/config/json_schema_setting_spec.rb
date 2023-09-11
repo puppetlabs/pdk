@@ -3,7 +3,7 @@ require 'pdk/config/json_schema_setting'
 
 # Note that the JSON Schema Gem is too unreliable for testing right now.
 # For the moment, all tests are skipped here.
-describe PDK::Config::JSONSchemaSetting, skip: true do
+describe PDK::Config::JSONSchemaSetting, :skip do
   subject(:setting) { described_class.new('spec_setting', namespace, initial_value) }
 
   let(:initial_value) { nil }

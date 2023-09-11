@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk validate metadata', module_command: true do
+describe 'pdk validate metadata', :module_command do
   let(:metadata_syntax_spinner) { /checking metadata syntax/i }
   let(:module_style_spinner) { /checking module metadata style/i }
   let(:task_style_spinner) { /checking task metadata style/i }

@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'pdk new class', module_command: true do
+describe 'pdk new class', :module_command do
   shared_examples 'it creates a class' do |options|
     describe file(options[:manifest]) do
       it { is_expected.to be_file }

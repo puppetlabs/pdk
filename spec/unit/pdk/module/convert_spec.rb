@@ -82,7 +82,7 @@ describe PDK::Module::Convert do
     end
   end
 
-  describe '.new', after_hook: true do
+  describe '.new', :after_hook do
     let(:instance) { described_class.new(module_root, options) }
     let(:options) { {} }
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
@@ -109,7 +109,7 @@ describe PDK::Module::Convert do
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!)
     end
 
-    after(:each, after_hook: true) do
+    after(:each, :after_hook) do
       instance.run
     end
 
