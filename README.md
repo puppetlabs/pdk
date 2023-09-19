@@ -1,6 +1,8 @@
 # pdk
 
-[![ci](https://github.com/puppetlabs/pdk/actions/workflows/ci.yml/badge.svg)](https://github.com/puppetlabs/pdk/actions/workflows/ci.yml) [![Gem Version](https://badge.fury.io/rb/pdk.svg)](https://badge.fury.io/rb/pdk)
+[![Code Owners](https://img.shields.io/badge/owners-DevX--team-blue)](https://github.com/puppetlabs/pdk/blob/main/CODEOWNERS)
+[![ci](https://github.com/puppetlabs/pdk/actions/workflows/ci.yml/badge.svg)](https://github.com/puppetlabs/pdk/actions/workflows/ci.yml) 
+[![Gem Version](https://badge.fury.io/rb/pdk.svg)](https://badge.fury.io/rb/pdk)
 
 * [Installation](#installation)
 * [Basic usage](#basic-usage)
