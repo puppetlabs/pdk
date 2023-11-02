@@ -27,6 +27,11 @@ module PDK
       end
       module_function :read_file
 
+      def make_executable(file)
+        FileUtils.chmod('a+x', file)
+      end
+      module_function :make_executable
+
       # :nocov:
       # These methods just wrap core Ruby functionality and
       # can be ignored for code coverage
@@ -133,6 +138,11 @@ module PDK
         end
       end
       module_function :mv
+
+      def executable?(*args)
+        File.executable?(*args)
+      end
+      module_function :executable?
       # :nocov:
     end
   end

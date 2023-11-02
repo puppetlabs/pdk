@@ -88,7 +88,7 @@ describe PDK::Module::Convert do
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
     let(:template_dir) { instance_double(PDK::Template::TemplateDir, metadata: {}) }
     let(:metadata) { instance_double(PDK::Module::Metadata, data: {}) }
-    let(:template_files) { { path: 'a/path/to/file', content: 'file contents', status: :manage } }
+    let(:template_files) { { path: 'a/path/to/file', content: 'file contents', status: :manage, executable: false } }
     let(:added_files) { Set.new }
     let(:removed_files) { Set.new }
     let(:modified_files) { {} }
@@ -100,7 +100,7 @@ describe PDK::Module::Convert do
       allow(instance).to receive(:update_metadata).with(any_args).and_return(metadata)
       allow(PDK::Template).to receive(:with).with(anything, anything).and_yield(template_dir)
       allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
-      allow(template_dir).to receive(:render_new_module).and_yield(template_files[:path], template_files[:content], template_files[:status])
+      allow(template_dir).to receive(:render_new_module).and_yield(template_files[:path], template_files[:content], template_files[:status], template_files[:executable])
       allow(update_manager).to receive(:changes).and_return(changes)
       allow(update_manager).to receive(:changed?).with('Gemfile').and_return(false)
       allow(update_manager).to receive(:unlink_file).with('Gemfile.lock')
