@@ -95,7 +95,9 @@ module PDK
                 end
               end
 
-              yield dest_path, dest_content, dest_status
+              dest_executable = config['manage_execute_permissions'] && PDK::Util::Filesystem.executable?(File.join(template_loc, template_file))
+
+              yield dest_path, dest_content, dest_status, dest_executable
             end
           end
           # :nocov:
