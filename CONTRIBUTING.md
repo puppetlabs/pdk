@@ -3,18 +3,21 @@
 ## Reporting Bugs
 
 We welcome error reports and patches to the PDK repository.
-If you have discovered an issue, please raise it here: https://github.com/puppetlabs/pdk/issues
-PRs to resolve issues discovered are greatly appreciated - please start a Discussion [here](https://github.com/puppetlabs/pdk/discussions) or post a question to [puppet-users@groups.google.com](https://groups.google.com/forum/#!forum/puppet-users).
+If you have discovered an issue, you can raise it [here](https://github.com/puppetlabs/pdk/issues) or reach out to us directly on the [Puppet Community Slack](https://slack.puppet.com/).
+
+In addition if there is something that you do not understand, or a point that you wish to clarify you can start a Discussion [here](https://github.com/puppetlabs/pdk/discussions) or post a question to [puppet-users@groups.google.com](https://groups.google.com/forum/#!forum/puppet-users).
+
+Finally if you have a fix for an issue you can open a PR to resolve it [here](https://github.com/puppetlabs/pdk/pulls).
 
 ## Raising Feature Requests
 
 Feature requests are also welcome.
 To raise a request, please start a ['Feature Request' Discussion](https://github.com/puppetlabs/pdk/discussions/categories/feature-request).
-After there is consensus on how to proceed, a Discussion will be converted in to a Feature Issue and prioritized, accordingly.
+Once there is consensus on how to proceed, we can then create a ticket for our backlog and plan for bringing it in to a future sprint.
 
 # Running from source
 
-If you need to run `pdk` in a working directory outside the cloned repository, either set `BUNDLE_GEMFILE` to the pdk's Gemfile location, or install and use the [binstubs of bundler](http://bundler.io/v1.15/bundle_binstubs.html). These binstubs are small proxy binaries that set up the environment for running the tool.
+If you need to run `pdk` in a working directory outside the cloned repository, either set `BUNDLE_GEMFILE` to the pdk's Gemfile location, or install and use the [binstubs of bundler](http://bundler.io/bundle_binstubs.html). These binstubs are small proxy binaries that set up the environment for running the tool.
 
 ```
 # assuming ~/bin is already on your path:
@@ -70,7 +73,7 @@ Environment Variable | Usage
 *--or--* |
 **LOCAL_PKG** | Full path to a locally built package that you want to test.
 **TEST_TARGET** | A beaker-hostgenerator string for the OS of the VM you want to test on e.g. _redhat7-64workstation._ or _windows2012r2-64workstation._ (The period character after workstation is required by beaker-hostgenerator).
-**BUILD_SERVER** | (Defaults to 'builds.delivery.puppetlabs.net' if not set) (Only required if testing a SHA on a Windows VM). The hostname of the build server that hosts packages. A Puppet JIRA ticket ([BKR-1109](https://tickets.puppetlabs.com/browse/BKR-1109)) has been filed to update beaker so this would never be required.
+**BUILD_SERVER** | (Defaults to 'builds.delivery.puppetlabs.net' if not set) (Only required if testing a SHA on a Windows VM). The hostname of the build server that hosts packages.
 **SUITE_VERSION** | (If not set, will be automatically determined if possible) The build tag/version string used when installing packages on certain platforms - e.g. if the package you built is `pdk-0.5.0.0.21.gb84d40e-1.osx10.12.dmg` then **SUITE_VERSION** would be `0.5.0.0.21.gb84d40e`
 
 # Release Process
