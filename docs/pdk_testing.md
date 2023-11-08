@@ -172,11 +172,11 @@ validate and unit test your code.
 
 For more information about RSpec and writing unit tests, see:
 
--   [Writing puppetlabs-rspec tests](http://rspec-puppet.com/tutorial/)
+-   [Writing rspec-puppet tests](http://rspec-puppet.com/tutorial/)
 
 -   [RSpec](http://rspec.info/)
 
--   [puppetlabs-rspec](https://github.com/puppetlabs/puppetlabs-rspec/)
+-   [rspec-puppet](https://github.com/puppetlabs/rspec-puppet/)
 
 -   [Puppet spec helper](https://github.com/puppetlabs/puppetlabs_spec_helper)
 
