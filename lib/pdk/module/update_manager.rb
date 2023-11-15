@@ -238,6 +238,8 @@ module PDK
 
         PDK.logger.debug(format("making '%{path}' executable", path: path))
         PDK::Util::Filesystem.make_executable(path)
+      rescue Errno::EACCES
+        raise PDK::CLI::ExitWithError, format("You do not have permission to make '%{path}' executable", path: path)
       end
     end
   end
