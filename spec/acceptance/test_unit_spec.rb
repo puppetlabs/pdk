@@ -5,11 +5,13 @@ describe 'pdk test unit', :module_command do
   include_context 'with a fake TTY'
 
   shared_context 'with spec file' do |filename, content|
-    around(:all) do |example|
-      path = File.join('spec', 'unit', filename)
+    path = File.join('spec', 'unit', filename)
+    before(:all) do
       FileUtils.mkdir_p(File.dirname(path))
       File.open(path, 'w') { |f| f.puts content }
-      example.run
+    end
+
+    after(:all) do
       FileUtils.rm_f(path)
     end
   end

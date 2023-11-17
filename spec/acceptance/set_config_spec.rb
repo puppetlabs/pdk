@@ -4,47 +4,6 @@ require 'tempfile'
 describe 'pdk set config' do
   include_context 'with a fake TTY'
 
-  shared_examples 'a saved configuration file' do |new_content|
-    it 'saves the setting' do
-      # Force the command to run if not already
-      subject.exit_status
-      expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
-
-      actual_content = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8', &:read)
-      expect(actual_content).to eq(new_content)
-    end
-  end
-
-  shared_examples 'a saved JSON configuration file' do |new_json_content|
-    it 'saves the setting' do
-      # Force the command to run if not already
-      subject.exit_status
-      expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
-
-      actual_content_raw = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8', &:read)
-      actual_json_content = JSON.parse(actual_content_raw)
-      expect(actual_json_content).to eq(new_json_content)
-    end
-  end
-
-  RSpec.shared_context 'with a fake answer file' do |initial_content = nil|
-    before(:all) do
-      fake_answer_file = Tempfile.new('mock_answers.json')
-      unless initial_content.nil?
-        require 'json'
-        fake_answer_file.binmode
-        fake_answer_file.write(JSON.pretty_generate(initial_content))
-      end
-      fake_answer_file.close
-      ENV['PDK_ANSWER_FILE'] = fake_answer_file.path
-    end
-
-    after(:all) do
-      FileUtils.rm_f(ENV.fetch('PDK_ANSWER_FILE', nil)) # Need actual file calls here
-      ENV.delete('PDK_ANSWER_FILE')
-    end
-  end
-
   context 'when run outside of a module' do
     describe command('pdk set config') do
       its(:exit_status) { is_expected.not_to eq 0 }
