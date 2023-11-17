@@ -49,42 +49,42 @@ Install PDK with the YUM package manager.
     -   RHEL 6
 
         ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-el-6.noarch.rpm
+        sudo rpm -Uvh https://downloads.devx.puppet.com/yum/puppet-tools-release-el-6.noarch.rpm
         sudo yum install pdk
         ```
 
     -   RHEL 7
 
         ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-el-7.noarch.rpm
+        sudo rpm -Uvh https://downloads.devx.puppet.com/yum/puppet-tools-release-el-7.noarch.rpm
         sudo yum install pdk
         ```
 
     -   RHEL 8
 
         ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-el-8.noarch.rpm
+        sudo rpm -Uvh https://downloads.devx.puppet.com/yum/puppet-tools-release-el-8.noarch.rpm
         sudo yum install pdk
         ```
 
     -   RHEL 9
 
         ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-el-9.noarch.rpm
+        sudo rpm -Uvh https://downloads.devx.puppet.com/yum/puppet-tools-release-el-9.noarch.rpm
         sudo yum install pdk
         ```
 
     -   SUSE Linux Enterprise Server 15
 
         ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-sles-15.noarch.rpm
+        sudo rpm -Uvh https://downloads.devx.puppet.com/yum/puppet-tools-release-sles-15.noarch.rpm
         sudo zypper install pdk
         ```
 
     -   Fedora 36
 
         ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-fedora-36.noarch.rpm
+        sudo rpm -Uvh https://downloads.devx.puppet.com/yum/puppet-tools-release-fedora-36.noarch.rpm
         sudo dnf install pdk
         ```
 
@@ -109,7 +109,7 @@ Install PDK with the Apt package manager.
     -   Debian 9
 
         ```
-        wget https://apt.puppet.com/puppet-tools-release-stretch.deb
+        wget https://downloads.devx.puppet.com/apt/puppet-tools-release-stretch.deb
         sudo dpkg -i puppet-tools-release-stretch.deb
         sudo apt-get update
         sudo apt-get install pdk
@@ -118,7 +118,7 @@ Install PDK with the Apt package manager.
     -   Debian 10
 
         ```
-        wget https://apt.puppet.com/puppet-tools-release-buster.deb
+        wget https://downloads.devx.puppet.com/apt/puppet-tools-release-buster.deb
         sudo dpkg -i puppet-tools-release-buster.deb
         sudo apt-get update
         sudo apt-get install pdk
@@ -127,7 +127,7 @@ Install PDK with the Apt package manager.
     -   Debian 11
 
         ```
-        wget https://apt.puppet.com/puppet-tools-release-bullseye.deb
+        wget https://downloads.devx.puppet.com/apt/puppet-tools-release-bullseye.deb
         sudo dpkg -i puppet-tools-release-bullseye.deb
         sudo apt-get update
         sudo apt-get install pdk
@@ -136,7 +136,7 @@ Install PDK with the Apt package manager.
     -   Ubuntu 18.04
 
         ```
-        wget https://apt.puppet.com/puppet-tools-release-bionic.deb
+        wget https://downloads.devx.puppet.com/apt/puppet-tools-release-bionic.deb
         sudo dpkg -i puppet-tools-release-bionic.deb
         sudo apt-get update
         sudo apt-get install pdk
@@ -145,7 +145,7 @@ Install PDK with the Apt package manager.
     -   Ubuntu 20.04
 
         ```
-        wget https://apt.puppet.com/puppet-tools-release-focal.deb
+        wget https://downloads.devx.puppet.com/apt/puppet-tools-release-focal.deb
         sudo dpkg -i puppet-tools-release-focal.deb
         sudo apt-get update
         sudo apt-get install pdk
@@ -154,7 +154,7 @@ Install PDK with the Apt package manager.
     -   Ubuntu 22.04
 
         ```
-        wget https://apt.puppet.com/puppet-tools-release-jammy.deb
+        wget https://downloads.devx.puppet.com/apt/puppet-tools-release-jammy.deb
         sudo dpkg -i puppet-tools-release-jammy.deb
         sudo apt-get update
         sudo apt-get install pdk
