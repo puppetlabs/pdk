@@ -52,6 +52,7 @@ module SpecUtils
                    when /^5\./ then '2.4.*'
                    when /^6\./ then '2.5.*'
                    when /^7\./ then '2.7.*'
+                   when /^8\./ then '3.2.*'
                    end
 
     return unless ruby_pattern
