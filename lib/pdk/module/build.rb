@@ -1,5 +1,5 @@
 require 'pdk'
-require_relative './pre_build'
+require_relative 'pre_build'
 
 module PDK
   module Module

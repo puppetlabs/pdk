@@ -9,9 +9,11 @@ describe PDK::Module::PreBuild do
     let(:report) { instance_double(PDK::Report, write_text: nil) }
 
     before do
-      allow(PDK::CLI::Util).to receive(:validate_puppet_version_opts).and_return(nil)
-      allow(PDK::CLI::Util).to receive(:module_version_check).and_return(nil)
-      allow(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(gemset: {}, ruby_version: '1.2.3')
+      allow(PDK::CLI::Util).to receive_messages(
+        validate_puppet_version_opts: nil,
+        module_version_check: nil,
+        puppet_from_opts_or_env: { gemset: {}, ruby_version: '1.2.3' }
+      )
       allow(PDK::Util::PuppetVersion).to receive(:fetch_puppet_dev).and_return(nil)
       allow(PDK::Util::RubyVersion).to receive(:use).and_return(nil)
       allow(PDK::Util::Bundler).to receive(:ensure_bundle!).and_return(nil)
