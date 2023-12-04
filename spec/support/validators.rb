@@ -74,7 +74,7 @@ end
 RSpec::Matchers.define :have_number_of_events do |state, expected_count|
   def get_event_count(report, state)
     count = 0
-    report.events.each do |_source, events|
+    report.events.each_value do |events|
       count += events.count { |event| event.state == state }
     end
 
