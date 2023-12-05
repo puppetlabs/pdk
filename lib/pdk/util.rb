@@ -95,7 +95,7 @@ module PDK
     def development_mode?
       require 'pdk/util/version'
 
-      (!PDK::Util::Version.git_ref.nil? || PDK::VERSION.end_with?('.pre'))
+      !PDK::Util::Version.git_ref.nil? || PDK::VERSION.end_with?('.pre')
     end
     module_function :development_mode?
 

@@ -217,7 +217,9 @@ module PDK
       # @api private
       def read_only!
         @read_only = true
-        @mounts.each { |_, child| child.read_only! }
+        # pass the read_only! method as a block to the each_value method. This means that
+        # for each value in the @mounts hash, the read_only! method will be called on that value.
+        @mounts.each_value(&:read_only!)
       end
 
       private
