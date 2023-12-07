@@ -5,15 +5,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v3.0.1](https://github.com/puppetlabs/pdk/tree/v3.0.1) - 2023-12-07
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.0.0...v3.0.1)
+
+### Fixed
+
+- (CAT-345) Update doc links where needed [#1285](https://github.com/puppetlabs/pdk/pull/1285) ([david22swan](https://github.com/david22swan))
+- (CAT-270) Adjusting expected Puppet/Ruby versions [#1283](https://github.com/puppetlabs/pdk/pull/1283) ([LukasAud](https://github.com/LukasAud))
+- (maint) - add stricter puppetlabs_spec_helper dependency [#1280](https://github.com/puppetlabs/pdk/pull/1280) ([jordanbreen28](https://github.com/jordanbreen28))
+- (PUPDOC-5439) Add Trademark icon [#1277](https://github.com/puppetlabs/pdk/pull/1277) ([pmcmaw](https://github.com/pmcmaw))
+
 ## [v3.0.0](https://github.com/puppetlabs/pdk/tree/v3.0.0) - 2023-07-04
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.7.1...v3.0.0)
-
-### Added
-
-- (CONT-1053) Update bundle command [#1255](https://github.com/puppetlabs/pdk/pull/1255) ([chelnak](https://github.com/chelnak))
-- (ISS-1123) Verbose output w/ junit file [#1246](https://github.com/puppetlabs/pdk/pull/1246) ([coreymbe](https://github.com/coreymbe))
-- Take "operatingsystem_support" parameter from answer.json [#1165](https://github.com/puppetlabs/pdk/pull/1165) ([me-minus](https://github.com/me-minus))
 
 ### Changed
 - (CONT-1134) Bump PDK Templates REF [#1264](https://github.com/puppetlabs/pdk/pull/1264) ([chelnak](https://github.com/chelnak))
@@ -24,6 +29,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 - (CONT-1024) Remove config command [#1249](https://github.com/puppetlabs/pdk/pull/1249) ([chelnak](https://github.com/chelnak))
 - (CONT-755) - Bump gem version [#1240](https://github.com/puppetlabs/pdk/pull/1240) ([chelnak](https://github.com/chelnak))
 - (CONT-755) Ruby 3 / Puppet 8 support [#1230](https://github.com/puppetlabs/pdk/pull/1230) ([chelnak](https://github.com/chelnak))
+
+### Added
+
+- (CONT-1053) Update bundle command [#1255](https://github.com/puppetlabs/pdk/pull/1255) ([chelnak](https://github.com/chelnak))
+- (ISS-1123) Verbose output w/ junit file [#1246](https://github.com/puppetlabs/pdk/pull/1246) ([coreymbe](https://github.com/coreymbe))
+- Take "operatingsystem_support" parameter from answer.json [#1165](https://github.com/puppetlabs/pdk/pull/1165) ([me-minus](https://github.com/me-minus))
 
 ### Fixed
 
