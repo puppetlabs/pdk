@@ -53,7 +53,7 @@ module PDK
       # @raise [ArgumentError] (see #sanitise_data)
       def initialize(data)
         sanitise_data(data).each do |key, value|
-          instance_variable_set("@#{key}", value)
+          instance_variable_set(:"@#{key}", value)
         end
       end
 
