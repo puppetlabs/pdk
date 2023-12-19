@@ -17,8 +17,8 @@ By default, the PDK module template includes tools that can:
 
 
 If you are working behind a proxy, before you begin, ensure that you've added
-the correct environment variables. See [Running PDK behind a
-proxy](pdk_install.md#running-pdk-behind-a-proxy) for details.
+the correct environment variables. See [Setting up PDK behind a
+proxy](pdk_install.md#setting-up-pdk-behind-a-proxy) for details.
 
 To ensure that your module works with Puppet, validate and unit test your
 modules against specific versions of Puppet and Puppet Enterprise. This allows
@@ -33,7 +33,7 @@ examples, see the unit testing and validation topics below.
 You can validate or test against any version of Puppet or PE that is currently
 under maintenance. See [open source
 Puppet](https://docs.puppet.com/puppet/latest/about_agent.html) and [Puppet
-Enterprise](https://puppet.com/docs/pe/2017.3/overview/getting_support_for_pe.html#supported-puppet-enterprise-versions)
+Enterprise](https://www.puppet.com/products/puppet-enterprise/support-lifecycle)
 lifecycle pages for details.
 
 ## Validating modules
@@ -176,7 +176,7 @@ For more information about RSpec and writing unit tests, see:
 
 -   [RSpec](http://rspec.info/)
 
--   [rspec-puppet](https://github.com/rodjek/rspec-puppet/)
+-   [rspec-puppet](https://github.com/puppetlabs/rspec-puppet/)
 
 -   [Puppet spec helper](https://github.com/puppetlabs/puppetlabs_spec_helper)
 

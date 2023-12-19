@@ -232,7 +232,7 @@ topic.
 |--------|-----------|------|-------|
 |`<module_name>`|Required. Specifies the name of the module being created.|A module name beginning with a lowercase letter and including only lowercase letters, digits, and underscores.|No default.|
 |`--full-interview`|Include interview questions related to publishing modules on the Forge to create module metadata.|None.|If not specified, PDK asks only basic module metadata questions. |
-|`--license=<IDENTIFIER>`|Specifies the license for this module is written under.|See the [SPDX](https://spdx.org) License List for a list of open source licenses, or use `proprietary`.|`Apache-2.0`|
+|`--license=<IDENTIFIER>`|Specifies the license for this module is written under.|See the [SPDX](https://spdx.org/licenses/) License List for a list of open source licenses, or use `proprietary`.|`Apache-2.0`|
 |`--skip-interview`|Skip interview questions and use default values to create module metadata.|None.|If not specified, PDK asks basic module metadata questions.|
 |`<TARGET_DIR>`|Specifies the directory that the new module will be created in.|A valid directory path.|Creates a directory with the given `module_name` inside the current directory.|
 |`--template-ref=<VALUE>`|Specifies the reference to use for the specified template for this module. This option is valid only if you have specified a template with the `--template-url` option.|A template branch name, tag name, or commit SHA for the specified template.|If you have specified a custom template, or if you installed PDK as a gem, this option defaults to "main". Otherwise, defaults to the defaults to the currently installed PDK version.|
@@ -420,7 +420,7 @@ topic.
 |`--puppet-dev`|When specified, PDK runs unit tests against the current Puppet source from GitHub. To use this option, you must have network access to https://github.com. You cannot specify `--puppet-dev` together with the `--puppet-version=` options.|None.|If not specified, PDK runs unit tests against default values or those specified by `--puppet-version`.|
 |`--puppet-version`|Specifies the Puppet gem version to run unit tests against.|A string indicating the Puppet version to test against, such as "5.4.2" or "5.5".|If not specified, tests against the most recent compatible Puppet version included in the PDK package.|
 |`--tests=<TEST_LIST>`|A comma-separated list of tests to run. Use this during development to pinpoint a single failing test.|See the `--list` output for available values.|No default.|
-|`--verbose`|When specified, PDK outputs a single line description for each test as the test is executed. This option uses the RSpec `documentation` format. For more information, see [RSpec Core 2.5](https://relishapp.com/rspec/rspec-core/v/2-5/docs/command-line/format-option#documentation-format).|None.|None.|
+|`--verbose`|When specified, PDK outputs a single line description for each test as the test is executed. This option uses the RSpec `documentation` format. For more information, see [RSpec Core Formatters](https://rubydoc.info/gems/rspec-core/RSpec/Core/Formatters).|None.|None.|
 
 ## `pdk update` command
 

@@ -93,8 +93,12 @@ module PDK
     # This report is designed for interactive use by a human and so excludes
     # all passing events in order to be consise.
     #
-    # @param target [#write] an IO object that the report will be written to.
-    #   Defaults to PDK::Report.default_target.
+    # @param target [String, IO] The IO target to write the report to.
+    #   If a String is provided, the report will be written to a file with the given path.
+    #   If an IO object is provided, the report will be written to the IO object.
+    #   If no target is provided, the default target PDK::Report.default_target will be used.
+    #
+    # @return [void]
     def write_text(target = self.class.default_target)
       coverage_report = nil
       report = []

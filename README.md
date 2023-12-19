@@ -98,7 +98,7 @@ This command validates the metadata, Puppet code syntax and style, and Ruby synt
 
 ### Run unit tests
 
-PDK's [default template](https://github.com/puppetlabs/pdk-templates) sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/rodjek/rspec-puppet/) for catalog-level unit testing.
+PDK's [default template](https://github.com/puppetlabs/pdk-templates) sets up [rspec](http://rspec.info/) for Ruby-level unit testing, and [rspec-puppet](https://github.com/puppetlabs/rspec-puppet/) for catalog-level unit testing.
 
 In the module's directory, run unit tests with:
 
@@ -115,6 +115,10 @@ This command runs all available unit tests.
 ## Contributing
 
 PDK encourages community contributions. See the [CONTRIBUTING.md](CONTRIBUTING.md) file for development notes.
+
+## License
+
+This codebase is licensed under Apache 2.0. However, the open source dependencies included in this codebase might be subject to other software licenses such as AGPL, GPL2.0, and MIT.
 
 ## Contact Information
 

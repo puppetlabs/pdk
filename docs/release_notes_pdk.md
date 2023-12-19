@@ -2,6 +2,14 @@
 
 New features, enhancements, and resolved issues for PDK.
 
+## PDK 3.0.1
+
+### New features and enhancements
+
+* Updated various dependencies
+* Added stricter puppetlabs_spec_helper dependency
+* Minor adjustments to our documentation
+
 ## PDK 3.0.0
 
 > PDK 3.0 is a backwards incompatible release.

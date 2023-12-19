@@ -206,6 +206,10 @@ module PDK
         version.nil? ? nil : { gem_version: version, ruby_version: PDK::Util::RubyVersion.default_ruby_version }
       end
 
+      # Finds the specified requirement in the package cache.
+      #
+      # @param requirement [Gem::Requirement] The requirement to search for.
+      # @return [Hash] A hash containing the gem version and ruby version if found, or nil if not found.
       def find_in_package_cache(requirement)
         require 'pdk/util/ruby_version'
 

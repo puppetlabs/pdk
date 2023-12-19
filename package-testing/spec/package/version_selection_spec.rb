@@ -2,12 +2,12 @@ require 'spec_helper_package'
 
 describe 'Test puppet & ruby version selection' do
   module_name = 'version_selection'
-  # IMPORTANT: The following block should be updated with the latest version of each major release supported for the
+  # IMPORTANT: The following block should be updated with the latest version of each release supported for the
   # test cases to pass. If you are running integration testing prior to a release and its failing due to missing Puppet
   # gems, verify that the following versions are correct.
   test_cases = [
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.26.0', expected_puppet: '7.26.0', expected_ruby: '2.7.8' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '8.2.0', expected_puppet: '8.2.0', expected_ruby: '3.2.2' }
+    { envvar: 'PDK_PUPPET_VERSION', version: '7.27.0', expected_puppet: '7.27.0', expected_ruby: '2.7.8' },
+    { envvar: 'PDK_PUPPET_VERSION', version: '8.3.1', expected_puppet: '8.3.1', expected_ruby: '3.2.2' }
   ]
 
   before(:all) do

@@ -28,8 +28,8 @@ describe 'Basic usage in an air-gapped environment' do
     end
 
     context 'when validating the module' do
-      context 'with puppet 7.x' do
-        puppet_version = '7.x'
+      context 'with puppet 8.x' do
+        puppet_version = '8.x'
         let(:ruby_version) { ruby_for_puppet(puppet_version) }
 
         describe command("pdk validate --puppet-version=#{puppet_version}") do
