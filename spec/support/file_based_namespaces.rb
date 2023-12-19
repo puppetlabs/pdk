@@ -50,7 +50,7 @@ RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
 
     it 'does not add or lose any data when round tripping the serialization' do
       # Force the file to be loaded
-      expected_settings.each { |k, _| subject[k] }
+      expected_settings.each_key { |k| subject[k] }
       # Force a setting to be saved by setting a single known value
       expect(PDK::Util::Filesystem).to receive(:write_file).with(subject.file, content)
       key = expected_settings.keys[0]

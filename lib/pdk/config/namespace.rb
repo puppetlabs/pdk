@@ -217,7 +217,7 @@ module PDK
       # @api private
       def read_only!
         @read_only = true
-        @mounts.each { |_, child| child.read_only! }
+        @mounts.each_value(&:read_only!)
       end
 
       private

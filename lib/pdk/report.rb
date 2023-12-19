@@ -99,7 +99,7 @@ module PDK
       coverage_report = nil
       report = []
 
-      events.each do |_tool, tool_events|
+      events.each_value do |tool_events|
         tool_events.each do |event|
           if event.rspec_puppet_coverage?
             coverage_report = event.to_text
