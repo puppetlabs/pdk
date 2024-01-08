@@ -6,6 +6,9 @@ on:
       - "main"
   workflow_dispatch:
 
+env:
+  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
 jobs:
 
   spec:
@@ -19,6 +22,7 @@ jobs:
     uses: "puppetlabs/cat-github-actions/.github/workflows/gem_ci.yml@main"
     secrets: "inherit"
     with:
+      rake_task: 'spec:coverage'
       ruby_version: ${{ matrix.ruby_version }}
 
   acceptance:
