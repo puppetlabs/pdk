@@ -244,6 +244,44 @@ describe PDK::Module::UpdateManager do
     end
   end
 
+  describe '#make_file_executable' do
+    before do
+      update_manager.make_file_executable(dummy_file)
+    end
+
+    it 'creates a pending change' do
+      expect(update_manager).to be_changes
+    end
+
+    it 'creates a file made executable change' do
+      expect(update_manager.changes).to include('made executable': [dummy_file])
+    end
+
+    it 'knows that the file will be changed' do
+      expect(update_manager).to be_changed(dummy_file)
+    end
+
+    context 'when syncing the changes' do
+      it 'makes the file executable' do
+        expect(PDK::Util::Filesystem).to receive(:make_executable).with(dummy_file)
+
+        update_manager.sync_changes!
+      end
+
+      context 'but if the file can not be written to' do
+        before do
+          allow(PDK::Util::Filesystem).to receive(:make_executable).with(dummy_file).and_raise(Errno::EACCES)
+        end
+
+        it 'exits with an error' do
+          expect do
+            update_manager.sync_changes!
+          end.to raise_error(PDK::CLI::ExitWithError, /You do not have permission to make '#{Regexp.escape(dummy_file)}' executable/)
+        end
+      end
+    end
+  end
+
   describe '#clear!' do
     before do
       update_manager.add_file(dummy_file, 'content')

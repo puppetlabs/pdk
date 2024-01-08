@@ -148,7 +148,7 @@ module PDK
           module_name = new_metadata.nil? ? 'new-module' : new_metadata.data['name']
           metadata_for_render = new_metadata.nil? ? {} : new_metadata.data
 
-          template_dir.render_new_module(module_name, metadata_for_render) do |relative_file_path, file_content, file_status|
+          template_dir.render_new_module(module_name, metadata_for_render) do |relative_file_path, file_content, file_status, file_executable|
             absolute_file_path = File.join(module_dir, relative_file_path)
             case file_status
             when :unmanage
@@ -156,12 +156,17 @@ module PDK
             when :delete
               update_manager.remove_file(absolute_file_path)
             when :init
-              update_manager.add_file(absolute_file_path, file_content) if convert? && !PDK::Util::Filesystem.exist?(absolute_file_path)
+              if convert? && !PDK::Util::Filesystem.exist?(absolute_file_path)
+                update_manager.add_file(absolute_file_path, file_content)
+                update_manager.make_file_executable(absolute_file_path) if file_executable
+              end
             when :manage
               if PDK::Util::Filesystem.exist?(absolute_file_path)
                 update_manager.modify_file(absolute_file_path, file_content)
+                update_manager.make_file_executable(absolute_file_path) if file_executable && !PDK::Util::Filesystem.executable?(absolute_file_path)
               else
                 update_manager.add_file(absolute_file_path, file_content)
+                update_manager.make_file_executable(absolute_file_path) if file_executable
               end
             end
           end

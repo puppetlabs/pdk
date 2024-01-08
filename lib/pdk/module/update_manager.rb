@@ -11,6 +11,7 @@ module PDK
         @modified_files = Set.new
         @added_files = Set.new
         @removed_files = Set.new
+        @executable_files = Set.new
         @diff_cache = {}
       end
 
@@ -37,6 +38,13 @@ module PDK
         @removed_files << path
       end
 
+      # Store a pending file execute mode change.
+      #
+      # @param path [String] The path to the file to be made executable.
+      def make_file_executable(path)
+        @executable_files << path
+      end
+
       # Generate a summary of the changes that will be applied to the module.
       #
       # @raise (see #calculate_diffs)
@@ -49,7 +57,8 @@ module PDK
         {
           added: @added_files,
           removed: @removed_files.select { |f| PDK::Util::Filesystem.exist?(f) },
-          modified: @diff_cache.compact
+          modified: @diff_cache.compact,
+          'made executable': @executable_files
         }
       end
 
@@ -60,7 +69,8 @@ module PDK
       def changes?
         !changes[:added].empty? ||
           !changes[:removed].empty? ||
-          changes[:modified].any? { |_, value| !value.nil? }
+          changes[:modified].any? { |_, value| !value.nil? } ||
+          !changes[:'made executable'].empty?
       end
 
       # Check if the update manager will change the specified file upon sync.
@@ -72,13 +82,15 @@ module PDK
       def changed?(path)
         changes[:added].any? { |add| add[:path] == path } ||
           changes[:removed].include?(path) ||
-          changes[:modified].key?(path)
+          changes[:modified].key?(path) ||
+          changes[:'made executable'].include?(path)
       end
 
       def clear!
         @modified_files.clear
         @added_files.clear
         @removed_files.clear
+        @executable_files.clear
         nil
       end
 
@@ -99,6 +111,10 @@ module PDK
 
         files_to_write.each do |file|
           write_file(file[:path], file[:content])
+        end
+
+        @executable_files.each do |file|
+          update_execute_bits(file)
         end
       end
 
@@ -214,6 +230,16 @@ module PDK
         output << oldhunk.diff(:unified)
 
         output.join($INPUT_RECORD_SEPARATOR)
+      end
+
+      # Set the execute bits on a file
+      def update_execute_bits(path)
+        require 'pdk/util/filesystem'
+
+        PDK.logger.debug(format("making '%{path}' executable", path: path))
+        PDK::Util::Filesystem.make_executable(path)
+      rescue Errno::EACCES
+        raise PDK::CLI::ExitWithError, format("You do not have permission to make '%{path}' executable", path: path)
       end
     end
   end

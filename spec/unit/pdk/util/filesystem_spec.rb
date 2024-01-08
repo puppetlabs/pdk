@@ -92,4 +92,30 @@ describe PDK::Util::Filesystem do
       end
     end
   end
+
+  describe '.make_executable' do
+    subject(:make_executable) { described_class.make_executable(path) }
+
+    let(:path) { File.join('path', 'to', 'my', 'file') }
+
+    context 'when file is writable' do
+      before do
+        allow(FileUtils).to receive(:chmod)
+      end
+
+      it 'does not raise an error' do
+        expect { make_executable }.not_to raise_error
+      end
+    end
+
+    context 'when file is not writable' do
+      before do
+        allow(FileUtils).to receive(:chmod).and_raise(Errno::EACCES, 'some error')
+      end
+
+      it 'raises an error' do
+        expect { make_executable }.to raise_error(Errno::EACCES, /some error/)
+      end
+    end
+  end
 end
