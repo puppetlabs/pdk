@@ -4,7 +4,7 @@ if ENV.fetch('COVERAGE', nil) == 'yes'
 
   SimpleCov.formatters = [
     SimpleCov::Formatter::HTMLFormatter,
-    SimpleCov::Formatter::Console,
+    SimpleCov::Formatter::Console
   ]
 
   if ENV['CI'] == 'true'
@@ -23,14 +23,6 @@ if ENV.fetch('COVERAGE', nil) == 'yes'
     add_filter '/.vendor'
     add_filter '/docs'
     add_filter '/lib/pdk/version.rb'
-
-    # do not track gitignored files
-    # this adds about 4 seconds to the coverage check
-    # this could definitely be optimized
-    add_filter do |f|
-      # system returns true if exit status is 0, which with git-check-ignore means file is ignored
-      system("git check-ignore --quiet #{f.filename}")
-    end
   end
 end
 
