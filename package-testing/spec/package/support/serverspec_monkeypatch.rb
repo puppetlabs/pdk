@@ -14,7 +14,7 @@ option_keys = Specinfra::Configuration.singleton_class.const_get(:VALID_OPTIONS_
 option_keys << :cwd
 option_keys << :run_as
 
-Specinfra::Configuration.singleton_class.send(:remove_const, :VALID_OPTIONS_KEYS)
+Specinfra::Configuration.singleton_class.send(:remove_const, :VALID_OPTIONS_KEYS) # rubocop:disable RSpec/RemoveConst
 Specinfra::Configuration.singleton_class.const_set(:VALID_OPTIONS_KEYS, option_keys.freeze)
 RSpec.configuration.add_setting :cwd
 RSpec.configuration.add_setting :run_as
