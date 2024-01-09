@@ -144,7 +144,7 @@ describe PDK::Config::Namespace do
       expect([config.fetch(:foo, 'default'), config.fetch('foo', 'default')]).to all(eq('bar'))
     end
 
-    it 'will return the specified default value for unknown values' do
+    it 'returns the specified default value for unknown values' do
       expect([config.fetch(:missing, 'default'), config.fetch('missing', 'default')]).to all(eq('default'))
     end
 
