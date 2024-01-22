@@ -162,7 +162,7 @@ module PDK
         new_hash = {}
         settings.each_pair { |k, v| new_hash[k] = v.value }
         @mounts.each_pair { |k, mount_point| new_hash[k] = mount_point.to_h if mount_point.include_in_parent? }
-        new_hash.delete_if { |_k, v| v.nil? } # rubocop :disable Style/CollectionCompact
+        new_hash.delete_if { |_k, v| v.nil? }
         new_hash
       end
 
