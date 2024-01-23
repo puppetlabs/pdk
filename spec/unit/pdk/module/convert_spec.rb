@@ -58,6 +58,12 @@ describe PDK::Module::Convert do
     end
   end
 
+  shared_context 'files made executable in the summary' do
+    before do
+      allow($stdout).to receive(:puts).with(/-Files to be made executable-/i)
+    end
+  end
+
   shared_context 'outputs a convert report' do
     before do
       allow($stdout).to receive(:puts).with(/You can find detailed differences in convert_report.txt./)
@@ -88,19 +94,20 @@ describe PDK::Module::Convert do
     let(:update_manager) { instance_double(PDK::Module::UpdateManager, sync_changes!: true) }
     let(:template_dir) { instance_double(PDK::Template::TemplateDir, metadata: {}) }
     let(:metadata) { instance_double(PDK::Module::Metadata, data: {}) }
-    let(:template_files) { { path: 'a/path/to/file', content: 'file contents', status: :manage } }
+    let(:template_files) { { path: 'a/path/to/file', content: 'file contents', status: :manage, executable: true } }
     let(:added_files) { Set.new }
     let(:removed_files) { Set.new }
     let(:modified_files) { {} }
+    let(:executable_files) { Set.new }
 
     before do
-      changes = { added: added_files, removed: removed_files, modified: modified_files }
+      changes = { added: added_files, removed: removed_files, modified: modified_files, 'made executable': executable_files }
 
       allow(PDK::Module::UpdateManager).to receive(:new).and_return(update_manager)
       allow(instance).to receive(:update_metadata).with(any_args).and_return(metadata)
       allow(PDK::Template).to receive(:with).with(anything, anything).and_yield(template_dir)
       allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
-      allow(template_dir).to receive(:render_new_module).and_yield(template_files[:path], template_files[:content], template_files[:status])
+      allow(template_dir).to receive(:render_new_module).and_yield(template_files[:path], template_files[:content], template_files[:status], template_files[:executable])
       allow(update_manager).to receive(:changes).and_return(changes)
       allow(update_manager).to receive(:changed?).with('Gemfile').and_return(false)
       allow(update_manager).to receive(:unlink_file).with('Gemfile.lock')
@@ -172,6 +179,7 @@ describe PDK::Module::Convert do
     context 'when the Gemfile has been modified' do
       include_context 'has changes in the summary'
       include_context 'modified files in the summary'
+      include_context 'files made executable in the summary'
       include_context 'outputs a convert report'
       include_context 'prompt to continue', true
       include_context 'completes a convert'
@@ -184,6 +192,7 @@ describe PDK::Module::Convert do
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         allow(update_manager).to receive(:modify_file).with(module_path(template_files[:path]), template_files[:content])
+        allow(update_manager).to receive(:make_file_executable).with(module_path(template_files[:path]))
         allow($stdout).to receive(:puts).with(/1 files modified/)
         allow(update_manager).to receive(:changed?).with('Gemfile').and_return(true)
         allow(update_manager).to receive(:remove_file).with(anything)
@@ -213,6 +222,7 @@ describe PDK::Module::Convert do
     context 'when there are changes to apply' do
       include_context 'has changes in the summary'
       include_context 'modified files in the summary'
+      include_context 'files made executable in the summary'
       include_context 'outputs a convert report'
       include_context 'completes a convert'
 
@@ -221,9 +231,11 @@ describe PDK::Module::Convert do
         allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['some/file'])
+        allow($stdout).to receive(:puts).with(['some/executable/file'])
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         allow(update_manager).to receive(:modify_file).with(module_path(template_files[:path]), template_files[:content])
+        allow(update_manager).to receive(:make_file_executable).with(module_path(template_files[:path]))
         allow($stdout).to receive(:puts).with(/1 files modified/)
         allow($stdout).to receive(:puts).with(/You can find a report of differences in convert_report.txt./)
       end
@@ -234,11 +246,20 @@ describe PDK::Module::Convert do
         }
       end
 
+      let(:executable_files) do
+        Set.new(
+          [
+            'some/executable/file'
+          ]
+        )
+      end
+
       context 'and run normally' do
         include_context 'prompt to continue', false
 
         it 'prints a diff of the changed files' do
           expect($stdout).to receive(:puts).with(['some/file'])
+          expect($stdout).to receive(:puts).with(['some/executable/file'])
         end
 
         it 'prompts the user to continue' do
@@ -250,6 +271,36 @@ describe PDK::Module::Convert do
 
           it 'syncs the pending changes' do
             expect(update_manager).to receive(:sync_changes!)
+          end
+
+          it 'lists the count of modified files' do
+            expect($stdout).to receive(:puts).with(/1 files modified/)
+          end
+
+          it 'lists the count of files made executable' do
+            expect($stdout).to receive(:puts).with(/1 files made executable/)
+          end
+
+          context 'when managing file execute bits' do
+            context 'when file exists and has correct execute bits' do
+              before do
+                allow(PDK::Util::Filesystem).to receive(:executable?).with(module_path('/a/path/to/file')).and_return(true)
+              end
+
+              it 'does not stage the file for making executable' do
+                expect(update_manager).not_to receive(:make_file_executable).with(module_path('/a/path/to/file'))
+              end
+            end
+
+            context 'when file exists but has incorrect execute bits' do
+              before do
+                allow(PDK::Util::Filesystem).to receive(:executable?).with(module_path('/a/path/to/file')).and_return(false)
+              end
+
+              it 'stages the file for making executable' do
+                expect(update_manager).to receive(:make_file_executable).with(module_path('/a/path/to/file'))
+              end
+            end
           end
 
           context 'and it is to add tests' do
@@ -352,7 +403,7 @@ describe PDK::Module::Convert do
     context 'when there are init files to add' do
       let(:options) { { noop: true } }
       let(:template_files) do
-        { path: 'a/path/to/file', content: 'file contents', status: :init }
+        { path: 'a/path/to/file', content: 'file contents', status: :init, executable: true }
       end
 
       context 'and the files already exist' do
@@ -361,10 +412,15 @@ describe PDK::Module::Convert do
         before do
           allow(PDK::Util::Filesystem).to receive(:exist?).with(module_path(template_files[:path])).and_return(true)
           allow(update_manager).to receive(:changes?).and_return(false)
+          allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         end
 
         it 'does not stage the file for addition' do
           expect(update_manager).not_to receive(:add_file).with(module_path(template_files[:path]), anything)
+        end
+
+        it 'does not stage the file for making executable' do
+          expect(update_manager).not_to receive(:make_file_executable).with(module_path(template_files[:path]))
         end
       end
 
@@ -373,10 +429,15 @@ describe PDK::Module::Convert do
           allow(PDK::Util::Filesystem).to receive(:exist?).with(module_path(template_files[:path])).and_return(false)
           allow(update_manager).to receive(:changes?).and_return(true)
           allow(update_manager).to receive(:add_file)
+          allow(update_manager).to receive(:make_file_executable)
         end
 
         it 'stages the file for addition' do
           expect(update_manager).to receive(:add_file).with(module_path(template_files[:path]), template_files[:content])
+        end
+
+        it 'stages the file for making executable' do
+          expect(update_manager).to receive(:make_file_executable).with(module_path(template_files[:path]))
         end
       end
     end
@@ -384,6 +445,7 @@ describe PDK::Module::Convert do
     context 'when there are files to add' do
       include_context 'has changes in the summary'
       include_context 'added files in the summary'
+      include_context 'files made executable in the summary'
       include_context 'outputs a convert report'
       include_context 'completes a convert'
 
@@ -396,12 +458,22 @@ describe PDK::Module::Convert do
         )
       end
 
+      let(:executable_files) do
+        Set.new(
+          [
+            'path/to/executable/file'
+          ]
+        )
+      end
+
       before do
         allow(update_manager).to receive(:changes?).and_return(true)
         allow($stdout).to receive(:puts).with(['path/to/file'])
+        allow($stdout).to receive(:puts).with(['path/to/executable/file'])
 
         allow(update_manager).to receive(:add_file).with(module_path('metadata.json'), anything)
         allow(update_manager).to receive(:add_file).with(module_path(template_files[:path]), template_files[:content])
+        allow(update_manager).to receive(:make_file_executable).with(module_path(template_files[:path]))
         allow($stdout).to receive(:puts).with(/1 files added/)
         allow($stdout).to receive(:puts).with(/You can find a report of differences in convert_report.txt./)
       end
@@ -413,6 +485,10 @@ describe PDK::Module::Convert do
           expect($stdout).to receive(:puts).with(['path/to/file'])
         end
 
+        it 'prints a path of the files made executable' do
+          expect($stdout).to receive(:puts).with(['path/to/executable/file'])
+        end
+
         it 'prompts the user to continue' do
           expect(PDK::CLI::Util).to receive(:prompt_for_yes).with(anything).and_return(false)
         end
@@ -422,6 +498,14 @@ describe PDK::Module::Convert do
 
           it 'syncs the pending changes' do
             expect(update_manager).to receive(:sync_changes!)
+          end
+
+          it 'lists the count of added files' do
+            expect($stdout).to receive(:puts).with(/1 files added/)
+          end
+
+          it 'lists the count of files made executable' do
+            expect($stdout).to receive(:puts).with(/1 files made executable/)
           end
         end
 

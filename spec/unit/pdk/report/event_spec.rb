@@ -140,9 +140,9 @@ describe PDK::Report::Event do
 
           methods.each do |method|
             if method == state_method
-              it { is_expected.to send("be_#{method}") }
+              it { is_expected.to send(:"be_#{method}") }
             else
-              it { is_expected.not_to send("be_#{method}") }
+              it { is_expected.not_to send(:"be_#{method}") }
             end
           end
         end
