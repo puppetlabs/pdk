@@ -7,11 +7,6 @@ if ENV.fetch('COVERAGE', nil) == 'yes'
     SimpleCov::Formatter::Console
   ]
 
-  if ENV['CI'] == 'true'
-    require 'codecov'
-    SimpleCov.formatters << SimpleCov::Formatter::Codecov
-  end
-
   SimpleCov.start do
     track_files 'lib/**/*.rb'
 
