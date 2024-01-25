@@ -14,8 +14,9 @@ module PDK
         # Write the context information to the debug log
         PDK.context.to_debug_log
 
-        raise PDK::CLI::ExitWithError, '`pdk update` can only be run from inside a valid module directory.' unless PDK.context.is_a?(PDK::Context::Module) ||
-                                                                                                                   PDK.context.is_a?(PDK::Context::ControlRepo)
+        unless PDK.context.is_a?(PDK::Context::Module) || PDK.context.is_a?(PDK::Context::ControlRepo)
+          raise PDK::CLI::ExitWithError, '`pdk update` can only be run from inside a valid module directory.'
+        end
 
         raise PDK::CLI::ExitWithError, 'This module does not appear to be PDK compatible. To make the module compatible with PDK, run `pdk convert`.' unless PDK::Util.module_pdk_compatible?
 

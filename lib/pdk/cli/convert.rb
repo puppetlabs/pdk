@@ -18,8 +18,9 @@ module PDK
         # Write the context information to the debug log
         PDK.context.to_debug_log
 
-        raise PDK::CLI::ExitWithError, '`pdk convert` can only be run from inside a valid module directory.' unless PDK.context.is_a?(PDK::Context::Module) ||
-                                                                                                                    PDK.context.is_a?(PDK::Context::ControlRepo)
+        unless PDK.context.is_a?(PDK::Context::Module) || PDK.context.is_a?(PDK::Context::ControlRepo)
+          raise PDK::CLI::ExitWithError, '`pdk convert` can only be run from inside a valid module directory.'
+        end
 
         raise PDK::CLI::ExitWithError, 'You can not specify --noop and --force when converting a module' if opts[:noop] && opts[:force]
 
