@@ -13,7 +13,6 @@ group :development do
 end
 
 group :test do
-  gem 'codecov'
   gem 'parallel'
   gem 'parallel_tests'
   gem 'rake'
