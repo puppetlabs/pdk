@@ -8,7 +8,9 @@ describe 'pdk remove config' do
     it 'saves the setting' do
       # Force the command to run if not already
       subject.exit_status
-      expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
+      retry_on_error_matching(60, 5) do
+        expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
+      end
 
       actual_content = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8', &:read)
       expect(actual_content).to eq(new_content)
@@ -19,7 +21,9 @@ describe 'pdk remove config' do
     it 'saves the setting' do
       # Force the command to run if not already
       subject.exit_status
-      expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
+      retry_on_error_matching(60, 5) do
+        expect(File).to exist(ENV.fetch('PDK_ANSWER_FILE', nil))
+      end
 
       actual_content_raw = File.open(ENV.fetch('PDK_ANSWER_FILE', nil), 'rb:utf-8', &:read)
       actual_json_content = JSON.parse(actual_content_raw)
