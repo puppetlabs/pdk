@@ -133,8 +133,7 @@ describe 'pdk test unit', :module_command do
 
       describe command('pdk test unit') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(/An error occurred while loading.*syntax_spec.rb/) }
-        its(:stdout) { is_expected.to match(/SyntaxError/) }
+        its(:stdout) { is_expected.to match(/While loading .*syntax_spec.rb a `raise SyntaxError` occurred/) }
       end
     end
 
