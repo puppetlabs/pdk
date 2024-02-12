@@ -6,8 +6,8 @@ describe 'Test puppet & ruby version selection' do
   # test cases to pass. If you are running integration testing prior to a release and its failing due to missing Puppet
   # gems, verify that the following versions are correct.
   test_cases = [
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.27.0', expected_puppet: '7.27.0', expected_ruby: '2.7.8' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '8.3.1', expected_puppet: '8.3.1', expected_ruby: '3.2.2' }
+    { envvar: 'PDK_PUPPET_VERSION', version: '7.28.0', expected_puppet: '7.28.0', expected_ruby: '2.7.8' },
+    { envvar: 'PDK_PUPPET_VERSION', version: '8.4.0', expected_puppet: '8.4.0', expected_ruby: '3.2.2' }
   ]
 
   before(:all) do
