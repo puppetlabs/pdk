@@ -14,3 +14,37 @@ jobs:
   mend:
     uses: "puppetlabs/cat-github-actions/.github/workflows/tooling_mend_ruby.yml@main"
     secrets: "inherit"
+  
+  mend_package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install PDK
+        run: |
+          wget https://apt.puppetlabs.com/puppet8-release-jammy.deb;
+          sudo dpkg -i puppet8-release-jammy.deb;
+          sudo apt-get update -y;
+          sudo apt-get install pdk -y;
+          pdk --version;
+
+      - uses: "ruby/setup-ruby@v1"
+        with:
+          ruby-version: 2.7
+
+      - uses: "actions/setup-java@v4"
+        with:
+          distribution: "temurin"
+          java-version: "17"
+  
+      - name: Download unified agent
+        run: |
+          curl -o wss-unified-agent.jar https://unified-agent.s3.amazonaws.com/wss-unified-agent.jar;
+
+      - name: Run Scan
+        run: |
+          sudo -E java -jar wss-unified-agent.jar -d /opt/puppetlabs/pdk
+        env:
+          WS_APIKEY: ${{ secrets.MEND_API_KEY }}
+          WS_WSS_URL: https://saas-eu.whitesourcesoftware.com/agent
+          WS_USERKEY: ${{ secrets.MEND_TOKEN }}
+          WS_PRODUCTNAME: "DevX"
+          WS_PROJECTNAME: "${{  github.event.repository.name }}-package"
