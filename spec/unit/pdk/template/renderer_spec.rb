@@ -11,17 +11,17 @@ describe PDK::Template::Renderer do
 
     context 'given an original template directory' do
       before do
-        allow(PDK::Template::Renderer::V1).to receive(:compatible?).and_return(true)
+        allow(described_class::V1).to receive(:compatible?).and_return(true)
       end
 
       it 'creates a version 1 renderer' do
-        expect(instance).to be_a(PDK::Template::Renderer::V1::Renderer)
+        expect(instance).to be_a(described_class::V1::Renderer)
       end
     end
 
     context 'given a template that has no appropriate renderer' do
       before do
-        allow(PDK::Template::Renderer::V1).to receive(:compatible?).and_return(false)
+        allow(described_class::V1).to receive(:compatible?).and_return(false)
       end
 
       it 'creates a Local Fetcher object' do

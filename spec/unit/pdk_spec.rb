@@ -5,13 +5,13 @@ describe PDK do
   describe '.logger', use_stubbed_logger: false do
     subject { described_class.logger }
 
-    it { is_expected.to be_an_instance_of(PDK::Logger) }
+    it { is_expected.to be_an_instance_of(described_class::Logger) }
   end
 
   describe '.config' do
     subject(:config) { described_class.config }
 
-    it { is_expected.to be_an_instance_of(PDK::Config) }
+    it { is_expected.to be_an_instance_of(described_class::Config) }
 
     it 'is memoised' do
       object1 = PDK.config # rubocop:disable RSpec/DescribedClass have to use the explicit form due to rspec caching
@@ -23,7 +23,7 @@ describe PDK do
   describe '.context' do
     subject(:context) { described_class.context }
 
-    it { is_expected.to be_a(PDK::Context::AbstractContext) }
+    it { is_expected.to be_a(described_class::Context::AbstractContext) }
 
     it 'is memoised' do
       object1 = PDK.context # rubocop:disable RSpec/DescribedClass have to use the explicit form due to rspec caching

@@ -25,19 +25,19 @@ describe PDK::Template do
     end
 
     context 'when initialized correctly' do
-      let(:fetcher) { PDK::Template::Fetcher::AbstractFetcher.new(template_uri, {}) }
+      let(:fetcher) { described_class::Fetcher::AbstractFetcher.new(template_uri, {}) }
       let(:template_dir) do
-        PDK::Template::TemplateDir.new(
+        described_class::TemplateDir.new(
           template_uri,
           nil,
           pdk_context,
-          instance_double(PDK::Template::Renderer::AbstractRenderer)
+          instance_double(described_class::Renderer::AbstractRenderer)
         )
       end
 
       before do
-        expect(PDK::Template::Fetcher).to receive(:with).with(template_uri).and_yield(fetcher)
-        allow(PDK::Template::TemplateDir).to receive(:instance).with(template_uri, anything, pdk_context).and_return(template_dir)
+        expect(described_class::Fetcher).to receive(:with).with(template_uri).and_yield(fetcher)
+        allow(described_class::TemplateDir).to receive(:instance).with(template_uri, anything, pdk_context).and_return(template_dir)
       end
 
       it 'fetches remote templates' do

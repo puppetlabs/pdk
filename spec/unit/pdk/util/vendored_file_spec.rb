@@ -57,7 +57,7 @@ describe PDK::Util::VendoredFile do
           allow(mock_http).to receive(:verify_mode=).with(anything)
         end
 
-        let(:download_error) { PDK::Util::VendoredFile::DownloadError }
+        let(:download_error) { described_class::DownloadError }
         let(:mock_http) { instance_double(Net::HTTP) }
         let(:mock_request) { instance_double(Net::HTTP::Get) }
         let(:mock_response) { instance_double(Net::HTTPResponse) }

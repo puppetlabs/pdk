@@ -9,12 +9,12 @@ RSpec.describe PDK::Util::Bundler do
     let(:gemfile) { '/Gemfile' }
     let(:gemfile_lock) { "#{gemfile}.lock" }
     let(:bundle_helper) do
-      instance_double(PDK::Util::Bundler::BundleHelper, gemfile: gemfile, gemfile?: true, gemfile_lock: gemfile_lock)
+      instance_double(described_class::BundleHelper, gemfile: gemfile, gemfile?: true, gemfile_lock: gemfile_lock)
     end
 
     before do
       # Allow us to mock/stub/expect calls to the internal bundle helper.
-      allow(PDK::Util::Bundler::BundleHelper).to receive(:new).and_return(bundle_helper)
+      allow(described_class::BundleHelper).to receive(:new).and_return(bundle_helper)
       allow(PDK::Util::Filesystem).to receive(:mv).with(gemfile_lock, anything)
       allow(PDK::Util::Filesystem).to receive(:mv).with(anything, gemfile_lock, force: true)
     end

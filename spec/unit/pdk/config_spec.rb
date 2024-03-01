@@ -24,19 +24,19 @@ describe PDK::Config do
 
   describe '.system_config' do
     it 'returns a PDK::Config::Namespace' do
-      expect(config.system_config).to be_a(PDK::Config::Namespace)
+      expect(config.system_config).to be_a(described_class::Namespace)
     end
   end
 
   describe '.user_config' do
     it 'returns a PDK::Config::Namespace' do
-      expect(config.user_config).to be_a(PDK::Config::Namespace)
+      expect(config.user_config).to be_a(described_class::Namespace)
     end
   end
 
   describe '.project_config' do
     it 'returns a PDK::Config::Namespace' do
-      expect(config.project_config).to be_a(PDK::Config::Namespace)
+      expect(config.project_config).to be_a(described_class::Namespace)
     end
 
     context 'Given a Control Repo context' do
@@ -115,7 +115,7 @@ describe PDK::Config do
     end
 
     it 'traverses root names' do
-      expect(config.get('user')).to be_a(PDK::Config::Namespace)
+      expect(config.get('user')).to be_a(described_class::Namespace)
     end
 
     it 'traverses namespaces' do
@@ -565,10 +565,10 @@ describe PDK::Config do
 
         context 'and the bolt configuration is unparsable' do
           before do
-            allow(PDK::Config::YAML).to receive(:new).and_call_original
-            allow(PDK::Config::YAML).to receive(:new)
+            allow(described_class::YAML).to receive(:new).and_call_original
+            allow(described_class::YAML).to receive(:new)
               .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
-              .and_raise(PDK::Config::LoadError)
+              .and_raise(described_class::LoadError)
           end
 
           it 'returns true' do
@@ -633,10 +633,10 @@ describe PDK::Config do
 
         context 'and the bolt configuration is unparsable' do
           before do
-            allow(PDK::Config::YAML).to receive(:new).and_call_original
-            allow(PDK::Config::YAML).to receive(:new)
+            allow(described_class::YAML).to receive(:new).and_call_original
+            allow(described_class::YAML).to receive(:new)
               .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
-              .and_raise(PDK::Config::LoadError)
+              .and_raise(described_class::LoadError)
           end
 
           it 'generates a new UUID' do
