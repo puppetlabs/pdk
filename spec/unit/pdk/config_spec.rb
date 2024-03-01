@@ -450,10 +450,10 @@ describe PDK::Config do
 
       context 'without forcing the change' do
         it 'raises an error' do
+          result = config
           # The old setting should exist
-          expect(config.get(['user', 'foo', 'bar'])).to eq([])
-
-          expect { config.set(setting, value) }.to raise_error(ArgumentError)
+          expect(result.get(['user', 'foo', 'bar'])).to eq([])
+          expect { result.set(setting, value) }.to raise_error(ArgumentError)
         end
       end
 

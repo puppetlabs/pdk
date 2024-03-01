@@ -125,8 +125,9 @@ describe PDK::Config::Namespace do
     end
 
     it 'raises ArgumentError if key is a mount name' do
-      config.mount('invalid', PDK::Config::Namespace.new('invalid')) # rubocop:disable RSpec/DescribedClass No.
-      expect { config['invalid'] = 'baz' }.to raise_error(ArgumentError, /Namespace mounts can not be set a value/)
+      result = config
+      result.mount('invalid', PDK::Config::Namespace.new('invalid')) # rubocop:disable RSpec/DescribedClass No.
+      expect { result['invalid'] = 'baz' }.to raise_error(ArgumentError, /Namespace mounts can not be set a value/)
     end
 
     it 'raises ArgumentError if the setting is not valid' do

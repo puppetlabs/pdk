@@ -49,9 +49,10 @@ describe PDK::Config::Setting do
       end
 
       it 'does not set the new value' do
-        expect(config_setting.value).to be_nil
-        expect { config_setting.value = new_value }.to raise_error(ArgumentError)
-        expect(config_setting.value).to be_nil
+        result = config_setting
+        expect(result.value).to be_nil
+        expect { result.value = new_value }.to raise_error(ArgumentError)
+        expect(result.value).to be_nil
       end
     end
   end

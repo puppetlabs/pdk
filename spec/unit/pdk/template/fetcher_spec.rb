@@ -30,7 +30,7 @@ describe PDK::Template::Fetcher do
   end
 
   describe '.with' do
-    let(:fetcher) { PDK::Template::Fetcher::AbstractFetcher.new(template_uri, fetcher_options) }
+    let(:fetcher) { described_class::AbstractFetcher.new(template_uri, fetcher_options) }
 
     before do
       allow(described_class).to receive(:instance).with(template_uri, fetcher_options).and_return(fetcher)
