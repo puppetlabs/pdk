@@ -13,7 +13,7 @@ describe PDK::Validate do
     end
 
     it 'all validator instances inherit from PDK::Validate::Validator' do
-      expect(described_class.validators.map(&:new)).to all(be_a(PDK::Validate::Validator))
+      expect(described_class.validators.map(&:new)).to all(be_a(described_class::Validator))
     end
   end
 

@@ -38,8 +38,8 @@ describe PDK::Report do
     it 'stores the events in the report by source' do
       expect(report).to have_attributes(
         events: {
-          'puppet-lint' => [instance_of(PDK::Report::Event)],
-          'rubocop' => [instance_of(PDK::Report::Event)]
+          'puppet-lint' => [instance_of(described_class::Event)],
+          'rubocop' => [instance_of(described_class::Event)]
         }
       )
     end

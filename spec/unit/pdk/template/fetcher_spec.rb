@@ -12,7 +12,7 @@ describe PDK::Template::Fetcher do
       let(:template_uri) { PDK::Util::TemplateURI.new('https://github.com/puppetlabs/pdk-templates') }
 
       it 'creates a Git Fetcher object' do
-        expect(instance).to be_a(PDK::Template::Fetcher::Git)
+        expect(instance).to be_a(described_class::Git)
       end
     end
 
@@ -20,17 +20,17 @@ describe PDK::Template::Fetcher do
       let(:template_uri) { PDK::Util::TemplateURI.new('/some/path') }
 
       before do
-        allow(PDK::Template::Fetcher::Git).to receive(:fetchable?).and_return(false)
+        allow(described_class::Git).to receive(:fetchable?).and_return(false)
       end
 
       it 'creates a Local Fetcher object' do
-        expect(instance).to be_a(PDK::Template::Fetcher::Local)
+        expect(instance).to be_a(described_class::Local)
       end
     end
   end
 
   describe '.with' do
-    let(:fetcher) { PDK::Template::Fetcher::AbstractFetcher.new(template_uri, fetcher_options) }
+    let(:fetcher) { described_class::AbstractFetcher.new(template_uri, fetcher_options) }
 
     before do
       allow(described_class).to receive(:instance).with(template_uri, fetcher_options).and_return(fetcher)

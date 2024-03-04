@@ -26,7 +26,8 @@ RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
       end
 
       it 'raises PDK::Config::LoadError' do
-        expect { subject.parse_file(subject.file) {} }.to raise_error(PDK::Config::LoadError, /error/)
+        result = subject
+        expect { result.parse_file(result.file) {} }.to raise_error(PDK::Config::LoadError, /error/)
       end
     end
 
@@ -36,9 +37,10 @@ RSpec.shared_examples 'a file based namespace' do |content, expected_settings|
       end
 
       it 'raises PDK::Config::LoadError' do
+        result = subject
         expect do
-          subject.parse_file(subject.file) {}
-        end.to raise_error(PDK::Config::LoadError, "Unable to open #{subject.file} for reading")
+          result.parse_file(result.file) {}
+        end.to raise_error(PDK::Config::LoadError, "Unable to open #{result.file} for reading")
       end
     end
   end
@@ -75,7 +77,8 @@ RSpec.shared_examples 'a file based namespace with a schema' do |content|
       end
 
       it 'yields schema based settings' do
-        expect { |o| subject.parse_file(subject.file, &o) }.to yield_control
+        result = subject
+        expect { |o| result.parse_file(result.file, &o) }.to yield_control
       end
     end
 
@@ -102,7 +105,8 @@ RSpec.shared_examples 'a file based namespace with a schema' do |content|
       end
 
       it 'raises LoadError' do
-        expect { subject.parse_file(subject.file) { |i| } }.to raise_error(PDK::Config::LoadError)
+        result = subject
+        expect { result.parse_file(result.file) { |i| } }.to raise_error(PDK::Config::LoadError)
       end
     end
   end
@@ -132,7 +136,8 @@ RSpec.shared_examples 'a file based namespace without a schema' do
       end
 
       it 'does not yield any results' do
-        expect { |o| subject.parse_file(subject.file, &o) }.not_to yield_control
+        result = subject
+        expect { |o| result.parse_file(result.file, &o) }.not_to yield_control
       end
     end
   end

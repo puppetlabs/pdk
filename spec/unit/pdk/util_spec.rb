@@ -20,13 +20,13 @@ describe PDK::Util do
     let(:version_file) { File.join('path', 'to', 'the', 'version', 'file') }
 
     before do
-      allow(PDK::Util::Version).to receive(:version_file).and_return(version_file)
+      allow(described_class::Version).to receive(:version_file).and_return(version_file)
     end
   end
 
   shared_context 'without version file', version_file: false do
     before do
-      allow(PDK::Util::Version).to receive(:version_file).and_return(nil)
+      allow(described_class::Version).to receive(:version_file).and_return(nil)
     end
   end
 
@@ -38,24 +38,24 @@ describe PDK::Util do
     let(:actual_start_dir) { '/path/to/something/deep/in/a/module' }
 
     before do
-      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep/in/a/module').and_return(true)
-      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in/a/module').and_return('/path/to/something/deep/in/a')
-      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep/in/a').and_return(true)
-      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in/a').and_return('/path/to/something/deep/in')
-      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep/in').and_return(true)
-      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in').and_return('/path/to/something/deep')
-      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something/deep').and_return(true)
-      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep').and_return('/path/to/something')
-      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to/something').and_return(true)
-      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to/something').and_return('/path/to')
-      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path/to').and_return(true)
-      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path/to').and_return('/path')
-      allow(PDK::Util::Filesystem).to receive(:directory?).with('/path').and_return(true)
-      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/path').and_return('/')
-      allow(PDK::Util::Filesystem).to receive(:directory?).with('/').and_return(true)
-      allow(PDK::Util::Filesystem).to receive(:expand_path).with('..', '/').and_return('/')
-      allow(PDK::Util::Filesystem).to receive(:expand_path).with(actual_start_dir).and_return(actual_start_dir)
-      allow(PDK::Util::Filesystem).to receive(:file?).with(a_string_matching(/metadata\.json\Z/)).and_return(false)
+      allow(described_class::Filesystem).to receive(:directory?).with('/path/to/something/deep/in/a/module').and_return(true)
+      allow(described_class::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in/a/module').and_return('/path/to/something/deep/in/a')
+      allow(described_class::Filesystem).to receive(:directory?).with('/path/to/something/deep/in/a').and_return(true)
+      allow(described_class::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in/a').and_return('/path/to/something/deep/in')
+      allow(described_class::Filesystem).to receive(:directory?).with('/path/to/something/deep/in').and_return(true)
+      allow(described_class::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep/in').and_return('/path/to/something/deep')
+      allow(described_class::Filesystem).to receive(:directory?).with('/path/to/something/deep').and_return(true)
+      allow(described_class::Filesystem).to receive(:expand_path).with('..', '/path/to/something/deep').and_return('/path/to/something')
+      allow(described_class::Filesystem).to receive(:directory?).with('/path/to/something').and_return(true)
+      allow(described_class::Filesystem).to receive(:expand_path).with('..', '/path/to/something').and_return('/path/to')
+      allow(described_class::Filesystem).to receive(:directory?).with('/path/to').and_return(true)
+      allow(described_class::Filesystem).to receive(:expand_path).with('..', '/path/to').and_return('/path')
+      allow(described_class::Filesystem).to receive(:directory?).with('/path').and_return(true)
+      allow(described_class::Filesystem).to receive(:expand_path).with('..', '/path').and_return('/')
+      allow(described_class::Filesystem).to receive(:directory?).with('/').and_return(true)
+      allow(described_class::Filesystem).to receive(:expand_path).with('..', '/').and_return('/')
+      allow(described_class::Filesystem).to receive(:expand_path).with(actual_start_dir).and_return(actual_start_dir)
+      allow(described_class::Filesystem).to receive(:file?).with(a_string_matching(/metadata\.json\Z/)).and_return(false)
     end
 
     context 'when start_dir is nil' do
@@ -65,7 +65,7 @@ describe PDK::Util do
 
       context 'and the target file exists' do
         before do
-          allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
+          allow(described_class::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
         end
 
         it { is_expected.to eq('/path/to/something/metadata.json') }
@@ -81,7 +81,7 @@ describe PDK::Util do
 
       context 'and the target file exists' do
         before do
-          allow(PDK::Util::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
+          allow(described_class::Filesystem).to receive(:file?).with('/path/to/something/metadata.json').and_return(true)
         end
 
         it { is_expected.to eq('/path/to/something/metadata.json') }
@@ -111,7 +111,7 @@ describe PDK::Util do
 
       context 'and the path does not exist' do
         before do
-          allow(PDK::Util::Filesystem).to receive(:exist?).with(path).and_return(false)
+          allow(described_class::Filesystem).to receive(:exist?).with(path).and_return(false)
         end
 
         it 'raises a FatalError' do
@@ -123,11 +123,11 @@ describe PDK::Util do
 
       context 'and the path exists' do
         before do
-          allow(PDK::Util::Filesystem).to receive(:exist?).with(path).and_return(true)
+          allow(described_class::Filesystem).to receive(:exist?).with(path).and_return(true)
         end
 
         it 'calls Puppet::Util::Windows::File.get_long_pathname to resolve the absolute path' do
-          expect(PDK::Util::Windows::File).to receive(:get_long_pathname).with(path)
+          expect(described_class::Windows::File).to receive(:get_long_pathname).with(path)
 
           described_class.canonical_path(path)
         end
@@ -140,7 +140,7 @@ describe PDK::Util do
       end
 
       it 'calls File.expath_path to resolve the absolute path' do
-        expect(PDK::Util::Filesystem).to receive(:expand_path).with(path)
+        expect(described_class::Filesystem).to receive(:expand_path).with(path)
 
         described_class.canonical_path(path)
       end
@@ -164,7 +164,7 @@ describe PDK::Util do
 
     context 'when running from a release' do
       before do
-        allow(PDK::Util::Version).to receive(:git_ref).and_return(nil)
+        allow(described_class::Version).to receive(:git_ref).and_return(nil)
         stub_const('PDK::VERSION', '1.3.0')
       end
 
@@ -173,7 +173,7 @@ describe PDK::Util do
 
     context 'when running from a pre-release' do
       before do
-        allow(PDK::Util::Version).to receive(:git_ref).and_return(nil)
+        allow(described_class::Version).to receive(:git_ref).and_return(nil)
         stub_const('PDK::VERSION', '1.3.0.pre')
       end
 
@@ -182,7 +182,7 @@ describe PDK::Util do
 
     context 'when running from git' do
       before do
-        allow(PDK::Util::Version).to receive(:git_ref).and_return('abc')
+        allow(described_class::Version).to receive(:git_ref).and_return('abc')
       end
 
       it { is_expected.to be true }
@@ -255,7 +255,7 @@ describe PDK::Util do
     context 'when running on Windows' do
       before do
         allow(Gem).to receive(:win_platform?).and_return(true)
-        allow(PDK::Util::Env).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
+        allow(described_class::Env).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
       end
 
       it 'returns a path in the %LOCALAPPDATA% folder' do
@@ -281,7 +281,7 @@ describe PDK::Util do
     context 'when running on Windows' do
       before do
         allow(Gem).to receive(:win_platform?).and_return(true)
-        allow(PDK::Util::Env).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
+        allow(described_class::Env).to receive(:[]).with('LOCALAPPDATA').and_return('C:/Users/test')
       end
 
       it 'returns a path in the %LOCALAPPDATA% folder' do
@@ -293,7 +293,7 @@ describe PDK::Util do
       before do
         allow(Gem).to receive(:win_platform?).and_return(false)
         allow(Dir).to receive(:home).with(any_args).and_return('/home/test')
-        allow(PDK::Util::Env).to receive(:fetch)
+        allow(described_class::Env).to receive(:fetch)
           .with('XDG_CONFIG_HOME', '/home/test/.config')
           .and_return('/xdg_home/test/.config')
       end
@@ -323,8 +323,8 @@ describe PDK::Util do
       context 'when ProgramData environment variable exists' do
         before do
           # ProgramData was added in Windows Vista
-          allow(PDK::Util::Env).to receive(:[]).with('ProgramData').and_return(program_data)
-          allow(PDK::Util::Env).to receive(:[]).with('AllUsersProfile').and_return(nil)
+          allow(described_class::Env).to receive(:[]).with('ProgramData').and_return(program_data)
+          allow(described_class::Env).to receive(:[]).with('AllUsersProfile').and_return(nil)
         end
 
         it 'returns a path in the Program Data directory' do
@@ -335,8 +335,8 @@ describe PDK::Util do
       context 'when AllUsersProfile environment variable exists' do
         before do
           # AllUsersProfile was added in Windows 2000
-          allow(PDK::Util::Env).to receive(:[]).with('ProgramData').and_return(nil)
-          allow(PDK::Util::Env).to receive(:[]).with('AllUsersProfile').and_return(program_data)
+          allow(described_class::Env).to receive(:[]).with('ProgramData').and_return(nil)
+          allow(described_class::Env).to receive(:[]).with('AllUsersProfile').and_return(program_data)
         end
 
         it 'returns a path in the Program Data directory' do
@@ -423,13 +423,13 @@ describe PDK::Util do
     let(:test_path) { '\x00path/test' }
 
     before do
-      allow(PDK::Util::Filesystem).to receive(:directory?).and_call_original
+      allow(described_class::Filesystem).to receive(:directory?).and_call_original
     end
 
     # Directories which indicate a module root
     ['manifests', 'lib/puppet', 'lib/puppet_x', 'lib/facter', 'tasks', 'facts.d', 'functions', 'types'].each do |testcase|
       it "detects #{testcase} as being in the root of a module" do
-        allow(PDK::Util::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
+        allow(described_class::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
         expect(described_class.in_module_root?(test_path)).to be(true)
       end
     end
@@ -437,18 +437,18 @@ describe PDK::Util do
     # Directories which do not indicate a module root
     ['lib', 'Boltdir', 'puppet'].each do |testcase|
       it "detects #{testcase} as not being in the root of a module" do
-        allow(PDK::Util::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
+        allow(described_class::Filesystem).to receive(:directory?).with(File.join(test_path, testcase)).and_return(true)
         expect(described_class.in_module_root?(test_path)).to be(false)
       end
     end
 
     it 'detects metadata.json within the folder and determines that it is the root of a module' do
-      allow(PDK::Util::Filesystem).to receive(:file?).with(File.join(test_path, 'metadata.json')).and_return(true)
+      allow(described_class::Filesystem).to receive(:file?).with(File.join(test_path, 'metadata.json')).and_return(true)
       expect(described_class.in_module_root?(test_path)).to be(true)
     end
 
     it 'uses the current directory if a directory is not specified' do
-      expect(PDK::Util::Filesystem).to receive(:directory?) { |path| expect(path).to start_with(Dir.pwd) }.at_least(:once)
+      expect(described_class::Filesystem).to receive(:directory?) { |path| expect(path).to start_with(Dir.pwd) }.at_least(:once)
       described_class.in_module_root?
     end
   end

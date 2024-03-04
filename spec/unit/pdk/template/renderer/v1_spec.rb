@@ -34,7 +34,7 @@ describe PDK::Template::Renderer::V1 do
 
   describe '.instance' do
     it 'creates a PDK::Template::Renderer::V1::Renderer object' do
-      expect(described_class.instance(template_root, template_uri, pdk_context)).to be_a(PDK::Template::Renderer::V1::Renderer)
+      expect(described_class.instance(template_root, template_uri, pdk_context)).to be_a(described_class::Renderer)
     end
   end
 end
