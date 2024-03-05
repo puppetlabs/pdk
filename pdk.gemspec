@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.7.0'
 
   spec.add_runtime_dependency 'bundler', '>= 2.1.0', '< 3.0.0'
-  spec.add_runtime_dependency 'childprocess', '~> 4.1.0'
+  spec.add_runtime_dependency 'childprocess', '>= 4.1', '< 5.1'
   spec.add_runtime_dependency 'cri', '~> 2.15.11'
   spec.add_runtime_dependency 'diff-lcs', '>= 1.5.0'
   spec.add_runtime_dependency 'ffi', '>= 1.15.5', '< 2.0.0'
