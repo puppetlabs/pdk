@@ -2,12 +2,12 @@ require 'spec_helper_package'
 
 describe 'Test puppet & ruby version selection' do
   module_name = 'version_selection'
-  # IMPORTANT: The following block should be updated with the latest version of each release supported for the
-  # test cases to pass. If you are running integration testing prior to a release and its failing due to missing Puppet
-  # gems, verify that the following versions are correct.
+  # IMPORTANT: The following block should be updated with the version of ruby that is included within the newest
+  #   Puppet release for each major version. If you are running integration testing prior to a release and its
+  #   failing, verify that the following versions are correct.
   test_cases = [
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.28.0', expected_puppet: '7.28.0', expected_ruby: '2.7.8' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '8.4.0', expected_puppet: '8.4.0', expected_ruby: '3.2.2' }
+    { envvar: 'PDK_PUPPET_VERSION', expected_puppet: '7', expected_ruby: '2.7.8' },
+    { envvar: 'PDK_PUPPET_VERSION', expected_puppet: '8', expected_ruby: '3.2.2' }
   ]
 
   before(:all) do
@@ -15,8 +15,8 @@ describe 'Test puppet & ruby version selection' do
   end
 
   test_cases.each do |test_case|
-    context "Select Puppet #{test_case[:version]}" do
-      let(:env) { { test_case[:envvar] => test_case[:version] } }
+    context "Select Puppet #{test_case[:expected_puppet]}" do
+      let(:env) { { test_case[:envvar] => test_case[:expected_puppet] } }
       let(:cwd) { module_name }
 
       let(:expected_puppet) { Regexp.escape(test_case[:expected_puppet]) }
@@ -28,8 +28,8 @@ describe 'Test puppet & ruby version selection' do
 
       describe command('pdk bundle exec puppet --version') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stderr) { is_expected.to match(/using puppet (#{expected_puppet})/im) }
-        its(:stdout) { is_expected.to match(/^(#{expected_puppet})*/im) }
+        its(:stderr) { is_expected.to match(/using puppet (#{expected_puppet}\.\d+\.\d+)/im) }
+        its(:stdout) { is_expected.to match(/^(#{expected_puppet}\.\d+\.\d+)*/im) }
       end
 
       describe command('pdk bundle exec ruby --version') do
