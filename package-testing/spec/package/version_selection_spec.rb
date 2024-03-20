@@ -6,8 +6,8 @@ describe 'Test puppet & ruby version selection' do
   # test cases to pass. If you are running integration testing prior to a release and its failing due to missing Puppet
   # gems, verify that the following versions are correct.
   test_cases = [
-    { envvar: 'PDK_PUPPET_VERSION', version: '7.28.0', expected_puppet: '7.28.0', expected_ruby: '2.7.8' },
-    { envvar: 'PDK_PUPPET_VERSION', version: '8.4.0', expected_puppet: '8.4.0', expected_ruby: '3.2.2' }
+    { envvar: 'PDK_PUPPET_VERSION', expected_puppet: '7.29.1', expected_ruby: '2.7.8' },
+    { envvar: 'PDK_PUPPET_VERSION', expected_puppet: '8.5.1', expected_ruby: '3.2.2' }
   ]
 
   before(:all) do
@@ -15,8 +15,8 @@ describe 'Test puppet & ruby version selection' do
   end
 
   test_cases.each do |test_case|
-    context "Select Puppet #{test_case[:version]}" do
-      let(:env) { { test_case[:envvar] => test_case[:version] } }
+    context "Select Puppet #{test_case[:expected_puppet]}" do
+      let(:env) { { test_case[:envvar] => test_case[:expected_puppet] } }
       let(:cwd) { module_name }
 
       let(:expected_puppet) { Regexp.escape(test_case[:expected_puppet]) }
