@@ -23,17 +23,6 @@ describe 'Updating an existing module' do
           create_remote_file(get_working_node, File.join(module_dir, 'metadata.json'), metadata.to_json)
 
           sync_yaml = YAML.safe_load(URI.open("https://raw.githubusercontent.com/#{mod}/main/.sync.yml").read)
-
-          sync_yaml['Gemfile'].each_key do |gem_type|
-            next unless sync_yaml['Gemfile'][gem_type].respond_to?(:each_key)
-
-            sync_yaml['Gemfile'][gem_type].each_key do |group|
-              sync_yaml['Gemfile'][gem_type][group].select! do |gem|
-                gem['gem'] =~ /\Apuppet-module-(?:posix|win)-system/
-              end
-            end
-          end
-
           create_remote_file(get_working_node, File.join(module_dir, '.sync.yml'), sync_yaml.to_yaml)
         end
 
