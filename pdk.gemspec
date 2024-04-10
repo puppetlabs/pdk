@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'concurrent-ruby', '~> 1.0'
   spec.add_runtime_dependency 'facter', '~> 4.0'
   spec.add_runtime_dependency 'httpclient', '~> 2.8.3'
+  spec.add_runtime_dependency 'locale', '~> 2.1.0'
 
   # Used in the pdk-templates
   spec.add_runtime_dependency 'deep_merge', '~> 1.2.2'
