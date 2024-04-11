@@ -5,7 +5,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v3.0.1](https://github.com/puppetlabs/pdk/tree/v3.0.1) - 2023-12-07
+## [v3.1.0](https://github.com/puppetlabs/pdk/tree/v3.1.0) - 2024-04-11
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.0.1...v3.1.0)
+
+### Added
+
+- Allow `pdk convert` and `pdk update` to work in a ControlRepo context [#1310](https://github.com/puppetlabs/pdk/pull/1310) ([garrettrowell](https://github.com/garrettrowell))
+- Support executable templates [#1289](https://github.com/puppetlabs/pdk/pull/1289) ([nabertrand](https://github.com/nabertrand))
+
+### Fixed
+
+- (CAT-1796) Fix missing locale gem [#1337](https://github.com/puppetlabs/pdk/pull/1337) ([LukasAud](https://github.com/LukasAud))
+- (CAT-1703) Convert concurrent-ruby from a pin to a pessimistic constraint [#1312](https://github.com/puppetlabs/pdk/pull/1312) ([david22swan](https://github.com/david22swan))
+
+## [v3.0.1](https://github.com/puppetlabs/pdk/tree/v3.0.1) - 2023-12-13
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.0.0...v3.0.1)
 
