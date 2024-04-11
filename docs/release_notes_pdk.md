@@ -2,6 +2,21 @@
 
 New features, enhancements, and resolved issues for PDK.
 
+## PDK 3.1.0
+
+### New features and enhancements
+
+* Executable templates are now supported
+* `pdk convert` and `pdk update`can now work in a ControlRepo context
+
+### Template Changes
+
+* The templates have been updated to allow Rubocop rules to be overriden.
+* CFPropertyList has been added as a pinned dependency on Windows.
+* Our Rubocop pin has been increased to `1.50.0`.
+* The codecov gem has been removed.
+* The archived ruby vscode extension has been replaced.
+
 ## PDK 3.0.1
 
 ### New features and enhancements
