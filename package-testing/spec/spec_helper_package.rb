@@ -5,8 +5,6 @@ Dir['./spec/package/support/*.rb'].sort.each { |f| require f }
 
 include SpecUtils # rubocop:disable Style/MixinUsage
 
-set :env, PDK_DISABLE_ANALYTICS: 'true'
-
 bin_path = SpecUtils.windows_node? ? 'bin$PATH' : 'bin:$PATH'
 set :path, "#{SpecUtils.install_dir}/#{bin_path}"
 
