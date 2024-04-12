@@ -67,7 +67,6 @@ module Specinfra
 end
 
 tempdir = nil
-analytics_config = nil
 
 # TODO: --path is deprecated
 # bundler won't install bundler into the --path, so in order to access ::Bundler.with_unbundled_env
@@ -97,11 +96,6 @@ RSpec.configure do |c|
     Dir.chdir(tempdir)
     puts "Working in #{tempdir}"
 
-    analytics_config = Tempfile.new('analytics.yml')
-    analytics_config.write(YAML.dump('disabled' => true))
-    analytics_config.close
-    ENV['PDK_ANALYTICS_CONFIG'] = analytics_config.path
-
     # Remove PUPPET_GEM_VERSION if it exists in the test environment
     ENV.delete('PUPPET_GEM_VERSION')
   end
@@ -111,7 +105,6 @@ RSpec.configure do |c|
     FileUtils.rm_rf(tempdir)
     FileUtils.rm_rf(RSpec.configuration.template_dir)
     puts "Cleaned #{tempdir}"
-    analytics_config.unlink
   end
 
   c.after do |e|
