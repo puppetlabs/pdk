@@ -28,8 +28,6 @@ module PDK
 
         Release.prepare_interview(opts) unless opts[:force]
 
-        Release.send_analytics("release #{cmd.name}", opts)
-
         release = PDK::Module::Release.new(nil, opts)
 
         Release.module_compatibility_checks!(release, opts)

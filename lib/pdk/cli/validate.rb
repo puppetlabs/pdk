@@ -29,7 +29,6 @@ module PDK
         require 'pdk/validate'
 
         if opts[:list]
-          PDK::CLI::Util.analytics_screen_view('validate', opts)
           PDK.logger.info(format('Available validators: %{validator_names}', validator_names: PDK::Validate.validator_names.join(', ')))
           exit 0
         end
@@ -74,12 +73,6 @@ module PDK
           PDK.logger.info('Running all available validators...')
         end
         validators_to_run = PDK::Validate.validator_names if validators_to_run.nil?
-
-        if validators_to_run.sort == PDK::Validate.validator_names.sort
-          PDK::CLI::Util.analytics_screen_view('validate', opts)
-        else
-          PDK::CLI::Util.analytics_screen_view(['validate', validators_to_run.sort].flatten.join('_'), opts)
-        end
 
         # Subsequent arguments are targets.
         targets.concat(args.to_a[1..]) if args.length > 1

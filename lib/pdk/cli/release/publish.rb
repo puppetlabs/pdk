@@ -37,8 +37,6 @@ module PDK
 
         Release.prepare_publish_interview(TTY::Prompt.new(help_color: :cyan), opts) unless opts[:force]
 
-        Release.send_analytics("release #{cmd.name}", opts)
-
         release = PDK::Module::Release.new(nil, opts)
 
         release.run

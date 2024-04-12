@@ -16,7 +16,6 @@ module Cri
     class CriExitException
       def initialize(is_error:)
         @is_error = is_error
-        PDK.analytics.event('CLI', 'invalid command', label: PDK::CLI.anonymised_args.join(' ')) if error?
       end
     end
   end
@@ -56,7 +55,6 @@ module PDK
 
     def self.run(args)
       @args = args
-      PDK::Config.analytics_config_interview! unless PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK::Config.analytics_config_exist?
       @base_cmd.run(args)
     rescue PDK::CLI::ExitWithError => e
       PDK.logger.send(e.log_level, e.message)

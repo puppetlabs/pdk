@@ -23,8 +23,6 @@ module PDK
         screen_view_name << args[0] if args.size >= 1
         screen_view_name << args[1] if args.size >= 2 && args[0] == 'exec'
 
-        PDK::CLI::Util.analytics_screen_view(screen_view_name.join('_'))
-
         # Ensure that the correct Ruby is activated before running command.
         puppet_env = PDK::CLI::Util.puppet_from_opts_or_env({})
         PDK::Util::RubyVersion.use(puppet_env[:ruby_version])

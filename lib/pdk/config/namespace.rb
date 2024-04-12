@@ -24,7 +24,7 @@ module PDK
       #   a child of (defaults to nil).
       # @option params [self] :persistent_defaults whether default values should be persisted
       #   to disk when evaluated. By default they are not persisted to disk. This is typically
-      #   used for settings which a randomly generated, instead of being deterministic, e.g. analytics user-id
+      #   used for settings which a randomly generated, instead of being deterministic, e.g. module_defaults author
       # @param block [Proc] a block that is evaluated within the new instance.
       def initialize(name = nil, file: nil, parent: nil, persistent_defaults: false, &block)
         @file = PDK::Util::Filesystem.expand_path(file) unless file.nil?
@@ -238,7 +238,7 @@ module PDK
       #  Returns true when filter is nil.
       #  Returns true if the filter is exactly the same name as the setting.
       #  Returns true if the name is a sub-key of the filter e.g.
-      #    Given a filter of user.module_defaults, `user.module_defaults.author` will return true, but `user.analytics.disabled` will return false.
+      #    Given a filter of user.module_defaults, `user.module_defaults.author` will return true, but `user.pdk_feature_flags.requested` will return false.
       #
       # @param name [String] The setting name to test.
       # @param filter [String] The filter used to test on the name.

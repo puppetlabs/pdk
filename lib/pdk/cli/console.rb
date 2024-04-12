@@ -34,8 +34,6 @@ module PDK
 
         PDK::CLI::Util.validate_puppet_version_opts(processed_options)
 
-        PDK::CLI::Util.analytics_screen_view('console', args)
-
         # TODO: figure out if we need to remove default configs set by puppet
         # so it is scoped for the module only
         # "--environmentpath"...

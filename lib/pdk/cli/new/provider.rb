@@ -17,8 +17,6 @@ module PDK
 
         raise PDK::CLI::ExitWithError, format("'%{name}' is not a valid provider name", name: provider_name) unless Util::OptionValidator.valid_provider_name?(provider_name)
 
-        PDK::CLI::Util.analytics_screen_view('new_provider', opts)
-
         require 'pdk/generate/provider'
 
         updates = PDK::Generate::Provider.new(PDK.context, provider_name, opts).run

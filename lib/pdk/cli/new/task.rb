@@ -24,8 +24,6 @@ module PDK
 
         raise PDK::CLI::ExitWithError, format("'%{name}' is not a valid task name", name: task_name) unless Util::OptionValidator.valid_task_name?(task_name)
 
-        PDK::CLI::Util.analytics_screen_view('new_task', opts)
-
         updates = PDK::Generate::Task.new(PDK.context, task_name, opts).run
         PDK::CLI::Util::UpdateManagerPrinter.print_summary(updates, tense: :past)
       end
