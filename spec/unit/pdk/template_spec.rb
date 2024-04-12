@@ -47,11 +47,6 @@ describe PDK::Template do
       it 'yields a PDK::Template::TemplateDir' do
         expect { |b| described_class.with(template_uri, pdk_context, &b) }.to yield_with_args(template_dir)
       end
-
-      it 'sends analytics event' do
-        expect(PDK.analytics).to receive(:event).with('TemplateDir', 'initialize', anything)
-        described_class.with(template_uri, pdk_context) {}
-      end
     end
   end
 end

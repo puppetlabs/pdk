@@ -13,12 +13,6 @@ describe 'PDK::CLI release prep' do
 
       expect { PDK::CLI.run(cli_args) }.to exit_nonzero
     end
-
-    it 'does not submit the command to analytics' do
-      expect(analytics).not_to receive(:screen_view)
-
-      expect { PDK::CLI.run(cli_args) }.to exit_nonzero
-    end
   end
 
   context 'when run from inside a module' do

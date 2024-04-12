@@ -44,7 +44,7 @@ module PDK
         template_dir = TemplateDir.instance(uri, fetcher.path, context)
         template_dir.metadata = fetcher.metadata
 
-        yield uri.default? ? 'default' : 'custom'
+        yield template_dir
       end
       nil
     end

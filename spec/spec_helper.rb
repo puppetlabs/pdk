@@ -27,8 +27,6 @@ require 'tempfile'
 # automatically load any shared examples or contexts
 Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
 
-analytics_config = nil
-
 FIXTURES_DIR = File.join(__dir__, 'fixtures')
 EMPTY_MODULE_ROOT = File.join(FIXTURES_DIR, 'module_root')
 
@@ -40,39 +38,20 @@ RSpec.shared_context 'stubbed logger' do
   end
 end
 
-RSpec.shared_context 'stubbed analytics' do
-  let(:analytics) { PDK::Analytics::Client::Noop.new(logger: logger) }
-
-  before do |example|
-    allow(PDK).to receive(:analytics).and_return(analytics) if example.metadata[:use_stubbed_analytics]
-  end
-end
-
 RSpec.configure do |c|
   c.define_derived_metadata do |metadata|
     metadata[:use_stubbed_logger] = true unless metadata.key?(:use_stubbed_logger)
-    metadata[:use_stubbed_analytics] = true unless metadata.key?(:use_stubbed_analytics)
   end
 
   c.include_context 'stubbed logger'
-  c.include_context 'stubbed analytics'
 
   c.before(:suite) do
     require 'yaml'
-    analytics_config = Tempfile.new('analytics.yml')
-    analytics_config.write(YAML.dump(disabled: true))
-    analytics_config.close
-    ENV['PDK_ANALYTICS_CONFIG'] = analytics_config.path
-  end
-
-  c.after(:suite) do
-    analytics_config.unlink
   end
 
   # This should catch any tests where we are not mocking out the actual calls to Rubygems.org
   c.before do
     allow(Gem::SpecFetcher).to receive(:fetcher).and_raise('Unmocked call to Gem::SpecFetcher.fetcher!')
-    ENV['PDK_DISABLE_ANALYTICS'] = 'true'
   end
 
   c.add_setting :root

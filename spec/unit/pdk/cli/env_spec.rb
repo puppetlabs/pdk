@@ -24,14 +24,6 @@ describe 'Running `pdk env`' do
     end
 
     context 'and called with no arguments' do
-      it 'sends a "env" screen view to analytics' do
-        expect(analytics).to receive(:screen_view).with(
-          'env',
-          output_format: 'default',
-          ruby_version: RUBY_VERSION
-        )
-      end
-
       it 'outputs export commands for environment variables' do
         output_regexes = [
           /export PDK_RESOLVED_PUPPET_VERSION="\d\.\d+\.\d+"/,

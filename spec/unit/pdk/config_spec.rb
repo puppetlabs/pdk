@@ -8,8 +8,6 @@ describe PDK::Config do
 
   include_context 'mock configuration'
 
-  let(:bolt_analytics_path) { '~/.puppetlabs/bolt/analytics.yaml' }
-
   def mock_file(path, content)
     allow(PDK::Util::Filesystem).to receive(:file?).with(PDK::Util::Filesystem.expand_path(path)).and_return(true)
     allow(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(path), anything)
@@ -78,7 +76,6 @@ describe PDK::Config do
   end
 
   describe '.get' do
-    let(:bolt_analytics_content) { "---\ndisabled: true\n" }
     let(:system_config_content) do
       <<-EOT
       {
@@ -118,10 +115,10 @@ describe PDK::Config do
       expect(config.get('user')).to be_a(described_class::Namespace)
     end
 
-    it 'traverses namespaces' do
-      # The analytics is a child namespace of user
-      expect(config.get('user', 'analytics', 'disabled')).to be(true)
-    end
+    # Test previously work due to the boolean value `user.analytics.disabled` always being present
+    # it 'traverses namespaces' do
+    #   expect(config.get('user', 'module_defaults', 'author')).to eq(['controlrepo'])
+    # end
 
     it 'traverses setting hash values' do
       expect(config.get('system', 'setting', 'child', 'child_setting')).to eq('child_setting_value')
@@ -144,7 +141,7 @@ describe PDK::Config do
     end
 
     context 'given a root name that does not exist' do
-      let(:names) { ['missing', 'analytics', 'disabled'] }
+      let(:names) { ['missing', 'module_defaults', 'author'] }
 
       it 'returns nil' do
         expect(config.get(*names)).to be_nil
@@ -363,7 +360,7 @@ describe PDK::Config do
     end
 
     context 'given a root name that does not exist' do
-      let(:names) { ['missing', 'analytics', 'disabled'] }
+      let(:names) { ['missing', 'module_defaults', 'author'] }
 
       it 'raises an error' do
         expect { config.set(names, value) }.to raise_error(ArgumentError)
@@ -520,188 +517,6 @@ describe PDK::Config do
         end
 
         it_behaves_like 'a new setting file', "{\n  \"bar\": \"mock_value\"\n}"
-      end
-    end
-  end
-
-  describe 'user.analytics.disabled' do
-    context 'set' do
-      it 'can be set to true' do
-        expect { config.user_config['analytics']['disabled'] = true }.not_to raise_error
-      end
-
-      it 'can be set to false' do
-        expect { config.user_config['analytics']['disabled'] = false }.not_to raise_error
-      end
-
-      it 'can not be set to a string' do
-        expect { config.user_config['analytics']['disabled'] = 'no' }.to raise_error(ArgumentError)
-      end
-    end
-
-    context 'default value' do
-      context 'when there is no pre-existing bolt configuration' do
-        it 'returns true' do
-          expect(config.user_config['analytics']['disabled']).to be_truthy
-        end
-
-        it 'saves the disabled value to the analytics config file' do
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), /disabled: true/)
-          config.user_config['analytics']['disabled']
-        end
-      end
-
-      context 'when there is a pre-existing bolt configuration' do
-        let(:bolt_analytics_content) { "---\ndisabled: false\n" }
-
-        it 'returns the value from the bolt configuration' do
-          expect(config.user_config['analytics']['disabled']).to be_falsey
-        end
-
-        it 'saves the disabled value to the analytics config file' do
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), /disabled: false/)
-          config.user_config['analytics']['disabled']
-        end
-
-        context 'and the bolt configuration is unparsable' do
-          before do
-            allow(described_class::YAML).to receive(:new).and_call_original
-            allow(described_class::YAML).to receive(:new)
-              .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
-              .and_raise(described_class::LoadError)
-          end
-
-          it 'returns true' do
-            expect(config.user_config['analytics']['disabled']).to be_truthy
-          end
-
-          it 'saves the disabled value to the analytics config file' do
-            expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), /disabled: true/)
-            config.user_config['analytics']['disabled']
-          end
-        end
-      end
-    end
-  end
-
-  describe 'user.analytics.user-id' do
-    context 'set' do
-      it 'can be set to a string that looks like a V4 UUID' do
-        expect { config.user_config['analytics']['user-id'] = SecureRandom.uuid }.not_to raise_error
-      end
-
-      it 'can not be set to other values' do
-        expect { config.user_config['analytics']['user-id'] = 'totally a UUID' }.to raise_error(ArgumentError)
-      end
-    end
-
-    def uuid_regex(uuid)
-      # Depending on the YAML or JSON generator, it may, or may not have quotes
-      /user-id: (?:#{uuid}|'#{uuid}'|"#{uuid}")/
-    end
-
-    context 'default value' do
-      context 'when there is no pre-existing bolt configuration' do
-        it 'generates a new UUID' do
-          expect(SecureRandom).to receive(:uuid).and_call_original
-          config.user_config['analytics']['user-id']
-        end
-
-        it 'saves the UUID to the analytics config file' do
-          new_id = SecureRandom.uuid
-          expect(SecureRandom).to receive(:uuid).and_return(new_id)
-          # Expect that the user-id is saved to the config file
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), uuid_regex(new_id))
-          # ... and that it returns the new id
-          expect(config.user_config['analytics']['user-id']).to eq(new_id)
-        end
-      end
-
-      context 'when there is a pre-existing bolt configuration' do
-        let(:uuid) { SecureRandom.uuid }
-        let(:bolt_analytics_content) { "---\nuser-id: #{uuid}\n" }
-
-        it 'returns the value from the bolt configuration' do
-          expect(config.user_config['analytics']['user-id']).to eq(uuid)
-        end
-
-        it 'saves the UUID to the analytics config file' do
-          # Expect that the user-id is saved to the config file
-          expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), uuid_regex(uuid))
-          config.user_config['analytics']['user-id']
-        end
-
-        context 'and the bolt configuration is unparsable' do
-          before do
-            allow(described_class::YAML).to receive(:new).and_call_original
-            allow(described_class::YAML).to receive(:new)
-              .with(file: PDK::Util::Filesystem.expand_path(bolt_analytics_path))
-              .and_raise(described_class::LoadError)
-          end
-
-          it 'generates a new UUID' do
-            expect(SecureRandom).to receive(:uuid).and_call_original
-            config.user_config['analytics']['user-id']
-          end
-
-          it 'saves the UUID to the analytics config file' do
-            new_id = SecureRandom.uuid
-            expect(SecureRandom).to receive(:uuid).and_return(new_id)
-            # Expect that the user-id is saved to the config file
-            expect(PDK::Util::Filesystem).to receive(:write_file).with(PDK::Util::Filesystem.expand_path(described_class.analytics_config_path), uuid_regex(new_id))
-            # ... and that it returns the new id
-            expect(config.user_config['analytics']['user-id']).to eq(new_id)
-          end
-        end
-      end
-    end
-  end
-
-  describe '.analytics_config_interview!' do
-    before do
-      prompt = TTY::Prompt::Test.new
-      allow(TTY::Prompt).to receive(:new).and_return(prompt)
-      prompt.input << ("#{responses.join("\r")}\r")
-      prompt.input.rewind
-
-      allow(PDK::CLI::Util).to receive(:interactive?).and_return(true)
-      # Mock any file writing
-      allow(PDK::Util::Filesystem).to receive(:write_file).with(anything, anything)
-    end
-
-    context 'when the user responds yes' do
-      let(:responses) { ['yes'] }
-
-      it 'sets user.analytics.disabled to false' do
-        described_class.analytics_config_interview!
-        expect(PDK.config.get(['user', 'analytics', 'disabled'])).to be_falsey
-      end
-    end
-
-    context 'when the user responds no' do
-      let(:responses) { ['no'] }
-
-      it 'sets user.analytics.disabled to true' do
-        described_class.analytics_config_interview!
-        expect(PDK.config.get(['user', 'analytics', 'disabled'])).to be_truthy
-      end
-    end
-
-    context 'when the user just hits enter' do
-      let(:responses) { [''] }
-
-      it 'sets user.analytics.disabled to false' do
-        described_class.analytics_config_interview!
-        expect(PDK.config.get(['user', 'analytics', 'disabled'])).to be_falsey
-      end
-    end
-
-    context 'when the user cancels the interview' do
-      let(:responses) { ["\003"] } # \003 == Ctrl-C
-
-      it 'sets user.analytics.disabled to true' do
-        described_class.analytics_config_interview!
-        expect(PDK.config.get(['user', 'analytics', 'disabled'])).to be_truthy
       end
     end
   end

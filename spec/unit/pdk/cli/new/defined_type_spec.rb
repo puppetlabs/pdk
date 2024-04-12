@@ -15,23 +15,11 @@ describe 'PDK::CLI new defined_type' do
     it 'exits non-zero and prints the `pdk new defined_type` help' do
       expect { PDK::CLI.run(args) }.to exit_nonzero.and output(help_text).to_stdout
     end
-
-    it 'does not submit the command to analytics' do
-      expect(analytics).not_to receive(:screen_view)
-
-      expect { PDK::CLI.run(args) }.to exit_nonzero.and output(help_text).to_stdout
-    end
   end
 
   shared_examples 'it exits with an error' do |expected_error|
     it 'exits with an error' do
       expect(logger).to receive(:error).with(a_string_matching(expected_error))
-
-      expect { PDK::CLI.run(args) }.to exit_nonzero
-    end
-
-    it 'does not submit the command to analytics' do
-      expect(analytics).not_to receive(:screen_view)
 
       expect { PDK::CLI.run(args) }.to exit_nonzero
     end
@@ -81,14 +69,6 @@ describe 'PDK::CLI new defined_type' do
 
       it 'generates the defined type' do
         expect(generator_double).to receive(:run)
-      end
-
-      it 'submits the command to analytics' do
-        expect(analytics).to receive(:screen_view).with(
-          'new_defined_type',
-          output_format: 'default',
-          ruby_version: RUBY_VERSION
-        )
       end
     end
   end
