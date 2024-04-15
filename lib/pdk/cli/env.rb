@@ -17,8 +17,6 @@ module PDK
 
         PDK::CLI::Util.validate_puppet_version_opts(opts)
 
-        PDK::CLI::Util.analytics_screen_view('env')
-
         # Ensure that the correct Ruby is activated before running command.
         puppet_env = PDK::CLI::Util.puppet_from_opts_or_env(opts)
         PDK::Util::RubyVersion.use(puppet_env[:ruby_version])

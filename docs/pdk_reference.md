@@ -40,11 +40,11 @@ Usage:
 pdk get config <key>
 ```
 
-For example: `pdk config get user.analytics.disabled`
+For example: `pdk config get user.module_defaults.author`
 
 |Argument|Description|Value|Default|
 |--------|-----------|-----|-------|
-|`<key>`|The name, or name prefix, of the setting key to retrieve. Raises an error if the setting does not exist.|The full name of the setting, such as `user.analytics.disabled`. Alternatively, the beginning of the setting name, which retrieves all settings that match. For example, `user.analytics` returns all settings that start with user.analytics`user.analytics`.|If no `<key>` is passed, the command returns all configuration keys that it finds.|
+|`<key>`|The name, or name prefix, of the setting key to retrieve. Raises an error if the setting does not exist.|The full name of the setting, such as `user.module_defaults.author`. Alternatively, the beginning of the setting name, which retrieves all settings that match. For example, `user.module_defaults` returns all settings that start with `user.module_defaults`.|If no `<key>` is passed, the command returns all configuration keys that it finds.|
 
 ## `pdk remove config` command
 
@@ -64,7 +64,7 @@ pdk remove config [--all] <key>
 
 |Argument|Description|Value|Default|
 |--------|-----------|-----|-------|
-|`<key>`|Required. The configuration key to delete values for.|The full name of the setting, such as `user.analytics.disabled`. Alternatively, the beginning of the setting name, which retrieves all settings that match. For example, `user.analytics` returns all settings that start with user.analytics`user.analytics`.|No default. The `<key>` is required.|
+|`<key>`|Required. The configuration key to delete values for.|The full name of the setting, such as `user.module_defaults.author`. Alternatively, the beginning of the setting name, which retrieves all settings that match. For example, `user.module_defaults` returns all settings that start with `user.module_defaults`.|No default. The `<key>` is required.|
 |`<value>`|Required. The value to delete for the specified key. To delete all values, use the `--all` option instead of specifying values.|One or more specified values for the given configuration key.|No default. Either a `<value>` or the `--all` option is required for normal usage.|
 |`--all`|Empties all values for the given key.|None.|When this option is passed, empties all values for the specified key.|
 
@@ -79,11 +79,11 @@ Usage:
 pdk set config [--type|--as <typename>] [--force] <key> [<value>]
 ```
 
-For example: `pdk set config --type boolean user.analytics.disabled false`
+For example: `pdk set config --type boolean user.module_defaults.author john_doe`
 
 |Argument|Description|Value|Default|
 |--------|-----------|-----|-------|
-|`<key>`|Required. The configuration key to set, change, or add values for.|The full name of the setting, such as `user.analytics.disabled`.|No default. The `<key>` is required.|
+|`<key>`|Required. The configuration key to set, change, or add values for.|The full name of the setting, such as `user.module_defaults.author`.|No default. The `<key>` is required.|
 |`<value>`|Required. The value to set for the specified key.|One or more valid values for the specified `<key>`.|No default. One or more values are required.|
 |`–-add`|Treats a user-defined configuration key as a multi-value key.|None.|This option treats the value as a list of values.|
 |`--force`|Runs the command, making literal changes without prompting for confirmation.|None.|By default, prompts are enabled.|

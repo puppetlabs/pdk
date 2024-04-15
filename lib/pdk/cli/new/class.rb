@@ -22,8 +22,6 @@ module PDK
 
         raise PDK::CLI::ExitWithError, format("'%{name}' is not a valid class name", name: class_name) unless Util::OptionValidator.valid_class_name?(class_name)
 
-        PDK::CLI::Util.analytics_screen_view('new_class', opts)
-
         updates = PDK::Generate::PuppetClass.new(PDK.context, class_name, opts).run
         PDK::CLI::Util::UpdateManagerPrinter.print_summary(updates, tense: :past)
       end

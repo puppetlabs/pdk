@@ -33,8 +33,6 @@ module PDK
           end
         end
 
-        PDK::CLI::Util.analytics_screen_view('update', opts)
-
         updater = PDK::Module::Update.new(PDK.context.root_path, opts)
 
         if updater.pinned_to_puppetlabs_template_tag?

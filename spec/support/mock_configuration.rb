@@ -1,10 +1,8 @@
 RSpec.shared_context 'mock configuration' do
   let(:default_answer_file_content) { nil }
   let(:system_answers_content) { nil }
-  let(:analytics_config_content) { nil }
   let(:user_config_content) { nil }
   let(:system_config_content) { nil }
-  let(:bolt_analytics_content) { nil }
 
   let(:new_config) do
     PDK::Config.new.tap do |item|
@@ -23,10 +21,8 @@ RSpec.shared_context 'mock configuration' do
     [
       { file: PDK::AnswerFile.default_answer_file_path, content: default_answer_file_content },
       { file: PDK::Config.system_answers_path, content: system_answers_content },
-      { file: PDK::Config.analytics_config_path, content: analytics_config_content },
       { file: PDK::Config.user_config_path, content: user_config_content },
-      { file: PDK::Config.system_config_path, content: system_config_content },
-      { file: '~/.puppetlabs/bolt/analytics.yaml', content: bolt_analytics_content }
+      { file: PDK::Config.system_config_path, content: system_config_content }
     ].each do |item|
       # If the content is nil then mock a missing file, otherwise mock a read-able file
       if item[:content].nil?

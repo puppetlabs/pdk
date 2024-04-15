@@ -44,9 +44,6 @@ module PDK
         template_dir = TemplateDir.instance(uri, fetcher.path, context)
         template_dir.metadata = fetcher.metadata
 
-        template_type = uri.default? ? 'default' : 'custom'
-        PDK.analytics.event('TemplateDir', 'initialize', label: template_type)
-
         yield template_dir
       end
       nil

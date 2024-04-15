@@ -17,12 +17,6 @@ describe 'PDK::CLI new test' do
 
       expect { PDK::CLI.run(['new', 'test', 'my_object']) }.to exit_nonzero
     end
-
-    it 'does not submit the command to analytics' do
-      expect(analytics).not_to receive(:screen_view)
-
-      expect { PDK::CLI.run(['new', 'test', 'my_object']) }.to exit_nonzero
-    end
   end
 
   context 'when run from inside a module' do
@@ -39,22 +33,10 @@ describe 'PDK::CLI new test' do
       it 'exits non-zero and prints the `pdk new test` help' do
         expect { PDK::CLI.run(['new', 'test', '--unit']) }.to exit_nonzero.and output(help_text).to_stdout
       end
-
-      it 'does not submit the command to analytics' do
-        expect(analytics).not_to receive(:screen_view)
-
-        expect { PDK::CLI.run(['new', 'test', '--unit']) }.to exit_nonzero.and output(help_text).to_stdout
-      end
     end
 
     context 'and provided an empty string as the object name' do
       it 'exits non-zero and prints the `pdk new test` help' do
-        expect { PDK::CLI.run(['new', 'test', '--unit', '']) }.to exit_nonzero.and output(help_text).to_stdout
-      end
-
-      it 'does not submit the command to analytics' do
-        expect(analytics).not_to receive(:screen_view)
-
         expect { PDK::CLI.run(['new', 'test', '--unit', '']) }.to exit_nonzero.and output(help_text).to_stdout
       end
     end
@@ -66,12 +48,6 @@ describe 'PDK::CLI new test' do
 
       it 'exits with an error' do
         expect(logger).to receive(:error).with(a_string_matching(/unable to find anything called "test-class"/i))
-
-        expect { PDK::CLI.run(['new', 'test', '--unit', 'test-class']) }.to exit_nonzero
-      end
-
-      it 'does not submit the command to analytics' do
-        expect(analytics).not_to receive(:screen_view)
 
         expect { PDK::CLI.run(['new', 'test', '--unit', 'test-class']) }.to exit_nonzero
       end
@@ -93,17 +69,6 @@ describe 'PDK::CLI new test' do
           expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'my_module::test_class', include(spec_only: true)).and_return(generator)
           expect(generator).to receive(:run)
         end
-
-        it 'submits the command to analytics' do
-          allow(PDK::Generate::PuppetClass).to receive(:new).and_return(generator)
-
-          expect(analytics).to receive(:screen_view).with(
-            'new_test',
-            cli_options: 'unit=true',
-            output_format: 'default',
-            ruby_version: RUBY_VERSION
-          )
-        end
       end
 
       context 'and the test type is not specified' do
@@ -114,17 +79,6 @@ describe 'PDK::CLI new test' do
         it 'generates a unit test for the class' do
           expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'my_module::test_class', include(spec_only: true)).and_return(generator)
           expect(generator).to receive(:run)
-        end
-
-        it 'submits the command to analytics' do
-          allow(PDK::Generate::PuppetClass).to receive(:new).and_return(generator)
-
-          expect(analytics).to receive(:screen_view).with(
-            'new_test',
-            cli_options: 'unit=true',
-            output_format: 'default',
-            ruby_version: RUBY_VERSION
-          )
         end
       end
     end
@@ -140,12 +94,6 @@ describe 'PDK::CLI new test' do
 
       it 'exits with an error' do
         expect(logger).to receive(:error).with(a_string_matching(/pdk does not support generating unit tests for "unsupported_thing"/i))
-
-        expect { PDK::CLI.run(['new', 'test', '--unit', 'test_thing']) }.to exit_nonzero
-      end
-
-      it 'does not submit the command to analytics' do
-        expect(analytics).not_to receive(:screen_view)
 
         expect { PDK::CLI.run(['new', 'test', '--unit', 'test_thing']) }.to exit_nonzero
       end

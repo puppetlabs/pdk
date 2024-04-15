@@ -17,12 +17,6 @@ describe 'PDK::CLI new class' do
 
       expect { PDK::CLI.run(['new', 'class', 'test_class']) }.to exit_nonzero
     end
-
-    it 'does not submit the command to analytics' do
-      expect(analytics).not_to receive(:screen_view)
-
-      expect { PDK::CLI.run(['new', 'class', 'test_class']) }.to exit_nonzero
-    end
   end
 
   context 'when run from inside a module' do
@@ -36,22 +30,10 @@ describe 'PDK::CLI new class' do
       it 'exits non-zero and prints the `pdk new class` help' do
         expect { PDK::CLI.run(['new', 'class']) }.to exit_nonzero.and output(help_text).to_stdout
       end
-
-      it 'does not submit the command to analytics' do
-        expect(analytics).not_to receive(:screen_view)
-
-        expect { PDK::CLI.run(['new', 'class']) }.to exit_nonzero.and output(help_text).to_stdout
-      end
     end
 
     context 'and provided an empty string as the class name' do
       it 'exits non-zero and prints the `pdk new class` help' do
-        expect { PDK::CLI.run(['new', 'class', '']) }.to exit_nonzero.and output(help_text).to_stdout
-      end
-
-      it 'does not submit the command to analytics' do
-        expect(analytics).not_to receive(:screen_view)
-
         expect { PDK::CLI.run(['new', 'class', '']) }.to exit_nonzero.and output(help_text).to_stdout
       end
     end
@@ -59,12 +41,6 @@ describe 'PDK::CLI new class' do
     context 'and provided an invalid class name' do
       it 'exits with an error' do
         expect(logger).to receive(:error).with(a_string_matching(/'test-class' is not a valid class name/))
-
-        expect { PDK::CLI.run(['new', 'class', 'test-class']) }.to exit_nonzero
-      end
-
-      it 'does not submit the command to analytics' do
-        expect(analytics).not_to receive(:screen_view)
 
         expect { PDK::CLI.run(['new', 'class', 'test-class']) }.to exit_nonzero
       end
@@ -80,16 +56,6 @@ describe 'PDK::CLI new class' do
       it 'generates the class' do
         expect(PDK::Generate::PuppetClass).to receive(:new).with(anything, 'test_class', instance_of(Hash)).and_return(generator)
         expect(generator).to receive(:run)
-      end
-
-      it 'submits the command to analytics' do
-        allow(PDK::Generate::PuppetClass).to receive(:new).and_return(generator)
-
-        expect(analytics).to receive(:screen_view).with(
-          'new_class',
-          output_format: 'default',
-          ruby_version: RUBY_VERSION
-        )
       end
     end
   end

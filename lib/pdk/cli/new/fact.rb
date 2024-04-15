@@ -17,8 +17,6 @@ module PDK
 
         raise PDK::CLI::ExitWithError, format("'%{name}' is not a valid fact name", name: fact_name) unless Util::OptionValidator.valid_fact_name?(fact_name)
 
-        PDK::CLI::Util.analytics_screen_view('new_fact', opts)
-
         require 'pdk/generate/fact'
 
         updates = PDK::Generate::Fact.new(PDK.context, fact_name, opts).run

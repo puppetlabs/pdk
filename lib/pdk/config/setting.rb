@@ -9,9 +9,9 @@ module PDK
     #
     # @example
     #
-    # PDK::Config::Namespace.new('analytics') do
-    #   setting :disabled do
-    #     validate PDK::Config::Validator.boolean
+    # PDK::Config::Namespace.new('module_defaults') do
+    #   setting :author do
+    #     validate PDK::Config::Validator.string
     #     default_to { false }
     #   end
     # end

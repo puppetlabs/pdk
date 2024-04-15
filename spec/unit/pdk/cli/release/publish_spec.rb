@@ -15,12 +15,6 @@ describe 'PDK::CLI release publish' do
 
       expect { PDK::CLI.run(cli_args) }.to exit_nonzero
     end
-
-    it 'does not submit the command to analytics' do
-      expect(analytics).not_to receive(:screen_view)
-
-      expect { PDK::CLI.run(cli_args) }.to exit_nonzero
-    end
   end
 
   context 'when run from inside a module' do
@@ -93,7 +87,6 @@ describe 'PDK::CLI release publish' do
 
       context 'when passed a forge-token via PDK_FORGE_TOKEN' do
         before do
-          allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(true)
           allow(PDK::Util::Env).to receive(:[]).with('PDK_FORGE_TOKEN').and_return('env123')
         end
 
@@ -109,7 +102,6 @@ describe 'PDK::CLI release publish' do
       let(:cli_args) { base_cli_args << '--forge-token=cli123' }
 
       before do
-        allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(true)
         allow(PDK::Util::Env).to receive(:[]).with('PDK_FORGE_TOKEN').and_return('env123')
       end
 

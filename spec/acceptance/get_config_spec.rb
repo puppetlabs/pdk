@@ -8,26 +8,26 @@ describe 'pdk get config' do
     describe command('pdk get config') do
       its(:exit_status) { is_expected.to eq 0 }
       # This setting should appear in all pdk versions
-      its(:stdout) { is_expected.to match(/user\.analytics\.user-id=/) }
+      its(:stdout) { is_expected.to match(/user.pdk_feature_flags.available=/) }
       its(:stderr) { is_expected.to have_no_output }
     end
 
-    describe command('pdk get config user.analytics.disabled') do
+    describe command('pdk get config user.pdk_feature_flags.available') do
       its(:exit_status) { is_expected.to eq 0 }
       # This setting, and only, this setting should appear in output
-      its(:stdout) { is_expected.to eq("true\n") }
+      its(:stdout) { is_expected.to match('["controlrepo"]') }
       its(:stderr) { is_expected.to have_no_output }
     end
 
-    describe command('pdk get config user.analytics') do
+    describe command('pdk get config user.pdk_feature_flags') do
       its(:exit_status) { is_expected.to eq 0 }
       # There should be two configuration items returned
       its(:stdout) { expect(is_expected.target.split("\n").count).to eq(2) }
 
       its(:stdout) do
         result = is_expected.target.split("\n").sort
-        expect(result[0]).to match('user.analytics.disabled=true')
-        expect(result[1]).to match(/user.analytics.user-id=.+/)
+        expect(result[0]).to match('user.pdk_feature_flags.available=["controlrepo"]')
+        expect(result[1]).to match(/user.pdk_feature_flags.requested=.+/)
       end
 
       its(:stderr) { is_expected.to have_no_output }

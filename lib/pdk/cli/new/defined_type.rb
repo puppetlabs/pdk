@@ -20,8 +20,6 @@ module PDK
 
         raise PDK::CLI::ExitWithError, format("'%{name}' is not a valid defined type name", name: defined_type_name) unless Util::OptionValidator.valid_defined_type_name?(defined_type_name)
 
-        PDK::CLI::Util.analytics_screen_view('new_defined_type', opts)
-
         require 'pdk/generate/defined_type'
 
         updates = PDK::Generate::DefinedType.new(PDK.context, defined_type_name, opts).run

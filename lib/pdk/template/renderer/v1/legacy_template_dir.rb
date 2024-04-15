@@ -43,7 +43,6 @@ module PDK
           # @api private
           def config_for(dest_path, sync_config_path = nil)
             require 'pdk/util'
-            require 'pdk/analytics'
 
             module_root = PDK::Util.module_root
             sync_config_path ||= File.join(module_root, '.sync.yml') unless module_root.nil?
@@ -61,17 +60,15 @@ module PDK
             file_config.merge!(@config.fetch(dest_path, {})) unless dest_path.nil?
             file_config.merge!(@config).tap do |c|
               if uri.default?
-                file_value = if c['unmanaged']
-                               'unmanaged'
-                             elsif c['delete']
-                               'deleted'
-                             elsif @sync_config&.key?(dest_path)
-                               'customized'
-                             else
-                               'default'
-                             end
-
-                PDK.analytics.event('TemplateDir', 'file', label: dest_path, value: file_value)
+                if c['unmanaged']
+                  'unmanaged'
+                elsif c['delete']
+                  'deleted'
+                elsif @sync_config&.key?(dest_path)
+                  'customized'
+                else
+                  'default'
+                end
               end
             end
           end

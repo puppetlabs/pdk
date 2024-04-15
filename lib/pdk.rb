@@ -1,5 +1,4 @@
 module PDK
-  autoload :Analytics, 'pdk/analytics'
   autoload :AnswerFile, 'pdk/answer_file'
   autoload :Bolt, 'pdk/bolt'
   autoload :Config, 'pdk/config'
@@ -57,18 +56,5 @@ module PDK
     return false unless available_feature_flags.include?(flagname)
 
     requested_feature_flags.include?(flagname)
-  end
-
-  def self.analytics
-    @analytics ||= PDK::Analytics.build_client(
-      logger: PDK.logger,
-      disabled: PDK::Util::Env['PDK_DISABLE_ANALYTICS'] || PDK.config.get_within_scopes('analytics.disabled', ['user', 'system']),
-      user_id: PDK.config.get_within_scopes('analytics.user-id', ['user', 'system']),
-      app_id: "UA-139917834-#{PDK::Util.development_mode? ? '2' : '1'}",
-      client: :google_analytics,
-      app_name: 'pdk',
-      app_version: PDK::VERSION,
-      app_installer: PDK::Util.package_install? ? 'package' : 'gem'
-    )
   end
 end

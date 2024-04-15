@@ -39,8 +39,6 @@ module PDK
         begin
           generator, obj = PDK::Util::PuppetStrings.find_object(object_name)
 
-          PDK::CLI::Util.analytics_screen_view('new_test', opts)
-
           updates = generator.new(PDK.context, obj['name'], opts.merge(spec_only: true)).run
           PDK::CLI::Util::UpdateManagerPrinter.print_summary(updates, tense: :past)
         rescue PDK::Util::PuppetStrings::NoObjectError

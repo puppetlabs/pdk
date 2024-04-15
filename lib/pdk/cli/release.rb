@@ -41,8 +41,6 @@ module PDK
 
         Release.prepare_interview(opts) unless opts[:force]
 
-        Release.send_analytics('release', opts)
-
         release = PDK::Module::Release.new(nil, opts)
 
         Release.module_compatibility_checks!(release, opts)
@@ -79,12 +77,6 @@ module PDK
             end
           end
         end
-      end
-
-      # Send_analytics for the given command and Cri options
-      def self.send_analytics(command, opts)
-        # Don't pass tokens to analytics
-        PDK::CLI::Util.analytics_screen_view(command, opts.reject { |k, _| k == :'forge-token' })
       end
 
       def self.prepare_interview(opts)

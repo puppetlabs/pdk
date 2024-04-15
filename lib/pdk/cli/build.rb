@@ -22,8 +22,6 @@ module PDK
           log_level: :info
         )
 
-        PDK::CLI::Util.analytics_screen_view('build', opts)
-
         module_metadata = PDK::Module::Metadata.from_file('metadata.json')
 
         # TODO: Ensure forge metadata has been set, or call out to interview

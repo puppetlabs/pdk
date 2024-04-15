@@ -44,54 +44,6 @@ describe PDK::CLI do
     end
   end
 
-  context 'analytics opt-out prompt' do
-    before do
-      # Temporarily bypass suite-wide analytics disable
-      allow(PDK::Util::Env).to receive(:[]).and_call_original
-      allow(PDK::Util::Env).to receive(:[]).with('PDK_ANALYTICS_CONFIG').and_return(nil)
-      allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return(nil)
-
-      # Suppress output
-      allow($stdout).to receive(:puts).with(anything)
-    end
-
-    context 'when analytics config does not yet exist' do
-      before do
-        allow(PDK::Config).to receive(:analytics_config_exist?).and_return(false)
-      end
-
-      it 'prompts the user about analytics config' do
-        expect(PDK::Config).to receive(:analytics_config_interview!)
-
-        expect { described_class.run(['--version']) }.to exit_zero
-      end
-
-      context 'when PDK_DISABLE_ANALYTICS is set' do
-        before do
-          allow(PDK::Util::Env).to receive(:[]).with('PDK_DISABLE_ANALYTICS').and_return('true')
-        end
-
-        it 'does not prompt the user about analytics config' do
-          expect(PDK::Config).not_to receive(:analytics_config_interview!)
-
-          expect { described_class.run(['--version']) }.to exit_zero
-        end
-      end
-    end
-
-    context 'when analytics config already exists' do
-      before do
-        allow(PDK::Config).to receive(:analytics_config_exist?).and_return(true)
-      end
-
-      it 'does not prompt the user about analytics config' do
-        expect(PDK::Config).not_to receive(:analytics_config_interview!)
-
-        expect { described_class.run(['--version']) }.to exit_zero
-      end
-    end
-  end
-
   ['validate', 'test unit', 'bundle'].each do |command|
     context "when #{command} command used but not in a module folder" do
       include_context 'run outside module'
@@ -127,18 +79,6 @@ describe PDK::CLI do
       allow($stdout).to receive(:puts).with(anything)
 
       described_class.run([])
-    end
-  end
-
-  context 'when provided an invalid subcommand' do
-    it 'submits an event to analytics' do
-      expect(analytics).to receive(:event).with(
-        'CLI', 'invalid command', label: 'test acceptance --an-opt redacted redacted'
-      )
-
-      expect do
-        described_class.run(['test', 'acceptance', '--an-opt', 'opt-value', 'some_arg'])
-      end.to exit_nonzero.and output.to_stderr
     end
   end
 end
