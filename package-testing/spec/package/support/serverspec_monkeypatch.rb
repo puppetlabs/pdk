@@ -49,6 +49,11 @@ module Specinfra
       old_build_command = instance_method(:build_command)
 
       define_method(:build_command) do |cmd|
+        if get_config(:cwd)
+          cmd = cmd.shelljoin if cmd.is_a? Array
+          cmd = "cd #{get_config(:cwd)} && #{cmd}"
+        end
+
         prepend_env(old_build_command.bind_call(self, cmd))
       end
 
@@ -57,36 +62,27 @@ module Specinfra
       end
 
       def prepend_env(cmd)
-        _, env, shell, command = cmd.match(/\Aenv (.+?)? (\S+) -c (.+)\Z/).to_a
+        _, orig_env, orig_cmd = cmd.match(/\A(?:env (.+) )?(\S+(?: -i)?(?: -l)? -c .+)\Z/).to_a
+
+        env = [orig_env].compact
+        (get_config(:env) || {}).each do |k, v|
+          env << %(#{k}="#{v}")
+        end
+
+        command = if env.empty?
+                    orig_cmd
+                  else
+                    "env #{env.join(' ')} #{orig_cmd}"
+                  end
 
         output = if get_config(:run_as)
-                   ["sudo -u #{get_config(:run_as)}"]
+                   "su -l #{get_config(:run_as)} -c #{command.shellescape}"
                  else
-                   ['env']
+                   command
                  end
 
-        (get_config(:env) || {}).each do |k, v|
-          output << %(#{k}="#{v}")
-        end
-        output << env
-        new_cmd = if get_config(:cwd)
-                    "'cd #{get_config(:cwd).shellescape} && #{unescape(command)}'"
-                  else
-                    "'#{unescape(command)}'"
-                  end
-        output << '-i --' if get_config(:run_as)
-
-        # sudo on osx 10.11 behaves strangely when processing arguments and does
-        # not preserve quoted arguments, so we have to quote twice for this corner
-        # case.
-        output << if Specinfra.get_working_node.platform.start_with?('osx-10.11-') && get_config(:run_as)
-                    "#{shell} -c \"#{new_cmd}\""
-                  else
-                    "#{shell} -c #{new_cmd}"
-                  end
-
-        $stderr.puts(output.join(' ')) if ENV.key?('BEAKER_debug')
-        output.join(' ')
+        $stderr.puts(output) if ENV.key?('BEAKER_debug')
+        output
       end
     end
   end
