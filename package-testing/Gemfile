@@ -2,6 +2,7 @@ source ENV.fetch('GEM_SOURCE', nil) || 'https://rubygems.org'
 
 gem 'beaker', '~> 4.39'
 gem 'beaker-abs', '~> 0.11.0'
+gem 'beaker-docker', '~> 2'
 gem 'beaker-hostgenerator', '~> 2.2.0'
 gem 'beaker-puppet', '= 1.29.0'
 gem 'beaker-rspec', '= 7.1.0'
