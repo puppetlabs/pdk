@@ -38,3 +38,26 @@ jobs:
       ruby_version: ${{ matrix.ruby_version }}
       rake_task: 'acceptance:local'
       runs_on: ${{ matrix.os }}
+
+  on-failure-workflow-restarter-proxy:
+    # (1) run this job after the "acceptance" job and...
+    needs: [acceptance]
+    # (2) continue ONLY IF "acceptance" fails
+    if: always() && needs.acceptance.result == 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      # (3) checkout this repository in order to "see" the following custom action
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # (4) "use" the custom action to retrigger the failed "acceptance job" above
+      # NOTE: pass the SOURCE_GITHUB_TOKEN to the custom action because (a) it must have
+      # this to trigger the reusable workflow that restarts the failed job; and
+      # (b) custom actions do not have access to the calling workflow's secrets
+      - name: Trigger reusable workflow
+        uses: ./.github/actions/workflow-restarter-proxy
+        env:
+          SOURCE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          repository: ${{ github.repository }}
+          run_id: ${{ github.run_id }}
