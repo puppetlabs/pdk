@@ -18,8 +18,6 @@ describe 'Running PDK as an unprivileged user' do
           on(host, "mkdir #{homedir} && chown #{uid}:#{gid} #{homedir}") unless directory_exists_on(host, homedir)
         end
       end
-
-      on(host, 'sed -i -e \'s/\srequiretty/!requiretty/g\' /etc/sudoers') if file_exists_on(host, '/etc/sudoers')
     end
   end
 
