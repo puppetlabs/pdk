@@ -5,7 +5,7 @@ description: |
   NOTE: This action cannot itself do the re-start because in effect it's composite steps get folded
   into the source workflow, the one that "uses" this custom action.  Since github does not allow a workflow
   to retrigger itself, then the source workflow must be triggered not by this but by another workflow.
-  Therefore, this custom action triggers that other workflow.
+  Therefore, this custom action triggers that other workflow via the API.
 inputs:
   repository:
     description: 'Should be set to github.repository via the calling workflow'
@@ -24,32 +24,17 @@ runs:
           echo "ERROR: \$SOURCE_GITHUB_TOKEN must be set by the calling workflow" 1>&2 && exit 1
         fi
 
-    # checkout the repository because I want bundler to have access to my Gemfile
-    - name: Checkout repository
-      uses: actions/checkout@v2
-
-    # setup ruby including a bundle install of my Gemfile
-    - name: Set up Ruby and install Octokit
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: '3'
-        bundler-cache: true # 'bundle install' will be run and gems cached for faster workflow runs
-
-    # Trigger the reusable workflow
-    - name: Trigger reusable workflow
+    - name: Trigger reusable workflow via API
       shell: bash
       run: |
-        bundle exec ruby -e "
-        require 'octokit'
-        client = Octokit::Client.new(:access_token => '${{ env.SOURCE_GITHUB_TOKEN }}')
-        client.post(
-          '/repos/${{ inputs.repository }}/actions/workflows/workflow-restarter.yml/dispatches',
-          {
-            ref: 'main',
-            inputs: {
-              repo: '${{ inputs.repository }}',
-              run_id: '${{ inputs.run_id }}'
-            }
+        curl -X POST \
+        -H "Authorization: token ${{ env.SOURCE_GITHUB_TOKEN  }}" \
+        -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/repos/${{ inputs.repository }}/actions/workflows/workflow-restarter.yml/dispatches \
+        -d '{
+          "ref": "main",
+          "inputs": {
+            "repo": "${{ inputs.repository }}",
+            "run_id": "${{ inputs.run_id }}"
           }
-        )
-        "
+        }'
