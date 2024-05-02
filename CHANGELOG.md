@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v3.2.0](https://github.com/puppetlabs/pdk/tree/v3.2.0) - 2024-05-02
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.1.0...v3.2.0)
+
+### Fixed
+
+- (CAT-1807)  Remove analytics from the PDK [#1339](https://github.com/puppetlabs/pdk/pull/1339) ([david22swan](https://github.com/david22swan))
+
 ## [v3.1.0](https://github.com/puppetlabs/pdk/tree/v3.1.0) - 2024-04-11
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.0.1...v3.1.0)
