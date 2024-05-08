@@ -162,7 +162,7 @@ module PDK
 
       # Do basic validation and parsing of the name parameter.
       def process_name(data)
-        validate_name(data['name'])
+        validate_name(data['name']) unless PDK.context.is_a?(PDK::Context::ControlRepo)
         author, modname = data['name'].split(%r{[-/]}, 2)
         data['name'] = [author, modname].join('-')
 
