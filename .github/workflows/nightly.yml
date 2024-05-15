@@ -44,7 +44,7 @@ jobs:
           - puppet_gem_version: "~> 8.0"
             ruby_version: "3.2"
     name: "acceptance (ruby ${{ matrix.ruby_version }} | ${{ matrix.os }})"
-  
+    run: 'gem uninstall bundler -v 2.5.10; gem install bundler  -v 2.5.9'
     uses: "puppetlabs/cat-github-actions/.github/workflows/gem_acceptance.yml@main"
     secrets: "inherit"
     with:
@@ -52,8 +52,6 @@ jobs:
       puppet_version: ${{ matrix.puppet_gem_version }}
       rake_task: 'acceptance:local'
       runs_on: ${{ matrix.os }}
-      bundler-cache: false
-      BUNDLER_VERSION: "2.5.9"
       
 
   on-failure-workflow-restarter-proxy:
