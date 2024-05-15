@@ -30,7 +30,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'cri', '~> 2.15.11'
 
   # Childprocess and deps
-  spec.add_runtime_dependency 'childprocess', '~> 4.1.0'
+  spec.add_runtime_dependency 'childprocess', '~> 5.0'
   spec.add_runtime_dependency 'hitimes', '2.0.0'
 
   ## root tty gems
