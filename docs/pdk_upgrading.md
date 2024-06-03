@@ -22,13 +22,13 @@ For that reason we recommend clearing the cache before you install PDK 3.0.0.
 
 #### On Linux/MacOS
 
-```
+```bash
 rm -rf ~/.pdk/cache
 ```
 
 #### On Windows
 
-```
+```powershell
 Remove-Item -Path $ENV:USERPROFILE\AppData\Local\PDK\cache -Recurse -Force
 ```
 
@@ -53,7 +53,7 @@ If it hasn't, it can easily be removed with a few simple steps:
 
 From a new PowerShell session, run the following command:
 
-```
+```powershell
 Get-Command -name PDK
 ```
 
@@ -61,7 +61,7 @@ Get-Command -name PDK
 
 From a new PowerShell session run the following command:
 
-```
+```powershell
 Get-ChildItem -Path 'C:\Program Files\WindowsPowerShell\Modules\'
 ```
 
@@ -88,7 +88,7 @@ To do this, simply run `pdk update` inside a module and follow the prompts.
 
 You may encounter the following error after upgrading to PDK 3.0.0
 
-```
+```bash
   bolt was resolved to 3.23.1, which depends on
     r10k was resolved to 3.15.4, which depends on
       gettext-setup was resolved to 1.1.0, which depends on
@@ -103,10 +103,11 @@ At this time, PDK cannot support all Gems with native extensions.
 ##### Resolution
 
 To resolve the issue you can either:
+
 * Run `pdk update`.
 * Manually add the following requirement to your `.sync.yml` and run `pdk update`.
 
-```
+```yaml
   optional:
     ":development":
     - gem: racc
@@ -118,7 +119,7 @@ To resolve the issue you can either:
 
 You may encounter the following error after upgrading to PDK 3.0.0
 
-```
+```bash
    github_changelog_generator was resolved to 1.16.4, which depends on
     async-http-faraday was resolved to 0.12.0, which depends on
       async-http was resolved to 0.60.2, which depends on
