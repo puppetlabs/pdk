@@ -296,3 +296,7 @@ $env:http_proxy="http://user:password@proxy.domain.com:port"
 
 $env:https_proxy="http://user:password@proxy.domain.com:port"
 ```
+
+## Setting up the PDK to connect to self-hosted git repositories
+
+If after you've created a new module with the pdk, you want to download and test dependencies or "fixtures" from a self-hosted git repository, then you'll need to configure the pdk to trust this self-hosted site.  For more information, see [PDK Troubleshooting](pdk_troubleshooting.md#pdk-failing-to-pull-from-custom-git-server).

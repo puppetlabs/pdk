@@ -7,6 +7,8 @@ Upgrade PDK using the same method you used to originally install it. See the PDK
 [installation](pdk_install.md) instructions for your platform for details.
 Then, update your modules to integrate any module template changes.
 
+Note also that if you have added certificates for self-hosted git repositories to the pdk's `cert.pem` (`/opt/puppetlabs/pdk/ssl/cert.pem` on linux or `C:\Program Files\Puppet Labs\DevelopmentKit\ssl\cert.pem` on windows), then you'll need to re-append these certificates after the pdk upgrade. For more information see the known issue [Upgrading the pdk over-writes the pdk's `cert.pem`](pdk_known_issues.md#upgrading-the-pdk-over-writes-the-pdks-certpem).
+
 ## Upgrading to PDK 3.0.0
 
 ### Clear the local PDK cache
