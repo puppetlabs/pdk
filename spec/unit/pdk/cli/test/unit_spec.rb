@@ -4,8 +4,8 @@ require 'pdk/cli'
 describe '`pdk test unit`' do
   subject(:test_unit_cmd) { PDK::CLI.instance_variable_get(:@test_unit_cmd) }
 
-  let(:puppet_version) { '5.4.0' }
-  let(:ruby_version) { '2.4.3' }
+  let(:ruby_version) { PDK_VERSION[:latest][:ruby] }
+  let(:puppet_version) { PDK_VERSION[:latest][:full] }
 
   before do
     allow(PDK::Util::RubyVersion).to receive(:use)
@@ -204,11 +204,11 @@ describe '`pdk test unit`' do
   end
 
   context 'with --puppet-version' do
-    let(:puppet_version) { '5.3' }
+    let(:puppet_version) { PDK_VERSION[:lts][:full] }
     let(:puppet_env) do
       {
         ruby_version: ruby_version,
-        gemset: { puppet: '5.3.5' }
+        gemset: { puppet: PDK_VERSION[:latest][:full] }
       }
     end
 

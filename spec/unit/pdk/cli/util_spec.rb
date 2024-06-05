@@ -231,8 +231,8 @@ describe PDK::CLI::Util do
 
     context 'when puppet-version has been set' do
       let(:options) { { 'puppet-version': '8' } }
-      let(:ruby_version) { '3.2.2' }
-      let(:puppet_version) { '8' }
+      let(:ruby_version) { PDK_VERSION[:latest][:ruby] }
+      let(:puppet_version) { PDK_VERSION[:latest][:major] }
 
       before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
@@ -243,12 +243,12 @@ describe PDK::CLI::Util do
 
     context 'when PDK_PUPPET_VERSION has been set' do
       let(:options) { {} }
-      let(:ruby_version) { '3.2.2' }
-      let(:puppet_version) { '8.1.0' }
+      let(:ruby_version) { PDK_VERSION[:latest][:ruby] }
+      let(:puppet_version) { PDK_VERSION[:latest][:full] }
 
       before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
-        allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return('4.10.10')
+        allow(PDK::Util::Env).to receive(:[]).with('PDK_PUPPET_VERSION').and_return(PDK_VERSION[:latest][:full])
       end
 
       it_behaves_like 'it returns a puppet environment'
@@ -261,8 +261,8 @@ describe PDK::CLI::Util do
         let(:context) { PDK::Context::Module.new(nil, nil) }
 
         context 'and a puppet version can be found in the module metadata' do
-          let(:ruby_version) { '3.2.2' }
-          let(:puppet_version) { '8.1.0' }
+          let(:ruby_version) { PDK_VERSION[:latest][:ruby] }
+          let(:puppet_version) { PDK_VERSION[:latest][:full] }
 
           before do
             allow(PDK::Util::PuppetVersion).to receive(:from_module_metadata).and_return(version_result)
@@ -277,8 +277,8 @@ describe PDK::CLI::Util do
         end
 
         context 'and there is no puppet version in the module metadata' do
-          let(:ruby_version) { '3.2.2' }
-          let(:puppet_version) { '8.1.0' }
+          let(:ruby_version) { PDK_VERSION[:latest][:ruby] }
+          let(:puppet_version) { PDK_VERSION[:latest][:full] }
 
           before do
             allow(PDK::Util::PuppetVersion).to receive_messages(from_module_metadata: nil, latest_available: version_result)
@@ -291,8 +291,8 @@ describe PDK::CLI::Util do
       context 'in a Control Repo Context' do
         let(:context) { PDK::Context::ControlRepo.new(nil, nil) }
 
-        let(:ruby_version) { '3.2.2' }
-        let(:puppet_version) { '8.1.0' }
+        let(:ruby_version) { PDK_VERSION[:latest][:ruby] }
+        let(:puppet_version) { PDK_VERSION[:latest][:full] }
 
         before do
           expect(PDK::Util::PuppetVersion).to receive(:latest_available).and_return(version_result)
@@ -394,8 +394,8 @@ describe PDK::CLI::Util do
   describe '.validate_puppet_version_opts' do
     subject(:validate_puppet_version_opts) { described_class.validate_puppet_version_opts(options) }
 
-    let(:cli_puppet_version) { '5.3' }
-    let(:env_puppet_version) { '5.1' }
+    let(:cli_puppet_version) { PDK_VERSION[:latest][:full] }
+    let(:env_puppet_version) { PDK_VERSION[:lts][:full] }
 
     context 'when --puppet-dev is set' do
       let(:options) { { 'puppet-dev': true } }
