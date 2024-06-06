@@ -7,6 +7,8 @@ Upgrade PDK using the same method you used to originally install it. See the PDK
 [installation](pdk_install.md) instructions for your platform for details.
 Then, update your modules to integrate any module template changes.
 
+Note also that if you have added certificates for self-hosted git repositories to the pdk's `cert.pem` (`/opt/puppetlabs/pdk/ssl/cert.pem` on linux or `C:\Program Files\Puppet Labs\DevelopmentKit\ssl\cert.pem` on windows), then you'll need to re-append these certificates after the pdk upgrade. For more information see the known issue [Upgrading the pdk over-writes the pdk's `cert.pem`](pdk_known_issues.md#upgrading-the-pdk-over-writes-the-pdks-certpem).
+
 ## Upgrading to PDK 3.0.0
 
 ### Clear the local PDK cache
@@ -22,13 +24,13 @@ For that reason we recommend clearing the cache before you install PDK 3.0.0.
 
 #### On Linux/MacOS
 
-```
+```bash
 rm -rf ~/.pdk/cache
 ```
 
 #### On Windows
 
-```
+```powershell
 Remove-Item -Path $ENV:USERPROFILE\AppData\Local\PDK\cache -Recurse -Force
 ```
 
@@ -53,7 +55,7 @@ If it hasn't, it can easily be removed with a few simple steps:
 
 From a new PowerShell session, run the following command:
 
-```
+```powershell
 Get-Command -name PDK
 ```
 
@@ -61,7 +63,7 @@ Get-Command -name PDK
 
 From a new PowerShell session run the following command:
 
-```
+```powershell
 Get-ChildItem -Path 'C:\Program Files\WindowsPowerShell\Modules\'
 ```
 
@@ -88,7 +90,7 @@ To do this, simply run `pdk update` inside a module and follow the prompts.
 
 You may encounter the following error after upgrading to PDK 3.0.0
 
-```
+```bash
   bolt was resolved to 3.23.1, which depends on
     r10k was resolved to 3.15.4, which depends on
       gettext-setup was resolved to 1.1.0, which depends on
@@ -103,10 +105,11 @@ At this time, PDK cannot support all Gems with native extensions.
 ##### Resolution
 
 To resolve the issue you can either:
+
 * Run `pdk update`.
 * Manually add the following requirement to your `.sync.yml` and run `pdk update`.
 
-```
+```yaml
   optional:
     ":development":
     - gem: racc
@@ -118,7 +121,7 @@ To resolve the issue you can either:
 
 You may encounter the following error after upgrading to PDK 3.0.0
 
-```
+```bash
    github_changelog_generator was resolved to 1.16.4, which depends on
     async-http-faraday was resolved to 0.12.0, which depends on
       async-http was resolved to 0.60.2, which depends on
