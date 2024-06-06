@@ -8,6 +8,7 @@ require 'tempfile'
 require 'json'
 
 # Sets default puppet/ruby versions to be used within the tests
+# Duplicates of this are found within spec_helper.rb and spec_helper_package.rb and should be updated simultaneously.
 PDK_VERSION = {
   latest: {
     full: '8.6.0',

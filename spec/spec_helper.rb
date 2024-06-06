@@ -59,6 +59,7 @@ RSpec.configure do |c|
 end
 
 # Sets default puppet/ruby versions to be used within the tests
+# Duplicates of this are found within spec_helper_package.rb and spec_helper_acceptance.rb and should be updated simultaneously.
 PDK_VERSION = {
   latest: {
     full: '8.6.0',
