@@ -64,12 +64,12 @@ PDK_VERSION = {
   latest: {
     full: '8.6.0',
     major: '8',
-    ruby: '3.2.3'
+    ruby: '3.2.*'
   },
   lts: {
     full: '7.30.0',
     major: '7',
-    ruby: '2.7.8'
+    ruby: '2.7.*'
   }
 }.freeze
 
