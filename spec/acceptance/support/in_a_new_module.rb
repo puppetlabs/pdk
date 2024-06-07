@@ -12,7 +12,7 @@ shared_context 'in a new module' do |name, options = {}|
     ]
     env = {
       'PDK_ANSWER_FILE' => File.join(Dir.pwd, "#{name}_answers.json"),
-      'PDK_PUPPET_VERSION' => ENV.fetch('PDK_PUPPET_VERSION', '7')
+      'PDK_PUPPET_VERSION' => ENV.fetch('PDK_PUPPET_VERSION', PDK_VERSION[:lts][:full])
     }
 
     output, status = Open3.capture2e(env, *argv)

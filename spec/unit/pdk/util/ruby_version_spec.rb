@@ -40,7 +40,7 @@ describe PDK::Util::RubyVersion do
     context 'when running from a package install' do
       include_context 'is a package install'
 
-      ['2.1.9', '2.4.4'].each do |ruby_version|
+      [PDK_VERSION[:lts][:ruby], PDK_VERSION[:latest][:ruby]].each do |ruby_version|
         context "when the active ruby version is #{ruby_version}" do
           let(:instance) { described_class.new(ruby_version) }
 
@@ -67,6 +67,7 @@ describe PDK::Util::RubyVersion do
       include_context 'is a package install'
 
       before do
+        # require 'pry'; binding.pry;
         allow(described_class).to receive_messages(versions: packaged_rubies, default_ruby_version: '2.4.4')
       end
 
@@ -143,7 +144,7 @@ describe PDK::Util::RubyVersion do
     let(:gem_home_pattern) { File.join(gem_home, 'specifications', '**', 'puppet*.gemspec') }
     let(:gem_path_results) do
       results = {}
-      [{ name: 'puppet', version: '4.10.10' }, { name: 'puppet-lint', version: '1.0.0' }].each do |spec_info|
+      [{ name: 'puppet', version: PDK_VERSION[:lts][:full] }, { name: 'puppet-lint', version: '1.0.0' }].each do |spec_info|
         spec_path = File.join(gem_home, 'specifications', "#{spec_info[:name]}-#{spec_info[:version]}.gemspec")
         spec_definition = Gem::Specification.new do |spec|
           spec.name = spec_info[:name]
@@ -155,7 +156,7 @@ describe PDK::Util::RubyVersion do
     end
     let(:gem_home_results) do
       results = {}
-      [{ name: 'puppet', version: '5.3.0' }].each do |spec_info|
+      [{ name: 'puppet', version: PDK_VERSION[:latest][:full] }].each do |spec_info|
         spec_path = File.join(gem_home, 'specifications', "#{spec_info[:name]}-#{spec_info[:version]}.gemspec")
         spec_definition = Gem::Specification.new do |spec|
           spec.name = spec_info[:name]
@@ -181,7 +182,7 @@ describe PDK::Util::RubyVersion do
     end
 
     it 'returns an ordered list of Puppet gem versions' do
-      expect(subject).to eq([Gem::Version.new('5.3.0'), Gem::Version.new('4.10.10')])
+      expect(subject).to eq([Gem::Version.new(PDK_VERSION[:latest][:full]), Gem::Version.new(PDK_VERSION[:lts][:full])])
     end
   end
 end

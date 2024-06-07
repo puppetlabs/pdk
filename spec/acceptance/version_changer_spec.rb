@@ -21,7 +21,7 @@ describe 'puppet version selection' do
       end
     end
 
-    ['7.22.0'].each do |puppet_version|
+    [PDK_VERSION[:lts][:full]].each do |puppet_version|
       context "when requesting --puppet-version #{puppet_version}" do
         describe command("pdk validate --puppet-version #{puppet_version}") do
           its(:exit_status) { is_expected.to eq(0) }

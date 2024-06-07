@@ -18,11 +18,8 @@ describe 'C100321 - Generate a module and validate it (i.e. ensure bundle instal
   end
 
   context 'when validating the module' do
-    context 'with puppet 8.x' do
-      puppet_version = '8.x'
-      let(:ruby_version) { ruby_for_puppet(puppet_version) }
-
-      describe command("pdk validate --puppet-version=#{puppet_version}") do
+    context "with puppet #{PDK_VERSION[:latest][:major]}" do
+      describe command("pdk validate --puppet-version=#{PDK_VERSION[:latest][:major]}") do
         let(:cwd) { module_name }
 
         its(:exit_status) { is_expected.to eq(0) }
@@ -35,7 +32,7 @@ describe 'C100321 - Generate a module and validate it (i.e. ensure bundle instal
           subject { super().content.gsub(/^DEPENDENCIES.+?\n\n/m, '') }
 
           it 'is identical to the vendored lockfile' do
-            vendored_lockfile = File.join(install_dir, 'share', 'cache', "Gemfile-#{ruby_version}.lock")
+            vendored_lockfile = File.join(install_dir, 'share', 'cache', "Gemfile-#{PDK_VERSION[:latest][:ruby]}.lock")
 
             expect(subject).to eq(file(vendored_lockfile).content.gsub(/^DEPENDENCIES.+?\n\n/m, ''))
           end
