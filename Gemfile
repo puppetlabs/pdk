@@ -21,6 +21,10 @@ group :test do
   gem 'rubocop-performance', '~> 1.16', require: false
   gem 'rubocop-rspec', '~> 2.19', require: false
   gem 'simplecov-console'
+
+  # Temporary exclusion required as these versions are currently broken for us
+  gem 'rubocop-factory_bot', '!= 2.26.0', require: false
+  gem 'rubocop-rspec_rails', '!= 2.29.0', require: false
 end
 
 group :acceptance do
