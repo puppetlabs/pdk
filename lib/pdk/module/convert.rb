@@ -211,7 +211,7 @@ module PDK
           return if options[:noop]
 
           project_dir = File.basename(Dir.pwd)
-          options[:module_name] = project_dir.split('-', 2).compact[-1]
+          options[:module_name] = PDK.context.is_a?(PDK::Context::ControlRepo) ? project_dir : project_dir.split('-', 2).compact[-1]
           options[:prompt] = false
           options[:'skip-interview'] = true if options[:force]
 
