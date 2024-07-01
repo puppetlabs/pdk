@@ -41,7 +41,7 @@ jobs:
       matrix:
         os:
           - "ubuntu-latest"
-          - "windows-2019"
+          - "windows-latest"
         ruby_version:
           - "2.7"
           - "3.2"
