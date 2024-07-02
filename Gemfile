@@ -35,4 +35,5 @@ end
 
 group :acceptance_ci do
   gem 'puppetlabs_spec_helper', '~> 7.0', require: false
+  gem 'puppet_litmus', '~> 1.0', require: false
 end

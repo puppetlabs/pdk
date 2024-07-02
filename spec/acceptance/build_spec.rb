@@ -21,7 +21,7 @@ describe 'pdk build', :module_command do
       'template-ref' => 'heads/main-0-g1234abc'
     }
 
-    context 'when the module has complete metadata' do
+    context "#{RbConfig::CONFIG['host_os']}" do
       before(:all) do
         File.open('metadata.json', 'w') do |f|
           f.puts metadata.to_json

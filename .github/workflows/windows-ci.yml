@@ -1,0 +1,67 @@
+# This is a generic workflow for gem Acceptance operations.
+name: "Windows Acceptance"
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  acceptance:
+    name: "acceptance"
+    runs-on: 'ubuntu-latest'
+
+    env:
+      PUPPET_GEM_VERSION: puppet8-nightly
+
+    steps:
+
+      - name: "checkout"
+        uses: "actions/checkout@v4"
+
+      - name: "export environment"
+        run: |
+          echo "PUPPET_VERSION=puppet8-nightly" >> $GITHUB_ENV
+          echo "PUPPET_GEM_VERSION=puppet8-nightly" >> $GITHUB_ENV
+
+      - name: "setup ruby"
+        uses: "ruby/setup-ruby@v1"
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: "provision machine"
+        run: |
+          cat <<EOF > test_machines.json
+          {
+            "url": "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID",
+            "VMs": [
+              {
+                "cloud": "gcp",
+                "images": ["windows-2019"]
+              }
+            ]
+          }
+          EOF
+
+
+          curl -X POST -H "Authorization:bearer $TOKEN" https://facade-main-6f3kfepqcq-uc.a.run.app/v1/provision --data @test_machines.json > ./spec/fixtures/litmus_inventory.yaml
+      
+      - name: "print inventory"
+        run: |
+          cat ./spec/fixtures/litmus_inventory.yaml
+
+      - name: "run acceptance"
+        run: |
+          function yaml2json() {
+            ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))' $*
+          }
+          target=$(yaml2json ./spec/fixtures/litmus_inventory.yaml | jq -r '.groups[2].targets[0].uri')
+          echo $target
+          TARGET_HOST=$target bundle exec rspec ./spec/acceptance/
+# target=$(yaml2json ../inventory.yaml | jq -r '.groups[1].targets[0].uri')
+# TARGET_HOST=35.185.225.136 bundle exec rspec ./spec/acceptance/
