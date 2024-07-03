@@ -1,0 +1,58 @@
+# This is a generic workflow for gem Acceptance operations.
+name: "Windows Acceptance"
+
+on:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+jobs:
+  acceptance:
+    name: "acceptance"
+    runs-on: 'ubuntu-latest'
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+
+    env:
+      PUPPET_VERSION: puppet8-nightly
+      PUPPET_GEM_VERSION: puppet8-nightly
+
+    steps:
+
+      - name: "checkout"
+        uses: "actions/checkout@v4"
+
+      - name: "setup ruby"
+        uses: "ruby/setup-ruby@v1"
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+
+      - name: "Bundle environment"
+        run: |
+          echo ::group::bundler environment
+          bundle env
+          echo ::endgroup::
+
+      - name: "Provision environment"
+        run: |
+          bundle exec rake "litmus:provision[provision_service,windows-2019]"
+          # Redact password
+          FILE='spec/fixtures/litmus_inventory.yaml'
+          sed -e 's/password: .*/password: "[redacted]"/' < $FILE || true
+
+      - name: "Run acceptance tests"
+        run: |
+          bundle exec rake 'litmus:acceptance:parallel'
+
+      - name: "Remove test environment"
+        continue-on-error: true
+        run: |
+          if [[ -f spec/fixtures/litmus_inventory.yaml ]]; then
+            bundle exec rake 'litmus:tear_down'
+          fi

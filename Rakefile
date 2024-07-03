@@ -1,5 +1,6 @@
 require 'bundler/gem_tasks'
 require 'puppet_litmus/rake_tasks' if Bundler.rubygems.find_name('puppet_litmus').any?
+require 'puppetlabs_spec_helper/rake_tasks'
 require 'rspec/core/rake_task'
 require 'rubocop/rake_task'
 

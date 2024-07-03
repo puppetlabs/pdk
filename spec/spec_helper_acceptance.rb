@@ -6,6 +6,9 @@ require 'pdk/generate/module'
 require 'pdk/util/template_uri'
 require 'tempfile'
 require 'json'
+require 'puppet_litmus'
+
+PuppetLitmus.configure!
 
 # Sets default puppet/ruby versions to be used within the tests
 # Duplicates of this are found within spec_helper.rb and spec_helper_package.rb and should be updated simultaneously.
