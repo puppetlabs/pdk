@@ -50,9 +50,9 @@ jobs:
         run: |
           bundle exec rake 'litmus:acceptance:parallel'
 
-      - name: "Remove test environment"
-        continue-on-error: true
-        run: |
-          if [[ -f spec/fixtures/litmus_inventory.yaml ]]; then
-            bundle exec rake 'litmus:tear_down'
-          fi
+      # - name: "Remove test environment"
+      #   continue-on-error: true
+      #   run: |
+      #     if [[ -f spec/fixtures/litmus_inventory.yaml ]]; then
+      #       bundle exec rake 'litmus:tear_down'
+      #     fi
