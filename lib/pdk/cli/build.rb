@@ -12,7 +12,6 @@ module PDK
       option nil, 'force', 'Skips the prompts and builds the module package.'
 
       run do |opts, _args, _cmd|
-        require 'pdk/module/build'
         require 'pdk/module/metadata'
         require 'pdk/cli/util'
 
@@ -37,7 +36,11 @@ module PDK
           end
         end
 
-        builder = PDK::Module::Build.new(opts)
+        # build module
+        require 'puppet/modulebuilder'
+        module_dir = PDK::Util::Filesystem.expand_path(Dir.pwd)
+        target_dir = PDK::Util::Filesystem.expand_path(opts[:'target-dir'])
+        builder = Puppet::Modulebuilder::Builder.new(module_dir, target_dir, PDK.logger)
 
         unless opts[:force]
           if builder.package_already_exists?
@@ -49,7 +52,7 @@ module PDK
             end
           end
 
-          unless builder.module_pdk_compatible?
+          unless PDK::Util.module_pdk_compatible?(module_dir)
             PDK.logger.info 'This module is not compatible with PDK, so PDK can not validate or test this build. ' \
                             'Unvalidated modules may have errors when uploading to the Forge. ' \
                             'To make this module PDK compatible and use validate features, cancel the build and run `pdk convert`.'

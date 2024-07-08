@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'pdk/cli'
+require 'puppet/modulebuilder'
 
 describe 'PDK::CLI build' do
   let(:help_text) { a_string_matching(/^USAGE\s+pdk build/m) }
@@ -24,8 +25,8 @@ describe 'PDK::CLI build' do
   context 'when run from inside a module' do
     before do
       allow(PDK::Util).to receive(:module_root).and_return('/path/to/test/module')
-      allow(PDK::Module::Metadata).to receive(:from_file).with('metadata.json').and_return(mock_metadata_obj)
-      allow(PDK::Module::Build).to receive(:new).with(anything).and_return(mock_builder)
+      allow(PDK::Module::Metadata).to receive(:from_file).with(/metadata.json/).and_return(mock_metadata_obj)
+      allow(Puppet::Modulebuilder::Builder).to receive(:new).and_return(mock_builder)
     end
 
     let(:command_opts) { [] }
@@ -46,9 +47,8 @@ describe 'PDK::CLI build' do
     let(:package_path) { File.join(Dir.pwd, 'pkg', 'testuser-testmodule-2.3.4.tar.gz') }
     let(:mock_builder) do
       instance_double(
-        PDK::Module::Build,
+        Puppet::Modulebuilder::Builder,
         build: true,
-        module_pdk_compatible?: true,
         package_already_exists?: false,
         package_file: package_path
       )
@@ -56,8 +56,9 @@ describe 'PDK::CLI build' do
 
     context 'and the module contains incomplete metadata' do
       before do
+        allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
         allow(mock_metadata_obj).to receive_messages(forge_ready?: false, missing_fields: ['operatingsystem_support', 'source'])
-        allow(PDK::Module::Build).to receive(:new).with(any_args).and_return(mock_builder)
+        allow(Puppet::Modulebuilder::Builder).to receive(:new).with(any_args).and_return(mock_builder)
       end
 
       context 'with default options' do
@@ -84,8 +85,8 @@ describe 'PDK::CLI build' do
       include_context 'exits cleanly'
 
       before do
-        allow(mock_metadata_obj).to receive(:forge_ready?).and_return(true)
-        allow(PDK::Module::Build).to receive(:new).with(any_args).and_return(mock_builder)
+        allow(PDK::Util).to receive_messages(module_pdk_compatible?: true, forge_ready?: true)
+        allow(Puppet::Modulebuilder::Builder).to receive(:new).with(any_args).and_return(mock_builder)
       end
 
       it 'does not interview the user' do
@@ -98,7 +99,8 @@ describe 'PDK::CLI build' do
       include_context 'exits cleanly'
 
       it 'invokes the builder with the default target directory' do
-        expect(PDK::Module::Build).to receive(:new).with(hash_with_defaults_including('target-dir': File.join(Dir.pwd, 'pkg'))).and_return(mock_builder)
+        allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
+        expect(Puppet::Modulebuilder::Builder).to receive(:new).with(Dir.pwd, File.join(Dir.pwd, 'pkg'), anything).and_return(mock_builder)
       end
     end
 
@@ -108,13 +110,15 @@ describe 'PDK::CLI build' do
       let(:command_opts) { ['--target-dir', '/tmp/pdk_builds'] }
 
       it 'invokes the builder with the specified target directory' do
-        expect(PDK::Module::Build).to receive(:new).with(hash_including('target-dir': '/tmp/pdk_builds')).and_return(mock_builder)
+        allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
+        expect(Puppet::Modulebuilder::Builder).to receive(:new).with(Dir.pwd, '/tmp/pdk_builds', anything).and_return(mock_builder)
       end
     end
 
     context 'package already exists in the target dir' do
       before do
-        allow(mock_builder).to receive_messages(package_already_exists?: true, module_pdk_compatible?: true)
+        allow(mock_builder).to receive_messages(package_already_exists?: true)
+        allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(true)
       end
 
       context 'user chooses to continue' do
@@ -148,7 +152,8 @@ describe 'PDK::CLI build' do
 
     context 'and module is not pdk compatible' do
       before do
-        allow(mock_builder).to receive_messages(package_already_exists?: false, module_pdk_compatible?: false)
+        allow(mock_builder).to receive_messages(package_already_exists?: false)
+        allow(PDK::Util).to receive(:module_pdk_compatible?).and_return(false)
       end
 
       context 'user chooses to continue' do
