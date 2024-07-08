@@ -2,6 +2,24 @@
 
 New features, enhancements, and resolved issues for PDK.
 
+## PDK 3.2.0
+
+### Deprecations
+
+* Analytics have been removed from the code
+* Support has been officially withdrawn for Debian 9 and Redhat 6.
+
+### New features and enhancements
+
+* Support has been added and packages are now being built for Debian 12 and Mac OSX 13.
+* While not possessing an explicit package Windows 11 is now being verified as supported.
+
+### Template Changes
+
+* CFPropertyList has been pinned on Windows
+* Fix implemented so that .sync.yml will properly overide Rubocop rules
+* Duplicate gems have been removed
+
 ## PDK 3.1.0
 
 ### New features and enhancements

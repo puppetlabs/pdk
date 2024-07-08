@@ -7,6 +7,21 @@ require 'pdk/util/template_uri'
 require 'tempfile'
 require 'json'
 
+# Sets default puppet/ruby versions to be used within the tests
+# Duplicates of this are found within spec_helper.rb and spec_helper_package.rb and should be updated simultaneously.
+PDK_VERSION = {
+  latest: {
+    full: '8.6.0',
+    major: '8',
+    ruby: '3.2.*'
+  },
+  lts: {
+    full: '7.30.0',
+    major: '7',
+    ruby: '2.7.*'
+  }
+}.freeze
+
 # automatically load any shared examples or contexts
 Dir['./spec/acceptance/support/**/*.rb'].sort.each { |f| require f }
 

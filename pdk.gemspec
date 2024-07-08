@@ -19,21 +19,33 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = '>= 2.7.0'
 
-  spec.add_runtime_dependency 'bundler', '>= 2.1.0', '< 3.0.0'
-  spec.add_runtime_dependency 'childprocess', '~> 4.1.0'
-  spec.add_runtime_dependency 'cri', '~> 2.15.11'
-  spec.add_runtime_dependency 'diff-lcs', '>= 1.5.0'
+  # PDK Rubygems
   spec.add_runtime_dependency 'ffi', '>= 1.15.5', '< 2.0.0'
-  spec.add_runtime_dependency 'hitimes', '2.0.0'
-  spec.add_runtime_dependency 'json_pure', '~> 2.6.3'
-  spec.add_runtime_dependency 'json-schema', '~> 4.0'
   spec.add_runtime_dependency 'minitar', '~> 0.8'
-  spec.add_runtime_dependency 'pathspec', '~> 1.1'
+
+  # Bundler
+  spec.add_runtime_dependency 'bundler', '>= 2.1.0', '< 3.0.0'
+
+  # Cri and deps
+  spec.add_runtime_dependency 'cri', '~> 2.15.11'
+
+  # Childprocess and deps
+  spec.add_runtime_dependency 'childprocess', '~> 5.0'
+  spec.add_runtime_dependency 'hitimes', '2.0.0'
+
+  ## root tty gems
   spec.add_runtime_dependency 'tty-prompt', '~> 0.23'
   spec.add_runtime_dependency 'tty-spinner', '~> 0.9'
   spec.add_runtime_dependency 'tty-which', '~> 0.5'
 
-  # Used in the pdk-templates
+  # json-schema and deps
+  spec.add_runtime_dependency 'json-schema', '~> 4.0'
+
+  # Other deps
   spec.add_runtime_dependency 'deep_merge', '~> 1.2.2'
+  spec.add_runtime_dependency 'diff-lcs', '>= 1.5.0'
+  spec.add_runtime_dependency 'json_pure', '~> 2.6.3'
+  spec.add_runtime_dependency 'pathspec', '~> 1.1'
+
   spec.metadata['rubygems_mfa_required'] = 'true'
 end
