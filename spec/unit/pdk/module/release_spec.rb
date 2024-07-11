@@ -1,5 +1,6 @@
 require 'spec_helper'
 require 'pdk/module/release'
+require 'puppet/modulebuilder'
 
 describe PDK::Module::Release do
   let(:module_path) { nil }
@@ -27,7 +28,6 @@ describe PDK::Module::Release do
     allow(PDK::Util).to receive_messages(find_upwards: nil, in_module_root?: true)
     allow(Dir).to receive(:pwd).and_return(module_root)
     allow(PDK::Util::ChangelogGenerator).to receive(:changelog_content).and_return('This is a changelog')
-
     allow(PDK::Module::Metadata).to receive(:from_file).and_return(mock_metadata_object)
   end
 
@@ -48,7 +48,12 @@ describe PDK::Module::Release do
   end
 
   describe '#run' do
+    let(:builder) { double(Puppet::Modulebuilder::Builder, package_file: 'package.tar.gz') } # rubocop:disable RSpec/VerifiedDoubles
+
     before do
+      logger = Logger.new(File.open(File::NULL, 'w')) # rubocop:disable PDK/FileOpen
+      allow(PDK).to receive(:logger).and_return(logger)
+      allow(Puppet::Modulebuilder::Builder).to receive(:new).and_return(builder)
       # Stop any of the actual worker methods from running
       allow(instance).to receive(:run_validations)
       allow(instance).to receive(:run_documentation)
@@ -56,6 +61,11 @@ describe PDK::Module::Release do
       allow(instance).to receive(:run_build)
       allow(instance).to receive(:run_publish)
       allow(PDK::Util::ChangelogGenerator).to receive(:generate_changelog)
+      allow(builder).to receive_messages(file_directory?: true, file_readable?: true)
+      allow(builder).to receive(:source)
+      allow(builder).to receive(:metadata) do |instance|
+        instance.instance_variable_set(:@metadata, metadata_hash)
+      end
     end
 
     context 'when skipping everything' do
@@ -220,10 +230,10 @@ describe PDK::Module::Release do
   end
 
   describe '#default_package_filename' do
-    let(:builder) { double(PDK::Module::Build, package_file: 'package.tar.gz') } # rubocop:disable RSpec/VerifiedDoubles
+    let(:builder) { double(Puppet::Modulebuilder::Builder, package_file: 'package.tar.gz') } # rubocop:disable RSpec/VerifiedDoubles
 
-    it 'calls PDK::Module::Build' do
-      expect(PDK::Module::Build).to receive(:new).with(module_dir: module_root).and_return(builder)
+    it 'calls Puppet::Modulebuilder::Builder' do
+      expect(Puppet::Modulebuilder::Builder).to receive(:new).with(module_root, nil, logger).and_return(builder)
       expect(instance.default_package_filename).to eq('package.tar.gz')
     end
   end
@@ -301,9 +311,17 @@ describe PDK::Module::Release do
   end
 
   describe '#run_build' do
-    it 'calls PDK::Module::Build.invoke' do
-      expect(PDK::Module::Build).to receive(:invoke)
-      instance.run_build(options)
+    let(:builder) { double(Puppet::Modulebuilder::Builder) } # rubocop:disable RSpec/VerifiedDoubles
+
+    before do
+      logger = Logger.new(File.open(File::NULL, 'w')) # rubocop:disable PDK/FileOpen
+      allow(PDK).to receive(:logger).and_return(logger)
+      allow(Puppet::Modulebuilder::Builder).to receive(:new).and_return(builder)
+    end
+
+    it 'calls Puppet::Modulebuilder::Builder.build' do
+      expect(builder).to receive(:build)
+      instance.run_build
     end
   end
 

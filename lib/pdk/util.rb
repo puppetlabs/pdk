@@ -32,6 +32,7 @@ module PDK
     def exit_process(exit_code)
       exit exit_code
     end
+    module_function :exit_process
     # :nocov:
 
     # Searches upwards from current working directory for the given target file.

@@ -1,5 +1,6 @@
 require 'pdk'
 require 'uri'
+require 'puppet/modulebuilder'
 
 module PDK
   module Module
@@ -77,7 +78,7 @@ module PDK
           # Use the default as a last resort
           package_file = default_package_filename if package_file.nil?
         else
-          package_file = run_build(options)
+          package_file = run_build
         end
 
         run_publish(options.dup, package_file) unless skip_publish?
@@ -95,7 +96,7 @@ module PDK
       def default_package_filename
         return @default_tarball_filename unless @default_tarball_filename.nil?
 
-        builder = PDK::Module::Build.new(module_dir: module_path)
+        builder = Puppet::Modulebuilder::Builder.new(module_path, nil, PDK.logger)
         @default_tarball_filename = builder.package_file
       end
 
@@ -135,8 +136,11 @@ module PDK
       end
 
       # @return [String] Path to the built tarball
-      def run_build(opts)
-        PDK::Module::Build.invoke(opts.dup)
+      def run_build
+        module_dir = PDK::Util::Filesystem.expand_path(module_path || Dir.pwd)
+        target_dir = File.join(module_dir, 'pkg')
+        builder = Puppet::Modulebuilder::Builder.new(module_dir, target_dir, PDK.logger)
+        builder.build
       end
 
       def run_publish(_opts, tarball_path)
@@ -238,8 +242,7 @@ module PDK
       def pdk_compatible?
         return @pdk_compatible unless @pdk_compatible.nil?
 
-        builder = PDK::Module::Build.new(module_dir: module_path)
-        @pdk_compatible = builder.module_pdk_compatible?
+        @pdk_compatible = PDK::Util.module_pdk_compatible?(module_path)
       end
       # :nocov:
 

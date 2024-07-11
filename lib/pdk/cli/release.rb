@@ -3,7 +3,6 @@ require 'pdk/validate'
 require 'pdk/util/bundler'
 require 'pdk/cli/util/interview'
 require 'pdk/util/changelog_generator'
-require 'pdk/module/build'
 
 module PDK
   module CLI

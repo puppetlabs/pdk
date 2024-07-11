@@ -41,6 +41,9 @@ Gem::Specification.new do |spec|
   # json-schema and deps
   spec.add_runtime_dependency 'json-schema', '~> 4.0'
 
+  #  PDK build
+  spec.add_runtime_dependency 'puppet-modulebuilder', '~> 1.0'
+
   # Other deps
   spec.add_runtime_dependency 'deep_merge', '~> 1.2.2'
   spec.add_runtime_dependency 'diff-lcs', '>= 1.5.0'
