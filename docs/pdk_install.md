@@ -24,7 +24,7 @@ PDK is compatible with *nix, Windows, and macOS systems. For detailed version co
 |Operating system|Versions|Arch|Package type|
 |----------------|--------|----|------------|
 |Debian|9, 10, 11|x86_64|DEB|
-|Fedora|36|x86_64|RPM|
+|Fedora|40|x86_64|RPM|
 |OSX|11, 12|x86_64|DPKG|
 |Red Hat Enterprise Linux (RHEL)|6, 7, 8, 9|x86_64|RPM|
 |SUSE Linux Enterprise Server|12, 15|x86_64|N/A|
@@ -81,10 +81,10 @@ Install PDK with the YUM package manager.
         sudo zypper install pdk
         ```
 
-    -   Fedora 36
+    -   Fedora 40
 
         ```
-        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-fedora-36.noarch.rpm
+        sudo rpm -Uvh https://yum.puppet.com/puppet-tools-release-fedora-40.noarch.rpm
         sudo dnf install pdk
         ```
 
