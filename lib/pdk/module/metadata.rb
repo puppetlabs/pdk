@@ -9,7 +9,7 @@ module PDK
         'RedHat based Linux' => [
           {
             'operatingsystem' => 'CentOS',
-            'operatingsystemrelease' => ['7']
+            'operatingsystemrelease' => ['7', '8', '9']
           },
           {
             'operatingsystem' => 'OracleLinux',
@@ -17,30 +17,38 @@ module PDK
           },
           {
             'operatingsystem' => 'RedHat',
-            'operatingsystemrelease' => ['8']
+            'operatingsystemrelease' => ['7', '8', '9']
           },
           {
             'operatingsystem' => 'Scientific',
             'operatingsystemrelease' => ['7']
+          },
+          {
+            'operatingsystem' => 'Rocky',
+            'operatingsystemrelease' => ['8']
+          },
+          {
+            'operatingsystem' => 'AlmaLinux',
+            'operatingsystemrelease' => ['8']
           }
         ],
         'Debian based Linux' => [
           {
             'operatingsystem' => 'Debian',
-            'operatingsystemrelease' => ['10']
+            'operatingsystemrelease' => ['10', '11', '12']
           },
           {
             'operatingsystem' => 'Ubuntu',
-            'operatingsystemrelease' => ['18.04']
+            'operatingsystemrelease' => ['18.04', '20.04', '22.04']
           }
         ],
         'Fedora' => {
           'operatingsystem' => 'Fedora',
-          'operatingsystemrelease' => ['29']
+          'operatingsystemrelease' => ['40']
         },
         'OSX' => {
           'operatingsystem' => 'Darwin',
-          'operatingsystemrelease' => ['16']
+          'operatingsystemrelease' => ['21', '22', '23']
         },
         'SLES' => {
           'operatingsystem' => 'SLES',
@@ -52,11 +60,11 @@ module PDK
         },
         'Windows' => {
           'operatingsystem' => 'windows',
-          'operatingsystemrelease' => ['2019', '10']
+          'operatingsystemrelease' => ['2019', '2022', '10', '11']
         },
         'AIX' => {
           'operatingsystem' => 'AIX',
-          'operatingsystemrelease' => ['6.1', '7.1', '7.2']
+          'operatingsystemrelease' => ['7.2', '7.3']
         }
       }.freeze
 

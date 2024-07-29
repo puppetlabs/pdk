@@ -379,6 +379,7 @@ describe PDK::Generate::Module do
           ]
         end
 
+        # rubocop:disable RSpec/ExampleLength
         it 'populates the Metadata object based on user input' do
           expect(interview_metadata).to include(
             'name' => 'foo-bar',
@@ -392,7 +393,7 @@ describe PDK::Generate::Module do
             'operatingsystem_support' => [
               {
                 'operatingsystem' => 'CentOS',
-                'operatingsystemrelease' => ['7']
+                'operatingsystemrelease' => ['7', '8', '9']
               },
               {
                 'operatingsystem' => 'OracleLinux',
@@ -400,27 +401,36 @@ describe PDK::Generate::Module do
               },
               {
                 'operatingsystem' => 'RedHat',
-                'operatingsystemrelease' => ['8']
+                'operatingsystemrelease' => ['7', '8', '9']
               },
               {
                 'operatingsystem' => 'Scientific',
                 'operatingsystemrelease' => ['7']
               },
               {
+                'operatingsystem' => 'Rocky',
+                'operatingsystemrelease' => ['8']
+              },
+              {
+                'operatingsystem' => 'AlmaLinux',
+                'operatingsystemrelease' => ['8']
+              },
+              {
                 'operatingsystem' => 'Debian',
-                'operatingsystemrelease' => ['10']
+                'operatingsystemrelease' => ['10', '11', '12']
               },
               {
                 'operatingsystem' => 'Ubuntu',
-                'operatingsystemrelease' => ['18.04']
+                'operatingsystemrelease' => ['18.04', '20.04', '22.04']
               },
               {
                 'operatingsystem' => 'windows',
-                'operatingsystemrelease' => ['2019', '10']
+                'operatingsystemrelease' => ['2019', '2022', '10', '11']
               }
             ]
           )
         end
+        # rubocop:enable RSpec/ExampleLength
 
         it 'saves the forge username to the answer file' do
           expect(answers['forge_username']).to eq('foo')
@@ -649,9 +659,9 @@ describe PDK::Generate::Module do
         expect(interview_metadata['operatingsystem_support']).not_to be_nil
 
         [
-          { 'operatingsystem' => 'Debian', 'operatingsystemrelease' => ['10'] },
-          { 'operatingsystem' => 'Ubuntu', 'operatingsystemrelease' => ['18.04'] },
-          { 'operatingsystem' => 'windows', 'operatingsystemrelease' => ['2019', '10'] },
+          { 'operatingsystem' => 'Debian', 'operatingsystemrelease' => ['10', '11', '12'] },
+          { 'operatingsystem' => 'Ubuntu', 'operatingsystemrelease' => ['18.04', '20.04', '22.04'] },
+          { 'operatingsystem' => 'windows', 'operatingsystemrelease' => ['2019', '2022', '10', '11'] },
           { 'operatingsystem' => 'Solaris', 'operatingsystemrelease' => ['11'] }
         ].each do |expected_os|
           expect(interview_metadata['operatingsystem_support']).to include(expected_os)
