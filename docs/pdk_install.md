@@ -23,12 +23,12 @@ PDK is compatible with *nix, Windows, and macOS systems. For detailed version co
 
 |Operating system|Versions|Arch|Package type|
 |----------------|--------|----|------------|
-|Debian|9, 10, 11|x86_64|DEB|
+|Debian|10, 11, 12|x86_64, aarch64|DEB|
 |Fedora|40|x86_64|RPM|
-|OSX|11, 12|x86_64|DPKG|
-|Red Hat Enterprise Linux (RHEL)|6, 7, 8, 9|x86_64|RPM|
+|OSX|11, 12, 13|x86_64, arm64|DPKG|
+|Red Hat Enterprise Linux (RHEL)|7, 8, 9|x86_64, aarch64|RPM|
 |SUSE Linux Enterprise Server|12, 15|x86_64|N/A|
-|Ubuntu|18.04, 20.04, 22.04|x86_64|DEB|
+|Ubuntu|18.04, 20.04, 22.04|x86_64, aarch64|DEB|
 |Windows (Consumer OS)|10, 11|x86_64|MSI|
 |Windows (Server OS)|2016, 2019, 2022|x86_64|MSI|
 
