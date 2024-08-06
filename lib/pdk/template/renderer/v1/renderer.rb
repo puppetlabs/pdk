@@ -95,7 +95,7 @@ module PDK
                 end
               end
 
-              dest_executable = config['manage_execute_permissions'] && PDK::Util::Filesystem.executable?(File.join(template_loc, template_file))
+              dest_executable = config['manage_execute_permissions'] && PDK::Util::Filesystem.stat(File.join(template_loc, template_file)).executable?
 
               yield dest_path, dest_content, dest_status, dest_executable
             end

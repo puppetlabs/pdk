@@ -185,6 +185,8 @@ describe PDK::Module::Convert do
       include_context 'completes a convert'
 
       before do
+        stat_double = instance_double(File::Stat, executable?: false)
+        allow(PDK::Util::Filesystem).to receive(:stat).with(module_path('/a/path/to/file')).and_return(stat_double)
         allow(PDK::Util::Filesystem).to receive(:exist?).with(module_path('/a/path/to/file')).and_return(true)
         allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
@@ -227,6 +229,8 @@ describe PDK::Module::Convert do
       include_context 'completes a convert'
 
       before do
+        stat_double = instance_double(File::Stat, executable?: false)
+        allow(PDK::Util::Filesystem).to receive(:stat).with(module_path('/a/path/to/file')).and_return(stat_double)
         allow(PDK::Util::Filesystem).to receive(:exist?).with(module_path('/a/path/to/file')).and_return(true)
         allow(update_manager).to receive(:modify_file).with(any_args)
         allow(update_manager).to receive(:changes?).and_return(true)
@@ -284,7 +288,8 @@ describe PDK::Module::Convert do
           context 'when managing file execute bits' do
             context 'when file exists and has correct execute bits' do
               before do
-                allow(PDK::Util::Filesystem).to receive(:executable?).with(module_path('/a/path/to/file')).and_return(true)
+                stat_double = instance_double(File::Stat, executable?: true)
+                allow(PDK::Util::Filesystem).to receive(:stat).with(module_path('/a/path/to/file')).and_return(stat_double)
               end
 
               it 'does not stage the file for making executable' do
@@ -293,10 +298,6 @@ describe PDK::Module::Convert do
             end
 
             context 'when file exists but has incorrect execute bits' do
-              before do
-                allow(PDK::Util::Filesystem).to receive(:executable?).with(module_path('/a/path/to/file')).and_return(false)
-              end
-
               it 'stages the file for making executable' do
                 expect(update_manager).to receive(:make_file_executable).with(module_path('/a/path/to/file'))
               end
