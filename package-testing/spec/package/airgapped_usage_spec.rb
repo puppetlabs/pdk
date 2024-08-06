@@ -27,6 +27,13 @@ describe 'Basic usage in an air-gapped environment' do
       end
     end
 
+    # If this test fails with a mismatch between the expected and actual Gemfile.lock content, check that the following
+    # steps are up to date:
+    # - Ensure that the pdk-templates main has been given an anotated (it must be annotated) tag with the version number,
+    #   if between releases add a fourth number to it, i.e. 3.2.0.3
+    # - Ensure that the pdk version.rb is pointing to this tag
+    #   https://github.com/puppetlabs/pdk/blob/main/lib/pdk/version.rb
+    # - Ensure that the pdk-vanagon template pin is up to date with the pdk-templates main commit
     context 'when validating the module' do
       context "with puppet #{PDK_VERSION[:latest][:major]}" do
         let(:ruby_version) { ruby_for_puppet(PDK_VERSION[:latest][:major]) }
