@@ -163,7 +163,7 @@ module PDK
             when :manage
               if PDK::Util::Filesystem.exist?(absolute_file_path)
                 update_manager.modify_file(absolute_file_path, file_content)
-                update_manager.make_file_executable(absolute_file_path) if file_executable && !PDK::Util::Filesystem.executable?(absolute_file_path)
+                update_manager.make_file_executable(absolute_file_path) if file_executable && !PDK::Util::Filesystem.stat(absolute_file_path).executable?
               else
                 update_manager.add_file(absolute_file_path, file_content)
                 update_manager.make_file_executable(absolute_file_path) if file_executable
