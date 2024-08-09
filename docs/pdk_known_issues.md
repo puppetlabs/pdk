@@ -8,6 +8,6 @@ For example, if you have customized the `cert.pem` to trust a self-hosted git re
 
 For more information on how to correct this known issue see the [PDK Troubleshooting](pdk_troubleshooting.md#pdk-failing-to-pull-from-custom-git-server) section.
 
-## PDK v3.0.1 Windows Cert expired
+## PDK v3.0.1 Cert expired
 
 This issue was resolved and shipped in PDK v3.1.0, if you are seeing an issue in relation to an expired cert, please upgrade the PDK.  
