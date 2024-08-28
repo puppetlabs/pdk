@@ -246,10 +246,10 @@ module PDK
         raise PDK::CLI::FatalError, format('Failed to find valid JSON in output from rspec: %{output}', output: output[:stdout]) unless rspec_json
 
         if rspec_json['examples'].empty?
-          rspec_message = rspec_json['messages'][0]
-          return [] if rspec_message == 'No examples found.'
+          return [] if rspec_json['messages'][0] == 'No examples found.'
+          return [] if rspec_json['messages'].include?("\nAll examples were filtered out")
 
-          raise PDK::CLI::FatalError, format('Unable to enumerate examples. rspec reported: %{message}', message: rspec_message)
+          raise PDK::CLI::FatalError, format('Unable to enumerate examples. rspec reported: %{message}', message: rspec_json['messages'])
         else
           examples = []
           rspec_json['examples'].each do |example|
