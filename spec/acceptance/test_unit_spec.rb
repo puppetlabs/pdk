@@ -47,11 +47,9 @@ describe 'pdk test unit', :module_command do
         require 'spec_helper'
 
         RSpec.describe 'passing test' do
-          on_supported_os(:facterversion => '2.4.6').each do |os, facts|
-            context "On OS \#{os}" do
-              it 'should pass' do
-                expect(true).to eq(true)
-              end
+          context 'On OS' do
+            it 'should pass' do
+              expect(true).to eq(true)
             end
           end
         end
