@@ -13,7 +13,6 @@ env:
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
 jobs:
-
   spec:
     strategy:
       fail-fast: false
@@ -28,7 +27,7 @@ jobs:
             ruby_version: "3.2"
     name: "spec (ruby ${{ matrix.ruby_version }})"
     uses: "puppetlabs/cat-github-actions/.github/workflows/gem_ci.yml@main"
-    secrets: "inherit"
+    secrets: inherit
     with:
       rake_task: 'spec:coverage'
       ruby_version: ${{ matrix.ruby_version }}
@@ -52,7 +51,7 @@ jobs:
             ruby_version: "3.2"
     name: "acceptance (ruby ${{ matrix.ruby_version }} | ${{ matrix.os }})"
     uses: "puppetlabs/cat-github-actions/.github/workflows/gem_acceptance.yml@main"
-    secrets: "inherit"
+    secrets: inherit
     with:
       ruby_version: ${{ matrix.ruby_version }}
       puppet_version: ${{ matrix.puppet_gem_version }}
