@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v3.3.0](https://github.com/puppetlabs/pdk/tree/v3.3.0) - 2024-05-02
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.2.0...v3.3.0)
+
+## Added
+
+- Skip 'name' validation when in a controlrepo context [#1352](https://github.com/puppetlabs/pdk/pull/1352) ([garrettrowell](https://github.com/garrettrowell))
+- (CAT-1896) - Use puppet-modulebuilder for PDK build [#1374](https://github.com/puppetlabs/pdk/pull/1374) ([jordanbreen28](https://github.com/jordanbreen28))
+
+### Fixed
+
+- (CAT-1643) Update childprocess and remove patch [#1356](https://github.com/puppetlabs/pdk/pull/1356) ([david22swan](https://github.com/david22swan))
+- (CAT-2026) Update how pdk test unit --list detects an error [#1388](https://github.com/puppetlabs/pdk/pull/1388) ([david22swan](https://github.com/david22swan))
+
 ## [v3.2.0](https://github.com/puppetlabs/pdk/tree/v3.2.0) - 2024-05-02
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.1.0...v3.2.0)

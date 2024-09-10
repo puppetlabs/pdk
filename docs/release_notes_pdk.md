@@ -2,6 +2,34 @@
 
 New features, enhancements, and resolved issues for PDK.
 
+## PDK 3.3.0
+
+### New features and enhancements
+
+* Name validation now skipped for controlrepo's
+* The PDK has been updated to use the `modulebuilder` gem in place of duplicated code within the PDK.
+* Support for Debian 11 and 12 has been extended to AARCH64 with new packages built
+* Support for Ubuntu 18.04 to 23.04 has been extended to AARCH64 with new packages built
+* Support for RedHat 9 has been extended to AARCH64 with new packages built
+* Support for Mac OsX 13 has been extended to arm64 with new packages built
+* Windows 2019 package is now being tested on Windows 11 to ensure support
+
+### Bug Fixes
+
+* The childprocess gem has been updated and a patch for it has been removed.
+* `pdk test --list` has been updated to account for a change in how information is passed back to it.
+
+### Template Changes
+
+* Updated to require `facterdb` 1.26 or newer
+* Bolt-related files added to the .gitignore default paths
+* `puppetlabs_sec_help` pinned to 7.3 or newer and `.rspec.erb` removed to account
+* Pin added for `rexml` to account for Windows issues
+* `deep_merge` updated to require 1.2.2 or newer
+* Config extras handling added back into the Rakefile
+* `.vendor` added to .gitignore
+* `facterdb` repinned to ~> 2.1 and `rspec-puppet-facts`to ~> 4.0
+
 ## PDK 3.2.0
 
 ### Deprecations
