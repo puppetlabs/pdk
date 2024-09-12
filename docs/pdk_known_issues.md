@@ -1,5 +1,9 @@
 # PDK known issues
 
+## PDK v3.3.0 requires puppet-modulebuilder
+
+With the v3.3.0 release of the PDK, it has been updated to utilise the [puppet-modulebuilder](https://github.com/puppetlabs/puppet-modulebuilder) with the previously existing duplicated internal code having been removed. As such anyone who uses `PDK::Module::Build` in their setup will need to update their own code to do the same.
+
 ## Upgrading the pdk over-writes the pdk's "cert.pem"
 
 Upgrading the pdk from one version to another, e.g., going from `3.0.0.0` to `3.2.0.1`, will over-write the existing `/opt/puppetlabs/pdk/ssl/cert.pem` on linux or `C:\Program Files\Puppet Labs\DevelopmentKit\ssl\cert.pem` on windows.
