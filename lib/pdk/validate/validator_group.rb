@@ -42,7 +42,7 @@ module PDK
 
         require 'pdk/cli/util/spinner'
 
-        @spinner = TTY::Spinner::Multi.new("[:spinner] #{spinner_text}", PDK::CLI::Util.spinner_opts_for_platform)
+        @spinner = TTY::Spinner::Multi.new("[:spinner] #{spinner_text}")
 
         # Register the child spinners
         validator_instances.each do |instance|
