@@ -28,18 +28,6 @@ module PDK
       end
       module_function :ensure_in_module!
 
-      def spinner_opts_for_platform
-        windows_opts = {
-          success_mark: '*',
-          error_mark: 'X'
-        }
-
-        return windows_opts if Gem.win_platform?
-
-        {}
-      end
-      module_function :spinner_opts_for_platform
-
       def prompt_for_yes(question_text, opts = {})
         require 'tty/prompt'
 

@@ -80,7 +80,7 @@ module PDK
 
           require 'pdk/cli/util/spinner'
 
-          @spinner = TTY::Spinner.new("[:spinner] #{message}", opts.merge(PDK::CLI::Util.spinner_opts_for_platform))
+          @spinner = TTY::Spinner.new("[:spinner] #{message}")
         end
 
         def update_environment(additional_env)
