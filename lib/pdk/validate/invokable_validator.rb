@@ -138,7 +138,7 @@ module PDK
 
         require 'pdk/cli/util/spinner'
 
-        @spinner = TTY::Spinner.new("[:spinner] #{spinner_text}", PDK::CLI::Util.spinner_opts_for_platform)
+        @spinner = TTY::Spinner.new("[:spinner] #{spinner_text}")
       end
 
       # Process any targets that were skipped by the validator and add the events to the validation report

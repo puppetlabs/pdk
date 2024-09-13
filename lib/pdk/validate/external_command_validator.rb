@@ -161,9 +161,9 @@ module PDK
               if parent_validator.nil? || parent_validator.spinner.nil? || !parent_validator.spinner.is_a?(TTY::Spinner::Multi)
                 c.add_spinner(spinner_text_for_targets(invokation_targets))
               else
-                spinner = TTY::Spinner.new("[:spinner] #{spinner_text_for_targets(invokation_targets)}", PDK::CLI::Util.spinner_opts_for_platform)
+                spinner = TTY::Spinner.new("[:spinner] #{spinner_text_for_targets(invokation_targets)}")
                 parent_validator.spinner.register(spinner)
-                c.register_spinner(spinner, PDK::CLI::Util.spinner_opts_for_platform)
+                c.register_spinner(spinner)
               end
             end
           end
