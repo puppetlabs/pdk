@@ -54,7 +54,6 @@ describe PDK::Util::VendoredFile do
           allow(Net::HTTP::Get).to receive(:new).with(anything).and_return(mock_request)
           allow(Net::HTTP).to receive(:new).with(any_args).and_return(mock_http)
           allow(mock_http).to receive(:use_ssl=).with(anything)
-          allow(mock_http).to receive(:verify_mode=).with(anything)
         end
 
         let(:download_error) { described_class::DownloadError }
