@@ -51,8 +51,11 @@ module PDK
         uri = URI.parse(url)
         http = Net::HTTP.new(uri.host, uri.port)
         http.use_ssl = true
-        # TODO: Get rid of this
-        http.verify_mode = OpenSSL::SSL::VERIFY_NONE if Gem.win_platform?
+        if Gem.win_platform?
+          cert_path = 'C:/Program Files/Puppet Labs/DevelopmentKit\ssl\cert.pem'
+          http.cert = OpenSSL::X509::Certificate.new(cert_path)
+          http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+        end
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)
 
