@@ -9,7 +9,7 @@ New features, enhancements, and resolved issues for PDK.
 * Name validation now skipped for controlrepo's
 * The PDK has been updated to use the `modulebuilder` gem in place of duplicated code within the PDK.
 * Support for Debian 11 and 12 has been extended to AARCH64 with new packages built
-* Support for Ubuntu 18.04 to 23.04 has been extended to AARCH64 with new packages built
+* Support for Ubuntu 18.04 to 24.04 has been extended to AARCH64 with new packages built
 * Support for RedHat 9 has been extended to AARCH64 with new packages built
 * Support for Mac OsX 13 has been extended to arm64 with new packages built
 * Windows 2019 package is now being tested on Windows 11 to ensure support
