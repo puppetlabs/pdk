@@ -72,7 +72,7 @@ as long as each target is unique.
 
 For detailed information about module validations, see:
 
--   [Puppet Lint](http://puppet-lint.com/) style validation.
+-   [Puppet Lint](http://puppetlabs.github.io/puppet-lint/) style validation.
 
 -   The [Puppet language style
     guide](https://puppet.com/docs/puppet/latest/style_guide.html).
@@ -172,7 +172,7 @@ validate and unit test your code.
 
 For more information about RSpec and writing unit tests, see:
 
--   [Writing rspec-puppet tests](http://rspec-puppet.com/tutorial/)
+-   [Writing rspec-puppet tests](http://puppetlabs.github.io/rspec-puppet/tutorial/)
 
 -   [RSpec](http://rspec.info/)
 
