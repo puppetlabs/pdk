@@ -1,4 +1,4 @@
----
+# target-repo/.github/workflows/call-reusable-workflow.yml
 name: Workflow Restarter
 on:
   workflow_dispatch:
@@ -14,38 +14,13 @@ on:
       retries:
         description: "The number of times to retry the workflow run."
         required: false
-        type: number
-        default: 3
-    secrets:
-      GITHUB_TOKEN:
-        required: true
+        type: string
+        default: "3"
 
 jobs:
-  rerun:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Check retry count
-        id: check-retry
-        run: |
-          # IF `--attempts` returns a non-zero exit code, then keep retrying
-          status_code=$(gh run view ${{ inputs.run_id }} --repo ${{ inputs.repo }} --attempt ${{ inputs.retries }} --json status) || { 
-              echo "Retry count is within limit"
-              echo "::set-output name=should_retry::true"
-              exit 0
-          }
-
-          # ELSE `--attempts` returns a zero exit code, so stop retrying
-          echo "Retry count has reached the limit"
-          echo "::set-output name=should_retry::false"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Re-run failed jobs
-        if: ${{ steps.check-retry.outputs.should_retry == 'true' }}
-        run: gh run rerun --failed ${{ inputs.run_id }} --repo ${{ inputs.repo }}
-        continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+  call-reusable-workflow:
+    uses: "puppetlabs/cat-github-actions/.github/workflows/workflow-restarter.yml@main"
+    with:
+      repo: ${{ inputs.repo }}
+      run_id: ${{ inputs.run_id }}
+      retries: ${{ inputs.retries }}

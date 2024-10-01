@@ -10,6 +10,8 @@ on:
           'false' = (succeed, fail)  
         required: true
         default: 'true'
+env:
+  SOURCE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   unit:
@@ -53,7 +55,7 @@ jobs:
       # this to trigger the reusable workflow that restarts the failed job; and
       # (b) custom actions do not have access to the calling workflow's secrets
       - name: Trigger reusable workflow
-        uses: ./.github/actions/workflow-restarter-proxy
+        uses: "puppetlabs/cat-github-actions/.github/actions/workflow-restarter-proxy@main"
         env:
           SOURCE_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
