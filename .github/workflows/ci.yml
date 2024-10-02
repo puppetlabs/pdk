@@ -26,7 +26,7 @@ jobs:
           - puppet_gem_version: "~> 8.0"
             ruby_version: "3.2"
     name: "spec (ruby ${{ matrix.ruby_version }})"
-    uses: "puppetlabs/cat-github-actions/.github/workflows/gem_ci.yml@main"
+    uses: "puppetlabs/cat-github-actions/.github/workflows/gem_ci.yml@CAT-2013-Implement_shellcheck_in_ci"
     secrets: inherit
     with:
       rake_task: 'spec:coverage'
