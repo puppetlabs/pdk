@@ -3,6 +3,6 @@ set -euo pipefail
 IFS=$'\n\t'
 set -vx
 
-bundle install
+bundle installingtest
 
 # Do any other automated setup that you need to do here
