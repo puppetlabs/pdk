@@ -49,6 +49,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'diff-lcs', '>= 1.5.0'
   spec.add_runtime_dependency 'json_pure', '~> 2.6.3'
   spec.add_runtime_dependency 'pathspec', '~> 1.1'
+  spec.add_runtime_dependency 'puppet_forge', '~> 5.0'
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

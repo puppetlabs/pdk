@@ -147,27 +147,15 @@ module PDK
         validate_publish_options!
         raise PDK::CLI::ExitWithError, format('Module tarball %{tarball_path} does not exist', tarball_path: tarball_path) unless PDK::Util::Filesystem.file?(tarball_path)
 
-        # TODO: Replace this code when the upload functionality is added to the forge ruby gem
-        require 'base64'
-        file_data = Base64.encode64(PDK::Util::Filesystem.read_file(tarball_path, open_args: 'rb'))
-
         PDK.logger.info 'Uploading tarball to puppet forge...'
-        uri = URI(forge_upload_url)
-        require 'net/http'
-        request = Net::HTTP::Post.new(uri.path)
-        request['Authorization'] = "Bearer #{forge_token}"
-        request['Content-Type'] = 'application/json'
-        data = { file: file_data }
-
-        request.body = data.to_json
-
-        require 'openssl'
-        use_ssl = uri.instance_of?(URI::HTTPS)
-        response = Net::HTTP.start(uri.host, uri.port, use_ssl: use_ssl) do |http|
-          http.request(request)
+        begin
+          require 'puppet_forge'
+          PuppetForge.host = forge_upload_url
+          PuppetForge::Connection.authorization = forge_token
+          PuppetForge::V3::Release.upload(tarball_path)
+        rescue StandardError => e
+          raise PDK::CLI::ExitWithError, format('Error uploading to Puppet Forge: %{result}', result: e.message)
         end
-
-        raise PDK::CLI::ExitWithError, format('Error uploading to Puppet Forge: %{result}', result: response.body) unless response.is_a?(Net::HTTPSuccess)
 
         PDK.logger.info 'Publish to Forge was successful'
       end

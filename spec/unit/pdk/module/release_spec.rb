@@ -1,6 +1,7 @@
 require 'spec_helper'
 require 'pdk/module/release'
 require 'puppet/modulebuilder'
+require 'puppet_forge'
 
 describe PDK::Module::Release do
   let(:module_path) { nil }
@@ -335,10 +336,10 @@ describe PDK::Module::Release do
       allow(instance).to receive_messages(forge_token: 'abc123', forge_upload_url: 'https://badapi.puppetlabs.com/v3/releases')
       allow(PDK::Util::Filesystem).to receive(:file?).with(tarball_path).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(tarball_path, Hash).and_return('tarball_contents')
-      allow(Net::HTTP).to receive(:start).and_return(http_response)
     end
 
     it 'uploads the tarball to the Forge' do
+      expect(PuppetForge::V3::Release).to receive(:upload).with(tarball_path).and_return(http_response)
       instance.run_publish({}, tarball_path)
     end
 
@@ -353,11 +354,9 @@ describe PDK::Module::Release do
     end
 
     context 'when the Forge returns an error' do
-      let(:http_response) { Net::HTTPUnauthorized.new(nil, nil, nil) }
-
       it 'raises' do
-        allow(http_response).to receive(:body)
-        expect { instance.run_publish({}, tarball_path) }.to raise_error(PDK::CLI::ExitWithError)
+        expect(PuppetForge::V3::Release).to receive(:upload).with(tarball_path).and_raise(PuppetForge::ReleaseForbidden)
+        expect { instance.run_publish({}, tarball_path) }.to raise_error(PDK::CLI::ExitWithError, /Error uploading to Puppet Forge/)
       end
     end
   end
