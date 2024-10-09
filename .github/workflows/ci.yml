@@ -32,6 +32,8 @@ jobs:
       rake_task: 'spec:coverage'
       ruby_version: ${{ matrix.ruby_version }}
       puppet_gem_version: ${{ matrix.puppet_gem_version }}
+      # This line enables CI shellcheck (reviewdog) to be run on the repository
+      run_shellcheck: true
 
   acceptance:
     needs: "spec"
