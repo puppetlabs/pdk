@@ -310,21 +310,6 @@ describe PDK::Module::Release do
     end
   end
 
-  describe '#run_build' do
-    let(:builder) { double(Puppet::Modulebuilder::Builder) } # rubocop:disable RSpec/VerifiedDoubles
-
-    before do
-      logger = Logger.new(File.open(File::NULL, 'w')) # rubocop:disable PDK/FileOpen
-      allow(PDK).to receive(:logger).and_return(logger)
-      allow(Puppet::Modulebuilder::Builder).to receive(:new).and_return(builder)
-    end
-
-    it 'calls Puppet::Modulebuilder::Builder.build' do
-      expect(builder).to receive(:build)
-      instance.run_build
-    end
-  end
-
   describe '#run_publish' do
     let(:tarball_path) { '/does/not/exist' }
     let(:http_response) { Net::HTTPSuccess.new(nil, nil, nil) }
@@ -335,10 +320,10 @@ describe PDK::Module::Release do
       allow(instance).to receive_messages(forge_token: 'abc123', forge_upload_url: 'https://badapi.puppetlabs.com/v3/releases')
       allow(PDK::Util::Filesystem).to receive(:file?).with(tarball_path).and_return(true)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(tarball_path, Hash).and_return('tarball_contents')
-      allow(Net::HTTP).to receive(:start).and_return(http_response)
     end
 
     it 'uploads the tarball to the Forge' do
+      expect(PuppetForge::V3::Release).to receive(:upload).with(tarball_path).and_return(http_response)
       instance.run_publish({}, tarball_path)
     end
 
@@ -353,11 +338,9 @@ describe PDK::Module::Release do
     end
 
     context 'when the Forge returns an error' do
-      let(:http_response) { Net::HTTPUnauthorized.new(nil, nil, nil) }
-
       it 'raises' do
-        allow(http_response).to receive(:body)
-        expect { instance.run_publish({}, tarball_path) }.to raise_error(PDK::CLI::ExitWithError)
+        expect(PuppetForge::V3::Release).to receive(:upload).with(tarball_path).and_raise(PuppetForge::ReleaseForbidden)
+        expect { instance.run_publish({}, tarball_path) }.to raise_error(PDK::CLI::ExitWithError, /Error uploading to Puppet Forge/)
       end
     end
   end
