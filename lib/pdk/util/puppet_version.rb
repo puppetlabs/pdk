@@ -182,7 +182,7 @@ module PDK
         @rubygems_puppet_versions ||= begin
           fetcher = Gem::SpecFetcher.fetcher
           puppet_tuples = fetcher.detect(:released) do |spec_tuple|
-            spec_tuple.name == 'puppet' && Gem::Platform.match(spec_tuple.platform)
+            spec_tuple.name == 'puppet' && Gem::Platform.match_spec?(spec_tuple)
           end
           puppet_versions = puppet_tuples.map { |name, _| name.version }.uniq
           puppet_versions.sort.reverse
