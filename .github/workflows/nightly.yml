@@ -38,6 +38,10 @@ jobs:
         ruby_version:
           - "2.7"
           - "3.2"
+        # TEMPORARILY exclude the following until CAT-2122 is resolved
+        exclude:
+          - os: "windows-2019"
+            ruby_version: "3.2"
         include:
           - puppet_gem_version: "~> 7.0"
             ruby_version: "2.7"
