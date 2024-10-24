@@ -99,7 +99,7 @@ describe 'pdk validate', :module_command do
         end
 
         File.open(File.join('manifests', 'init.pp'), 'w') do |f|
-          f.puts <<-EOS.gsub(/^ {10}/, '')
+          f.puts <<-EOS
             # pdk_in_gemfile
             class pdk_in_gemfile {}
           EOS
