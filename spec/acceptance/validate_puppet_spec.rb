@@ -81,7 +81,7 @@ describe 'pdk validate puppet', :module_command do
       end
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
-        its(:exit_status) { is_expected.to eq(0) }
+        its(:exit_status) { is_expected.to eq(1) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
@@ -180,7 +180,10 @@ describe 'pdk validate puppet', :module_command do
     context 'with a parsable file and some style warnings' do
       before(:all) do
         File.open(init_pp, 'w') do |f|
-          f.puts 'class foo {}'
+          f.puts <<-EOS.gsub(/^ {10}/, '')
+            # pdk_in_gemfile
+            class pdk_in_gemfile {}
+          EOS
         end
       end
 
@@ -190,7 +193,7 @@ describe 'pdk validate puppet', :module_command do
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(/\(warning\):.*class not documented.*\(#{Regexp.escape(init_pp)}.+\)/i) }
+        its(:stdout) { is_expected.to match(/\(warning\):.*indent should be 0 chars and is 2.*\(#{Regexp.escape(init_pp)}.+\)/i) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
