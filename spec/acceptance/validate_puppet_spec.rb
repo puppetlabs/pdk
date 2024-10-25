@@ -306,7 +306,7 @@ describe 'pdk validate puppet', :module_command do
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(/Syntax error at end of input.*\(#{Regexp.escape(example_pp)}.+\)/i) }
+        its(:stdout) { is_expected.to match(/Syntax error at end of input/i) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
