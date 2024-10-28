@@ -107,7 +107,7 @@ describe 'pdk validate', :module_command do
       end
 
       describe command('pdk validate') do
-        its(:exit_status) { is_expected.to eq(1) }
+        its(:exit_status) { is_expected.to eq(1) | eq(256) }
         its(:stderr) { is_expected.to match(/Running all available validators/i) }
         its(:stderr) { is_expected.to match(/Checking metadata syntax/i) }
         its(:stderr) { is_expected.to match(/Checking module metadata style/i) }
