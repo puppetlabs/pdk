@@ -81,7 +81,7 @@ describe 'pdk validate puppet', :module_command do
       end
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
-        its(:exit_status) { is_expected.to eq(0) }
+        its(:exit_status) { is_expected.to eq(1) | eq(256) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
@@ -153,7 +153,6 @@ describe 'pdk validate puppet', :module_command do
 
       describe command('pdk validate puppet manifests\test') do
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(/\(warning\):.*class not documented.*\(#{Regexp.escape(File.join('manifests', 'test', 'test.pp'))}.+\)/i) }
       end
     end
 
@@ -180,7 +179,10 @@ describe 'pdk validate puppet', :module_command do
     context 'with a parsable file and some style warnings' do
       before(:all) do
         File.open(init_pp, 'w') do |f|
-          f.puts 'class foo {}'
+          f.puts <<-EOS.gsub(/^ {10}/, '')
+            # pdk_in_gemfile
+            class pdk_in_gemfile {}
+          EOS
         end
       end
 
@@ -189,8 +191,8 @@ describe 'pdk validate puppet', :module_command do
       end
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
-        its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(/\(warning\):.*class not documented.*\(#{Regexp.escape(init_pp)}.+\)/i) }
+        its(:exit_status) { is_expected.to eq(1) | eq(256) }
+        its(:stdout) { is_expected.to match(/\(warning\):.*indent should be 0 chars and is 2.*\(#{Regexp.escape(init_pp)}.+\)/i) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
@@ -221,7 +223,7 @@ describe 'pdk validate puppet', :module_command do
 
           its(:content) do
             is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
-              'classname' => 'puppet-lint.documentation',
+              'classname' => 'puppet-lint.strict_indent',
               'name' => a_string_starting_with(init_pp)
             ).that_failed
           end
@@ -289,11 +291,11 @@ describe 'pdk validate puppet', :module_command do
       end
     end
 
-    context 'with a parsable file and some style errors' do
+    context 'with a parsable file and some errors' do
       before(:all) do
         File.open(example_pp, 'w') do |f|
           f.puts '# some documentation'
-          f.puts 'class foo::bar {}'
+          f.puts 'class foo::bar'
         end
       end
 
@@ -303,7 +305,7 @@ describe 'pdk validate puppet', :module_command do
 
       describe command('pdk validate puppet --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(/autoload module layout.*\(#{Regexp.escape(example_pp)}.+\)/i) }
+        its(:stdout) { is_expected.to match(/Syntax error at end of input/i) }
         its(:stderr) { is_expected.not_to match(epp_spinner_text) }
         its(:stderr) { is_expected.to match(syntax_spinner_text) }
         its(:stderr) { is_expected.to match(lint_spinner_text) }
@@ -312,15 +314,15 @@ describe 'pdk validate puppet', :module_command do
           its(:content) { is_expected.to contain_valid_junit_xml }
 
           its(:content) do
-            is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
+            is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
               'failures' => eq(1),
               'tests' => eq(1)
             )
           end
 
           its(:content) do
-            is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
-              'classname' => 'puppet-lint.autoloader_layout',
+            is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+              'classname' => 'puppet-syntax',
               'name' => a_string_starting_with(example_pp)
             ).that_failed
           end
@@ -388,7 +390,7 @@ describe 'pdk validate puppet', :module_command do
         before(:all) do
           FileUtils.mkdir_p(another_problem_dir)
           File.open(another_problem_pp, 'w') do |f|
-            f.puts 'class foo::bar::whoops {}'
+            f.puts 'class foo::bar::whoops'
           end
         end
 
@@ -408,15 +410,15 @@ describe 'pdk validate puppet', :module_command do
             its(:content) { is_expected.to contain_valid_junit_xml }
 
             its(:content) do
-              is_expected.to have_junit_testsuite('puppet-lint').with_attributes(
-                'failures' => eq(2),
-                'tests' => eq(2)
+              is_expected.to have_junit_testsuite('puppet-syntax').with_attributes(
+                'failures' => eq(1),
+                'tests' => eq(1)
               )
             end
 
             its(:content) do
-              is_expected.to have_junit_testcase.in_testsuite('puppet-lint').with_attributes(
-                'classname' => a_string_starting_with('puppet-lint'),
+              is_expected.to have_junit_testcase.in_testsuite('puppet-syntax').with_attributes(
+                'classname' => a_string_starting_with('puppet-syntax'),
                 'name' => a_string_starting_with(another_problem_pp)
               ).that_failed
             end

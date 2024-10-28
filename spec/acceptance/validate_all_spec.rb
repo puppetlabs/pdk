@@ -107,12 +107,13 @@ describe 'pdk validate', :module_command do
       end
 
       describe command('pdk validate') do
-        its(:exit_status) { is_expected.to eq(0) }
+        its(:exit_status) { is_expected.to eq(1) | eq(256) }
         its(:stderr) { is_expected.to match(/Running all available validators/i) }
         its(:stderr) { is_expected.to match(/Checking metadata syntax/i) }
         its(:stderr) { is_expected.to match(/Checking module metadata style/i) }
         its(:stderr) { is_expected.to match(/Checking Puppet manifest syntax/i) }
         its(:stderr) { is_expected.to match(/Checking Ruby code style/i) }
+        its(:stdout) { is_expected.to match(/\(warning\):.*indent should be 0 chars and is 2/i) }
       end
     end
   end
