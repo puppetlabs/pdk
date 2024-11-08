@@ -22,15 +22,6 @@ module PDK
           JSON.parser = JSON::Ext::Parser if defined?(JSON::Ext::Parser)
         end
 
-        def before_validation
-          # The pure ruby JSON parser gives much nicer parse error messages than
-          # the C extension at the cost of slightly slower parsing. We require it
-          # here and restore the C extension at the end of the method (if it was
-          # being used).
-          require 'json/pure'
-          JSON.parser = JSON::Pure::Parser
-        end
-
         def validate_target(report, target)
           unless PDK::Util::Filesystem.readable?(target)
             report.add_event(
@@ -56,9 +47,7 @@ module PDK
           rescue JSON::ParserError => e
             # Because the message contains a raw segment of the file, we use
             # String#dump here to unescape any escape characters like newlines.
-            # We then strip out the surrounding quotes and the exclaimation
-            # point that json_pure likes to put in exception messages.
-            sane_message = e.message.dump[/\A"(.+?)!?"\Z/, 1]
+            sane_message = e.message.dump
 
             report.add_event(
               file: target,

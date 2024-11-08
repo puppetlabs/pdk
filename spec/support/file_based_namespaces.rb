@@ -197,7 +197,7 @@ RSpec.shared_examples 'a json file based namespace' do
 
     context 'when there is no data stored' do
       it 'serializes to an empty JSON object' do
-        expect(serialized_data).to match(/^\{\n+\}$/)
+        expect(serialized_data).to match(/^\{\}$/)
       end
     end
 

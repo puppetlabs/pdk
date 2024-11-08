@@ -78,7 +78,7 @@ describe PDK::Validate::Metadata::MetadataSyntaxValidator do
                                                      source: 'metadata-syntax',
                                                      state: :failure,
                                                      severity: 'error',
-                                                     message: a_string_matching(/\Aexpected ':' in object/)
+                                                     message: a_string_matching(/unexpected token at/)
                                                    })
         expect(return_value).to eq(1)
       end
