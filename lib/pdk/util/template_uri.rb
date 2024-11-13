@@ -7,7 +7,7 @@ module PDK
 
       PACKAGED_TEMPLATE_KEYWORD = 'pdk-default'.freeze
       DEPRECATED_TEMPLATE_URL = 'https://github.com/puppetlabs/pdk-module-template'.freeze
-      PDK_TEMPLATE_URL = 'https://github.com/puppetlabs/pdk-templates'.freeze
+      PDK_TEMPLATE_URL = 'https://github.com/silug/pdk-templates'.freeze
 
       LEGACY_PACKAGED_TEMPLATE_PATHS = {
         'windows' => 'file:///C:/Program Files/Puppet Labs/DevelopmentKit/share/cache/pdk-templates.git',
