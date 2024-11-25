@@ -18,11 +18,9 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 
 - (CAT-2162) Remove support for SLES 12 [#1418](https://github.com/puppetlabs/pdk/pull/1418) ([david22swan](https://github.com/david22swan))
 - (CAT-2155) Remove metadata_syntax_validator parser swap to `JSON::Pure` [#1415](https://github.com/puppetlabs/pdk/pull/1415) ([david22swan](https://github.com/david22swan))
-- (BUGFIX) Exclude newest JSON version [#1414](https://github.com/puppetlabs/pdk/pull/1414) ([david22swan](https://github.com/david22swan))
 - (CAT-2128) Remove `json_pure` dependency [#1411](https://github.com/puppetlabs/pdk/pull/1411) ([david22swan](https://github.com/david22swan))
 - (maint) Fix Gem::Platform.match() deprecation warning  [#1408](https://github.com/puppetlabs/pdk/pull/1408) ([jhbuchanan45](https://github.com/jhbuchanan45))
 - (CAT-2007) Update http setting cert to setting ca_file [#1398](https://github.com/puppetlabs/pdk/pull/1398) ([david22swan](https://github.com/david22swan))
-- (DOCS) Fix typo [#1397](https://github.com/puppetlabs/pdk/pull/1397) ([david22swan](https://github.com/david22swan))
 - (CAT-2007) Use vendored cert files and VERIFY_PEER wth NET::HTTP on Windows [#1396](https://github.com/puppetlabs/pdk/pull/1396) ([david22swan](https://github.com/david22swan))
 - (CAT-2040) pdk spinner inconsistent on windows [#1394](https://github.com/puppetlabs/pdk/pull/1394) ([alex501212](https://github.com/alex501212))
 

@@ -2,6 +2,44 @@
 
 New features, enhancements, and resolved issues for PDK.
 
+## PDK 3.4.0
+
+### Deprecations
+
+* Support has been removed for `SLES 12` and packages for it are no being longer built.
+
+### New features and enhancements
+
+* The in built `forge upload` functionality has been replaced with a call to the `puppet_forge` gem.
+* `json-schema` dependency updated so as to `~> 5.0` in order for it to be kept it in line with the wider Puppet products.
+* Support for `RedHat 8` has been extended to `AARCH64` with new packages built.
+
+### Bug Fixes
+
+* A parser swap to `JSON::Pure` has been removed from the `metadata_syntax_validator` changing the output. This is needed as the parser no longer being supported by the `json`/`json_pure` gem.
+* Remove dependency on `json_pure` gem as it is no longer necesary with `json` being added as a default ruby gem.
+* Deprecated call `Gem::Platform.match()` replaced with the modern `Gem::Platform.match_spec?` within `puppet_version.rb`.
+* Update `vendored_file.rb` to use vendored cert files and `VERIFY_PEER` with `NET::HTTP` on Windows machines.
+* The above change to `vendored_file.rb` has been updated to set `http.ca_file` rather than `http.cert`.
+* PDK spinner has been updated on Windows to be more consistent, with tick marks now being given upon success.
+
+### Runtime Changes
+
+* Version of `git` gem bundle within runtime set to `2.39.4`.
+* `json_pure` gem removed from the runtime.
+* `puppet_forge` gem has been added to the runtime pinned to `5.0.4`, with the following dependencies also added:
+  * Dependency `faraday` pinned to `2.12.0`.
+  * Dependency `faraday-follow_redirects` pinned to `0.3.0`.
+  * Dependency `faraday-net_http` pinned to `3.3.0`.
+  * Dependency `semantic_puppet` pinned to `1.1.0`.
+  * Dependency `minitar` already present, pin kept at `0.9`.
+
+### Template Changes
+
+* `puppet_blacksmith` gem has been added to the templates, pinned to `~> 7.0`.
+* `puppetlabs_spec_helper` gem has been repinned to `~> 8.0`.
+* Default `lint` configuration has been updated to match that within `puppetlabs_spec_helper`. Notation added to help ensure they are kept in sync.
+
 ## PDK 3.3.0
 
 ### New features and enhancements
@@ -21,7 +59,6 @@ New features, enhancements, and resolved issues for PDK.
 
 ### Template Changes
 
-* Updated to require `facterdb` 1.26 or newer
 * Bolt-related files added to the .gitignore default paths
 * `puppetlabs_sec_help` pinned to 7.3 or newer and `.rspec.erb` removed to account
 * Pin added for `rexml` to account for Windows issues
