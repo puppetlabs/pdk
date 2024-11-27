@@ -3,7 +3,7 @@ require 'spec_helper_package'
 describe 'C100545 - Generate a module, add a gem to it, and validate it' do
   module_name = 'c100545_module'
 
-  describe command("pdk new module #{module_name} --skip-interview --skip-interview --template-url=https://github.com/puppetlabs/pdk-templates --template-ref=main") do
+  describe command("pdk new module #{module_name} --skip-interview") do
     its(:exit_status) { is_expected.to eq(0) }
   end
 
