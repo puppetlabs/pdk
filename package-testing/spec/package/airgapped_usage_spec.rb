@@ -22,7 +22,7 @@ describe 'Basic usage in an air-gapped environment' do
         it { is_expected.to be_file }
 
         its(:content_as_json) do
-          is_expected.to include('template-url' => a_string_matching(/pdk-templates#main/))
+          is_expected.to include('template-url' => a_string_matching(/\Apdk-default#[\w.-]+\Z/))
         end
       end
     end
