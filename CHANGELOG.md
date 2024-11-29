@@ -5,21 +5,44 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v3.3.0](https://github.com/puppetlabs/pdk/tree/v3.3.0) - 2024-09-10
+## [v3.4.0](https://github.com/puppetlabs/pdk/tree/v3.4.0) - 2024-11-25
 
-[Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.2.0...v3.3.0)
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.3.0...v3.4.0)
 
-## Added
+### Added
 
-- Skip 'name' validation when in a controlrepo context [#1352](https://github.com/puppetlabs/pdk/pull/1352) ([garrettrowell](https://github.com/garrettrowell))
-- (CAT-1896) - Use puppet-modulebuilder for PDK build [#1374](https://github.com/puppetlabs/pdk/pull/1374) ([jordanbreen28](https://github.com/jordanbreen28))
+- (CAT-2141) Update `json-schema` dependency [#1412](https://github.com/puppetlabs/pdk/pull/1412) ([david22swan](https://github.com/david22swan))
+- (CAT-643) Add forge gem upload functionality [#1403](https://github.com/puppetlabs/pdk/pull/1403) ([danadoherty639](https://github.com/danadoherty639))
 
 ### Fixed
 
-- (CAT-1643) Update childprocess and remove patch [#1356](https://github.com/puppetlabs/pdk/pull/1356) ([david22swan](https://github.com/david22swan))
-- (CAT-2026) Update how pdk test unit --list detects an error [#1388](https://github.com/puppetlabs/pdk/pull/1388) ([david22swan](https://github.com/david22swan))
+- (CAT-2162) Remove support for SLES 12 [#1418](https://github.com/puppetlabs/pdk/pull/1418) ([david22swan](https://github.com/david22swan))
+- (CAT-2155) Remove metadata_syntax_validator parser swap to `JSON::Pure` [#1415](https://github.com/puppetlabs/pdk/pull/1415) ([david22swan](https://github.com/david22swan))
+- (CAT-2128) Remove `json_pure` dependency [#1411](https://github.com/puppetlabs/pdk/pull/1411) ([david22swan](https://github.com/david22swan))
+- (maint) Fix Gem::Platform.match() deprecation warning  [#1408](https://github.com/puppetlabs/pdk/pull/1408) ([jhbuchanan45](https://github.com/jhbuchanan45))
+- (CAT-2007) Update http setting cert to setting ca_file [#1398](https://github.com/puppetlabs/pdk/pull/1398) ([david22swan](https://github.com/david22swan))
+- (CAT-2007) Use vendored cert files and VERIFY_PEER wth NET::HTTP on Windows [#1396](https://github.com/puppetlabs/pdk/pull/1396) ([david22swan](https://github.com/david22swan))
+- (CAT-2040) pdk spinner inconsistent on windows [#1394](https://github.com/puppetlabs/pdk/pull/1394) ([alex501212](https://github.com/alex501212))
 
-## [v3.2.0](https://github.com/puppetlabs/pdk/tree/v3.2.0) - 2024-05-02
+## [v3.3.0](https://github.com/puppetlabs/pdk/tree/v3.3.0) - 2024-09-11
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.2.0...v3.3.0)
+
+### Added
+
+- (CAT-1928) Update Supported OS on new module to match what is expected [#1381](https://github.com/puppetlabs/pdk/pull/1381) ([david22swan](https://github.com/david22swan))
+- (CAT-1896) - Use puppet-modulebuilder for `PDK build` [#1374](https://github.com/puppetlabs/pdk/pull/1374) ([jordanbreen28](https://github.com/jordanbreen28))
+- Skip 'name' validation when in a controlrepo context [#1352](https://github.com/puppetlabs/pdk/pull/1352) ([garrettrowell](https://github.com/garrettrowell))
+
+### Fixed
+
+- (CAT-2026) Update how `pdk test unit --list` detects an error [#1388](https://github.com/puppetlabs/pdk/pull/1388) ([david22swan](https://github.com/david22swan))
+- Support executable templates on filesystems mounted with `noexec` [#1383](https://github.com/puppetlabs/pdk/pull/1383) ([nabertrand](https://github.com/nabertrand))
+- (CAT-1786) Remove Fedora 36 from the and add Fedora 40 to the PDK README [#1379](https://github.com/puppetlabs/pdk/pull/1379) ([LukasAud](https://github.com/LukasAud))
+- (CAT-648) - Mark release*.rb files as non-executable [#1378](https://github.com/puppetlabs/pdk/pull/1378) ([jordanbreen28](https://github.com/jordanbreen28))
+- (CAT-1643) Update childprocess and remove patch [#1356](https://github.com/puppetlabs/pdk/pull/1356) ([david22swan](https://github.com/david22swan))
+
+## [v3.2.0](https://github.com/puppetlabs/pdk/tree/v3.2.0) - 2024-05-08
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.1.0...v3.2.0)
 
@@ -57,6 +80,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) a
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v2.7.1...v3.0.0)
 
 ### Changed
+
 - (CONT-1134) Bump PDK Templates REF [#1264](https://github.com/puppetlabs/pdk/pull/1264) ([chelnak](https://github.com/chelnak))
 - (CONT-1154) Disable console command [#1263](https://github.com/puppetlabs/pdk/pull/1263) ([chelnak](https://github.com/chelnak))
 - (CONT-1130) Bump PDK gem version [#1260](https://github.com/puppetlabs/pdk/pull/1260) ([chelnak](https://github.com/chelnak))
