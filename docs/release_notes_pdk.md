@@ -11,23 +11,23 @@ New features, enhancements, and resolved issues for PDK.
 ### New features and enhancements
 
 * The in built `forge upload` functionality has been replaced with a call to the `puppet_forge` gem.
-* `json-schema` dependency updated so as to `~> 5.0` in order for it to be kept it in line with the wider Puppet products.
+* `json-schema` dependency updated to `~> 5.0` in order for it to be kept it in line with the wider Puppet products.
 * Support for `RedHat 8` has been extended to `AARCH64` with new packages built.
 
 ### Bug Fixes
 
-* A parser swap to `JSON::Pure` has been removed from the `metadata_syntax_validator` changing the output. This is needed as the parser no longer being supported by the `json`/`json_pure` gem.
-* Remove dependency on `json_pure` gem as it is no longer necesary with `json` being added as a default ruby gem.
+* A parser swap to `JSON::Pure` has been removed from the `metadata_syntax_validator` changing the format of the output. This was required due to the parser used no being longer included within either the `json` or `json_pure` gems.
+* Removed the dependency on the `json_pure` gem as it is no longer necesary with `json` added as a default ruby gem.
 * Deprecated call `Gem::Platform.match()` replaced with the modern `Gem::Platform.match_spec?` within `puppet_version.rb`.
-* Update `vendored_file.rb` to use vendored cert files and `VERIFY_PEER` with `NET::HTTP` on Windows machines.
+* Updated `vendored_file.rb` to use vendored cert files and `VERIFY_PEER` with `NET::HTTP` on Windows machines.
 * The above change to `vendored_file.rb` has been updated to set `http.ca_file` rather than `http.cert`.
-* PDK spinner has been updated on Windows to be more consistent, with tick marks now being given upon success.
+* The PDK spinner has been updated on Windows to be more consistent, with tick marks now being given upon success.
 
 ### Runtime Changes
 
-* Version of `git` gem bundle within runtime set to `2.39.4`.
-* `json_pure` gem removed from the runtime.
-* `puppet_forge` gem has been added to the runtime pinned to `5.0.4`, with the following dependencies also added:
+* The version of the `git` gem bundled within the runtime has been set to `2.39.4`.
+* The `json_pure` gem has been removed from the runtime.
+* The `puppet_forge` gem has been added to the runtime pinned to `5.0.4`, with the following dependencies also added:
   * Dependency `faraday` pinned to `2.12.0`.
   * Dependency `faraday-follow_redirects` pinned to `0.3.0`.
   * Dependency `faraday-net_http` pinned to `3.3.0`.
@@ -36,8 +36,8 @@ New features, enhancements, and resolved issues for PDK.
 
 ### Template Changes
 
-* `puppet_blacksmith` gem has been added to the templates, pinned to `~> 7.0`.
-* `puppetlabs_spec_helper` gem has been repinned to `~> 8.0`.
+* The `puppet_blacksmith` gem has been added to the templates, pinned to `~> 7.0`.
+* The `puppetlabs_spec_helper` gem has been repinned to `~> 8.0`.
 * Default `lint` configuration has been updated to match that within `puppetlabs_spec_helper`. Notation added to help ensure they are kept in sync.
 
 ## PDK 3.3.0
