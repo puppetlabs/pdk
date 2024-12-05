@@ -10,16 +10,21 @@ pdk (FATAL): Unable to find a valid module template to use.
 
 Through investigation this seems most likely to be an issue with a dependency brought in throught Git and unfortunately one that we have not been able to resolve in time for this release.
 
-This error is most commonly found when creating a new module or attempting to update a module that was previously created from the default templates, within an airgapped environment.
+This error is most commonly found when creating a new module or attempting to update a module that was previously created from the default templates, within an airgapped environment. There is a relatively simple solution for this however, though it does require a few extra steps:
 
-There is a relatively simple solution to get around this however, though it does require a few extra steps and that is to clone down the pdk-template repo onto your machine and target it manually as shown below.
+ - When creating a new module simply target either the main branch or a specified tag on the Github pdk-templates fork, or if you are airgapped a local copy of it that you have cloned down. Once the first run has been made, the PDK should store your targeted templates location and automatically go to it moving forward, until such time as you target another or clear your .pdk cache.
 
 ```
 pdk new module example --template-url=file:///Users/example.user/Github/pdk-templates --template-ref=3.4.0
-pdk update --template-url=file:///Users/example.user/Github/pdk-templates --template-ref=3.4.0
+pdk new module example --template-url=https://github.com/puppetlabs/pdk-templates --template-ref=main
 ```
 
-Once the first run has been made, the PDK will store your targeted templates location and so your next run should automatically go to it moving forward, until such time as you target another or clear your .pdk cache.
+- For existing modules that are targeting the default bundled templates, you will instead need to either run the `pdk convert` command as shown below to retarget them at a new template location, or manually alter the Modules metadata fields to target, though I would suggest using the convert command as a preference.
+
+```
+pdk convert --template-url=file:///Users/example.user/Github/pdk-templates --template-ref=3.4.0
+pdk convert --template-url=https://github.com/puppetlabs/pdk-templates --template-ref=main
+```
 
 ## PDK v3.3.0 requires puppet-modulebuilder
 
