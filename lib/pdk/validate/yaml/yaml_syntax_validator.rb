@@ -49,15 +49,25 @@ module PDK
           end
 
           begin
-            ::YAML.safe_load(PDK::Util::Filesystem.read_file(target), permitted_classes: YAML_ALLOWLISTED_CLASSES, permitted_symbols: [], aliases: true)
-
-            report.add_event(
-              file: target,
-              source: name,
-              state: :passed,
-              severity: 'ok'
-            )
-            0
+            data = ::YAML.safe_load(PDK::Util::Filesystem.read_file(target), permitted_classes: YAML_ALLOWLISTED_CLASSES, permitted_symbols: [], aliases: true)
+            if data.is_a?(Hash)
+              report.add_event(
+                file: target,
+                source: name,
+                state: :passed,
+                severity: 'ok'
+              )
+              0
+            else
+              report.add_event(
+                file: target,
+                source: name,
+                state: :failure,
+                severity: 'error',
+                message: format('File does not contain a valid YAML hash.')
+              )
+              1
+            end
           rescue Psych::SyntaxError => e
             report.add_event(
               file: target,
