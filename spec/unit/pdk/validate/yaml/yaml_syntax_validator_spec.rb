@@ -109,5 +109,20 @@ describe PDK::Validate::YAML::YAMLSyntaxValidator do
         expect(return_value).to eq(1)
       end
     end
+
+    context 'when a target is provided that contains no YAML' do
+      let(:target) { { name: '.sync.yaml', content: '' } }
+
+      it 'adds a failure event to the report' do
+        expect(report).to receive(:add_event).with({
+                                                     file: target[:name],
+                                                     source: 'yaml-syntax',
+                                                     state: :failure,
+                                                     severity: 'error',
+                                                     message: a_string_matching(/\AFile does not contain a valid YAML hash/)
+                                                   })
+        expect(return_value).to eq(1)
+      end
+    end
   end
 end
