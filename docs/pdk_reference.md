@@ -405,7 +405,7 @@ pdk test unit [--tests=<TEST_LIST>] [--format=<FORMAT>[:<TARGET_FILE>]] [--puppe
 For example:
 
 ```bash
-pdk test unit --tests=test1,test2,test3 --puppet-version=5
+pdk test unit --tests=test1,test2,test3 --puppet-version=7
 ```
 
 To learn more, see the [validating and testing modules](pdk_testing.md) topic.
@@ -418,7 +418,7 @@ topic.
 |`--format=<FORMAT>[:<TARGET_FILE>]`|Specifies the format of the output. Optionally, you can specify a target file for the given output format, such as `--format=junit:report.xml` . You can specify multiple `--format` options if each has a distinct output target. To output to standard output or standard error, specify `stdout` or `stderr` as the target value.|<ul><li>`junit` (JUnit XML)</li><li>`text` (plain text)</li></ul>|If not specified, does not output to a file, but displays errors in the terminal.|
 |`--list`|Displays a list of unit tests and their descriptions. Using this option lists the tests without running them.|No value. Optional `--verbose` or `-v` flag displays more information.|No default.|
 |`--puppet-dev`|When specified, PDK runs unit tests against the current Puppet source from GitHub. To use this option, you must have network access to https://github.com. You cannot specify `--puppet-dev` together with the `--puppet-version=` options.|None.|If not specified, PDK runs unit tests against default values or those specified by `--puppet-version`.|
-|`--puppet-version`|Specifies the Puppet gem version to run unit tests against.|A string indicating the Puppet version to test against, such as "5.4.2" or "5.5".|If not specified, tests against the most recent compatible Puppet version included in the PDK package.|
+|`--puppet-version`|Specifies the Puppet gem version to run unit tests against.|A string indicating the major Puppet version to test against, such as "7" or "8".|If not specified, tests against the most recent compatible Puppet version included in the PDK package.|
 |`--tests=<TEST_LIST>`|A comma-separated list of tests to run. Use this during development to pinpoint a single failing test.|See the `--list` output for available values.|No default.|
 |`--verbose`|When specified, PDK outputs a single line description for each test as the test is executed. This option uses the RSpec `documentation` format. For more information, see [RSpec Core Formatters](https://rubydoc.info/gems/rspec-core/RSpec/Core/Formatters).|None.|None.|
 
@@ -479,6 +479,6 @@ topic.
 |`--list`|Displays a list of available validations and their descriptions. Using this option lists the tests without running them.|None.|No default.|
 |`--parallel`|Runs all validations simultaneously, using multiple threads.|None.|If not specified, validations are run in succession on a single thread.|
 |`--puppet-dev`|When specified, PDK validates against the current Puppet source from GitHub. To use this option, you must have network access to https://github.com. You cannot specify `--puppet-dev` together with the `--puppet-version=` options.|None.|If not specified, PDK validates against default values or those specified by `--puppet-version`.|
-|`--puppet-version`|Specifies the Puppet gem version to run validations against.|A string indicating the Puppet version to validate against, such as "5.4.2" or "5.5".|If not specified, validates against the most recent compatible Puppet version included in the PDK package.|
+|`--puppet-version`|Specifies the Puppet gem version to run validations against.|A string indicating the major Puppet version to validate against, such as "7" or "8".|If not specified, validates against the most recent compatible Puppet version included in the PDK package.|
 |`<TARGETS>`|A list of directories or individual files to validate. Validations which are not applicable to individual files will be skipped for those files.|A space-separated list of directories or files.|Validates all available directories and files.|
 |`<VALIDATIONS>`|A comma-separated list of validations to run or `all` for all validations. In PowerShell, this list must be enclosed in single quotes, such as `pdk validate 'puppet,metadata'`|See the `--list`output for a list of available validations.|`all`|
