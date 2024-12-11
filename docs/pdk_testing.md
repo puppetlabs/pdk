@@ -99,20 +99,20 @@ send your validation output to a file in either JUnit or text format.
 
 2.  Run all validations by running `pdk validate` .
 
-    To change validation behavior, add option flags to the command. For example,
-    to run all validations simultaneously on multiple threads, run:
+    You can customize unit test execution by using command-line options with PDK.
+    Here are some common scenarios:
 
     ```no-highlight
     pdk validate --parallel
     ```
 
-    To validate against a specific version of Puppet or PE, add the
+    To validate against a specific major version of Puppet, add the
     `--puppet-version` option flag.
 
-    For example. To validate against Puppet 5.5.12, run:
+    For example. To validate against Puppet 7, run:
 
     ```no-highlight
-    pdk validate --puppet-version 5.5.12
+    pdk validate --puppet-version 7
     ```
 
     For a complete list of command options and usage information, see the PDK
@@ -196,20 +196,20 @@ correctly performs the functions you expect it to.
 
 2.  Run `pdk test unit`
 
-    To change unit test behavior, add option flags to the command. For example,
-    to run only certain unit tests, run:
+    You can customize unit test execution by using command-line options with PDK.
+    Here are some common scenarios:
 
     ```no-highlight
     pdk test unit --tests=<TEST1>,<TEST2>
     ```
 
-    To unit test against a specific version of Puppet, add a version
+    To unit test against a specific major version of Puppet, add a version
     option flag.
 
-    For example. To test against Puppet 5.5.12, run:
+    For example. To test against Puppet 7, run:
 
     ```no-highlight
-    pdk test unit --puppet-version 5.5.12
+    pdk test unit --puppet-version 7
     ```
 
 
