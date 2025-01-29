@@ -8,9 +8,15 @@ We have recently begun seeing an issue with the default bundled templates on cer
 pdk (FATAL): Unable to find a valid module template to use.
 ```
 
-Through investigation this seems most likely to be an issue with a dependency brought in throught Git and unfortunately one that we have not been able to resolve in time for this release.
+Through investigation this has been shown to be a permssions issue regarding the `pdk-templates.git` file and unfortunately one that we have not been able to resolve in time for this release.
 
-This error is most commonly found when creating a new module or attempting to update a module that was previously created from the default templates, within an airgapped environment. There is a relatively simple solution for this however, though it does require a few extra steps:
+This error is most commonly found when creating a new module or attempting to update a module that was previously created from the default templates, within an airgapped environment. There are two possible solutions that we have found for this, with the first one being to grant the `pdk-templates.git` directory packaged with the pdk the permissions that it requires in order for it to be used, this can be done with the below command:
+
+```
+git config --global --add safe.directory /opt/puppetlabs/pdk/share/cache/pdk-templates.git
+```
+
+The other solution is to target a seperate template location a shown below:
 
  - When creating a new module simply target either the main branch or a specified tag on the Github pdk-templates fork, or if you are airgapped a local copy of it that you have cloned down. Once the first run has been made, the PDK should store your targeted templates location and automatically go to it moving forward, until such time as you target another or clear your .pdk cache.
 
