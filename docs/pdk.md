@@ -15,6 +15,7 @@ validate, and test modules.
         <ul>
             <li><a class="xref" href="pdk_overview.md">PDK overview and workflow</a></li>
             <li><a class="xref" href="pdk_release_notes.md">Release notes</a></li>
+            <li><a class="xref" href="pdk_known_issues.md">Known issues</a></li>
             <li><a class="xref" href="pdk_overview.md#pdk-package">Tools included in PDK</a></li>
         </ul>
     </p>
