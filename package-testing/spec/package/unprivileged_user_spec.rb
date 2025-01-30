@@ -18,6 +18,7 @@ describe 'Running PDK as an unprivileged user' do
           on(host, "mkdir #{homedir} && chown #{uid}:#{gid} #{homedir}") unless directory_exists_on(host, homedir)
         end
       end
+      on(host, 'git config --global --add safe.directory /opt/puppetlabs/pdk/share/cache/pdk-templates.git')
     end
   end
 
