@@ -116,6 +116,19 @@ This command runs all available unit tests.
 
 PDK encourages community contributions. See the [CONTRIBUTING.md](CONTRIBUTING.md) file for development notes.
 
+## Known Issues
+
+Prevelant known issues with the PDK, for more detailed information, please check the PDK documentation on [puppet.com](https://www.puppet.com/docs/pdk/3.x/pdk).
+
+### v3.4.0
+
+Moving forward, if you are using the installed version of the PDK, if you wish to utilize the inbuilt templates you will have to manually fix their permissions, either by changing their ownership to your local user or by setting them as a safe directory.
+
+```
+sudo chown -R example.user /opt/puppetlabs/pdk/share/cache/pdk-templates.git
+git config --global --add safe.directory /opt/puppetlabs/pdk/share/cache/pdk-templates.git
+```
+
 ## License
 
 This codebase is licensed under Apache 2.0. However, the open source dependencies included in this codebase might be subject to other software licenses such as AGPL, GPL2.0, and MIT.
