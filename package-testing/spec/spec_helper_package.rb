@@ -38,6 +38,9 @@ RSpec.configure do |c|
   # rubocop:disable RSpec/BeforeAfterAll
   c.before(:all) do
     RSpec.configuration.logger.log_level = :warn
+    
+    cmd = command('git config --global --add safe.directory /opt/puppetlabs/pdk/share/cache/pdk-templates.git')
+    cmd.run
   end
 
   c.after(:all) do
