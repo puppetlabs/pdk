@@ -20,7 +20,7 @@ sudo chown -R example.user /opt/puppetlabs/pdk/share/cache/pdk-templates.git
 git config --global --add safe.directory /opt/puppetlabs/pdk/share/cache/pdk-templates.git
 ```
 
-The other solution is to target a seperate template location a shown below:
+The other solution is to target a seperate template location as shown below:
 
  - When creating a new module simply target either the main branch or a specified tag on the Github pdk-templates fork, or if you are airgapped a local copy of it that you have cloned down. Once the first run has been made, the PDK should store your targeted templates location and automatically go to it moving forward, until such time as you target another or clear your .pdk cache.
 
