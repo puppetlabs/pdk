@@ -8,22 +8,26 @@ We have recently begun seeing an issue with the default bundled templates on cer
 pdk (FATAL): Unable to find a valid module template to use.
 ```
 
-Through investigation this has been shown to be a permssions issue regarding the `pdk-templates.git` file and unfortunately one that we have not been able to resolve in time for this release.
+Through investigation this has been shown to be a permssions issue regarding the `pdk-templates.git` file, with newer versions of git not trusting it by default due to the manner in which it is copied over, something that we have not been able to resolve moving forward and will likely be unable to fully resolve at anytime soon, most likely leaving this as a permanent limitation of the code.
 
-This error is most commonly found when creating a new module or attempting to update a module that was previously created from the default templates, within an airgapped environment. There are two possible solutions that we have found for this, with the first one being to grant the `pdk-templates.git` directory packaged with the pdk the permissions that it requires in order for it to be used, either by confirming the local user as the owner of the files through the `chown` command or by setting it as a safe.directory going forward.
+This error is most commonly found when creating a new module or attempting to update a module that was previously created from the default templates, within an airgapped environment. There are two possible solutions that we have found for this, with the first one being to grant the `pdk-templates.git` directory packaged with the pdk the permissions that it requires in order for it to be used, either by confirming the local user as the owner of the files through the `chown` command or by setting it as a safe directory via git.
 Please be aware however that if using the `chown` command, you will have to reapply the fix between PDK versions.
 
 ```
 sudo chown -R example.user /opt/puppetlabs/pdk/share/cache/pdk-templates.git
+```
+```
 git config --global --add safe.directory /opt/puppetlabs/pdk/share/cache/pdk-templates.git
 ```
 
-The other solution is to target a seperate template location a shown below:
+The other solution is to target a seperate template location as shown below:
 
  - When creating a new module simply target either the main branch or a specified tag on the Github pdk-templates fork, or if you are airgapped a local copy of it that you have cloned down. Once the first run has been made, the PDK should store your targeted templates location and automatically go to it moving forward, until such time as you target another or clear your .pdk cache.
 
 ```
 pdk new module example --template-url=file:///Users/example.user/Github/pdk-templates --template-ref=3.4.0
+```
+```
 pdk new module example --template-url=https://github.com/puppetlabs/pdk-templates --template-ref=main
 ```
 
@@ -31,6 +35,8 @@ pdk new module example --template-url=https://github.com/puppetlabs/pdk-template
 
 ```
 pdk convert --template-url=file:///Users/example.user/Github/pdk-templates --template-ref=3.4.0
+```
+```
 pdk convert --template-url=https://github.com/puppetlabs/pdk-templates --template-ref=main
 ```
 
