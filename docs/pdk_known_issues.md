@@ -10,7 +10,7 @@ pdk (FATAL): Unable to find a valid module template to use.
 
 Through investigation this has been shown to be a permssions issue regarding the `pdk-templates.git` file and unfortunately one that we have not been able to resolve in time for this release.
 
-This error is most commonly found when creating a new module or attempting to update a module that was previously created from the default templates, within an airgapped environment. There are two possible solutions that we have found for this, with the first one being to grant the `pdk-templates.git` directory packaged with the pdk the permissions that it requires in order for it to be used, either by confirming the local user as the owner of the files through the `chown` command or by setting it as a safe.directory going forward through git.
+This error is most commonly found when creating a new module or attempting to update a module that was previously created from the default templates, within an airgapped environment. There are two possible solutions that we have found for this, with the first one being to grant the `pdk-templates.git` directory packaged with the pdk the permissions that it requires in order for it to be used, either by confirming the local user as the owner of the files through the `chown` command or by setting it as a safe directory via git.
 Please be aware however that if using the `chown` command, you will have to reapply the fix between PDK versions.
 
 ```
