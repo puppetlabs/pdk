@@ -164,7 +164,7 @@ describe PDK::Module::UpdateManager do
     context 'when the new file content differs from the original content' do
       let(:expected_diff) do
         <<-EOS.chomp.gsub(/^ {10}/, '')
-          @@ -1,4 +1,5 @@
+          @@ -1,3 +1,4 @@
           -line 1
           +line 4
            line 2
