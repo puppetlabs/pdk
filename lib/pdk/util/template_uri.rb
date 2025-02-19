@@ -246,7 +246,11 @@ module PDK
         # 4. Leave updating answers/metadata to other code
         found_template = templates_array.find { |t| valid_template?(t) }
 
-        raise PDK::CLI::FatalError, 'Unable to find a valid module template to use.' if found_template.nil?
+        raise PDK::CLI::FatalError, <<~ERROR if found_template.nil?
+          Unable to find a valid module template to use.
+
+          If targeting the bundled templates, please see the Known Issue page on the PDK docs site: https://github.com/puppetlabs/pdk/blob/main/docs/pdk_known_issues.md
+        ERROR
 
         found_template[:uri]
       end
