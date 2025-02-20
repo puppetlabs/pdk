@@ -81,6 +81,8 @@ module PDK
       private
 
       def latest_template?
+        return true if /^\d+\.\d+\.\d+(?:\.\d+)?$/.match?(template_uri.uri_fragment) && Gem::Version.new(template_uri.uri_fragment) > Gem::Version.new(PDK::TEMPLATE_REF)
+
         [PDK::TEMPLATE_REF, 'master', 'main'].include?(template_uri.uri_fragment)
       end
 
