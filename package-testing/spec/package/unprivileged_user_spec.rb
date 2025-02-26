@@ -28,7 +28,7 @@ describe 'Running PDK as an unprivileged user' do
       its(:stdout) { is_expected.to contain('testuser') }
     end
 
-    describe command("pdk new module #{module_name} --skip-interview") do
+    describe command("pdk new module #{module_name} --skip-interview --template-url=https://github.com/puppetlabs/pdk-templates --template-ref=main") do
       its(:exit_status) { is_expected.to eq(0) }
     end
 
