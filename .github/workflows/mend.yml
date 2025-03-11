@@ -27,7 +27,11 @@ jobs:
       - name: Get latest build name
         id: latest
         run: |
-          echo "::set-output name=ver::$(curl -X POST "https://artifactory.delivery.puppetlabs.net/artifactory/api/search/aql" -H "Content-Type: text/plain" --data 'items.find({"repo": "internal_nightly__local", "path": {"$match": "apt/pool/jammy/puppet-nightly/p/pdk/*"}}).sort({"$desc": ["created"]}).limit(1)')"          
+          echo "LATEST_BUILD=$(curl -X POST "https://artifactory.delivery.puppetlabs.net/artifactory/api/search/aql" -H "Content-Type: text/plain" --data 'items.find({"repo": "internal_nightly__local", "path": {"$match": "apt/pool/jammy/puppet-nightly/p/pdk/*"}}).sort({"$desc": ["created"]}).limit(1)')" >> $GITHUB_ENV    
+
+      - name: show output
+        run: |
+          echo $LATEST_BUILD       
 
       # - name: Install PDK
       #   run: |
