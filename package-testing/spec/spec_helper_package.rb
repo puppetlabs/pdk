@@ -17,6 +17,11 @@ PDK_VERSION = {
     full: '8.6.0',
     major: '8',
     ruby: '3.2.*'
+  },
+  lts: {
+    full: '8.6.0',
+    major: '8',
+    ruby: '3.2.*'
   }
 }.freeze
 

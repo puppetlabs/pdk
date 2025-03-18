@@ -16,7 +16,13 @@ describe 'pdk validate', :module_command do
     end
 
     describe command('pdk validate') do
-      its(:exit_status) { is_expected.to eq(0) }
+      # Warn is outputed as failure on non-windows
+      #   Warn caused by tests being run against only a single Puppet version
+      if Gem.win_platform?
+        its(:exit_status) { is_expected.to eq(0) }
+      else
+        its(:exit_status) { is_expected.to eq(1) }
+      end
       its(:stderr) { is_expected.to match(/Running all available validators/i) }
       its(:stderr) { is_expected.to match(/Checking metadata syntax/i) }
       its(:stderr) { is_expected.to match(/Checking module metadata style/i) }

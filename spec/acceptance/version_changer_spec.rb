@@ -15,7 +15,13 @@ describe 'puppet version selection' do
         end
 
         describe command("#{pre_cmd} pdk validate#{post_cmd}") do
-          its(:exit_status) { is_expected.to eq(0) }
+          # Warn is outputed as failure on non-windows
+          #   Warn caused by tests being run against only a single Puppet version
+          if Gem.win_platform?
+            its(:exit_status) { is_expected.to eq(0) }
+          else
+            its(:exit_status) { is_expected.to eq(1) }
+          end
           its(:stderr) { is_expected.to match(/#{gem}_GEM_VERSION is not supported by PDK/im) }
         end
       end
@@ -24,7 +30,13 @@ describe 'puppet version selection' do
     [PDK_VERSION[:lts][:full]].each do |puppet_version|
       context "when requesting --puppet-version #{puppet_version}" do
         describe command("pdk validate --puppet-version #{puppet_version}") do
-          its(:exit_status) { is_expected.to eq(0) }
+          # Warn is outputed as failure on non-windows
+          #   Warn caused by tests being run against only a single Puppet version
+          if Gem.win_platform?
+            its(:exit_status) { is_expected.to eq(0) }
+          else
+            its(:exit_status) { is_expected.to eq(1) }
+          end
         end
 
         describe file('Gemfile.lock') do
@@ -65,7 +77,14 @@ describe 'puppet version selection' do
 
       describe command('pdk validate') do
         its(:stderr) { is_expected.not_to match(%r{Using Puppet file://}i) }
-        its(:exit_status) { is_expected.to eq(0) }
+
+        # Warn is outputed as failure on non-windows
+        #   Warn caused by tests being run against only a single Puppet version
+        if Gem.win_platform?
+          its(:exit_status) { is_expected.to eq(0) }
+        else
+          its(:exit_status) { is_expected.to eq(1) }
+        end
       end
 
       describe command('pdk test unit') do
