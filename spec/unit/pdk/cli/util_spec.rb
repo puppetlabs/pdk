@@ -326,14 +326,14 @@ describe PDK::CLI::Util do
       end
 
       it 'rases a PDK::CLI::ExitWithError' do
-        expect { puppet_env }.to raise_error(PDK::CLI::ExitWithError, /Support for Puppet versions older than 7.0.0 has been removed from PDK./)
+        expect { puppet_env }.to raise_error(PDK::CLI::ExitWithError, /Support for Puppet versions older than 8.0.0 has been removed from PDK./)
       end
     end
 
-    context 'when the Puppet version is at least 7.0.0' do
-      let(:options) { { 'puppet-version': '7.0.0' } }
-      let(:ruby_version) { '2.7.8' }
-      let(:puppet_version) { '7.0.0' }
+    context 'when the Puppet version is at least 8.0.0' do
+      let(:options) { { 'puppet-version': '8.0.0' } }
+      let(:ruby_version) { '3.1.6' }
+      let(:puppet_version) { '8.0.0' }
 
       before do
         allow(PDK::Util::PuppetVersion).to receive(:find_gem_for).with(anything).and_return(version_result)
