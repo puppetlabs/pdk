@@ -44,7 +44,7 @@ module PDK
               target = PDK::Report.default_target
             end
 
-            { method: :"write_#{format}", target: target }
+            { method: :"write_#{format}", target: }
           end
         end
       end

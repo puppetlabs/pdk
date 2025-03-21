@@ -57,7 +57,7 @@ module PDK
         require 'pdk/util'
 
         unless PDK::Util.package_install?
-          PDK.logger.debug(format("PDK package installation not found. Trying '%{fallback}' from the system PATH instead.", fallback: fallback))
+          PDK.logger.debug(format("PDK package installation not found. Trying '%{fallback}' from the system PATH instead.", fallback:))
           return fallback
         end
 
@@ -65,7 +65,7 @@ module PDK
 
         require 'pdk/util/filesystem'
         unless PDK::Util::Filesystem.exist?(vendored_bin_full_path)
-          PDK.logger.debug(format("Could not find '%{vendored_bin}' in PDK package. Trying '%{fallback}' from the system PATH instead.", fallback: fallback, vendored_bin: vendored_bin_full_path))
+          PDK.logger.debug(format("Could not find '%{vendored_bin}' in PDK package. Trying '%{fallback}' from the system PATH instead.", fallback:, vendored_bin: vendored_bin_full_path))
           return fallback
         end
 

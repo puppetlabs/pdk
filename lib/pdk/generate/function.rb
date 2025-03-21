@@ -42,7 +42,7 @@ module PDK
       def template_data
         func_name = object_name.split('::').last
         namespace = object_name.split('::')[0...-1].join('::')
-        { name: object_name, func_name: func_name, namespace: namespace }
+        { name: object_name, func_name:, namespace: }
       end
     end
   end

@@ -80,8 +80,8 @@ module PDK
         @exit_codes = []
       end
 
-      def register(&block)
-        super(&block)
+      def register(&)
+        super(&)
 
         # TODO: This executes the thread immediately, whereas the SerialExecGroup executes only when exit_code
         # is called.  Need to change this so it uses a kind of ThreadPool to limit to number on concurrent jobs

@@ -16,9 +16,9 @@ PDK_VERSION = {
     ruby: '3.2.*'
   },
   lts: {
-    full: '7.30.0',
-    major: '7',
-    ruby: '2.7.*'
+    full: '8.6.0',
+    major: '8',
+    ruby: '3.2.*'
   }
 }.freeze
 
@@ -71,10 +71,10 @@ module Specinfra
       def execute_script(script)
         if Open3.respond_to?(:capture3)
           stdout, stderr, status = Open3.capture3(script)
-          { stdout: stdout, stderr: stderr, status: status }
+          { stdout:, stderr:, status: }
         else
           stdout = `#{script} 2>&1`
-          { stdout: stdout, stderr: nil, status: $? } # rubocop:disable Style/SpecialGlobalVars
+          { stdout:, stderr: nil, status: $? } # rubocop:disable Style/SpecialGlobalVars
         end
       end
     end

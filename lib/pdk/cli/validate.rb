@@ -56,7 +56,7 @@ module PDK
 
             vals.reject { |v| PDK::Validate.validator_names.include?(v) }
                 .each do |v|
-              PDK.logger.warn(format("Unknown validator '%{v}'. Available validators: %{validators}.", v: v, validators: PDK::Validate.validator_names.join(', ')))
+              PDK.logger.warn(format("Unknown validator '%{v}'. Available validators: %{validators}.", v:, validators: PDK::Validate.validator_names.join(', ')))
             end
           else
             # This is a single item. Check if it's a known validator, or otherwise treat it as a target.
@@ -87,7 +87,7 @@ module PDK
                            }]
                          end
 
-        options = targets.empty? ? {} : { targets: targets }
+        options = targets.empty? ? {} : { targets: }
         options[:auto_correct] = true if opts[:'auto-correct']
         options.merge!(puppet_env[:gemset])
 

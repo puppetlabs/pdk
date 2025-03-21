@@ -185,7 +185,7 @@ module PDK
         return unless json_data['summary']
 
         # TODO: standardize summary output
-        $stderr.puts '  ' << (format('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.', total: json_data['summary']['example_count'], duration: duration,
+        $stderr.puts '  ' << (format('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.', total: json_data['summary']['example_count'], duration:,
                                                                                                                                    failures: json_data['summary']['failure_count'], pending: json_data['summary']['pending_count'])) # rubocop:disable Layout/LineLength
       end
 

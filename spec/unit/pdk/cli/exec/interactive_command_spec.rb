@@ -64,11 +64,11 @@ describe PDK::CLI::Exec::InteractiveCommand do
     let(:environment) { {} }
 
     let(:exitstatus) { 0 }
-    let(:child_status) { instance_double(Process::Status, exitstatus: exitstatus) }
+    let(:child_status) { instance_double(Process::Status, exitstatus:) }
 
     before do
       # rubocop:disable RSpec/SubjectStub
-      allow(command).to receive_messages(resolved_env_for_command: environment, child_status: child_status)
+      allow(command).to receive_messages(resolved_env_for_command: environment, child_status:)
       allow(command).to receive(:system) # Kernel is a mixed-in module
       # rubocop:enable RSpec/SubjectStub
     end

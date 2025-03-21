@@ -59,7 +59,7 @@ describe PDK::Validate::InvokableValidator do
   describe '.parse_targets' do
     subject(:target_files) { validator.parse_targets }
 
-    let(:validator_options) { { targets: targets } }
+    let(:validator_options) { { targets: } }
     let(:pattern) { '**/**.pp' }
     let(:project_config_exists) { false }
 

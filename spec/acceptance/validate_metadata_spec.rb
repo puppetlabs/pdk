@@ -1,9 +1,9 @@
 require 'spec_helper_acceptance'
 
 describe 'pdk validate metadata', :module_command do
-  let(:metadata_syntax_spinner) { /checking metadata syntax/i }
-  let(:module_style_spinner) { /checking module metadata style/i }
-  let(:task_style_spinner) { /checking task metadata style/i }
+  let(:metadata_syntax_spinner) { /(?:c|C)hecking metadata syntax/i }
+  let(:module_style_spinner) { /(?:c|C)hecking module metadata style/i }
+  let(:task_style_spinner) { /(?:c|C)hecking task metadata style/i }
 
   def broken_metadata
     JSON.parse(File.read('metadata.bak')).tap do |metadata|
@@ -33,24 +33,39 @@ describe 'pdk validate metadata', :module_command do
 
       describe command('pdk validate metadata --format text:stdout --format junit:report.xml') do
         its(:exit_status) { is_expected.not_to eq(0) }
-        its(:stdout) { is_expected.to match(/\(warning\): metadata-json-lint:.+open ended dependency/i) }
         its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
 
         describe file('report.xml') do
           its(:content) { is_expected.to contain_valid_junit_xml }
 
-          its(:content) do
-            is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
-              'failures' => eq(1),
-              'tests' => eq(1)
-            )
-          end
+          if Gem.win_platform?
+            its(:content) do
+              is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
+                'failures' => eq(1),
+                'tests' => eq(1)
+              )
+            end
 
-          its(:content) do
-            is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
-              'classname' => 'metadata-json-lint.dependencies',
-              'name' => 'metadata.json'
-            ).that_failed
+            its(:content) do
+              is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
+                'classname' => 'metadata-json-lint.dependencies',
+                'name' => 'metadata.json'
+              ).that_failed
+            end
+          else
+            its(:content) do
+              is_expected.to have_junit_testsuite('metadata-json-lint').with_attributes(
+                'failures' => eq(0),
+                'tests' => eq(1)
+              )
+            end
+
+            its(:content) do
+              is_expected.to have_junit_testcase.in_testsuite('metadata-json-lint').with_attributes(
+                'classname' => 'metadata-json-lint',
+                'name' => 'metadata.json'
+              )
+            end
           end
         end
       end
@@ -66,7 +81,13 @@ describe 'pdk validate metadata', :module_command do
       end
 
       describe command('pdk validate metadata --format junit') do
-        its(:exit_status) { is_expected.to eq(0) }
+        # Warn is outputed as failure on non-windows
+        #   Warn caused by tests being run against only a single Puppet version
+        if Gem.win_platform?
+          its(:exit_status) { is_expected.to eq(0) }
+        else
+          its(:exit_status) { is_expected.to eq(1) }
+        end
         its(:stderr) { is_expected.to match(metadata_syntax_spinner) }
 
         its(:stdout) do

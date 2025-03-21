@@ -21,7 +21,7 @@ module PDK
           # Ensure the parsed document is actually valid
           validate_document!(@raw_data)
         rescue ::JSON::Schema::ValidationError => e
-          raise PDK::Config::LoadError, format('The configuration file %{filename} is not valid: %{message}', filename: filename, message: e.message)
+          raise PDK::Config::LoadError, format('The configuration file %{filename} is not valid: %{message}', filename:, message: e.message)
         end
 
         require 'pdk/config/json_schema_setting'

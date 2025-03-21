@@ -22,7 +22,7 @@ describe '`pdk test unit`' do
 
   context 'when executing' do
     before do
-      expect(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version: ruby_version, gemset: { puppet: puppet_version })
+      expect(PDK::CLI::Util).to receive(:puppet_from_opts_or_env).and_return(ruby_version:, gemset: { puppet: puppet_version })
       expect(PDK::Util::RubyVersion).to receive(:use).with(ruby_version)
       expect(PDK::CLI::Util).to receive(:ensure_in_module!).with(any_args).once
       expect(PDK::Util).to receive(:module_pdk_version).and_return(PDK::VERSION)
@@ -173,7 +173,7 @@ describe '`pdk test unit`' do
   context 'with --puppet-dev' do
     let(:puppet_env) do
       {
-        ruby_version: ruby_version,
+        ruby_version:,
         gemset: { puppet: 'file://path/to/puppet' }
       }
     end
@@ -207,7 +207,7 @@ describe '`pdk test unit`' do
     let(:puppet_version) { PDK_VERSION[:lts][:full] }
     let(:puppet_env) do
       {
-        ruby_version: ruby_version,
+        ruby_version:,
         gemset: { puppet: PDK_VERSION[:latest][:full] }
       }
     end
