@@ -98,7 +98,7 @@ describe PDK::Util::TemplateURI do
 
       before do
         allow(PDK::Util::Git).to receive(:repo?).with(anything).and_return(true)
-        allow(PDK::Util).to receive_messages(module_root: module_root, development_mode?: false)
+        allow(PDK::Util).to receive_messages(module_root:, development_mode?: false)
       end
 
       context 'when passed no options' do

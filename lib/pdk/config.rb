@@ -67,7 +67,7 @@ module PDK
     # @api private
     def project_config
       context = @config_options['context']
-      @project ||= PDK::Config::Namespace.new('project') do
+      @project_config ||= PDK::Config::Namespace.new('project') do
         mount :environment, PDK::ControlRepo.environment_conf_as_config(File.join(context.root_path, 'environment.conf')) if context.is_a?(PDK::Context::ControlRepo)
 
         mount :validate, PDK::Config::YAML.new('validate', file: File.join(context.root_path, 'pdk.yaml'), persistent_defaults: true) do

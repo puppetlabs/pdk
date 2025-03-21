@@ -89,9 +89,9 @@ module PDK
           duration = Time.now - start_time
 
           PDK.logger.debug(format("Execution of '%{command}' complete (duration: \
-                              %{duration_in_seconds}s; exit code: %{exit_code})", command: command_string, exit_code: exit_code, duration_in_seconds: duration))
+                              %{duration_in_seconds}s; exit code: %{exit_code})", command: command_string, exit_code:, duration_in_seconds: duration))
 
-          { exit_code: exit_code, duration: duration }
+          { exit_code:, duration: }
         end
 
         def child_status

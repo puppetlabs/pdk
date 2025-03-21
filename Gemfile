@@ -16,10 +16,11 @@ group :test do
   gem 'parallel'
   gem 'parallel_tests'
   gem 'rake'
+  gem 'rexml'
   gem 'rspec', '~> 3.0'
-  gem 'rubocop', '~> 1.50.0', require: false
-  gem 'rubocop-performance', '~> 1.16', require: false
-  gem 'rubocop-rspec', '~> 2.19', require: false
+  gem 'rubocop', '~> 1.70.0', require: false
+  gem 'rubocop-performance', '~> 1.22.1', require: false
+  gem 'rubocop-rspec', '~> 3.1.0', require: false
   gem 'simplecov-console'
 
   # Temporary exclusion required as these versions are currently broken for us

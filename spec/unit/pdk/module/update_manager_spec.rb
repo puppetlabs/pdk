@@ -24,7 +24,7 @@ describe PDK::Module::UpdateManager do
     end
 
     it 'creates a file added change' do
-      expect(update_manager.changes).to include(added: [{ path: dummy_file, content: content }])
+      expect(update_manager.changes).to include(added: [{ path: dummy_file, content: }])
     end
 
     it 'knows that the file will be changed' do

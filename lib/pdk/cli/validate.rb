@@ -56,7 +56,7 @@ module PDK
 
             vals.reject { |v| PDK::Validate.validator_names.include?(v) }
                 .each do |v|
-              PDK.logger.warn(format("Unknown validator '%{v}'. Available validators: %{validators}.", v: v, validators: PDK::Validate.validator_names.join(', ')))
+              PDK.logger.warn(format("Unknown validator '%{v}'. Available validators: %{validators}.", v:, validators: PDK::Validate.validator_names.join(', ')))
             end
           else
             # This is a single item. Check if it's a known validator, or otherwise treat it as a target.
@@ -77,7 +77,7 @@ module PDK
         # Subsequent arguments are targets.
         targets.concat(args.to_a[1..]) if args.length > 1
 
-        report = PDK::Report.new
+        PDK::Report.new
         report_formats = if opts[:format]
                            PDK::CLI::Util::OptionNormalizer.report_formats(opts[:format])
                          else
@@ -87,7 +87,7 @@ module PDK
                            }]
                          end
 
-        options = targets.empty? ? {} : { targets: targets }
+        options = targets.empty? ? {} : { targets: }
         options[:auto_correct] = true if opts[:'auto-correct']
         options.merge!(puppet_env[:gemset])
 

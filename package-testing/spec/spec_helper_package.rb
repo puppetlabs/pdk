@@ -1,7 +1,7 @@
 require 'beaker-rspec'
 require 'beaker-puppet'
 
-Dir['./spec/package/support/*.rb'].sort.each { |f| require f }
+Dir['./spec/package/support/*.rb'].each { |f| require f }
 
 include SpecUtils # rubocop:disable Style/MixinUsage
 

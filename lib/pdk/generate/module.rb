@@ -33,7 +33,7 @@ module PDK
           PDK::Util::Filesystem.write_file(test_file, 'This file was created by the Puppet Development Kit to test if this folder was writable, you can safely remove this file.')
           PDK::Util::Filesystem.rm_f(test_file)
         rescue Errno::EACCES || Errno::EROFS
-          raise PDK::CLI::FatalError, format("You do not have permission to write to '%{parent_dir}'", parent_dir: parent_dir)
+          raise PDK::CLI::FatalError, format("You do not have permission to write to '%{parent_dir}'", parent_dir:)
         end
 
         temp_target_dir = PDK::Util.make_tmpdir_name('pdk-module-target')
@@ -149,7 +149,7 @@ module PDK
         ].each do |dir|
           PDK::Util::Filesystem.mkdir_p(dir)
         rescue SystemCallError => e
-          raise PDK::CLI::FatalError, format("Unable to create directory '%{dir}': %{message}", dir: dir, message: e.message)
+          raise PDK::CLI::FatalError, format("Unable to create directory '%{dir}': %{message}", dir:, message: e.message)
         end
       end
 
@@ -305,7 +305,7 @@ module PDK
 
           continue = PDK::CLI::Util.prompt_for_yes(
             'Metadata will be generated based on this information, continue?',
-            prompt: prompt,
+            prompt:,
             cancel_message: 'Interview cancelled; exiting.'
           )
 

@@ -25,7 +25,7 @@ $LOAD_PATH.unshift File.expand_path('../lib', __dir__)
 require 'tempfile'
 
 # automatically load any shared examples or contexts
-Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
+Dir['./spec/support/**/*.rb'].each { |f| require f }
 
 FIXTURES_DIR = File.join(__dir__, 'fixtures')
 EMPTY_MODULE_ROOT = File.join(FIXTURES_DIR, 'module_root')

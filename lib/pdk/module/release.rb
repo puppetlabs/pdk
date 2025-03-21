@@ -22,7 +22,7 @@ module PDK
           module_path = PDK::Util.module_root
           raise PDK::CLI::ExitWithError, 'The module release process requires a valid module path' if module_path.nil?
         end
-        raise PDK::CLI::ExitWithError, format('%{module_path} is not a valid module', module_path: module_path) unless PDK::Util.in_module_root?(module_path)
+        raise PDK::CLI::ExitWithError, format('%{module_path} is not a valid module', module_path:) unless PDK::Util.in_module_root?(module_path)
 
         @module_path = module_path
       end
@@ -62,9 +62,7 @@ module PDK
 
           # Check if the versions match
           latest_version = PDK::Util::ChangelogGenerator.latest_version
-          if !latest_version && (new_version != latest_version)
-            raise PDK::CLI::ExitWithError, format('%{new_version} does not match %{latest_version}', new_version: new_version, latest_version: latest_version)
-          end
+          raise PDK::CLI::ExitWithError, format('%{new_version} does not match %{latest_version}', new_version:, latest_version:) if !latest_version && (new_version != latest_version)
         end
 
         run_documentation(options) unless skip_documentation?
@@ -85,7 +83,7 @@ module PDK
       end
 
       def module_metadata
-        @module_metada ||= PDK::Module::Metadata.from_file(File.join(module_path, 'metadata.json'))
+        @module_metadata ||= PDK::Module::Metadata.from_file(File.join(module_path, 'metadata.json'))
       end
 
       def write_module_metadata!
@@ -145,7 +143,7 @@ module PDK
 
       def run_publish(_opts, tarball_path)
         validate_publish_options!
-        raise PDK::CLI::ExitWithError, format('Module tarball %{tarball_path} does not exist', tarball_path: tarball_path) unless PDK::Util::Filesystem.file?(tarball_path)
+        raise PDK::CLI::ExitWithError, format('Module tarball %{tarball_path} does not exist', tarball_path:) unless PDK::Util::Filesystem.file?(tarball_path)
 
         PDK.logger.info 'Uploading tarball to puppet forge...'
         begin

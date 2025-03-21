@@ -35,7 +35,7 @@ module PDK
         PDK::Util::Filesystem.glob(File.join(context.root_path, 'tasks', "#{task_name}.*")).each do |file|
           next if allowed_extensions.include?(File.extname(file))
 
-          raise PDK::CLI::ExitWithError, format(error, name: task_name, file: file)
+          raise PDK::CLI::ExitWithError, format(error, name: task_name, file:)
         end
       end
 

@@ -48,7 +48,7 @@ describe PDK::Generate::Module do
     let(:target_dir) { PDK::Util::Filesystem.expand_path('/path/to/target/module') }
     let(:invoke_opts) do
       {
-        target_dir: target_dir,
+        target_dir:,
         module_name: 'foo',
         'skip-interview': true
       }
@@ -66,7 +66,7 @@ describe PDK::Generate::Module do
         expect(logger).not_to receive(:info).with(a_string_matching(/In your new module directory, add classes with the 'pdk new class' command/i))
 
         expect do
-          described_class.invoke(module_name: 'foo', target_dir: target_dir)
+          described_class.invoke(module_name: 'foo', target_dir:)
         end.to raise_error(PDK::CLI::ExitWithError, /destination directory '.+' already exists/i)
       end
     end
@@ -299,7 +299,7 @@ describe PDK::Generate::Module do
     end
     let(:module_name) { 'bar' }
     let(:default_metadata) { {} }
-    let(:options) { { module_name: module_name } }
+    let(:options) { { module_name: } }
 
     before do
       prompt = TTY::Prompt::Test.new
@@ -359,7 +359,7 @@ describe PDK::Generate::Module do
     end
 
     context 'with --full-interview' do
-      let(:options) { { module_name: module_name, 'full-interview': true } }
+      let(:options) { { module_name:, 'full-interview': true } }
 
       context 'when provided answers to all the questions' do
         include_context 'allow summary to be printed to stdout'
@@ -529,7 +529,7 @@ describe PDK::Generate::Module do
     context 'when the user provides the license as a command line option' do
       include_context 'allow summary to be printed to stdout'
 
-      let(:options) { { module_name: module_name, license: 'MIT' } }
+      let(:options) { { module_name:, license: 'MIT' } }
       let(:responses) do
         [
           'foo',

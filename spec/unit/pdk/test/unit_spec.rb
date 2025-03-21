@@ -57,7 +57,7 @@ describe PDK::Test::Unit do
 
   describe '.setup' do
     before do
-      mock_result = { stdout: 'some output', stderr: 'some error', exit_code: exit_code }
+      mock_result = { stdout: 'some output', stderr: 'some error', exit_code: }
       allow(described_class).to receive(:rake).with('spec_prep', any_args).and_return(mock_result)
     end
 
@@ -90,7 +90,7 @@ describe PDK::Test::Unit do
 
   describe '.tear_down' do
     before do
-      mock_result = { stdout: 'some output', stderr: 'some error', exit_code: exit_code }
+      mock_result = { stdout: 'some output', stderr: 'some error', exit_code: }
       allow(described_class).to receive(:rake).with('spec_clean', any_args).and_return(mock_result)
     end
 

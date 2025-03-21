@@ -9,7 +9,7 @@ RSpec.describe PDK::Util::Bundler do
     let(:gemfile) { '/Gemfile' }
     let(:gemfile_lock) { "#{gemfile}.lock" }
     let(:bundle_helper) do
-      instance_double(described_class::BundleHelper, gemfile: gemfile, gemfile?: true, gemfile_lock: gemfile_lock)
+      instance_double(described_class::BundleHelper, gemfile:, gemfile?: true, gemfile_lock:)
     end
 
     before do

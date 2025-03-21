@@ -70,7 +70,7 @@ describe 'pdk build', :module_command do
     context 'when the module has incomplete metadata' do
       before(:all) do
         File.open('metadata.json', 'w') do |f|
-          f.puts metadata.reject { |k, _| k == 'source' }.to_json
+          f.puts metadata.except('source').to_json
         end
       end
 

@@ -12,7 +12,7 @@ module PDK
       def self.rake_bin
         require 'pdk/util'
 
-        @rake ||= File.join(PDK::Util.module_root, 'bin', 'rake')
+        @rake_bin ||= File.join(PDK::Util.module_root, 'bin', 'rake')
       end
 
       def self.cmd_with_args(task)
@@ -185,7 +185,7 @@ module PDK
         return unless json_data['summary']
 
         # TODO: standardize summary output
-        $stderr.puts '  ' << (format('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.', total: json_data['summary']['example_count'], duration: duration,
+        $stderr.puts '  ' << (format('Evaluated %{total} tests in %{duration} seconds: %{failures} failures, %{pending} pending.', total: json_data['summary']['example_count'], duration:,
                                                                                                                                    failures: json_data['summary']['failure_count'], pending: json_data['summary']['pending_count'])) # rubocop:disable Layout/LineLength
       end
 
@@ -251,11 +251,9 @@ module PDK
 
           raise PDK::CLI::FatalError, format('Unable to enumerate examples. rspec reported: %{message}', message: rspec_json['messages'])
         else
-          examples = []
-          rspec_json['examples'].each do |example|
-            examples << { file_path: example['file_path'], id: example['id'], full_description: example['full_description'] }
+          rspec_json['examples'].map do |example|
+            { file_path: example['file_path'], id: example['id'], full_description: example['full_description'] }
           end
-          examples
         end
       end
     end

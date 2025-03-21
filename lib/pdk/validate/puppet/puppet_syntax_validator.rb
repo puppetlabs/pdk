@@ -5,15 +5,15 @@ module PDK
     module Puppet
       class PuppetSyntaxValidator < ExternalCommandValidator
         # In Puppet >= 5.3.4, the error context formatting was changed to facilitate localization
-        ERROR_CONTEXT = /(?:file:\s(?<file>.+?)|line:\s(?<line>.+?)|column:\s(?<column>.+?))/.freeze
+        ERROR_CONTEXT = /(?:file:\s(?<file>.+?)|line:\s(?<line>.+?)|column:\s(?<column>.+?))/
         # In Puppet < 5.3.3, the error context was formatted in these variations:
         #   - "at file_path:line_num:col_num"
         #   - "at file_path:line_num"
         #   - "at line line_num"
         #   - "in file_path"
-        ERROR_CONTEXT_LEGACY = /(?:at\sline\s(?<line>\d+)|at\s(?<file>.+?):(?<line>\d+):(?<column>\d+)|at\s(?<file>.+?):(?<line>\d+)|in\s(?<file>.+?))/.freeze
+        ERROR_CONTEXT_LEGACY = /(?:at\sline\s(?<line>\d+)|at\s(?<file>.+?):(?<line>\d+):(?<column>\d+)|at\s(?<file>.+?):(?<line>\d+)|in\s(?<file>.+?))/
 
-        PUPPET_LOGGER_PREFIX = /^(debug|info|notice|warning|error|alert|critical):\s.+?$/i.freeze
+        PUPPET_LOGGER_PREFIX = /^(debug|info|notice|warning|error|alert|critical):\s.+?$/i
         PUPPET_SYNTAX_PATTERN = /^
           (?<severity>.+?):\s
           (?<message>.+?)
@@ -22,7 +22,7 @@ module PDK
             \s#{ERROR_CONTEXT_LEGACY}| # attempt to match the old " at file:line:column" location
             $                                               # handle cases where the output has no location
           )
-        $/x.freeze
+        $/x
 
         def name
           'puppet-syntax'
@@ -74,7 +74,7 @@ module PDK
         end
 
         def null_file
-          Gem.win_platform? ? 'NUL' : '/dev/null'
+          File::NULL
         end
 
         def parse_output(report, result, targets)

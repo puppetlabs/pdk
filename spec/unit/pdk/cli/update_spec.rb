@@ -4,7 +4,7 @@ require 'pdk/cli'
 describe 'PDK::CLI update' do
   let(:help_text) { a_string_matching(/^USAGE\s+pdk update/m) }
   let(:updater) do
-    instance_double(PDK::Module::Update, run: true, current_version: current_version, new_version: new_version, pinned_to_puppetlabs_template_tag?: pinned_to_tag, template_uri: template_uri)
+    instance_double(PDK::Module::Update, run: true, current_version:, new_version:, pinned_to_puppetlabs_template_tag?: pinned_to_tag, template_uri:)
   end
   let(:current_version) { '1.2.3' }
   let(:new_version) { '1.2.4' }
@@ -95,7 +95,7 @@ describe 'PDK::CLI update' do
 
     before do
       allow(PDK).to receive(:context).and_return(pdk_context)
-      allow(PDK::Util).to receive_messages(module_root: module_root, module_pdk_compatible?: true, module_pdk_version: module_pdk_version)
+      allow(PDK::Util).to receive_messages(module_root:, module_pdk_compatible?: true, module_pdk_version:)
     end
 
     context 'and provided no flags' do
@@ -186,7 +186,7 @@ describe 'PDK::CLI update' do
 
   context 'when run from inside an unconverted module' do
     before do
-      allow(PDK::Util).to receive_messages(module_root: module_root, module_pdk_compatible?: false)
+      allow(PDK::Util).to receive_messages(module_root:, module_pdk_compatible?: false)
     end
 
     context 'and provided no flags' do

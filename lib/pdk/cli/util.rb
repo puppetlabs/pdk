@@ -161,12 +161,12 @@ module PDK
           gemset.each do |gem, version|
             next if version.nil?
 
-            PDK.logger.info(format('Using %{gem} %{version}', gem: gem.to_s.capitalize, version: version))
+            PDK.logger.info(format('Using %{gem} %{version}', gem: gem.to_s.capitalize, version:))
           end
         end
 
         {
-          gemset: gemset,
+          gemset:,
           ruby_version: puppet_env[:ruby_version]
         }
       end

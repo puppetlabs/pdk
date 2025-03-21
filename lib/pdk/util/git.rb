@@ -19,11 +19,11 @@ module PDK
       GIT_QUERY_CACHE_TTL = 10
 
       def self.git_bindir
-        @git_dir ||= File.join('private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
+        @git_bindir ||= File.join('private', 'git', Gem.win_platform? ? 'cmd' : 'bin')
       end
 
       def self.git_paths
-        @paths ||= begin
+        @git_paths ||= begin
           paths = [File.join(PDK::Util.pdk_package_basedir, git_bindir)]
 
           if Gem.win_platform?
@@ -118,7 +118,7 @@ module PDK
 
         matching_refs = output[:stdout].split(/\r?\n/).map { |r| r.split("\t") }
         matching_ref = matching_refs.find { |_sha, remote_ref| ["refs/tags/#{ref}", "refs/remotes/origin/#{ref}", "refs/heads/#{ref}"].include?(remote_ref) }
-        raise PDK::CLI::ExitWithError, format('Unable to find a branch or tag named "%{ref}" in %{repo}', ref: ref, repo: repo) if matching_ref.nil?
+        raise PDK::CLI::ExitWithError, format('Unable to find a branch or tag named "%{ref}" in %{repo}', ref:, repo:) if matching_ref.nil?
 
         matching_ref.first
       end

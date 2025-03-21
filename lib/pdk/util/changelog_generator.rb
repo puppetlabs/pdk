@@ -4,7 +4,7 @@ module PDK
   module Util
     module ChangelogGenerator
       # Taken from the version regex in https://forgeapi.puppet.com/schemas/module.json
-      VERSION_REGEX = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/.freeze
+      VERSION_REGEX = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(-(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(\.(0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*)?(\+[0-9a-zA-Z-]+(\.[0-9a-zA-Z-]+)*)?$/
       GEM = 'github_changelog_generator'.freeze
 
       # Raises if the github_changelog_generator is not available
@@ -33,7 +33,7 @@ module PDK
 
         output = changelog_content
 
-        raise PDK::CLI::ExitWithError, format('The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details', changelog_file: changelog_file) if output.include?('UNCATEGORIZED PRS; GO LABEL THEM') # rubocop:disable Layout/LineLength
+        raise PDK::CLI::ExitWithError, format('The generated changelog contains uncategorized Pull Requests. Please label them and try again. See %{changelog_file} for more details', changelog_file:) if output.include?('UNCATEGORIZED PRS; GO LABEL THEM') # rubocop:disable Layout/LineLength
 
         output
       end

@@ -168,7 +168,7 @@ module PDK
             end
           end
 
-          @commands << { command: command, invokation_targets: invokation_targets }
+          @commands << { command:, invokation_targets: }
         end
         nil
       end

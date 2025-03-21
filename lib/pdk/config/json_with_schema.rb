@@ -20,7 +20,7 @@ module PDK
           # Ensure the parsed document is actually valid
           validate_document!(@raw_data)
         rescue ::JSON::Schema::ValidationError => e
-          raise PDK::Config::LoadError, format('The configuration file %{filename} is not valid: %{message}', filename: filename, message: e.message)
+          raise PDK::Config::LoadError, format('The configuration file %{filename} is not valid: %{message}', filename:, message: e.message)
         end
 
         schema_property_names.each do |key|
@@ -29,7 +29,7 @@ module PDK
 
         # Remove all of the "known" settings from the schema and
         # we're left with the settings that we don't manage.
-        self.unmanaged_settings = @raw_data.reject { |k, _| schema_property_names.include?(k) }
+        self.unmanaged_settings = @raw_data.except(*schema_property_names)
       rescue ::JSON::ParserError => e
         raise PDK::Config::LoadError, e.message
       end

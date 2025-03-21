@@ -314,7 +314,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
         allow(Gem).to receive(:win_platform?).and_return(true)
       end
 
-      it { is_expected.to eq('NUL') }
+      it { is_expected.to eq(File::NULL) }
     end
 
     context 'on a POSIX host' do
@@ -322,7 +322,7 @@ describe PDK::Validate::Puppet::PuppetSyntaxValidator do
         allow(Gem).to receive(:win_platform?).and_return(false)
       end
 
-      it { is_expected.to eq('/dev/null') }
+      it { is_expected.to eq(File::NULL) }
     end
   end
 end

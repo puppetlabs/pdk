@@ -67,7 +67,7 @@ describe 'PDK::CLI::Set::Config' do
 
     RSpec.shared_examples 'a saved setting' do |setting_name, expected_value, force = nil|
       it 'saves the setting' do
-        expect(pdk_config).to receive(:set).with(setting_name, anything, force: force).and_call_original
+        expect(pdk_config).to receive(:set).with(setting_name, anything, force:).and_call_original
         expect(run).to eq(0)
         expect(pdk_config.get(setting_name)).to eq(expected_value)
       end

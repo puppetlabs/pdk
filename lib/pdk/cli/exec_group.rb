@@ -54,12 +54,12 @@ module PDK
     # @see PDK::CLI::ExecGroup
     class SerialExecGroup < ExecGroup
       def initialize(message, opts = {})
-        super(message, opts)
+        super
         @procs = []
       end
 
       def register(&block)
-        super(&block)
+        super
 
         @procs << block
       end
@@ -75,13 +75,13 @@ module PDK
     # @see PDK::CLI::ExecGroup
     class ParallelExecGroup < ExecGroup
       def initialize(message, opts = {})
-        super(message, opts)
+        super
         @threads = []
         @exit_codes = []
       end
 
-      def register(&block)
-        super(&block)
+      def register(&)
+        super
 
         # TODO: This executes the thread immediately, whereas the SerialExecGroup executes only when exit_code
         # is called.  Need to change this so it uses a kind of ThreadPool to limit to number on concurrent jobs
