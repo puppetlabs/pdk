@@ -4,7 +4,7 @@ require 'stringio'
 
 describe PDK::Util::Filesystem do
   describe '.read_file' do
-    subject(:read_file) { described_class.read_file(path, nil_on_error: nil_on_error) }
+    subject(:read_file) { described_class.read_file(path, nil_on_error:) }
 
     let(:path) { File.join('path', 'to', 'my', 'file') }
     let(:nil_on_error) { false }

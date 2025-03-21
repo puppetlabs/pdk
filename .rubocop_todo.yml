@@ -72,16 +72,6 @@ Metrics/ModuleLength:
 Metrics/PerceivedComplexity:
   Max: 28
 
-# Offense count: 5
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, BlockForwardingName.
-# SupportedStyles: anonymous, explicit
-Naming/BlockForwarding:
-  Exclude:
-    - 'lib/pdk/cli/exec_group.rb'
-    - 'lib/pdk/config/namespace.rb'
-    - 'lib/pdk/util/windows/api_types.rb'
-
 # Offense count: 38
 # Configuration parameters: ForbiddenDelimiters.
 # ForbiddenDelimiters: (?i-mx:(^|\s)(EO[A-Z]{1}|END)(\s|$))
@@ -240,14 +230,6 @@ Style/HashExcept:
     - 'rakelib/command_spec.rake'
     - 'spec/acceptance/build_spec.rb'
 
-# Offense count: 135
-# This cop supports safe autocorrection (--autocorrect).
-# Configuration parameters: EnforcedStyle, EnforcedShorthandSyntax, UseHashRocketsWithSymbolValues, PreferHashRocketsForNonAlnumEndingSymbols.
-# SupportedStyles: ruby19, hash_rockets, no_mixed_keys, ruby19_no_mixed_keys
-# SupportedShorthandSyntax: always, never, either, consistent
-Style/HashSyntax:
-  Enabled: false
-
 # Offense count: 4
 Style/OpenStructUse:
   Exclude:
@@ -266,17 +248,6 @@ Style/OptionalBooleanParameter:
     - 'lib/pdk/validate.rb'
     - 'package-testing/spec/package/support/spec_utils.rb'
     - 'spec/unit/pdk/context_spec.rb'
-
-# Offense count: 13
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantFreeze:
-  Exclude:
-    - 'ext/rubocop.rb'
-    - 'lib/pdk/module/update.rb'
-    - 'lib/pdk/util/changelog_generator.rb'
-    - 'lib/pdk/util/template_uri.rb'
-    - 'lib/pdk/validate/puppet/puppet_epp_validator.rb'
-    - 'lib/pdk/validate/puppet/puppet_syntax_validator.rb'
 
 # Offense count: 13
 # This cop supports safe autocorrection (--autocorrect).

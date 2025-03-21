@@ -60,7 +60,7 @@ describe PDK::Template::Renderer::V1::Renderer do
       def rendered_files
         result = []
         renderer.render(PDK::Template::MODULE_TEMPLATE_TYPE, module_name, render_options) do |dest_path, dest_content, dest_status|
-          result << { dest_path: dest_path, dest_content: dest_content, dest_status: dest_status }
+          result << { dest_path:, dest_content:, dest_status: }
         end
         result
       end

@@ -715,7 +715,7 @@ describe PDK::Module::Convert do
 
     before do
       allow(PDK::Util::PuppetStrings).to receive(:all_objects).and_return(objects)
-      allow(PDK::Util).to receive_messages(module_root: module_root, module_metadata: metadata)
+      allow(PDK::Util).to receive_messages(module_root:, module_metadata: metadata)
     end
 
     let(:metadata) { { 'name' => 'myuser-mymodule' } }
@@ -758,7 +758,7 @@ describe PDK::Module::Convert do
 
     before do
       allow(PDK::Util::PuppetStrings).to receive(:all_objects).and_return(objects)
-      allow(PDK::Util).to receive_messages(module_root: module_root, module_metadata: metadata)
+      allow(PDK::Util).to receive_messages(module_root:, module_metadata: metadata)
       allow(PDK).to receive(:context).and_return(pdk_context)
     end
 

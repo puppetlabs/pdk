@@ -71,10 +71,10 @@ module Specinfra
       def execute_script(script)
         if Open3.respond_to?(:capture3)
           stdout, stderr, status = Open3.capture3(script)
-          { stdout: stdout, stderr: stderr, status: status }
+          { stdout:, stderr:, status: }
         else
           stdout = `#{script} 2>&1`
-          { stdout: stdout, stderr: nil, status: $? } # rubocop:disable Style/SpecialGlobalVars
+          { stdout:, stderr: nil, status: $? } # rubocop:disable Style/SpecialGlobalVars
         end
       end
     end

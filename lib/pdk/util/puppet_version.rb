@@ -216,7 +216,7 @@ module PDK
         PDK::Util::RubyVersion.versions.each_key do |ruby_version|
           PDK::Util::RubyVersion.use(ruby_version)
           version = PDK::Util::RubyVersion.available_puppet_versions.find { |r| requirement.satisfied_by?(r) }
-          return { gem_version: version, ruby_version: ruby_version } unless version.nil?
+          return { gem_version: version, ruby_version: } unless version.nil?
         end
 
         nil

@@ -36,7 +36,7 @@ module PDK
         @metadata = {}
 
         @renderer = renderer.nil? ? Renderer.instance(uri, path, context) : renderer
-        raise format('Could not find a compatible template renderer for %{path}', path: path) if @renderer.nil?
+        raise format('Could not find a compatible template renderer for %{path}', path:) if @renderer.nil?
       end
 
       # Later additions may include Control Repo rendering, for example
@@ -59,7 +59,7 @@ module PDK
       # Render a new module
       # @see PDK::Template::Renderer::AbstractRenderer.render
       def render_new_module(module_name, module_metadata = {}, options = {})
-        @renderer.render(MODULE_TEMPLATE_TYPE, module_name, options.merge(include_first_time: true, module_metadata: module_metadata)) { |*args| yield(*args) }
+        @renderer.render(MODULE_TEMPLATE_TYPE, module_name, options.merge(include_first_time: true, module_metadata:)) { |*args| yield(*args) }
       end
       # :nocov:
     end

@@ -73,7 +73,7 @@ describe PDK::Validate::Metadata::MetadataJSONLintValidator do
     end
 
     let(:report) { PDK::Report.new }
-    let(:metadata_json_lint_output) { { result: 'something', errors: errors, warnings: warnings }.to_json }
+    let(:metadata_json_lint_output) { { result: 'something', errors:, warnings: }.to_json }
     let(:targets) { ['metadata.json'] }
     let(:errors) { [] }
     let(:warnings) { [] }

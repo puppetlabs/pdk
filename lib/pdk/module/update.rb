@@ -3,7 +3,7 @@ require 'pdk'
 module PDK
   module Module
     class Update < Convert
-      GIT_DESCRIBE_PATTERN = /\A(?<base>.+?)-(?<additional_commits>\d+)-g(?<sha>.+)\Z/.freeze
+      GIT_DESCRIBE_PATTERN = /\A(?<base>.+?)-(?<additional_commits>\d+)-g(?<sha>.+)\Z/
 
       def run
         template_uri.uri_fragment = new_template_version
@@ -117,7 +117,7 @@ module PDK
                           'Updating %{module_name} using the template at %{template_url}, from %{current_version} to %{new_version}'
                         end
 
-        format(format_string, module_name: module_metadata.data['name'], template_url: template_uri.bare_uri, current_version: current_version, new_version: new_version)
+        format(format_string, module_name: module_metadata.data['name'], template_url: template_uri.bare_uri, current_version:, new_version:)
       end
     end
   end

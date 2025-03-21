@@ -18,7 +18,7 @@ describe PDK::Util::VendoredFile do
     let(:gem_vendored_content) { 'gem file content' }
 
     before do
-      allow(PDK::Util).to receive_messages(package_cachedir: package_cachedir, cachedir: cachedir)
+      allow(PDK::Util).to receive_messages(package_cachedir:, cachedir:)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(package_vendored_path).and_return(package_vendored_content)
       allow(PDK::Util::Filesystem).to receive(:read_file).with(gem_vendored_path).and_return(gem_vendored_content)
     end

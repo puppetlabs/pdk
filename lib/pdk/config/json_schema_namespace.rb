@@ -34,7 +34,7 @@ module PDK
       #
       # @option params [String] :schema_file Path to the JSON Schema document
       def initialize(name = nil, file: nil, parent: nil, persistent_defaults: false, schema_file: nil, &block)
-        super(name, file: file, parent: parent, persistent_defaults: persistent_defaults, &block)
+        super(name, file:, parent:, persistent_defaults:, &block)
         @schema_file = schema_file
         @unmanaged_settings = {}
       end

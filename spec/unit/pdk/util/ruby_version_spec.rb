@@ -21,7 +21,7 @@ describe PDK::Util::RubyVersion do
     end
 
     before do
-      allow(PDK::Util).to receive_messages(package_install?: true, pdk_package_basedir: pdk_package_basedir, package_cachedir: package_cachedir)
+      allow(PDK::Util).to receive_messages(package_install?: true, pdk_package_basedir:, package_cachedir:)
       allow(described_class).to receive(:scan_for_packaged_rubies).and_return(packaged_rubies)
     end
   end
@@ -168,7 +168,7 @@ describe PDK::Util::RubyVersion do
     end
 
     before do
-      allow(instance).to receive_messages(gem_path: gem_path, gem_home: gem_home)
+      allow(instance).to receive_messages(gem_path:, gem_home:)
       allow(PDK::Util::Filesystem).to receive(:glob).with(gem_path_pattern).and_return(gem_path_results.keys)
       allow(PDK::Util::Filesystem).to receive(:glob).with(gem_home_pattern).and_return(gem_home_results.keys)
 

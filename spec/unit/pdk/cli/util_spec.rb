@@ -173,7 +173,7 @@ describe PDK::CLI::Util do
     it 'returns the gemset and ruby version' do
       expected_result = {
         gemset: { puppet: puppet_version },
-        ruby_version: ruby_version
+        ruby_version:
       }
       expect(subject).to eq(expected_result)
     end
@@ -185,7 +185,7 @@ describe PDK::CLI::Util do
     let(:context) { nil }
     let(:logging_disabled) { false }
     let(:version_result) do
-      { ruby_version: ruby_version, gem_version: Gem::Version.new(puppet_version) }
+      { ruby_version:, gem_version: Gem::Version.new(puppet_version) }
     end
 
     context 'when puppet-dev has been set' do
@@ -196,7 +196,7 @@ describe PDK::CLI::Util do
       let(:version_result) do
         {
           gem_version: puppet_version,
-          ruby_version: ruby_version
+          ruby_version:
         }
       end
 
@@ -216,7 +216,7 @@ describe PDK::CLI::Util do
       let(:version_result) do
         {
           gem_version: puppet_version,
-          ruby_version: ruby_version
+          ruby_version:
         }
       end
 
