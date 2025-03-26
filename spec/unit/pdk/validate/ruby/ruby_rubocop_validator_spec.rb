@@ -89,10 +89,10 @@ describe PDK::Validate::Ruby::RubyRubocopValidator do
     def mock_offense(severity, message, cop_name, corrected, line, column)
       OpenStruct.new(
         severity: OpenStruct.new(name: severity),
-        message: message,
-        cop_name: cop_name,
+        message:,
+        cop_name:,
         corrected?: corrected,
-        line: line,
+        line:,
         last_line: line,
         real_column: column,
         last_column: column,

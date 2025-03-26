@@ -55,7 +55,7 @@ module PDK
                 source: name,
                 state: :failure,
                 severity: 'error',
-                message: message
+                message:
               )
               is_valid = false
             end
@@ -67,7 +67,7 @@ module PDK
                 source: name,
                 state: :failure,
                 severity: 'error',
-                message: format("environment_timeout is set to '%{timeout}' but should be 0, 'unlimited' or not set.", timeout: timeout)
+                message: format("environment_timeout is set to '%{timeout}' but should be 0, 'unlimited' or not set.", timeout:)
               )
               is_valid = false
             end

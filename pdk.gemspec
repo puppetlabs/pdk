@@ -17,38 +17,38 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 2.7.0'
+  spec.required_ruby_version = '>= 3.1.0'
 
   # PDK Rubygems
-  spec.add_runtime_dependency 'ffi', '>= 1.15.5', '< 2.0.0'
-  spec.add_runtime_dependency 'minitar', '~> 0.8'
+  spec.add_dependency 'ffi', '>= 1.15.5', '< 2.0.0'
+  spec.add_dependency 'minitar', '~> 0.8'
 
   # Bundler
-  spec.add_runtime_dependency 'bundler', '>= 2.1.0', '< 3.0.0'
+  spec.add_dependency 'bundler', '>= 2.1.0', '< 3.0.0'
 
   # Cri and deps
-  spec.add_runtime_dependency 'cri', '~> 2.15.11'
+  spec.add_dependency 'cri', '~> 2.15.11'
 
   # Childprocess and deps
-  spec.add_runtime_dependency 'childprocess', '~> 5.0'
-  spec.add_runtime_dependency 'hitimes', '2.0.0'
+  spec.add_dependency 'childprocess', '~> 5.0'
+  spec.add_dependency 'hitimes', '2.0.0'
 
   ## root tty gems
-  spec.add_runtime_dependency 'tty-prompt', '~> 0.23'
-  spec.add_runtime_dependency 'tty-spinner', '~> 0.9'
-  spec.add_runtime_dependency 'tty-which', '~> 0.5'
+  spec.add_dependency 'tty-prompt', '~> 0.23'
+  spec.add_dependency 'tty-spinner', '~> 0.9'
+  spec.add_dependency 'tty-which', '~> 0.5'
 
   # json-schema and deps
-  spec.add_runtime_dependency 'json-schema', '~> 5.0'
+  spec.add_dependency 'json-schema', '~> 5.0'
 
   #  PDK build
-  spec.add_runtime_dependency 'puppet-modulebuilder', '~> 1.0'
+  spec.add_dependency 'puppet-modulebuilder', '~> 1.0'
 
   # Other deps
-  spec.add_runtime_dependency 'deep_merge', '~> 1.2.2'
-  spec.add_runtime_dependency 'diff-lcs', '>= 1.5.0'
-  spec.add_runtime_dependency 'pathspec', '~> 1.1'
-  spec.add_runtime_dependency 'puppet_forge', '~> 5.0'
+  spec.add_dependency 'deep_merge', '~> 1.2.2'
+  spec.add_dependency 'diff-lcs', '>= 1.5.0'
+  spec.add_dependency 'pathspec', '~> 1.1'
+  spec.add_dependency 'puppet_forge', '~> 5.0'
 
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

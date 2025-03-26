@@ -21,7 +21,7 @@ module PDK
           # Ensure the parsed document is actually valid
           validate_document!(@raw_data)
         rescue ::JSON::Schema::ValidationError => e
-          raise PDK::Config::LoadError, format('The configuration file %{filename} is not valid: %{message}', filename: filename, message: e.message)
+          raise PDK::Config::LoadError, format('The configuration file %{filename} is not valid: %{message}', filename:, message: e.message)
         end
 
         require 'pdk/config/json_schema_setting'
@@ -32,7 +32,7 @@ module PDK
 
         # Remove all of the "known" settings from the schema and
         # we're left with the settings that we don't manage.
-        self.unmanaged_settings = @raw_data.reject { |k, _| schema_property_names.include?(k) }
+        self.unmanaged_settings = @raw_data.except(*schema_property_names)
       rescue Psych::SyntaxError => e
         raise PDK::Config::LoadError, format('Syntax error when loading %{file}: %{error}', file: filename, error: "#{e.problem} #{e.context}")
       rescue Psych::DisallowedClass => e

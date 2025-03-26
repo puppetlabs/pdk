@@ -49,7 +49,8 @@ describe 'Updating an existing module' do
         let(:cwd) { repo_dir }
 
         its(:exit_status) { is_expected.to eq(0) }
-        its(:stdout) { is_expected.to match(/0 failures/m) }
+
+        its(:stdout) { is_expected.to match(/0 failures/m) } unless windows_node?
       end
 
       # Parallel tests gem is currently broken on Windows.

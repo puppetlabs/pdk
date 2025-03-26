@@ -130,7 +130,7 @@ describe PDK::Report::Event do
         context "and passed #{state.inspect} as the state" do
           let(:data) do
             {
-              state: state
+              state:
             }
           end
 

@@ -301,7 +301,7 @@ describe PDK::Config do
       end
 
       def project_config
-        @system_config ||= PDK::Config::Namespace.new('project') {}
+        @project_config ||= PDK::Config::Namespace.new('project') {}
       end
     end
 

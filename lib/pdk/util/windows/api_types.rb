@@ -16,7 +16,7 @@ module PDK
 
         module ::FFI
           class Pointer
-            def self.from_string_to_wide_string(str, &_block)
+            def self.from_string_to_wide_string(str, &)
               str = PDK::Util::Windows::String.wide_string(str)
               FFI::MemoryPointer.new(:byte, str.bytesize) do |ptr|
                 # uchar here is synonymous with byte
@@ -41,7 +41,7 @@ module PDK
             def read_arbitrary_wide_string_up_to(max_char_length = 512, null_terminator = :single_null, encode_options = {})
               unless [:single_null, :double_null].include?(null_terminator)
                 raise ArgumentError,
-                      format('Unable to read wide strings with %{null_terminator} terminal nulls', null_terminator: null_terminator)
+                      format('Unable to read wide strings with %{null_terminator} terminal nulls', null_terminator:)
               end
 
               terminator_width = null_terminator == :single_null ? 1 : 2

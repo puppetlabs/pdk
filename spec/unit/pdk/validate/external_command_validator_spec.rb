@@ -121,7 +121,7 @@ describe PDK::Validate::ExternalCommandValidator do
           require 'pdk/cli/util/spinner'
           instance_double(PDK::Validate::Validator, spinner: TTY::Spinner::Multi.new('test'))
         end
-        let(:validator_options) { { parent_validator: parent_validator } }
+        let(:validator_options) { { parent_validator: } }
 
         it 'registers a spinner for a hierarchical command' do
           expect(dummy_command).to receive(:register_spinner).and_return(nil)

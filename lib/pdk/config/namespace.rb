@@ -77,8 +77,8 @@ module PDK
       #
       # @param name [String,Symbol] the name of the new namespace.
       # @param block [Proc]
-      def namespace(name, &block)
-        mount(name, PDK::Config::Namespace.new, &block)
+      def namespace(name, &)
+        mount(name, PDK::Config::Namespace.new, &)
       end
 
       # Get the value of the named key.
@@ -336,7 +336,7 @@ module PDK
 
         PDK::Util::Filesystem.write_file(file, serialize_data(to_h))
       rescue Errno::EACCES
-        raise PDK::Config::LoadError, format('Unable to open %{file} for writing', file: file)
+        raise PDK::Config::LoadError, format('Unable to open %{file} for writing', file:)
       rescue SystemCallError => e
         raise PDK::Config::LoadError, e.message
       end

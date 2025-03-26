@@ -111,7 +111,7 @@ module PDK
       def check_for_deprecated_puppet(version)
         return unless version.is_a?(Gem::Version)
 
-        deprecated_below = Gem::Version.new('7.0.0')
+        deprecated_below = Gem::Version.new('8.0.0')
         return unless version < deprecated_below
 
         raise PDK::CLI::ExitWithError, "Support for Puppet versions older than #{deprecated_below} has been removed from PDK."
@@ -161,12 +161,12 @@ module PDK
           gemset.each do |gem, version|
             next if version.nil?
 
-            PDK.logger.info(format('Using %{gem} %{version}', gem: gem.to_s.capitalize, version: version))
+            PDK.logger.info(format('Using %{gem} %{version}', gem: gem.to_s.capitalize, version:))
           end
         end
 
         {
-          gemset: gemset,
+          gemset:,
           ruby_version: puppet_env[:ruby_version]
         }
       end

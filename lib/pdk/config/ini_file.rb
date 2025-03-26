@@ -155,7 +155,7 @@ module PDK
           end
 
           def ==(other)
-            super(other) && self.line_number == other.line_number
+            super && self.line_number == other.line_number
           end
         end
 

@@ -1,7 +1,7 @@
 require 'beaker-rspec'
 require 'beaker-puppet'
 
-Dir['./spec/package/support/*.rb'].sort.each { |f| require f }
+Dir['./spec/package/support/*.rb'].each { |f| require f }
 
 include SpecUtils # rubocop:disable Style/MixinUsage
 
@@ -19,9 +19,9 @@ PDK_VERSION = {
     ruby: '3.2.*'
   },
   lts: {
-    full: '7.30.0',
-    major: '7',
-    ruby: '2.7.*'
+    full: '8.6.0',
+    major: '8',
+    ruby: '3.2.*'
   }
 }.freeze
 

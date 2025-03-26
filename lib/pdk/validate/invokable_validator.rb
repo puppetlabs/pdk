@@ -89,7 +89,7 @@ module PDK
               target_list = target_list.reject { |file| ignore_list.match(file) }
 
               if target_list.flatten.empty?
-                PDK.logger.info(format('Validator \'%{validator}\' skipped for \'%{target}\'. No files matching \'%{pattern}\' found to validate.', validator: name, target: target, pattern: pattern))
+                PDK.logger.info(format('Validator \'%{validator}\' skipped for \'%{target}\'. No files matching \'%{pattern}\' found to validate.', validator: name, target:, pattern:))
 
                 skipped << target
               end
@@ -128,7 +128,7 @@ module PDK
       # @see PDK::Validate::Validator.spinner_text
       # @abstract
       def spinner_text
-        format('Running %{name} validator ...', name: name)
+        format('Running %{name} validator ...', name:)
       end
 
       # @see PDK::Validate::Validator.spinner
@@ -146,11 +146,11 @@ module PDK
       # @param skipped [Array[String]] The list of skipped targets
       def process_skipped(report, skipped = [])
         skipped.each do |skipped_target|
-          PDK.logger.debug(format('%{validator}: Skipped \'%{target}\'. Target does not contain any files to validate (%{pattern}).', validator: name, target: skipped_target, pattern: pattern))
+          PDK.logger.debug(format('%{validator}: Skipped \'%{target}\'. Target does not contain any files to validate (%{pattern}).', validator: name, target: skipped_target, pattern:))
           report.add_event(
             file: skipped_target,
             source: name,
-            message: format('Target does not contain any files to validate (%{pattern}).', pattern: pattern),
+            message: format('Target does not contain any files to validate (%{pattern}).', pattern:),
             severity: :info,
             state: :skipped
           )

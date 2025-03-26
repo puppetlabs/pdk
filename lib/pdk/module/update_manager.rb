@@ -20,7 +20,7 @@ module PDK
       # @param path [String] The path to the file to be modified.
       # @param content [String] The new content of the file.
       def modify_file(path, content)
-        @modified_files << { path: path, content: content }
+        @modified_files << { path:, content: }
       end
 
       # Store a pending file addition.
@@ -28,7 +28,7 @@ module PDK
       # @param path [String] The path where the file will be created.
       # @param content [String] The content of the new file.
       def add_file(path, content)
-        @added_files << { path: path, content: content }
+        @added_files << { path:, content: }
       end
 
       # Store a pending file removal.
@@ -131,13 +131,13 @@ module PDK
         require 'pdk/util/filesystem'
 
         if PDK::Util::Filesystem.file?(path)
-          PDK.logger.debug(format("unlinking '%{path}'", path: path))
+          PDK.logger.debug(format("unlinking '%{path}'", path:))
           PDK::Util::Filesystem.rm(path)
         else
-          PDK.logger.debug(format("'%{path}': already gone", path: path))
+          PDK.logger.debug(format("'%{path}': already gone", path:))
         end
       rescue StandardError => e
-        raise PDK::CLI::ExitWithError, format("Unable to remove '%{path}': %{message}", path: path, message: e.message)
+        raise PDK::CLI::ExitWithError, format("Unable to remove '%{path}': %{message}", path:, message: e.message)
       end
 
       private
@@ -171,10 +171,10 @@ module PDK
         require 'pdk/util/filesystem'
 
         PDK::Util::Filesystem.mkdir_p(File.dirname(path))
-        PDK.logger.debug(format("writing '%{path}'", path: path))
+        PDK.logger.debug(format("writing '%{path}'", path:))
         PDK::Util::Filesystem.write_file(path, content)
       rescue Errno::EACCES
-        raise PDK::CLI::ExitWithError, format("You do not have permission to write to '%{path}'", path: path)
+        raise PDK::CLI::ExitWithError, format("You do not have permission to write to '%{path}'", path:)
       end
 
       # Generate a unified diff of the changes to be made to a file.
@@ -236,10 +236,10 @@ module PDK
       def update_execute_bits(path)
         require 'pdk/util/filesystem'
 
-        PDK.logger.debug(format("making '%{path}' executable", path: path))
+        PDK.logger.debug(format("making '%{path}' executable", path:))
         PDK::Util::Filesystem.make_executable(path)
       rescue Errno::EACCES
-        raise PDK::CLI::ExitWithError, format("You do not have permission to make '%{path}' executable", path: path)
+        raise PDK::CLI::ExitWithError, format("You do not have permission to make '%{path}' executable", path:)
       end
     end
   end

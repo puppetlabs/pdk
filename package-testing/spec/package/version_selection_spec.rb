@@ -3,7 +3,6 @@ require 'spec_helper_package'
 describe 'Test puppet & ruby version selection' do
   module_name = 'version_selection'
   test_cases = [
-    { envvar: 'PDK_PUPPET_VERSION', expected_puppet: PDK_VERSION[:lts][:major], expected_ruby: PDK_VERSION[:lts][:ruby] },
     { envvar: 'PDK_PUPPET_VERSION', expected_puppet: PDK_VERSION[:latest][:major], expected_ruby: PDK_VERSION[:latest][:ruby] }
   ]
 

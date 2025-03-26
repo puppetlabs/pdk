@@ -3,7 +3,7 @@ require 'pdk'
 module PDK
   module Util
     class TemplateURI
-      SCP_PATTERN = %r{\A(?!\w+://)(?:(?<user>.+?)@)?(?<host>[^:/]+):(?<path>.+)\z}.freeze
+      SCP_PATTERN = %r{\A(?!\w+://)(?:(?<user>.+?)@)?(?<host>[^:/]+):(?<path>.+)\z}
 
       PACKAGED_TEMPLATE_KEYWORD = 'pdk-default'.freeze
       DEPRECATED_TEMPLATE_URL = 'https://github.com/puppetlabs/pdk-module-template'.freeze

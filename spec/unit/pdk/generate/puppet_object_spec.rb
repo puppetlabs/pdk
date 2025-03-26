@@ -132,7 +132,7 @@ describe PDK::Generate::PuppetObject do
 
     before do
       # Mock required PuppetObject methods
-      allow(templated_object).to receive_messages(friendly_name: 'spec_object', template_files: { 'source' => 'target' }, templates: templates)
+      allow(templated_object).to receive_messages(friendly_name: 'spec_object', template_files: { 'source' => 'target' }, templates:)
 
       allow(PDK::Template).to receive(:with) # An unknown uri will not yield
       allow(PDK::Template).to receive(:with).with(uri_of('expected1'), pdk_context).and_yield(expected1_template_dir)
@@ -210,7 +210,7 @@ describe PDK::Generate::PuppetObject do
 
     before do
       # Mock required PuppetObject methods
-      allow(templated_object).to receive_messages(template_files: template_files, template_data: {}, friendly_name: 'spec_object', non_template_files: non_template_files,
+      allow(templated_object).to receive_messages(template_files:, template_data: {}, friendly_name: 'spec_object', non_template_files:,
                                                   update_manager_instance: update_manager)
       # Mock external objects
       allow(templated_object).to receive(:with_templates).and_yield(template_dir)

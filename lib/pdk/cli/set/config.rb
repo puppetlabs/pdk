@@ -12,13 +12,11 @@ module PDK
 
         def self.transform_value(type_name, value)
           normalized_name = type_name.downcase.strip
-          unless ALLOWED_TYPE_NAMES.include?(normalized_name)
-            raise PDK::CLI::ExitWithError, format('Unknown type %{type_name}. Expected one of %{allowed}', type_name: type_name, allowed: pretty_allowed_names)
-          end
+          raise PDK::CLI::ExitWithError, format('Unknown type %{type_name}. Expected one of %{allowed}', type_name:, allowed: pretty_allowed_names) unless ALLOWED_TYPE_NAMES.include?(normalized_name)
 
           # Short circuit string conversions as it's trivial
           if normalized_name == 'string'
-            raise PDK::CLI::ExitWithError, format('An error occured converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name: type_name) unless value.is_a?(String)
+            raise PDK::CLI::ExitWithError, format('An error occured converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name:) unless value.is_a?(String)
 
             return value
           end
@@ -35,7 +33,7 @@ module PDK
               value
             end
           rescue ArgumentError, TypeError
-            raise PDK::CLI::ExitWithError, format('An error occured converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name: type_name)
+            raise PDK::CLI::ExitWithError, format('An error occured converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name:)
           end
         end
 

@@ -195,7 +195,7 @@ module PDK
                 'Namespace must contain only alphanumeric characters.'
               end
 
-        raise ArgumentError, format("Invalid 'name' field in metadata.json: %{err}", err: err)
+        raise ArgumentError, format("Invalid 'name' field in metadata.json: %{err}", err:)
       end
     end
   end

@@ -1,7 +1,7 @@
 module RuboCop
   module Cop
     module PDK
-      class FileFilePredicate < Cop
+      class FileFilePredicate < Base
         MSG = 'Use PDK::Util::Filesystem.file? instead of File.file?'.freeze
 
         def_node_matcher :file_file_predicate?,
@@ -34,7 +34,7 @@ module RuboCop
         end
       end
 
-      class FileExistPredicate < Cop
+      class FileExistPredicate < Base
         MSG = 'Use PDK::Util::Filesystem.exist? instead of File.exist?'.freeze
 
         def_node_matcher :file_exist_predicate?,
@@ -67,7 +67,7 @@ module RuboCop
         end
       end
 
-      class FileDirectoryPredicate < Cop
+      class FileDirectoryPredicate < Base
         MSG = 'Use PDK::Util::Filesystem.directory? instead of File.directory?'.freeze
 
         def_node_matcher :file_directory_predicate?,
@@ -101,7 +101,7 @@ module RuboCop
         end
       end
 
-      class FileUtilsMkdirP < Cop
+      class FileUtilsMkdirP < Base
         MSG = 'Use PDK::Util::Filesystem.mkdir_p instead of FileUtils.mkdir_p'.freeze
 
         def_node_matcher :fileutils_mkdir_p?,
@@ -135,7 +135,7 @@ module RuboCop
         end
       end
 
-      class FileExpandPath < Cop
+      class FileExpandPath < Base
         MSG = 'Use PDK::Util::Filesystem.expand_path instead of File.expand_path'.freeze
 
         def_node_matcher :file_expand_path?,
@@ -169,7 +169,7 @@ module RuboCop
         end
       end
 
-      class DirGlob < Cop
+      class DirGlob < Base
         MSG = 'Use PDK::Util::Filesystem.glob instead of Dir.glob'.freeze
 
         def_node_matcher :dir_glob?,
@@ -202,7 +202,7 @@ module RuboCop
         end
       end
 
-      class FileFnmatchPredicate < Cop
+      class FileFnmatchPredicate < Base
         MSG = 'Use PDK::Util::Filesystem.fnmatch? instead of File.fnmatch?'.freeze
 
         def_node_matcher :file_fnmatch_predicate?,
@@ -236,7 +236,7 @@ module RuboCop
         end
       end
 
-      class FileReadablePredicate < Cop
+      class FileReadablePredicate < Base
         MSG = 'Use PDK::Util::Filesystem.readable? instead of File.readable?'.freeze
 
         def_node_matcher :file_readable_predicate?,
@@ -269,7 +269,7 @@ module RuboCop
         end
       end
 
-      class FileUtilsRm < Cop
+      class FileUtilsRm < Base
         MSG = 'Use PDK::Util::Filesystem.rm instead of FileUtils.rm'.freeze
 
         def_node_matcher :fileutils_rm?,
@@ -302,7 +302,7 @@ module RuboCop
         end
       end
 
-      class FileRead < Cop
+      class FileRead < Base
         MSG = 'Use PDK::Util::Filesystem.read_file instead of File.read'.freeze
 
         def_node_matcher :file_read?,
@@ -340,7 +340,7 @@ module RuboCop
         end
       end
 
-      class FileZeroPredicate < Cop
+      class FileZeroPredicate < Base
         MSG = 'Use PDK::Util::Filesystem.zero? instead of File.zero?'.freeze
 
         def_node_matcher :file_zero?,
@@ -373,7 +373,7 @@ module RuboCop
         end
       end
 
-      class FileStat < Cop
+      class FileStat < Base
         MSG = 'Use PDK::Util::Filesystem.stat instead of File.stat'.freeze
 
         def_node_matcher :file_stat?,
@@ -406,7 +406,7 @@ module RuboCop
         end
       end
 
-      class DirExistPredicate < Cop
+      class DirExistPredicate < Base
         MSG = 'Use PDK::Util::Filesystem.directory? instead of Dir.exist?'.freeze
 
         def_node_matcher :dir_exist?,
@@ -444,7 +444,7 @@ module RuboCop
         end
       end
 
-      class DirBrackets < Cop
+      class DirBrackets < Base
         MSG = 'Use PDK::Util::Filesystem.glob instead of Dir[]'.freeze
 
         def_node_matcher :dir_brackets?,
@@ -482,7 +482,7 @@ module RuboCop
         end
       end
 
-      class FileOpen < Cop
+      class FileOpen < Base
         MSG = 'Use PDK::Util::Filesystem.read_file or PDK::Util::Filesystem.write_file instead of File.open'.freeze
 
         def_node_matcher :file_open?,
@@ -504,7 +504,7 @@ module RuboCop
         end
       end
 
-      class FileSymlinkPredicate < Cop
+      class FileSymlinkPredicate < Base
         MSG = 'Use PDK::Util::Filesystem.symlink? instead of File.symlink?'.freeze
 
         def_node_matcher :file_symlink?,
@@ -537,7 +537,7 @@ module RuboCop
         end
       end
 
-      class FileDelete < Cop
+      class FileDelete < Base
         MSG = 'Use PDK::Util::Filesystem.rm instead of File.delete'.freeze
 
         def_node_matcher :file_delete?,
@@ -570,7 +570,7 @@ module RuboCop
         end
       end
 
-      class FileUtilsRMF < Cop
+      class FileUtilsRMF < Base
         MSG = 'Use PDK::Util::Filesystem.rm_f instead of FileUtils.rm_f'.freeze
 
         def_node_matcher :fileutils_rm_f?,
@@ -603,7 +603,7 @@ module RuboCop
         end
       end
 
-      class FileUtilsRMRF < Cop
+      class FileUtilsRMRF < Base
         MSG = 'Use PDK::Util::Filesystem.rm_rf instead of FileUtils.rm_rf'.freeze
 
         def_node_matcher :fileutils_rm_rf?,
@@ -636,7 +636,7 @@ module RuboCop
         end
       end
 
-      class FileUtilsCP < Cop
+      class FileUtilsCP < Base
         MSG = 'Use PDK::Util::Filesystem.cp instead of FileUtils.cp'.freeze
 
         def_node_matcher :fileutils_cp?,
@@ -669,7 +669,7 @@ module RuboCop
         end
       end
 
-      class FileUtilsMV < Cop
+      class FileUtilsMV < Base
         MSG = 'Use PDK::Util::Filesystem.mv instead of FileUtils.mv'.freeze
 
         def_node_matcher :fileutils_mv?,
@@ -702,7 +702,7 @@ module RuboCop
         end
       end
 
-      class FileUtilsRemoveDir < Cop
+      class FileUtilsRemoveDir < Base
         MSG = 'Use PDK::Util::Filesystem.rm_rf instead of FileUtils.remove_dir'.freeze
 
         def_node_matcher :fileutils_remove_dir?,
@@ -744,7 +744,7 @@ module RuboCop
         end
       end
 
-      class FileUtilsRemoveEntrySecure < Cop
+      class FileUtilsRemoveEntrySecure < Base
         MSG = 'Use PDK::Util::Filesystem.remove_entry_secure instead of FileUtils.remove_entry_secure'.freeze
 
         def_node_matcher :fileutils_remove_entry_secure?,
@@ -778,10 +778,10 @@ module RuboCop
         end
       end
 
-      class SmartQuotes < Cop
+      class SmartQuotes < Base
         MSG = 'Use ASCII quotes instead of Unicode smart quotes'.freeze
-        SINGLE_QUOTES_PAT = /(?:\u2018|\u2019)/.freeze
-        DOUBLE_QUOTES_PAT = /(?:\u201C|\u201D)/.freeze
+        SINGLE_QUOTES_PAT = /(?:\u2018|\u2019)/
+        DOUBLE_QUOTES_PAT = /(?:\u201C|\u201D)/
 
         def on_str(node)
           return unless node.loc.respond_to?(:begin) && node.loc.begin
