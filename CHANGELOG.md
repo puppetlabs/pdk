@@ -5,7 +5,24 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v3.4.0](https://github.com/puppetlabs/pdk/tree/v3.4.0) - 2024-11-25
+## [v3.5.0](https://github.com/puppetlabs/pdk/tree/v3.5.0) - 2025-06-06
+
+[Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.4.0...v3.5.0)
+
+### Changed
+
+- (CAT-2247) Remove support for Puppet 7 and Ruby 2.7 [#1443](https://github.com/puppetlabs/pdk/pull/1443) ([david22swan](https://github.com/david22swan))
+
+### Added
+
+- (CAT-2164) Correct `yaml_syntax_validator` to error on empty file [#1425](https://github.com/puppetlabs/pdk/pull/1425) ([david22swan](https://github.com/david22swan))
+
+### Fixed
+
+- (CAT-2238) Update latest_template? check to compare version numbers [#1438](https://github.com/puppetlabs/pdk/pull/1438) ([david22swan](https://github.com/david22swan))
+- (CAT-2148) Update template error message to reference known issues [#1437](https://github.com/puppetlabs/pdk/pull/1437) ([david22swan](https://github.com/david22swan))
+
+## [v3.4.0](https://github.com/puppetlabs/pdk/tree/v3.4.0) - 2024-11-29
 
 [Full Changelog](https://github.com/puppetlabs/pdk/compare/v3.3.0...v3.4.0)
 
