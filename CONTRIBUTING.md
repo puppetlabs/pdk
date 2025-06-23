@@ -75,13 +75,3 @@ Environment Variable | Usage
 **TEST_TARGET** | A beaker-hostgenerator string for the OS of the VM you want to test on e.g. _redhat7-64workstation._ or _windows2012r2-64workstation._ (The period character after workstation is required by beaker-hostgenerator).
 **BUILD_SERVER** | (Defaults to 'builds.delivery.puppetlabs.net' if not set) (Only required if testing a SHA on a Windows VM). The hostname of the build server that hosts packages.
 **SUITE_VERSION** | (If not set, will be automatically determined if possible) The build tag/version string used when installing packages on certain platforms - e.g. if the package you built is `pdk-0.5.0.0.21.gb84d40e-1.osx10.12.dmg` then **SUITE_VERSION** would be `0.5.0.0.21.gb84d40e`
-
-# Release Process
-
-1. Bump the version in `lib/pdk/version.rb`.
-1. In a clean checkout of main, run `bundle exec rake changelog`.
-1. Edit PR titles and tags, until `bundle exec rake changelog` output makes sense.
-1. Commit and PR the changes.
-1. When the PR is merged, get a clean checkout of the merged commit, and run `bundle exec rake release[upstream]` (where "upstream" is your local name of the puppetlabs remote)
-1. Profit!
-1. Update `lib/pdk/version.rb` with `x.y.z.pre` version bump, commit, and PR to prepare for next release.
