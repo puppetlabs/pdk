@@ -48,7 +48,7 @@ jobs:
     steps:
       # (3) checkout this repository in order to "see" the following custom action
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       # (4) "use" the custom action to retrigger the failed "acceptance job" above
       # NOTE: pass the SOURCE_GITHUB_TOKEN to the custom action because (a) it must have
