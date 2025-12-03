@@ -145,7 +145,7 @@ module PDK
       def validate_puppet_version_requirement!
         msgs = {
           no_reqs: 'Module metadata does not contain any requirements.',
-          no_puppet_req: 'Module metadata does not contain a "puppet" requirement.',
+          no_puppet_req: 'Module metadata does not contain a "puppet" or a "openvox" requirement.',
           no_puppet_ver: 'The "puppet" requirement in module metadata does not specify a "version_requirement".'
         }
 
@@ -157,7 +157,7 @@ module PDK
 
       def puppet_requirement
         @data['requirements'].find do |r|
-          r.key?('name') && r['name'] == 'puppet'
+          r.key?('name') && ['puppet', 'openvox'].include? r['name']
         end
       end
 
