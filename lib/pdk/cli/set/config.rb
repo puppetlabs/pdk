@@ -16,7 +16,7 @@ module PDK
 
           # Short circuit string conversions as it's trivial
           if normalized_name == 'string'
-            raise PDK::CLI::ExitWithError, format('An error occured converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name:) unless value.is_a?(String)
+            raise PDK::CLI::ExitWithError, format('An error occurred converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name:) unless value.is_a?(String)
 
             return value
           end
@@ -33,7 +33,7 @@ module PDK
               value
             end
           rescue ArgumentError, TypeError
-            raise PDK::CLI::ExitWithError, format('An error occured converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name:)
+            raise PDK::CLI::ExitWithError, format('An error occurred converting \'%{value}\' into a %{type_name}', value: value.nil? ? 'nil' : value, type_name:)
           end
         end
 
