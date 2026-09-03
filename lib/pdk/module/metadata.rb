@@ -157,7 +157,7 @@ module PDK
 
       def puppet_requirement
         @data['requirements'].find do |r|
-          r.key?('name') && ['puppet', 'openvox'].include? r['name']
+          r.key?('name') && ['puppet', 'openvox'].include?(r['name'])
         end
       end
 

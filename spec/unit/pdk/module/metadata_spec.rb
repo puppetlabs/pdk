@@ -202,7 +202,7 @@ describe PDK::Module::Metadata do
       it 'raises an ArgumentError' do
         expect do
           metadata.validate_puppet_version_requirement!
-        end.to raise_error(ArgumentError, /does not contain a "puppet" requirement/i)
+        end.to raise_error(ArgumentError, /does not contain a "puppet" or a "openvox" requirement/i)
       end
     end
 
