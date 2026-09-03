@@ -74,6 +74,8 @@ module PDK
         'Windows'
       ].freeze
 
+      PUPPET_REQUIREMENT_NAMES = ['puppet', 'openvox'].freeze
+
       DEFAULTS = {
         'name' => nil,
         'version' => '0.1.0',
@@ -157,7 +159,7 @@ module PDK
 
       def puppet_requirement
         @data['requirements'].find do |r|
-          r.key?('name') && ['puppet', 'openvox'].include?(r['name'])
+          r.key?('name') && PUPPET_REQUIREMENT_NAMES.include?(r['name'])
         end
       end
 

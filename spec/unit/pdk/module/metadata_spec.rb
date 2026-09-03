@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'json'
 require 'pdk/module/metadata'
 
 describe PDK::Module::Metadata do
