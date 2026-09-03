@@ -53,7 +53,7 @@ describe PDK::Generate::Function do
       end
 
       it 'maps the spec template to the correct destination path' do
-        expected_path = File.join('spec', 'functions', 'my_func') + '_spec.rb'
+        expected_path = "#{File.join('spec', 'functions', 'my_func')}_spec.rb"
         expect(generator.template_files[File.join('functions', 'function_spec.erb')]).to eq(expected_path)
       end
     end
@@ -68,7 +68,7 @@ describe PDK::Generate::Function do
 
       it 'maps the implementation template to a ruby lib path' do
         template_file = File.join('functions', 'v4_function.erb')
-        expected_path = File.join('lib', 'puppet', 'functions', module_name, 'my_func') + '.rb'
+        expected_path = "#{File.join('lib', 'puppet', 'functions', module_name, 'my_func')}.rb"
         expect(generator.template_files[template_file]).to eq(expected_path)
       end
     end
@@ -78,7 +78,7 @@ describe PDK::Generate::Function do
 
       it 'maps the implementation template to a puppet functions path' do
         template_file = File.join('functions', 'v3_function.erb')
-        expected_path = File.join('functions', 'my_func') + '.pp'
+        expected_path = "#{File.join('functions', 'my_func')}.pp"
         expect(generator.template_files[template_file]).to eq(expected_path)
       end
     end

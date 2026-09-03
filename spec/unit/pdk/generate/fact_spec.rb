@@ -28,7 +28,7 @@ describe PDK::Generate::Fact do
       end
 
       it 'maps the spec template to the correct destination path' do
-        expect(generator.template_files['fact_spec.erb']).to eq(File.join('spec', 'unit', 'facter', given_name) + '_spec.rb')
+        expect(generator.template_files['fact_spec.erb']).to eq("#{File.join('spec', 'unit', 'facter', given_name)}_spec.rb")
       end
     end
 
@@ -40,7 +40,7 @@ describe PDK::Generate::Fact do
       end
 
       it 'maps the implementation template to the correct destination path' do
-        expect(generator.template_files['fact.erb']).to eq(File.join('lib', 'facter', given_name) + '.rb')
+        expect(generator.template_files['fact.erb']).to eq("#{File.join('lib', 'facter', given_name)}.rb")
       end
     end
   end
